@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>701</width>
+    <height>490</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QMdiArea" name="mdiArea"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>701</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuArbres">
+    <property name="title">
+     <string>Bases</string>
+    </property>
+    <addaction name="actionNouvelle_base"/>
+    <addaction name="actionOuvrir_base"/>
+   </widget>
+   <widget class="QMenu" name="menuAudits">
+    <property name="title">
+     <string>Arbres</string>
+    </property>
+    <addaction name="actionAfficher"/>
+    <addaction name="actionG_rer"/>
+   </widget>
+   <widget class="QMenu" name="menuAudits_2">
+    <property name="title">
+     <string>Audits</string>
+    </property>
+   </widget>
+   <addaction name="menuArbres"/>
+   <addaction name="menuAudits"/>
+   <addaction name="menuAudits_2"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionAfficher">
+   <property name="text">
+    <string>Afficher</string>
+   </property>
+  </action>
+  <action name="actionNouvelle_base">
+   <property name="text">
+    <string>Nouvelle base</string>
+   </property>
+  </action>
+  <action name="actionOuvrir_base">
+   <property name="text">
+    <string>Ouvrir base</string>
+   </property>
+  </action>
+  <action name="actionG_rer">
+   <property name="text">
+    <string>Gérer</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
