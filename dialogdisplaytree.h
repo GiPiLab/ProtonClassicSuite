@@ -2,6 +2,7 @@
 #define DIALOGDISPLAYTREE_H
 
 #include <QWidget>
+#include <QtSql/QSqlTableModel>
 #include "pcx_treemodel.h"
 
 namespace Ui {
@@ -20,17 +21,18 @@ private slots:
 
     void on_remplirButton_clicked();
 
-    void on_chargerButton_clicked();
-
     void on_treeView_clicked(const QModelIndex &index);
 
     void on_comboBox_currentIndexChanged(int index);
 
+    void on_addTypeButton_clicked();
+
+    void on_deleteTreeButton_clicked();
 
 private:
     Ui::DialogDisplayTree *ui;
     PCx_TreeModel *model;
-
+    void updateListOfTree();
 };
 
 #endif // DIALOGDISPLAYTREE_H

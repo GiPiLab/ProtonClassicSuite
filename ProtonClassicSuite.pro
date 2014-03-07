@@ -16,12 +16,14 @@ SOURCES += main.cpp\
 	mainwindow.cpp \
     dialogdisplaytree.cpp \
     pcx_treemodel.cpp \
-    utility.cpp
+    utility.cpp \
+    dbutils.cpp
 
 HEADERS  += mainwindow.h \
     dialogdisplaytree.h \
     pcx_treemodel.h \
-    utility.h
+    utility.h \
+    dbutils.h
 
 FORMS    += mainwindow.ui \
     dialogdisplaytree.ui

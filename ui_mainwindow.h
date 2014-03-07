@@ -29,16 +29,18 @@ class Ui_MainWindow
 {
 public:
     QAction *actionAfficher;
-    QAction *actionNouvelle_base;
+    QAction *actionEffacerTout;
     QAction *actionOuvrir_base;
     QAction *actionG_rer;
+    QAction *actionQuitter;
+    QAction *actionAfficher_2;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QMdiArea *mdiArea;
     QMenuBar *menuBar;
+    QMenu *menuBases;
     QMenu *menuArbres;
     QMenu *menuAudits;
-    QMenu *menuAudits_2;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -49,12 +51,16 @@ public:
         MainWindow->resize(701, 490);
         actionAfficher = new QAction(MainWindow);
         actionAfficher->setObjectName(QStringLiteral("actionAfficher"));
-        actionNouvelle_base = new QAction(MainWindow);
-        actionNouvelle_base->setObjectName(QStringLiteral("actionNouvelle_base"));
+        actionEffacerTout = new QAction(MainWindow);
+        actionEffacerTout->setObjectName(QStringLiteral("actionEffacerTout"));
         actionOuvrir_base = new QAction(MainWindow);
         actionOuvrir_base->setObjectName(QStringLiteral("actionOuvrir_base"));
         actionG_rer = new QAction(MainWindow);
         actionG_rer->setObjectName(QStringLiteral("actionG_rer"));
+        actionQuitter = new QAction(MainWindow);
+        actionQuitter->setObjectName(QStringLiteral("actionQuitter"));
+        actionAfficher_2 = new QAction(MainWindow);
+        actionAfficher_2->setObjectName(QStringLiteral("actionAfficher_2"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -70,12 +76,12 @@ public:
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 701, 19));
+        menuBases = new QMenu(menuBar);
+        menuBases->setObjectName(QStringLiteral("menuBases"));
         menuArbres = new QMenu(menuBar);
         menuArbres->setObjectName(QStringLiteral("menuArbres"));
         menuAudits = new QMenu(menuBar);
         menuAudits->setObjectName(QStringLiteral("menuAudits"));
-        menuAudits_2 = new QMenu(menuBar);
-        menuAudits_2->setObjectName(QStringLiteral("menuAudits_2"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -84,13 +90,13 @@ public:
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
 
+        menuBar->addAction(menuBases->menuAction());
         menuBar->addAction(menuArbres->menuAction());
         menuBar->addAction(menuAudits->menuAction());
-        menuBar->addAction(menuAudits_2->menuAction());
-        menuArbres->addAction(actionNouvelle_base);
-        menuArbres->addAction(actionOuvrir_base);
-        menuAudits->addAction(actionAfficher);
-        menuAudits->addAction(actionG_rer);
+        menuBases->addAction(actionEffacerTout);
+        menuBases->addAction(actionQuitter);
+        menuArbres->addAction(actionAfficher);
+        menuAudits->addAction(actionAfficher_2);
 
         retranslateUi(MainWindow);
 
@@ -101,12 +107,14 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         actionAfficher->setText(QApplication::translate("MainWindow", "Afficher", 0));
-        actionNouvelle_base->setText(QApplication::translate("MainWindow", "Nouvelle base", 0));
+        actionEffacerTout->setText(QApplication::translate("MainWindow", "Effacer toutes les donn\303\251es", 0));
         actionOuvrir_base->setText(QApplication::translate("MainWindow", "Ouvrir base", 0));
         actionG_rer->setText(QApplication::translate("MainWindow", "G\303\251rer", 0));
-        menuArbres->setTitle(QApplication::translate("MainWindow", "Bases", 0));
-        menuAudits->setTitle(QApplication::translate("MainWindow", "Arbres", 0));
-        menuAudits_2->setTitle(QApplication::translate("MainWindow", "Audits", 0));
+        actionQuitter->setText(QApplication::translate("MainWindow", "Quitter", 0));
+        actionAfficher_2->setText(QApplication::translate("MainWindow", "Afficher", 0));
+        menuBases->setTitle(QApplication::translate("MainWindow", "Fichiers", 0));
+        menuArbres->setTitle(QApplication::translate("MainWindow", "Arbres", 0));
+        menuAudits->setTitle(QApplication::translate("MainWindow", "Audits", 0));
     } // retranslateUi
 
 };

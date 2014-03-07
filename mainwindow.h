@@ -19,6 +19,10 @@ public:
 private slots:
     void on_actionAfficher_triggered();
 
+    void on_actionEffacerTout_triggered();
+
+    void on_actionQuitter_triggered();
+
 private:
     Ui::MainWindow *ui;
     DialogDisplayTree *ddt;

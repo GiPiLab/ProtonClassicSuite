@@ -6,7 +6,7 @@
 #include <QList>
 #include <QString>
 #include <QtGlobal>
-#include <QSqlDatabase>
+#include <QSqlTableModel>
 
 
 class PCx_TreeModel
@@ -20,6 +20,7 @@ public:
     QString & getName(){return treeName;}
     QDateTime getCreationTime();
     QStandardItemModel * getModel(){return model;}
+    QSqlTableModel * getTypesModel(){return typesModel;}
 
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
@@ -32,6 +33,8 @@ public:
 private:
     QStandardItemModel * model;
     QStandardItem * root;
+    QSqlTableModel *typesModel;
+
 
     unsigned int treeId;
     bool finished;

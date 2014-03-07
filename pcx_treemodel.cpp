@@ -10,6 +10,7 @@ PCx_TreeModel::PCx_TreeModel()
 {
     finished=false;
     model=new QStandardItemModel();
+    typesModel=new QSqlTableModel();
     treeId=0;
     root=model->invisibleRootItem();
 }
@@ -17,6 +18,7 @@ PCx_TreeModel::PCx_TreeModel()
 PCx_TreeModel::~PCx_TreeModel()
 {
     model->clear();
+    typesModel->clear();
 }
 
 QDateTime PCx_TreeModel::getCreationTime()
@@ -34,7 +36,13 @@ bool PCx_TreeModel::saveToDatabase(void)
 bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
+
+    typesModel->setTable(QString("types_%1").arg(treeId));
+    typesModel->setEditStrategy(QSqlTableModel::OnFieldChange);
+    typesModel->select();
+
     QSqlQuery query;
+
     query.prepare("SELECT id,nom,termine,le_timestamp from index_arbres where id=:id");
     query.bindValue(":id",treeId);
     query.exec();
@@ -61,8 +69,8 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
 
     if(query.next())
     {
-        //Ajouter le type
-        QStandardItem *trueRoot=new QStandardItem(query.value(1).toString());
+        QStandardItem *trueRoot=new
+        QStandardItem(query.value(1).toString());
         root->appendRow(trueRoot);
         createChildren(trueRoot,query.value(0).toInt());
     }

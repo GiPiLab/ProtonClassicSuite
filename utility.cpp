@@ -5,10 +5,6 @@
 #include <cstdlib>
 #include <QApplication>
 
-
-
-
-
 void die(int retcode)
 {
     QSqlDatabase::database().close();

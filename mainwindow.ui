@@ -29,28 +29,28 @@
      <height>19</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuArbres">
+   <widget class="QMenu" name="menuBases">
     <property name="title">
-     <string>Bases</string>
+     <string>Fichiers</string>
     </property>
-    <addaction name="actionNouvelle_base"/>
-    <addaction name="actionOuvrir_base"/>
+    <addaction name="actionEffacerTout"/>
+    <addaction name="actionQuitter"/>
    </widget>
-   <widget class="QMenu" name="menuAudits">
+   <widget class="QMenu" name="menuArbres">
     <property name="title">
      <string>Arbres</string>
     </property>
     <addaction name="actionAfficher"/>
-    <addaction name="actionG_rer"/>
    </widget>
-   <widget class="QMenu" name="menuAudits_2">
+   <widget class="QMenu" name="menuAudits">
     <property name="title">
      <string>Audits</string>
     </property>
+    <addaction name="actionAfficher_2"/>
    </widget>
+   <addaction name="menuBases"/>
    <addaction name="menuArbres"/>
    <addaction name="menuAudits"/>
-   <addaction name="menuAudits_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -66,9 +66,9 @@
     <string>Afficher</string>
    </property>
   </action>
-  <action name="actionNouvelle_base">
+  <action name="actionEffacerTout">
    <property name="text">
-    <string>Nouvelle base</string>
+    <string>Effacer toutes les données</string>
    </property>
   </action>
   <action name="actionOuvrir_base">
@@ -79,6 +79,16 @@
   <action name="actionG_rer">
    <property name="text">
     <string>Gérer</string>
+   </property>
+  </action>
+  <action name="actionQuitter">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionAfficher_2">
+   <property name="text">
+    <string>Afficher</string>
    </property>
   </action>
  </widget>
