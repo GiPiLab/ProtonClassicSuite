@@ -69,6 +69,8 @@ public:
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         mdiArea = new QMdiArea(centralWidget);
         mdiArea->setObjectName(QStringLiteral("mdiArea"));
+        mdiArea->setViewMode(QMdiArea::SubWindowView);
+        mdiArea->setTabsClosable(false);
 
         horizontalLayout->addWidget(mdiArea);
 

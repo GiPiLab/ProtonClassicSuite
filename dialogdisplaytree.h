@@ -29,6 +29,8 @@ private slots:
 
     void on_deleteTreeButton_clicked();
 
+    void onTypesChanged();
+
 private:
     Ui::DialogDisplayTree *ui;
     PCx_TreeModel *model;

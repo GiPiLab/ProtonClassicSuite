@@ -67,13 +67,6 @@ void DialogDisplayTree::on_remplirButton_clicked()
         die();
     }
 
-    query.exec(QString("insert into types_%1 (nom) values ('Entité')").arg(lastId.toInt()));
-
-    if(query.numRowsAffected()==-1)
-    {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
-        die();
-    }
     query.exec(QString("insert into types_%1 (nom) values ('Maire')").arg(lastId.toInt()));
 
     if(query.numRowsAffected()==-1)
@@ -82,13 +75,22 @@ void DialogDisplayTree::on_remplirButton_clicked()
         die();
     }
 
-    query.exec(QString("insert into types_%1 (nom) values ('1er adjoint')").arg(lastId.toInt()));
+    query.exec(QString("insert into types_%1 (nom) values ('Adjoint')").arg(lastId.toInt()));
 
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
         die();
     }
+
+    query.exec(QString("insert into types_%1 (nom) values ('Service')").arg(lastId.toInt()));
+
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        die();
+    }
+
 
     //Racine
     query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toInt()));
@@ -138,23 +140,28 @@ void DialogDisplayTree::on_treeView_clicked(const QModelIndex &index)
 void DialogDisplayTree::on_comboBox_currentIndexChanged(int index)
 {
     if(index==-1)return;
-    if(model!=NULL)delete model;
+    if(model!=NULL)
+    {
+        ui->tableView->setModel(NULL);
+        delete model;
+    }
 
     model=new PCx_TreeModel();
     model->loadFromDatabase(ui->comboBox->currentData().toInt());
 
     ui->treeView->setModel(model->getModel());
-    ui->treeView->expandToDepth(0);
+    ui->treeView->expandToDepth(1);
 
-    ui->tableView->setModel(model->getTypesModel());
+    ui->tableView->setModel(model->getTypes()->getTableModel());
     ui->tableView->hideColumn(0);
+    connect(model->getTypes()->getTableModel(),SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(onTypesChanged()));
 }
 
 void DialogDisplayTree::on_addTypeButton_clicked()
 {
     if(model!=NULL)
     {
-        model->getTypesModel()->insertRow(model->getTypesModel()->rowCount());
+        model->getTypes()->getTableModel()->insertRow(model->getTypes()->getTableModel()->rowCount());
     }
 }
 
@@ -175,6 +182,11 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
     if(model!=NULL)
     {
         qDebug()<<"Deleting tree "<<model->getTreeId();
+
+        ui->tableView->setModel(NULL);
+        model->getTypes()->getTableModel()->clear();
+        model->getModel()->clear();
+
         QSqlQuery query;
         query.exec(QString("drop table arbre_%1").arg(model->getTreeId()));
         if(query.numRowsAffected()==-1)
@@ -183,6 +195,14 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
             die();
         }
 
+        query.exec(QString("drop table types_%1").arg(model->getTreeId()));
+        if(query.numRowsAffected()==-1)
+        {
+            qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+            die();
+        }
+
+
         query.exec(QString("delete from index_arbres where id='%1'").arg(model->getTreeId()));
         if(query.numRowsAffected()==-1)
         {
@@ -190,5 +210,22 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
             die();
         }
         qDebug()<<"Tree "<<model->getTreeId()<<" deleted.";
+
+        updateListOfTree();
+        delete model;
+        model=NULL;
+        if(ui->comboBox->count()==1)
+        {
+            ui->comboBox->setCurrentIndex(-1);
+            ui->comboBox->setCurrentIndex(0);
+
+        }
     }
+}
+
+void DialogDisplayTree::onTypesChanged()
+{
+    qDebug()<<"Types changed !";
+    model->updateTree();
+    ui->treeView->expandToDepth(1);
 }

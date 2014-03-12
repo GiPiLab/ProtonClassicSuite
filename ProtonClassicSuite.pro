@@ -15,15 +15,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
 	mainwindow.cpp \
     dialogdisplaytree.cpp \
-    pcx_treemodel.cpp \
     utility.cpp \
-    dbutils.cpp
+    dbutils.cpp \
+    types.cpp \
+    pcx_treemodel.cpp
 
 HEADERS  += mainwindow.h \
     dialogdisplaytree.h \
-    pcx_treemodel.h \
     utility.h \
-    dbutils.h
+    dbutils.h \
+    types.h \
+    pcx_treemodel.h
 
 FORMS    += mainwindow.ui \
     dialogdisplaytree.ui

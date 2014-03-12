@@ -5,20 +5,25 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QHash>
 
 PCx_TreeModel::PCx_TreeModel()
 {
     finished=false;
     model=new QStandardItemModel();
-    typesModel=new QSqlTableModel();
     treeId=0;
     root=model->invisibleRootItem();
+    types=NULL;
 }
 
 PCx_TreeModel::~PCx_TreeModel()
 {
     model->clear();
-    typesModel->clear();
+    delete model;
+    model=NULL;
+    delete types;
+    types=NULL;
+
 }
 
 QDateTime PCx_TreeModel::getCreationTime()
@@ -33,15 +38,12 @@ bool PCx_TreeModel::saveToDatabase(void)
     return true;
 }
 
-bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
+bool PCx_TreeModel::loadFromDatabase(int treeId)
 {
     Q_ASSERT(treeId>0);
 
-    typesModel->setTable(QString("types_%1").arg(treeId));
-    typesModel->setEditStrategy(QSqlTableModel::OnFieldChange);
-    typesModel->select();
-
     QSqlQuery query;
+    types=new Types(treeId,true);
 
     query.prepare("SELECT id,nom,termine,le_timestamp from index_arbres where id=:id");
     query.bindValue(":id",treeId);
@@ -58,8 +60,14 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
         qDebug()<<Q_FUNC_INFO<<"Arbre inconnu dans "<<__LINE__;
         return false;
     }
+    return updateTree();
+}
 
-    //The root of the tree
+bool PCx_TreeModel::updateTree()
+{
+    model->clear();
+    root=model->invisibleRootItem();
+    QSqlQuery query;
     query.exec(QString("select * from arbre_%1 order by id limit 1").arg(treeId));
     if(!query.isActive())
     {
@@ -70,7 +78,7 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
     if(query.next())
     {
         QStandardItem *trueRoot=new
-        QStandardItem(query.value(1).toString());
+        QStandardItem(QString("%1 %2").arg(types->getNomType(query.value(3).toInt())).arg(query.value(1).toString()));
         root->appendRow(trueRoot);
         createChildren(trueRoot,query.value(0).toInt());
     }
@@ -79,13 +87,15 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
         qDebug()<<Q_FUNC_INFO<<__LINE__<<"Empty tree";
         return false;
     }
-
     return true;
+
 }
+
 
 bool PCx_TreeModel::createChildren(QStandardItem *item,unsigned int nodeId)
 {
     Q_ASSERT(nodeId>0);
+
     QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
     if(!query.isActive())
     {
@@ -94,7 +104,8 @@ bool PCx_TreeModel::createChildren(QStandardItem *item,unsigned int nodeId)
     }
     while(query.next())
     {
-        QStandardItem *newitem=new QStandardItem(query.value(1).toString());
+        QStandardItem *newitem=new QStandardItem(QString("%1 %2").arg(types->getNomType(query.value(3).toInt())).arg(query.value(1).toString()));
+
         item->appendRow(newitem);
         createChildren(newitem,query.value(0).toInt());
     }

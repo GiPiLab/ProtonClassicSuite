@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMdiSubWindow>
 #include "dialogdisplaytree.h"
 
 namespace Ui {
@@ -23,9 +24,15 @@ private slots:
 
     void on_actionQuitter_triggered();
 
+    void onDdtWindowsDestroyed();
+
+
+
 private:
+
     Ui::MainWindow *ui;
-    DialogDisplayTree *ddt;
+    QMdiSubWindow *ddt;
+    DialogDisplayTree *ddtwidget;
 };
 
 #endif // MAINWINDOW_H

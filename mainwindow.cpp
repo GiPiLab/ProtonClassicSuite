@@ -1,12 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dbutils.h"
+#include "dialogdisplaytree.h"
 #include <QFileDialog>
 #include <QString>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QDebug>
 #include <QMessageBox>
+#include <QList>
+#include <QMdiSubWindow>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setCentralWidget(ui->mdiArea);
+    ddt=NULL;
+    ddtwidget=NULL;
 }
 
 MainWindow::~MainWindow()
@@ -23,9 +28,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionAfficher_triggered()
 {
-    this->ddt=new DialogDisplayTree(this);
-    this->ui->mdiArea->addSubWindow(ddt);
-    ddt->show();
+    //Only one instance allowed
+    if(ddt==NULL && ddtwidget==NULL)
+    {
+        ddtwidget=new DialogDisplayTree(this);
+        this->ddt=ui->mdiArea->addSubWindow(ddtwidget);
+        ddtwidget->show();
+        connect(ddt,SIGNAL(destroyed()),this,SLOT(onDdtWindowsDestroyed()));
+    }
 }
 
 
@@ -41,4 +51,12 @@ void MainWindow::on_actionEffacerTout_triggered()
 void MainWindow::on_actionQuitter_triggered()
 {
     this->close();
+}
+
+void MainWindow::onDdtWindowsDestroyed()
+{
+    delete ddtwidget;
+    ddtwidget=NULL;
+    ddt=NULL;
+    qDebug()<<"Closed";
 }

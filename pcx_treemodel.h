@@ -1,6 +1,7 @@
 #ifndef PCX_TREEMODEL_H
 #define PCX_TREEMODEL_H
 
+#include "types.h"
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QList>
@@ -15,28 +16,28 @@ public:
     PCx_TreeModel();
     virtual ~PCx_TreeModel();
 
-    unsigned int getTreeId(){return treeId;}
+    int getTreeId(){return treeId;}
     bool isFinished(){return finished;}
     QString & getName(){return treeName;}
     QDateTime getCreationTime();
     QStandardItemModel * getModel(){return model;}
-    QSqlTableModel * getTypesModel(){return typesModel;}
+    Types * getTypes(){return types;}
 
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
 
     bool saveToDatabase(void);
-    bool loadFromDatabase(unsigned int treeId);
+    bool loadFromDatabase(int treeId);
     bool loadFromDatabase(const QString & treeName);
 
+    bool updateTree();
 
 private:
     QStandardItemModel * model;
     QStandardItem * root;
-    QSqlTableModel *typesModel;
+    Types *types;
 
-
-    unsigned int treeId;
+    int treeId;
     bool finished;
     QString treeName;
     QString creationTime;
