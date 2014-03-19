@@ -21,8 +21,6 @@ private slots:
 
     void on_remplirButton_clicked();
 
-    void on_treeView_clicked(const QModelIndex &index);
-
     void on_comboBox_currentIndexChanged(int index);
 
     void on_addTypeButton_clicked();
@@ -30,6 +28,14 @@ private slots:
     void on_deleteTreeButton_clicked();
 
     void onTypesChanged();
+
+    void on_newTreeButton_clicked();
+
+    void on_deleteTypeButton_clicked();
+
+    //void on_treeView_clicked(const QModelIndex &index);
+
+     void on_addNodeButton_clicked();
 
 private:
     Ui::DialogDisplayTree *ui;

@@ -108,15 +108,15 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        actionAfficher->setText(QApplication::translate("MainWindow", "Afficher", 0));
-        actionEffacerTout->setText(QApplication::translate("MainWindow", "Effacer toutes les donn\303\251es", 0));
+        actionAfficher->setText(QApplication::translate("MainWindow", "Afficher et modifier", 0));
+        actionEffacerTout->setText(QApplication::translate("MainWindow", "&Effacer toutes les donn\303\251es", 0));
         actionOuvrir_base->setText(QApplication::translate("MainWindow", "Ouvrir base", 0));
         actionG_rer->setText(QApplication::translate("MainWindow", "G\303\251rer", 0));
-        actionQuitter->setText(QApplication::translate("MainWindow", "Quitter", 0));
+        actionQuitter->setText(QApplication::translate("MainWindow", "&Quitter", 0));
         actionAfficher_2->setText(QApplication::translate("MainWindow", "Afficher", 0));
-        menuBases->setTitle(QApplication::translate("MainWindow", "Fichiers", 0));
-        menuArbres->setTitle(QApplication::translate("MainWindow", "Arbres", 0));
-        menuAudits->setTitle(QApplication::translate("MainWindow", "Audits", 0));
+        menuBases->setTitle(QApplication::translate("MainWindow", "&Fichiers", 0));
+        menuArbres->setTitle(QApplication::translate("MainWindow", "&Arbres", 0));
+        menuAudits->setTitle(QApplication::translate("MainWindow", "A&udits", 0));
     } // retranslateUi
 
 };

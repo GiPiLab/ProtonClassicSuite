@@ -26,7 +26,9 @@ public:
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
 
-    bool saveToDatabase(void);
+    int addChild(int pid,int type,const QString &name);
+
+    static bool addNewTree(const QString &name);
     bool loadFromDatabase(int treeId);
     bool loadFromDatabase(const QString & treeName);
 

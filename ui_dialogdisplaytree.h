@@ -14,11 +14,10 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
+#include <QtWidgets/QListView>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QTableView>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -28,42 +27,44 @@ QT_BEGIN_NAMESPACE
 class Ui_DialogDisplayTree
 {
 public:
-    QVBoxLayout *verticalLayout_6;
-    QHBoxLayout *horizontalLayout_2;
-    QVBoxLayout *verticalLayout_4;
-    QComboBox *comboBox;
+    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout;
+    QListView *listTypesView;
     QTreeView *treeView;
-    QHBoxLayout *horizontalLayout_5;
-    QPushButton *newTreeButton;
-    QPushButton *deleteTreeButton;
-    QPushButton *remplirButton;
-    QLabel *label;
-    QVBoxLayout *verticalLayout_5;
-    QHBoxLayout *horizontalLayout;
     QPushButton *addTypeButton;
+    QPushButton *newTreeButton;
     QPushButton *deleteTypeButton;
-    QTableView *tableView;
+    QPushButton *addNodeButton;
+    QPushButton *finishTreeButton;
+    QPushButton *deleteTreeButton;
+    QComboBox *comboBox;
+    QPushButton *modifyNodeButton;
+    QPushButton *deleteNodeButton;
+    QPushButton *remplirButton;
 
     void setupUi(QWidget *DialogDisplayTree)
     {
         if (DialogDisplayTree->objectName().isEmpty())
             DialogDisplayTree->setObjectName(QStringLiteral("DialogDisplayTree"));
         DialogDisplayTree->setWindowModality(Qt::NonModal);
-        DialogDisplayTree->resize(681, 426);
-        verticalLayout_6 = new QVBoxLayout(DialogDisplayTree);
-        verticalLayout_6->setSpacing(6);
-        verticalLayout_6->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        comboBox = new QComboBox(DialogDisplayTree);
-        comboBox->setObjectName(QStringLiteral("comboBox"));
+        DialogDisplayTree->resize(729, 339);
+        verticalLayout = new QVBoxLayout(DialogDisplayTree);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        gridLayout = new QGridLayout();
+        gridLayout->setSpacing(6);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        listTypesView = new QListView(DialogDisplayTree);
+        listTypesView->setObjectName(QStringLiteral("listTypesView"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(listTypesView->sizePolicy().hasHeightForWidth());
+        listTypesView->setSizePolicy(sizePolicy);
+        listTypesView->setAlternatingRowColors(true);
 
-        verticalLayout_4->addWidget(comboBox);
+        gridLayout->addWidget(listTypesView, 1, 3, 1, 1);
 
         treeView = new QTreeView(DialogDisplayTree);
         treeView->setObjectName(QStringLiteral("treeView"));
@@ -72,66 +73,69 @@ public:
         treeView->setRootIsDecorated(false);
         treeView->header()->setVisible(false);
 
-        verticalLayout_4->addWidget(treeView);
+        gridLayout->addWidget(treeView, 1, 0, 1, 3);
 
-        horizontalLayout_5 = new QHBoxLayout();
-        horizontalLayout_5->setSpacing(6);
-        horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        addTypeButton = new QPushButton(DialogDisplayTree);
+        addTypeButton->setObjectName(QStringLiteral("addTypeButton"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(addTypeButton->sizePolicy().hasHeightForWidth());
+        addTypeButton->setSizePolicy(sizePolicy1);
+
+        gridLayout->addWidget(addTypeButton, 2, 3, 1, 1);
+
         newTreeButton = new QPushButton(DialogDisplayTree);
         newTreeButton->setObjectName(QStringLiteral("newTreeButton"));
 
-        horizontalLayout_5->addWidget(newTreeButton);
+        gridLayout->addWidget(newTreeButton, 4, 0, 1, 1);
+
+        deleteTypeButton = new QPushButton(DialogDisplayTree);
+        deleteTypeButton->setObjectName(QStringLiteral("deleteTypeButton"));
+        sizePolicy1.setHeightForWidth(deleteTypeButton->sizePolicy().hasHeightForWidth());
+        deleteTypeButton->setSizePolicy(sizePolicy1);
+
+        gridLayout->addWidget(deleteTypeButton, 4, 3, 1, 1);
+
+        addNodeButton = new QPushButton(DialogDisplayTree);
+        addNodeButton->setObjectName(QStringLiteral("addNodeButton"));
+
+        gridLayout->addWidget(addNodeButton, 2, 0, 1, 1);
+
+        finishTreeButton = new QPushButton(DialogDisplayTree);
+        finishTreeButton->setObjectName(QStringLiteral("finishTreeButton"));
+
+        gridLayout->addWidget(finishTreeButton, 4, 2, 1, 1);
 
         deleteTreeButton = new QPushButton(DialogDisplayTree);
         deleteTreeButton->setObjectName(QStringLiteral("deleteTreeButton"));
 
-        horizontalLayout_5->addWidget(deleteTreeButton);
+        gridLayout->addWidget(deleteTreeButton, 4, 1, 1, 1);
+
+        comboBox = new QComboBox(DialogDisplayTree);
+        comboBox->setObjectName(QStringLiteral("comboBox"));
+
+        gridLayout->addWidget(comboBox, 0, 0, 1, 4);
+
+        modifyNodeButton = new QPushButton(DialogDisplayTree);
+        modifyNodeButton->setObjectName(QStringLiteral("modifyNodeButton"));
+
+        gridLayout->addWidget(modifyNodeButton, 2, 1, 1, 1);
+
+        deleteNodeButton = new QPushButton(DialogDisplayTree);
+        deleteNodeButton->setObjectName(QStringLiteral("deleteNodeButton"));
+
+        gridLayout->addWidget(deleteNodeButton, 2, 2, 1, 1);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_5);
+        verticalLayout->addLayout(gridLayout);
 
         remplirButton = new QPushButton(DialogDisplayTree);
         remplirButton->setObjectName(QStringLiteral("remplirButton"));
+        sizePolicy1.setHeightForWidth(remplirButton->sizePolicy().hasHeightForWidth());
+        remplirButton->setSizePolicy(sizePolicy1);
 
-        verticalLayout_4->addWidget(remplirButton);
-
-        label = new QLabel(DialogDisplayTree);
-        label->setObjectName(QStringLiteral("label"));
-
-        verticalLayout_4->addWidget(label);
-
-
-        horizontalLayout_2->addLayout(verticalLayout_4);
-
-        verticalLayout_5 = new QVBoxLayout();
-        verticalLayout_5->setSpacing(6);
-        verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        addTypeButton = new QPushButton(DialogDisplayTree);
-        addTypeButton->setObjectName(QStringLiteral("addTypeButton"));
-
-        horizontalLayout->addWidget(addTypeButton);
-
-        deleteTypeButton = new QPushButton(DialogDisplayTree);
-        deleteTypeButton->setObjectName(QStringLiteral("deleteTypeButton"));
-
-        horizontalLayout->addWidget(deleteTypeButton);
-
-
-        verticalLayout_5->addLayout(horizontalLayout);
-
-        tableView = new QTableView(DialogDisplayTree);
-        tableView->setObjectName(QStringLiteral("tableView"));
-
-        verticalLayout_5->addWidget(tableView);
-
-
-        horizontalLayout_2->addLayout(verticalLayout_5);
-
-
-        verticalLayout_6->addLayout(horizontalLayout_2);
+        verticalLayout->addWidget(remplirButton);
 
 
         retranslateUi(DialogDisplayTree);
@@ -142,12 +146,15 @@ public:
     void retranslateUi(QWidget *DialogDisplayTree)
     {
         DialogDisplayTree->setWindowTitle(QApplication::translate("DialogDisplayTree", "DialogDisplayTree", 0));
-        newTreeButton->setText(QApplication::translate("DialogDisplayTree", "Nouvel arbre", 0));
-        deleteTreeButton->setText(QApplication::translate("DialogDisplayTree", "Supprimer cet arbre", 0));
-        remplirButton->setText(QApplication::translate("DialogDisplayTree", "Remplir un nouvel arbre bidon", 0));
-        label->setText(QApplication::translate("DialogDisplayTree", "TextLabel", 0));
         addTypeButton->setText(QApplication::translate("DialogDisplayTree", "Ajouter un type", 0));
+        newTreeButton->setText(QApplication::translate("DialogDisplayTree", "Ajouter un arbre", 0));
         deleteTypeButton->setText(QApplication::translate("DialogDisplayTree", "Supprimer un type", 0));
+        addNodeButton->setText(QApplication::translate("DialogDisplayTree", "Ajouter noeud", 0));
+        finishTreeButton->setText(QApplication::translate("DialogDisplayTree", "Terminer un arbre", 0));
+        deleteTreeButton->setText(QApplication::translate("DialogDisplayTree", "Supprimer un arbre", 0));
+        modifyNodeButton->setText(QApplication::translate("DialogDisplayTree", "Modifier noeud", 0));
+        deleteNodeButton->setText(QApplication::translate("DialogDisplayTree", "Supprimer noeud", 0));
+        remplirButton->setText(QApplication::translate("DialogDisplayTree", "Al\303\251atoire", 0));
     } // retranslateUi
 
 };

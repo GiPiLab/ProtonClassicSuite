@@ -18,14 +18,17 @@ SOURCES += main.cpp\
     utility.cpp \
     dbutils.cpp \
     types.cpp \
-    pcx_treemodel.cpp
+    pcx_treemodel.cpp \
+    dialogaddchangetreenode.cpp
 
 HEADERS  += mainwindow.h \
     dialogdisplaytree.h \
     utility.h \
     dbutils.h \
     types.h \
-    pcx_treemodel.h
+    pcx_treemodel.h \
+    dialogaddchangetreenode.h
 
 FORMS    += mainwindow.ui \
-    dialogdisplaytree.ui
+    dialogdisplaytree.ui \
+    dialogaddchangetreenode.ui

@@ -38,20 +38,20 @@
    </property>
    <widget class="QMenu" name="menuBases">
     <property name="title">
-     <string>Fichiers</string>
+     <string>&amp;Fichiers</string>
     </property>
     <addaction name="actionEffacerTout"/>
     <addaction name="actionQuitter"/>
    </widget>
    <widget class="QMenu" name="menuArbres">
     <property name="title">
-     <string>Arbres</string>
+     <string>&amp;Arbres</string>
     </property>
     <addaction name="actionAfficher"/>
    </widget>
    <widget class="QMenu" name="menuAudits">
     <property name="title">
-     <string>Audits</string>
+     <string>A&amp;udits</string>
     </property>
     <addaction name="actionAfficher_2"/>
    </widget>
@@ -70,12 +70,12 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAfficher">
    <property name="text">
-    <string>Afficher</string>
+    <string>Afficher et modifier</string>
    </property>
   </action>
   <action name="actionEffacerTout">
    <property name="text">
-    <string>Effacer toutes les données</string>
+    <string>&amp;Effacer toutes les données</string>
    </property>
   </action>
   <action name="actionOuvrir_base">
@@ -90,7 +90,7 @@
   </action>
   <action name="actionQuitter">
    <property name="text">
-    <string>Quitter</string>
+    <string>&amp;Quitter</string>
    </property>
   </action>
   <action name="actionAfficher_2">
