@@ -37,6 +37,10 @@ private slots:
 
      void on_addNodeButton_clicked();
 
+     void on_modifyNodeButton_clicked();
+
+     void on_treeView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::DialogDisplayTree *ui;
     PCx_TreeModel *model;

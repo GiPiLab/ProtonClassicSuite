@@ -37,9 +37,9 @@ void DialogDisplayTree::on_remplirButton_clicked()
              QString nomNode=QString("Node_%1").arg(qrand());
              query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('%2',1,1)").arg(model->getTreeId()).arg(nomNode));
 
-             if(query.numRowsAffected()==-1)
+             if(query.numRowsAffected()!=1)
              {
-                 qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+                 qCritical()<<query.lastError().text();
                  die();
              }
      }
@@ -51,9 +51,9 @@ void DialogDisplayTree::on_remplirButton_clicked()
              QString nomNode=QString("Node2nd_%1").arg(qrand());
              query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('%2',%3,2)").arg(model->getTreeId()).arg(nomNode).arg(2+qrand()%(numNodes-2)));
 
-             if(query.numRowsAffected()==-1)
+             if(query.numRowsAffected()!=1)
              {
-                 qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+                 qCritical()<<query.lastError().text();
                  die();
              }
      }
@@ -134,9 +134,9 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
         QSqlQuery query;
 
         query.exec(QString("delete from index_arbres where id='%1'").arg(model->getTreeId()));
-        if(query.numRowsAffected()==-1)
+        if(query.numRowsAffected()!=1)
         {
-            qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+            qCritical()<<query.lastError().text();
             die();
         }
 
@@ -144,14 +144,14 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
         query.exec(QString("drop table arbre_%1").arg(model->getTreeId()));
         if(query.numRowsAffected()==-1)
         {
-            qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+            qCritical()<<query.lastError().text();
             die();
         }
 
         query.exec(QString("drop table types_%1").arg(model->getTreeId()));
         if(query.numRowsAffected()==-1)
         {
-            qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+            qCritical()<<query.lastError().text();
             die();
         }
 
@@ -220,6 +220,7 @@ void DialogDisplayTree::on_treeView_clicked(const QModelIndex &index)
 
 void DialogDisplayTree::on_addNodeButton_clicked()
 {
+    if(model==NULL)return;
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
 
     if(!selection.isEmpty())
@@ -249,7 +250,7 @@ void DialogDisplayTree::on_addNodeButton_clicked()
 
         if(ok)
         {
-            model->addChild(selectedId,selectedTypeId,text,selection[0]);
+            model->addNode(selectedId,selectedTypeId,text,selection[0]);
         }
 
     }
@@ -258,4 +259,57 @@ void DialogDisplayTree::on_addNodeButton_clicked()
         QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez d'abord le noeud père dans l'arbre"));
         return;
     }
+}
+
+void DialogDisplayTree::on_modifyNodeButton_clicked()
+{
+    if(model==NULL)return;
+
+    QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
+
+    if(!selection.isEmpty())
+    {
+        int selectedId=selection[0].data(Qt::UserRole+1).toInt();
+        qDebug()<<"Node Selected Id : "<<selectedId;
+
+        //No modification for the root
+        if(selectedId==1)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Vous ne pouvez pas modifier la racine de l'arbre"));
+            return;
+        }
+
+        QModelIndex indexType=ui->listTypesView->currentIndex();
+        if(indexType.row()<0)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez le nouveau type du noeud à modifier dans la zone de droite"));
+            return;
+        }
+
+        int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
+
+        bool ok;
+        QString text;
+
+        do
+        {
+            text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok);
+
+        }while(ok && text.isEmpty());
+
+        if(ok)
+        {
+            model->updateNode(selection[0],text,selectedTypeId);
+        }
+    }
+    else
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez le noeud à modifier"));
+        return;
+    }
+}
+
+void DialogDisplayTree::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    on_modifyNodeButton_clicked();
 }

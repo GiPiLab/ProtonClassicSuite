@@ -21,9 +21,8 @@ Types::Types(int treeId,bool loadSqlTableModel)
     loadTypesFromTree(treeId);
     if(loadSqlTableModel==true)
     {
-        qDebug()<<"Load sql model";
         this->loadSqlTableModel();
-        qDebug()<<typesTableModel->columnCount();
+        qDebug()<<"Loaded types with "<<typesTableModel->rowCount()<<" rows";
     }
 }
 
@@ -80,9 +79,9 @@ bool Types::addType(const QString &type)
         q.prepare(QString("insert into types_%1 (nom) values(:nom)").arg(treeId));
         q.bindValue(":nom",type);
         q.exec();
-        if(q.numRowsAffected()==-1)
+        if(q.numRowsAffected()!=1)
         {
-            qCritical()<<Q_FUNC_INFO<<__LINE__<<q.lastError().text();
+            qCritical()<<q.lastError().text();
             die();
         }
 
@@ -104,7 +103,7 @@ bool Types::deleteType(const QString &type)
 
     if(!query.isActive())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError();
+        qCritical()<<query.lastError();
         die();
     }
 
@@ -129,7 +128,7 @@ bool Types::deleteType(int id)
 
     if(!query.isActive())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError();
+        qCritical()<<query.lastError();
         die();
     }
 
@@ -149,9 +148,9 @@ bool Types::deleteType(int id)
     query.bindValue(":id",id);
     query.exec();
 
-    if(query.numRowsAffected()==-1)
+    if(query.numRowsAffected()!=1)
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         die();
     }
     loadTypesFromTree(treeId);
@@ -168,7 +167,7 @@ bool Types::loadTypesFromTree(int treeId)
     QSqlQuery query(QString("select * from types_%1").arg(treeId));
     if(!query.isActive())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError();
+        qCritical()<<query.lastError();
         return false;
     }
 

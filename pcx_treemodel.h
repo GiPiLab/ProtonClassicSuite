@@ -27,7 +27,7 @@ public:
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
 
-    int addChild(int pid,  int type, const QString &name, QModelIndex &pidNodeIndex);
+    int addNode(int pid,  int type, const QString &name, QModelIndex &pidNodeIndex);
     bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, int newType);
 
     static bool addNewTree(const QString &name);

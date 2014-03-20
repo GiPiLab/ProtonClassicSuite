@@ -31,7 +31,7 @@ void initDb(void)
     if(query.numRowsAffected()==-1)
     {
         db.close();
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         exit(-1);
     }
 
@@ -39,7 +39,7 @@ void initDb(void)
     if(query.numRowsAffected()==-1)
     {
         db.close();
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         exit(-1);
     }
 
@@ -63,7 +63,7 @@ QSqlDatabase loadDb(bool addDriver)
 
     if(!db.open())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<db.lastError();
+        qCritical()<<db.lastError();
         exit(-1);
     }
     return db;

@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
                 );
     a.installTranslator(&qtTranslator);
 
-
+    qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{message}");
     int retval;
     qsrand(time(NULL));
 

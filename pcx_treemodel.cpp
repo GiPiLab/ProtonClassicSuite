@@ -35,24 +35,39 @@ QDateTime PCx_TreeModel::getCreationTime()
     return dt;
 }
 
-int PCx_TreeModel::addChild(int pid, int type, const QString &name, QModelIndex & pidNodeIndex)
+int PCx_TreeModel::addNode(int pid, int type, const QString &name, QModelIndex & pidNodeIndex)
 {
-    if(name.isNull() || name.isEmpty()||pid<=0 ||type<=0)
-    {
-        qDebug()<<"addChild données invalides";
-        return -1;
-    }
+    Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
 
     QSqlQuery q;
+    q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
+    q.bindValue(":nom",name);
+    q.bindValue(":type",type);
+    q.exec();
+
+    if(q.next())
+    {
+        if(q.value(0).toInt()>0)
+        {
+            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+            return -1;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
     q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(treeId));
     q.bindValue(":nom",name);
     q.bindValue(":pid",pid);
     q.bindValue(":type",type);
     q.exec();
 
-    if(q.numRowsAffected()==-1)
+    if(q.numRowsAffected()!=1)
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<q.lastError().text();
+        qCritical()<<q.lastError().text();
         die();
     }
 
@@ -70,11 +85,47 @@ int PCx_TreeModel::addChild(int pid, int type, const QString &name, QModelIndex 
 bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, int newType)
 {
     Q_ASSERT(nodeIndex.isValid() && !newName.isNull()&& !newName.isEmpty() && newType>0);
+    int nodeId=nodeIndex.data(Qt::UserRole+1).toInt();
+    qDebug()<<"Node ID = "<<nodeId;
 
+    QSqlQuery q;
 
+    q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
+    q.bindValue(":nom",newName);
+    q.bindValue(":type",newType);
+    q.exec();
+
+    if(q.next())
+    {
+        if(q.value(0).toInt()>0)
+        {
+            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+            return false;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    q.prepare(QString("update arbre_%1 set nom=:nom, type=:type where id=:id").arg(treeId));
+    q.bindValue(":nom",newName);
+    q.bindValue(":type",newType);
+    q.bindValue(":id",nodeId);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    QStandardItem *item=model->itemFromIndex(nodeIndex);
+    item->setText(QString("%1 %2").arg(types->getNomType(newType)).arg(newName));
+    item->setData(newType,Qt::UserRole+2);
 
     return true;
-
 }
 
 
@@ -98,7 +149,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     }
     else
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         die();
     }
 
@@ -106,27 +157,27 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     query.bindValue(":nom",name);
     query.exec();
 
-    if(query.numRowsAffected()==-1)
+    if(query.numRowsAffected()!=1)
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         die();
     }
 
     QVariant lastId=query.lastInsertId();
     if(!lastId.isValid())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<"Problème d'id, vérifiez la consistance de la base";
+        qCritical()<<"Problème d'id, vérifiez la consistance de la base";
         die();
     }
 
-    qDebug()<<Q_FUNC_INFO<<__LINE__<<"Last inserted id = "<<lastId.toInt();
+    qDebug()<<"Last inserted id = "<<lastId.toInt();
 
     //Arbre
     query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toInt()));
 
     if(query.numRowsAffected()==-1)
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
         die();
     }
@@ -138,7 +189,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     {
         //Penser à supprimer les tables d'avant en cas d'échec pour éviter les orphelines
 
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
         query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
         die();
@@ -150,9 +201,9 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(lastId.toInt()));
         query.bindValue(":nomtype",oneType);
         query.exec();
-        if(query.numRowsAffected()==-1)
+        if(query.numRowsAffected()!=1)
         {
-            qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+            qCritical()<<query.lastError().text();
             query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
             query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
             query.exec(QString("drop table types_%1").arg(lastId.toInt()));
@@ -162,9 +213,9 @@ bool PCx_TreeModel::addNewTree(const QString &name)
 
     //Racine
     query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toInt()));
-    if(query.numRowsAffected()==-1)
+    if(query.numRowsAffected()!=1)
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError().text();
+        qCritical()<<query.lastError().text();
         query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
         query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
         query.exec(QString("drop table types_%1").arg(lastId.toInt()));
@@ -192,7 +243,7 @@ bool PCx_TreeModel::loadFromDatabase(int treeId)
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<<"Arbre inconnu dans "<<__LINE__;
+        qDebug()<<"Arbre inconnu";
         return false;
     }
     return updateTree();
@@ -206,7 +257,7 @@ bool PCx_TreeModel::updateTree()
     query.exec(QString("select * from arbre_%1 order by id limit 1").arg(treeId));
     if(!query.isActive())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError();
+        qCritical()<<query.lastError();
         return false;
     }
 
@@ -219,7 +270,7 @@ bool PCx_TreeModel::updateTree()
     }
     else
     {
-        qDebug()<<Q_FUNC_INFO<<__LINE__<<"Empty tree";
+        qDebug()<<"Empty tree";
         return false;
     }
     return true;
@@ -232,7 +283,7 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
     if(!query.isActive())
     {
-        qCritical()<<Q_FUNC_INFO<<__LINE__<<query.lastError();
+        qCritical()<<query.lastError();
         return false;
     }
     while(query.next())
