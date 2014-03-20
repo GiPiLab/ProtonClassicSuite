@@ -35,7 +35,7 @@ QDateTime PCx_TreeModel::getCreationTime()
     return dt;
 }
 
-int PCx_TreeModel::addChild(int pid, int type, const QString &name)
+int PCx_TreeModel::addChild(int pid, int type, const QString &name, QModelIndex & pidNodeIndex)
 {
     if(name.isNull() || name.isEmpty()||pid<=0 ||type<=0)
     {
@@ -44,7 +44,7 @@ int PCx_TreeModel::addChild(int pid, int type, const QString &name)
     }
 
     QSqlQuery q;
-    q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom,;pid,:type)").arg(treeId));
+    q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(treeId));
     q.bindValue(":nom",name);
     q.bindValue(":pid",pid);
     q.bindValue(":type",type);
@@ -56,7 +56,25 @@ int PCx_TreeModel::addChild(int pid, int type, const QString &name)
         die();
     }
 
+    //Also add an item to the model
+    if(pidNodeIndex.isValid())
+    {
+        QStandardItem *pidItem=model->itemFromIndex(pidNodeIndex);
+        QStandardItem *newitem=createItem(types->getNomType(type),name,type,q.lastInsertId().toInt());
+        pidItem->appendRow(newitem);
+    }
+
     return q.lastInsertId().toInt();
+}
+
+bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, int newType)
+{
+    Q_ASSERT(nodeIndex.isValid() && !newName.isNull()&& !newName.isEmpty() && newType>0);
+
+
+
+    return true;
+
 }
 
 
@@ -152,9 +170,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         query.exec(QString("drop table types_%1").arg(lastId.toInt()));
         die();
     }
-
     return true;
-
 }
 
 bool PCx_TreeModel::loadFromDatabase(int treeId)
@@ -196,19 +212,10 @@ bool PCx_TreeModel::updateTree()
 
     if(query.next())
     {
-        QStandardItem *trueRoot=new
-        QStandardItem(QString("%1 %2").arg(types->getNomType(query.value(3).toInt())).arg(query.value(1).toString()));
-
-        //Id of the node in database
-        trueRoot->setData(query.value(0).toInt(),Qt::UserRole+1);
-
-        //Type of node
-        trueRoot->setData(query.value(3).toInt(),Qt::UserRole+2);
+        QStandardItem *trueRoot=createItem(types->getNomType(query.value(3).toInt()),query.value(1).toString(),query.value(3).toInt(),query.value(0).toInt());
 
         root->appendRow(trueRoot);
-
-
-        createChildren(trueRoot,query.value(0).toInt());
+        createChildrenItems(trueRoot,query.value(0).toInt());
     }
     else
     {
@@ -216,11 +223,9 @@ bool PCx_TreeModel::updateTree()
         return false;
     }
     return true;
-
 }
 
-
-bool PCx_TreeModel::createChildren(QStandardItem *item,unsigned int nodeId)
+bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
 {
     Q_ASSERT(nodeId>0);
 
@@ -232,20 +237,21 @@ bool PCx_TreeModel::createChildren(QStandardItem *item,unsigned int nodeId)
     }
     while(query.next())
     {
-        QStandardItem *newitem=new QStandardItem(QString("%1 %2").arg(types->getNomType(query.value(3).toInt())).arg(query.value(1).toString()));
-
-        //Id of the node in database
-        newitem->setData(query.value(0).toInt(),Qt::UserRole+1);
-
-        //Type of node
-        newitem->setData(query.value(3).toInt(),Qt::UserRole+2);
-
+        QStandardItem *newitem=createItem(types->getNomType(query.value(3).toInt()),query.value(1).toString(),query.value(3).toInt(),query.value(0).toInt());
 
         item->appendRow(newitem);
-        createChildren(newitem,query.value(0).toInt());
+        createChildrenItems(newitem,query.value(0).toInt());
     }
     return true;
 
+}
+
+QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, int typeId, int nodeId)
+{
+    QStandardItem *newitem=new QStandardItem(QString("%1 %2").arg(typeName).arg(nodeName));
+    newitem->setData(nodeId,Qt::UserRole+1);
+    newitem->setData(typeId,Qt::UserRole+2);
+    return newitem;
 }
 
 

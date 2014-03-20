@@ -2,13 +2,8 @@
 #include "ui_dialogdisplaytree.h"
 #include "utility.h"
 #include "pcx_treemodel.h"
-#include <QTreeWidgetItem>
-#include <QSql>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlDatabase>
-#include <QComboBox>
-#include <QtSql/QSqlError>
-#include <QDebug>
+#include <QtSql>
+#include <QtGui>
 #include <QMessageBox>
 #include <QInputDialog>
 
@@ -203,18 +198,24 @@ void DialogDisplayTree::on_deleteTypeButton_clicked()
         qDebug()<<index;
         if(index.row()>-1)
         {
-            model->getTypes()->deleteType(index.data().toString());
+            model->getTypes()->deleteType(model->getTypes()->getTableModel()->record(index.row()).field("id").value().toInt());
+            //Or with string :
+            //model->getTypes()->deleteType(index.data().toString());
         }
     }
 }
 
 /*
- * Two way to access items : clicked or selected
+ * Pense-bete pour accéder aux items et aux id
 void DialogDisplayTree::on_treeView_clicked(const QModelIndex &index)
 {
     qDebug()<<"Clicked : "<<index.data().toString()<<"Id = "<<index.data(Qt::UserRole+1).toInt()<< "Type = "<<index.data(Qt::UserRole+2).toInt();
 
     qDebug()<<"Selection model : "<<ui->treeView->selectionModel()->selectedIndexes()[0].data(Qt::UserRole+1).toInt();
+
+    //Access id in listTypeView :
+    QModelIndex indexType=ui->listTypesView->currentIndex();
+    qDebug()<<"Type selected ID : "<<model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
 }*/
 
 void DialogDisplayTree::on_addNodeButton_clicked()
@@ -224,12 +225,37 @@ void DialogDisplayTree::on_addNodeButton_clicked()
     if(!selection.isEmpty())
     {
         int selectedId=selection[0].data(Qt::UserRole+1).toInt();
-        qDebug()<<"Selected Id : "<<selectedId;
+        qDebug()<<"Node Selected Id : "<<selectedId;
 
+        QModelIndex indexType=ui->listTypesView->currentIndex();
+        if(indexType.row()<0)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez le type de l'élément à ajouter dans la zone de droite"));
+            return;
+        }
 
+        int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
 
+        qDebug()<<"Type selected ID : "<<selectedTypeId;
 
+        bool ok;
+        QString text;
+
+        do
+        {
+            text=QInputDialog::getText(this,tr("Nouveau noeud"), tr("Donnez un nom au nouveau noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok);
+
+        }while(ok && text.isEmpty());
+
+        if(ok)
+        {
+            model->addChild(selectedId,selectedTypeId,text,selection[0]);
+        }
 
     }
-
+    else
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez d'abord le noeud père dans l'arbre"));
+        return;
+    }
 }

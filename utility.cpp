@@ -8,7 +8,6 @@
 void die(int retcode)
 {
     QSqlDatabase::database().close();
-    qDebug()<<"DB Closed on die";
     QApplication::instance()->exit(retcode);
     exit(retcode);
 }

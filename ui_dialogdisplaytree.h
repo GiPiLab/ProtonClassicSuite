@@ -47,7 +47,7 @@ public:
         if (DialogDisplayTree->objectName().isEmpty())
             DialogDisplayTree->setObjectName(QStringLiteral("DialogDisplayTree"));
         DialogDisplayTree->setWindowModality(Qt::NonModal);
-        DialogDisplayTree->resize(729, 339);
+        DialogDisplayTree->resize(522, 324);
         verticalLayout = new QVBoxLayout(DialogDisplayTree);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);

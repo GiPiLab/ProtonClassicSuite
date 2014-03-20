@@ -5,6 +5,7 @@
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QList>
+#include <QModelIndex>
 #include <QString>
 #include <QtGlobal>
 #include <QSqlTableModel>
@@ -26,7 +27,8 @@ public:
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
 
-    int addChild(int pid,int type,const QString &name);
+    int addChild(int pid,  int type, const QString &name, QModelIndex &pidNodeIndex);
+    bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, int newType);
 
     static bool addNewTree(const QString &name);
     bool loadFromDatabase(int treeId);
@@ -43,8 +45,8 @@ private:
     bool finished;
     QString treeName;
     QString creationTime;
-    bool createChildren(QStandardItem *item, unsigned int nodeId);
-
+    bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
+    QStandardItem *createItem(const QString &typeName,const QString &nodeName,int typeId,int nodeId);
 };
 
 #endif // PCX_TREEMODEL_H
