@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_DialogDisplayTree_t {
-    QByteArrayData data[13];
-    char stringdata[283];
+    QByteArrayData data[14];
+    char stringdata[311];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -41,7 +41,8 @@ QT_MOC_LITERAL(8, 150, 24),
 QT_MOC_LITERAL(9, 175, 27),
 QT_MOC_LITERAL(10, 203, 24),
 QT_MOC_LITERAL(11, 228, 27),
-QT_MOC_LITERAL(12, 256, 25)
+QT_MOC_LITERAL(12, 256, 25),
+QT_MOC_LITERAL(13, 282, 27)
     },
     "DialogDisplayTree\0on_remplirButton_clicked\0"
     "\0on_comboBox_currentIndexChanged\0index\0"
@@ -52,6 +53,7 @@ QT_MOC_LITERAL(12, 256, 25)
     "on_addNodeButton_clicked\0"
     "on_modifyNodeButton_clicked\0"
     "on_treeView_doubleClicked\0"
+    "on_deleteNodeButton_clicked\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -61,7 +63,7 @@ static const uint qt_meta_data_DialogDisplayTree[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -69,16 +71,17 @@ static const uint qt_meta_data_DialogDisplayTree[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   64,    2, 0x08,
-       3,    1,   65,    2, 0x08,
-       5,    0,   68,    2, 0x08,
-       6,    0,   69,    2, 0x08,
-       7,    0,   70,    2, 0x08,
-       8,    0,   71,    2, 0x08,
-       9,    0,   72,    2, 0x08,
-      10,    0,   73,    2, 0x08,
-      11,    0,   74,    2, 0x08,
-      12,    1,   75,    2, 0x08,
+       1,    0,   69,    2, 0x08,
+       3,    1,   70,    2, 0x08,
+       5,    0,   73,    2, 0x08,
+       6,    0,   74,    2, 0x08,
+       7,    0,   75,    2, 0x08,
+       8,    0,   76,    2, 0x08,
+       9,    0,   77,    2, 0x08,
+      10,    0,   78,    2, 0x08,
+      11,    0,   79,    2, 0x08,
+      12,    1,   80,    2, 0x08,
+      13,    0,   83,    2, 0x08,
 
  // slots: parameters
     QMetaType::Void,
@@ -91,6 +94,7 @@ static const uint qt_meta_data_DialogDisplayTree[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QModelIndex,    4,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -110,6 +114,7 @@ void DialogDisplayTree::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
         case 7: _t->on_addNodeButton_clicked(); break;
         case 8: _t->on_modifyNodeButton_clicked(); break;
         case 9: _t->on_treeView_doubleClicked((*reinterpret_cast< const QModelIndex(*)>(_a[1]))); break;
+        case 10: _t->on_deleteNodeButton_clicked(); break;
         default: ;
         }
     }
@@ -140,13 +145,13 @@ int DialogDisplayTree::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

@@ -69,8 +69,8 @@ public:
         treeView = new QTreeView(DialogDisplayTree);
         treeView->setObjectName(QStringLiteral("treeView"));
         treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        treeView->setProperty("showDropIndicator", QVariant(false));
-        treeView->setRootIsDecorated(false);
+        treeView->setDragDropMode(QAbstractItemView::InternalMove);
+        treeView->setDefaultDropAction(Qt::MoveAction);
         treeView->header()->setVisible(false);
 
         gridLayout->addWidget(treeView, 1, 0, 1, 3);

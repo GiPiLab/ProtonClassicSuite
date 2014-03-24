@@ -9,19 +9,20 @@
 #include <QString>
 #include <QtGlobal>
 #include <QSqlTableModel>
+#include <QMimeData>
 
 
-class PCx_TreeModel
+class PCx_TreeModel:public QStandardItemModel
 {
+
 public:
-    PCx_TreeModel();
+    PCx_TreeModel(QObject *parent=0);
     virtual ~PCx_TreeModel();
 
     int getTreeId(){return treeId;}
     bool isFinished(){return finished;}
     QString & getName(){return treeName;}
     QDateTime getCreationTime();
-    QStandardItemModel * getModel(){return model;}
     Types * getTypes(){return types;}
 
     void setName(const QString & name){treeName=name;}
@@ -30,14 +31,19 @@ public:
     int addNode(int pid,  int type, const QString &name, QModelIndex &pidNodeIndex);
     bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, int newType);
 
+    bool deleteNode(const QModelIndex &nodeIndex);
+
     static bool addNewTree(const QString &name);
     bool loadFromDatabase(int treeId);
     bool loadFromDatabase(const QString & treeName);
 
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+
+    void updateNodePosition(int nodeId, int newPid);
+
     bool updateTree();
 
 private:
-    QStandardItemModel * model;
     QStandardItem * root;
     Types *types;
 
@@ -45,6 +51,7 @@ private:
     bool finished;
     QString treeName;
     QString creationTime;
+
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
     QStandardItem *createItem(const QString &typeName,const QString &nodeName,int typeId,int nodeId);
 };

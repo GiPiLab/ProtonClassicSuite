@@ -74,7 +74,7 @@ void DialogDisplayTree::on_comboBox_currentIndexChanged(int index)
     model=new PCx_TreeModel();
     model->loadFromDatabase(ui->comboBox->currentData().toInt());
 
-    ui->treeView->setModel(model->getModel());
+    ui->treeView->setModel(model);
     ui->treeView->expandToDepth(1);
 
     ui->listTypesView->setModel(model->getTypes()->getTableModel());
@@ -129,7 +129,7 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
 
         ui->listTypesView->setModel(NULL);
         model->getTypes()->getTableModel()->clear();
-        model->getModel()->clear();
+        model->clear();
 
         QSqlQuery query;
 
@@ -312,4 +312,24 @@ void DialogDisplayTree::on_modifyNodeButton_clicked()
 void DialogDisplayTree::on_treeView_doubleClicked(const QModelIndex &index)
 {
     on_modifyNodeButton_clicked();
+}
+
+void DialogDisplayTree::on_deleteNodeButton_clicked()
+{
+    if(model==NULL)return;
+    QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
+
+    if(!selection.isEmpty())
+    {
+        int selectedId=selection[0].data(Qt::UserRole+1).toInt();
+        qDebug()<<"Node Selected Id : "<<selectedId;
+
+        //No modification for the root
+        if(selectedId==1)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Vous ne pouvez pas supprimer la racine de l'arbre"));
+            return;
+        }
+        //model->deleteNode(selectedId);
+    }
 }

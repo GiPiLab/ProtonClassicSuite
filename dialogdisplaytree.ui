@@ -37,11 +37,11 @@
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
-       <property name="showDropIndicator" stdset="0">
-        <bool>false</bool>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::InternalMove</enum>
        </property>
-       <property name="rootIsDecorated">
-        <bool>false</bool>
+       <property name="defaultDropAction">
+        <enum>Qt::MoveAction</enum>
        </property>
        <attribute name="headerVisible">
         <bool>false</bool>

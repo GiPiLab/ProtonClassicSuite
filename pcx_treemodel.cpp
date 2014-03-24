@@ -1,29 +1,22 @@
 #include "pcx_treemodel.h"
 #include "utility.h"
 #include "types.h"
-#include <QDateTime>
-#include <QStandardItem>
-#include <QString>
+#include <QtGui>
+#include <QtSql>
 #include <QMessageBox>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QDebug>
-#include <QHash>
 
-PCx_TreeModel::PCx_TreeModel()
+
+PCx_TreeModel::PCx_TreeModel(QObject *parent):QStandardItemModel(parent)
 {
     finished=false;
-    model=new QStandardItemModel();
     treeId=0;
-    root=model->invisibleRootItem();
+    root=this->invisibleRootItem();
     types=NULL;
 }
 
 PCx_TreeModel::~PCx_TreeModel()
 {
-    model->clear();
-    delete model;
-    model=NULL;
+    this->clear();
     delete types;
     types=NULL;
 }
@@ -74,11 +67,10 @@ int PCx_TreeModel::addNode(int pid, int type, const QString &name, QModelIndex &
     //Also add an item to the model
     if(pidNodeIndex.isValid())
     {
-        QStandardItem *pidItem=model->itemFromIndex(pidNodeIndex);
+        QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
         QStandardItem *newitem=createItem(types->getNomType(type),name,type,q.lastInsertId().toInt());
         pidItem->appendRow(newitem);
     }
-
     return q.lastInsertId().toInt();
 }
 
@@ -121,11 +113,16 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
         die();
     }
 
-    QStandardItem *item=model->itemFromIndex(nodeIndex);
+    QStandardItem *item=this->itemFromIndex(nodeIndex);
     item->setText(QString("%1 %2").arg(types->getNomType(newType)).arg(newName));
     item->setData(newType,Qt::UserRole+2);
 
     return true;
+}
+
+bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
+{
+
 }
 
 
@@ -249,37 +246,79 @@ bool PCx_TreeModel::loadFromDatabase(int treeId)
     return updateTree();
 }
 
+
+
+/*
+ * Drag and drop : uses QStandardItemModel to compute the logic with items
+ *
+ * - Check validity (no dd outside of the tree)
+ * - get DB IDs of elements
+ * - update DB
+ * - let QStandardItemModel::dropMimeData do the job with items
+ */
+bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+
+    if(!parent.isValid())
+    {
+        qDebug()<<"Hors racine";
+        return false;
+    }
+
+
+    int dragId,dropId;
+
+    dropId=parent.data(Qt::UserRole+1).toInt();
+
+    qDebug()<<"DROP ID = "<<dropId;
+
+    QByteArray encodedData=data->data("application/x-qstandarditemmodeldatalist");
+    QDataStream stream(&encodedData, QIODevice::ReadOnly);
+    int arow,acol;
+    QMap<int, QVariant> roleDataMap;
+    stream >> arow>>acol>>roleDataMap;
+
+    dragId=roleDataMap[Qt::UserRole+1].toInt();
+    qDebug()<<"DRAG ID = "<<dragId;
+    if(dragId==1)
+    {
+        qDebug()<<"NOT DRAGGING THE ROOT";
+        return false;
+    }
+
+    updateNodePosition(dragId,dropId);
+
+    return QStandardItemModel::dropMimeData(data,action,row,column,parent);
+}
+
+void PCx_TreeModel::updateNodePosition(int nodeId, int newPid)
+{
+    Q_ASSERT(nodeId>1 && newPid > 0);
+    QSqlQuery q;
+
+    q.prepare(QString("update arbre_%1 set pid=:pid where id=:id").arg(treeId));
+    q.bindValue(":pid",newPid);
+    q.bindValue(":id",nodeId);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+}
+
+
 bool PCx_TreeModel::updateTree()
 {
-    model->clear();
-    root=model->invisibleRootItem();
-    QSqlQuery query;
-    query.exec(QString("select * from arbre_%1 order by id limit 1").arg(treeId));
-    if(!query.isActive())
-    {
-        qCritical()<<query.lastError();
-        return false;
-    }
-
-    if(query.next())
-    {
-        QStandardItem *trueRoot=createItem(types->getNomType(query.value(3).toInt()),query.value(1).toString(),query.value(3).toInt(),query.value(0).toInt());
-
-        root->appendRow(trueRoot);
-        createChildrenItems(trueRoot,query.value(0).toInt());
-    }
-    else
-    {
-        qDebug()<<"Empty tree";
-        return false;
-    }
+    this->clear();
+    root=this->invisibleRootItem();
+    createChildrenItems(root,0);
     return true;
 }
 
 bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
 {
-    Q_ASSERT(nodeId>0);
-
     QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
     if(!query.isActive())
     {
@@ -304,7 +343,4 @@ QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString 
     newitem->setData(typeId,Qt::UserRole+2);
     return newitem;
 }
-
-
-
 
