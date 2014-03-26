@@ -28,12 +28,10 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QAction *actionAfficher;
-    QAction *actionEffacerTout;
-    QAction *actionOuvrir_base;
-    QAction *actionG_rer;
-    QAction *actionQuitter;
-    QAction *actionAfficher_2;
+    QAction *actionManageTree;
+    QAction *actionReset;
+    QAction *actionExit;
+    QAction *actionDisplayTree;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QMdiArea *mdiArea;
@@ -49,18 +47,14 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(701, 490);
-        actionAfficher = new QAction(MainWindow);
-        actionAfficher->setObjectName(QStringLiteral("actionAfficher"));
-        actionEffacerTout = new QAction(MainWindow);
-        actionEffacerTout->setObjectName(QStringLiteral("actionEffacerTout"));
-        actionOuvrir_base = new QAction(MainWindow);
-        actionOuvrir_base->setObjectName(QStringLiteral("actionOuvrir_base"));
-        actionG_rer = new QAction(MainWindow);
-        actionG_rer->setObjectName(QStringLiteral("actionG_rer"));
-        actionQuitter = new QAction(MainWindow);
-        actionQuitter->setObjectName(QStringLiteral("actionQuitter"));
-        actionAfficher_2 = new QAction(MainWindow);
-        actionAfficher_2->setObjectName(QStringLiteral("actionAfficher_2"));
+        actionManageTree = new QAction(MainWindow);
+        actionManageTree->setObjectName(QStringLiteral("actionManageTree"));
+        actionReset = new QAction(MainWindow);
+        actionReset->setObjectName(QStringLiteral("actionReset"));
+        actionExit = new QAction(MainWindow);
+        actionExit->setObjectName(QStringLiteral("actionExit"));
+        actionDisplayTree = new QAction(MainWindow);
+        actionDisplayTree->setObjectName(QStringLiteral("actionDisplayTree"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -95,10 +89,10 @@ public:
         menuBar->addAction(menuBases->menuAction());
         menuBar->addAction(menuArbres->menuAction());
         menuBar->addAction(menuAudits->menuAction());
-        menuBases->addAction(actionEffacerTout);
-        menuBases->addAction(actionQuitter);
-        menuArbres->addAction(actionAfficher);
-        menuAudits->addAction(actionAfficher_2);
+        menuBases->addAction(actionReset);
+        menuBases->addAction(actionExit);
+        menuArbres->addAction(actionManageTree);
+        menuArbres->addAction(actionDisplayTree);
 
         retranslateUi(MainWindow);
 
@@ -108,12 +102,10 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-        actionAfficher->setText(QApplication::translate("MainWindow", "Afficher et modifier", 0));
-        actionEffacerTout->setText(QApplication::translate("MainWindow", "&Effacer toutes les donn\303\251es", 0));
-        actionOuvrir_base->setText(QApplication::translate("MainWindow", "Ouvrir base", 0));
-        actionG_rer->setText(QApplication::translate("MainWindow", "G\303\251rer", 0));
-        actionQuitter->setText(QApplication::translate("MainWindow", "&Quitter", 0));
-        actionAfficher_2->setText(QApplication::translate("MainWindow", "Afficher", 0));
+        actionManageTree->setText(QApplication::translate("MainWindow", "&Gestion des arbres", 0));
+        actionReset->setText(QApplication::translate("MainWindow", "&Effacer toutes les donn\303\251es", 0));
+        actionExit->setText(QApplication::translate("MainWindow", "&Quitter", 0));
+        actionDisplayTree->setText(QApplication::translate("MainWindow", "&Afficher un arbre", 0));
         menuBases->setTitle(QApplication::translate("MainWindow", "&Fichiers", 0));
         menuArbres->setTitle(QApplication::translate("MainWindow", "&Arbres", 0));
         menuAudits->setTitle(QApplication::translate("MainWindow", "A&udits", 0));

@@ -1,17 +1,15 @@
 #include "pcx_treemodel.h"
 #include "utility.h"
-#include "types.h"
+#include "pcx_typemodel.h"
 #include <QtGui>
 #include <QtSql>
 #include <QMessageBox>
 
 
-PCx_TreeModel::PCx_TreeModel(QObject *parent):QStandardItemModel(parent)
+PCx_TreeModel::PCx_TreeModel(unsigned int treeId,QObject *parent):QStandardItemModel(parent)
 {
-    finished=false;
-    treeId=0;
-    root=this->invisibleRootItem();
-    types=NULL;
+    types=new PCx_TypeModel(treeId);
+    loadFromDatabase(treeId);
 }
 
 PCx_TreeModel::~PCx_TreeModel()
@@ -180,7 +178,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     }
 
     //Types associés
-    query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text not null)").arg(lastId.toInt()));
+    query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(lastId.toInt()));
 
     if(query.numRowsAffected()==-1)
     {
@@ -192,7 +190,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         die();
     }
 
-    QStringList listOfTypes=Types::getListOfDefaultTypes();
+    QStringList listOfTypes=PCx_TypeModel::getListOfDefaultTypes();
     foreach(QString oneType,listOfTypes)
     {
         query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(lastId.toInt()));
@@ -221,12 +219,11 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     return true;
 }
 
-bool PCx_TreeModel::loadFromDatabase(int treeId)
+bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
 
     QSqlQuery query;
-    types=new Types(treeId,true);
 
     query.prepare("SELECT id,nom,termine,le_timestamp from index_arbres where id=:id");
     query.bindValue(":id",treeId);

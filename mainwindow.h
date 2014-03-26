@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QMdiSubWindow>
-#include "dialogdisplaytree.h"
+#include "dialogedittree.h"
 
 namespace Ui {
 class MainWindow;
@@ -18,13 +18,13 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionAfficher_triggered();
+    void on_actionManageTree_triggered();
 
-    void on_actionEffacerTout_triggered();
+    void on_actionReset_triggered();
 
-    void on_actionQuitter_triggered();
+    void on_actionExit_triggered();
 
-    void onDdtWindowsDestroyed();
+    void onDialogEditTreeWindowsDestroyed();
 
 
 
@@ -32,7 +32,7 @@ private:
 
     Ui::MainWindow *ui;
     QMdiSubWindow *ddt;
-    DialogDisplayTree *ddtwidget;
+    DialogEditTree *dialogEditTreeWin;
 };
 
 #endif // MAINWINDOW_H

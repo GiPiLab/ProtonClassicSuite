@@ -13,18 +13,18 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
 	mainwindow.cpp \
-    dialogdisplaytree.cpp \
     utility.cpp \
     dbutils.cpp \
-    types.cpp \
-    pcx_treemodel.cpp
+    pcx_treemodel.cpp \
+    pcx_typemodel.cpp \
+    dialogedittree.cpp
 
 HEADERS  += mainwindow.h \
-    dialogdisplaytree.h \
     utility.h \
     dbutils.h \
-    types.h \
-    pcx_treemodel.h
+    pcx_treemodel.h \
+    pcx_typemodel.h \
+    dialogedittree.h
 
 FORMS    += mainwindow.ui \
-    dialogdisplaytree.ui
+    dialogedittree.ui

@@ -40,20 +40,20 @@
     <property name="title">
      <string>&amp;Fichiers</string>
     </property>
-    <addaction name="actionEffacerTout"/>
-    <addaction name="actionQuitter"/>
+    <addaction name="actionReset"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuArbres">
     <property name="title">
      <string>&amp;Arbres</string>
     </property>
-    <addaction name="actionAfficher"/>
+    <addaction name="actionManageTree"/>
+    <addaction name="actionDisplayTree"/>
    </widget>
    <widget class="QMenu" name="menuAudits">
     <property name="title">
      <string>A&amp;udits</string>
     </property>
-    <addaction name="actionAfficher_2"/>
    </widget>
    <addaction name="menuBases"/>
    <addaction name="menuArbres"/>
@@ -68,34 +68,24 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionAfficher">
+  <action name="actionManageTree">
    <property name="text">
-    <string>Afficher et modifier</string>
+    <string>&amp;Gestion des arbres</string>
    </property>
   </action>
-  <action name="actionEffacerTout">
+  <action name="actionReset">
    <property name="text">
     <string>&amp;Effacer toutes les données</string>
    </property>
   </action>
-  <action name="actionOuvrir_base">
-   <property name="text">
-    <string>Ouvrir base</string>
-   </property>
-  </action>
-  <action name="actionG_rer">
-   <property name="text">
-    <string>Gérer</string>
-   </property>
-  </action>
-  <action name="actionQuitter">
+  <action name="actionExit">
    <property name="text">
     <string>&amp;Quitter</string>
    </property>
   </action>
-  <action name="actionAfficher_2">
+  <action name="actionDisplayTree">
    <property name="text">
-    <string>Afficher</string>
+    <string>&amp;Afficher un arbre</string>
    </property>
   </action>
  </widget>

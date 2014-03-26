@@ -1,7 +1,7 @@
 #ifndef PCX_TREEMODEL_H
 #define PCX_TREEMODEL_H
 
-#include "types.h"
+#include "pcx_typemodel.h"
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QList>
@@ -16,14 +16,14 @@ class PCx_TreeModel:public QStandardItemModel
 {
 
 public:
-    PCx_TreeModel(QObject *parent=0);
+    PCx_TreeModel(unsigned int treeId, QObject *parent=0);
     virtual ~PCx_TreeModel();
 
     int getTreeId(){return treeId;}
     bool isFinished(){return finished;}
     QString & getName(){return treeName;}
     QDateTime getCreationTime();
-    Types * getTypes(){return types;}
+    PCx_TypeModel* getTypes(){return types;}
 
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
@@ -34,8 +34,6 @@ public:
     bool deleteNode(const QModelIndex &nodeIndex);
 
     static bool addNewTree(const QString &name);
-    bool loadFromDatabase(int treeId);
-    bool loadFromDatabase(const QString & treeName);
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
@@ -45,13 +43,14 @@ public:
 
 private:
     QStandardItem * root;
-    Types *types;
+    PCx_TypeModel *types;
 
     int treeId;
     bool finished;
     QString treeName;
     QString creationTime;
 
+    bool loadFromDatabase(unsigned int treeId);
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
     QStandardItem *createItem(const QString &typeName,const QString &nodeName,int typeId,int nodeId);
 };

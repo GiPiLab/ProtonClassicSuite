@@ -40,7 +40,6 @@ public:
     QComboBox *comboBox;
     QPushButton *modifyNodeButton;
     QPushButton *deleteNodeButton;
-    QPushButton *remplirButton;
 
     void setupUi(QWidget *DialogDisplayTree)
     {
@@ -130,13 +129,6 @@ public:
 
         verticalLayout->addLayout(gridLayout);
 
-        remplirButton = new QPushButton(DialogDisplayTree);
-        remplirButton->setObjectName(QStringLiteral("remplirButton"));
-        sizePolicy1.setHeightForWidth(remplirButton->sizePolicy().hasHeightForWidth());
-        remplirButton->setSizePolicy(sizePolicy1);
-
-        verticalLayout->addWidget(remplirButton);
-
 
         retranslateUi(DialogDisplayTree);
 
@@ -154,7 +146,6 @@ public:
         deleteTreeButton->setText(QApplication::translate("DialogDisplayTree", "Supprimer un arbre", 0));
         modifyNodeButton->setText(QApplication::translate("DialogDisplayTree", "Modifier noeud", 0));
         deleteNodeButton->setText(QApplication::translate("DialogDisplayTree", "Supprimer noeud", 0));
-        remplirButton->setText(QApplication::translate("DialogDisplayTree", "Al\303\251atoire", 0));
     } // retranslateUi
 
 };

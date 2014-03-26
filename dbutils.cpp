@@ -42,8 +42,6 @@ void initDb(void)
         qCritical()<<query.lastError().text();
         exit(-1);
     }
-
-
 }
 
 

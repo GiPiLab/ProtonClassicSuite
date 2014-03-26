@@ -1,5 +1,5 @@
-#include "dialogdisplaytree.h"
-#include "ui_dialogdisplaytree.h"
+#include "dialogedittree.h"
+#include "ui_dialogedittree.h"
 #include "utility.h"
 #include "pcx_treemodel.h"
 #include <QtSql>
@@ -7,62 +7,20 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
-DialogDisplayTree::DialogDisplayTree(QWidget *parent) : QWidget(parent), ui(new Ui::DialogDisplayTree)
+DialogEditTree::DialogEditTree(QWidget *parent) : QDialog(parent), ui(new Ui::DialogEditTree)
 {
     ui->setupUi(this);
     model=NULL;
     updateListOfTree();
 }
 
-DialogDisplayTree::~DialogDisplayTree()
+DialogEditTree::~DialogEditTree()
 {
     if(model!=NULL)delete model;
     delete ui;
 }
 
-
-void DialogDisplayTree::on_remplirButton_clicked()
-{
-    if(model==NULL)
-    {
-        qDebug()<<"Aucun arbre sélectionné, rien à faire";
-        return;
-    }
-    QSqlQuery query;
-
-    //Premier niveau
-     int numNodes=qrand()%20+1;
-     for(int i=0;i<numNodes;i++)
-     {
-             QString nomNode=QString("Node_%1").arg(qrand());
-             query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('%2',1,1)").arg(model->getTreeId()).arg(nomNode));
-
-             if(query.numRowsAffected()!=1)
-             {
-                 qCritical()<<query.lastError().text();
-                 die();
-             }
-     }
-
-     //Deuxieme niveau
-     int numNodes2nd=qrand()%40+3;
-     for(int i=0;i<numNodes2nd;i++)
-     {
-             QString nomNode=QString("Node2nd_%1").arg(qrand());
-             query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('%2',%3,2)").arg(model->getTreeId()).arg(nomNode).arg(2+qrand()%(numNodes-2)));
-
-             if(query.numRowsAffected()!=1)
-             {
-                 qCritical()<<query.lastError().text();
-                 die();
-             }
-     }
-
-     model->updateTree();
-     ui->treeView->expandToDepth(1);
-}
-
-void DialogDisplayTree::on_comboBox_currentIndexChanged(int index)
+void DialogEditTree::on_comboBox_currentIndexChanged(int index)
 {
     if(index==-1)return;
     if(model!=NULL)
@@ -71,18 +29,18 @@ void DialogDisplayTree::on_comboBox_currentIndexChanged(int index)
         delete model;
     }
 
-    model=new PCx_TreeModel();
-    model->loadFromDatabase(ui->comboBox->currentData().toInt());
+    model=new PCx_TreeModel(ui->comboBox->currentData().toInt());
 
     ui->treeView->setModel(model);
     ui->treeView->expandToDepth(1);
 
     ui->listTypesView->setModel(model->getTypes()->getTableModel());
     ui->listTypesView->setModelColumn(1);
-    connect(model->getTypes()->getTableModel(),SIGNAL(dataChanged(QModelIndex,QModelIndex)),this,SLOT(onTypesChanged()));
+
+    connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
 }
 
-void DialogDisplayTree::on_addTypeButton_clicked()
+void DialogEditTree::on_addTypeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -102,9 +60,10 @@ void DialogDisplayTree::on_addTypeButton_clicked()
     }
 }
 
-void DialogDisplayTree::updateListOfTree()
+void DialogEditTree::updateListOfTree()
 {
     ui->comboBox->clear();
+    bool oldstate=ui->comboBox->blockSignals(true);
 
     QSqlQuery query("select * from index_arbres");
     while(query.next())
@@ -112,10 +71,11 @@ void DialogDisplayTree::updateListOfTree()
         QString item(query.value(1).toString()+" - "+query.value(2).toString()+" - "+query.value(3).toString());
         ui->comboBox->insertItem(0,item,query.value(0).toInt());
     }
+    ui->comboBox->blockSignals(oldstate);
     ui->comboBox->setCurrentIndex(0);
 }
 
-void DialogDisplayTree::on_deleteTreeButton_clicked()
+void DialogEditTree::on_deleteTreeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -165,14 +125,14 @@ void DialogDisplayTree::on_deleteTreeButton_clicked()
     }
 }
 
-void DialogDisplayTree::onTypesChanged()
+void DialogEditTree::onTypesChanged()
 {
     qDebug()<<"Types changed !";
     model->updateTree();
     ui->treeView->expandToDepth(1);
 }
 
-void DialogDisplayTree::on_newTreeButton_clicked()
+void DialogEditTree::on_newTreeButton_clicked()
 {
     bool ok;
     QString text;
@@ -190,7 +150,7 @@ void DialogDisplayTree::on_newTreeButton_clicked()
     }
 }
 
-void DialogDisplayTree::on_deleteTypeButton_clicked()
+void DialogEditTree::on_deleteTypeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -199,15 +159,13 @@ void DialogDisplayTree::on_deleteTypeButton_clicked()
         if(index.row()>-1)
         {
             model->getTypes()->deleteType(model->getTypes()->getTableModel()->record(index.row()).field("id").value().toInt());
-            //Or with string :
-            //model->getTypes()->deleteType(index.data().toString());
         }
     }
 }
 
 /*
  * Pense-bete pour accéder aux items et aux id
-void DialogDisplayTree::on_treeView_clicked(const QModelIndex &index)
+void DialogEditTree::on_treeView_clicked(const QModelIndex &index)
 {
     qDebug()<<"Clicked : "<<index.data().toString()<<"Id = "<<index.data(Qt::UserRole+1).toInt()<< "Type = "<<index.data(Qt::UserRole+2).toInt();
 
@@ -218,7 +176,7 @@ void DialogDisplayTree::on_treeView_clicked(const QModelIndex &index)
     qDebug()<<"Type selected ID : "<<model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
 }*/
 
-void DialogDisplayTree::on_addNodeButton_clicked()
+void DialogEditTree::on_addNodeButton_clicked()
 {
     if(model==NULL)return;
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
@@ -261,7 +219,7 @@ void DialogDisplayTree::on_addNodeButton_clicked()
     }
 }
 
-void DialogDisplayTree::on_modifyNodeButton_clicked()
+void DialogEditTree::on_modifyNodeButton_clicked()
 {
     if(model==NULL)return;
 
@@ -309,12 +267,12 @@ void DialogDisplayTree::on_modifyNodeButton_clicked()
     }
 }
 
-void DialogDisplayTree::on_treeView_doubleClicked(const QModelIndex &index)
+void DialogEditTree::on_treeView_doubleClicked(const QModelIndex &index)
 {
     on_modifyNodeButton_clicked();
 }
 
-void DialogDisplayTree::on_deleteNodeButton_clicked()
+void DialogEditTree::on_deleteNodeButton_clicked()
 {
     if(model==NULL)return;
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();

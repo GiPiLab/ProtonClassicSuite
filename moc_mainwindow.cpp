@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[6];
-    char stringdata[121];
+    char stringdata[125];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,16 +30,16 @@ struct qt_meta_stringdata_MainWindow_t {
 static const qt_meta_stringdata_MainWindow_t qt_meta_stringdata_MainWindow = {
     {
 QT_MOC_LITERAL(0, 0, 10),
-QT_MOC_LITERAL(1, 11, 27),
-QT_MOC_LITERAL(2, 39, 0),
-QT_MOC_LITERAL(3, 40, 30),
-QT_MOC_LITERAL(4, 71, 26),
-QT_MOC_LITERAL(5, 98, 21)
+QT_MOC_LITERAL(1, 11, 29),
+QT_MOC_LITERAL(2, 41, 0),
+QT_MOC_LITERAL(3, 42, 24),
+QT_MOC_LITERAL(4, 67, 23),
+QT_MOC_LITERAL(5, 91, 32)
     },
-    "MainWindow\0on_actionAfficher_triggered\0"
-    "\0on_actionEffacerTout_triggered\0"
-    "on_actionQuitter_triggered\0"
-    "onDdtWindowsDestroyed\0"
+    "MainWindow\0on_actionManageTree_triggered\0"
+    "\0on_actionReset_triggered\0"
+    "on_actionExit_triggered\0"
+    "onDialogEditTreeWindowsDestroyed\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -76,10 +76,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->on_actionAfficher_triggered(); break;
-        case 1: _t->on_actionEffacerTout_triggered(); break;
-        case 2: _t->on_actionQuitter_triggered(); break;
-        case 3: _t->onDdtWindowsDestroyed(); break;
+        case 0: _t->on_actionManageTree_triggered(); break;
+        case 1: _t->on_actionReset_triggered(); break;
+        case 2: _t->on_actionExit_triggered(); break;
+        case 3: _t->onDialogEditTreeWindowsDestroyed(); break;
         default: ;
         }
     }
