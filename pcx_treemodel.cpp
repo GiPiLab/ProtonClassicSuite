@@ -26,7 +26,7 @@ QDateTime PCx_TreeModel::getCreationTime()
     return dt;
 }
 
-int PCx_TreeModel::addNode(int pid, int type, const QString &name, QModelIndex & pidNodeIndex)
+int PCx_TreeModel::addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex)
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
 
@@ -72,7 +72,7 @@ int PCx_TreeModel::addNode(int pid, int type, const QString &name, QModelIndex &
     return q.lastInsertId().toInt();
 }
 
-bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, int newType)
+bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, unsigned int newType)
 {
     Q_ASSERT(nodeIndex.isValid() && !newName.isNull()&& !newName.isEmpty() && newType>0);
     int nodeId=nodeIndex.data(Qt::UserRole+1).toInt();
@@ -120,7 +120,10 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
 
 bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
 {
-
+    unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
+    Q_ASSERT(nodeId>0);
+    this->removeRow(nodeIndex.row(),nodeIndex.parent());
+    return deleteNodeAndChildren(nodeId);
 }
 
 
@@ -331,6 +334,49 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     }
     return true;
 
+}
+
+bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
+{
+    Q_ASSERT(nodeId>0);
+    QList<unsigned int> listOfChildrens;
+    QSqlQuery q;
+    q.prepare(QString("select * from arbre_%1 where pid=:pid").arg(treeId));
+    q.bindValue(":pid",nodeId);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        return false;
+    }
+    while(q.next())
+    {
+        listOfChildrens.append(q.value(0).toUInt());
+    }
+
+    if(listOfChildrens.size()==0)
+    {
+        q.prepare(QString("delete from arbre_%1 where id=:id").arg(treeId));
+        q.bindValue(":id",nodeId);
+        q.exec();
+
+        if(q.numRowsAffected()!=1)
+        {
+            qCritical()<<q.lastError().text();
+            die();
+        }
+        return true;
+    }
+
+    else
+    {
+        foreach(unsigned int child,listOfChildrens)
+        {
+            deleteNodeAndChildren(child);
+        }
+        deleteNodeAndChildren(nodeId);
+    }
 }
 
 QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, int typeId, int nodeId)

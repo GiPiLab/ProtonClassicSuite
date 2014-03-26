@@ -63,7 +63,6 @@ void DialogEditTree::on_addTypeButton_clicked()
 void DialogEditTree::updateListOfTree()
 {
     ui->comboBox->clear();
-    bool oldstate=ui->comboBox->blockSignals(true);
 
     QSqlQuery query("select * from index_arbres");
     while(query.next())
@@ -71,8 +70,11 @@ void DialogEditTree::updateListOfTree()
         QString item(query.value(1).toString()+" - "+query.value(2).toString()+" - "+query.value(3).toString());
         ui->comboBox->insertItem(0,item,query.value(0).toInt());
     }
-    ui->comboBox->blockSignals(oldstate);
     ui->comboBox->setCurrentIndex(0);
+    if(ui->comboBox->count()==0)
+    {
+        on_newTreeButton_clicked();
+    }
 }
 
 void DialogEditTree::on_deleteTreeButton_clicked()
@@ -139,7 +141,7 @@ void DialogEditTree::on_newTreeButton_clicked()
 
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvel arbre"), tr("Nom du nouvel arbre : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this->parentWidget(),tr("Nouvel arbre"), tr("Nom du nouvel arbre : "),QLineEdit::Normal,"",&ok);
 
     }while(ok && text.isEmpty());
 
@@ -279,6 +281,7 @@ void DialogEditTree::on_deleteNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
+        //Assume only single selection
         int selectedId=selection[0].data(Qt::UserRole+1).toInt();
         qDebug()<<"Node Selected Id : "<<selectedId;
 
@@ -288,6 +291,6 @@ void DialogEditTree::on_deleteNodeButton_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Vous ne pouvez pas supprimer la racine de l'arbre"));
             return;
         }
-        //model->deleteNode(selectedId);
+        model->deleteNode(selection[0]);
     }
 }

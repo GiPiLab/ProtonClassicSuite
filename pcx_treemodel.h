@@ -28,8 +28,8 @@ public:
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
 
-    int addNode(int pid,  int type, const QString &name, QModelIndex &pidNodeIndex);
-    bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, int newType);
+    int addNode(int pid,  int type, const QString &name, const QModelIndex &pidNodeIndex);
+    bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, unsigned int newType);
 
     bool deleteNode(const QModelIndex &nodeIndex);
 
@@ -52,6 +52,7 @@ private:
 
     bool loadFromDatabase(unsigned int treeId);
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
+    bool deleteNodeAndChildren(unsigned int nodeId);
     QStandardItem *createItem(const QString &typeName,const QString &nodeName,int typeId,int nodeId);
 };
 
