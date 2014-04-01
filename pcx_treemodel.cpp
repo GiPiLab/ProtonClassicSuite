@@ -308,6 +308,25 @@ void PCx_TreeModel::updateNodePosition(int nodeId, int newPid)
     }
 }
 
+bool PCx_TreeModel::finishTree()
+{
+    Q_ASSERT(treeId>0);
+    if(this->finished==false)
+    {
+        QSqlQuery q;
+        q.prepare("update index_arbres set termine=1 where id=:id");
+        q.bindValue(":id",treeId);
+        q.exec();
+        if(q.numRowsAffected()!=1)
+        {
+            qCritical()<<q.lastError().text();
+            return false;
+        }
+        this->finished=true;
+    }
+    return true;
+}
+
 
 bool PCx_TreeModel::updateTree()
 {

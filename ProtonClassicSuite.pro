@@ -17,14 +17,17 @@ SOURCES += main.cpp\
     dbutils.cpp \
     pcx_treemodel.cpp \
     pcx_typemodel.cpp \
-    dialogedittree.cpp
+    dialogedittree.cpp \
+    dialogdisplaytree.cpp
 
 HEADERS  += mainwindow.h \
     utility.h \
     dbutils.h \
     pcx_treemodel.h \
     pcx_typemodel.h \
-    dialogedittree.h
+    dialogedittree.h \
+    dialogdisplaytree.h
 
 FORMS    += mainwindow.ui \
-    dialogedittree.ui
+    dialogedittree.ui \
+    dialogdisplaytree.ui

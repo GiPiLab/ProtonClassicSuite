@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>DialogEditTree</class>
- <widget class="QWidget" name="DialogEditTree">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
-  </property>
+ <widget class="QDialog" name="DialogEditTree">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>522</width>
+    <width>559</width>
     <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Gestion des arbres</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="3">
-      <widget class="QListView" name="listTypesView">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+     <item row="0" column="0" colspan="4">
+      <widget class="QComboBox" name="comboBox"/>
+     </item>
+     <item row="0" column="4">
+      <widget class="QToolButton" name="viewTreeButton">
+       <property name="toolTip">
+        <string>Prendre un instantané de l'arbre</string>
+       </property>
+       <property name="text">
+        <string>...</string>
        </property>
       </widget>
      </item>
@@ -45,36 +45,19 @@
        </attribute>
       </widget>
      </item>
-     <item row="2" column="3">
-      <widget class="QPushButton" name="addTypeButton">
+     <item row="1" column="3" colspan="2">
+      <widget class="QListView" name="listTypesView">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text">
-        <string>Ajouter un type</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="newTreeButton">
-       <property name="text">
-        <string>Ajouter un arbre</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QPushButton" name="deleteTypeButton">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Supprimer un type</string>
+       <property name="maximumSize">
+        <size>
+         <width>161</width>
+         <height>16777215</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -84,23 +67,6 @@
         <string>Ajouter noeud</string>
        </property>
       </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QPushButton" name="finishTreeButton">
-       <property name="text">
-        <string>Terminer un arbre</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QPushButton" name="deleteTreeButton">
-       <property name="text">
-        <string>Supprimer un arbre</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="4">
-      <widget class="QComboBox" name="comboBox"/>
      </item>
      <item row="2" column="1">
       <widget class="QPushButton" name="modifyNodeButton">
@@ -116,11 +82,71 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="newTreeButton">
+       <property name="text">
+        <string>Ajouter un arbre</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="deleteTreeButton">
+       <property name="text">
+        <string>Supprimer un arbre</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QPushButton" name="finishTreeButton">
+       <property name="text">
+        <string>Terminer un arbre</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3" colspan="2">
+      <widget class="QPushButton" name="addTypeButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Ajouter un type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3" colspan="2">
+      <widget class="QPushButton" name="deleteTypeButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Supprimer un type</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>comboBox</tabstop>
+  <tabstop>addNodeButton</tabstop>
+  <tabstop>modifyNodeButton</tabstop>
+  <tabstop>deleteNodeButton</tabstop>
+  <tabstop>newTreeButton</tabstop>
+  <tabstop>deleteTreeButton</tabstop>
+  <tabstop>finishTreeButton</tabstop>
+  <tabstop>addTypeButton</tabstop>
+  <tabstop>deleteTypeButton</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>listTypesView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

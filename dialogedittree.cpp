@@ -1,3 +1,4 @@
+#include "dialogdisplaytree.h"
 #include "dialogedittree.h"
 #include "ui_dialogedittree.h"
 #include "utility.h"
@@ -7,10 +8,11 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
-DialogEditTree::DialogEditTree(QWidget *parent) : QDialog(parent), ui(new Ui::DialogEditTree)
+DialogEditTree::DialogEditTree(QWidget *parent,QMdiArea *mdiArea) : QDialog(parent), ui(new Ui::DialogEditTree)
 {
     ui->setupUi(this);
     model=NULL;
+    this->mdiArea=mdiArea;
     updateListOfTree();
 }
 
@@ -38,6 +40,8 @@ void DialogEditTree::on_comboBox_currentIndexChanged(int index)
     ui->listTypesView->setModelColumn(1);
 
     connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
+    setReadOnly(model->isFinished());
+
 }
 
 void DialogEditTree::on_addTypeButton_clicked()
@@ -67,7 +71,15 @@ void DialogEditTree::updateListOfTree()
     QSqlQuery query("select * from index_arbres");
     while(query.next())
     {
-        QString item(query.value(1).toString()+" - "+query.value(2).toString()+" - "+query.value(3).toString());
+        QString item;
+        if(query.value(2).toBool()==true)
+        {
+            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(query.value(3).toString());
+        }
+        else
+        {
+            item=QString("%1 - %2").arg(query.value(1).toString()).arg(query.value(3).toString());
+        }
         ui->comboBox->insertItem(0,item,query.value(0).toInt());
     }
     ui->comboBox->setCurrentIndex(0);
@@ -75,6 +87,18 @@ void DialogEditTree::updateListOfTree()
     {
         on_newTreeButton_clicked();
     }
+}
+
+void DialogEditTree::setReadOnly(bool state)
+{
+    ui->deleteNodeButton->setDisabled(state);
+    ui->addNodeButton->setDisabled(state);
+    ui->addTypeButton->setDisabled(state);
+    ui->deleteTypeButton->setDisabled(state);
+    ui->finishTreeButton->setDisabled(state);
+    ui->modifyNodeButton->setDisabled(state);
+    ui->treeView->setDisabled(state);
+    ui->listTypesView->setDisabled(state);
 }
 
 void DialogEditTree::on_deleteTreeButton_clicked()
@@ -269,7 +293,7 @@ void DialogEditTree::on_modifyNodeButton_clicked()
     }
 }
 
-void DialogEditTree::on_treeView_doubleClicked(const QModelIndex &index)
+void DialogEditTree::on_treeView_doubleClicked()
 {
     on_modifyNodeButton_clicked();
 }
@@ -277,6 +301,8 @@ void DialogEditTree::on_treeView_doubleClicked(const QModelIndex &index)
 void DialogEditTree::on_deleteNodeButton_clicked()
 {
     if(model==NULL)return;
+
+
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
 
     if(!selection.isEmpty())
@@ -291,6 +317,32 @@ void DialogEditTree::on_deleteNodeButton_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Vous ne pouvez pas supprimer la racine de l'arbre"));
             return;
         }
+
+        if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment supprimer le noeud <b>%1</b> ainsi que tous ses descendants ?").arg(selection[0].data().toString()))==QMessageBox::No)
+        {
+            return;
+        }
         model->deleteNode(selection[0]);
     }
+}
+
+void DialogEditTree::on_finishTreeButton_clicked()
+{
+    if(model!=NULL)
+    {
+        if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment terminer cet arbre ? Une fois terminé, vous ne pourrez plus le modifier."))==QMessageBox::No)
+        {
+            return;
+        }
+        model->finishTree();
+        updateListOfTree();
+    }
+}
+
+void DialogEditTree::on_viewTreeButton_clicked()
+{
+    DialogDisplayTree *ddt=new DialogDisplayTree(model,this);
+    mdiArea->addSubWindow(ddt);
+    //displayTrees.append(ddt);
+    ddt->show();
 }

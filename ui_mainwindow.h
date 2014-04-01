@@ -63,8 +63,6 @@ public:
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         mdiArea = new QMdiArea(centralWidget);
         mdiArea->setObjectName(QStringLiteral("mdiArea"));
-        mdiArea->setViewMode(QMdiArea::SubWindowView);
-        mdiArea->setTabsClosable(false);
 
         horizontalLayout->addWidget(mdiArea);
 
@@ -101,7 +99,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "ProtonClassicSuite", 0));
         actionManageTree->setText(QApplication::translate("MainWindow", "&Gestion des arbres", 0));
         actionReset->setText(QApplication::translate("MainWindow", "&Effacer toutes les donn\303\251es", 0));
         actionExit->setText(QApplication::translate("MainWindow", "&Quitter", 0));

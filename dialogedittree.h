@@ -2,9 +2,12 @@
 #define DIALOGEDITTREE_H
 
 #include <QDialog>
+#include <QList>
+#include <QMdiArea>
 #include <QtSql/QSqlTableModel>
 #include <QtSql/QSqlQueryModel>
 
+#include "dialogdisplaytree.h"
 #include "pcx_treemodel.h"
 
 namespace Ui {
@@ -16,7 +19,7 @@ class DialogEditTree : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogEditTree(QWidget *parent = 0);
+    explicit DialogEditTree(QWidget *parent = 0, QMdiArea *mdiArea = 0);
     ~DialogEditTree();
 
 private slots:
@@ -37,16 +40,25 @@ private slots:
 
     void on_modifyNodeButton_clicked();
 
-    void on_treeView_doubleClicked(const QModelIndex &index);
+    void on_treeView_doubleClicked();
 
     void on_deleteNodeButton_clicked();
 
 
 
+    void on_finishTreeButton_clicked();
+
+    void on_viewTreeButton_clicked();
+
 private:
     Ui::DialogEditTree *ui;
     PCx_TreeModel *model;
+    QMdiArea *mdiArea;
+    //QList<DialogDisplayTree *> displayTrees;
+
     void updateListOfTree();
+    //Disable editing
+    void setReadOnly(bool state);
 };
 
 #endif // DIALOGEDITTREE_H

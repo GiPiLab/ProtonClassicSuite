@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QMdiSubWindow>
+#include <QList>
+#include "pcx_treemodel.h"
 #include "dialogedittree.h"
 
 namespace Ui {
@@ -26,12 +28,9 @@ private slots:
 
     void onDialogEditTreeWindowsDestroyed();
 
-
-
 private:
 
     Ui::MainWindow *ui;
-    QMdiSubWindow *ddt;
     DialogEditTree *dialogEditTreeWin;
 };
 
