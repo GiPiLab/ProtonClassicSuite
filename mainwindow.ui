@@ -41,12 +41,12 @@
      <string>&amp;Arbres</string>
     </property>
     <addaction name="actionManageTree"/>
-    <addaction name="actionDisplayTree"/>
    </widget>
    <widget class="QMenu" name="menuAudits">
     <property name="title">
      <string>A&amp;udits</string>
     </property>
+    <addaction name="actionGerer_les_audits"/>
    </widget>
    <addaction name="menuBases"/>
    <addaction name="menuArbres"/>
@@ -76,9 +76,9 @@
     <string>&amp;Quitter</string>
    </property>
   </action>
-  <action name="actionDisplayTree">
+  <action name="actionGerer_les_audits">
    <property name="text">
-    <string>&amp;Afficher un arbre</string>
+    <string>&amp;Gestion des audits</string>
    </property>
   </action>
  </widget>

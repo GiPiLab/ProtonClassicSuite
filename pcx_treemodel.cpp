@@ -19,14 +19,36 @@ PCx_TreeModel::~PCx_TreeModel()
     types=NULL;
 }
 
-QDateTime PCx_TreeModel::getCreationTime()
+QDateTime PCx_TreeModel::getCreationTime() const
 {
     //Assume sqlite CURRENT_TIMESTAMP format
     QDateTime dt(QDateTime::fromString(creationTime,"yyyy-MM-dd hh:mm:ss"));
     return dt;
 }
 
-int PCx_TreeModel::addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex)
+QHash<int, QString> PCx_TreeModel::getListOfTrees(bool finishedOnly)
+{
+    QHash<int,QString> listOfTrees;
+
+    QSqlQuery query("select * from index_arbres");
+    while(query.next())
+    {
+        QString item;
+        if(query.value(2).toBool()==true)
+        {
+            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(query.value(3).toString());
+            listOfTrees.insert(query.value(0).toInt(),item);
+        }
+        else if(finishedOnly==false)
+        {
+             item=QString("%1 - %2").arg(query.value(1).toString()).arg(query.value(3).toString());
+             listOfTrees.insert(query.value(0).toInt(),item);
+        }
+    }
+    return listOfTrees;
+}
+
+unsigned int PCx_TreeModel::addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex)
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
 
@@ -170,7 +192,6 @@ bool PCx_TreeModel::addNewTree(const QString &name)
 
     qDebug()<<"Last inserted id = "<<lastId.toInt();
 
-    //Arbre
     query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toInt()));
 
     if(query.numRowsAffected()==-1)
@@ -180,13 +201,10 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         die();
     }
 
-    //Types associés
     query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(lastId.toInt()));
 
     if(query.numRowsAffected()==-1)
     {
-        //Penser à supprimer les tables d'avant en cas d'échec pour éviter les orphelines
-
         qCritical()<<query.lastError().text();
         query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
         query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
@@ -220,6 +238,68 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         die();
     }
     return true;
+}
+
+bool PCx_TreeModel::deleteTree(unsigned int treeId)
+{
+    Q_ASSERT(treeId>0);
+
+    QSqlQuery query;
+
+    query.exec(QString("select count(*) from index_arbres where id='%1'").arg(treeId));
+    if(query.next())
+    {
+        if(query.value(0).toInt()==0)
+        {
+            qCritical()<<"Arbre inexistant !";
+            return false;
+        }
+    }
+    else
+    {
+        qCritical()<<query.lastError().text();
+        die();
+    }
+
+    query.exec(QString("delete from index_arbres where id='%1'").arg(treeId));
+    if(query.numRowsAffected()!=1)
+    {
+        qCritical()<<query.lastError().text();
+        die();
+    }
+
+
+    query.exec(QString("drop table arbre_%1").arg(treeId));
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<query.lastError().text();
+        die();
+    }
+
+    query.exec(QString("drop table types_%1").arg(treeId));
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<query.lastError().text();
+        die();
+    }
+
+    qDebug()<<"Tree "<<treeId<<" deleted.";
+    return true;
+}
+
+QString PCx_TreeModel::idTreeToName(unsigned int treeId)
+{
+    Q_ASSERT(treeId>0);
+    QSqlQuery q(QString("select * from index_arbres where id='%1'").arg(treeId));
+    if(q.next())
+    {
+        return q.value("nom").toString();
+    }
+    else
+    {
+        qDebug()<<"Missing tree";
+        return NULL;
+    }
 }
 
 bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
@@ -291,7 +371,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     return QStandardItemModel::dropMimeData(data,action,row,column,parent);
 }
 
-void PCx_TreeModel::updateNodePosition(int nodeId, int newPid)
+void PCx_TreeModel::updateNodePosition(unsigned int nodeId, unsigned int newPid)
 {
     Q_ASSERT(nodeId>1 && newPid > 0);
     QSqlQuery q;
@@ -387,7 +467,6 @@ bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
         }
         return true;
     }
-
     else
     {
         foreach(unsigned int child,listOfChildrens)
@@ -396,10 +475,12 @@ bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
         }
         deleteNodeAndChildren(nodeId);
     }
+    return true;
 }
 
-QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, int typeId, int nodeId)
+QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, unsigned int typeId, unsigned int nodeId)
 {
+    Q_ASSERT(!nodeName.isEmpty());
     QStandardItem *newitem=new QStandardItem(QString("%1 %2").arg(typeName).arg(nodeName));
     newitem->setData(nodeId,Qt::UserRole+1);
     newitem->setData(typeId,Qt::UserRole+2);

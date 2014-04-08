@@ -14,33 +14,33 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QTreeView>
-#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_DialogDisplayTree
 {
 public:
-    QVBoxLayout *verticalLayout;
-    QLabel *label;
+    QHBoxLayout *horizontalLayout;
+    QGridLayout *gridLayout;
     QTreeView *treeView;
+    QLabel *label;
+    QPushButton *printViewButton;
 
     void setupUi(QDialog *DialogDisplayTree)
     {
         if (DialogDisplayTree->objectName().isEmpty())
             DialogDisplayTree->setObjectName(QStringLiteral("DialogDisplayTree"));
         DialogDisplayTree->resize(324, 283);
-        verticalLayout = new QVBoxLayout(DialogDisplayTree);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        label = new QLabel(DialogDisplayTree);
-        label->setObjectName(QStringLiteral("label"));
-        label->setAlignment(Qt::AlignCenter);
-
-        verticalLayout->addWidget(label);
-
+        horizontalLayout = new QHBoxLayout(DialogDisplayTree);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        gridLayout = new QGridLayout();
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         treeView = new QTreeView(DialogDisplayTree);
         treeView->setObjectName(QStringLiteral("treeView"));
         treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -48,7 +48,21 @@ public:
         treeView->setSelectionMode(QAbstractItemView::NoSelection);
         treeView->setHeaderHidden(true);
 
-        verticalLayout->addWidget(treeView);
+        gridLayout->addWidget(treeView, 1, 0, 1, 2);
+
+        label = new QLabel(DialogDisplayTree);
+        label->setObjectName(QStringLiteral("label"));
+        label->setAlignment(Qt::AlignCenter);
+
+        gridLayout->addWidget(label, 0, 0, 1, 2);
+
+        printViewButton = new QPushButton(DialogDisplayTree);
+        printViewButton->setObjectName(QStringLiteral("printViewButton"));
+
+        gridLayout->addWidget(printViewButton, 2, 0, 1, 2);
+
+
+        horizontalLayout->addLayout(gridLayout);
 
 
         retranslateUi(DialogDisplayTree);
@@ -60,6 +74,7 @@ public:
     {
         DialogDisplayTree->setWindowTitle(QApplication::translate("DialogDisplayTree", "Instantan\303\251 d'arbre", 0));
         label->setText(QApplication::translate("DialogDisplayTree", "TextLabel", 0));
+        printViewButton->setText(QApplication::translate("DialogDisplayTree", "Imprimer la vue", 0));
     } // retranslateUi
 
 };

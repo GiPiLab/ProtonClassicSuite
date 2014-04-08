@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QMdiSubWindow>
 #include <QList>
-#include "pcx_treemodel.h"
+#include "dialogmanageaudits.h"
 #include "dialogedittree.h"
 
 namespace Ui {
@@ -19,6 +19,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+
 private slots:
     void on_actionManageTree_triggered();
 
@@ -28,10 +29,15 @@ private slots:
 
     void onDialogEditTreeWindowsDestroyed();
 
+    void onDialogManageAuditsWindowsDestroyed();
+
+    void on_actionGerer_les_audits_triggered();
+
 private:
 
     Ui::MainWindow *ui;
     DialogEditTree *dialogEditTreeWin;
+    DialogManageAudits *dialogManageAudits;
 };
 
 #endif // MAINWINDOW_H

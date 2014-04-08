@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql
+QT       += core gui sql printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,7 +18,9 @@ SOURCES += main.cpp\
     pcx_treemodel.cpp \
     pcx_typemodel.cpp \
     dialogedittree.cpp \
-    dialogdisplaytree.cpp
+    dialogdisplaytree.cpp \
+    dialogmanageaudits.cpp \
+    pcx_auditmodel.cpp
 
 HEADERS  += mainwindow.h \
     utility.h \
@@ -26,8 +28,11 @@ HEADERS  += mainwindow.h \
     pcx_treemodel.h \
     pcx_typemodel.h \
     dialogedittree.h \
-    dialogdisplaytree.h
+    dialogdisplaytree.h \
+    dialogmanageaudits.h \
+    pcx_auditmodel.h
 
 FORMS    += mainwindow.ui \
     dialogedittree.ui \
-    dialogdisplaytree.ui
+    dialogdisplaytree.ui \
+    dialogmanageaudits.ui

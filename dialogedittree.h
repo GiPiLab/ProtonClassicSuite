@@ -44,11 +44,12 @@ private slots:
 
     void on_deleteNodeButton_clicked();
 
-
-
     void on_finishTreeButton_clicked();
 
     void on_viewTreeButton_clicked();
+
+signals:
+    void listOfTreeChanged();
 
 private:
     Ui::DialogEditTree *ui;

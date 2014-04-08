@@ -134,9 +134,8 @@ bool PCx_TypeModel::deleteType(const QString &type)
     return deleteType(typeId);
 }
 
-bool PCx_TypeModel::deleteType(int id)
+bool PCx_TypeModel::deleteType(unsigned int id)
 {
-    if(id<0)return false;
     QSqlQuery query;
 
     query.prepare(QString("select count(*) from arbre_%1 where type=:type").arg(treeId));

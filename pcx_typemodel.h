@@ -7,17 +7,17 @@ class PCx_TypeModel:public QObject
 {
     Q_OBJECT
 public:
-    PCx_TypeModel(unsigned int treeId, QObject *parent=0);
+    explicit PCx_TypeModel(unsigned int treeId, QObject *parent=0);
     ~PCx_TypeModel();
 
-    inline QString getNomType(int id){return idTypesToNom[id];}
-    QStringList getNomTypes(){return nomTypes;}
+    QString getNomType(unsigned int id) const{return idTypesToNom[id];}
+    const QStringList &getNomTypes() const {return nomTypes;}
 
     bool addType(const QString &type);
     bool deleteType(const QString &type);
-    bool deleteType(int id);
+    bool deleteType(unsigned int id);
 
-    int getTreeId(){return treeId;}
+    unsigned int getTreeId() const{return treeId;}
     QSqlTableModel *getTableModel(){return typesTableModel;}
     QSqlQueryModel *getQueryModel(){return typesQueryModel;}
 
@@ -42,7 +42,6 @@ private:
     QStringList nomTypes;
     QSqlTableModel *typesTableModel;
     QSqlQueryModel *typesQueryModel;
-
 };
 
 #endif // PCX_TYPEMODEL_H

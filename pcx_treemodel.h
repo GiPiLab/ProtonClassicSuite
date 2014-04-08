@@ -16,34 +16,37 @@ class PCx_TreeModel:public QStandardItemModel
 {
 
 public:
-    PCx_TreeModel(unsigned int treeId, QObject *parent=0);
+    explicit PCx_TreeModel(unsigned int treeId, QObject *parent=0);
     virtual ~PCx_TreeModel();
 
-    int getTreeId(){return treeId;}
-    bool isFinished(){return finished;}
-    QString & getName(){return treeName;}
-    QDateTime getCreationTime();
-    PCx_TypeModel* getTypes(){return types;}
+    int getTreeId() const {return treeId;}
+    bool isFinished() const {return finished;}
+    const QString & getName() const {return treeName;}
+    QDateTime getCreationTime() const;
+    PCx_TypeModel* getTypes() const {return types;}
 
     void setName(const QString & name){treeName=name;}
     void finish(){finished=true;}
 
-    int addNode(int pid,  int type, const QString &name, const QModelIndex &pidNodeIndex);
+    unsigned int addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex);
     bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, unsigned int newType);
 
     bool deleteNode(const QModelIndex &nodeIndex);
 
     static bool addNewTree(const QString &name);
+    static bool deleteTree(unsigned int treeId);
+    static QString idTreeToName(unsigned int treeId);
+    static QHash<int,QString> getListOfTrees(bool finishedOnly=false);
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
-    void updateNodePosition(int nodeId, int newPid);
+    void updateNodePosition(unsigned int nodeId, unsigned int newPid);
     bool finishTree();
 
     bool updateTree();
 
 private:
-    QStandardItem * root;
+    QStandardItem *root;
     PCx_TypeModel *types;
 
     int treeId;
@@ -54,7 +57,7 @@ private:
     bool loadFromDatabase(unsigned int treeId);
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
     bool deleteNodeAndChildren(unsigned int nodeId);
-    QStandardItem *createItem(const QString &typeName,const QString &nodeName,int typeId,int nodeId);
+    QStandardItem *createItem(const QString &typeName,const QString &nodeName,unsigned int typeId,unsigned int nodeId);
 };
 
 #endif // PCX_TREEMODEL_H

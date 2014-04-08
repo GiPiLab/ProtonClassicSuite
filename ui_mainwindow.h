@@ -31,7 +31,7 @@ public:
     QAction *actionManageTree;
     QAction *actionReset;
     QAction *actionExit;
-    QAction *actionDisplayTree;
+    QAction *actionGerer_les_audits;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QMdiArea *mdiArea;
@@ -53,8 +53,8 @@ public:
         actionReset->setObjectName(QStringLiteral("actionReset"));
         actionExit = new QAction(MainWindow);
         actionExit->setObjectName(QStringLiteral("actionExit"));
-        actionDisplayTree = new QAction(MainWindow);
-        actionDisplayTree->setObjectName(QStringLiteral("actionDisplayTree"));
+        actionGerer_les_audits = new QAction(MainWindow);
+        actionGerer_les_audits->setObjectName(QStringLiteral("actionGerer_les_audits"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -90,7 +90,7 @@ public:
         menuBases->addAction(actionReset);
         menuBases->addAction(actionExit);
         menuArbres->addAction(actionManageTree);
-        menuArbres->addAction(actionDisplayTree);
+        menuAudits->addAction(actionGerer_les_audits);
 
         retranslateUi(MainWindow);
 
@@ -103,7 +103,7 @@ public:
         actionManageTree->setText(QApplication::translate("MainWindow", "&Gestion des arbres", 0));
         actionReset->setText(QApplication::translate("MainWindow", "&Effacer toutes les donn\303\251es", 0));
         actionExit->setText(QApplication::translate("MainWindow", "&Quitter", 0));
-        actionDisplayTree->setText(QApplication::translate("MainWindow", "&Afficher un arbre", 0));
+        actionGerer_les_audits->setText(QApplication::translate("MainWindow", "&Gestion des audits", 0));
         menuBases->setTitle(QApplication::translate("MainWindow", "&Fichiers", 0));
         menuArbres->setTitle(QApplication::translate("MainWindow", "&Arbres", 0));
         menuAudits->setTitle(QApplication::translate("MainWindow", "A&udits", 0));

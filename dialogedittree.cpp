@@ -68,19 +68,10 @@ void DialogEditTree::updateListOfTree()
 {
     ui->comboBox->clear();
 
-    QSqlQuery query("select * from index_arbres");
-    while(query.next())
+    QHash<int,QString> lot=PCx_TreeModel::getListOfTrees();
+    foreach(int treeId,lot.keys())
     {
-        QString item;
-        if(query.value(2).toBool()==true)
-        {
-            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(query.value(3).toString());
-        }
-        else
-        {
-            item=QString("%1 - %2").arg(query.value(1).toString()).arg(query.value(3).toString());
-        }
-        ui->comboBox->insertItem(0,item,query.value(0).toInt());
+        ui->comboBox->insertItem(0,lot[treeId],treeId);
     }
     ui->comboBox->setCurrentIndex(0);
     if(ui->comboBox->count()==0)
@@ -105,48 +96,26 @@ void DialogEditTree::on_deleteTreeButton_clicked()
 {
     if(model!=NULL)
     {
-
         if(QMessageBox::question(this,tr("Attention"),tr("Vous allez supprimer cet arbre. Cette action ne peut pas être annulée. En êtes-vous sûr ?"))==QMessageBox::No)
         {
             return;
         }
 
-        qDebug()<<"Deleting tree "<<model->getTreeId();
+        unsigned int treeId=model->getTreeId();
+        qDebug()<<"Deleting tree "<<treeId;
+
 
         ui->listTypesView->setModel(NULL);
         model->getTypes()->getTableModel()->clear();
         model->clear();
 
-        QSqlQuery query;
-
-        query.exec(QString("delete from index_arbres where id='%1'").arg(model->getTreeId()));
-        if(query.numRowsAffected()!=1)
-        {
-            qCritical()<<query.lastError().text();
-            die();
-        }
-
-
-        query.exec(QString("drop table arbre_%1").arg(model->getTreeId()));
-        if(query.numRowsAffected()==-1)
-        {
-            qCritical()<<query.lastError().text();
-            die();
-        }
-
-        query.exec(QString("drop table types_%1").arg(model->getTreeId()));
-        if(query.numRowsAffected()==-1)
-        {
-            qCritical()<<query.lastError().text();
-            die();
-        }
-
-        qDebug()<<"Tree "<<model->getTreeId()<<" deleted.";
+        PCx_TreeModel::deleteTree(treeId);
 
         updateListOfTree();
         delete model;
         model=NULL;
 
+        emit(listOfTreeChanged());
         ui->comboBox->setCurrentIndex(-1);
     }
 }
@@ -173,6 +142,7 @@ void DialogEditTree::on_newTreeButton_clicked()
     {
         PCx_TreeModel::addNewTree(text);
         updateListOfTree();
+        emit(listOfTreeChanged());
     }
 }
 
@@ -335,6 +305,7 @@ void DialogEditTree::on_finishTreeButton_clicked()
             return;
         }
         model->finishTree();
+        emit(listOfTreeChanged());
         updateListOfTree();
     }
 }

@@ -16,6 +16,9 @@ public:
     explicit DialogDisplayTree(PCx_TreeModel *treeModel, QWidget *parent = 0);
     ~DialogDisplayTree();
 
+private slots:
+    void on_printViewButton_clicked();
+
 private:
     Ui::DialogDisplayTree *ui;
     PCx_TreeModel *model;
