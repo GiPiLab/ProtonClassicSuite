@@ -2,6 +2,7 @@
 #include "ui_dialogmanageaudits.h"
 #include "pcx_treemodel.h"
 #include "pcx_auditmodel.h"
+#include "pcx_auditinfos.h"
 
 DialogManageAudits::DialogManageAudits(QWidget *parent,QMdiArea *mdiarea) :
     QDialog(parent),
@@ -9,6 +10,7 @@ DialogManageAudits::DialogManageAudits(QWidget *parent,QMdiArea *mdiarea) :
 {
     ui->setupUi(this);
     updateListOfTrees();
+    updateListOfAudits();
     this->mdiarea=mdiarea;
 
 }
@@ -59,11 +61,32 @@ void DialogManageAudits::on_addAuditButton_clicked()
         return;
     }
 
-
-
     QSet<unsigned int> annees;
     annees.insert(2002);
     annees.insert(2003);
     annees.insert(2004);
     PCx_AuditModel::addNewAudit("Toto",annees,1);
+}
+
+void DialogManageAudits::on_comboListOfAudits_currentIndexChanged(int index)
+{
+    if(index==-1)return;
+    unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
+    qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
+    PCx_AuditInfos infos(selectedAuditId);
+    if(infos.valid==true)
+    {
+        ui->labelDate->setText(infos.creationTimeLocal.toString(Qt::SystemLocaleLongDate));
+        if(infos.finished==true)
+        {
+            ui->labelFinished->setText(tr("oui"));
+        }
+        else
+        {
+            ui->labelFinished->setText(tr("non"));
+        }
+        ui->labelTree->setText(infos.attachedTreeName);
+        ui->labelYears->setText(infos.anneesString);
+    }
+
 }

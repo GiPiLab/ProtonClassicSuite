@@ -47,6 +47,7 @@
      <string>A&amp;udits</string>
     </property>
     <addaction name="actionGerer_les_audits"/>
+    <addaction name="actionSaisie_des_donnees"/>
    </widget>
    <addaction name="menuBases"/>
    <addaction name="menuArbres"/>
@@ -79,6 +80,11 @@
   <action name="actionGerer_les_audits">
    <property name="text">
     <string>&amp;Gestion des audits</string>
+   </property>
+  </action>
+  <action name="actionSaisie_des_donnees">
+   <property name="text">
+    <string>Saisie des &amp;données</string>
    </property>
   </action>
  </widget>

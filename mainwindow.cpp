@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setCentralWidget(ui->mdiArea);
     dialogEditTreeWin=NULL;
     dialogManageAudits=NULL;
+    dialogEditAudit=NULL;
 }
 
 MainWindow::~MainWindow()
@@ -69,6 +70,11 @@ void MainWindow::onDialogManageAuditsWindowsDestroyed()
     dialogManageAudits=NULL;
 }
 
+void MainWindow::onDialogEditAuditWindowsDestroyed()
+{
+    dialogEditAudit=NULL;
+}
+
 void MainWindow::on_actionGerer_les_audits_triggered()
 {
     if(dialogManageAudits==NULL)
@@ -79,4 +85,15 @@ void MainWindow::on_actionGerer_les_audits_triggered()
         connect(dialogManageAudits,SIGNAL(destroyed()),this,SLOT(onDialogManageAuditsWindowsDestroyed()));
     }
 
+}
+
+void MainWindow::on_actionSaisie_des_donnees_triggered()
+{
+    if(dialogEditAudit==NULL)
+    {
+        dialogEditAudit=new DialogEditAudit(this);
+        ui->mdiArea->addSubWindow(dialogEditAudit);
+        dialogEditAudit->show();
+        connect(dialogEditAudit,SIGNAL(destroyed()),this,SLOT(onDialogEditAuditWindowsDestroyed()));
+    }
 }

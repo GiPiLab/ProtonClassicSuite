@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[8];
-    char stringdata[198];
+    QByteArrayData data[10];
+    char stringdata[270];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -36,14 +36,18 @@ QT_MOC_LITERAL(3, 42, 24),
 QT_MOC_LITERAL(4, 67, 23),
 QT_MOC_LITERAL(5, 91, 32),
 QT_MOC_LITERAL(6, 124, 36),
-QT_MOC_LITERAL(7, 161, 35)
+QT_MOC_LITERAL(7, 161, 33),
+QT_MOC_LITERAL(8, 195, 35),
+QT_MOC_LITERAL(9, 231, 37)
     },
     "MainWindow\0on_actionManageTree_triggered\0"
     "\0on_actionReset_triggered\0"
     "on_actionExit_triggered\0"
     "onDialogEditTreeWindowsDestroyed\0"
     "onDialogManageAuditsWindowsDestroyed\0"
+    "onDialogEditAuditWindowsDestroyed\0"
     "on_actionGerer_les_audits_triggered\0"
+    "on_actionSaisie_des_donnees_triggered\0"
 };
 #undef QT_MOC_LITERAL
 
@@ -53,7 +57,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -61,14 +65,18 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   44,    2, 0x08,
-       3,    0,   45,    2, 0x08,
-       4,    0,   46,    2, 0x08,
-       5,    0,   47,    2, 0x08,
-       6,    0,   48,    2, 0x08,
-       7,    0,   49,    2, 0x08,
+       1,    0,   54,    2, 0x08,
+       3,    0,   55,    2, 0x08,
+       4,    0,   56,    2, 0x08,
+       5,    0,   57,    2, 0x08,
+       6,    0,   58,    2, 0x08,
+       7,    0,   59,    2, 0x08,
+       8,    0,   60,    2, 0x08,
+       9,    0,   61,    2, 0x08,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -89,7 +97,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->on_actionExit_triggered(); break;
         case 3: _t->onDialogEditTreeWindowsDestroyed(); break;
         case 4: _t->onDialogManageAuditsWindowsDestroyed(); break;
-        case 5: _t->on_actionGerer_les_audits_triggered(); break;
+        case 5: _t->onDialogEditAuditWindowsDestroyed(); break;
+        case 6: _t->on_actionGerer_les_audits_triggered(); break;
+        case 7: _t->on_actionSaisie_des_donnees_triggered(); break;
         default: ;
         }
     }
@@ -121,13 +131,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 8)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 6;
+        _id -= 8;
     }
     return _id;
 }

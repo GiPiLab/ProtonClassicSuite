@@ -29,19 +29,25 @@ QDateTime PCx_TreeModel::getCreationTime() const
 QHash<int, QString> PCx_TreeModel::getListOfTrees(bool finishedOnly)
 {
     QHash<int,QString> listOfTrees;
+    QDateTime dt;
 
     QSqlQuery query("select * from index_arbres");
     while(query.next())
     {
         QString item;
+
+        dt=QDateTime::fromString(query.value(3).toString(),"yyyy-MM-dd hh:mm:ss");
+        dt.setTimeSpec(Qt::UTC);
+        QDateTime dtLocal=dt.toLocalTime();
+
         if(query.value(2).toBool()==true)
         {
-            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(query.value(3).toString());
+            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
             listOfTrees.insert(query.value(0).toInt(),item);
         }
         else if(finishedOnly==false)
         {
-             item=QString("%1 - %2").arg(query.value(1).toString()).arg(query.value(3).toString());
+             item=QString("%1 - %2").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
              listOfTrees.insert(query.value(0).toInt(),item);
         }
     }

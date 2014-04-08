@@ -110,77 +110,77 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Date</string>
+           <string>Date :</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
          <widget class="QLabel" name="labelDate">
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Arbre</string>
+           <string>Arbre :</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
          <widget class="QLabel" name="labelTree">
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_7">
           <property name="text">
-           <string>Années</string>
+           <string>Années :</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
          <widget class="QLabel" name="labelYears">
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_9">
           <property name="text">
-           <string>Terminé</string>
+           <string>Terminé :</string>
           </property>
          </widget>
         </item>
         <item row="3" column="1">
          <widget class="QLabel" name="labelFinished">
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
           <property name="alignment">
-           <set>Qt::AlignCenter</set>
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item row="2" column="0" colspan="2">
-       <widget class="QPushButton" name="editAuditButton">
+       <widget class="QPushButton" name="moreInfosButton">
         <property name="text">
-         <string>Remplir audit</string>
+         <string>Plus d'infos</string>
         </property>
        </widget>
       </item>

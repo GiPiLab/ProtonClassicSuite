@@ -150,44 +150,27 @@ void PCx_AuditModel::loadFromDb(unsigned int auditId)
 QHash<int, QString> PCx_AuditModel::getListOfAudits(bool finishedOnly)
 {
     QHash<int,QString> listOfAudits;
+    QDateTime dt;
 
     QSqlQuery query("select * from index_audits");
+
     while(query.next())
     {
         QString item;
+        dt=QDateTime::fromString(query.value(5).toString(),"yyyy-MM-dd hh:mm:ss");
+        dt.setTimeSpec(Qt::UTC);
+        QDateTime dtLocal=dt.toLocalTime();
         if(query.value(4).toBool()==true)
         {
-            item=QString("%1 - %2 (audit terminé)").arg(query.value(1).toString()).arg(query.value(5).toString());
+            item=QString("%1 - %2 (audit terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
             listOfAudits.insert(query.value(0).toInt(),item);
         }
         else if(finishedOnly==false)
         {
-             item=QString("%1 - %2").arg(query.value(1).toString()).arg(query.value(5).toString());
+             item=QString("%1 - %2").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
              listOfAudits.insert(query.value(0).toInt(),item);
         }
     }
     return listOfAudits;
 }
-
-QHash<QString, QVariant> PCx_AuditModel::getAuditInfos(unsigned int auditId)
-{
-    Q_ASSERT(auditId>0);
-    QHash<QString,QVariant> infos;
-    QSqlQuery q(QString("select * from index_audits where id='%1'").arg(auditId));
-    if(q.next())
-    {
-        infos.insert("id",q.value(0));
-        infos.insert("nom",q.value(1));
-        infos.insert("nom_arbre",QVariant(PCx_TreeModel::idTreeToName(q.value(2).toUInt())));
-        infos.insert("annees",q.value(3));
-        infos.insert("termine",q.value(4));
-        QDateTime dt(QDateTime::fromString(q.value(5).toString(),"yyyy-MM-dd hh:mm:ss"));
-        infos.insert("date_creation",QVariant(dt));
-
-    }
-    return infos;
-}
-
-
-
 

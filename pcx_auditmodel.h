@@ -28,7 +28,6 @@ public:
     QSqlTableModel *getModelRI() const {return modelRI;}
 
     static QHash<int, QString> getListOfAudits(bool finishedOnly);
-    static QHash<QString,QVariant> getAuditInfos(unsigned int auditId);
 
 signals:
 

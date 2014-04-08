@@ -32,6 +32,7 @@ public:
     QAction *actionReset;
     QAction *actionExit;
     QAction *actionGerer_les_audits;
+    QAction *actionSaisie_des_donnees;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout;
     QMdiArea *mdiArea;
@@ -55,6 +56,8 @@ public:
         actionExit->setObjectName(QStringLiteral("actionExit"));
         actionGerer_les_audits = new QAction(MainWindow);
         actionGerer_les_audits->setObjectName(QStringLiteral("actionGerer_les_audits"));
+        actionSaisie_des_donnees = new QAction(MainWindow);
+        actionSaisie_des_donnees->setObjectName(QStringLiteral("actionSaisie_des_donnees"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         horizontalLayout = new QHBoxLayout(centralWidget);
@@ -91,6 +94,7 @@ public:
         menuBases->addAction(actionExit);
         menuArbres->addAction(actionManageTree);
         menuAudits->addAction(actionGerer_les_audits);
+        menuAudits->addAction(actionSaisie_des_donnees);
 
         retranslateUi(MainWindow);
 
@@ -104,6 +108,7 @@ public:
         actionReset->setText(QApplication::translate("MainWindow", "&Effacer toutes les donn\303\251es", 0));
         actionExit->setText(QApplication::translate("MainWindow", "&Quitter", 0));
         actionGerer_les_audits->setText(QApplication::translate("MainWindow", "&Gestion des audits", 0));
+        actionSaisie_des_donnees->setText(QApplication::translate("MainWindow", "Saisie des &donn\303\251es", 0));
         menuBases->setTitle(QApplication::translate("MainWindow", "&Fichiers", 0));
         menuArbres->setTitle(QApplication::translate("MainWindow", "&Arbres", 0));
         menuAudits->setTitle(QApplication::translate("MainWindow", "A&udits", 0));
