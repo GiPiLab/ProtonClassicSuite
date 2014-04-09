@@ -34,7 +34,7 @@ public:
     bool deleteNode(const QModelIndex &nodeIndex);
 
     static bool addNewTree(const QString &name);
-    static bool deleteTree(unsigned int treeId);
+    static int deleteTree(unsigned int treeId);
     static QString idTreeToName(unsigned int treeId);
     static QHash<int,QString> getListOfTrees(bool finishedOnly=false);
 

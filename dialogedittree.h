@@ -24,8 +24,6 @@ public:
 
 private slots:
 
-    void on_comboBox_currentIndexChanged(int index);
-
     void on_addTypeButton_clicked();
 
     void on_deleteTreeButton_clicked();
@@ -47,6 +45,8 @@ private slots:
     void on_finishTreeButton_clicked();
 
     void on_viewTreeButton_clicked();
+
+    void on_comboBox_activated(int index);
 
 signals:
     void listOfTreeChanged();

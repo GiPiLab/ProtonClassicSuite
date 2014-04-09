@@ -1,3 +1,5 @@
+#include <QMessageBox>
+#include <QInputDialog>
 #include "dialogmanageaudits.h"
 #include "ui_dialogmanageaudits.h"
 #include "pcx_treemodel.h"
@@ -12,12 +14,10 @@ DialogManageAudits::DialogManageAudits(QWidget *parent,QMdiArea *mdiarea) :
     updateListOfTrees();
     updateListOfAudits();
     this->mdiarea=mdiarea;
-
 }
 
 DialogManageAudits::~DialogManageAudits()
 {
-
     delete ui;
 }
 
@@ -32,6 +32,7 @@ void DialogManageAudits::updateListOfAudits()
         ui->comboListOfAudits->insertItem(0,listOfAudits[auditId],auditId);
     }
     ui->comboListOfAudits->setCurrentIndex(0);
+    this->on_comboListOfAudits_activated(0);
 }
 
 
@@ -60,15 +61,51 @@ void DialogManageAudits::on_addAuditButton_clicked()
         qDebug()<<"Pas d'arbre";
         return;
     }
+    int selectedIndex=ui->comboListOfTrees->currentIndex();
 
-    QSet<unsigned int> annees;
-    annees.insert(2002);
-    annees.insert(2003);
-    annees.insert(2004);
-    PCx_AuditModel::addNewAudit("Toto",annees,1);
+    if(selectedIndex==-1)
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez l'arbre sur lequel sera adossé l'audit"));
+        return;
+    }
+
+    unsigned int selectedTree=ui->comboListOfTrees->currentData().toUInt();
+
+    int anneeFrom=ui->spinBoxFrom->value();
+    int anneeTo=ui->spinBoxTo->value();
+
+    if(anneeFrom>=anneeTo)
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("L'audit doit porter sur au moins deux années"));
+        return;
+    }
+
+    QSet<unsigned int> years;
+    QString yearsString;
+    yearsString=QString("De %1 à %2").arg(anneeFrom).arg(anneeTo);
+    for(int i=anneeFrom;i<=anneeTo;i++)
+    {
+        years.insert(i);
+    }
+
+    bool ok;
+    QString text;
+
+    do
+    {
+        text=QInputDialog::getText(this,tr("Nouvel audit"), tr("Nom de l'audit à ajouter : "),QLineEdit::Normal,"",&ok);
+
+    }while(ok && text.isEmpty());
+
+    if(ok)
+    {
+        qDebug()<<"Add audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
+        PCx_AuditModel::addNewAudit(text,years,selectedTree);
+        updateListOfAudits();
+    }
 }
 
-void DialogManageAudits::on_comboListOfAudits_currentIndexChanged(int index)
+void DialogManageAudits::on_comboListOfAudits_activated(int index)
 {
     if(index==-1)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
@@ -86,7 +123,25 @@ void DialogManageAudits::on_comboListOfAudits_currentIndexChanged(int index)
             ui->labelFinished->setText(tr("non"));
         }
         ui->labelTree->setText(infos.attachedTreeName);
-        ui->labelYears->setText(infos.anneesString);
+        ui->labelYears->setText(infos.yearsString);
     }
-
 }
+
+void DialogManageAudits::on_deleteAuditButton_clicked()
+{
+    if(ui->comboListOfAudits->currentIndex()==-1)
+    {
+        return;
+    }
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment supprimer l'audit <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    {
+        return;
+    }
+    PCx_AuditModel::deleteAudit(ui->comboListOfAudits->currentData().toUInt());
+    updateListOfAudits();
+}
+
+
+
+
+

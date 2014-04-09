@@ -22,27 +22,6 @@ DialogEditTree::~DialogEditTree()
     delete ui;
 }
 
-void DialogEditTree::on_comboBox_currentIndexChanged(int index)
-{
-    if(index==-1)return;
-    if(model!=NULL)
-    {
-        ui->listTypesView->setModel(NULL);
-        delete model;
-    }
-
-    model=new PCx_TreeModel(ui->comboBox->currentData().toInt());
-
-    ui->treeView->setModel(model);
-    ui->treeView->expandToDepth(1);
-
-    ui->listTypesView->setModel(model->getTypes()->getTableModel());
-    ui->listTypesView->setModelColumn(1);
-
-    connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
-    setReadOnly(model->isFinished());
-
-}
 
 void DialogEditTree::on_addTypeButton_clicked()
 {
@@ -73,10 +52,15 @@ void DialogEditTree::updateListOfTree()
     {
         ui->comboBox->insertItem(0,lot[treeId],treeId);
     }
-    ui->comboBox->setCurrentIndex(0);
+
     if(ui->comboBox->count()==0)
     {
         on_newTreeButton_clicked();
+    }
+    else
+    {
+        ui->comboBox->setCurrentIndex(0);
+        on_comboBox_activated(0);
     }
 }
 
@@ -104,19 +88,26 @@ void DialogEditTree::on_deleteTreeButton_clicked()
         unsigned int treeId=model->getTreeId();
         qDebug()<<"Deleting tree "<<treeId;
 
+        int result=PCx_TreeModel::deleteTree(treeId);
 
-        ui->listTypesView->setModel(NULL);
-        model->getTypes()->getTableModel()->clear();
-        model->clear();
+        if(result==1)
+        {
+            ui->listTypesView->setModel(NULL);
+            model->getTypes()->getTableModel()->clear();
+            model->clear();
 
-        PCx_TreeModel::deleteTree(treeId);
+            updateListOfTree();
+            delete model;
+            model=NULL;
 
-        updateListOfTree();
-        delete model;
-        model=NULL;
-
-        emit(listOfTreeChanged());
-        ui->comboBox->setCurrentIndex(-1);
+            emit(listOfTreeChanged());
+            ui->comboBox->setCurrentIndex(-1);
+        }
+        else if(result==0)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe des audits liés à cet arbre. Supprimez-les d'abord"));
+            return;
+        }
     }
 }
 
@@ -316,4 +307,25 @@ void DialogEditTree::on_viewTreeButton_clicked()
     mdiArea->addSubWindow(ddt);
     //displayTrees.append(ddt);
     ddt->show();
+}
+
+void DialogEditTree::on_comboBox_activated(int index)
+{
+    if(index==-1)return;
+    if(model!=NULL)
+    {
+        ui->listTypesView->setModel(NULL);
+        delete model;
+    }
+
+    model=new PCx_TreeModel(ui->comboBox->currentData().toInt());
+
+    ui->treeView->setModel(model);
+    ui->treeView->expandToDepth(1);
+
+    ui->listTypesView->setModel(model->getTypes()->getTableModel());
+    ui->listTypesView->setModelColumn(1);
+
+    connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
+    setReadOnly(model->isFinished());
 }

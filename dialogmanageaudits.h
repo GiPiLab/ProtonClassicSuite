@@ -23,7 +23,9 @@ public slots:
 private slots:
     void on_addAuditButton_clicked();
 
-    void on_comboListOfAudits_currentIndexChanged(int index);
+    void on_comboListOfAudits_activated(int index);
+
+    void on_deleteAuditButton_clicked();
 
 private:
     Ui::DialogManageAudits *ui;

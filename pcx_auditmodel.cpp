@@ -13,22 +13,22 @@ PCx_AuditModel::~PCx_AuditModel()
 
 }
 
-bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> annees, unsigned int attachedTreeId)
+bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> years, unsigned int attachedTreeId)
 {
-    Q_ASSERT(!annees.isEmpty() && !name.isEmpty() && attachedTreeId>0);
+    Q_ASSERT(!years.isEmpty() && !name.isEmpty() && attachedTreeId>0);
 
-    QList<unsigned int> anneesList=annees.toList();
-    qSort(anneesList);
+    QList<unsigned int> yearsList=years.toList();
+    qSort(yearsList);
 
-    QString anneesString;
-    foreach(unsigned int annee,anneesList)
+    QString yearsString;
+    foreach(unsigned int annee,yearsList)
     {
-        anneesString.append(QString::number(annee));
-        anneesString.append(',');
+        yearsString.append(QString::number(annee));
+        yearsString.append(',');
     }
-    anneesString.chop(1);
+    yearsString.chop(1);
 
-    qDebug()<<"Annees string = "<<anneesString;
+    qDebug()<<"years string = "<<yearsString;
 
     QSqlQuery q;
     q.prepare("select count(*) from index_audits where nom=:nom");
@@ -63,10 +63,10 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> annees,
         qCritical()<<q.lastError().text();
         die();
     }
-    q.prepare("insert into index_audits (nom,id_arbre,annees) values (:nom,:id_arbre,:annees)");
+    q.prepare("insert into index_audits (nom,id_arbre,years) values (:nom,:id_arbre,:years)");
     q.bindValue(":nom",name);
     q.bindValue(":id_arbre",attachedTreeId);
-    q.bindValue(":annees",anneesString);
+    q.bindValue(":years",yearsString);
     q.exec();
 
     if(q.numRowsAffected()!=1)
@@ -131,6 +131,33 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> annees,
 bool PCx_AuditModel::deleteAudit(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
+    QSqlQuery q(QString("select count(*) from index_audits where id='%1'").arg(auditId));
+    q.exec();
+    if(q.next())
+    {
+        if(q.value(0).toInt()==0)
+        {
+            qCritical()<<"Audit inexistant !";
+            return false;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    q.exec(QString("delete from index_audits where id='%1'").arg(auditId));
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    q.exec(QString("drop table audit_DF_%1").arg(auditId));
+    q.exec(QString("drop table audit_RF_%1").arg(auditId));
+    q.exec(QString("drop table audit_DI_%1").arg(auditId));
+    q.exec(QString("drop table audit_RI_%1").arg(auditId));
+    qDebug()<<"Audit "<<auditId<<" supprimé";
+    return true;
 }
 
 QDateTime PCx_AuditModel::getCreationTime() const

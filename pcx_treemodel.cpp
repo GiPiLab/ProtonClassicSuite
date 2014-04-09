@@ -246,7 +246,8 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     return true;
 }
 
-bool PCx_TreeModel::deleteTree(unsigned int treeId)
+//Returns 0 if the tree is linked to an audit, -1 for a non-existant tree (should not happens) and 1 on success
+int PCx_TreeModel::deleteTree(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
 
@@ -258,7 +259,7 @@ bool PCx_TreeModel::deleteTree(unsigned int treeId)
         if(query.value(0).toInt()==0)
         {
             qCritical()<<"Arbre inexistant !";
-            return false;
+            return -1;
         }
     }
     else
@@ -266,6 +267,22 @@ bool PCx_TreeModel::deleteTree(unsigned int treeId)
         qCritical()<<query.lastError().text();
         die();
     }
+
+    query.exec(QString("select count(*) from index_audits where id_arbre='%1'").arg(treeId));
+    if(query.next())
+    {
+        if(query.value(0).toInt()>0)
+        {
+           return 0;
+        }
+    }
+    else
+    {
+        qCritical()<<query.lastError().text();
+        die();
+    }
+
+
 
     query.exec(QString("delete from index_arbres where id='%1'").arg(treeId));
     if(query.numRowsAffected()!=1)
@@ -290,7 +307,7 @@ bool PCx_TreeModel::deleteTree(unsigned int treeId)
     }
 
     qDebug()<<"Tree "<<treeId<<" deleted.";
-    return true;
+    return 1;
 }
 
 QString PCx_TreeModel::idTreeToName(unsigned int treeId)

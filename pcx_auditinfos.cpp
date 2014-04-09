@@ -15,12 +15,17 @@ PCx_AuditInfos::PCx_AuditInfos(unsigned int auditId)
         name=q.value(1).toString();
         attachedTreeId=q.value(2).toUInt();
         attachedTreeName=PCx_TreeModel::idTreeToName(attachedTreeId);
-        anneesString=q.value(3).toString();
-        anneesString.replace(',',", ");
-        QStringList anneesSplitted=anneesString.split(',');
-        foreach (QString uneAnnee, anneesSplitted) {
-            annees.insert(uneAnnee.toUInt());
+        yearsString=q.value(3).toString();
+        QStringList yearsSplitted=yearsString.split(',');
+
+        QList<unsigned int> yearsTemp;
+        foreach (QString uneAnnee, yearsSplitted) {
+            yearsTemp.append(uneAnnee.toUInt());
         }
+        qSort(yearsTemp);
+        yearsString=QString("%1 - %2").arg(yearsTemp.first()).arg(yearsTemp.last());
+        years=yearsTemp.toSet();
+
         finished=q.value(4).toBool();
         creationTimeUTC=QDateTime::fromString(q.value(5).toString(),"yyyy-MM-dd hh:mm:ss");
         creationTimeUTC.setTimeSpec(Qt::UTC);

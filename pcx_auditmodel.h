@@ -13,14 +13,14 @@ public:
     explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0);
     virtual ~PCx_AuditModel();
 
-    static bool addNewAudit(const QString &name, QSet<unsigned int> annees, unsigned int attachedTreeId);
+    static bool addNewAudit(const QString &name, QSet<unsigned int> years, unsigned int attachedTreeId);
     static bool deleteAudit(unsigned int auditId);
 
     unsigned int getAuditId() const{return auditId;}
     bool isFinished() const{return finished;}
     const QString &getName() const{return name;}
     QDateTime getCreationTime() const;
-    const QSet<unsigned int> &getAnnees()const {return annees;}
+    const QSet<unsigned int> &getYears()const {return years;}
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     QSqlTableModel *getModelDF() const {return modelDF;}
     QSqlTableModel *getModelDI() const {return modelDI;}
@@ -38,7 +38,7 @@ private:
     bool finished;
     QString name;
     QString creationTime;
-    QSet<unsigned int> annees;
+    QSet<unsigned int> years;
     PCx_TreeModel *attachedTree;
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
     void loadFromDb(unsigned int auditId);

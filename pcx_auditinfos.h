@@ -11,8 +11,9 @@ public:
     unsigned int id;
     QString attachedTreeName;
     unsigned int attachedTreeId;
-    QSet<unsigned int> annees;
-    QString anneesString;
+    QSet<unsigned int> years;
+
+    QString yearsString;
     bool finished;
 
     QDateTime creationTimeUTC;
