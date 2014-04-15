@@ -2,6 +2,7 @@
 #include "ui_dialogeditaudit.h"
 #include "pcx_auditmodel.h"
 #include "pcx_auditinfos.h"
+#include "auditdatadelegate.h"
 
 DialogEditAudit::DialogEditAudit(QWidget *parent) :
     QDialog(parent),
@@ -57,6 +58,7 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewRF->setEnabled(false);
     ui->tableViewDI->setEnabled(false);
     ui->tableViewRI->setEnabled(false);
+    ui->tableViewDF->setItemDelegate(new auditDataDelegate());
 }
 
 void DialogEditAudit::on_treeView_activated(const QModelIndex &index)
