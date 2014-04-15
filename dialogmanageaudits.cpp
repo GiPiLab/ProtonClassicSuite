@@ -107,7 +107,7 @@ void DialogManageAudits::on_addAuditButton_clicked()
 
 void DialogManageAudits::on_comboListOfAudits_activated(int index)
 {
-    if(index==-1)return;
+    if(index==-1 || ui->comboListOfAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
     qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
     PCx_AuditInfos infos(selectedAuditId);
@@ -124,6 +124,7 @@ void DialogManageAudits::on_comboListOfAudits_activated(int index)
         }
         ui->labelTree->setText(infos.attachedTreeName);
         ui->labelYears->setText(infos.yearsString);
+        ui->labelName->setText(infos.name);
     }
 }
 

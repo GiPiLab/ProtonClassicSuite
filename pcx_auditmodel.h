@@ -21,6 +21,7 @@ public:
     const QString &getName() const{return name;}
     QDateTime getCreationTime() const;
     const QSet<unsigned int> &getYears()const {return years;}
+
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     QSqlTableModel *getModelDF() const {return modelDF;}
     QSqlTableModel *getModelDI() const {return modelDI;}
@@ -41,7 +42,7 @@ private:
     QSet<unsigned int> years;
     PCx_TreeModel *attachedTree;
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
-    void loadFromDb(unsigned int auditId);
+    bool loadFromDb(unsigned int auditId);
 };
 
 #endif // PCX_AUDITMODEL_H

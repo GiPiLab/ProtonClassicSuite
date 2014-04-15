@@ -5,12 +5,37 @@
 PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent) :
     QObject(parent)
 {
-
+    attachedTree=NULL;
+    modelDF=NULL;
+    modelDI=NULL;
+    modelRI=NULL;
+    modelRF=NULL;
+    loadFromDb(auditId);
 }
 
 PCx_AuditModel::~PCx_AuditModel()
 {
-
+    if(modelDF!=NULL)
+    {
+        modelDF->clear();
+        delete modelDF;
+    }
+    if(modelRF!=NULL)
+    {
+        modelRF->clear();
+        delete modelRF;
+    }
+    if(modelDI!=NULL)
+    {
+        modelDI->clear();
+        delete modelDI;
+    }
+    if(modelRI!=NULL)
+    {
+        modelRI->clear();
+        delete modelRI;
+    }
+    delete attachedTree;
 }
 
 bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> years, unsigned int attachedTreeId)
@@ -63,15 +88,18 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> years, 
         qCritical()<<q.lastError().text();
         die();
     }
-    q.prepare("insert into index_audits (nom,id_arbre,years) values (:nom,:id_arbre,:years)");
+
+    QSqlDatabase::database().transaction();
+    q.prepare("insert into index_audits (nom,id_arbre,annees) values (:nom,:id_arbre,:annees)");
     q.bindValue(":nom",name);
     q.bindValue(":id_arbre",attachedTreeId);
-    q.bindValue(":years",yearsString);
+    q.bindValue(":annees",yearsString);
     q.exec();
 
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError().text();
+        QSqlDatabase::database().rollback();
         die();
     }
 
@@ -79,53 +107,114 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> years, 
     if(!lastId.isValid())
     {
         qCritical()<<"Problème d'id, vérifiez la consistance de la base";
+        QSqlDatabase::database().rollback();
         die();
     }
+    unsigned int uLastId=lastId.toUInt();
 
-    q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real not null, realises real not null, engages real not null, disponibles real not null)").arg(lastId.toInt()));
+    q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError().text();
-        q.exec(QString("delete from index_audits where id=%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
         die();
     }
 
-    q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real not null, realises real not null, engages real not null, disponibles real not null)").arg(lastId.toInt()));
+    q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError().text();
-        q.exec(QString("delete from index_audits where id=%1").arg(lastId.toInt()));
-        q.exec(QString("drop table audit_DF_%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
+        //q.exec(QString("drop table audit_DF_%1").arg(uLastId));
         die();
     }
 
-
-    q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real not null, realises real not null, engages real not null, disponibles real not null)").arg(lastId.toInt()));
+    q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError().text();
-        q.exec(QString("delete from index_audits where id=%1").arg(lastId.toInt()));
-        q.exec(QString("drop table audit_DF_%1").arg(lastId.toInt()));
-        q.exec(QString("drop table audit_RF_%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
+        //q.exec(QString("drop table audit_DF_%1").arg(uLastId));
+        //q.exec(QString("drop table audit_RF_%1").arg(uLastId));
         die();
     }
 
-    q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real not null, realises real not null, engages real not null, disponibles real not null)").arg(lastId.toInt()));
+    q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError().text();
-        q.exec(QString("delete from index_audits where id=%1").arg(lastId.toInt()));
-        q.exec(QString("drop table audit_DF_%1").arg(lastId.toInt()));
-        q.exec(QString("drop table audit_RF_%1").arg(lastId.toInt()));
-        q.exec(QString("drop table audit_DI_%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
+        //q.exec(QString("drop table audit_DF_%1").arg(uLastId));
+        //q.exec(QString("drop table audit_RF_%1").arg(uLastId));
+        //q.exec(QString("drop table audit_DI_%1").arg(uLastId));
         die();
     }
+
+    //Populate tables with years for each node of the attached tree
+
+    QList<unsigned int> nodes=PCx_TreeModel::getNodesId(attachedTreeId);
+    qDebug()<<"Nodes ids = "<<nodes;
+
+    foreach(unsigned int node,nodes)
+    {
+        foreach(unsigned int annee,yearsList)
+        {
+            q.prepare(QString("insert into audit_DF_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
+            q.bindValue(":idnode",node);
+            q.bindValue(":annee",annee);
+            q.exec();
+            if(q.numRowsAffected()==-1)
+            {
+                qCritical()<<q.lastError().text();
+                QSqlDatabase::database().rollback();
+                die();
+            }
+
+            q.prepare(QString("insert into audit_RF_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
+            q.bindValue(":idnode",node);
+            q.bindValue(":annee",annee);
+            q.exec();
+            if(q.numRowsAffected()==-1)
+            {
+                qCritical()<<q.lastError().text();
+                QSqlDatabase::database().rollback();
+                die();
+            }
+
+            q.prepare(QString("insert into audit_DI_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
+            q.bindValue(":idnode",node);
+            q.bindValue(":annee",annee);
+            q.exec();
+            if(q.numRowsAffected()==-1)
+            {
+                qCritical()<<q.lastError().text();
+                QSqlDatabase::database().rollback();
+                die();
+            }
+
+            q.prepare(QString("insert into audit_RI_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
+            q.bindValue(":idnode",node);
+            q.bindValue(":annee",annee);
+            q.exec();
+            if(q.numRowsAffected()==-1)
+            {
+                qCritical()<<q.lastError().text();
+                QSqlDatabase::database().rollback();
+                die();
+            }
+        }
+    }
+    QSqlDatabase::database().commit();
+
     return true;
-
 }
 
 bool PCx_AuditModel::deleteAudit(unsigned int auditId)
@@ -146,16 +235,44 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
         qCritical()<<q.lastError().text();
         die();
     }
+
+    QSqlDatabase::database().transaction();
     q.exec(QString("delete from index_audits where id='%1'").arg(auditId));
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError().text();
+        QSqlDatabase::database().rollback();
         die();
     }
     q.exec(QString("drop table audit_DF_%1").arg(auditId));
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError().text();
+        QSqlDatabase::database().rollback();
+        die();
+    }
     q.exec(QString("drop table audit_RF_%1").arg(auditId));
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError().text();
+        QSqlDatabase::database().rollback();
+        die();
+    }
     q.exec(QString("drop table audit_DI_%1").arg(auditId));
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError().text();
+        QSqlDatabase::database().rollback();
+        die();
+    }
     q.exec(QString("drop table audit_RI_%1").arg(auditId));
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError().text();
+        QSqlDatabase::database().rollback();
+        die();
+    }
+    QSqlDatabase::database().commit();
     qDebug()<<"Audit "<<auditId<<" supprimé";
     return true;
 }
@@ -167,10 +284,68 @@ QDateTime PCx_AuditModel::getCreationTime() const
     return dt;
 }
 
-void PCx_AuditModel::loadFromDb(unsigned int auditId)
+bool PCx_AuditModel::loadFromDb(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
+    QSqlQuery q;
+    q.prepare("select * from index_audits where id=:id limit 1");
+    q.bindValue(":id",auditId);
+    q.exec();
+    if(q.next())
+    {
+        unsigned int attachedTreeId=q.value("id_arbre").toUInt();
+        qDebug()<<"Attached tree ID = "<<attachedTreeId;
+        if(attachedTree!=NULL)
+        {
+            delete attachedTree;
+        }
+        attachedTree=new PCx_TreeModel(attachedTreeId);
+        if(modelDF!=NULL)
+        {
+            modelDF->clear();
+            delete modelDF;
+        }
+        if(modelRF!=NULL)
+        {
+            modelRF->clear();
+            delete modelRF;
+        }
+        if(modelDI!=NULL)
+        {
+            modelDI->clear();
+            delete modelDI;
+        }
+        if(modelRI!=NULL)
+        {
+            modelRI->clear();
+            delete modelRI;
+        }
+        modelDF=new QSqlTableModel();
+        modelDF->setTable(QString("audit_DF_%1").arg(auditId));
+        modelDF->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelDF->select();
 
+        modelDI=new QSqlTableModel();
+        modelDI->setTable(QString("audit_DI_%1").arg(auditId));
+        modelDI->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelDI->select();
+
+        modelRI=new QSqlTableModel();
+        modelRI->setTable(QString("audit_RI_%1").arg(auditId));
+        modelRI->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelRI->select();
+
+        modelRF=new QSqlTableModel();
+        modelRF->setTable(QString("audit_RF_%1").arg(auditId));
+        modelRF->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelRF->select();
+    }
+    else
+    {
+        qCritical()<<"Invalid audit ID";
+        die();
+    }
+    return true;
 }
 
 

@@ -38,8 +38,6 @@ private slots:
 
     void on_modifyNodeButton_clicked();
 
-    void on_treeView_doubleClicked();
-
     void on_deleteNodeButton_clicked();
 
     void on_finishTreeButton_clicked();
@@ -47,6 +45,8 @@ private slots:
     void on_viewTreeButton_clicked();
 
     void on_comboBox_activated(int index);
+
+    void on_treeView_activated(const QModelIndex &index);
 
 signals:
     void listOfTreeChanged();

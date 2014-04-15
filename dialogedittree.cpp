@@ -254,11 +254,6 @@ void DialogEditTree::on_modifyNodeButton_clicked()
     }
 }
 
-void DialogEditTree::on_treeView_doubleClicked()
-{
-    on_modifyNodeButton_clicked();
-}
-
 void DialogEditTree::on_deleteNodeButton_clicked()
 {
     if(model==NULL)return;
@@ -328,4 +323,10 @@ void DialogEditTree::on_comboBox_activated(int index)
 
     connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
     setReadOnly(model->isFinished());
+}
+
+void DialogEditTree::on_treeView_activated(const QModelIndex &index)
+{
+    Q_UNUSED(index);
+    on_modifyNodeButton_clicked();
 }

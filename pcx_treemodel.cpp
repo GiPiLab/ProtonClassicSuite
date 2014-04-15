@@ -166,7 +166,6 @@ bool PCx_TreeModel::addNewTree(const QString &name)
 
     if(query.next())
     {
-        qDebug()<<query.value(0).toInt();
         if(query.value(0).toInt()>0)
         {
             QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
@@ -178,7 +177,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         qCritical()<<query.lastError().text();
         die();
     }
-
+    QSqlDatabase::database().transaction();
     query.prepare("insert into index_arbres (nom) values(:nom)");
     query.bindValue(":nom",name);
     query.exec();
@@ -186,6 +185,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     if(query.numRowsAffected()!=1)
     {
         qCritical()<<query.lastError().text();
+        QSqlDatabase::database().rollback();
         die();
     }
 
@@ -193,57 +193,135 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     if(!lastId.isValid())
     {
         qCritical()<<"Problème d'id, vérifiez la consistance de la base";
+        QSqlDatabase::database().rollback();
         die();
     }
 
-    qDebug()<<"Last inserted id = "<<lastId.toInt();
+    qDebug()<<"Last inserted id = "<<lastId.toUInt();
 
-    query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toInt()));
+    query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toUInt()));
 
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError().text();
-        query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
         die();
     }
 
-    query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(lastId.toInt()));
+    query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(lastId.toUInt()));
 
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError().text();
-        query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
-        query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
+        //query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
         die();
     }
 
     QStringList listOfTypes=PCx_TypeModel::getListOfDefaultTypes();
     foreach(QString oneType,listOfTypes)
     {
-        query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(lastId.toInt()));
+        query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(lastId.toUInt()));
         query.bindValue(":nomtype",oneType);
         query.exec();
         if(query.numRowsAffected()!=1)
         {
             qCritical()<<query.lastError().text();
-            query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
-            query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
-            query.exec(QString("drop table types_%1").arg(lastId.toInt()));
+            QSqlDatabase::database().rollback();
+            //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
+            //query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
+            //query.exec(QString("drop table types_%1").arg(lastId.toInt()));
             die();
         }
     }
 
     //Racine
-    query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toInt()));
+    query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toUInt()));
     if(query.numRowsAffected()!=1)
     {
         qCritical()<<query.lastError().text();
-        query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
-        query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
-        query.exec(QString("drop table types_%1").arg(lastId.toInt()));
+        QSqlDatabase::database().rollback();
+        //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
+        //query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
+        //query.exec(QString("drop table types_%1").arg(lastId.toInt()));
         die();
     }
+    QSqlDatabase::database().commit();
+    qDebug()<<"Tree "<<lastId.toUInt()<< " inserted";
+
     return true;
+}
+
+QList<unsigned int> PCx_TreeModel::getNodesId() const
+{
+    return PCx_TreeModel::getNodesId(this->treeId);
+}
+
+QList<unsigned int> PCx_TreeModel::getLeavesId() const
+{
+    QList<unsigned int> leaves;
+    QList<unsigned int> nodes;
+    nodes=getNodesId();
+    foreach (unsigned int node, nodes) {
+        if(isLeaf(node))
+        {
+            leaves.append(node);
+        }
+    }
+    qDebug()<<"Leaves for tree "<<treeId<< " = "<<leaves;
+    return leaves;
+}
+
+QList<unsigned int> PCx_TreeModel::getNodesId(unsigned int treeId)
+{
+    Q_ASSERT(treeId>0);
+    QSqlQuery q;
+    QList<unsigned int> nodeIds;
+    q.exec(QString("select id from arbre_%1").arg(treeId));
+    while(q.next())
+    {
+        nodeIds.append(q.value(0).toUInt());
+    }
+    return nodeIds;
+
+}
+
+QList<unsigned int> PCx_TreeModel::getNonLeavesId() const
+{
+    QList<unsigned int> nonleaves;
+    QList<unsigned int> nodes;
+    nodes=getNodesId();
+    foreach (unsigned int node, nodes) {
+        if(!isLeaf(node))
+        {
+            nonleaves.append(node);
+        }
+    }
+    qDebug()<<"Non-leaves for tree "<<treeId<< " = "<<nonleaves;
+    return nonleaves;
+}
+
+bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
+{
+    Q_ASSERT(nodeId>0);
+    QSqlQuery q;
+    q.prepare(QString("select count(*) from arbre_%1 where pid=:nodeid").arg(treeId));
+    q.bindValue(":nodeid",nodeId);
+    q.exec();
+    if(q.next())
+    {
+        if(q.value(0).toInt()==0)
+            return true;
+        else return false;
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    return false;
 }
 
 //Returns 0 if the tree is linked to an audit, -1 for a non-existant tree (should not happens) and 1 on success
@@ -283,11 +361,12 @@ int PCx_TreeModel::deleteTree(unsigned int treeId)
     }
 
 
-
+    QSqlDatabase::database().transaction();
     query.exec(QString("delete from index_arbres where id='%1'").arg(treeId));
     if(query.numRowsAffected()!=1)
     {
         qCritical()<<query.lastError().text();
+        QSqlDatabase::database().rollback();
         die();
     }
 
@@ -296,6 +375,7 @@ int PCx_TreeModel::deleteTree(unsigned int treeId)
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError().text();
+        QSqlDatabase::database().rollback();
         die();
     }
 
@@ -303,8 +383,11 @@ int PCx_TreeModel::deleteTree(unsigned int treeId)
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError().text();
+        QSqlDatabase::database().rollback();
         die();
     }
+
+    QSqlDatabase::database().commit();
 
     qDebug()<<"Tree "<<treeId<<" deleted.";
     return 1;
@@ -349,8 +432,6 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
     return updateTree();
 }
 
-
-
 /*
  * Drag and drop : uses QStandardItemModel to compute the logic with items
  *
@@ -367,7 +448,6 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         qDebug()<<"Hors racine";
         return false;
     }
-
 
     int dragId,dropId;
 
@@ -444,7 +524,7 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
     if(!query.isActive())
     {
-        qCritical()<<query.lastError();
+        qCritical()<<query.lastError().text();
         return false;
     }
     while(query.next())

@@ -26,17 +26,17 @@ public:
     PCx_TypeModel* getTypes() const {return types;}
 
     void setName(const QString & name){treeName=name;}
-    void finish(){finished=true;}
 
     unsigned int addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex);
     bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, unsigned int newType);
 
     bool deleteNode(const QModelIndex &nodeIndex);
 
-    static bool addNewTree(const QString &name);
-    static int deleteTree(unsigned int treeId);
-    static QString idTreeToName(unsigned int treeId);
-    static QHash<int,QString> getListOfTrees(bool finishedOnly=false);
+    QList<unsigned int> getNodesId() const;
+    QList<unsigned int> getLeavesId() const;
+    static QList<unsigned int> getNodesId(unsigned int treeId);
+    QList<unsigned int> getNonLeavesId() const;
+    bool isLeaf(unsigned int nodeId) const;
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
@@ -44,6 +44,16 @@ public:
     bool finishTree();
 
     bool updateTree();
+
+
+
+
+    static bool addNewTree(const QString &name);
+    static int deleteTree(unsigned int treeId);
+    static QString idTreeToName(unsigned int treeId);
+    static QHash<int,QString> getListOfTrees(bool finishedOnly=false);
+
+
 
 private:
     QStandardItem *root;
