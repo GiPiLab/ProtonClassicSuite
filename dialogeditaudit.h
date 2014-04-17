@@ -4,12 +4,13 @@
 #include <QDialog>
 #include <QtSql>
 #include "pcx_auditmodel.h"
+#include "auditdatadelegate.h"
 
 namespace Ui {
 class DialogEditAudit;
 }
 
-class DialogEditAudit : public QDialog
+class DialogEditAudit : public QWidget
 {
     Q_OBJECT
 
@@ -26,6 +27,8 @@ private:
     Ui::DialogEditAudit *ui;
     void updateListOfAudits();
     PCx_AuditModel *auditModel;
+    auditDataDelegate *delegateDF,*delegateRF,*delegateDI,*delegateRI;
+
 };
 
 #endif // DIALOGEDITAUDIT_H

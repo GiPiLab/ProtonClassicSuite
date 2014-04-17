@@ -1,5 +1,7 @@
 #include "auditdatadelegate.h"
 #include <QtGui>
+#include <QDoubleValidator>
+#include <QLineEdit>
 
 auditDataDelegate::auditDataDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
@@ -32,20 +34,31 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
 QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    if(index.column()==2)
+    Q_UNUSED(option);
+    //No editing for Year and Disponible
+    if(index.column()==2 || index.column()==6)
     {
         return 0;
     }
-    return QStyledItemDelegate::createEditor(parent, option, index);
+    else
+    {
+        QLineEdit *lineEditor=new QLineEdit(parent);
+        QDoubleValidator *v=new QDoubleValidator(parent);
+        v->setBottom(0.0);
+        v->setNotation(QDoubleValidator::StandardNotation);
+        v->setDecimals(5);
+        lineEditor->setValidator(v);
+        return lineEditor;
+    }
 }
 
-void auditDataDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+/*void auditDataDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
     QStyledItemDelegate::setEditorData(editor, index);
-}
+}*/
 
-void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+/*void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     QStyledItemDelegate::setModelData(editor, model, index);
 
-}
+}*/

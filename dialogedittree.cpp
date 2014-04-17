@@ -8,7 +8,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
-DialogEditTree::DialogEditTree(QWidget *parent,QMdiArea *mdiArea) : QDialog(parent), ui(new Ui::DialogEditTree)
+DialogEditTree::DialogEditTree(QWidget *parent,QMdiArea *mdiArea) : QWidget(parent), ui(new Ui::DialogEditTree)
 {
     ui->setupUi(this);
     model=NULL;

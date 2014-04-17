@@ -8,7 +8,7 @@ namespace Ui {
 class DialogManageAudits;
 }
 
-class DialogManageAudits : public QDialog
+class DialogManageAudits : public QWidget
 {
     Q_OBJECT
 

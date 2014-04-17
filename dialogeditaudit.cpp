@@ -5,17 +5,37 @@
 #include "auditdatadelegate.h"
 
 DialogEditAudit::DialogEditAudit(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::DialogEditAudit)
 {
     ui->setupUi(this);
+    ui->splitter->setStretchFactor(1,1);
     auditModel=NULL;
+
+    delegateDF=new auditDataDelegate(ui->tableViewDF);
+    delegateRF=new auditDataDelegate(ui->tableViewRF);
+    delegateDI=new auditDataDelegate(ui->tableViewDI);
+    delegateRI=new auditDataDelegate(ui->tableViewRI);
+
+    ui->tableViewDF->setItemDelegate(delegateDF);
+    ui->tableViewRF->setItemDelegate(delegateRF);
+    ui->tableViewDI->setItemDelegate(delegateDI);
+    ui->tableViewRI->setItemDelegate(delegateRI);
+
     updateListOfAudits();
 }
 
 DialogEditAudit::~DialogEditAudit()
 {
     delete ui;
+    if(auditModel!=NULL)
+    {
+        delete auditModel;
+    }
+    delete(delegateDF);
+    delete(delegateRF);
+    delete(delegateDI);
+    delete(delegateRI);
 }
 
 void DialogEditAudit::updateListOfAudits()
@@ -44,21 +64,32 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     ui->treeView->setModel(auditModel->getAttachedTreeModel());
     ui->treeView->expandToDepth(1);
 
+
+
     ui->tableViewDF->setModel(auditModel->getModelDF());
     ui->tableViewDF->hideColumn(0);
     ui->tableViewDF->hideColumn(1);
     ui->tableViewRF->setModel(auditModel->getModelRF());
+    ui->tableViewRF->hideColumn(0);
+    ui->tableViewRF->hideColumn(1);
     ui->tableViewDI->setModel(auditModel->getModelDI());
+    ui->tableViewDI->hideColumn(0);
+    ui->tableViewDI->hideColumn(1);
     ui->tableViewRI->setModel(auditModel->getModelRI());
+    ui->tableViewRI->hideColumn(0);
+    ui->tableViewRI->hideColumn(1);
+
+    //Roots
     auditModel->getModelDF()->setFilter(QString("id_node=1"));
     auditModel->getModelRF()->setFilter(QString("id_node=1"));
     auditModel->getModelDI()->setFilter(QString("id_node=1"));
     auditModel->getModelRI()->setFilter(QString("id_node=1"));
+    ui->label->setText(auditModel->getAttachedTreeModel()->index(0,0).data().toString());
+
     ui->tableViewDF->setEnabled(false);
     ui->tableViewRF->setEnabled(false);
     ui->tableViewDI->setEnabled(false);
     ui->tableViewRI->setEnabled(false);
-    ui->tableViewDF->setItemDelegate(new auditDataDelegate());
 }
 
 void DialogEditAudit::on_treeView_activated(const QModelIndex &index)
@@ -76,4 +107,5 @@ void DialogEditAudit::on_treeView_activated(const QModelIndex &index)
     ui->tableViewRF->setEnabled(isLeaf);
     ui->tableViewDI->setEnabled(isLeaf);
     ui->tableViewRI->setEnabled(isLeaf);
+    ui->label->setText(index.data().toString());
 }

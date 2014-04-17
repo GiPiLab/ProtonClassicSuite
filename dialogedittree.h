@@ -14,7 +14,7 @@ namespace Ui {
 class DialogEditTree;
 }
 
-class DialogEditTree : public QDialog
+class DialogEditTree : public QWidget
 {
     Q_OBJECT
 

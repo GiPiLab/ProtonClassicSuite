@@ -44,6 +44,7 @@ QStringList PCx_TypeModel::getListOfDefaultTypes()
  */
 bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
 {
+    Q_UNUSED(bottomRight);
     bool oldState;
     QString newType=topLeft.data().toString();
     if(validateType(newType)==false)

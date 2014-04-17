@@ -7,7 +7,7 @@
 #include "pcx_auditinfos.h"
 
 DialogManageAudits::DialogManageAudits(QWidget *parent,QMdiArea *mdiarea) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::DialogManageAudits)
 {
     ui->setupUi(this);

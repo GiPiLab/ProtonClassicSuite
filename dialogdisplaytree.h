@@ -8,7 +8,7 @@ namespace Ui {
 class DialogDisplayTree;
 }
 
-class DialogDisplayTree : public QDialog
+class DialogDisplayTree : public QWidget
 {
     Q_OBJECT
 

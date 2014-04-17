@@ -322,29 +322,93 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
         }
         modelDF=new QSqlTableModel();
         modelDF->setTable(QString("audit_DF_%1").arg(auditId));
+        modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+        modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+        modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+        modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
         modelDF->setEditStrategy(QSqlTableModel::OnManualSubmit);
         modelDF->select();
 
         modelDI=new QSqlTableModel();
         modelDI->setTable(QString("audit_DI_%1").arg(auditId));
+        modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+        modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+        modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+        modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
         modelDI->setEditStrategy(QSqlTableModel::OnManualSubmit);
         modelDI->select();
 
         modelRI=new QSqlTableModel();
         modelRI->setTable(QString("audit_RI_%1").arg(auditId));
+        modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+        modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+        modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+        modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
         modelRI->setEditStrategy(QSqlTableModel::OnManualSubmit);
         modelRI->select();
 
         modelRF=new QSqlTableModel();
         modelRF->setTable(QString("audit_RF_%1").arg(auditId));
+        modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+        modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+        modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+        modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
         modelRF->setEditStrategy(QSqlTableModel::OnManualSubmit);
         modelRF->select();
+
+        connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
     }
     else
     {
         qCritical()<<"Invalid audit ID";
         die();
     }
+    return true;
+}
+
+
+bool PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
+{
+    QSqlTableModel *model=(QSqlTableModel *)topLeft.model();
+
+    qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
+    //Assume that only one cell can be edited at once?
+
+    int row=topLeft.row();
+
+    QVariant vOuverts=model->index(row,COL_OUVERTS).data();
+    QVariant vRealises=model->index(row,COL_REALISES).data();
+    QVariant vEngages=model->index(row,COL_ENGAGES).data();
+    QLocale q;
+
+    double ouverts=q.toDouble(vOuverts.toString());
+    double realises=q.toDouble(vRealises.toString());
+    double engages=q.toDouble(vEngages.toString());
+
+    qDebug()<<"Ouverts = "<<ouverts;
+    qDebug()<<"Realises = "<<realises;
+    qDebug()<<"Engages = "<<engages;
+
+    if(!vRealises.isNull() && !vOuverts.isNull() && !vEngages.isNull())
+    {
+        QVariant disponibles=ouverts-(realises+engages);
+        QModelIndex indexDispo=model->index(row,COL_DISPONIBLES);
+       /* if(disponibles<0.0)
+        {
+            QMessageBox::warning(NULL,"Attention","Disponibles négatifs !");
+            model->revertAll();
+            return false;
+        }*/
+        model->setData(indexDispo,disponibles);
+    }
+    model->submitAll();
     return true;
 }
 
@@ -359,18 +423,18 @@ QHash<int, QString> PCx_AuditModel::getListOfAudits(bool finishedOnly)
     while(query.next())
     {
         QString item;
-        dt=QDateTime::fromString(query.value(5).toString(),"yyyy-MM-dd hh:mm:ss");
+        dt=QDateTime::fromString(query.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         dt.setTimeSpec(Qt::UTC);
         QDateTime dtLocal=dt.toLocalTime();
-        if(query.value(4).toBool()==true)
+        if(query.value("termine").toBool()==true)
         {
-            item=QString("%1 - %2 (audit terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-            listOfAudits.insert(query.value(0).toInt(),item);
+            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            listOfAudits.insert(query.value("id").toInt(),item);
         }
         else if(finishedOnly==false)
         {
-             item=QString("%1 - %2").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-             listOfAudits.insert(query.value(0).toInt(),item);
+             item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+             listOfAudits.insert(query.value("id").toInt(),item);
         }
     }
     return listOfAudits;

@@ -4,7 +4,7 @@
 
 
 DialogDisplayTree::DialogDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::DialogDisplayTree)
 {
     ui->setupUi(this);
