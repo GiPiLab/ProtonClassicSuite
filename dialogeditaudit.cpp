@@ -10,6 +10,14 @@ DialogEditAudit::DialogEditAudit(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
+    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+
+
+
     auditModel=NULL;
 
     delegateDF=new auditDataDelegate(ui->tableViewDF);
@@ -38,11 +46,16 @@ DialogEditAudit::~DialogEditAudit()
     delete(delegateRI);
 }
 
+void DialogEditAudit::onListOfAuditsChanged()
+{
+    updateListOfAudits();
+}
+
 void DialogEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QHash<int,QString> listOfAudits=PCx_AuditModel::getListOfAudits(false);
+    QHash<int,QString> listOfAudits=PCx_AuditModel::getListOfAudits(UnFinishedAuditsOnly);
     foreach(int auditId,listOfAudits.keys())
     {
         ui->comboListAudits->insertItem(0,listOfAudits[auditId],auditId);
@@ -63,8 +76,6 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     auditModel=new PCx_AuditModel(selectedAuditId);
     ui->treeView->setModel(auditModel->getAttachedTreeModel());
     ui->treeView->expandToDepth(1);
-
-
 
     ui->tableViewDF->setModel(auditModel->getModelDF());
     ui->tableViewDF->hideColumn(0);
@@ -90,6 +101,16 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewRF->setEnabled(false);
     ui->tableViewDI->setEnabled(false);
     ui->tableViewRI->setEnabled(false);
+
+
+    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
+
+
+
+
 }
 
 void DialogEditAudit::on_treeView_activated(const QModelIndex &index)

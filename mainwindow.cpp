@@ -39,7 +39,7 @@ void MainWindow::on_actionManageTree_triggered()
         {
             connect(dialogEditTreeWin,SIGNAL(listOfTreeChanged()),dialogManageAudits,SLOT(onLOTchanged()));
         }
-        connect(dialogEditTreeWin,SIGNAL(destroyed()),this,SLOT(onDialogEditTreeWindowsDestroyed()));
+        connect(dialogEditTreeWin,SIGNAL(destroyed()),this,SLOT(onDialogEditTreeWindowsDestroyed()));     
     }
 }
 
@@ -83,8 +83,11 @@ void MainWindow::on_actionGerer_les_audits_triggered()
         ui->mdiArea->addSubWindow(dialogManageAudits);
         dialogManageAudits->show();
         connect(dialogManageAudits,SIGNAL(destroyed()),this,SLOT(onDialogManageAuditsWindowsDestroyed()));
+        if(dialogEditAudit!=NULL)
+        {
+            connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dialogEditAudit,SLOT(onListOfAuditsChanged()));
+        }
     }
-
 }
 
 void MainWindow::on_actionSaisie_des_donnees_triggered()
@@ -95,5 +98,10 @@ void MainWindow::on_actionSaisie_des_donnees_triggered()
         ui->mdiArea->addSubWindow(dialogEditAudit);
         dialogEditAudit->show();
         connect(dialogEditAudit,SIGNAL(destroyed()),this,SLOT(onDialogEditAuditWindowsDestroyed()));
+
+        if(dialogManageAudits!=NULL)
+        {
+            connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dialogEditAudit,SLOT(onListOfAuditsChanged()));
+        }
     }
 }

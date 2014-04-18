@@ -1,7 +1,9 @@
 #include "auditdatadelegate.h"
+#include "pcx_auditmodel.h"
 #include <QtGui>
-#include <QDoubleValidator>
-#include <QLineEdit>
+#include <QApplication>
+#include <QDoubleSpinBox>
+#include <float.h>
 
 auditDataDelegate::auditDataDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
@@ -9,56 +11,45 @@ auditDataDelegate::auditDataDelegate(QObject *parent) :
 
 }
 
+
 void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    /*QString text=index.data().toString();
-        painter->save();
-        painter->setPen(QColor(255,0,0));
-        //Years = column 2 in the table model (0 = id, 1=node_id)
-        if(index.column()==2)
-        {
-            painter->setBrush(QColor(255,0,0));
-        }
-        else
-        {
-            painter->setBrush(QColor(0,255,0));
-        }
-       // painter->drawRect(option.rect);
 
-        painter->drawText(option.rect, Qt::AlignJustify | Qt::AlignVCenter | Qt::TextWordWrap, text);
-        painter->restore();
-*/
-    QStyledItemDelegate::paint(painter,option,index);
+    QLocale locale;
 
+    //Add a little horizontal padding
+    QRect rect=option.rect;
+    rect.setWidth(rect.width()-5);
+    rect.setLeft(rect.left()+5);
+    painter->save();
+
+    if(!index.data().isNull() && (index.column()==COL_OUVERTS||index.column()==COL_REALISES||index.column()==COL_ENGAGES||index.column()==COL_DISPONIBLES))
+    {
+        if(index.data().toDouble()<0.0)
+        {
+            painter->setPen(QColor(255,0,0));
+        }
+        QString formattedNum=locale.toString(index.data().toDouble(),'f',2);
+        painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
+    }
+    else if(index.column()==COL_ANNEE)
+    {
+        painter->drawText(rect,index.data().toString(),QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
+    }
+    painter->restore();
 }
 
 QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     Q_UNUSED(option);
-    //No editing for Year and Disponible
-    if(index.column()==2 || index.column()==6)
+
+    if(index.column()==COL_DISPONIBLES || index.column()==COL_ANNEE)
     {
         return 0;
     }
-    else
-    {
-        QLineEdit *lineEditor=new QLineEdit(parent);
-        QDoubleValidator *v=new QDoubleValidator(parent);
-        v->setBottom(0.0);
-        v->setNotation(QDoubleValidator::StandardNotation);
-        v->setDecimals(5);
-        lineEditor->setValidator(v);
-        return lineEditor;
-    }
+    QDoubleSpinBox *spin=new QDoubleSpinBox(parent);
+    spin->setRange(0.0,DBL_MAX-1);
+    return spin;
+    //return QStyledItemDelegate::createEditor(parent,option,index);
 }
 
-/*void auditDataDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
-{
-    QStyledItemDelegate::setEditorData(editor, index);
-}*/
-
-/*void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
-{
-    QStyledItemDelegate::setModelData(editor, model, index);
-
-}*/

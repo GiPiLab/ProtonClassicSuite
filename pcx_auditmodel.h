@@ -15,11 +15,21 @@
 #define COL_ENGAGES 5
 #define COL_DISPONIBLES 6
 
+enum ListAuditsMode
+{
+    FinishedAuditsOnly,
+    UnFinishedAuditsOnly,
+    AllAudits
+};
+
 
 class PCx_AuditModel : public QObject
 {
     Q_OBJECT
+
+
 public:
+
     explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0);
     virtual ~PCx_AuditModel();
 
@@ -32,13 +42,15 @@ public:
     QDateTime getCreationTime() const;
     const QSet<unsigned int> &getYears()const {return years;}
 
+    bool finishAudit();
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     QSqlTableModel *getModelDF() const {return modelDF;}
     QSqlTableModel *getModelDI() const {return modelDI;}
     QSqlTableModel *getModelRF() const {return modelRF;}
     QSqlTableModel *getModelRI() const {return modelRI;}
 
-    static QHash<int, QString> getListOfAudits(bool finishedOnly);
+    static QHash<int, QString> getListOfAudits(ListAuditsMode mode);
+    static bool finishAudit(unsigned int id);
 
 signals:
 
@@ -55,7 +67,7 @@ private:
     bool loadFromDb(unsigned int auditId);
 
 private slots:
-    bool onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 };
 
 #endif // PCX_AUDITMODEL_H

@@ -27,6 +27,11 @@ private slots:
 
     void on_deleteAuditButton_clicked();
 
+    void on_finishAuditButton_clicked();
+
+signals:
+    void listOfAuditsChanged();
+
 private:
     Ui::DialogManageAudits *ui;
     QMdiArea *mdiarea;

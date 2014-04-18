@@ -6,20 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>764</width>
-    <height>448</height>
+    <width>700</width>
+    <height>280</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>0</height>
+   </size>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <property name="windowTitle">
+   <string>Saisie des données</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_6">
    <item>
     <widget class="QSplitter" name="splitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QComboBox" name="comboListAudits"/>
@@ -42,7 +48,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QLabel" name="label">
@@ -57,21 +63,30 @@
           <enum>QTabWidget::Triangular</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="tabDF">
           <attribute name="title">
-           <string>Dépenses de fonctionnement</string>
+           <string>DF</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QTableView" name="tableViewDF">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+             </property>
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
              <property name="selectionMode">
-              <enum>QAbstractItemView::NoSelection</enum>
+              <enum>QAbstractItemView::SingleSelection</enum>
              </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
+             <property name="cornerButtonEnabled">
+              <bool>false</bool>
              </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
              <attribute name="verticalHeaderVisible">
               <bool>false</bool>
              </attribute>
@@ -81,11 +96,29 @@
          </widget>
          <widget class="QWidget" name="tabRF">
           <attribute name="title">
-           <string>Recettes de fonctionnement</string>
+           <string>RF</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
             <widget class="QTableView" name="tableViewRF">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+             </property>
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectItems</enum>
+             </property>
+             <property name="cornerButtonEnabled">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
              <attribute name="verticalHeaderVisible">
               <bool>false</bool>
              </attribute>
@@ -95,11 +128,26 @@
          </widget>
          <widget class="QWidget" name="tabDI">
           <attribute name="title">
-           <string>Dépenses d'investissement</string>
+           <string>DI</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QTableView" name="tableViewDI">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+             </property>
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="cornerButtonEnabled">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
              <attribute name="verticalHeaderVisible">
               <bool>false</bool>
              </attribute>
@@ -109,11 +157,26 @@
          </widget>
          <widget class="QWidget" name="tabRI">
           <attribute name="title">
-           <string>Recettes d'investissement</string>
+           <string>RI</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QTableView" name="tableViewRI">
+             <property name="editTriggers">
+              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+             </property>
+             <property name="showDropIndicator" stdset="0">
+              <bool>false</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="cornerButtonEnabled">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
              <attribute name="verticalHeaderVisible">
               <bool>false</bool>
              </attribute>
@@ -123,19 +186,29 @@
          </widget>
         </widget>
        </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QPushButton" name="auditStatsButton">
+           <property name="text">
+            <string>Statistiques de saisie</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="computeAuditButton">
+           <property name="text">
+            <string>Recalculer</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </widget>
     </widget>
    </item>
   </layout>
-  <zorder>treeView</zorder>
-  <zorder>comboListAudits</zorder>
-  <zorder>tabWidget</zorder>
-  <zorder>label</zorder>
-  <zorder>tabWidget</zorder>
-  <zorder>tabWidget</zorder>
-  <zorder>tabWidget</zorder>
-  <zorder>splitter</zorder>
  </widget>
  <resources/>
  <connections/>

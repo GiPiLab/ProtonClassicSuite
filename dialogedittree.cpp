@@ -13,6 +13,7 @@ DialogEditTree::DialogEditTree(QWidget *parent,QMdiArea *mdiArea) : QWidget(pare
     ui->setupUi(this);
     model=NULL;
     this->mdiArea=mdiArea;
+
     updateListOfTree();
 }
 
@@ -72,7 +73,7 @@ void DialogEditTree::setReadOnly(bool state)
     ui->deleteTypeButton->setDisabled(state);
     ui->finishTreeButton->setDisabled(state);
     ui->modifyNodeButton->setDisabled(state);
-    ui->treeView->setDisabled(state);
+    ui->treeView->setDragEnabled(!state);
     ui->listTypesView->setDisabled(state);
 }
 
@@ -328,5 +329,7 @@ void DialogEditTree::on_comboBox_activated(int index)
 void DialogEditTree::on_treeView_activated(const QModelIndex &index)
 {
     Q_UNUSED(index);
-    on_modifyNodeButton_clicked();
+    //Only edit unfinished trees
+    if(!model->isFinished())
+        on_modifyNodeButton_clicked();
 }

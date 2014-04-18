@@ -26,7 +26,7 @@ void DialogManageAudits::updateListOfAudits()
 {
     ui->comboListOfAudits->clear();
 
-    QHash<int,QString> listOfAudits=PCx_AuditModel::getListOfAudits(false);
+    QHash<int,QString> listOfAudits=PCx_AuditModel::getListOfAudits(AllAudits);
     foreach(int auditId,listOfAudits.keys())
     {
         ui->comboListOfAudits->insertItem(0,listOfAudits[auditId],auditId);
@@ -34,8 +34,6 @@ void DialogManageAudits::updateListOfAudits()
     ui->comboListOfAudits->setCurrentIndex(0);
     this->on_comboListOfAudits_activated(0);
 }
-
-
 
 void DialogManageAudits::onLOTchanged()
 {
@@ -102,6 +100,7 @@ void DialogManageAudits::on_addAuditButton_clicked()
         qDebug()<<"Add audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
         PCx_AuditModel::addNewAudit(text,years,selectedTree);
         updateListOfAudits();
+        emit(listOfAuditsChanged());
     }
 }
 
@@ -134,15 +133,28 @@ void DialogManageAudits::on_deleteAuditButton_clicked()
     {
         return;
     }
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment supprimer l'audit <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> l'audit <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
     {
         return;
     }
     PCx_AuditModel::deleteAudit(ui->comboListOfAudits->currentData().toUInt());
     updateListOfAudits();
+    emit(listOfAuditsChanged());
+
 }
 
 
-
-
-
+void DialogManageAudits::on_finishAuditButton_clicked()
+{
+    if(ui->comboListOfAudits->currentIndex()==-1)
+    {
+        return;
+    }
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>terminer</b> l'audit <b>%1</b> ? Celà signifie que vous ne pourrez plus en modifier les données").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    {
+        return;
+    }
+    PCx_AuditModel::finishAudit(ui->comboListOfAudits->currentData().toUInt());
+    updateListOfAudits();
+    emit(listOfAuditsChanged());
+}

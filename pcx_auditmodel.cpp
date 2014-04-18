@@ -284,6 +284,12 @@ QDateTime PCx_AuditModel::getCreationTime() const
     return dt;
 }
 
+bool PCx_AuditModel::finishAudit()
+{
+    finished=true;
+    return PCx_AuditModel::finishAudit(auditId);
+}
+
 bool PCx_AuditModel::loadFromDb(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
@@ -327,7 +333,7 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
         modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
         modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
         modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelDF->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
         modelDF->select();
 
         modelDI=new QSqlTableModel();
@@ -337,7 +343,7 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
         modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
         modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
         modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelDI->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
         modelDI->select();
 
         modelRI=new QSqlTableModel();
@@ -347,7 +353,7 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
         modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
         modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
         modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelRI->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
         modelRI->select();
 
         modelRF=new QSqlTableModel();
@@ -357,7 +363,7 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
         modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
         modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
         modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelRF->setEditStrategy(QSqlTableModel::OnManualSubmit);
+        modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
         modelRF->select();
 
         connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
@@ -374,46 +380,34 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
 }
 
 
-bool PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
+void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
 {
+    Q_UNUSED(bottomRight);
     QSqlTableModel *model=(QSqlTableModel *)topLeft.model();
 
-    qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
-    //Assume that only one cell can be edited at once?
+   // qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
 
     int row=topLeft.row();
 
     QVariant vOuverts=model->index(row,COL_OUVERTS).data();
     QVariant vRealises=model->index(row,COL_REALISES).data();
     QVariant vEngages=model->index(row,COL_ENGAGES).data();
-    QLocale q;
 
-    double ouverts=q.toDouble(vOuverts.toString());
-    double realises=q.toDouble(vRealises.toString());
-    double engages=q.toDouble(vEngages.toString());
-
-    qDebug()<<"Ouverts = "<<ouverts;
-    qDebug()<<"Realises = "<<realises;
-    qDebug()<<"Engages = "<<engages;
+    double ouverts=vOuverts.toDouble();
+    double realises=vRealises.toDouble();
+    double engages=vEngages.toDouble();
 
     if(!vRealises.isNull() && !vOuverts.isNull() && !vEngages.isNull())
     {
         QVariant disponibles=ouverts-(realises+engages);
+       // qDebug()<<disponibles;
         QModelIndex indexDispo=model->index(row,COL_DISPONIBLES);
-       /* if(disponibles<0.0)
-        {
-            QMessageBox::warning(NULL,"Attention","Disponibles négatifs !");
-            model->revertAll();
-            return false;
-        }*/
         model->setData(indexDispo,disponibles);
     }
-    model->submitAll();
-    return true;
 }
 
 
-QHash<int, QString> PCx_AuditModel::getListOfAudits(bool finishedOnly)
+QHash<int, QString> PCx_AuditModel::getListOfAudits(ListAuditsMode mode)
 {
     QHash<int,QString> listOfAudits;
     QDateTime dt;
@@ -429,14 +423,47 @@ QHash<int, QString> PCx_AuditModel::getListOfAudits(bool finishedOnly)
         if(query.value("termine").toBool()==true)
         {
             item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-            listOfAudits.insert(query.value("id").toInt(),item);
+            if(mode!=UnFinishedAuditsOnly)
+                listOfAudits.insert(query.value("id").toInt(),item);
         }
-        else if(finishedOnly==false)
+        else if(mode!=FinishedAuditsOnly)
         {
              item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
              listOfAudits.insert(query.value("id").toInt(),item);
         }
     }
     return listOfAudits;
+}
+
+bool PCx_AuditModel::finishAudit(unsigned int id)
+{
+    Q_ASSERT(id>0);
+    QSqlQuery q;
+    q.prepare("select count(*) from index_audits where id=:id");
+    q.bindValue(":id",id);
+    q.exec();
+    if(q.next())
+    {
+        if(q.value(0).toInt()==0)
+        {
+            qCritical()<<"Terminer Audit inexistant !";
+            return false;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    q.prepare("update index_audits set termine=1 where id=:id");
+    q.bindValue(":id",id);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    return true;
 }
 

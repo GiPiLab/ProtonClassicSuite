@@ -2,19 +2,19 @@
 <ui version="4.0">
  <class>DialogManageAudits</class>
  <widget class="QWidget" name="DialogManageAudits">
+  <property name="modal" stdset="0">
+   <bool>false</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>389</width>
-    <height>337</height>
+    <height>357</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Gestion des audits</string>
-  </property>
-  <property name="modal">
-   <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -206,10 +206,17 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="2" column="0">
        <widget class="QPushButton" name="moreInfosButton">
         <property name="text">
          <string>Plus d'infos</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="finishAuditButton">
+        <property name="text">
+         <string>Terminer audit</string>
         </property>
        </widget>
       </item>

@@ -18,6 +18,10 @@ public:
     explicit DialogEditAudit(QWidget *parent = 0);
     ~DialogEditAudit();
 
+public slots:
+    void onListOfAuditsChanged();
+
+
 private slots:
     void on_comboListAudits_activated(int index);
 
@@ -27,7 +31,9 @@ private:
     Ui::DialogEditAudit *ui;
     void updateListOfAudits();
     PCx_AuditModel *auditModel;
+    //Perhaps only would be sufficient ?
     auditDataDelegate *delegateDF,*delegateRF,*delegateDI,*delegateRI;
+
 
 };
 
