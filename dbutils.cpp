@@ -64,6 +64,7 @@ QSqlDatabase loadDb(bool addDriver)
         qCritical()<<db.lastError();
         exit(-1);
     }
+    initDb();
     return db;
 }
 

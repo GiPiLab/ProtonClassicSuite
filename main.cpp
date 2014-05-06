@@ -8,6 +8,7 @@
 #include <QtSql/QSqlQuery>
 #include <QDebug>
 #include <QLocale>
+#include <time.h>
 
 
 int main(int argc, char *argv[])
@@ -28,6 +29,7 @@ int main(int argc, char *argv[])
 
 
     QSqlDatabase db=loadDb(true);
+
 
     w.show();
 

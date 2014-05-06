@@ -25,7 +25,7 @@ public slots:
 private slots:
     void on_comboListAudits_activated(int index);
 
-    void on_treeView_activated(const QModelIndex &index);
+    void on_treeView_clicked(const QModelIndex &index);
 
 private:
     Ui::DialogEditAudit *ui;
@@ -33,8 +33,6 @@ private:
     PCx_AuditModel *auditModel;
     //Perhaps only would be sufficient ?
     auditDataDelegate *delegateDF,*delegateRF,*delegateDI,*delegateRI;
-
-
 };
 
 #endif // DIALOGEDITAUDIT_H

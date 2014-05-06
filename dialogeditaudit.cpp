@@ -15,9 +15,6 @@ DialogEditAudit::DialogEditAudit(QWidget *parent) :
     ui->tableViewDI->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableViewRI->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-
-
-
     auditModel=NULL;
 
     delegateDF=new auditDataDelegate(ui->tableViewDF);
@@ -102,18 +99,13 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewDI->setEnabled(false);
     ui->tableViewRI->setEnabled(false);
 
-
     ui->tableViewDF->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
     ui->tableViewRF->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
     ui->tableViewDI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
     ui->tableViewRI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
-
-
-
-
 }
 
-void DialogEditAudit::on_treeView_activated(const QModelIndex &index)
+void DialogEditAudit::on_treeView_clicked(const QModelIndex &index)
 {
     unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
     Q_ASSERT(selectedNode>0);

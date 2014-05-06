@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     pcx_auditmodel.cpp \
     dialogeditaudit.cpp \
     pcx_auditinfos.cpp \
-    auditdatadelegate.cpp
+    auditdatadelegate.cpp \
+    dialogt1t9.cpp
 
 HEADERS  += mainwindow.h \
     utility.h \
@@ -36,10 +37,12 @@ HEADERS  += mainwindow.h \
     pcx_auditmodel.h \
     dialogeditaudit.h \
     pcx_auditinfos.h \
-    auditdatadelegate.h
+    auditdatadelegate.h \
+    dialogt1t9.h
 
 FORMS    += mainwindow.ui \
     dialogedittree.ui \
     dialogdisplaytree.ui \
     dialogmanageaudits.ui \
-    dialogeditaudit.ui
+    dialogeditaudit.ui \
+    dialogt1t9.ui

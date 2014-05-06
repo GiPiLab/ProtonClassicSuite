@@ -324,6 +324,41 @@ bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
     return false;
 }
 
+unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
+{
+    Q_ASSERT(nodeId > 0);
+    QSqlQuery q;
+    q.prepare(QString("select pid from arbre_%1 where id=:nodeid").arg(treeId));
+    q.bindValue(":nodeid",nodeId);
+    q.exec();
+    if(q.next())
+    {
+        return q.value(0).toUInt();
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    return 0;
+}
+
+QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
+{
+    Q_ASSERT(nodeId > 0);
+    QList<unsigned int> listOfChildren;
+    QSqlQuery q;
+    q.prepare(QString("select * from arbre_%1 where pid=:nodeid").arg(treeId));
+    q.bindValue(":nodeid",nodeId);
+    q.exec();
+
+    while(q.next())
+    {
+        listOfChildren.append(q.value("id").toUInt());
+    }
+    return listOfChildren;
+}
+
 //Returns 0 if the tree is linked to an audit, -1 for a non-existant tree (should not happens) and 1 on success
 int PCx_TreeModel::deleteTree(unsigned int treeId)
 {

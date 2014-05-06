@@ -379,7 +379,76 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId)
     return true;
 }
 
+bool PCx_AuditModel::propagateToAncestors(const QModelIndex &node)
+{
+    QSqlTableModel *model=(QSqlTableModel *)node.model();
+    int row=node.row();
+    unsigned int nodeId=model->index(row,COL_IDNODE).data().toUInt();
+    unsigned int annee=model->index(row,COL_ANNEE).data().toUInt();
+    QString tableName=model->tableName();
+    qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
 
+    updateAncestors(tableName,annee,nodeId);
+    return true;
+}
+
+bool PCx_AuditModel::updateAncestors(const QString &tableName, unsigned int annee, unsigned int nodeId)
+{
+    unsigned int parent=attachedTree->getParentId(nodeId);
+    qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
+    QList<unsigned int> listOfChildren=attachedTree->getChildren(parent);
+    qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
+    QSqlQuery q;
+    QStringList l;
+    foreach (unsigned int childId, listOfChildren)
+    {
+        l.append(QString::number(childId));
+    }
+
+    q.exec(QString("select * from %1 where id_node in(%2) and annee=%3").arg(tableName).arg(l.join(',')).arg(annee));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    double sumOuverts=0.0;
+    double sumRealises=0.0;
+    double sumEngages=0.0;
+    double sumDisponibles=0.0;
+
+    while(q.next())
+    {
+        qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
+        if(!q.value("ouverts").isNull())
+            sumOuverts+=q.value("ouverts").toDouble();
+        if(!q.value("realises").isNull())
+            sumRealises+=q.value("realises").toDouble();
+        if(!q.value("engages").isNull())
+            sumEngages+=q.value("engages").toDouble();
+        if(!q.value("disponibles").isNull())
+            sumDisponibles+=q.value("disponibles").toDouble();
+    }
+    qDebug()<<"Sum Ouverts = "<<sumOuverts;
+
+    q.prepare(QString("update %1 set ouverts=:ouverts,realises=:realises,engages=:engages,disponibles=:disponibles where annee=:annee and id_node=:id_node").arg(tableName));
+    q.bindValue(":ouverts",sumOuverts);
+    q.bindValue(":realises",sumRealises);
+    q.bindValue(":engages",sumEngages);
+    q.bindValue(":disponibles",sumDisponibles);
+    q.bindValue(":annee",annee);
+    q.bindValue(":id_node",parent);
+    q.exec();
+    if(q.numRowsAffected()<=0)
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+}
+
+
+//Warning, be called twice (see isDirty)
 void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
 {
     Q_UNUSED(bottomRight);
@@ -387,6 +456,7 @@ void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModel
 
    // qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
 
+    //qDebug()<<"Model dirty : "<<model->isDirty();
     int row=topLeft.row();
 
     QVariant vOuverts=model->index(row,COL_OUVERTS).data();
@@ -404,6 +474,13 @@ void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModel
         QModelIndex indexDispo=model->index(row,COL_DISPONIBLES);
         model->setData(indexDispo,disponibles);
     }
+
+    //Only propagate after the database has been updated (called for refreshing the view, see https://bugreports.qt-project.org/browse/QTBUG-30672
+    if(!model->isDirty())
+    {
+        propagateToAncestors(topLeft);
+    }
+
 }
 
 

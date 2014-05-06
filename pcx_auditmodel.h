@@ -65,6 +65,8 @@ private:
     PCx_TreeModel *attachedTree;
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
     bool loadFromDb(unsigned int auditId);
+    bool propagateToAncestors(const QModelIndex &node);
+    bool updateAncestors(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
