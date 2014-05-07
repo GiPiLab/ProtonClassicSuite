@@ -49,7 +49,7 @@ public:
     QSqlTableModel *getModelRF() const {return modelRF;}
     QSqlTableModel *getModelRI() const {return modelRI;}
 
-    static QHash<int, QString> getListOfAudits(ListAuditsMode mode);
+    static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
     static bool finishAudit(unsigned int id);
 
 signals:
@@ -66,7 +66,7 @@ private:
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
     bool loadFromDb(unsigned int auditId);
     bool propagateToAncestors(const QModelIndex &node);
-    bool updateAncestors(const QString &tableName, unsigned int annee, unsigned int nodeId);
+    bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

@@ -52,10 +52,11 @@ void DialogEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QHash<int,QString> listOfAudits=PCx_AuditModel::getListOfAudits(UnFinishedAuditsOnly);
-    foreach(int auditId,listOfAudits.keys())
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(UnFinishedAuditsOnly);
+    QPair<unsigned int, QString> p;
+    foreach(p,listOfAudits)
     {
-        ui->comboListAudits->insertItem(0,listOfAudits[auditId],auditId);
+        ui->comboListAudits->insertItem(0,p.second,p.first);
     }
     ui->comboListAudits->setCurrentIndex(0);
     on_comboListAudits_activated(0);

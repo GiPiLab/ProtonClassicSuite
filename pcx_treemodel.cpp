@@ -26,12 +26,12 @@ QDateTime PCx_TreeModel::getCreationTime() const
     return dt;
 }
 
-QHash<int, QString> PCx_TreeModel::getListOfTrees(bool finishedOnly)
+QList<QPair<unsigned int, QString> > PCx_TreeModel::getListOfTrees(bool finishedOnly)
 {
-    QHash<int,QString> listOfTrees;
+    QList<QPair<unsigned int,QString> > listOfTrees;
     QDateTime dt;
 
-    QSqlQuery query("select * from index_arbres");
+    QSqlQuery query("select * from index_arbres order by datetime(le_timestamp)");
     while(query.next())
     {
         QString item;
@@ -43,12 +43,18 @@ QHash<int, QString> PCx_TreeModel::getListOfTrees(bool finishedOnly)
         if(query.value(2).toBool()==true)
         {
             item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-            listOfTrees.insert(query.value(0).toInt(),item);
+            QPair<unsigned int, QString> p;
+            p.first=query.value(0).toUInt();
+            p.second=item;
+            listOfTrees.append(p);
         }
         else if(finishedOnly==false)
         {
              item=QString("%1 - %2").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-             listOfTrees.insert(query.value(0).toInt(),item);
+             QPair<unsigned int, QString> p;
+             p.first=query.value(0).toUInt();
+             p.second=item;
+             listOfTrees.append(p);
         }
     }
     return listOfTrees;
@@ -192,7 +198,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     QVariant lastId=query.lastInsertId();
     if(!lastId.isValid())
     {
-        qCritical()<<"Problème d'id, vérifiez la consistance de la base";
+        qCritical()<<"Problème d'id";
         QSqlDatabase::database().rollback();
         die();
     }

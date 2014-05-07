@@ -52,7 +52,7 @@ public:
     static bool addNewTree(const QString &name);
     static int deleteTree(unsigned int treeId);
     static QString idTreeToName(unsigned int treeId);
-    static QHash<int,QString> getListOfTrees(bool finishedOnly=false);
+    static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 
 private:
     QStandardItem *root;

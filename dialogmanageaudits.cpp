@@ -26,10 +26,11 @@ void DialogManageAudits::updateListOfAudits()
 {
     ui->comboListOfAudits->clear();
 
-    QHash<int,QString> listOfAudits=PCx_AuditModel::getListOfAudits(AllAudits);
-    foreach(int auditId,listOfAudits.keys())
+    QList<QPair<unsigned int,QString> > listOfAudits=PCx_AuditModel::getListOfAudits(AllAudits);
+    QPair<unsigned int,QString> p;
+    foreach(p,listOfAudits)
     {
-        ui->comboListOfAudits->insertItem(0,listOfAudits[auditId],auditId);
+        ui->comboListOfAudits->insertItem(0,p.second,p.first);
     }
     ui->comboListOfAudits->setCurrentIndex(0);
     this->on_comboListOfAudits_activated(0);
@@ -44,10 +45,11 @@ void DialogManageAudits::updateListOfTrees()
 {
     ui->comboListOfTrees->clear();
 
-    QHash<int,QString> lot=PCx_TreeModel::getListOfTrees(true);
-    foreach(int treeId,lot.keys())
+    QList<QPair<unsigned int,QString> > lot=PCx_TreeModel::getListOfTrees(true);
+    QPair<unsigned int, QString> p;
+    foreach(p,lot)
     {
-        ui->comboListOfTrees->insertItem(0,lot[treeId],treeId);
+        ui->comboListOfTrees->insertItem(0,p.second,p.first);
     }
     ui->comboListOfTrees->setCurrentIndex(0);
 }

@@ -48,10 +48,11 @@ void DialogEditTree::updateListOfTree()
 {
     ui->comboBox->clear();
 
-    QHash<int,QString> lot=PCx_TreeModel::getListOfTrees();
-    foreach(int treeId,lot.keys())
+    QList<QPair<unsigned int,QString> > lot=PCx_TreeModel::getListOfTrees();
+    QPair<unsigned int, QString> p;
+    foreach(p,lot)
     {
-        ui->comboBox->insertItem(0,lot[treeId],treeId);
+        ui->comboBox->insertItem(0,p.second,p.first);
     }
 
     if(ui->comboBox->count()==0)

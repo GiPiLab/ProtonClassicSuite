@@ -388,16 +388,27 @@ bool PCx_AuditModel::propagateToAncestors(const QModelIndex &node)
     QString tableName=model->tableName();
     qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
 
-    updateAncestors(tableName,annee,nodeId);
-    return true;
+    QSqlDatabase::database().transaction();
+    if(updateParent(tableName,annee,nodeId))
+    {
+        QSqlDatabase::database().commit();
+        return true;
+    }
+    else
+    {
+        qCritical()<<"ERROR DURING PROPAGATING VALUES TO ROOTS, CANCELLING";
+        QSqlDatabase::database().rollback();
+        return false;
+    }
+
 }
 
-bool PCx_AuditModel::updateAncestors(const QString &tableName, unsigned int annee, unsigned int nodeId)
+bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
 {
     unsigned int parent=attachedTree->getParentId(nodeId);
-    qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
+    //qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
     QList<unsigned int> listOfChildren=attachedTree->getChildren(parent);
-    qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
+    //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
     QSqlQuery q;
     QStringList l;
     foreach (unsigned int childId, listOfChildren)
@@ -417,34 +428,74 @@ bool PCx_AuditModel::updateAncestors(const QString &tableName, unsigned int anne
     double sumEngages=0.0;
     double sumDisponibles=0.0;
 
+    //To check if we need to insert 0.0 or NULL
+    bool nullOuverts=true;
+    bool nullEngages=true;
+    bool nullRealises=true;
+    bool nullDisponibles=true;
+
+
     while(q.next())
     {
-        qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
+        //qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
         if(!q.value("ouverts").isNull())
+        {
             sumOuverts+=q.value("ouverts").toDouble();
+            nullOuverts=false;
+        }
+
         if(!q.value("realises").isNull())
+        {
             sumRealises+=q.value("realises").toDouble();
+            nullRealises=false;
+        }
         if(!q.value("engages").isNull())
+        {
             sumEngages+=q.value("engages").toDouble();
+            nullEngages=false;
+        }
         if(!q.value("disponibles").isNull())
+        {
             sumDisponibles+=q.value("disponibles").toDouble();
+            nullDisponibles=false;
+        }
     }
-    qDebug()<<"Sum Ouverts = "<<sumOuverts;
 
     q.prepare(QString("update %1 set ouverts=:ouverts,realises=:realises,engages=:engages,disponibles=:disponibles where annee=:annee and id_node=:id_node").arg(tableName));
-    q.bindValue(":ouverts",sumOuverts);
-    q.bindValue(":realises",sumRealises);
-    q.bindValue(":engages",sumEngages);
-    q.bindValue(":disponibles",sumDisponibles);
+    if(nullOuverts)
+        q.bindValue(":ouverts",QVariant(QVariant::Double));
+    else
+        q.bindValue(":ouverts",sumOuverts);
+
+    if(nullRealises)
+        q.bindValue(":realises",QVariant(QVariant::Double));
+    else
+        q.bindValue(":realises",sumRealises);
+
+    if(nullEngages)
+        q.bindValue(":engages",QVariant(QVariant::Double));
+    else
+        q.bindValue(":engages",sumEngages);
+
+    if(nullDisponibles)
+        q.bindValue(":disponibles",QVariant(QVariant::Double));
+    else
+        q.bindValue(":disponibles",sumDisponibles);
+
     q.bindValue(":annee",annee);
     q.bindValue(":id_node",parent);
     q.exec();
     if(q.numRowsAffected()<=0)
     {
         qCritical()<<q.lastError().text();
-        die();
+        return false;
     }
 
+    if(parent>1)
+    {
+        updateParent(tableName,annee,parent);
+    }
+    return true;
 }
 
 
@@ -484,12 +535,12 @@ void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModel
 }
 
 
-QHash<int, QString> PCx_AuditModel::getListOfAudits(ListAuditsMode mode)
+QList<QPair<unsigned int, QString> > PCx_AuditModel::getListOfAudits(ListAuditsMode mode)
 {
-    QHash<int,QString> listOfAudits;
+    QList<QPair<unsigned int,QString> > listOfAudits;
     QDateTime dt;
 
-    QSqlQuery query("select * from index_audits");
+    QSqlQuery query("select * from index_audits order by datetime(le_timestamp)");
 
     while(query.next())
     {
@@ -497,16 +548,23 @@ QHash<int, QString> PCx_AuditModel::getListOfAudits(ListAuditsMode mode)
         dt=QDateTime::fromString(query.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         dt.setTimeSpec(Qt::UTC);
         QDateTime dtLocal=dt.toLocalTime();
+        QPair<unsigned int, QString> p;
         if(query.value("termine").toBool()==true)
         {
             item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
             if(mode!=UnFinishedAuditsOnly)
-                listOfAudits.insert(query.value("id").toInt(),item);
+            {
+                p.first=query.value("id").toUInt();
+                p.second=item;
+                listOfAudits.append(p);
+            }
         }
         else if(mode!=FinishedAuditsOnly)
         {
              item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-             listOfAudits.insert(query.value("id").toInt(),item);
+             p.first=query.value("id").toUInt();
+             p.second=item;
+             listOfAudits.append(p);
         }
     }
     return listOfAudits;

@@ -206,20 +206,6 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="moreInfosButton">
-        <property name="text">
-         <string>Plus d'infos</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="finishAuditButton">
-        <property name="text">
-         <string>Terminer audit</string>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QPushButton" name="deleteAuditButton">
         <property name="text">
@@ -234,6 +220,13 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QPushButton" name="finishAuditButton">
+        <property name="text">
+         <string>Terminer audit</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -245,7 +238,6 @@
   <tabstop>spinBoxTo</tabstop>
   <tabstop>addAuditButton</tabstop>
   <tabstop>comboListOfAudits</tabstop>
-  <tabstop>moreInfosButton</tabstop>
   <tabstop>deleteAuditButton</tabstop>
   <tabstop>cloneAuditButton</tabstop>
  </tabstops>

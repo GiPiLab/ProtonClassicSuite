@@ -195,13 +195,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="computeAuditButton">
-           <property name="text">
-            <string>Recalculer</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
       </layout>
