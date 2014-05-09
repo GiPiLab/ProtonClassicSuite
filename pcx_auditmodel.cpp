@@ -290,6 +290,39 @@ bool PCx_AuditModel::finishAudit()
     return PCx_AuditModel::finishAudit(auditId);
 }
 
+QSqlTableModel *PCx_AuditModel::getModel(const QString &mode) const
+{
+    if(0==mode.compare("DF",Qt::CaseInsensitive))
+    {
+        return modelDF;
+    }
+    if(0==mode.compare("RF",Qt::CaseInsensitive))
+    {
+        return modelRF;
+    }
+    if(0==mode.compare("DI",Qt::CaseInsensitive))
+    {
+        return modelDI;
+    }
+    if(0==mode.compare("RI",Qt::CaseInsensitive))
+    {
+        return modelRI;
+    }
+    return NULL;
+}
+
+QSqlTableModel *PCx_AuditModel::getModel(DFRFDIRI mode) const
+{
+    switch(mode)
+    {
+        case DF:return modelDF;
+        case RF:return modelRF;
+        case DI:return modelDI;
+        case RI:return modelRI;
+    }
+    return NULL;
+}
+
 bool PCx_AuditModel::loadFromDb(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);

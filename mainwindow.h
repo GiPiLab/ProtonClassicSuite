@@ -7,6 +7,7 @@
 #include "dialogmanageaudits.h"
 #include "dialogedittree.h"
 #include "dialogeditaudit.h"
+#include "dialogtables.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,16 +35,27 @@ private slots:
 
     void onDialogEditAuditWindowsDestroyed();
 
+    void onDialogTablesWindowsDestroyed(QObject *);
+
     void on_actionGerer_les_audits_triggered();
 
     void on_actionSaisie_des_donnees_triggered();
 
+    void on_actionTableaux_triggered();
+
 private:
 
     Ui::MainWindow *ui;
+
+    //Only one instance of these dialogs is allowed at once
     DialogEditTree *dialogEditTreeWin;
     DialogManageAudits *dialogManageAudits;
     DialogEditAudit *dialogEditAudit;
+
+    //Multiple "tables" dialogs are allowed
+    QList<DialogTables *>listOfDialogTables;
+
+
 
 };
 

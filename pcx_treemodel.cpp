@@ -628,6 +628,7 @@ QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString 
     QStandardItem *newitem=new QStandardItem(QString("%1 %2").arg(typeName).arg(nodeName));
     newitem->setData(nodeId,Qt::UserRole+1);
     newitem->setData(typeId,Qt::UserRole+2);
+//    newitem->setIcon(QIcon::fromTheme());
     return newitem;
 }
 

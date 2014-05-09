@@ -33,6 +33,7 @@
     <property name="title">
      <string>&amp;Fichiers</string>
     </property>
+    <addaction name="actionAudit_rapide"/>
     <addaction name="actionReset"/>
     <addaction name="actionExit"/>
    </widget>
@@ -48,10 +49,18 @@
     </property>
     <addaction name="actionGerer_les_audits"/>
     <addaction name="actionSaisie_des_donnees"/>
+    <addaction name="actionTableaux"/>
+    <addaction name="actionGraphiques"/>
+   </widget>
+   <widget class="QMenu" name="menuRapports">
+    <property name="title">
+     <string>Rapports</string>
+    </property>
    </widget>
    <addaction name="menuBases"/>
    <addaction name="menuArbres"/>
    <addaction name="menuAudits"/>
+   <addaction name="menuRapports"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -85,6 +94,21 @@
   <action name="actionSaisie_des_donnees">
    <property name="text">
     <string>Saisie des &amp;données</string>
+   </property>
+  </action>
+  <action name="actionTableaux">
+   <property name="text">
+    <string>&amp;Tableaux</string>
+   </property>
+  </action>
+  <action name="actionGraphiques">
+   <property name="text">
+    <string>Gr&amp;aphiques</string>
+   </property>
+  </action>
+  <action name="actionAudit_rapide">
+   <property name="text">
+    <string>Audit rapide</string>
    </property>
   </action>
  </widget>

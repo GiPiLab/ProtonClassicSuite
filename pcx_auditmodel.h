@@ -15,6 +15,15 @@
 #define COL_ENGAGES 5
 #define COL_DISPONIBLES 6
 
+
+enum DFRFDIRI
+{
+    DF,
+    RF,
+    DI,
+    RI
+};
+
 enum ListAuditsMode
 {
     FinishedAuditsOnly,
@@ -26,7 +35,6 @@ enum ListAuditsMode
 class PCx_AuditModel : public QObject
 {
     Q_OBJECT
-
 
 public:
 
@@ -44,6 +52,8 @@ public:
 
     bool finishAudit();
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
+    QSqlTableModel *getModel(const QString &mode) const;
+    QSqlTableModel *getModel(DFRFDIRI mode) const;
     QSqlTableModel *getModelDF() const {return modelDF;}
     QSqlTableModel *getModelDI() const {return modelDI;}
     QSqlTableModel *getModelRF() const {return modelRF;}
