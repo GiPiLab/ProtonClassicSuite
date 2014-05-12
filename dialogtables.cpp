@@ -1,14 +1,18 @@
 #include "dialogtables.h"
+#include "pcx_tables.h"
 #include "ui_dialogtables.h"
+#include "utils.h"
+
+//TODO : Slot for list of audits changed
+
 
 DialogTables::DialogTables(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DialogTables)
 {
+    model=NULL;
     ui->setupUi(this);
-    tables=NULL;
-    ui->splitter->setStretchFactor(1,1);
-
+    //ui->splitter->setStretchFactor(1,1);
     updateListOfAudits();
 
 }
@@ -16,8 +20,8 @@ DialogTables::DialogTables(QWidget *parent) :
 DialogTables::~DialogTables()
 {
     delete ui;
-    if(tables!=NULL)
-        delete tables;
+    if(model!=NULL)
+        delete model;
 }
 
 void DialogTables::updateListOfAudits()
@@ -34,6 +38,75 @@ void DialogTables::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
+void DialogTables::updateTextBrowser()
+{
+    QSqlTableModel *tableModel;
+    if(ui->radioButtonDF->isChecked())
+    {
+        tableModel=model->getTableModelDF();
+    }
+    else if(ui->radioButtonRF->isChecked())
+    {
+        tableModel=model->getTableModelRF();
+    }
+    else if(ui->radioButtonDI->isChecked())
+    {
+        tableModel=model->getTableModelDI();
+    }
+    else if(ui->radioButtonRI->isChecked())
+    {
+        tableModel=model->getTableModelRI();
+    }
+    else if(ui->radioButtonGlobal->isChecked())
+    {
+        tableModel=NULL;
+    }
+    else
+    {
+        qCritical()<<"Unsupported case of radio button checking";
+        die();
+    }
+
+    ui->textBrowser->clear();
+    QString output;
+
+    unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
+
+
+    //Mode DF,RF,DI,RI
+    if(tableModel!=NULL)
+    {
+        if(ui->checkBoxRecap->isChecked())
+        {
+                output.append(PCx_Tables::getTabRecap(selectedNode,tableModel));
+        }
+        if(ui->checkBoxEvolution->isChecked())
+        {
+                output.append(PCx_Tables::getTabEvolution(selectedNode,tableModel));
+        }
+        if(ui->checkBoxEvolutionCumul->isChecked())
+        {
+                output.append(PCx_Tables::getTabEvolutionCumul(selectedNode,tableModel));
+        }
+        if(ui->checkBoxBase100->isChecked())
+        {
+                output.append(PCx_Tables::getTabBase100(selectedNode,tableModel));
+        }
+        if(ui->checkBoxJoursAct->isChecked())
+        {
+                output.append(PCx_Tables::getTabJoursAct(selectedNode,tableModel));
+        }
+    }
+    //Global mode
+    else
+    {
+        output.append("Toto");
+    }
+
+    ui->textBrowser->setHtml(output);
+}
+
+
 void DialogTables::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
@@ -41,14 +114,17 @@ void DialogTables::on_comboListAudits_activated(int index)
     Q_ASSERT(selectedAuditId>0);
     qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-    if(tables!=NULL)
+    if(model!=NULL)
     {
-        delete tables;
+        delete model;
     }
-    tables=new PCx_tables(selectedAuditId,this);
+    model=new PCx_AuditModel(selectedAuditId,this);
 
-    ui->treeView->setModel(tables->getModel()->getAttachedTreeModel());
+    ui->treeView->setModel(model->getAttachedTreeModel());
     ui->treeView->expandToDepth(1);
+    QModelIndex rootIndex=model->getAttachedTreeModel()->index(0,0);
+    ui->treeView->setCurrentIndex(rootIndex);
+    on_treeView_clicked(rootIndex);
 }
 
 void DialogTables::on_treeView_clicked(const QModelIndex &index)
@@ -56,24 +132,68 @@ void DialogTables::on_treeView_clicked(const QModelIndex &index)
     unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
     Q_ASSERT(selectedNode>0);
 
-    ui->label->setText(index.data().toString());
+    ui->groupBoxMode->setTitle(index.data().toString());
 
+    updateTextBrowser();
 
-    QSqlTableModel *modelDF=tables->getModel()->getModelDF();
-    QSqlTableModel *modelRF=tables->getModel()->getModelRF();
-    QSqlTableModel *modelDI=tables->getModel()->getModelDI();
-    QSqlTableModel *modelRI=tables->getModel()->getModelRI();
+    /*displayTablesRecap(selectedNode,tbl);
+        displayTablesEvolution(selectedNode,tbl);
+        displayTablesEvolutionCumul(selectedNode,tbl);
+        displayTablesBase100(selectedNode,tbl);
+        displayTablesJoursAct(selectedNode,tbl);*/
+}
 
+void DialogTables::on_radioButtonGlobal_toggled(bool checked)
+{
+    if(checked)
+        updateTextBrowser();
+}
 
-    QString T1DF=tables->getT1(selectedNode,modelDF);
-    QString T1RF=tables->getT1(selectedNode,modelRF);
-    QString T1DI=tables->getT1(selectedNode,modelDI);
-    QString T1RI=tables->getT1(selectedNode,modelRI);
-    ui->textBrowserRecapDF->setText(T1DF);
-    ui->textBrowserRecapRF->setText(T1RF);
-    ui->textBrowserRecapDI->setText(T1DI);
-    ui->textBrowserRecapRI->setText(T1RI);
+void DialogTables::on_checkBoxRecap_toggled(bool checked)
+{
+        updateTextBrowser();
+}
 
+void DialogTables::on_radioButtonDF_toggled(bool checked)
+{
+    if(checked)
+        updateTextBrowser();
+}
 
+void DialogTables::on_radioButtonRF_toggled(bool checked)
+{
+   if(checked)
+       updateTextBrowser();
+}
 
+void DialogTables::on_radioButtonDI_toggled(bool checked)
+{
+    if(checked)
+        updateTextBrowser();
+}
+
+void DialogTables::on_radioButtonRI_toggled(bool checked)
+{
+    if(checked)
+        updateTextBrowser();
+}
+
+void DialogTables::on_checkBoxEvolution_toggled(bool checked)
+{
+    updateTextBrowser();
+}
+
+void DialogTables::on_checkBoxEvolutionCumul_toggled(bool checked)
+{
+    updateTextBrowser();
+}
+
+void DialogTables::on_checkBoxBase100_toggled(bool checked)
+{
+    updateTextBrowser();
+}
+
+void DialogTables::on_checkBoxJoursAct_toggled(bool checked)
+{
+    updateTextBrowser();
 }

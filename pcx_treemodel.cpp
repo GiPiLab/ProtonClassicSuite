@@ -1,5 +1,5 @@
 #include "pcx_treemodel.h"
-#include "utility.h"
+#include "utils.h"
 #include "pcx_typemodel.h"
 #include <QtGui>
 #include <QtSql>

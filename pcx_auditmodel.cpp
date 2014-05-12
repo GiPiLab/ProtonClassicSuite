@@ -1,5 +1,5 @@
 #include "pcx_auditmodel.h"
-#include "utility.h"
+#include "utils.h"
 #include <QMessageBox>
 
 PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent) :
@@ -290,7 +290,7 @@ bool PCx_AuditModel::finishAudit()
     return PCx_AuditModel::finishAudit(auditId);
 }
 
-QSqlTableModel *PCx_AuditModel::getModel(const QString &mode) const
+QSqlTableModel *PCx_AuditModel::getTableModel(const QString &mode) const
 {
     if(0==mode.compare("DF",Qt::CaseInsensitive))
     {
@@ -311,7 +311,7 @@ QSqlTableModel *PCx_AuditModel::getModel(const QString &mode) const
     return NULL;
 }
 
-QSqlTableModel *PCx_AuditModel::getModel(DFRFDIRI mode) const
+QSqlTableModel *PCx_AuditModel::getTableModel(DFRFDIRI mode) const
 {
     switch(mode)
     {

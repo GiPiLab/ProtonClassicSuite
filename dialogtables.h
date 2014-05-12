@@ -2,7 +2,7 @@
 #define DIALOGTABLES_H
 
 #include <QWidget>
-#include "pcx_tables.h"
+#include "pcx_auditmodel.h"
 
 namespace Ui {
 class DialogTables;
@@ -22,10 +22,34 @@ private slots:
 
     void on_treeView_clicked(const QModelIndex &index);
 
+    void on_radioButtonGlobal_toggled(bool checked);
+
+    void on_checkBoxRecap_toggled(bool checked);
+
+    void on_radioButtonDF_toggled(bool checked);
+
+    void on_radioButtonRF_toggled(bool checked);
+
+    void on_radioButtonDI_toggled(bool checked);
+
+    void on_radioButtonRI_toggled(bool checked);
+
+    void on_checkBoxEvolution_toggled(bool checked);
+
+    void on_checkBoxEvolutionCumul_toggled(bool checked);
+
+    void on_checkBoxBase100_toggled(bool checked);
+
+    void on_checkBoxJoursAct_toggled(bool checked);
+
 private:
     Ui::DialogTables *ui;
     void updateListOfAudits();
-    PCx_tables *tables;
+    void updateTextBrowser();
+
+    PCx_AuditModel *model;
+
+
 };
 
 #endif // DIALOGTABLES_H

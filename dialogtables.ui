@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>685</width>
+    <width>811</width>
     <height>486</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Tableaux</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QComboBox" name="comboListAudits"/>
@@ -39,325 +39,125 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
+        <widget class="QGroupBox" name="groupBoxMode">
+         <property name="title">
           <string/>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>40</number>
+          </property>
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="radioButtonGlobal">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Résultats globaux</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonDF">
+            <property name="text">
+             <string>DF</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonRF">
+            <property name="text">
+             <string>RF</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonDI">
+            <property name="text">
+             <string>DI</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="radioButtonRI">
+            <property name="text">
+             <string>RI</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextBrowser" name="textBrowser">
+         <property name="textInteractionFlags">
+          <set>Qt::NoTextInteraction</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QTabWidget" name="tabWidget">
-         <property name="tabShape">
-          <enum>QTabWidget::Triangular</enum>
+        <widget class="QGroupBox" name="groupBoxTables">
+         <property name="title">
+          <string>Tableaux</string>
          </property>
-         <property name="currentIndex">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="tabDF">
-          <attribute name="title">
-           <string>DF</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QTabWidget" name="tabWidget_2">
-             <property name="tabPosition">
-              <enum>QTabWidget::South</enum>
-             </property>
-             <property name="tabShape">
-              <enum>QTabWidget::Rounded</enum>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <property name="elideMode">
-              <enum>Qt::ElideNone</enum>
-             </property>
-             <widget class="QWidget" name="tabRecapDF">
-              <attribute name="title">
-               <string>Récapitulatif</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_6">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserRecapDF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionDF">
-              <attribute name="title">
-               <string>Evolution</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_7">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionDF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionCumulDF">
-              <attribute name="title">
-               <string>Evolution cumulée</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_8">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionCumulDF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabBase100DF">
-              <attribute name="title">
-               <string>Base 100</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserBase100DF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabJoursActDF">
-              <attribute name="title">
-               <string>Jours activité</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserJoursActDF"/>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabRF">
-          <attribute name="title">
-           <string>RF</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QTabWidget" name="tabWidget_3">
-             <property name="tabPosition">
-              <enum>QTabWidget::South</enum>
-             </property>
-             <property name="tabShape">
-              <enum>QTabWidget::Rounded</enum>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <property name="elideMode">
-              <enum>Qt::ElideNone</enum>
-             </property>
-             <widget class="QWidget" name="tabRecapRF">
-              <attribute name="title">
-               <string>Récapitulatif</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_11">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserRecapRF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionRF">
-              <attribute name="title">
-               <string>Evolution</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_12">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionRF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionCumulRF">
-              <attribute name="title">
-               <string>Evolution cumulée</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_13">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionCumulRF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabBase100RF">
-              <attribute name="title">
-               <string>Base 100</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_14">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserBase100RF"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabJoursActRF">
-              <attribute name="title">
-               <string>Jours activité</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_15">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserJoursActRF"/>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabDI">
-          <attribute name="title">
-           <string>DI</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <widget class="QTabWidget" name="tabWidget_4">
-             <property name="tabPosition">
-              <enum>QTabWidget::South</enum>
-             </property>
-             <property name="tabShape">
-              <enum>QTabWidget::Rounded</enum>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <property name="elideMode">
-              <enum>Qt::ElideNone</enum>
-             </property>
-             <widget class="QWidget" name="tabRecapDI">
-              <attribute name="title">
-               <string>Récapitulatif</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_16">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserRecapDI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionDI">
-              <attribute name="title">
-               <string>Evolution</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_17">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionDI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionCumulDI">
-              <attribute name="title">
-               <string>Evolution cumulée</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_18">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionCumulDI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabBase100DI">
-              <attribute name="title">
-               <string>Base 100</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_19">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserBase100DI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabJoursActDI">
-              <attribute name="title">
-               <string>Jours activité</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_20">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserJoursActDI"/>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabRI">
-          <attribute name="title">
-           <string>RI</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QTabWidget" name="tabWidget_5">
-             <property name="tabPosition">
-              <enum>QTabWidget::South</enum>
-             </property>
-             <property name="tabShape">
-              <enum>QTabWidget::Rounded</enum>
-             </property>
-             <property name="currentIndex">
-              <number>0</number>
-             </property>
-             <property name="elideMode">
-              <enum>Qt::ElideNone</enum>
-             </property>
-             <widget class="QWidget" name="tabRecapRI">
-              <attribute name="title">
-               <string>Récapitulatif</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_21">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserRecapRI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionRI">
-              <attribute name="title">
-               <string>Evolution</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_22">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionRI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabEvolutionCumulRI">
-              <attribute name="title">
-               <string>Evolution cumulée</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_23">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserEvolutionCumulRI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabBase100RI">
-              <attribute name="title">
-               <string>Base 100</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_24">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserBase100RI"/>
-               </item>
-              </layout>
-             </widget>
-             <widget class="QWidget" name="tabJoursActRI">
-              <attribute name="title">
-               <string>Jours activité</string>
-              </attribute>
-              <layout class="QHBoxLayout" name="horizontalLayout_25">
-               <item>
-                <widget class="QTextBrowser" name="textBrowserJoursActRI"/>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="tabResults">
-          <attribute name="title">
-           <string>Résultats</string>
-          </attribute>
-          <layout class="QHBoxLayout" name="horizontalLayout_26">
-           <item>
-            <widget class="QTextBrowser" name="textBrowserResults"/>
-           </item>
-          </layout>
-         </widget>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>2</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="checkBoxRecap">
+            <property name="text">
+             <string>Récapitulatif</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="checkBoxEvolution">
+            <property name="text">
+             <string>Evolution</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="checkBoxEvolutionCumul">
+            <property name="text">
+             <string>Evolution cumulée</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxBase100">
+            <property name="text">
+             <string>Base 100</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBoxJoursAct">
+            <property name="text">
+             <string>Jours activité</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>

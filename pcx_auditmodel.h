@@ -52,12 +52,12 @@ public:
 
     bool finishAudit();
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
-    QSqlTableModel *getModel(const QString &mode) const;
-    QSqlTableModel *getModel(DFRFDIRI mode) const;
-    QSqlTableModel *getModelDF() const {return modelDF;}
-    QSqlTableModel *getModelDI() const {return modelDI;}
-    QSqlTableModel *getModelRF() const {return modelRF;}
-    QSqlTableModel *getModelRI() const {return modelRI;}
+    QSqlTableModel *getTableModel(const QString &mode) const;
+    QSqlTableModel *getTableModel(DFRFDIRI mode) const;
+    QSqlTableModel *getTableModelDF() const {return modelDF;}
+    QSqlTableModel *getTableModelDI() const {return modelDI;}
+    QSqlTableModel *getTableModelRF() const {return modelRF;}
+    QSqlTableModel *getTableModelRI() const {return modelRI;}
 
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
     static bool finishAudit(unsigned int id);

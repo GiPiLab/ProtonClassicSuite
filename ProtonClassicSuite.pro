@@ -13,8 +13,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
 	mainwindow.cpp \
-    utility.cpp \
-    dbutils.cpp \
     pcx_treemodel.cpp \
     pcx_typemodel.cpp \
     dialogedittree.cpp \
@@ -25,11 +23,10 @@ SOURCES += main.cpp\
     pcx_auditinfos.cpp \
     auditdatadelegate.cpp \
     pcx_tables.cpp \
-    dialogtables.cpp
+    dialogtables.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
-    utility.h \
-    dbutils.h \
     pcx_treemodel.h \
     pcx_typemodel.h \
     dialogedittree.h \
@@ -40,7 +37,8 @@ HEADERS  += mainwindow.h \
     pcx_auditinfos.h \
     auditdatadelegate.h \
     pcx_tables.h \
-    dialogtables.h
+    dialogtables.h \
+    utils.h
 
 FORMS    += mainwindow.ui \
     dialogedittree.ui \

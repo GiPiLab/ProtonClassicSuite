@@ -1,7 +1,7 @@
 #include "dialogdisplaytree.h"
 #include "dialogedittree.h"
 #include "ui_dialogedittree.h"
-#include "utility.h"
+#include "utils.h"
 #include "pcx_treemodel.h"
 #include <QtSql>
 #include <QtGui>

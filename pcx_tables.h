@@ -2,25 +2,31 @@
 #define PCX_TABLES_H
 
 #include <QObject>
-#include "pcx_auditmodel.h"
+#include <QSqlTableModel>
 
-class PCx_tables : public QObject
+namespace PCx_Tables
 {
-    Q_OBJECT
-public:
-    explicit PCx_tables(unsigned int auditId,QObject *parent = 0);
-    virtual ~PCx_tables();
-    QString getT1(unsigned int node, QSqlTableModel *model) const;
-    PCx_AuditModel *getModel(){return currentAudit;}
+QString getT1(unsigned int node, const QSqlTableModel *model);
+QString getT2(unsigned int node, const QSqlTableModel *model);
+QString getT3(unsigned int node, const QSqlTableModel *model);
+QString getT4(unsigned int node, const QSqlTableModel *model);
+QString getT5(unsigned int node, const QSqlTableModel *model);
+QString getT6(unsigned int node, const QSqlTableModel *model);
+QString getT7(unsigned int node, const QSqlTableModel *model);
+QString getT8(unsigned int node, const QSqlTableModel *model);
+QString getT9(unsigned int node, const QSqlTableModel *model);
+QString getT10(unsigned int node, const QSqlTableModel *model);
+QString getT11(unsigned int node, const QSqlTableModel *model);
+QString getCSS();
 
-signals:
 
-public slots:
+QString getTabRecap(unsigned int node, const QSqlTableModel *tableModel);
+QString getTabEvolution(unsigned int node, const QSqlTableModel *tableModel);
+QString getTabEvolutionCumul(unsigned int node, const QSqlTableModel *tableModel);
+QString getTabBase100(unsigned int node, const QSqlTableModel *tableModel);
+QString getTabJoursAct(unsigned int node, const QSqlTableModel *tableModel);
 
-private:
-    PCx_AuditModel *currentAudit;
 
-
-};
+}
 
 #endif // PCX_TABLES_H

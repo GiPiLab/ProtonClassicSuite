@@ -1,5 +1,5 @@
 #include "pcx_typemodel.h"
-#include "utility.h"
+#include "utils.h"
 #include <QtGui>
 #include <QtSql>
 #include <QMessageBox>

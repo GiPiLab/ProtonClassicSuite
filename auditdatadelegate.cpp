@@ -1,5 +1,6 @@
 #include "auditdatadelegate.h"
 #include "pcx_auditmodel.h"
+#include "utils.h"
 #include <QtGui>
 #include <QApplication>
 #include <QDoubleSpinBox>
@@ -14,9 +15,6 @@ auditDataDelegate::auditDataDelegate(QObject *parent) :
 
 void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-
-    QLocale locale;
-
     //Add a little horizontal padding
     QRect rect=option.rect;
     rect.setWidth(rect.width()-5);
@@ -29,7 +27,7 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         {
             painter->setPen(QColor(255,0,0));
         }
-        QString formattedNum=locale.toString(index.data().toDouble(),'f',2);
+        QString formattedNum=formatDouble(index.data().toDouble());
         painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
     }
     else if(index.column()==COL_ANNEE)

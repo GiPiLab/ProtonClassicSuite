@@ -1,22 +1,13 @@
 #include "pcx_tables.h"
 #include <QtGui>
 #include <QtSql>
+#include "utils.h"
 
 
-
-PCx_tables::PCx_tables(unsigned int auditId, QObject *parent) :
-    QObject(parent)
+namespace PCx_Tables
 {
-    currentAudit=new PCx_AuditModel(auditId,parent);
-}
-
-PCx_tables::~PCx_tables()
-{
-    delete currentAudit;
-}
-
 //Overview and percents
-QString PCx_tables::getT1(unsigned int node, QSqlTableModel *model) const
+QString getT1(unsigned int node, const QSqlTableModel *model)
 {
     Q_ASSERT(node>0 && model!=NULL);
 
@@ -28,9 +19,57 @@ QString PCx_tables::getT1(unsigned int node, QSqlTableModel *model) const
     q.exec();
     while(q.next())
     {
-        output.append(QString("<span style='color:red;background-color:blue'>%1</span>").arg(QString::number(q.value("ouverts").toDouble())));
+        output.append(QString("<span>%1</span>").arg(formatDouble(q.value("ouverts").toDouble())));
+
         output.append("   ");
     }
     return output;
+
+}
+
+QString getCSS()
+{
+    QString css;
+    css="span {color:red;}";
+    return css;
+}
+
+
+QString getTabRecap(unsigned int node, const QSqlTableModel *tableModel)
+{
+    return getT1(node,tableModel);
+}
+
+QString getTabEvolution(unsigned int node, const QSqlTableModel *tableModel)
+{
+   return "EVOL";
+}
+
+
+
+QString getTabEvolutionCumul(unsigned int node, const QSqlTableModel *tableModel)
+{
+   return "EVOLCUMUL";
+}
+
+
+QString getTabBase100(unsigned int node, const QSqlTableModel *tableModel)
+{
+    return "BASE100";
+}
+
+
+QString getTabJoursAct(unsigned int node, const QSqlTableModel *tableModel)
+{
+    return "JOURSACT";
+}
+
+
+
+
+
+
+
+
 
 }

@@ -1,11 +1,21 @@
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
-#include <QDebug>
-#include <QFile>
-#include "dbutils.h"
+#include "utils.h"
 
+#include <QtGui>
+#include <QtSql>
+#include <QApplication>
 
+void die(int retcode)
+{
+    QSqlDatabase::database().close();
+    QApplication::instance()->exit(retcode);
+    exit(retcode);
+}
+
+QString formatDouble(double num)
+{
+    QLocale locale;
+    return locale.toString(num,'f',2);
+}
 
 void emptyDb(void)
 {
@@ -67,4 +77,3 @@ QSqlDatabase loadDb(bool addDriver)
     initDb();
     return db;
 }
-

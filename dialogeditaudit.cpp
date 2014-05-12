@@ -75,24 +75,24 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     ui->treeView->setModel(auditModel->getAttachedTreeModel());
     ui->treeView->expandToDepth(1);
 
-    ui->tableViewDF->setModel(auditModel->getModelDF());
+    ui->tableViewDF->setModel(auditModel->getTableModelDF());
     ui->tableViewDF->hideColumn(0);
     ui->tableViewDF->hideColumn(1);
-    ui->tableViewRF->setModel(auditModel->getModelRF());
+    ui->tableViewRF->setModel(auditModel->getTableModelRF());
     ui->tableViewRF->hideColumn(0);
     ui->tableViewRF->hideColumn(1);
-    ui->tableViewDI->setModel(auditModel->getModelDI());
+    ui->tableViewDI->setModel(auditModel->getTableModelDI());
     ui->tableViewDI->hideColumn(0);
     ui->tableViewDI->hideColumn(1);
-    ui->tableViewRI->setModel(auditModel->getModelRI());
+    ui->tableViewRI->setModel(auditModel->getTableModelRI());
     ui->tableViewRI->hideColumn(0);
     ui->tableViewRI->hideColumn(1);
 
     //Roots
-    auditModel->getModelDF()->setFilter(QString("id_node=1"));
-    auditModel->getModelRF()->setFilter(QString("id_node=1"));
-    auditModel->getModelDI()->setFilter(QString("id_node=1"));
-    auditModel->getModelRI()->setFilter(QString("id_node=1"));
+    auditModel->getTableModelDF()->setFilter(QString("id_node=1"));
+    auditModel->getTableModelRF()->setFilter(QString("id_node=1"));
+    auditModel->getTableModelDI()->setFilter(QString("id_node=1"));
+    auditModel->getTableModelRI()->setFilter(QString("id_node=1"));
     ui->label->setText(auditModel->getAttachedTreeModel()->index(0,0).data().toString());
 
     ui->tableViewDF->setEnabled(false);
@@ -111,10 +111,10 @@ void DialogEditAudit::on_treeView_clicked(const QModelIndex &index)
     unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
     Q_ASSERT(selectedNode>0);
 
-    auditModel->getModelDF()->setFilter(QString("id_node=%1").arg(selectedNode));
-    auditModel->getModelRF()->setFilter(QString("id_node=%1").arg(selectedNode));
-    auditModel->getModelDI()->setFilter(QString("id_node=%1").arg(selectedNode));
-    auditModel->getModelRI()->setFilter(QString("id_node=%1").arg(selectedNode));
+    auditModel->getTableModelDF()->setFilter(QString("id_node=%1").arg(selectedNode));
+    auditModel->getTableModelRF()->setFilter(QString("id_node=%1").arg(selectedNode));
+    auditModel->getTableModelDI()->setFilter(QString("id_node=%1").arg(selectedNode));
+    auditModel->getTableModelRI()->setFilter(QString("id_node=%1").arg(selectedNode));
     bool isLeaf=auditModel->getAttachedTreeModel()->isLeaf(selectedNode);
 
     ui->tableViewDF->setEnabled(isLeaf);
