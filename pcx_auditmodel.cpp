@@ -531,6 +531,42 @@ bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, 
     return true;
 }
 
+QString PCx_AuditModel::modetoTableString(DFRFDIRI mode) const
+{
+    switch(mode)
+    {
+    case DF:
+        return "DF";
+    case RF:
+        return "RF";
+    case DI:
+        return "DI";
+    case RI:
+        return "RI";
+    default:
+        qDebug()<<"Invalid mode specified !";
+    }
+    return QString();
+}
+
+QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode) const
+{
+    switch(mode)
+    {
+    case DF:
+        return tr("Dépenses de fonctionnement");
+    case RF:
+        return tr("Recettes de fonctionnement");
+    case DI:
+        return tr("Dépenses d'investissement");
+    case RI:
+        return tr("Recettes d'investissement");
+    default:
+        qDebug()<<"Invalid mode specified !";
+    }
+    return QString();
+}
+
 
 //Warning, be called twice (see isDirty)
 void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
@@ -634,4 +670,267 @@ bool PCx_AuditModel::finishAudit(unsigned int id)
     }
     return true;
 }
+
+
+QString PCx_AuditModel::getT1(unsigned int node, DFRFDIRI mode) const
+{
+    Q_ASSERT(node>0);
+
+    QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
+    QString output;
+    output.append("<table cellpadding='5' border='1'>");
+    output.append(QString("<tr class='t1entete'><td style='text-align:center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>").arg(attachedTree->getNodeName(node)).arg(modeToCompleteString(mode).toHtmlEscaped()));
+    output.append("<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>%/pr&eacute;vu</th><th>Engag&eacute;</th><th>%/pr&eacute;vu</th><th>Disponible</th><th>%/pr&eacute;vu</th></tr>");
+
+    QSqlQuery q;
+    q.prepare(QString("select * from %1 where id_node=:id").arg(tableName));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    while(q.next())
+    {
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double engages=q.value("engages").toDouble();
+        double disponibles=q.value("disponibles").toDouble();
+
+        double percent_realises_ouverts=0.0,percent_engages_ouverts=0.0,percent_disponibles_ouverts=0.0;
+
+        if(ouverts!=0.0)
+        {
+            percent_realises_ouverts=realises*100/ouverts;
+            percent_engages_ouverts=engages*100/ouverts;
+            percent_disponibles_ouverts=disponibles*100/ouverts;
+        }
+        output.append(QString("<tr><td class='t1annee'>%1</td><td class='t1valeur'>%2</td><td class='t1valeur'>%3</td>"
+                      "<td align='right' class='t1pourcent'>%4\%</td><td class='t1valeur'>%5</td><td align='right' class='t1pourcent'>%6\%</td>"
+                      "<td class='t1valeur'>%7</td><td align='right' class='t1pourcent'>%8\%</td></tr>").arg(q.value("annee").toUInt())
+                      .arg(formatDouble(ouverts)).arg(formatDouble(realises)).arg(formatDouble(percent_realises_ouverts))
+                      .arg(formatDouble(engages)).arg(formatDouble(percent_engages_ouverts))
+                      .arg(formatDouble(disponibles)).arg(formatDouble(percent_disponibles_ouverts)));
+    }
+
+    output.append("</table>");
+
+
+
+
+    return output;
+
+}
+
+QString PCx_AuditModel::getCSS() const
+{
+    QString css="dt.synop{"
+    "	font-weight:bold;"
+    "	padding-top:1em;"
+    "}"
+    "dd.synop{"
+    "	margin:0;"
+    "}"
+    ".req1 {"
+    "background-color:#FAB;"
+    "padding:5px;"
+    "}"
+    ".req2 {"
+    "background-color:#BFA;"
+    "padding:5px;"
+    "}"
+    ".req3 {"
+    "background-color:#BAF;"
+    "padding:5px;"
+    "}"
+    ".req1normal {"
+    "background-color:#FAB;"
+    "}"
+    ".req2normal {"
+    "background-color:#BFA;"
+    "}"
+    ".req3normal {"
+    "background-color:#BAF;"
+    "}"
+    ".bg1 {"
+    "padding-left:5px;"
+    "padding-right:5px;"
+    "background-color:#ABC;"
+    "}"
+    ".bg2 {"
+    "padding-left:5px;"
+    "padding-right:5px;"
+    "background-color:#CAC;"
+    "}"
+    ".bg3 {"
+    "padding-left:5px;"
+    "padding-right:5px;"
+    "background-color:#CDB;"
+    "}"
+    "a:visited {"
+    "font-weight:700;"
+    "}"
+    "li {"
+    "line-height:30px;"
+    "}"
+    "h1 {"
+    "color:#A00;"
+    "}"
+    "h2 {"
+    "color:navy;"
+    "}"
+    "h3 {"
+    "color:green;"
+    "font-size:larger;"
+    "}"
+    "table {"
+    "color:navy;"
+    //"font-weight:700;"
+    //"font-size:10pt;"
+    "page-break-inside:avoid;"
+    "}"
+    "td.t1pourcent {"
+    "background-color:#b3b3b3;"
+
+    "color:#FFF;"
+    "}"
+    "td.t2annee {"
+    "background-color:#b3b3b3;"
+    "color:green;"
+    "}"
+    "tr.t6entete {"
+    "background-color:#e6e6e6;"
+    "color:green;"
+    "text-align:center;"
+    "}"
+    "td.t6annee {"
+    "background-color:#e6e6e6;"
+    "color:green;"
+    "}"
+    "td.t7pourcent {"
+    "background-color:#666;"
+    "color:#FFF;"
+    "}"
+    "tr.t8entete {"
+    "background-color:#e6e6e6;"
+    "text-align:center;"
+    "color:green;"
+    "}"
+    "td.t8valeur {"
+    "background-color:#e6e6e6;"
+    "font-weight:400;"
+    "text-align:center;"
+    "color:#000;"
+    "}"
+    "td.t8pourcent {"
+    "background-color:#e6e6e6;"
+    "text-align:center;"
+    "color:#000;"
+    "}"
+    "td.t9valeur {"
+    "background-color:#666;"
+    "color:#FFF;"
+    "font-weight:400;"
+    "text-align:center;"
+    "}"
+    "td.t9pourcent {"
+    "background-color:#666;"
+    "text-align:center;"
+    "color:#FFF;"
+    "}"
+    "tr.t1entete,tr.t3entete,td.t9annee {"
+    "background-color:#b3b3b3;"
+    "text-align:center;"
+    "}"
+    "td.t1annee,td.t3annee {"
+    "background-color:#b3b3b3;"
+    "}"
+    "td.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee {"
+    "background-color:#e6e6e6;"
+    "}"
+    "td.t2pourcent,td.t3pourcent {"
+    "background-color:#e6e6e6;"
+    "color:#000;"
+    "}"
+    "tr.t2entete,td.t8annee {"
+    "background-color:#b3b3b3;"
+    "color:green;"
+    "text-align:center;"
+    "}"
+    "tr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete {"
+    "background-color:#e6e6e6;"
+    "text-align:center;"
+    "}"
+    "td.t5valeur,td.t6valeur,td.t7valeur {"
+    "background-color:#b3b3b3;"
+    "color:#000;"
+    "font-weight:400;"
+    "}"
+    "td.t5pourcent,td.t6pourcent {"
+    "background-color:#b3b3b3;"
+    "color:#000;"
+    "}";
+    return css;
+}
+
+
+QString PCx_AuditModel::getTabRecap(unsigned int node, DFRFDIRI mode) const
+{
+    QString out=getT1(node,mode);
+    return out;
+}
+
+QString PCx_AuditModel::getTabEvolution(unsigned int node, DFRFDIRI mode) const
+{
+   return "EVOL";
+}
+
+
+
+QString PCx_AuditModel::getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const
+{
+   return "EVOLCUMUL";
+}
+
+
+QString PCx_AuditModel::getTabBase100(unsigned int node, DFRFDIRI mode) const
+{
+    return "BASE100";
+}
+
+
+QString PCx_AuditModel::getTabJoursAct(unsigned int node, DFRFDIRI mode) const
+{
+    return "JOURSACT";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

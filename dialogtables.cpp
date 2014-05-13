@@ -1,5 +1,4 @@
 #include "dialogtables.h"
-#include "pcx_tables.h"
 #include "ui_dialogtables.h"
 #include "utils.h"
 
@@ -12,6 +11,7 @@ DialogTables::DialogTables(QWidget *parent) :
 {
     model=NULL;
     ui->setupUi(this);
+    doc=new QTextDocument();
     //ui->splitter->setStretchFactor(1,1);
     updateListOfAudits();
 
@@ -20,6 +20,7 @@ DialogTables::DialogTables(QWidget *parent) :
 DialogTables::~DialogTables()
 {
     delete ui;
+    delete doc;
     if(model!=NULL)
         delete model;
 }
@@ -40,26 +41,27 @@ void DialogTables::updateListOfAudits()
 
 void DialogTables::updateTextBrowser()
 {
-    QSqlTableModel *tableModel;
+    DFRFDIRI mode;
+    bool modeGlobal=false;
     if(ui->radioButtonDF->isChecked())
     {
-        tableModel=model->getTableModelDF();
+        mode=DF;
     }
     else if(ui->radioButtonRF->isChecked())
     {
-        tableModel=model->getTableModelRF();
+        mode=RF;
     }
     else if(ui->radioButtonDI->isChecked())
     {
-        tableModel=model->getTableModelDI();
+        mode=DI;
     }
     else if(ui->radioButtonRI->isChecked())
     {
-        tableModel=model->getTableModelRI();
+        mode=RI;
     }
     else if(ui->radioButtonGlobal->isChecked())
     {
-        tableModel=NULL;
+        modeGlobal=true;
     }
     else
     {
@@ -68,33 +70,33 @@ void DialogTables::updateTextBrowser()
     }
 
     ui->textBrowser->clear();
-    QString output;
+    QString output="<html><head><link rel='stylesheet' type='text/css' href='style.css'></head><body>";
 
     unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 
 
     //Mode DF,RF,DI,RI
-    if(tableModel!=NULL)
+    if(modeGlobal==false)
     {
         if(ui->checkBoxRecap->isChecked())
         {
-                output.append(PCx_Tables::getTabRecap(selectedNode,tableModel));
+                output.append(model->getTabRecap(selectedNode,mode));
         }
         if(ui->checkBoxEvolution->isChecked())
         {
-                output.append(PCx_Tables::getTabEvolution(selectedNode,tableModel));
+                output.append(model->getTabEvolution(selectedNode,mode));
         }
         if(ui->checkBoxEvolutionCumul->isChecked())
         {
-                output.append(PCx_Tables::getTabEvolutionCumul(selectedNode,tableModel));
+                output.append(model->getTabEvolutionCumul(selectedNode,mode));
         }
         if(ui->checkBoxBase100->isChecked())
         {
-                output.append(PCx_Tables::getTabBase100(selectedNode,tableModel));
+                output.append(model->getTabBase100(selectedNode,mode));
         }
         if(ui->checkBoxJoursAct->isChecked())
         {
-                output.append(PCx_Tables::getTabJoursAct(selectedNode,tableModel));
+                output.append(model->getTabJoursAct(selectedNode,mode));
         }
     }
     //Global mode
@@ -102,8 +104,13 @@ void DialogTables::updateTextBrowser()
     {
         output.append("Toto");
     }
+   output.append("</body></html>");
 
-    ui->textBrowser->setHtml(output);
+   doc->clear();
+   doc->addResource(QTextDocument::StyleSheetResource,QUrl("style.css"),model->getCSS());
+   doc->setHtml(output);
+
+   ui->textBrowser->setDocument(doc);
 }
 
 
@@ -135,12 +142,6 @@ void DialogTables::on_treeView_clicked(const QModelIndex &index)
     ui->groupBoxMode->setTitle(index.data().toString());
 
     updateTextBrowser();
-
-    /*displayTablesRecap(selectedNode,tbl);
-        displayTablesEvolution(selectedNode,tbl);
-        displayTablesEvolutionCumul(selectedNode,tbl);
-        displayTablesBase100(selectedNode,tbl);
-        displayTablesJoursAct(selectedNode,tbl);*/
 }
 
 void DialogTables::on_radioButtonGlobal_toggled(bool checked)

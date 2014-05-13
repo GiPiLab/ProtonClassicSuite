@@ -37,7 +37,7 @@ private:
     bool loadSqlTableModel();
     void loadSqlQueryModel();
 
-    QHash<int,QString> idTypesToNom;
+    QHash<unsigned int,QString> idTypesToNom;
     unsigned int treeId;
     QStringList nomTypes;
     QSqlTableModel *typesTableModel;

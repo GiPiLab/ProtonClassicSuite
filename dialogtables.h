@@ -47,6 +47,7 @@ private:
     void updateListOfAudits();
     void updateTextBrowser();
 
+    QTextDocument *doc;
     PCx_AuditModel *model;
 
 

@@ -19,7 +19,7 @@ public:
     explicit PCx_TreeModel(unsigned int treeId, QObject *parent=0);
     virtual ~PCx_TreeModel();
 
-    int getTreeId() const {return treeId;}
+    unsigned int getTreeId() const {return treeId;}
     bool isFinished() const {return finished;}
     const QString & getName() const {return treeName;}
     QDateTime getCreationTime() const;
@@ -27,7 +27,7 @@ public:
 
     void setName(const QString & name){treeName=name;}
 
-    unsigned int addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex);
+    unsigned int addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex);
     bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, unsigned int newType);
 
     bool deleteNode(const QModelIndex &nodeIndex);
@@ -49,6 +49,7 @@ public:
 
     bool updateTree();
 
+    QString getNodeName(unsigned int node) const;
     static bool addNewTree(const QString &name);
     static int deleteTree(unsigned int treeId);
     static QString idTreeToName(unsigned int treeId);
@@ -58,7 +59,7 @@ private:
     QStandardItem *root;
     PCx_TypeModel *types;
 
-    int treeId;
+    unsigned int treeId;
     bool finished;
     QString treeName;
     QString creationTime;

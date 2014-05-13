@@ -113,7 +113,7 @@ bool PCx_TypeModel::deleteType(const QString &type)
 {
     if(type.isNull() || type.isEmpty())return false;
     QSqlQuery query;
-    int typeId=-1;
+    unsigned int typeId=0;
 
     query.prepare(QString("select id from types_%1 where nom=:nom limit 1").arg(treeId));
     query.bindValue(":nom",type);
@@ -127,7 +127,7 @@ bool PCx_TypeModel::deleteType(const QString &type)
 
     if(query.next())
     {
-        typeId=query.value(0).toInt();
+        typeId=query.value(0).toUInt();
         qDebug()<<"typeId = "<<typeId<<"Text = "<<type;
     }
     else return false;
@@ -137,6 +137,7 @@ bool PCx_TypeModel::deleteType(const QString &type)
 
 bool PCx_TypeModel::deleteType(unsigned int id)
 {
+    Q_ASSERT(id>0);
     QSqlQuery query;
 
     query.prepare(QString("select count(*) from arbre_%1 where type=:type").arg(treeId));
@@ -189,7 +190,7 @@ bool PCx_TypeModel::loadFromDatabase(unsigned int treeId)
 
     while(query.next())
     {
-        idTypesToNom.insert(query.value(0).toInt(),query.value(1).toString());
+        idTypesToNom.insert(query.value(0).toUInt(),query.value(1).toString());
         nomTypes.append(query.value(1).toString());
     }
     return true;

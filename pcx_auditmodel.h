@@ -62,6 +62,16 @@ public:
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
     static bool finishAudit(unsigned int id);
 
+    QString getTabJoursAct(unsigned int node, DFRFDIRI mode) const;
+    QString getTabBase100(unsigned int node, DFRFDIRI mode) const;
+    QString getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const;
+    QString getTabEvolution(unsigned int node, DFRFDIRI mode) const;
+    QString getTabRecap(unsigned int node, DFRFDIRI mode) const;
+    QString getCSS() const;
+    QString getT1(unsigned int node, DFRFDIRI mode) const;
+    QString modetoTableString(DFRFDIRI mode) const;
+    QString modeToCompleteString(DFRFDIRI mode) const;
+
 signals:
 
 public slots:
@@ -77,6 +87,9 @@ private:
     bool loadFromDb(unsigned int auditId);
     bool propagateToAncestors(const QModelIndex &node);
     bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
+
+
+
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

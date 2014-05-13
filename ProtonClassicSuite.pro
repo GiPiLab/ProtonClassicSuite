@@ -22,7 +22,6 @@ SOURCES += main.cpp\
     dialogeditaudit.cpp \
     pcx_auditinfos.cpp \
     auditdatadelegate.cpp \
-    pcx_tables.cpp \
     dialogtables.cpp \
     utils.cpp
 
@@ -36,7 +35,6 @@ HEADERS  += mainwindow.h \
     dialogeditaudit.h \
     pcx_auditinfos.h \
     auditdatadelegate.h \
-    pcx_tables.h \
     dialogtables.h \
     utils.h
 

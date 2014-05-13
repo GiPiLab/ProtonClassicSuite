@@ -152,19 +152,6 @@ void DialogEditTree::on_deleteTypeButton_clicked()
     }
 }
 
-/*
- * Pense-bete pour accéder aux items et aux id
-void DialogEditTree::on_treeView_clicked(const QModelIndex &index)
-{
-    qDebug()<<"Clicked : "<<index.data().toString()<<"Id = "<<index.data(Qt::UserRole+1).toInt()<< "Type = "<<index.data(Qt::UserRole+2).toInt();
-
-    qDebug()<<"Selection model : "<<ui->treeView->selectionModel()->selectedIndexes()[0].data(Qt::UserRole+1).toInt();
-
-    //Access id in listTypeView :
-    QModelIndex indexType=ui->listTypesView->currentIndex();
-    qDebug()<<"Type selected ID : "<<model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
-}*/
-
 void DialogEditTree::on_addNodeButton_clicked()
 {
     if(model==NULL)return;
@@ -172,7 +159,7 @@ void DialogEditTree::on_addNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
-        int selectedId=selection[0].data(Qt::UserRole+1).toInt();
+        unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
         qDebug()<<"Node Selected Id : "<<selectedId;
 
         QModelIndex indexType=ui->listTypesView->currentIndex();
@@ -182,7 +169,7 @@ void DialogEditTree::on_addNodeButton_clicked()
             return;
         }
 
-        int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
+        unsigned int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toUInt();
 
         qDebug()<<"Type selected ID : "<<selectedTypeId;
 
@@ -216,7 +203,7 @@ void DialogEditTree::on_modifyNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
-        int selectedId=selection[0].data(Qt::UserRole+1).toInt();
+        unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
         qDebug()<<"Node Selected Id : "<<selectedId;
 
         //No modification for the root
@@ -233,7 +220,7 @@ void DialogEditTree::on_modifyNodeButton_clicked()
             return;
         }
 
-        int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toInt();
+        unsigned int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toUInt();
 
         bool ok;
         QString text;
@@ -266,7 +253,7 @@ void DialogEditTree::on_deleteNodeButton_clicked()
     if(!selection.isEmpty())
     {
         //Assume only single selection
-        int selectedId=selection[0].data(Qt::UserRole+1).toInt();
+        unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
         qDebug()<<"Node Selected Id : "<<selectedId;
 
         //No modification for the root
@@ -315,7 +302,7 @@ void DialogEditTree::on_comboBox_activated(int index)
         delete model;
     }
 
-    model=new PCx_TreeModel(ui->comboBox->currentData().toInt());
+    model=new PCx_TreeModel(ui->comboBox->currentData().toUInt());
 
     ui->treeView->setModel(model);
     ui->treeView->expandToDepth(1);

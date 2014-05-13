@@ -60,7 +60,7 @@ QList<QPair<unsigned int, QString> > PCx_TreeModel::getListOfTrees(bool finished
     return listOfTrees;
 }
 
-unsigned int PCx_TreeModel::addNode(int pid, int type, const QString &name, const QModelIndex &pidNodeIndex)
+unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex)
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
 
@@ -100,16 +100,16 @@ unsigned int PCx_TreeModel::addNode(int pid, int type, const QString &name, cons
     if(pidNodeIndex.isValid())
     {
         QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(types->getNomType(type),name,type,q.lastInsertId().toInt());
+        QStandardItem *newitem=createItem(types->getNomType(type),name,type,q.lastInsertId().toUInt());
         pidItem->appendRow(newitem);
     }
-    return q.lastInsertId().toInt();
+    return q.lastInsertId().toUInt();
 }
 
 bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, unsigned int newType)
 {
     Q_ASSERT(nodeIndex.isValid() && !newName.isNull()&& !newName.isEmpty() && newType>0);
-    int nodeId=nodeIndex.data(Qt::UserRole+1).toInt();
+    unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
     qDebug()<<"Node ID = "<<nodeId;
 
     QSqlQuery q;
@@ -211,7 +211,6 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     {
         qCritical()<<query.lastError().text();
         QSqlDatabase::database().rollback();
-        //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
         die();
     }
 
@@ -221,8 +220,6 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     {
         qCritical()<<query.lastError().text();
         QSqlDatabase::database().rollback();
-        //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
-        //query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
         die();
     }
 
@@ -236,9 +233,6 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         {
             qCritical()<<query.lastError().text();
             QSqlDatabase::database().rollback();
-            //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
-            //query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
-            //query.exec(QString("drop table types_%1").arg(lastId.toInt()));
             die();
         }
     }
@@ -249,9 +243,6 @@ bool PCx_TreeModel::addNewTree(const QString &name)
     {
         qCritical()<<query.lastError().text();
         QSqlDatabase::database().rollback();
-        //query.exec(QString("delete from index_arbres where id=%1").arg(lastId.toInt()));
-        //query.exec(QString("drop table arbre_%1").arg(lastId.toInt()));
-        //query.exec(QString("drop table types_%1").arg(lastId.toInt()));
         die();
     }
     QSqlDatabase::database().commit();
@@ -490,9 +481,9 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         return false;
     }
 
-    int dragId,dropId;
+    unsigned int dragId,dropId;
 
-    dropId=parent.data(Qt::UserRole+1).toInt();
+    dropId=parent.data(Qt::UserRole+1).toUInt();
 
     qDebug()<<"DROP ID = "<<dropId;
 
@@ -502,7 +493,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     QMap<int, QVariant> roleDataMap;
     stream >> arow>>acol>>roleDataMap;
 
-    dragId=roleDataMap[Qt::UserRole+1].toInt();
+    dragId=roleDataMap[Qt::UserRole+1].toUInt();
     qDebug()<<"DRAG ID = "<<dragId;
     if(dragId==1)
     {
@@ -560,6 +551,26 @@ bool PCx_TreeModel::updateTree()
     return true;
 }
 
+QString PCx_TreeModel::getNodeName(unsigned int node) const
+{
+    Q_ASSERT(node>0);
+    QSqlQuery q;
+    q.prepare(QString("select * from arbre_%1 where id=:id").arg(treeId));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(q.next())
+    {
+        QString typeName=types->getNomType(q.value("type").toUInt());
+        return QString("%1 %2").arg(typeName).arg(q.value("nom").toString());
+    }
+    else
+    {
+        qDebug()<<"Bad node id";
+    }
+    return QString();
+}
+
 bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
 {
     QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
@@ -570,10 +581,11 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     }
     while(query.next())
     {
-        QStandardItem *newitem=createItem(types->getNomType(query.value(3).toInt()),query.value(1).toString(),query.value(3).toInt(),query.value(0).toInt());
+        QStandardItem *newitem=createItem(types->getNomType(query.value(3).toUInt()),query.value(1).toString(),query.value(3).toUInt(),query.value(0).toUInt());
 
         item->appendRow(newitem);
-        createChildrenItems(newitem,query.value(0).toInt());
+        createChildrenItems(newitem,query.value(0).toUInt());
+//        qDebug()<<getNodeName(query.value(0).toUInt());
     }
     return true;
 
