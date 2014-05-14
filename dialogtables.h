@@ -16,6 +16,10 @@ public:
     explicit DialogTables(QWidget *parent = 0);
     ~DialogTables();
 
+public slots:
+    void onListOfAuditsChanged();
+
+
 private slots:
 
     void on_comboListAudits_activated(int index);

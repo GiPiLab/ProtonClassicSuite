@@ -118,10 +118,12 @@ void DialogManageAudits::on_comboListOfAudits_activated(int index)
         if(infos.finished==true)
         {
             ui->labelFinished->setText(tr("oui"));
+            ui->finishAuditButton->setEnabled(false);
         }
         else
         {
             ui->labelFinished->setText(tr("non"));
+            ui->finishAuditButton->setEnabled(true);
         }
         ui->labelTree->setText(infos.attachedTreeName);
         ui->labelYears->setText(infos.yearsString);

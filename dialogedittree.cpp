@@ -97,13 +97,12 @@ void DialogEditTree::on_deleteTreeButton_clicked()
             ui->listTypesView->setModel(NULL);
             model->getTypes()->getTableModel()->clear();
             model->clear();
-
-            updateListOfTree();
             delete model;
             model=NULL;
 
+            updateListOfTree();
+
             emit(listOfTreeChanged());
-            ui->comboBox->setCurrentIndex(-1);
         }
         else if(result==0)
         {

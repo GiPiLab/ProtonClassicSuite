@@ -2,9 +2,6 @@
 #include "ui_dialogtables.h"
 #include "utils.h"
 
-//TODO : Slot for list of audits changed
-
-
 DialogTables::DialogTables(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::DialogTables)
@@ -23,6 +20,11 @@ DialogTables::~DialogTables()
     delete doc;
     if(model!=NULL)
         delete model;
+}
+
+void DialogTables::onListOfAuditsChanged()
+{
+    updateListOfAudits();
 }
 
 void DialogTables::updateListOfAudits()
@@ -72,6 +74,7 @@ void DialogTables::updateTextBrowser()
     ui->textBrowser->clear();
     QString output="<html><head><link rel='stylesheet' type='text/css' href='style.css'></head><body>";
 
+    //TODO : Preserve scroll location between refresh
     unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 
 

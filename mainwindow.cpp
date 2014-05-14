@@ -93,9 +93,19 @@ void MainWindow::on_actionGerer_les_audits_triggered()
         ui->mdiArea->addSubWindow(dialogManageAudits);
         dialogManageAudits->show();
         connect(dialogManageAudits,SIGNAL(destroyed()),this,SLOT(onDialogManageAuditsWindowsDestroyed()));
+
+        if(dialogEditTreeWin!=NULL)
+        {
+            connect(dialogEditTreeWin,SIGNAL(listOfTreeChanged()),dialogManageAudits,SLOT(onLOTchanged()));
+        }
+
         if(dialogEditAudit!=NULL)
         {
             connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dialogEditAudit,SLOT(onListOfAuditsChanged()));
+        }
+        foreach(DialogTables *dlg,listOfDialogTables)
+        {
+            connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
         }
     }
 }
@@ -128,4 +138,8 @@ void MainWindow::on_actionTableaux_triggered()
 
     connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onDialogTablesWindowsDestroyed(QObject *)));
 
+    if(dialogManageAudits!=NULL)
+    {
+        connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+    }
 }

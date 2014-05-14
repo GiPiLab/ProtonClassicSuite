@@ -10,6 +10,7 @@ PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent) :
     modelDI=NULL;
     modelRI=NULL;
     modelRF=NULL;
+    this->auditId=auditId;
     loadFromDb(auditId);
 }
 
@@ -676,6 +677,7 @@ QString PCx_AuditModel::getT1(unsigned int node, DFRFDIRI mode) const
     Q_ASSERT(node>0);
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
+    qDebug()<<"TABLE T1 = "<<tableName;
     QString output=QString("<table align='center' width='100%' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
@@ -1247,13 +1249,13 @@ QString PCx_AuditModel::getCSS() const
 
 QString PCx_AuditModel::getTabRecap(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT1(node,mode)+"<br>"+getT4(node,mode)+"<br>"+getT8(node,mode);
+    QString out="<br>"+getT1(node,mode)+"<br>"+getT4(node,mode)+"<br>"+getT8(node,mode);
     return out;
 }
 
 QString PCx_AuditModel::getTabEvolution(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT2bis(node,mode)+"<br>"+getT3bis(node,mode);
+    QString out="<br>"+getT2bis(node,mode)+"<br>"+getT3bis(node,mode);
     return out;
 }
 
