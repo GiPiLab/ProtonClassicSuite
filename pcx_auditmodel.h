@@ -68,9 +68,25 @@ public:
     QString getTabEvolution(unsigned int node, DFRFDIRI mode) const;
     QString getTabRecap(unsigned int node, DFRFDIRI mode) const;
     QString getCSS() const;
-    QString getT1(unsigned int node, DFRFDIRI mode) const;
+
     QString modetoTableString(DFRFDIRI mode) const;
     QString modeToCompleteString(DFRFDIRI mode) const;
+
+    //T1,T2... are named as in the original PCA version
+    //Content of tab "Recap"
+    QString getT1(unsigned int node, DFRFDIRI mode) const;
+    QString getT4(unsigned int node, DFRFDIRI mode) const;
+    QString getT8(unsigned int node, DFRFDIRI mode) const;
+
+    //Content of tab "Evolution"
+    QString getT2bis(unsigned int node, DFRFDIRI mode) const;
+    QString getT3bis(unsigned int node, DFRFDIRI mode) const;
+
+    //Content of tab "EvolutionCumul"
+    QString getT2(unsigned int node, DFRFDIRI mode) const;
+    QString getT3(unsigned int node, DFRFDIRI mode) const;
+
+
 
 signals:
 
