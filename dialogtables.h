@@ -46,6 +46,10 @@ private slots:
 
     void on_checkBoxJoursAct_toggled(bool checked);
 
+    void on_printButton_clicked();
+
+    void on_saveButton_clicked();
+
 private:
     Ui::DialogTables *ui;
     void updateListOfAudits();

@@ -62,6 +62,7 @@ public:
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
     static bool finishAudit(unsigned int id);
 
+    //TODO : T10, T11, T12
     QString getTabJoursAct(unsigned int node, DFRFDIRI mode) const;
     QString getTabBase100(unsigned int node, DFRFDIRI mode) const;
     QString getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const;

@@ -2,6 +2,9 @@
 #include "ui_dialogtables.h"
 #include "utils.h"
 #include <QScrollBar>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QFileDialog>
 
 DialogTables::DialogTables(QWidget *parent) :
     QWidget(parent),
@@ -10,7 +13,7 @@ DialogTables::DialogTables(QWidget *parent) :
     model=NULL;
     ui->setupUi(this);
     doc=new QTextDocument();
-    //ui->splitter->setStretchFactor(1,1);
+    ui->splitter->setStretchFactor(1,1);
     updateListOfAudits();
 
 }
@@ -186,20 +189,44 @@ void DialogTables::on_radioButtonRI_toggled(bool checked)
 
 void DialogTables::on_checkBoxEvolution_toggled(bool checked)
 {
+    Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 void DialogTables::on_checkBoxEvolutionCumul_toggled(bool checked)
 {
+    Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 void DialogTables::on_checkBoxBase100_toggled(bool checked)
 {
+    Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 void DialogTables::on_checkBoxJoursAct_toggled(bool checked)
 {
+    Q_UNUSED(checked);
     updateTextBrowser();
+}
+
+//TODO : page split problem
+void DialogTables::on_printButton_clicked()
+{
+    QPrinter p;
+    QPrintDialog *dialog = new QPrintDialog(&p, this);
+    dialog->setWindowTitle(tr("Imprimer"));
+    if (dialog->exec() != QDialog::Accepted)
+        return;
+    doc->print(&p);
+}
+
+void DialogTables::on_saveButton_clicked()
+{
+     QFileDialog fileDialog;
+     fileDialog.setDirectory(QDir::home());
+     QString file = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+     QTextDocumentWriter writer(file);
+     writer.write(doc);
 }

@@ -945,7 +945,7 @@ QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
     QString output=QString("<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>Evolution du compte administratif de la Collectivit&eacute; "
-                           "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
 
@@ -1104,7 +1104,6 @@ QString PCx_AuditModel::getT3(unsigned int node, DFRFDIRI mode) const
 QString PCx_AuditModel::getT5(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
-    //TODO : T5, verifier les resultats
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
@@ -1233,23 +1232,187 @@ QString PCx_AuditModel::getT5(unsigned int node, DFRFDIRI mode) const
 
 QString PCx_AuditModel::getT6(unsigned int node, DFRFDIRI mode) const
 {
-    //TODO : T6
-    QString out;
-    return out;
+    Q_ASSERT(node>0);
+
+    QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
+
+    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+                           "<tr class='t6entete'><td colspan=6 align='center'>"
+                           "<b>Analyse en base 100 du compte administratif de [ %1 ]"
+                           "<br>(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<tr class='t6entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Pr&eacute;vu</th>"
+                           "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
+                           "<tr class='t6entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
+                        .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+
+
+    QSqlQuery q;
+    q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    bool doneFirstForNode=false;
+    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0,firstYearEngagesNode=0.0,firstYearDisponiblesNode=0.0,firstYearNodeNC=0.0;
+
+    while(q.next())
+    {
+        unsigned int annee=q.value("annee").toUInt();
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double engages=q.value("engages").toDouble();
+        double disponibles=q.value("disponibles").toDouble();
+        double nc=engages+disponibles;
+        double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
+        if(doneFirstForNode==false)
+        {
+            firstYearOuvertsNode=ouverts;
+            firstYearRealisesNode=realises;
+            firstYearEngagesNode=engages;
+            firstYearDisponiblesNode=disponibles;
+            firstYearNodeNC=nc;
+
+            output.append(QString("<tr><td class='t6annee'>%1</td><td align='right' class='t6pourcent'>100</td>"
+                                  "<td align='right' class='t6pourcent'>100</td><td align='right' class='t6pourcent'>100</td>"
+                                  "<td align='right' class='t6valeur'>100</td><td align='right' class='t6valeur'>100</td></tr>").arg(annee));
+            doneFirstForNode=true;
+        }
+        else
+        {
+            if(ouverts*firstYearOuvertsNode!=0.0)
+                percentOuverts=100/firstYearOuvertsNode*ouverts;
+
+            if(realises*firstYearRealisesNode!=0.0)
+                percentRealises=100/firstYearRealisesNode*realises;
+
+            if(engages*firstYearEngagesNode!=0.0)
+                percentEngages=100/firstYearEngagesNode*engages;
+
+            if(disponibles*firstYearDisponiblesNode!=0.0)
+                percentDisponibles=100/firstYearDisponiblesNode*disponibles;
+
+            if(nc*firstYearNodeNC!=0.0)
+                percentNC=100/firstYearNodeNC*nc;
+
+
+            output.append(QString("<tr><td class='t6annee'>%1</td><td align='right' class='t6pourcent'>%2</td>"
+                                  "<td align='right' class='t6pourcent'>%3</td><td align='right' class='t6pourcent'>%4</td>"
+                                  "<td align='right' class='t6valeur'>%5</td><td align='right' class='t6valeur'>%6</td></tr>")
+                          .arg(annee).arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentRealises,0)).arg(formatDouble(percentNC,0))
+                          .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+        }
+    }
+    output.append("</table>");
+    return output;
 }
 
 QString PCx_AuditModel::getT7(unsigned int node, DFRFDIRI mode) const
 {
-    //TODO : T7
-    QString out;
-    return out;
+    Q_ASSERT(node>0);
+
+    QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
+
+    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+                           "<tr class='t7entete'><td colspan=5 align='center'>"
+                           "<b>Transcription en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>"
+                           "[ %1 ] (<span style='color:#7c0000'>%2</span>)<br><u>sur la base d'une &eacute;quivalence de"
+                           " 365/365<sup>&egrave;me</sup> entre le r&eacute;alis&eacute; budg&eacute;taire et l'ann&eacute;e</u></b>"
+                           "<tr class='t7entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th>"
+                           "<th>Engag&eacute;</th><th>Disponible</th></tr>")
+                           .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+
+
+    QSqlQuery q;
+    q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    while(q.next())
+    {
+        unsigned int annee=q.value("annee").toUInt();
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double engages=q.value("engages").toDouble();
+        double disponibles=q.value("disponibles").toDouble();
+        double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0;
+
+        if(realises!=0.0)
+        {
+            percentOuverts=365*ouverts/realises;
+            percentRealises=365.0;
+            percentEngages=365*engages/realises;
+            percentDisponibles=365*disponibles/realises;
+        }
+        output.append(QString("<tr><td class='t7annee'>%1</td><td align='right' class='t7pourcent'>%2</td>"
+                                  "<td align='right' class='t7pourcent'>%3</td><td align='right' class='t7pourcent'>%4</td>"
+                                  "<td align='right' class='t7pourcent'>%5</td></tr>")
+                          .arg(annee).arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentRealises,0))
+                          .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+    }
+    output.append("</table>");
+    return output;
 }
 
 QString PCx_AuditModel::getT9(unsigned int node, DFRFDIRI mode) const
 {
-    //TODO : T9
-    QString out;
-    return out;
+    Q_ASSERT(node>0);
+
+    QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
+
+    QString output=QString("<table width='60%' align='center' cellpadding='5'>"
+                           "<tr class='t9entete'><td colspan=2 align='center'>"
+                           "<b>&Eacute;quivalences moyennes en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>[ %1 ]"
+                           " (<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b>"
+                           "</td></tr>").arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+
+    QSqlQuery q;
+    q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    double sumOuverts=0.0,sumRealises=0.0,sumEngages=0.0,sumDisponibles=0.0;
+    double percentOuverts=0.0,percentNC=0.0,percentEngages=0.0,percentDisponibles=0.0;
+
+    while(q.next())
+    {
+        sumOuverts+=q.value("ouverts").toDouble();
+        sumRealises+=q.value("realises").toDouble();
+        sumEngages+=q.value("engages").toDouble();
+        sumDisponibles+=q.value("disponibles").toDouble();
+    }
+        if(sumRealises!=0.0)
+        {
+            percentOuverts=sumOuverts*365/sumRealises;
+            percentEngages=sumEngages*365/sumRealises;
+            percentDisponibles=sumDisponibles*365/sumRealises;
+            percentNC=percentEngages+percentDisponibles;
+        }
+        output.append(QString("<tr><td colspan='2' align='center' class='t9annee'>Face aux cr&eacute;dits r&eacute;alis&eacute;s, les pr&eacute;visions correspondent"
+                              " &agrave; :<br><b>%1 jours de travail par an</b></td></tr>"
+                              "<tr><td class='t9annee' style='font-weight:normal'>D&eacute;passement de capacit&eacute; des pr&eacute;visions</td><td align='right' class='t9valeur' valign='middle'>%2 jours</td></tr>"
+                              "<tr><td class='t9annee'><i>dont engag&eacute;</i></td><td class='t9pourcent' align='right' valign='middle'><i>%3 jours</i></td></tr>"
+                              "<tr><td class='t9annee'><i>dont disponible</i></td><td class='t9pourcent' align='right' valign='middle'><i>%4 jours</i></td></tr>")
+                          .arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentNC,0))
+                          .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+    output.append("</table>");
+    return output;
 }
 
 
