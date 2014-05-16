@@ -86,6 +86,13 @@ public:
     QString getT2(unsigned int node, DFRFDIRI mode) const;
     QString getT3(unsigned int node, DFRFDIRI mode) const;
 
+    //Content of tab "Base100"
+    QString getT5(unsigned int node, DFRFDIRI mode) const;
+    QString getT6(unsigned int node, DFRFDIRI mode) const;
+
+    //Content of tab "Jours act."
+    QString getT7(unsigned int node, DFRFDIRI mode) const;
+    QString getT9(unsigned int node, DFRFDIRI mode) const;
 
 
 signals:

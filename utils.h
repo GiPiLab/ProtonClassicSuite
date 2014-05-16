@@ -12,7 +12,7 @@ void die(int retcode=1);
 void emptyDb(void);
 QSqlDatabase loadDb(bool addDriver);
 void initDb(void);
-QString formatDouble(double num);
+QString formatDouble(double num,unsigned int decimals=2);
 
 
 

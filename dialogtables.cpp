@@ -1,6 +1,7 @@
 #include "dialogtables.h"
 #include "ui_dialogtables.h"
 #include "utils.h"
+#include <QScrollBar>
 
 DialogTables::DialogTables(QWidget *parent) :
     QWidget(parent),
@@ -71,12 +72,12 @@ void DialogTables::updateTextBrowser()
         die();
     }
 
+    QScrollBar *sb=ui->textBrowser->verticalScrollBar();
+    int sbval=sb->value();
     ui->textBrowser->clear();
     QString output="<html><head><link rel='stylesheet' type='text/css' href='style.css'></head><body>";
 
-    //TODO : Preserve scroll location between refresh
     unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
-
 
     //Mode DF,RF,DI,RI
     if(modeGlobal==false)
@@ -114,6 +115,7 @@ void DialogTables::updateTextBrowser()
    doc->setHtml(output);
 
    ui->textBrowser->setDocument(doc);
+   sb->setValue(sbval);
 }
 
 

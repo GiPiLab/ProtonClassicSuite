@@ -621,7 +621,8 @@ QList<QPair<unsigned int, QString> > PCx_AuditModel::getListOfAudits(ListAuditsM
         QPair<unsigned int, QString> p;
         if(query.value("termine").toBool()==true)
         {
-            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            //Finished audit
+            item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
             if(mode!=UnFinishedAuditsOnly)
             {
                 p.first=query.value("id").toUInt();
@@ -631,6 +632,7 @@ QList<QPair<unsigned int, QString> > PCx_AuditModel::getListOfAudits(ListAuditsM
         }
         else if(mode!=FinishedAuditsOnly)
         {
+            //Unfinished audit
              item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
              p.first=query.value("id").toUInt();
              p.second=item;
@@ -677,7 +679,7 @@ QString PCx_AuditModel::getT1(unsigned int node, DFRFDIRI mode) const
     Q_ASSERT(node>0);
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    qDebug()<<"TABLE T1 = "<<tableName;
+
     QString output=QString("<table align='center' width='100%' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
@@ -793,7 +795,7 @@ QString PCx_AuditModel::getT8(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
     QString output=QString("<table width='50%' align='center' cellpadding='5'>"
-                           "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ]<br>"
+                           "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
                   .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
 
@@ -816,7 +818,7 @@ QString PCx_AuditModel::getT8(unsigned int node, DFRFDIRI mode) const
         sumOuverts+=q.value("ouverts").toDouble();
         sumRealises+=q.value("realises").toDouble();
         sumEngages+=q.value("engages").toDouble();
-        sumDisponibles=q.value("disponibles").toDouble();
+        sumDisponibles+=q.value("disponibles").toDouble();
     }
 
     double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
@@ -937,16 +939,43 @@ QString PCx_AuditModel::getT2(unsigned int node, DFRFDIRI mode) const
 QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
-    return QString();
-
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table width='50%' align='center' cellpadding='5'>"
-                           "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ]<br>"
-                           "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
-                  .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
 
+    //The classes "t3xxx" are not a mistake
+    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+                           "<tr class='t3entete'><td colspan=3 align='center'>"
+                           "<b>Evolution du compte administratif de la Collectivit&eacute; "
+                           "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+            .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+
+
+    QMap<unsigned int,double> ouvertsRoot,realisesRoot;
+    double firstYearOuvertsRoot=0.0,firstYearRealisesRoot=0.0;
 
     QSqlQuery q;
+    q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    bool doneFirstForRoot=false;
+    while(q.next())
+    {
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        ouvertsRoot.insert(q.value("annee").toUInt(),ouverts);
+        realisesRoot.insert(q.value("annee").toUInt(),realises);
+        if(doneFirstForRoot==false)
+        {
+            firstYearOuvertsRoot=ouverts;
+            firstYearRealisesRoot=realises;
+            doneFirstForRoot=true;
+        }
+    }
+
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
     q.bindValue(":id",node);
     q.exec();
@@ -957,32 +986,53 @@ QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
         die();
     }
 
-    double sumOuverts=0.0,sumRealises=0.0,sumEngages=0.0,sumDisponibles=0.0;
+    bool doneFirstForNode=false;
+    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
+    double diffFirstYearRootNodeOuverts=0.0,diffFirstYearRootNodeRealises=0.0;
+
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toDouble();
-        sumRealises+=q.value("realises").toDouble();
-        sumEngages+=q.value("engages").toDouble();
-        sumDisponibles=q.value("disponibles").toDouble();
+        double diffRootNodeOuverts=0.0,diffRootNodeRealises=0.0;
+        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+
+        unsigned int annee=q.value("annee").toUInt();
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double percentOuverts=0.0,percentRealises=0.0;
+        if(doneFirstForNode==false)
+        {
+            firstYearOuvertsNode=ouverts;
+            firstYearRealisesNode=realises;
+            //ouverts_1 in PCA
+            diffFirstYearRootNodeOuverts=firstYearOuvertsRoot-firstYearOuvertsNode;
+            diffFirstYearRootNodeRealises=firstYearRealisesRoot-firstYearRealisesNode;
+            output.append(QString("<tr><td class='t3annee'>%1</td><td class='t3pourcent'>&nbsp;</td><td class='t3pourcent'>&nbsp;</td></tr>").arg(annee));
+            doneFirstForNode=true;
+        }
+        else
+        {
+            //ouverts_2
+            diffRootNodeOuverts=ouvertsRoot[annee]-ouverts;
+            diffRootNodeRealises=realisesRoot[annee]-realises;
+            diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
+            diffCurrentYearFirstYearRealises=diffRootNodeRealises-diffFirstYearRootNodeRealises;
+            if(diffFirstYearRootNodeOuverts!=0.0)
+            {
+                percentOuverts=diffCurrentYearFirstYearOuverts*100/diffFirstYearRootNodeOuverts;
+            }
+            if(diffFirstYearRootNodeRealises!=0.0)
+            {
+                percentRealises=diffCurrentYearFirstYearRealises*100/diffFirstYearRootNodeRealises;
+            }
+            output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
+                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+
+            //Here is the trick between T2 and T2bis, change the reference each year
+            diffFirstYearRootNodeOuverts=diffRootNodeOuverts;
+            diffFirstYearRootNodeRealises=diffRootNodeRealises;
+        }
     }
-
-    double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
-
-    if(sumOuverts!=0.0)
-    {
-        percentRealisesOuverts=sumRealises*100/sumOuverts;
-        percentEngagesOuverts=sumEngages*100/sumOuverts;
-        percentDisponiblesOuverts=sumDisponibles*100/sumOuverts;
-    }
-
-    output.append(QString("<tr><td class='t8annee' align='center'>R&eacute;alis&eacute;</td><td align='right' class='t8pourcent'>%1\%</td></tr>"
-                          "<tr><td class='t8annee' align='center' style='font-weight:normal'>Non utilis&eacute;</td><td align='right' class='t8valeur'>%2\%</td></tr>"
-                          "<tr><td class='t8annee' align='center'><i>dont engag&eacute;</i></td><td align='right' class='t8pourcent'><i>%3\%</i></td></tr>"
-                          "<tr><td class='t8annee' align='center'><i>dont disponible</i></td><td align='right' class='t8pourcent'><i>%4\%</i></td></tr>")
-                  .arg(formatDouble(percentRealisesOuverts)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts))
-                  .arg(formatDouble(percentEngagesOuverts)).arg(formatDouble(percentDisponiblesOuverts)));
-
     output.append("</table>");
     return output;
 }
@@ -990,14 +1040,16 @@ QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
 QString PCx_AuditModel::getT3(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
-    return QString();
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table width='50%' align='center' cellpadding='5'>"
-                           "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ]<br>"
-                           "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
-                  .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
 
+    //The classes "t2xxx" are not a mistake
+    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+                           "<tr class='t2entete'><td colspan=3 align='center'>"
+                           "<b>Evolution cumul&eacute;e du compte administratif de<br>[ %1 ] "
+                           "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+            .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -1010,46 +1062,207 @@ QString PCx_AuditModel::getT3(unsigned int node, DFRFDIRI mode) const
         die();
     }
 
-    double sumOuverts=0.0,sumRealises=0.0,sumEngages=0.0,sumDisponibles=0.0;
+    bool doneFirstForNode=false;
+    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toDouble();
-        sumRealises+=q.value("realises").toDouble();
-        sumEngages+=q.value("engages").toDouble();
-        sumDisponibles=q.value("disponibles").toDouble();
+        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+
+        unsigned int annee=q.value("annee").toUInt();
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double percentOuverts=0.0,percentRealises=0.0;
+        if(doneFirstForNode==false)
+        {
+            firstYearOuvertsNode=ouverts;
+            firstYearRealisesNode=realises;
+            output.append(QString("<tr><td class='t2annee'>%1</td><td class='t2pourcent'>&nbsp;</td><td class='t2pourcent'>&nbsp;</td></tr>").arg(annee));
+            doneFirstForNode=true;
+        }
+        else
+        {
+            diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
+            diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
+            if(firstYearOuvertsNode!=0.0)
+            {
+                percentOuverts=diffCurrentYearFirstYearOuverts*100/firstYearOuvertsNode;
+            }
+            if(firstYearRealisesNode!=0.0)
+            {
+                percentRealises=diffCurrentYearFirstYearRealises*100/firstYearRealisesNode;
+            }
+            output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
+                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+
+        }
     }
-
-    double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
-
-    if(sumOuverts!=0.0)
-    {
-        percentRealisesOuverts=sumRealises*100/sumOuverts;
-        percentEngagesOuverts=sumEngages*100/sumOuverts;
-        percentDisponiblesOuverts=sumDisponibles*100/sumOuverts;
-    }
-
-    output.append(QString("<tr><td class='t8annee' align='center'>R&eacute;alis&eacute;</td><td align='right' class='t8pourcent'>%1\%</td></tr>"
-                          "<tr><td class='t8annee' align='center' style='font-weight:normal'>Non utilis&eacute;</td><td align='right' class='t8valeur'>%2\%</td></tr>"
-                          "<tr><td class='t8annee' align='center'><i>dont engag&eacute;</i></td><td align='right' class='t8pourcent'><i>%3\%</i></td></tr>"
-                          "<tr><td class='t8annee' align='center'><i>dont disponible</i></td><td align='right' class='t8pourcent'><i>%4\%</i></td></tr>")
-                  .arg(formatDouble(percentRealisesOuverts)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts))
-                  .arg(formatDouble(percentEngagesOuverts)).arg(formatDouble(percentDisponiblesOuverts)));
-
     output.append("</table>");
     return output;
 }
+
+QString PCx_AuditModel::getT5(unsigned int node, DFRFDIRI mode) const
+{
+    Q_ASSERT(node>0);
+    //TODO : T5, verifier les resultats
+
+    QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
+
+    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+                           "<tr class='t5entete'><td colspan=6 align='center'>"
+                           "<b>Analyse en base 100 du compte administratif de la Collectivit&eacute; "
+                           "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<tr class='t5entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Pr&eacute;vu</th>"
+                           "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
+                           "<tr class='t5entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
+                        .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+
+    QMap<unsigned int,double> ouvertsRoot,realisesRoot,engagesRoot,disponiblesRoot;
+    double firstYearOuvertsRoot=0.0,firstYearRealisesRoot=0.0,firstYearEngagesRoot=0.0,firstYearDisponiblesRoot=0.0;
+
+    QSqlQuery q;
+    q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    bool doneFirstForRoot=false;
+    while(q.next())
+    {
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double engages=q.value("engages").toDouble();
+        double disponibles=q.value("disponibles").toDouble();
+        unsigned int annee=q.value("annee").toUInt();
+        ouvertsRoot.insert(annee,ouverts);
+        realisesRoot.insert(annee,realises);
+        engagesRoot.insert(annee,engages);
+        disponiblesRoot.insert(annee,disponibles);
+        if(doneFirstForRoot==false)
+        {
+            firstYearOuvertsRoot=ouverts;
+            firstYearRealisesRoot=realises;
+            firstYearEngagesRoot=engages;
+            firstYearDisponiblesRoot=disponibles;
+            doneFirstForRoot=true;
+        }
+    }
+
+    q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+    bool doneFirstForNode=false;
+    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0,firstYearEngagesNode=0.0,firstYearDisponiblesNode=0.0;
+    double diffFirstYearRootNodeOuverts=0.0,diffFirstYearRootNodeRealises=0.0,diffFirstYearRootNodeEngages=0.0,
+            diffFirstYearRootNodeDisponibles=0.0,diffFirstYearRootNodeNC=0.0;
+
+
+    while(q.next())
+    {
+        double diffRootNodeOuverts=0.0,diffRootNodeRealises=0.0,diffRootNodeEngages=0.0,diffRootNodeDisponibles=0.0,diffRootNodeNC=0.0;
+
+        unsigned int annee=q.value("annee").toUInt();
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double engages=q.value("engages").toDouble();
+        double disponibles=q.value("disponibles").toDouble();
+        double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
+        if(doneFirstForNode==false)
+        {
+            firstYearOuvertsNode=ouverts;
+            firstYearRealisesNode=realises;
+            firstYearEngagesNode=engages;
+            firstYearDisponiblesNode=disponibles;
+
+            //ouverts_1
+            diffFirstYearRootNodeOuverts=firstYearOuvertsRoot-firstYearOuvertsNode;
+            diffFirstYearRootNodeRealises=firstYearRealisesRoot-firstYearRealisesNode;
+            diffFirstYearRootNodeEngages=firstYearEngagesRoot-firstYearEngagesNode;
+            diffFirstYearRootNodeDisponibles=firstYearDisponiblesRoot-firstYearDisponiblesNode;
+            diffFirstYearRootNodeNC=diffFirstYearRootNodeEngages+diffFirstYearRootNodeDisponibles;
+
+            output.append(QString("<tr><td class='t5annee'>%1</td><td align='right' class='t5pourcent'>100</td>"
+                                  "<td align='right' class='t5pourcent'>100</td><td align='right' class='t5pourcent'>100</td>"
+                                  "<td align='right' class='t5valeur'>100</td><td align='right' class='t5valeur'>100</td></tr>").arg(annee));
+            doneFirstForNode=true;
+        }
+        else
+        {
+            //ouverts_2
+            diffRootNodeOuverts=ouvertsRoot[annee]-ouverts;
+            diffRootNodeRealises=realisesRoot[annee]-realises;
+            diffRootNodeEngages=engagesRoot[annee]-engages;
+            diffRootNodeDisponibles=disponiblesRoot[annee]-disponibles;
+            diffRootNodeNC=diffRootNodeEngages+diffRootNodeDisponibles;
+
+            if(diffFirstYearRootNodeOuverts*diffRootNodeOuverts!=0.0)
+                percentOuverts=100/diffFirstYearRootNodeOuverts*diffRootNodeOuverts;
+
+            if(diffFirstYearRootNodeRealises*diffRootNodeRealises!=0.0)
+                percentRealises=100/diffFirstYearRootNodeRealises*diffRootNodeRealises;
+
+            if(diffFirstYearRootNodeEngages*diffRootNodeEngages!=0.0)
+                percentEngages=100/diffFirstYearRootNodeEngages*diffRootNodeEngages;
+
+            if(diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles!=0.0)
+                percentDisponibles=100/diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles;
+
+            if(diffRootNodeNC+diffFirstYearRootNodeNC!=0.0)
+                percentNC=100/diffFirstYearRootNodeNC*diffRootNodeNC;
+
+
+            output.append(QString("<tr><td class='t5annee'>%1</td><td align='right' class='t5pourcent'>%2</td>"
+                                  "<td align='right' class='t5pourcent'>%3</td><td align='right' class='t5pourcent'>%4</td>"
+                                  "<td align='right' class='t5valeur'>%5</td><td align='right' class='t5valeur'>%6</td></tr>")
+                          .arg(annee).arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentRealises,0)).arg(formatDouble(percentNC,0))
+                          .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+        }
+    }
+    output.append("</table>");
+    return output;
+}
+
+QString PCx_AuditModel::getT6(unsigned int node, DFRFDIRI mode) const
+{
+    //TODO : T6
+    QString out;
+    return out;
+}
+
+QString PCx_AuditModel::getT7(unsigned int node, DFRFDIRI mode) const
+{
+    //TODO : T7
+    QString out;
+    return out;
+}
+
+QString PCx_AuditModel::getT9(unsigned int node, DFRFDIRI mode) const
+{
+    //TODO : T9
+    QString out;
+    return out;
+}
+
+
 QString PCx_AuditModel::getT3bis(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
-    return QString();
-
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table width='50%' align='center' cellpadding='5'>"
-                           "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ]<br>"
-                           "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
-                  .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
-
+    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+                           "<tr class='t3entete'><td colspan=3 align='center'>"
+                           "<b>Evolution du compte administratif de<br>[ %1 ] "
+                           "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+            .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -1062,32 +1275,45 @@ QString PCx_AuditModel::getT3bis(unsigned int node, DFRFDIRI mode) const
         die();
     }
 
-    double sumOuverts=0.0,sumRealises=0.0,sumEngages=0.0,sumDisponibles=0.0;
+    bool doneFirstForNode=false;
+    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toDouble();
-        sumRealises+=q.value("realises").toDouble();
-        sumEngages+=q.value("engages").toDouble();
-        sumDisponibles=q.value("disponibles").toDouble();
+        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+
+        unsigned int annee=q.value("annee").toUInt();
+        double ouverts=q.value("ouverts").toDouble();
+        double realises=q.value("realises").toDouble();
+        double percentOuverts=0.0,percentRealises=0.0;
+        if(doneFirstForNode==false)
+        {
+            firstYearOuvertsNode=ouverts;
+            firstYearRealisesNode=realises;
+            output.append(QString("<tr><td class='t3annee'>%1</td><td class='t3pourcent'>&nbsp;</td><td class='t3pourcent'>&nbsp;</td></tr>").arg(annee));
+            doneFirstForNode=true;
+        }
+        else
+        {
+            diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
+            diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
+            if(firstYearOuvertsNode!=0.0)
+            {
+                percentOuverts=diffCurrentYearFirstYearOuverts*100/firstYearOuvertsNode;
+            }
+            if(firstYearRealisesNode!=0.0)
+            {
+                percentRealises=diffCurrentYearFirstYearRealises*100/firstYearRealisesNode;
+            }
+            output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
+                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+
+            //Here is the only difference between T3 and T3bis, slide the reference
+            firstYearOuvertsNode=ouverts;
+            firstYearRealisesNode=realises;
+
+        }
     }
-
-    double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
-
-    if(sumOuverts!=0.0)
-    {
-        percentRealisesOuverts=sumRealises*100/sumOuverts;
-        percentEngagesOuverts=sumEngages*100/sumOuverts;
-        percentDisponiblesOuverts=sumDisponibles*100/sumOuverts;
-    }
-
-    output.append(QString("<tr><td class='t8annee' align='center'>R&eacute;alis&eacute;</td><td align='right' class='t8pourcent'>%1\%</td></tr>"
-                          "<tr><td class='t8annee' align='center' style='font-weight:normal'>Non utilis&eacute;</td><td align='right' class='t8valeur'>%2\%</td></tr>"
-                          "<tr><td class='t8annee' align='center'><i>dont engag&eacute;</i></td><td align='right' class='t8pourcent'><i>%3\%</i></td></tr>"
-                          "<tr><td class='t8annee' align='center'><i>dont disponible</i></td><td align='right' class='t8pourcent'><i>%4\%</i></td></tr>")
-                  .arg(formatDouble(percentRealisesOuverts)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts))
-                  .arg(formatDouble(percentEngagesOuverts)).arg(formatDouble(percentDisponiblesOuverts)));
-
     output.append("</table>");
     return output;
 }
@@ -1096,166 +1322,57 @@ QString PCx_AuditModel::getT3bis(unsigned int node, DFRFDIRI mode) const
 
 QString PCx_AuditModel::getCSS() const
 {
-    QString css="dt.synop{"
-    "	font-weight:bold;"
-    "	padding-top:1em;"
-    "}"
-    "body{font-size:8pt;}"
-    "dd.synop{"
-    "	margin:0;"
-    "}"
-    ".req1 {"
-    "background-color:#FAB;"
-    "padding:5px;"
-    "}"
-    ".req2 {"
-    "background-color:#BFA;"
-    "padding:5px;"
-    "}"
-    ".req3 {"
-    "background-color:#BAF;"
-    "padding:5px;"
-    "}"
-    ".req1normal {"
-    "background-color:#FAB;"
-    "}"
-    ".req2normal {"
-    "background-color:#BFA;"
-    "}"
-    ".req3normal {"
-    "background-color:#BAF;"
-    "}"
-    ".bg1 {"
-    "padding-left:5px;"
-    "padding-right:5px;"
-    "background-color:#ABC;"
-    "}"
-    ".bg2 {"
-    "padding-left:5px;"
-    "padding-right:5px;"
-    "background-color:#CAC;"
-    "}"
-    ".bg3 {"
-    "padding-left:5px;"
-    "padding-right:5px;"
-    "background-color:#CDB;"
-    "}"
-    "a:visited {"
-    "font-weight:700;"
-    "}"
-    "li {"
-    "line-height:30px;"
-    "}"
-    "h1 {"
-    "color:#A00;"
-    "}"
-    "h2 {"
-    "color:navy;"
-    "}"
-    "h3 {"
-    "color:green;"
-    "font-size:larger;"
-    "}"
-    "table {"
-    "color:navy;"
-    //"font-weight:700;"
-    //"font-size:10pt;"
-    "page-break-inside:avoid;"
-    "}"
-    "td.t1pourcent {"
-    "background-color:#b3b3b3;"
+    //Original PCA stylesheet with slight incoherencies between t2, t2bis, t3 and t3bis
+    QString css=
+            ".bg1{padding-left:5px;padding-right:5px;background-color:#ABC;}"
+            ".bg2{padding-left:5px;padding-right:5px;background-color:#CAC;}"
+            ".bg3{padding-left:5px;padding-right:5px;background-color:#CDB;}"
+            ".req1{background-color:#FAB;padding:5px;}"
+            ".req1normal{background-color:#FAB;}"
+            ".req2{background-color:#BFA;padding:5px;}"
+            ".req2normal{background-color:#BFA;}"
+            ".req3{background-color:#BAF;padding:5px;}"
+            ".req3normal{background-color:#BAF;}"
+            "a:visited{font-weight:700;}"
+            "dd.synop{margin:0;}"
+            "dt.synop{font-weight:700;padding-top:1em;}"
+            "h1{color:#A00;}"
+            "h2{color:navy;}"
+            "h3{color:green;font-size:larger;}"
+            "li{line-height:30px;}"
+            "table{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
+            "td.t1annee,td.t3annee{background-color:#b3b3b3;}"
+            "td.t1pourcent{background-color:#b3b3b3;color:#FFF;}"
+            "td.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee{background-color:#e6e6e6;}"
+            "td.t2annee{background-color:#b3b3b3;color:green;}"
+            "td.t2pourcent,td.t3pourcent{background-color:#e6e6e6;color:#000;}"
+            "td.t5pourcent,td.t6pourcent{background-color:#b3b3b3;color:#000;}"
+            "td.t5valeur,td.t6valeur,td.t7valeur{background-color:#b3b3b3;color:#000;font-weight:400;}"
+            "td.t6annee{background-color:#e6e6e6;color:green;}"
+            "td.t7pourcent{background-color:#666;color:#FFF;}"
+            "td.t8pourcent{background-color:#e6e6e6;text-align:center;color:#000;}"
+            "td.t8valeur{background-color:#e6e6e6;font-weight:400;text-align:center;color:#000;}"
+            "td.t9pourcent{background-color:#666;text-align:center;color:#FFF;}"
+            "td.t9valeur{background-color:#666;color:#FFF;font-weight:400;text-align:center;}"
+            "tr.t1entete,tr.t3entete,td.t9annee{background-color:#b3b3b3;text-align:center;}"
+            "tr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
+            "tr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
+            "tr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
+            "tr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}";
 
-    "color:#FFF;"
-    "}"
-    "td.t2annee {"
-    "background-color:#b3b3b3;"
-    "color:green;"
-    "}"
-    "tr.t6entete {"
-    "background-color:#e6e6e6;"
-    "color:green;"
-    "text-align:center;"
-    "}"
-    "td.t6annee {"
-    "background-color:#e6e6e6;"
-    "color:green;"
-    "}"
-    "td.t7pourcent {"
-    "background-color:#666;"
-    "color:#FFF;"
-    "}"
-    "tr.t8entete {"
-    "background-color:#e6e6e6;"
-    "text-align:center;"
-    "color:green;"
-    "}"
-    "td.t8valeur {"
-    "background-color:#e6e6e6;"
-    "font-weight:400;"
-    "text-align:center;"
-    "color:#000;"
-    "}"
-    "td.t8pourcent {"
-    "background-color:#e6e6e6;"
-    "text-align:center;"
-    "color:#000;"
-    "}"
-    "td.t9valeur {"
-    "background-color:#666;"
-    "color:#FFF;"
-    "font-weight:400;"
-    "text-align:center;"
-    "}"
-    "td.t9pourcent {"
-    "background-color:#666;"
-    "text-align:center;"
-    "color:#FFF;"
-    "}"
-    "tr.t1entete,tr.t3entete,td.t9annee {"
-    "background-color:#b3b3b3;"
-    "text-align:center;"
-    "}"
-    "td.t1annee,td.t3annee {"
-    "background-color:#b3b3b3;"
-    "}"
-    "td.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee {"
-    "background-color:#e6e6e6;"
-    "}"
-    "td.t2pourcent,td.t3pourcent {"
-    "background-color:#e6e6e6;"
-    "color:#000;"
-    "}"
-    "tr.t2entete,td.t8annee {"
-    "background-color:#b3b3b3;"
-    "color:green;"
-    "text-align:center;"
-    "}"
-    "tr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete {"
-    "background-color:#e6e6e6;"
-    "text-align:center;"
-    "}"
-    "td.t5valeur,td.t6valeur,td.t7valeur {"
-    "background-color:#b3b3b3;"
-    "color:#000;"
-    "font-weight:400;"
-    "}"
-    "td.t5pourcent,td.t6pourcent {"
-    "background-color:#b3b3b3;"
-    "color:#000;"
-    "}";
     return css;
 }
 
 
 QString PCx_AuditModel::getTabRecap(unsigned int node, DFRFDIRI mode) const
 {
-    QString out="<br>"+getT1(node,mode)+"<br>"+getT4(node,mode)+"<br>"+getT8(node,mode);
+    QString out=getT1(node,mode)+"<br>"+getT4(node,mode)+"<br>"+getT8(node,mode)+"<br>";
     return out;
 }
 
 QString PCx_AuditModel::getTabEvolution(unsigned int node, DFRFDIRI mode) const
 {
-    QString out="<br>"+getT2bis(node,mode)+"<br>"+getT3bis(node,mode);
+    QString out=getT2bis(node,mode)+"<br>"+getT3bis(node,mode)+"<br>";
     return out;
 }
 
@@ -1263,20 +1380,22 @@ QString PCx_AuditModel::getTabEvolution(unsigned int node, DFRFDIRI mode) const
 
 QString PCx_AuditModel::getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const
 {
-   QString out="<br>"+getT2(node,mode)+"<br>"+getT3(node,mode);
+   QString out=getT2(node,mode)+"<br>"+getT3(node,mode)+"<br>";
    return out;
 }
 
 
 QString PCx_AuditModel::getTabBase100(unsigned int node, DFRFDIRI mode) const
 {
-    return "BASE100";
+    QString out=getT5(node,mode)+"<br>"+getT6(node,mode)+"<br>";
+    return out;
 }
 
 
 QString PCx_AuditModel::getTabJoursAct(unsigned int node, DFRFDIRI mode) const
 {
-    return "JOURSACT";
+    QString out=getT7(node,mode)+"<br>"+getT9(node,mode)+"<br>";
+    return out;
 }
 
 

@@ -11,10 +11,10 @@ void die(int retcode)
     exit(retcode);
 }
 
-QString formatDouble(double num)
+QString formatDouble(double num, unsigned int decimals)
 {
     QLocale locale;
-    return locale.toString(num,'f',2);
+    return locale.toString(num,'f',decimals);
 }
 
 void emptyDb(void)
