@@ -67,7 +67,8 @@ bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QM
 
 bool PCx_TypeModel::validateType(const QString &newType)
 {
-    if(newType.isEmpty() || newType.contains(QRegExp("( )+")))
+    qDebug()<<"Type = "<<newType;
+    if(newType.isEmpty() || newType.contains(QRegExp("^( )+$")))
     {
         QMessageBox::warning(NULL,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
         return false;
