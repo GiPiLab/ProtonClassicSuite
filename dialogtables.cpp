@@ -78,7 +78,8 @@ void DialogTables::updateTextBrowser()
     QScrollBar *sb=ui->textBrowser->verticalScrollBar();
     int sbval=sb->value();
     ui->textBrowser->clear();
-    QString output="<html><head><link rel='stylesheet' type='text/css' href='style.css'></head><body>";
+    QString output=QString("<html><head><link rel='stylesheet' type='text/css' href='style.css'></head><body>"
+            "<h3>Audit %1</h3><hr>").arg(model->getName().toHtmlEscaped());
 
     unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 
@@ -109,9 +110,9 @@ void DialogTables::updateTextBrowser()
     //Global mode
     else
     {
-        output.append("Toto");
+        output.append(model->getTabResults(selectedNode));
     }
-   output.append("</body></html>");
+   output.append(QString("<p align='center' style='font-size:6pt'>&copy;2006-%1 Laboratoire de Recherche pour le D&eacute;veloppement Local</p></body></html>").arg(QDate::currentDate().toString("yyyy")));
 
    doc->clear();
    doc->addResource(QTextDocument::StyleSheetResource,QUrl("style.css"),model->getCSS());
@@ -155,7 +156,15 @@ void DialogTables::on_treeView_clicked(const QModelIndex &index)
 void DialogTables::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
+    {
         updateTextBrowser();
+        ui->groupBoxTables->setEnabled(false);
+    }
+    else
+    {
+        ui->groupBoxTables->setEnabled(true);
+    }
+
 }
 
 void DialogTables::on_checkBoxRecap_toggled(bool checked)

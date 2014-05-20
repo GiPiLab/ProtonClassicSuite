@@ -68,6 +68,7 @@ public:
     QString getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const;
     QString getTabEvolution(unsigned int node, DFRFDIRI mode) const;
     QString getTabRecap(unsigned int node, DFRFDIRI mode) const;
+    QString getTabResults(unsigned int node) const;
     QString getCSS() const;
 
     QString modetoTableString(DFRFDIRI mode) const;
@@ -95,6 +96,10 @@ public:
     QString getT7(unsigned int node, DFRFDIRI mode) const;
     QString getT9(unsigned int node, DFRFDIRI mode) const;
 
+    //Content of "Resultats" mode (without tabs)
+    QString getT10(unsigned int node) const;
+    QString getT11(unsigned int node) const;
+    QString getT12(unsigned int node) const;
 
 signals:
 
@@ -102,9 +107,15 @@ public slots:
 
 private:
     unsigned int auditId;
+
+    //TODO : fill finished
     bool finished;
+
     QString name;
+
+    //TODO : fill creationTime
     QString creationTime;
+   //TODO : fill years
     QSet<unsigned int> years;
     PCx_TreeModel *attachedTree;
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;

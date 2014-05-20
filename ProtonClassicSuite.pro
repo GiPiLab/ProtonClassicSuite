@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     pcx_auditinfos.cpp \
     auditdatadelegate.cpp \
     dialogtables.cpp \
-    utils.cpp
+    utils.cpp \
+    pcx_auditmodel_tables.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
