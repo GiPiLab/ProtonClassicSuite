@@ -3,7 +3,7 @@
 
 #include <QtGui>
 #include <QtSql>
-
+#include "QCustomPlot/qcustomplot.h"
 #include "pcx_treemodel.h"
 
 //Column indexes in sql tables
@@ -22,6 +22,14 @@ enum DFRFDIRI
     RF,
     DI,
     RI
+};
+
+enum ORED
+{
+    ouverts,
+    realises,
+    engages,
+    disponibles
 };
 
 enum ListAuditsMode
@@ -62,17 +70,21 @@ public:
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
     static bool finishAudit(unsigned int id);
 
-    //TODO : T10, T11, T12
     QString getTabJoursAct(unsigned int node, DFRFDIRI mode) const;
     QString getTabBase100(unsigned int node, DFRFDIRI mode) const;
     QString getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const;
     QString getTabEvolution(unsigned int node, DFRFDIRI mode) const;
     QString getTabRecap(unsigned int node, DFRFDIRI mode) const;
     QString getTabResults(unsigned int node) const;
+
     QString getCSS() const;
 
     QString modetoTableString(DFRFDIRI mode) const;
     QString modeToCompleteString(DFRFDIRI mode) const;
+    QString OREDtoCompleteString(ORED ored) const;
+    QString OREDtoTableString(ORED ored) const;
+
+
 
     //T1,T2... are named as in the original PCA version
     //Content of tab "Recap"
@@ -101,6 +113,17 @@ public:
     QString getT11(unsigned int node) const;
     QString getT12(unsigned int node) const;
 
+
+    void getG1(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,ouverts,false,plot);}
+    void getG3(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,realises,false,plot);}
+    void getG5(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,engages,false,plot);}
+    void getG7(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,disponibles,false,plot);}
+
+    void getG2(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,ouverts,true,plot);}
+    void getG4(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,realises,true,plot);}
+    void getG6(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,engages,true,plot);}
+    void getG8(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,disponibles,true,plot);}
+
 signals:
 
 public slots:
@@ -123,11 +146,15 @@ private:
     bool propagateToAncestors(const QModelIndex &node);
     bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
+    void getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const;
+
 
 
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 };
+
+
 
 #endif // PCX_AUDITMODEL_H

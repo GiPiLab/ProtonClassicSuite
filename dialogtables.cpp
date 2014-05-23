@@ -5,6 +5,7 @@
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QFileDialog>
+#include "QCustomPlot/qcpdocumentobject.h"
 
 DialogTables::DialogTables(QWidget *parent) :
     QWidget(parent),
@@ -12,16 +13,20 @@ DialogTables::DialogTables(QWidget *parent) :
 {
     model=NULL;
     ui->setupUi(this);
+    //ui->plot->setHidden(true);
     doc=new QTextDocument();
     ui->splitter->setStretchFactor(1,1);
     updateListOfAudits();
 
+    interface = new QCPDocumentObject(this);
+    ui->textEdit->document()->documentLayout()->registerHandler(QCPDocumentObject::PlotTextFormat, interface);
 }
 
 DialogTables::~DialogTables()
 {
     delete ui;
     delete doc;
+    delete interface;
     if(model!=NULL)
         delete model;
 }
@@ -47,7 +52,7 @@ void DialogTables::updateListOfAudits()
 
 void DialogTables::updateTextBrowser()
 {
-    DFRFDIRI mode;
+    DFRFDIRI mode=DF;
     bool modeGlobal=false;
     if(ui->radioButtonDF->isChecked())
     {
@@ -75,9 +80,9 @@ void DialogTables::updateTextBrowser()
         die();
     }
 
-    QScrollBar *sb=ui->textBrowser->verticalScrollBar();
+    QScrollBar *sb=ui->textEdit->verticalScrollBar();
     int sbval=sb->value();
-    ui->textBrowser->clear();
+    ui->textEdit->clear();
     QString output=QString("<html><head><link rel='stylesheet' type='text/css' href='style.css'></head><body>"
             "<h3>Audit %1</h3><hr>").arg(model->getName().toHtmlEscaped());
 
@@ -106,6 +111,14 @@ void DialogTables::updateTextBrowser()
         {
                 output.append(model->getTabJoursAct(selectedNode,mode));
         }
+
+        QWidget *parent=ui->plot->parentWidget();
+        model->getG1(selectedNode,mode,ui->plot);
+        ui->plot->replot();
+        //model->getG2(selectedNode,mode,ui->plot);
+
+
+
     }
     //Global mode
     else
@@ -118,8 +131,35 @@ void DialogTables::updateTextBrowser()
    doc->addResource(QTextDocument::StyleSheetResource,QUrl("style.css"),model->getCSS());
    doc->setHtml(output);
 
-   ui->textBrowser->setDocument(doc);
+   ui->textEdit->setDocument(doc);
    sb->setValue(sbval);
+
+
+
+   /*ui->plot->clearGraphs();
+
+   ui->plot->addGraph();
+
+
+
+   ui->plot->graph(0)->setData(x,y);
+   QTextCursor cursor = ui->textEdit->textCursor();
+
+     // insert the current plot at the cursor position. QCPDocumentObject::generatePlotFormat creates a
+     // vectorized snapshot of the passed plot (with the specified width and height) which gets inserted
+     // into the text document.
+     double width = 300.0;
+     double height = 300.0;
+     cursor.insertText(QString(QChar::ObjectReplacementCharacter), QCPDocumentObject::generatePlotFormat(ui->plot, width, height));
+
+     ui->textEdit->setTextCursor(cursor);
+     */
+
+
+
+
+
+
 }
 
 
@@ -158,17 +198,18 @@ void DialogTables::on_radioButtonGlobal_toggled(bool checked)
     if(checked)
     {
         updateTextBrowser();
-        ui->groupBoxTables->setEnabled(false);
+        ui->pageTables->setEnabled(false);
     }
     else
     {
-        ui->groupBoxTables->setEnabled(true);
+        ui->pageTables->setEnabled(true);
     }
 
 }
 
 void DialogTables::on_checkBoxRecap_toggled(bool checked)
 {
+    Q_UNUSED(checked);
         updateTextBrowser();
 }
 

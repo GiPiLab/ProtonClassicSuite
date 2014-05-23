@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "pcx_auditmodel.h"
+#include "QCustomPlot/qcpdocumentobject.h"
 
 namespace Ui {
 class DialogTables;
@@ -57,6 +58,7 @@ private:
 
     QTextDocument *doc;
     PCx_AuditModel *model;
+    QCPDocumentObject *interface;
 
 
 };

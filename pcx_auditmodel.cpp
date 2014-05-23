@@ -551,6 +551,8 @@ QString PCx_AuditModel::modetoTableString(DFRFDIRI mode) const
     return QString();
 }
 
+
+
 QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode) const
 {
     switch(mode)
@@ -568,6 +570,52 @@ QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode) const
     }
     return QString();
 }
+
+QString PCx_AuditModel::OREDtoTableString(ORED ored) const
+{
+    switch(ored)
+    {
+    case ouverts:
+        return "ouverts";
+    case realises:
+        return "realises";
+    case engages:
+        return "engages";
+    case disponibles:
+        return "disponibles";
+    default:
+        qDebug()<<"Invalid ORED specified !";
+    }
+    return QString();
+}
+
+QString PCx_AuditModel::OREDtoCompleteString(ORED ored) const
+{
+    switch(ored)
+    {
+    case ouverts:
+        return tr("Prévu");
+    case realises:
+        return tr("Réalisés");
+    case engages:
+        return tr("Engagés");
+    case disponibles:
+        return tr("Disponibles");
+    default:
+        qDebug()<<"Invalid ORED specified !";
+    }
+    return QString();
+}
+
+
+
+
+
+
+
+
+
+
 
 
 //Warning, be called twice (see isDirty)
