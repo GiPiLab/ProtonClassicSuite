@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1058</width>
-    <height>517</height>
+    <width>787</width>
+    <height>546</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,42 +38,210 @@
         </widget>
        </item>
        <item>
-        <widget class="QCustomPlot" name="plot" native="true">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>200</height>
-          </size>
+        <widget class="QGroupBox" name="groupBoxTables">
+         <property name="title">
+          <string>Tableaux</string>
          </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>0</number>
+          </property>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxEvolution">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Evolution</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBoxEvolutionCumul">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Evolution cumulée</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="checkBoxBase100">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Base 100</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="checkBoxJoursAct">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Jours activité</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="checkBoxPoidsRelatif">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Poids relatifs</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="checkBoxResults">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Résultats</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxGraphics">
+         <property name="title">
+          <string>Graphiques</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <property name="topMargin">
+           <number>2</number>
+          </property>
+          <property name="bottomMargin">
+           <number>2</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkBoxRecapGraph">
+            <property name="text">
+             <string>Décomposition par année</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="checkBoxPrevu">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Prévu</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QCheckBox" name="checkBoxEngage">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Engagé</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="checkBoxPrevuCumul">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Prévu cumulé</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="checkBoxRealise">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Réalisé</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="checkBoxRealiseCumul">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Réalisé cumulé</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QCheckBox" name="checkBoxEngageCumul">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Engagé cumulé</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QCheckBox" name="checkBoxDisponible">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Disponible</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QCheckBox" name="checkBoxDisponibleCumul">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Disponible cumulé</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCustomPlot" name="plot" native="true"/>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget">
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="4" column="0">
-        <widget class="QPushButton" name="printButton">
-         <property name="text">
-          <string>Imprimer</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QPushButton" name="saveButton">
-         <property name="text">
-          <string>Enregistrer en HTML</string>
-         </property>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxMode">
          <property name="title">
           <string/>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
-          <property name="spacing">
-           <number>40</number>
-          </property>
           <property name="topMargin">
            <number>2</number>
           </property>
@@ -126,132 +294,38 @@
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QTextEdit" name="textEdit">
+         <property name="minimumSize">
+          <size>
+           <width>474</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="acceptDrops">
+          <bool>false</bool>
+         </property>
          <property name="undoRedoEnabled">
           <bool>false</bool>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
          </property>
          <property name="textInteractionFlags">
           <set>Qt::NoTextInteraction</set>
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QToolBox" name="toolBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="printButton">
+         <property name="text">
+          <string>Imprimer</string>
          </property>
-         <property name="frameShadow">
-          <enum>QFrame::Plain</enum>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="saveButton">
+         <property name="text">
+          <string>Enregistrer en HTML</string>
          </property>
-         <property name="tabSpacing">
-          <number>0</number>
-         </property>
-         <widget class="QWidget" name="pageTables">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>670</width>
-            <height>68</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Tableaux</string>
-          </attribute>
-          <layout class="QGridLayout" name="gridLayout">
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="checkBoxJoursAct">
-             <property name="text">
-              <string>Jours activité</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="checkBoxBase100">
-             <property name="text">
-              <string>Base 100</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QCheckBox" name="checkBoxEvolutionCumul">
-             <property name="text">
-              <string>Evolution cumulée</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QCheckBox" name="checkBoxEvolution">
-             <property name="text">
-              <string>Evolution</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="checkBoxRecap">
-             <property name="text">
-              <string>Récapitulatif</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-         <widget class="QWidget" name="pageGraphics">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>100</width>
-            <height>30</height>
-           </rect>
-          </property>
-          <attribute name="label">
-           <string>Graphiques</string>
-          </attribute>
-          <widget class="QCheckBox" name="checkBoxProportions">
-           <property name="geometry">
-            <rect>
-             <x>30</x>
-             <y>0</y>
-             <width>101</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Proportions</string>
-           </property>
-          </widget>
-          <widget class="QCheckBox" name="checkBox">
-           <property name="geometry">
-            <rect>
-             <x>170</x>
-             <y>0</y>
-             <width>85</width>
-             <height>20</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Prévu</string>
-           </property>
-          </widget>
-         </widget>
         </widget>
        </item>
       </layout>

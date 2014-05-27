@@ -1,17 +1,23 @@
 #ifndef PCX_AUDITINFOS_H
 #define PCX_AUDITINFOS_H
 
-#include <QtGui>
+#include <QString>
+#include <QList>
+#include <QDateTime>
+
+//TODO : Refactor with PCX_AuditModel
 class PCx_AuditInfos
 {
 public:
+    PCx_AuditInfos();
     PCx_AuditInfos(unsigned int auditId);
+    void updateInfos(unsigned int auditId);
 
     QString name;
     unsigned int id;
     QString attachedTreeName;
     unsigned int attachedTreeId;
-    QSet<unsigned int> years;
+    QList<unsigned int> years;
 
     QString yearsString;
     bool finished;

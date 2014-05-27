@@ -1,7 +1,6 @@
 #include "dialogeditaudit.h"
 #include "ui_dialogeditaudit.h"
 #include "pcx_auditmodel.h"
-#include "pcx_auditinfos.h"
 #include "auditdatadelegate.h"
 
 DialogEditAudit::DialogEditAudit(QWidget *parent) :
@@ -71,7 +70,8 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     {
         delete auditModel;
     }
-    auditModel=new PCx_AuditModel(selectedAuditId);
+    //Read-write audit model
+    auditModel=new PCx_AuditModel(selectedAuditId,0,false);
     ui->treeView->setModel(auditModel->getAttachedTreeModel());
     ui->treeView->expandToDepth(1);
 

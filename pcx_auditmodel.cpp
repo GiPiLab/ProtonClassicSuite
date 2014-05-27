@@ -2,7 +2,7 @@
 #include "utils.h"
 #include <QMessageBox>
 
-PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent) :
+PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly) :
     QObject(parent)
 {
     attachedTree=NULL;
@@ -11,7 +11,7 @@ PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent) :
     modelRI=NULL;
     modelRF=NULL;
     this->auditId=auditId;
-    loadFromDb(auditId);
+    loadFromDb(auditId,readOnly);
 }
 
 PCx_AuditModel::~PCx_AuditModel()
@@ -39,11 +39,13 @@ PCx_AuditModel::~PCx_AuditModel()
     delete attachedTree;
 }
 
-bool PCx_AuditModel::addNewAudit(const QString &name, QSet<unsigned int> years, unsigned int attachedTreeId)
+bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId)
 {
     Q_ASSERT(!years.isEmpty() && !name.isEmpty() && attachedTreeId>0);
 
-    QList<unsigned int> yearsList=years.toList();
+    //Removes duplicates and sort years
+    QSet<unsigned int> yearsSet=years.toSet();
+    QList<unsigned int> yearsList=yearsSet.toList();
     qSort(yearsList);
 
     QString yearsString;
@@ -278,16 +280,11 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
     return true;
 }
 
-QDateTime PCx_AuditModel::getCreationTime() const
-{
-    //Assume sqlite CURRENT_TIMESTAMP format
-    QDateTime dt(QDateTime::fromString(creationTime,"yyyy-MM-dd hh:mm:ss"));
-    return dt;
-}
+
 
 bool PCx_AuditModel::finishAudit()
 {
-    finished=true;
+    auditInfos.finished=true;
     return PCx_AuditModel::finishAudit(auditId);
 }
 
@@ -324,87 +321,88 @@ QSqlTableModel *PCx_AuditModel::getTableModel(DFRFDIRI mode) const
     return NULL;
 }
 
-bool PCx_AuditModel::loadFromDb(unsigned int auditId)
+bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
 {
     Q_ASSERT(auditId>0);
     QSqlQuery q;
-    q.prepare("select * from index_audits where id=:id limit 1");
-    q.bindValue(":id",auditId);
-    q.exec();
-    if(q.next())
+    auditInfos.updateInfos(auditId);
+    if(auditInfos.valid)
     {
-        unsigned int attachedTreeId=q.value("id_arbre").toUInt();
+        unsigned int attachedTreeId=auditInfos.attachedTreeId;
         qDebug()<<"Attached tree ID = "<<attachedTreeId;
-        name=q.value("nom").toString();
+
         if(attachedTree!=NULL)
         {
             delete attachedTree;
         }
         attachedTree=new PCx_TreeModel(attachedTreeId);
-        if(modelDF!=NULL)
+        if(readOnly==false)
         {
-            modelDF->clear();
-            delete modelDF;
-        }
-        if(modelRF!=NULL)
-        {
-            modelRF->clear();
-            delete modelRF;
-        }
-        if(modelDI!=NULL)
-        {
-            modelDI->clear();
-            delete modelDI;
-        }
-        if(modelRI!=NULL)
-        {
-            modelRI->clear();
-            delete modelRI;
-        }
-        modelDF=new QSqlTableModel();
-        modelDF->setTable(QString("audit_DF_%1").arg(auditId));
-        modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-        modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-        modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-        modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelDF->select();
+            if(modelDF!=NULL)
+            {
+                modelDF->clear();
+                delete modelDF;
+            }
+            if(modelRF!=NULL)
+            {
+                modelRF->clear();
+                delete modelRF;
+            }
+            if(modelDI!=NULL)
+            {
+                modelDI->clear();
+                delete modelDI;
+            }
+            if(modelRI!=NULL)
+            {
+                modelRI->clear();
+                delete modelRI;
+            }
+            modelDF=new QSqlTableModel();
+            modelDF->setTable(QString("audit_DF_%1").arg(auditId));
+            modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+            modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+            modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+            modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+            modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
+            modelDF->select();
 
-        modelDI=new QSqlTableModel();
-        modelDI->setTable(QString("audit_DI_%1").arg(auditId));
-        modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-        modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-        modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-        modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelDI->select();
+            modelDI=new QSqlTableModel();
+            modelDI->setTable(QString("audit_DI_%1").arg(auditId));
+            modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+            modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+            modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+            modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+            modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
+            modelDI->select();
 
-        modelRI=new QSqlTableModel();
-        modelRI->setTable(QString("audit_RI_%1").arg(auditId));
-        modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-        modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-        modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-        modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelRI->select();
+            modelRI=new QSqlTableModel();
+            modelRI->setTable(QString("audit_RI_%1").arg(auditId));
+            modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+            modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+            modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+            modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+            modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
+            modelRI->select();
 
-        modelRF=new QSqlTableModel();
-        modelRF->setTable(QString("audit_RF_%1").arg(auditId));
-        modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-        modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-        modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-        modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
-        modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelRF->select();
+            modelRF=new QSqlTableModel();
+            modelRF->setTable(QString("audit_RF_%1").arg(auditId));
+            modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+            modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
+            modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
+            modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
+            modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
+            modelRF->select();
 
-        connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-        connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-        connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-        connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+            connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+            connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+            connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+            connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        }
     }
     else
     {
@@ -594,29 +592,18 @@ QString PCx_AuditModel::OREDtoCompleteString(ORED ored) const
     switch(ored)
     {
     case ouverts:
-        return tr("Prévu");
+        return tr("prévu");
     case realises:
-        return tr("Réalisés");
+        return tr("réalisé");
     case engages:
-        return tr("Engagés");
+        return tr("engagé");
     case disponibles:
-        return tr("Disponibles");
+        return tr("disponible");
     default:
         qDebug()<<"Invalid ORED specified !";
     }
     return QString();
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //Warning, be called twice (see isDirty)
 void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)

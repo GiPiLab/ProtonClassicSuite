@@ -3,7 +3,7 @@
 #include <float.h>
 
 
-void PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const
+QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const
 {
     Q_ASSERT(node>0 && plot!=NULL);
     QString tableName=modetoTableString(mode);
@@ -108,21 +108,29 @@ void PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bo
 
     plot->clearItems();
     plot->clearGraphs();
-    plot->clearMask();
-    plot->clearPlottables();
-    plot->clearFocus();
 
     plot->addGraph();
     plot->graph(0)->setData(dataPlotNodeX,dataPlotNodeY);
+
     plot->addGraph();
     plot->graph(1)->setData(dataPlotRootX,dataPlotRootY);
+
+    //Legend
+    plot->graph(0)->setName(QString(attachedTree->getNodeName(node)));
+    plot->graph(1)->setName(tr("Total - %1").arg(attachedTree->getNodeName(node)));
+
+    plot->legend->setVisible(true);
+    plot->legend->setFont(QFont(QFont().family(),8));
+    plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom);
 
     plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
     plot->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
 
+    //Add value labels to points
     Q_ASSERT(dataPlotRoot.keys()==dataPlotNode.keys());
     int i=0;
     int j=dataPlotRoot.count()-1;
+
     foreach(double key,dataPlotRoot.keys())
     {
         double val1=dataPlotRoot.value(key);
@@ -169,24 +177,40 @@ void PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bo
 
     QString plotTitle;
     if(cumule==false)
-        plotTitle=QString("Evolutions comparées du %1 de la collectivité et de [ %2 ] (%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node)).arg(modeToCompleteString(mode));
+    {
+        if(modeORED!=engages)
+            plotTitle=tr("&Eacute;volution du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+        else
+            plotTitle=tr("&Eacute;volution de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+    }
 
     else
-        plotTitle=QString("Evolutions comparées du cumulé du %1 de la collectivité et de [ %2 ] (%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node)).arg(modeToCompleteString(mode));
+    {
+        if(modeORED!=engages)
+            plotTitle=tr("&Eacute;volution du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+        else
+            plotTitle=tr("&Eacute;volution du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+    }
 
-
-    qDebug()<<plot->plotLayout()->elementCount();
-    //Reuse title space
+    /*
+     * Embedded plot title, not used here
+     *
+     * QCPPlotTitle *title;
     if(plot->plotLayout()->elementCount()==1)
     {
         plot->plotLayout()->insertRow(0);
-        plot->plotLayout()->addElement(0,0,new QCPPlotTitle(plot,plotTitle));
+        title=new QCPPlotTitle(plot,plotTitle);
+        title->setAutoMargins(QCP::msAll);
+        title->setMargins(QMargins(0,0,0,0));
+        //title->setFont(QFont(QFont().family(),12));
+        plot->plotLayout()->addElement(0,0,title);
     }
     else
     {
-        QCPPlotTitle *title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
         title->setText(plotTitle);
     }
+    */
 
     plot->graph(0)->setPen(QPen(QColor(255,0,0)));
     plot->graph(0)->setBrush(QBrush(QColor(255,0,0,70)));
@@ -199,13 +223,10 @@ void PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bo
     plot->xAxis->setSubTickCount(0);
     plot->xAxis->grid()->setVisible(false);
     plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
-    //plot->yAxis->setTickLabels(true);
-    //plot->yAxis->setAutoSubTicks(false);
-    //plot->yAxis->setSubTickCount(0);
 
-    plot->yAxis->setVisible(false);
-    plot->xAxis->setRange(dataPlotNodeX.first()-0.5,dataPlotNodeX.last()+0.5);
+    plot->xAxis->setRange(dataPlotNodeX.first()-0.2,dataPlotNodeX.last()+0.2);
     plot->yAxis->setRange(minYRange-10,maxYRange+10);
+    return plotTitle;
 }
 
 

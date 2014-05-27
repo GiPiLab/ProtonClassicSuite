@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QtSql>
 #include "QCustomPlot/qcustomplot.h"
+#include "pcx_auditinfos.h"
 #include "pcx_treemodel.h"
 
 //Column indexes in sql tables
@@ -46,19 +47,18 @@ class PCx_AuditModel : public QObject
 
 public:
 
-    explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0);
+    explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0,bool readOnly=true);
     virtual ~PCx_AuditModel();
 
-    static bool addNewAudit(const QString &name, QSet<unsigned int> years, unsigned int attachedTreeId);
+    static bool addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
     static bool deleteAudit(unsigned int auditId);
 
     unsigned int getAuditId() const{return auditId;}
-    bool isFinished() const{return finished;}
-    const QString &getName() const{return name;}
-    QDateTime getCreationTime() const;
-    const QSet<unsigned int> &getYears()const {return years;}
+    const PCx_AuditInfos &getAuditInfos() const{return auditInfos;}
 
     bool finishAudit();
+    static bool finishAudit(unsigned int id);
+
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     QSqlTableModel *getTableModel(const QString &mode) const;
     QSqlTableModel *getTableModel(DFRFDIRI mode) const;
@@ -68,7 +68,6 @@ public:
     QSqlTableModel *getTableModelRI() const {return modelRI;}
 
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
-    static bool finishAudit(unsigned int id);
 
     QString getTabJoursAct(unsigned int node, DFRFDIRI mode) const;
     QString getTabBase100(unsigned int node, DFRFDIRI mode) const;
@@ -83,8 +82,6 @@ public:
     QString modeToCompleteString(DFRFDIRI mode) const;
     QString OREDtoCompleteString(ORED ored) const;
     QString OREDtoTableString(ORED ored) const;
-
-
 
     //T1,T2... are named as in the original PCA version
     //Content of tab "Recap"
@@ -113,16 +110,15 @@ public:
     QString getT11(unsigned int node) const;
     QString getT12(unsigned int node) const;
 
+    QString getG1(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,ouverts,false,plot);}
+    QString getG3(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,realises,false,plot);}
+    QString getG5(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,engages,false,plot);}
+    QString getG7(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,disponibles,false,plot);}
 
-    void getG1(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,ouverts,false,plot);}
-    void getG3(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,realises,false,plot);}
-    void getG5(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,engages,false,plot);}
-    void getG7(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,disponibles,false,plot);}
-
-    void getG2(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,ouverts,true,plot);}
-    void getG4(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,realises,true,plot);}
-    void getG6(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,engages,true,plot);}
-    void getG8(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {getG1G8(node,mode,disponibles,true,plot);}
+    QString getG2(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,ouverts,true,plot);}
+    QString getG4(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,realises,true,plot);}
+    QString getG6(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,engages,true,plot);}
+    QString getG8(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,disponibles,true,plot);}
 
 signals:
 
@@ -131,24 +127,16 @@ public slots:
 private:
     unsigned int auditId;
 
-    //TODO : fill finished
-    bool finished;
-
-    QString name;
-
-    //TODO : fill creationTime
-    QString creationTime;
-   //TODO : fill years
-    QSet<unsigned int> years;
+    PCx_AuditInfos auditInfos;
     PCx_TreeModel *attachedTree;
+
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
-    bool loadFromDb(unsigned int auditId);
+    bool loadFromDb(unsigned int auditId, bool readOnly=true);
     bool propagateToAncestors(const QModelIndex &node);
     bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
-    void getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const;
-
-
+    //Returns the title of the graphic in html
+    QString getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const;
 
 
 private slots:

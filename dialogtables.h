@@ -29,7 +29,7 @@ private slots:
 
     void on_radioButtonGlobal_toggled(bool checked);
 
-    void on_checkBoxRecap_toggled(bool checked);
+    void on_checkBoxPoidsRelatif_toggled(bool checked);
 
     void on_radioButtonDF_toggled(bool checked);
 
@@ -51,14 +51,37 @@ private slots:
 
     void on_saveButton_clicked();
 
+    void on_checkBoxResults_toggled(bool checked);
+
+    void on_checkBoxRecapGraph_toggled(bool checked);
+
+    void on_checkBoxPrevu_toggled(bool checked);
+
+    void on_checkBoxEngage_toggled(bool checked);
+
+    void on_checkBoxPrevuCumul_toggled(bool checked);
+
+    void on_checkBoxEngageCumul_toggled(bool checked);
+
+    void on_checkBoxRealise_toggled(bool checked);
+
+    void on_checkBoxDisponible_toggled(bool checked);
+
+    void on_checkBoxRealiseCumul_toggled(bool checked);
+
+    void on_checkBoxDisponibleCumul_toggled(bool checked);
+
 private:
     Ui::DialogTables *ui;
     void updateListOfAudits();
     void updateTextBrowser();
+    QString insertPlotPixmapInDocResourceCache(const QCustomPlot *plot,int width,int height) const;
 
     QTextDocument *doc;
     PCx_AuditModel *model;
     QCPDocumentObject *interface;
+    bool ready;
+    QStringList imageNames;
 
 
 };

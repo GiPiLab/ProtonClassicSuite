@@ -561,8 +561,16 @@ QString PCx_TreeModel::getNodeName(unsigned int node) const
 
     if(q.next())
     {
-        QString typeName=types->getNomType(q.value("type").toUInt());
-        return QString("%1 %2").arg(typeName).arg(q.value("nom").toString());
+        if(node>1)
+        {
+            QString typeName=types->getNomType(q.value("type").toUInt());
+            return QString("%1 %2").arg(typeName).arg(q.value("nom").toString());
+        }
+        //Root does not has type
+        else
+        {
+            return q.value("nom").toString();
+        }
     }
     else
     {

@@ -4,7 +4,17 @@
 #include <QtSql>
 #include <QtGui>
 
+PCx_AuditInfos::PCx_AuditInfos()
+{
+    valid=false;
+}
+
 PCx_AuditInfos::PCx_AuditInfos(unsigned int auditId)
+{
+    updateInfos(auditId);
+}
+
+void PCx_AuditInfos::updateInfos(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
 
@@ -12,22 +22,23 @@ PCx_AuditInfos::PCx_AuditInfos(unsigned int auditId)
     if(q.next())
     {
         id=auditId;
-        name=q.value(1).toString();
-        attachedTreeId=q.value(2).toUInt();
+        name=q.value("nom").toString();
+        attachedTreeId=q.value("id_arbre").toUInt();
         attachedTreeName=PCx_TreeModel::idTreeToName(attachedTreeId);
-        yearsString=q.value(3).toString();
+        yearsString=q.value("annees").toString();
         QStringList yearsSplitted=yearsString.split(',');
 
-        QList<unsigned int> yearsTemp;
+        QSet<unsigned int> yearsTemp;
         foreach (QString uneAnnee, yearsSplitted) {
-            yearsTemp.append(uneAnnee.toUInt());
+            yearsTemp.insert(uneAnnee.toUInt());
         }
-        qSort(yearsTemp);
-        yearsString=QString("%1 - %2").arg(yearsTemp.first()).arg(yearsTemp.last());
-        years=yearsTemp.toSet();
+        years=yearsTemp.toList();
+        qSort(years);
 
-        finished=q.value(4).toBool();
-        creationTimeUTC=QDateTime::fromString(q.value(5).toString(),"yyyy-MM-dd hh:mm:ss");
+        yearsString=QString("%1 - %2").arg(years.first()).arg(years.last());
+
+        finished=q.value("termine").toBool();
+        creationTimeUTC=QDateTime::fromString(q.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         creationTimeUTC.setTimeSpec(Qt::UTC);
         creationTimeLocal=creationTimeUTC.toLocalTime();
         valid=true;

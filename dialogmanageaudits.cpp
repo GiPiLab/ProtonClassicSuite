@@ -80,12 +80,12 @@ void DialogManageAudits::on_addAuditButton_clicked()
         return;
     }
 
-    QSet<unsigned int> years;
+    QList<unsigned int> years;
     QString yearsString;
     yearsString=QString("De %1 à %2").arg(anneeFrom).arg(anneeTo);
     for(int i=anneeFrom;i<=anneeTo;i++)
     {
-        years.insert(i);
+        years.append(i);
     }
 
     bool ok;
