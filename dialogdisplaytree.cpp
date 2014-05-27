@@ -21,6 +21,7 @@ DialogDisplayTree::~DialogDisplayTree()
     delete ui;
 }
 
+//TODO : better tree printing support
 void DialogDisplayTree::on_printViewButton_clicked()
 {
     QPrinter printer;

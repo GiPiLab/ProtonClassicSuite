@@ -7,7 +7,7 @@
 #include "dialogmanageaudits.h"
 #include "dialogedittree.h"
 #include "dialogeditaudit.h"
-#include "dialogtables.h"
+#include "dialogtablesgraphics.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,7 +53,7 @@ private:
     DialogEditAudit *dialogEditAudit;
 
     //Multiple "tables" dialogs are allowed
-    QList<DialogTables *>listOfDialogTables;
+    QList<DialogTablesGraphics *>listOfDialogTablesGraphics;
 
 
 

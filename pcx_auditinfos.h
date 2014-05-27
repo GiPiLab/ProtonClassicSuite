@@ -5,7 +5,6 @@
 #include <QList>
 #include <QDateTime>
 
-//TODO : Refactor with PCX_AuditModel
 class PCx_AuditInfos
 {
 public:

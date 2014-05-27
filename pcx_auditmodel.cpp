@@ -329,7 +329,7 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
     if(auditInfos.valid)
     {
         unsigned int attachedTreeId=auditInfos.attachedTreeId;
-        qDebug()<<"Attached tree ID = "<<attachedTreeId;
+        //qDebug()<<"Attached tree ID = "<<attachedTreeId;
 
         if(attachedTree!=NULL)
         {

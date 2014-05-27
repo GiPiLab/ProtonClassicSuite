@@ -22,12 +22,11 @@ SOURCES += main.cpp\
     dialogeditaudit.cpp \
     pcx_auditinfos.cpp \
     auditdatadelegate.cpp \
-    dialogtables.cpp \
     utils.cpp \
     pcx_auditmodel_tables.cpp \
-    QCustomPlot/qcpdocumentobject.cpp \
     QCustomPlot/qcustomplot.cpp \
-    pcx_auditmodel_graphics.cpp
+    pcx_auditmodel_graphics.cpp \
+    dialogtablesgraphics.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -39,14 +38,13 @@ HEADERS  += mainwindow.h \
     dialogeditaudit.h \
     pcx_auditinfos.h \
     auditdatadelegate.h \
-    dialogtables.h \
     utils.h \
-    QCustomPlot/qcpdocumentobject.h \
-    QCustomPlot/qcustomplot.h
+    QCustomPlot/qcustomplot.h \
+    dialogtablesgraphics.h
 
 FORMS    += mainwindow.ui \
     dialogedittree.ui \
     dialogdisplaytree.ui \
     dialogmanageaudits.ui \
     dialogeditaudit.ui \
-    dialogtables.ui
+    dialogtablesgraphics.ui

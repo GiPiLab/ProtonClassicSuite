@@ -75,21 +75,22 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
             if(diffRootNode1!=0.0)
             {
                 percentRoot=diffRootNode*100/diffRootNode1;
-                if(percentRoot<minYRange)
-                    minYRange=percentRoot;
-                if(percentRoot>maxYRange)
-                    maxYRange=percentRoot;
+
             }
+            if(percentRoot<minYRange)
+                minYRange=percentRoot;
+            if(percentRoot>maxYRange)
+                maxYRange=percentRoot;
             dataPlotRoot.insert(key,percentRoot);
 
             if(firstYearDataNode!=0.0)
             {
                 percentNode=diffNode*100/firstYearDataNode;
-                if(percentNode<minYRange)
-                    minYRange=percentNode;
-                if(percentNode>maxYRange)
-                    maxYRange=percentNode;
             }
+            if(percentNode<minYRange)
+                minYRange=percentNode;
+            if(percentNode>maxYRange)
+                maxYRange=percentNode;
             dataPlotNode.insert(key,percentNode);
 
             //cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
@@ -108,6 +109,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
 
     plot->clearItems();
     plot->clearGraphs();
+    plot->clearPlottables();
 
     plot->addGraph();
     plot->graph(0)->setData(dataPlotNodeX,dataPlotNodeY);
@@ -121,6 +123,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
 
     plot->legend->setVisible(true);
     plot->legend->setFont(QFont(QFont().family(),8));
+    plot->legend->setRowSpacing(-5);
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom);
 
     plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
@@ -129,7 +132,6 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     //Add value labels to points
     Q_ASSERT(dataPlotRoot.keys()==dataPlotNode.keys());
     int i=0;
-    int j=dataPlotRoot.count()-1;
 
     foreach(double key,dataPlotRoot.keys())
     {
@@ -137,11 +139,11 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
         double val2=dataPlotNode.value(key);
         QCPItemText *text=new QCPItemText(plot);
         text->setText(formatDouble(val1,1)+"\%");
-        int alignment=Qt::AlignCenter;
-        if(i==0)
+        int alignment=Qt::AlignHCenter;
+       /* if(i==0)
             alignment=Qt::AlignRight;
         else if(i==j)
-            alignment=Qt::AlignLeft;
+            alignment=Qt::AlignLeft;*/
 
         if(val1<val2)
             alignment|=Qt::AlignTop;
@@ -156,11 +158,11 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
         text=new QCPItemText(plot);
         text->setText(formatDouble(val2,1)+"\%");
 
-        alignment=Qt::AlignCenter;
-        if(i==0)
+        alignment=Qt::AlignHCenter;
+        /*if(i==0)
             alignment=Qt::AlignRight;
         else if(i==j)
-            alignment=Qt::AlignLeft;
+            alignment=Qt::AlignLeft;*/
 
         if(val2<val1)
             alignment|=Qt::AlignTop;
@@ -219,14 +221,170 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
 
     plot->xAxis->setAutoTickStep(false);
     plot->xAxis->setAutoSubTicks(false);
+    plot->xAxis->setTickLength(0,4);
     plot->xAxis->setTickStep(1);
     plot->xAxis->setSubTickCount(0);
     plot->xAxis->grid()->setVisible(false);
     plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
 
-    plot->xAxis->setRange(dataPlotNodeX.first()-0.2,dataPlotNodeX.last()+0.2);
-    plot->yAxis->setRange(minYRange-10,maxYRange+10);
+    plot->xAxis->setRange(dataPlotNodeX.first()-0.8,dataPlotNodeX.last()+0.8);
+
+    // qDebug()<<minYRange<<maxYRange;
+    double padding=(maxYRange-minYRange)*0.2;
+
+    plot->yAxis->setRange(minYRange-(padding*2),maxYRange+padding);
     return plotTitle;
+}
+
+QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
+{
+    Q_ASSERT(node>0 && plot!=NULL);
+    QString plotTitle;
+
+    plot->clearItems();
+    plot->clearGraphs();
+    plot->clearPlottables();
+
+    QCPBars *dfBar=new QCPBars(plot->xAxis,plot->yAxis);
+    QCPBars *rfBar=new QCPBars(plot->xAxis,plot->yAxis);
+    QCPBars *diBar=new QCPBars(plot->xAxis,plot->yAxis);
+    QCPBars *riBar=new QCPBars(plot->xAxis,plot->yAxis);
+    plot->addPlottable(dfBar);
+    plot->addPlottable(rfBar);
+    plot->addPlottable(diBar);
+    plot->addPlottable(riBar);
+
+    QPen pen;
+    pen.setWidth(0);
+
+    dfBar->setName(modeToCompleteString(DF));
+    pen.setColor(QColor(255,0,0,70));
+    dfBar->setPen(pen);
+    dfBar->setBrush(QColor(255,0,0,70));
+
+    rfBar->setName(modeToCompleteString(RF));
+    pen.setColor(QColor(0,255,0,70));
+    rfBar->setPen(pen);
+    rfBar->setBrush(QColor(0,255,0,70));
+
+    diBar->setName(modeToCompleteString(DI));
+    pen.setColor(QColor(0,0,255,70));
+    diBar->setPen(pen);
+    diBar->setBrush(QColor(0,0,255,70));
+
+    riBar->setName(modeToCompleteString(RI));
+    pen.setColor(QColor(0,255,255,70));
+    riBar->setPen(pen);
+    riBar->setBrush(QColor(0,255,255,70));
+
+    rfBar->moveAbove(dfBar);
+    diBar->moveAbove(rfBar);
+    riBar->moveAbove(diBar);
+
+    QSqlQuery q;
+    q.prepare(QString("select a.annee, a.ouverts 'ouvertsDF', b.ouverts 'ouvertsRF', c.ouverts 'ouvertsDI', d.ouverts 'ouvertsRI',"
+                      "a.realises 'realisesDF', b.realises 'realisesRF', c.realises 'realisesDI', d.realises 'realisesRI',"
+                      "a.engages 'engagesDF', b.engages 'engagesRF', c.engages 'engagesDI', d.engages 'engagesRI',"
+                      "a.disponibles 'disponiblesDF', b.disponibles 'disponiblesRF', c.disponibles 'disponiblesDI', d.disponibles 'disponiblesRI' "
+                      "from audit_DF_%1 a, audit_RF_%1 b, audit_DI_%1 c,audit_RI_%1 d "
+                      "where a.id_node=:id_node and a.id_node=b.id_node and b.id_node=c.id_node "
+                      "and c.id_node=d.id_node and a.annee=b.annee and b.annee=c.annee and c.annee=d.annee "
+                      "order by a.annee").arg(auditId));
+    q.bindValue(":id_node",node);
+    q.exec();
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+
+
+    //FIXME : Maybe optimize this part
+    QStringList listModes=(QStringList()<<OREDtoTableString(ouverts)<<OREDtoTableString(realises)
+                           <<OREDtoTableString(engages)<<OREDtoTableString(disponibles));
+    QStringList listModesForLabel=(QStringList()<<OREDtoCompleteString(ouverts)<<OREDtoCompleteString(realises)
+                                   <<OREDtoCompleteString(engages)<<OREDtoCompleteString(disponibles));
+    QVector<double> ticks;
+    QVector<QString> labels;
+    QVector<double> valuesDF,valuesRF,valuesDI,valuesRI;
+    int tickCounter=0;
+
+    while(q.next())
+    {
+
+        unsigned int annee=q.value("annee").toUInt();
+
+        foreach (const QString & mode,listModes)
+        {
+            double dataDF=0.0,dataRF=0.0,dataDI=0.0,dataRI=0.0,sum=0.0;
+            double percentDF=0.0,percentRF=0.0,percentDI=0.0,percentRI=0.0;
+            dataDF=q.value(mode+"DF").toDouble();
+            dataRF=q.value(mode+"RF").toDouble();
+            dataDI=q.value(mode+"DI").toDouble();
+            dataRI=q.value(mode+"RI").toDouble();
+
+            //In case of negative disponible
+            if(dataDF<0.0)
+                dataDF=0.0;
+            if(dataRF<0.0)
+                dataRF=0.0;
+            if(dataDI<0.0)
+                dataDI=0.0;
+            if(dataRI<0.0)
+                dataRI=0.0;
+
+            sum=dataDF+dataRF+dataDI+dataRI;
+            if(sum>0.0)
+            {
+                percentDF=100*dataDF/sum;
+                percentRF=100*dataRF/sum;
+                percentDI=100*dataDI/sum;
+                percentRI=100*dataRI/sum;
+            }
+            valuesDF.append(percentDF);
+            valuesRF.append(percentRF);
+            valuesDI.append(percentDI);
+            valuesRI.append(percentRI);
+            ticks.append(++tickCounter);
+        }
+        //FIXME : may be optimized here, assume listMode and listModeForLabel are sorted
+        foreach(const QString &modeLabel,listModesForLabel)
+            labels.append(QString("%1 %2").arg(modeLabel).arg(annee));
+    }
+    //qDebug()<<ticks;
+    //qDebug()<<"ValueDF = "<<valuesDF;
+    //qDebug()<<"ValueRF = "<<valuesRF;
+    //qDebug()<<"ValueDI = "<<valuesDI;
+    //qDebug()<<"ValueRI = "<<valuesRI;
+
+    dfBar->setData(ticks,valuesDF);
+    rfBar->setData(ticks,valuesRF);
+    diBar->setData(ticks,valuesDI);
+    riBar->setData(ticks,valuesRI);
+
+    QFont legendFont=QFont();
+    legendFont.setPointSize(8);
+    plot->legend->setFont(legendFont);
+    plot->legend->setRowSpacing(-8);
+    //plot->legend->setIconSize(50,5);
+    plot->legend->setVisible(true);
+
+    plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignHCenter);
+
+    plot->xAxis->setAutoTicks(false);
+    plot->xAxis->setAutoTickLabels(false);
+    plot->yAxis->setLabel("%");
+    plot->xAxis->setTickLength(0,4);
+    plot->xAxis->setTickLabelRotation(90);
+    plot->xAxis->setTickVector(ticks);
+    plot->xAxis->setTickVectorLabels(labels);
+    plot->xAxis->setSubTickCount(0);
+    plot->xAxis->setRange(0,tickCounter+1);
+    plot->yAxis->setRange(0,150);
+
+    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(attachedTree->getNodeName(node).toHtmlEscaped());
+    return plotTitle;
+
 }
 
 

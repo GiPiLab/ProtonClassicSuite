@@ -78,9 +78,9 @@ void MainWindow::onDialogEditAuditWindowsDestroyed()
 
 void MainWindow::onDialogTablesWindowsDestroyed(QObject *obj)
 {
-    qDebug()<<listOfDialogTables;
-    listOfDialogTables.removeAt(listOfDialogTables.indexOf((DialogTables *)obj));
-    qDebug()<<listOfDialogTables;
+    //qDebug()<<listOfDialogTables;
+    listOfDialogTablesGraphics.removeAt(listOfDialogTablesGraphics.indexOf((DialogTablesGraphics *)obj));
+    //qDebug()<<listOfDialogTables;
 }
 
 void MainWindow::on_actionGerer_les_audits_triggered()
@@ -103,7 +103,7 @@ void MainWindow::on_actionGerer_les_audits_triggered()
         {
             connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dialogEditAudit,SLOT(onListOfAuditsChanged()));
         }
-        foreach(DialogTables *dlg,listOfDialogTables)
+        foreach(DialogTablesGraphics *dlg,listOfDialogTablesGraphics)
         {
             connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
         }
@@ -129,12 +129,12 @@ void MainWindow::on_actionSaisie_des_donnees_triggered()
 
 void MainWindow::on_actionTableaux_triggered()
 {
-    DialogTables *dlg=new DialogTables();
+    DialogTablesGraphics *dlg=new DialogTablesGraphics();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     ui->mdiArea->addSubWindow(dlg);
     dlg->show();
-    listOfDialogTables.append(dlg);
+    listOfDialogTablesGraphics.append(dlg);
 
     connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onDialogTablesWindowsDestroyed(QObject *)));
 

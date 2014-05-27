@@ -1,21 +1,23 @@
-#include "dialogtables.h"
-#include "ui_dialogtables.h"
+#include "dialogtablesgraphics.h"
+#include "ui_dialogtablesgraphics.h"
 #include "utils.h"
 #include <QScrollBar>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QFileDialog>
-#include "QCustomPlot/qcpdocumentobject.h"
+//#include "QCustomPlot/qcpdocumentobject.h"
 
-DialogTables::DialogTables(QWidget *parent) :
+DialogTablesGraphics::DialogTablesGraphics(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DialogTables)
+    ui(new Ui::DialogTablesGraphics)
 {
     model=NULL;
     ready=false;
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
-    ui->plot->setHidden(true);
+    //We use two hidden QCustomPlot, one for G1G8 graphics with lines, one for G9 (histograms)
+    ui->plotG1G8->setHidden(true);
+    ui->plotG9->setHidden(true);
 
     doc=new QTextDocument();
     ui->textEdit->setDocument(doc);
@@ -28,7 +30,7 @@ DialogTables::DialogTables(QWidget *parent) :
     ui->textEdit->moveCursor(QTextCursor::Start);
 }
 
-DialogTables::~DialogTables()
+DialogTablesGraphics::~DialogTablesGraphics()
 {
     delete ui;
     delete doc;
@@ -37,12 +39,12 @@ DialogTables::~DialogTables()
         delete model;
 }
 
-void DialogTables::onListOfAuditsChanged()
+void DialogTablesGraphics::onListOfAuditsChanged()
 {
     updateListOfAudits();
 }
 
-void DialogTables::updateListOfAudits()
+void DialogTablesGraphics::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
@@ -56,7 +58,7 @@ void DialogTables::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
-void DialogTables::updateTextBrowser()
+void DialogTablesGraphics::updateTextBrowser()
 {
     if(!ready)return;
     imageNames.clear();
@@ -97,8 +99,9 @@ void DialogTables::updateTextBrowser()
 
     unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 
-    int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.8);
+    int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
     int favoriteGraphicsHeight=400;
+
 
     //Mode DF,RF,DI,RI
     if(modeGlobal==false)
@@ -123,50 +126,50 @@ void DialogTables::updateTextBrowser()
         if(ui->checkBoxPrevu->isChecked())
         {
 
-            output.append("<p align='center'><b>"+model->getG1(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG1(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxPrevuCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG2(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG2(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxRealise->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG3(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG3(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxRealiseCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG4(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG4(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxEngage->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG5(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG5(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxEngageCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG6(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG6(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxDisponible->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG7(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG7(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
         if(ui->checkBoxDisponibleCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG8(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append("<p align='center'><b>"+model->getG8(selectedNode,mode,ui->plotG1G8)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
         }
 
@@ -180,12 +183,11 @@ void DialogTables::updateTextBrowser()
             output.append(model->getTabResults(selectedNode));
         if(ui->checkBoxRecapGraph->isChecked())
         {
-            /*
-            //TODO : getG9 for each year
-            output.append("<p align='center'><b>"+model->getG9(selectedNode,mode,ui->plot)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plot,favoriteGraphicsWidth,favoriteGraphicsHeight);
+
+            output.append("<p align='center'><b>"+model->getG9(selectedNode,ui->plotG9)+"</b></p>");
+            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG9,favoriteGraphicsWidth,favoriteGraphicsHeight);
             output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
-            */
+
         }
 
     }
@@ -196,12 +198,12 @@ void DialogTables::updateTextBrowser()
 }
 
 
-void DialogTables::on_comboListAudits_activated(int index)
+void DialogTablesGraphics::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
     Q_ASSERT(selectedAuditId>0);
-    qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=NULL)
     {
@@ -216,7 +218,7 @@ void DialogTables::on_comboListAudits_activated(int index)
     on_treeView_clicked(rootIndex);
 }
 
-void DialogTables::on_treeView_clicked(const QModelIndex &index)
+void DialogTablesGraphics::on_treeView_clicked(const QModelIndex &index)
 {
     unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
     Q_ASSERT(selectedNode>0);
@@ -226,7 +228,7 @@ void DialogTables::on_treeView_clicked(const QModelIndex &index)
     updateTextBrowser();
 }
 
-void DialogTables::on_radioButtonGlobal_toggled(bool checked)
+void DialogTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
@@ -271,62 +273,62 @@ void DialogTables::on_radioButtonGlobal_toggled(bool checked)
 
 }
 
-void DialogTables::on_checkBoxPoidsRelatif_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_radioButtonDF_toggled(bool checked)
+void DialogTablesGraphics::on_radioButtonDF_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTables::on_radioButtonRF_toggled(bool checked)
+void DialogTablesGraphics::on_radioButtonRF_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTables::on_radioButtonDI_toggled(bool checked)
+void DialogTablesGraphics::on_radioButtonDI_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTables::on_radioButtonRI_toggled(bool checked)
+void DialogTablesGraphics::on_radioButtonRI_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxEvolution_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxEvolution_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxEvolutionCumul_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxEvolutionCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxBase100_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxBase100_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxJoursAct_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 //TODO : page split problem
-void DialogTables::on_printButton_clicked()
+void DialogTablesGraphics::on_printButton_clicked()
 {
     QPrinter p;
     QPrintDialog *dialog = new QPrintDialog(&p, this);
@@ -336,7 +338,7 @@ void DialogTables::on_printButton_clicked()
     doc->print(&p);
 }
 
-void DialogTables::on_saveButton_clicked()
+void DialogTablesGraphics::on_saveButton_clicked()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QDir::home());
@@ -346,72 +348,72 @@ void DialogTables::on_saveButton_clicked()
     writer.write(doc);
 }
 
-void DialogTables::on_checkBoxResults_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 //Draw the plot to a pixmap and add it in the document resource cache. Returns its name
-QString DialogTables::insertPlotPixmapInDocResourceCache(const QCustomPlot *plot, int width, int height) const
+QString DialogTablesGraphics::insertPlotPixmapInDocResourceCache(QCustomPlot *plot, int width, int height) const
 {
     Q_ASSERT(plot!=NULL && width>0 && height>0);
     QPixmap pixmap;
     QString imageName=QUuid::createUuid().toString()+".png";
-    pixmap=ui->plot->toPixmap(width,height);
+    pixmap=plot->toPixmap(width,height);
     doc->addResource(QTextDocument::ImageResource,QUrl(imageName),QVariant(pixmap));
     return imageName;
 }
 
-void DialogTables::on_checkBoxRecapGraph_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxPrevu_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxPrevu_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxEngage_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxEngage_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxPrevuCumul_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxPrevuCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxEngageCumul_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxEngageCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxRealise_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxRealise_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxDisponible_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxDisponible_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxRealiseCumul_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxRealiseCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTables::on_checkBoxDisponibleCumul_toggled(bool checked)
+void DialogTablesGraphics::on_checkBoxDisponibleCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();

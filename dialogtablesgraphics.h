@@ -1,21 +1,20 @@
-#ifndef DIALOGTABLES_H
-#define DIALOGTABLES_H
+#ifndef DIALOGTABLESGRAPHICS_H
+#define DIALOGTABLESGRAPHICS_H
 
 #include <QWidget>
 #include "pcx_auditmodel.h"
-#include "QCustomPlot/qcpdocumentobject.h"
 
 namespace Ui {
-class DialogTables;
+class DialogTablesGraphics;
 }
 
-class DialogTables : public QWidget
+class DialogTablesGraphics : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DialogTables(QWidget *parent = 0);
-    ~DialogTables();
+    explicit DialogTablesGraphics(QWidget *parent = 0);
+    ~DialogTablesGraphics();
 
 public slots:
     void onListOfAuditsChanged();
@@ -72,18 +71,17 @@ private slots:
     void on_checkBoxDisponibleCumul_toggled(bool checked);
 
 private:
-    Ui::DialogTables *ui;
+    Ui::DialogTablesGraphics *ui;
     void updateListOfAudits();
     void updateTextBrowser();
-    QString insertPlotPixmapInDocResourceCache(const QCustomPlot *plot,int width,int height) const;
+    QString insertPlotPixmapInDocResourceCache(QCustomPlot *plot, int width, int height) const;
 
     QTextDocument *doc;
     PCx_AuditModel *model;
-    QCPDocumentObject *interface;
     bool ready;
     QStringList imageNames;
 
 
 };
 
-#endif // DIALOGTABLES_H
+#endif // DIALOGTABLESGRAPHICS_H

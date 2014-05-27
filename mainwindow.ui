@@ -39,41 +39,30 @@
    </widget>
    <widget class="QMenu" name="menuArbres">
     <property name="title">
-     <string>&amp;Arbres</string>
+     <string>&amp;Saisie des données</string>
     </property>
     <addaction name="actionManageTree"/>
+    <addaction name="actionGerer_les_audits"/>
+    <addaction name="actionSaisie_des_donnees"/>
    </widget>
    <widget class="QMenu" name="menuAudits">
     <property name="title">
-     <string>A&amp;udits</string>
+     <string>&amp;Exploitation des données</string>
     </property>
-    <addaction name="actionGerer_les_audits"/>
-    <addaction name="actionSaisie_des_donnees"/>
     <addaction name="actionTableaux"/>
-    <addaction name="actionGraphiques"/>
-   </widget>
-   <widget class="QMenu" name="menuRapports">
-    <property name="title">
-     <string>Rapports</string>
-    </property>
+    <addaction name="actionG_n_rateur_de_rapports"/>
+    <addaction name="actionRequ_tes_personnalis_es"/>
    </widget>
    <addaction name="menuBases"/>
    <addaction name="menuArbres"/>
    <addaction name="menuAudits"/>
-   <addaction name="menuRapports"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionManageTree">
    <property name="text">
-    <string>&amp;Gestion des arbres</string>
+    <string>Gestion des &amp;arbres</string>
+   </property>
+   <property name="toolTip">
+    <string>Gestion des arbres</string>
    </property>
   </action>
   <action name="actionReset">
@@ -88,7 +77,7 @@
   </action>
   <action name="actionGerer_les_audits">
    <property name="text">
-    <string>&amp;Gestion des audits</string>
+    <string>Gestion des a&amp;udits</string>
    </property>
   </action>
   <action name="actionSaisie_des_donnees">
@@ -98,17 +87,22 @@
   </action>
   <action name="actionTableaux">
    <property name="text">
-    <string>&amp;Tableaux</string>
-   </property>
-  </action>
-  <action name="actionGraphiques">
-   <property name="text">
-    <string>Gr&amp;aphiques</string>
+    <string>E&amp;xplorateur d'audits</string>
    </property>
   </action>
   <action name="actionAudit_rapide">
    <property name="text">
     <string>Audit rapide</string>
+   </property>
+  </action>
+  <action name="actionG_n_rateur_de_rapports">
+   <property name="text">
+    <string>Générateur de &amp;rapports</string>
+   </property>
+  </action>
+  <action name="actionRequ_tes_personnalis_es">
+   <property name="text">
+    <string>Requêtes &amp;personnalisées</string>
    </property>
   </action>
  </widget>

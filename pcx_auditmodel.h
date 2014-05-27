@@ -120,6 +120,7 @@ public:
     QString getG6(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,engages,true,plot);}
     QString getG8(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,disponibles,true,plot);}
 
+    QString getG9(unsigned int node, QCustomPlot *plot) const;
 signals:
 
 public slots:

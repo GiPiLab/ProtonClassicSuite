@@ -19,7 +19,6 @@ public:
 
     unsigned int getTreeId() const{return treeId;}
     QSqlTableModel *getTableModel(){return typesTableModel;}
-    QSqlQueryModel *getQueryModel(){return typesQueryModel;}
 
     static QStringList getListOfDefaultTypes();
 
@@ -35,13 +34,11 @@ private:
     bool validateType(const QString &newType);
     bool loadFromDatabase(unsigned int treeId);
     bool loadSqlTableModel();
-    void loadSqlQueryModel();
 
     QHash<unsigned int,QString> idTypesToNom;
     unsigned int treeId;
     QStringList nomTypes;
     QSqlTableModel *typesTableModel;
-    QSqlQueryModel *typesQueryModel;
 };
 
 #endif // PCX_TYPEMODEL_H

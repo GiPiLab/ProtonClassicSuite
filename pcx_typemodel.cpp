@@ -9,15 +9,7 @@ PCx_TypeModel::PCx_TypeModel(unsigned int treeId, QObject *parent):QObject(paren
     this->treeId=treeId;
     loadFromDatabase(treeId);
     loadSqlTableModel();
-    loadSqlQueryModel();
-    qDebug()<<"Loaded PCx_TypeModel with "<<typesTableModel->rowCount()<<" rows";
-}
-
-void PCx_TypeModel::loadSqlQueryModel()
-{
-    Q_ASSERT(treeId>0);
-    typesQueryModel=new QSqlQueryModel();
-    typesQueryModel->setQuery(QString("select * from types_%1").arg(treeId));
+//    qDebug()<<"Loaded PCx_TypeModel with "<<typesTableModel->rowCount()<<" rows";
 }
 
 bool PCx_TypeModel::loadSqlTableModel()

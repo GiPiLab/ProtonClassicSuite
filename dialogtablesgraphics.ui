@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogTables</class>
- <widget class="QWidget" name="DialogTables">
+ <class>DialogTablesGraphics</class>
+ <widget class="QWidget" name="DialogTablesGraphics">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tableaux</string>
+   <string>Explorateur d'audits</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="layoutWidget1">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QComboBox" name="comboListAudits"/>
@@ -141,6 +141,9 @@
             <property name="text">
              <string>Décomposition par année</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item row="1" column="0">
@@ -230,7 +233,18 @@
         </widget>
        </item>
        <item>
-        <widget class="QCustomPlot" name="plot" native="true"/>
+        <widget class="QCustomPlot" name="plotG1G8" native="true">
+         <widget class="QCustomPlot" name="plotG9" native="true">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>287</width>
+            <height>10</height>
+           </rect>
+          </property>
+         </widget>
+        </widget>
        </item>
       </layout>
      </widget>
