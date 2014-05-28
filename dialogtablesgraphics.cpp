@@ -44,6 +44,7 @@ void DialogTablesGraphics::onListOfAuditsChanged()
     updateListOfAudits();
 }
 
+
 void DialogTablesGraphics::updateListOfAudits()
 {
     ui->comboListAudits->clear();
@@ -58,10 +59,17 @@ void DialogTablesGraphics::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
+//TODO : HTML REPORT IN MODEL FOR EXPORT
+//QString DialogTablesGraphics::doHTMLReport(unsigned int node,double imageScaling) const
+//{
+
+//}
+
+
 void DialogTablesGraphics::updateTextBrowser()
 {
     if(!ready)return;
-    imageNames.clear();
+
     DFRFDIRI mode=DF;
     bool modeGlobal=false;
     if(ui->radioButtonDF->isChecked())
@@ -99,9 +107,10 @@ void DialogTablesGraphics::updateTextBrowser()
 
     unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 
-    int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
+    //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
+    //Fit A4 paper width
+    int favoriteGraphicsWidth=650;
     int favoriteGraphicsHeight=400;
-
 
     //Mode DF,RF,DI,RI
     if(modeGlobal==false)
@@ -125,54 +134,61 @@ void DialogTablesGraphics::updateTextBrowser()
         //getGx draw the plot in the hidden QCustomPlot widget, which can be exported to pixmap and inserted into html with <img>
         if(ui->checkBoxPrevu->isChecked())
         {
-
-            output.append("<p align='center'><b>"+model->getG1(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG1(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
         if(ui->checkBoxPrevuCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG2(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG2(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
         if(ui->checkBoxRealise->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG3(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG3(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
         if(ui->checkBoxRealiseCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG4(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG4(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
         if(ui->checkBoxEngage->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG5(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<p align='center'><b>"+model->getG5(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
         if(ui->checkBoxEngageCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG6(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG6(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
         if(ui->checkBoxDisponible->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG7(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG7(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+
         }
         if(ui->checkBoxDisponibleCumul->isChecked())
         {
-            output.append("<p align='center'><b>"+model->getG8(selectedNode,mode,ui->plotG1G8)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
+            output.append("<div align='center'><b>"+model->getG8(selectedNode,mode,ui->plotG1G8)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
-
         //NOTE : For vectorized graphics
         //cursor.insertText(QString(QChar::ObjectReplacementCharacter), QCPDocumentObject::generatePlotFormat(ui->plot, 600, 400));
     }
@@ -183,17 +199,14 @@ void DialogTablesGraphics::updateTextBrowser()
             output.append(model->getTabResults(selectedNode));
         if(ui->checkBoxRecapGraph->isChecked())
         {
-
-            output.append("<p align='center'><b>"+model->getG9(selectedNode,ui->plotG9)+"</b></p>");
-            QString imageName=insertPlotPixmapInDocResourceCache(ui->plotG9,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<div align='center'><img src='%1' alt='img'></div>").arg(imageName));
-
+            output.append("<div align='center'><b>"+model->getG9(selectedNode,ui->plotG9)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(ui->plotG9,favoriteGraphicsWidth,favoriteGraphicsHeight);
+            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
         }
-
     }
     output.append("</body></html>");
     doc->setHtml(output);
-
     sb->setValue(sbval);
 }
 
@@ -223,7 +236,7 @@ void DialogTablesGraphics::on_treeView_clicked(const QModelIndex &index)
     unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
     Q_ASSERT(selectedNode>0);
 
-    ui->groupBoxMode->setTitle(index.data().toString());
+   // ui->groupBoxMode->setTitle(index.data().toString());
 
     updateTextBrowser();
 }
@@ -270,7 +283,6 @@ void DialogTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
         ui->checkBoxDisponibleCumul->setEnabled(true);
         ui->checkBoxRecapGraph->setEnabled(false);
     }
-
 }
 
 void DialogTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
@@ -354,16 +366,21 @@ void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)
     updateTextBrowser();
 }
 
-//Draw the plot to a pixmap and add it in the document resource cache. Returns its name
-QString DialogTablesGraphics::insertPlotPixmapInDocResourceCache(QCustomPlot *plot, int width, int height) const
+QByteArray DialogTablesGraphics::plotToBase64ByteArray(QCustomPlot *plot, int width,int height) const
 {
     Q_ASSERT(plot!=NULL && width>0 && height>0);
     QPixmap pixmap;
-    QString imageName=QUuid::createUuid().toString()+".png";
     pixmap=plot->toPixmap(width,height);
-    doc->addResource(QTextDocument::ImageResource,QUrl(imageName),QVariant(pixmap));
-    return imageName;
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+    pixmap.save(&buffer,"PNG");
+    buffer.close();
+    return ba.toBase64();
 }
+
+
+
 
 void DialogTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)
 {

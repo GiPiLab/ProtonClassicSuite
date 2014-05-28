@@ -298,30 +298,30 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
         die();
     }
 
+    QList<QPair<QString,QString> > listModesAndLabels;
+    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(ouverts),OREDtoCompleteString(ouverts)));
+    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(realises),OREDtoCompleteString(realises)));
+    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(engages),OREDtoCompleteString(engages)));
+    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(disponibles),OREDtoCompleteString(disponibles)));
 
-    //FIXME : Maybe optimize this part
-    QStringList listModes=(QStringList()<<OREDtoTableString(ouverts)<<OREDtoTableString(realises)
-                           <<OREDtoTableString(engages)<<OREDtoTableString(disponibles));
-    QStringList listModesForLabel=(QStringList()<<OREDtoCompleteString(ouverts)<<OREDtoCompleteString(realises)
-                                   <<OREDtoCompleteString(engages)<<OREDtoCompleteString(disponibles));
     QVector<double> ticks;
     QVector<QString> labels;
     QVector<double> valuesDF,valuesRF,valuesDI,valuesRI;
     int tickCounter=0;
 
+    QPair<QString,QString>mode;
     while(q.next())
     {
-
         unsigned int annee=q.value("annee").toUInt();
 
-        foreach (const QString & mode,listModes)
+        foreach (mode,listModesAndLabels)
         {
             double dataDF=0.0,dataRF=0.0,dataDI=0.0,dataRI=0.0,sum=0.0;
             double percentDF=0.0,percentRF=0.0,percentDI=0.0,percentRI=0.0;
-            dataDF=q.value(mode+"DF").toDouble();
-            dataRF=q.value(mode+"RF").toDouble();
-            dataDI=q.value(mode+"DI").toDouble();
-            dataRI=q.value(mode+"RI").toDouble();
+            dataDF=q.value(mode.first+"DF").toDouble();
+            dataRF=q.value(mode.first+"RF").toDouble();
+            dataDI=q.value(mode.first+"DI").toDouble();
+            dataRI=q.value(mode.first+"RI").toDouble();
 
             //In case of negative disponible
             if(dataDF<0.0)
@@ -346,10 +346,14 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
             valuesDI.append(percentDI);
             valuesRI.append(percentRI);
             ticks.append(++tickCounter);
+            labels.append(QString("%1 %2").arg(mode.second).arg(annee));
         }
-        //FIXME : may be optimized here, assume listMode and listModeForLabel are sorted
-        foreach(const QString &modeLabel,listModesForLabel)
-            labels.append(QString("%1 %2").arg(modeLabel).arg(annee));
+        ticks.append(++tickCounter);
+        labels.append(QString());
+        valuesDF.append(0.0);
+        valuesRF.append(0.0);
+        valuesDI.append(0.0);
+        valuesRI.append(0.0);
     }
     //qDebug()<<ticks;
     //qDebug()<<"ValueDF = "<<valuesDF;
@@ -374,12 +378,13 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
     plot->xAxis->setAutoTicks(false);
     plot->xAxis->setAutoTickLabels(false);
     plot->yAxis->setLabel("%");
-    plot->xAxis->setTickLength(0,4);
+    plot->xAxis->setTickLength(0,0);
+    plot->xAxis->grid()->setVisible(false);
     plot->xAxis->setTickLabelRotation(90);
     plot->xAxis->setTickVector(ticks);
     plot->xAxis->setTickVectorLabels(labels);
     plot->xAxis->setSubTickCount(0);
-    plot->xAxis->setRange(0,tickCounter+1);
+    plot->xAxis->setRange(0,tickCounter);
     plot->yAxis->setRange(0,150);
 
     plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(attachedTree->getNodeName(node).toHtmlEscaped());
