@@ -13,11 +13,11 @@ DialogTablesGraphics::DialogTablesGraphics(QWidget *parent) :
 {
     model=NULL;
     ready=false;
+    favoriteGraphicsWidth=650;
+    favoriteGraphicsHeight=400;
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
-    //We use two hidden QCustomPlot, one for G1G8 graphics with lines, one for G9 (histograms)
     ui->plotG1G8->setHidden(true);
-    ui->plotG9->setHidden(true);
 
     doc=new QTextDocument();
     ui->textEdit->setDocument(doc);
@@ -25,9 +25,12 @@ DialogTablesGraphics::DialogTablesGraphics(QWidget *parent) :
     //interface = new QCPDocumentObject(this);
     //ui->textEdit->document()->documentLayout()->registerHandler(QCPDocumentObject::PlotTextFormat, interface);
     updateListOfAudits();
-    ready=true;
     updateTextBrowser();
     ui->textEdit->moveCursor(QTextCursor::Start);
+    //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
+    //Fit A4 paper width
+
+
 }
 
 DialogTablesGraphics::~DialogTablesGraphics()
@@ -50,6 +53,8 @@ void DialogTablesGraphics::updateListOfAudits()
     ui->comboListAudits->clear();
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(FinishedAuditsOnly);
+    //do not update text browser if no audit are available
+    ready=!listOfAudits.isEmpty();
     QPair<unsigned int, QString> p;
     foreach(p,listOfAudits)
     {
@@ -59,155 +64,120 @@ void DialogTablesGraphics::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
-//TODO : HTML REPORT IN MODEL FOR EXPORT
-//QString DialogTablesGraphics::doHTMLReport(unsigned int node,double imageScaling) const
-//{
-
-//}
-
 
 void DialogTablesGraphics::updateTextBrowser()
 {
-    if(!ready)return;
 
+    ui->saveButton->setEnabled(ready);
+    if(!ready)
+    {
+        doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));
+        return;
+    }
+
+    QElapsedTimer timer;
+    timer.start();
+    unsigned int selectedNode;
+    quint8 tabsMask=0;
+    quint16 graphicsMask=0;
     DFRFDIRI mode=DF;
-    bool modeGlobal=false;
+    getSelections(&selectedNode,&tabsMask,&graphicsMask,&mode);
+
+    QScrollBar *sb=ui->textEdit->verticalScrollBar();
+    int sbval=sb->value();
+
+    doc->clear();
+
+
+    QString output=model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,ui->plotG1G8,
+                                                    favoriteGraphicsWidth,favoriteGraphicsHeight);
+    doc->setHtml(output);
+    sb->setValue(sbval);
+    qDebug()<<timer.elapsed()<<"ms";
+}
+
+void DialogTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode)
+{
+    DFRFDIRI mode=DF;
+
     if(ui->radioButtonDF->isChecked())
-    {
         mode=DF;
-    }
+
     else if(ui->radioButtonRF->isChecked())
-    {
         mode=RF;
-    }
+
     else if(ui->radioButtonDI->isChecked())
-    {
         mode=DI;
-    }
+
     else if(ui->radioButtonRI->isChecked())
-    {
         mode=RI;
-    }
+
     else if(ui->radioButtonGlobal->isChecked())
-    {
-        modeGlobal=true;
-    }
+        mode=GLOBAL;
+
     else
     {
         qCritical()<<"Unsupported case of radio button checking";
         die();
     }
 
-    QScrollBar *sb=ui->textEdit->verticalScrollBar();
-    int sbval=sb->value();
+    quint8 tabsMask=0;
+    quint16 graphicsMask=0;
 
-    QString output=QString("<html><head><title>Audit %1</title><style type='text/css'>%2</style></head><body>"
-                           "<h3>Audit %1</h3>").arg(model->getAuditInfos().name.toHtmlEscaped()).arg(model->getCSS());
-    doc->clear();
-
-    unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
-
-    //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
-    //Fit A4 paper width
-    int favoriteGraphicsWidth=650;
-    int favoriteGraphicsHeight=400;
-
-    //Mode DF,RF,DI,RI
-    if(modeGlobal==false)
+    if(mode!=GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
-            output.append(model->getTabRecap(selectedNode,mode));
+            tabsMask|=TABRECAP;
 
         if(ui->checkBoxEvolution->isChecked())
-            output.append(model->getTabEvolution(selectedNode,mode));
+            tabsMask|=TABEVOLUTION;
 
         if(ui->checkBoxEvolutionCumul->isChecked())
-            output.append(model->getTabEvolutionCumul(selectedNode,mode));
+            tabsMask|=TABEVOLUTIONCUMUL;
 
         if(ui->checkBoxBase100->isChecked())
-            output.append(model->getTabBase100(selectedNode,mode));
+            tabsMask|=TABBASE100;
 
         if(ui->checkBoxJoursAct->isChecked())
-            output.append(model->getTabJoursAct(selectedNode,mode));
+            tabsMask|=TABJOURSACT;
 
-        //Graphics, a little too verbose
-        //getGx draw the plot in the hidden QCustomPlot widget, which can be exported to pixmap and inserted into html with <img>
         if(ui->checkBoxPrevu->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG1(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(ui->checkBoxPrevuCumul->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG2(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(ui->checkBoxRealise->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG3(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(ui->checkBoxRealiseCumul->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG4(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(ui->checkBoxEngage->isChecked())
-        {
-            output.append("<p align='center'><b>"+model->getG5(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(ui->checkBoxEngageCumul->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG6(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(ui->checkBoxDisponible->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG7(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+            graphicsMask|=G1;
 
-        }
+        if(ui->checkBoxPrevuCumul->isChecked())
+            graphicsMask|=G2;
+
+        if(ui->checkBoxRealise->isChecked())
+            graphicsMask|=G3;
+
+        if(ui->checkBoxRealiseCumul->isChecked())
+            graphicsMask|=G4;
+
+        if(ui->checkBoxEngage->isChecked())
+            graphicsMask|=G5;
+
+        if(ui->checkBoxEngageCumul->isChecked())
+            graphicsMask|=G6;
+
+        if(ui->checkBoxDisponible->isChecked())
+            graphicsMask|=G7;
+
         if(ui->checkBoxDisponibleCumul->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG8(selectedNode,mode,ui->plotG1G8)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        //NOTE : For vectorized graphics
-        //cursor.insertText(QString(QChar::ObjectReplacementCharacter), QCPDocumentObject::generatePlotFormat(ui->plot, 600, 400));
+            graphicsMask|=G8;
     }
-    //Global mode
+
     else
     {
         if(ui->checkBoxResults->isChecked())
-            output.append(model->getTabResults(selectedNode));
+            tabsMask|=TABRESULTS;
+
         if(ui->checkBoxRecapGraph->isChecked())
-        {
-            output.append("<div align='center'><b>"+model->getG9(selectedNode,ui->plotG9)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(ui->plotG9,favoriteGraphicsWidth,favoriteGraphicsHeight);
-            output.append(QString("<img width='%1' height='%2' alt='img' src='data:image/png;base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
+            graphicsMask|=G9;
     }
-    output.append("</body></html>");
-    doc->setHtml(output);
-    sb->setValue(sbval);
+    *selectedTablePages=tabsMask;
+    *selectedGraphics=graphicsMask;
+    *selectedMode=mode;
+    *selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 }
 
 
@@ -233,9 +203,7 @@ void DialogTablesGraphics::on_comboListAudits_activated(int index)
 
 void DialogTablesGraphics::on_treeView_clicked(const QModelIndex &index)
 {
-    unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
-    Q_ASSERT(selectedNode>0);
-
+    Q_UNUSED(index);
    // ui->groupBoxMode->setTitle(index.data().toString());
 
     updateTextBrowser();
@@ -339,8 +307,8 @@ void DialogTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
     updateTextBrowser();
 }
 
-//TODO : page split problem
-void DialogTablesGraphics::on_printButton_clicked()
+//FIXME : page split problem
+/*void DialogTablesGraphics::on_printButton_clicked()
 {
     QPrinter p;
     QPrintDialog *dialog = new QPrintDialog(&p, this);
@@ -348,16 +316,48 @@ void DialogTablesGraphics::on_printButton_clicked()
     if (dialog->exec() != QDialog::Accepted)
         return;
     doc->print(&p);
-}
+}*/
 
 void DialogTablesGraphics::on_saveButton_clicked()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QDir::home());
-    QString file = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
-    QTextDocumentWriter writer(file);
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        return;
+    }
+
+    QTextStream stream(&file);
+
+    quint8 tabs;
+    quint16 graphs;
+    DFRFDIRI mode;
+    unsigned int node;
+    getSelections(&node,&tabs,&graphs,&mode);
+
+    //BUG : Scaling with libreoffice : when scale>2.0 garbage is displayed
+    //BUG : Bad character encoding when opening html with chromium
+
+    QString output=model->generateHTMLReportForNode(tabs,0,graphs,node,mode,ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight,2.0,true);
+    //Pass HTML through a temp QTextDocument to inject css into tags (more compatible with text editors)
+    QTextDocument formattedOut;
+    formattedOut.setHtml(output);
+    stream<<formattedOut.toHtml();
+    stream.flush();
+    if(stream.status()==QTextStream::Ok)
+        QMessageBox::information(this,tr("Information"),"Le document a bien été enregistré");
+    else
+        QMessageBox::critical(this,tr("Attention"),"Le document n'a pas pu être enregistré !");
+    file.close();
+
+
+    /*QTextDocumentWriter writer(fileName);
     writer.setFormat("html");
-    writer.write(doc);
+    writer.write(doc);*/
+
 }
 
 void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)
@@ -365,21 +365,6 @@ void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)
     Q_UNUSED(checked);
     updateTextBrowser();
 }
-
-QByteArray DialogTablesGraphics::plotToBase64ByteArray(QCustomPlot *plot, int width,int height) const
-{
-    Q_ASSERT(plot!=NULL && width>0 && height>0);
-    QPixmap pixmap;
-    pixmap=plot->toPixmap(width,height);
-    QByteArray ba;
-    QBuffer buffer(&ba);
-    buffer.open(QIODevice::WriteOnly);
-    pixmap.save(&buffer,"PNG");
-    buffer.close();
-    return ba.toBase64();
-}
-
-
 
 
 void DialogTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)

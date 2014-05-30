@@ -11,6 +11,9 @@
 #include <QList>
 #include <QMdiSubWindow>
 
+
+//TODO : MANAGE EMPTY DATABASE GRAYED MENUS
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)

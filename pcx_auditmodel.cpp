@@ -313,10 +313,11 @@ QSqlTableModel *PCx_AuditModel::getTableModel(DFRFDIRI mode) const
 {
     switch(mode)
     {
-        case DF:return modelDF;
-        case RF:return modelRF;
-        case DI:return modelDI;
-        case RI:return modelRI;
+    case DF:return modelDF;
+    case RF:return modelRF;
+    case DI:return modelDI;
+    case RI:return modelRI;
+    case GLOBAL:return NULL;
     }
     return NULL;
 }
@@ -611,7 +612,7 @@ void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModel
     Q_UNUSED(bottomRight);
     QSqlTableModel *model=(QSqlTableModel *)topLeft.model();
 
-   // qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
+    // qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
 
     //qDebug()<<"Model dirty : "<<model->isDirty();
     int row=topLeft.row();
@@ -627,7 +628,7 @@ void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModel
     if(!vRealises.isNull() && !vOuverts.isNull() && !vEngages.isNull())
     {
         QVariant disponibles=ouverts-(realises+engages);
-       // qDebug()<<disponibles;
+        // qDebug()<<disponibles;
         QModelIndex indexDispo=model->index(row,COL_DISPONIBLES);
         model->setData(indexDispo,disponibles);
     }
@@ -669,10 +670,10 @@ QList<QPair<unsigned int, QString> > PCx_AuditModel::getListOfAudits(ListAuditsM
         else if(mode!=FinishedAuditsOnly)
         {
             //Unfinished audit
-             item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-             p.first=query.value("id").toUInt();
-             p.second=item;
-             listOfAudits.append(p);
+            item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            p.first=query.value("id").toUInt();
+            p.second=item;
+            listOfAudits.append(p);
         }
     }
     return listOfAudits;
@@ -710,4 +711,152 @@ bool PCx_AuditModel::finishAudit(unsigned int id)
     return true;
 }
 
+
+
+QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, quint16 bitFieldTables, quint16 bitFieldGraphics, unsigned int selectedNode, DFRFDIRI mode,
+                                                  QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight,double scale,bool png) const
+{
+    Q_ASSERT(selectedNode>0 && plot!=NULL);
+
+    QString output=QString("<html><head><title>Audit %1</title><style type='text/css'>%2</style></head><body>"
+                           "<h3>Audit %1</h3>").arg(auditInfos.name.toHtmlEscaped()).arg(getCSS());
+
+
+    //Either group of tables, or individual tables
+    if(bitFieldPagesOfTables!=0)
+    {
+        if(bitFieldPagesOfTables & TABRECAP)
+            output.append(getTabRecap(selectedNode,mode));
+
+        if(bitFieldPagesOfTables & TABEVOLUTION)
+            output.append(getTabEvolution(selectedNode,mode));
+
+        if(bitFieldPagesOfTables & TABEVOLUTIONCUMUL)
+            output.append(getTabEvolutionCumul(selectedNode,mode));
+
+        if(bitFieldPagesOfTables & TABBASE100)
+            output.append(getTabBase100(selectedNode,mode));
+
+        if(bitFieldPagesOfTables & TABJOURSACT)
+            output.append(getTabJoursAct(selectedNode,mode));
+
+        if(bitFieldPagesOfTables & TABRESULTS)
+            output.append(getTabResults(selectedNode));
+    }
+
+    else if(bitFieldTables!=0)
+    {
+        if(bitFieldTables & T1)
+            output.append(getT1(selectedNode,mode));
+        if(bitFieldTables & T2)
+            output.append(getT2(selectedNode,mode));
+        if(bitFieldTables & T2BIS)
+            output.append(getT2bis(selectedNode,mode));
+        if(bitFieldTables & T3)
+            output.append(getT3(selectedNode,mode));
+        if(bitFieldTables & T3BIS)
+            output.append(getT3bis(selectedNode,mode));
+        if(bitFieldTables & T4)
+            output.append(getT4(selectedNode,mode));
+        if(bitFieldTables & T5)
+            output.append(getT5(selectedNode,mode));
+        if(bitFieldTables & T6)
+            output.append(getT6(selectedNode,mode));
+        if(bitFieldTables & T7)
+            output.append(getT7(selectedNode,mode));
+        if(bitFieldTables & T8)
+            output.append(getT8(selectedNode,mode));
+        if(bitFieldTables & T9)
+            output.append(getT9(selectedNode,mode));
+        if(bitFieldTables & T10)
+            output.append(getT10(selectedNode));
+        if(bitFieldTables & T11)
+            output.append(getT11(selectedNode));
+        if(bitFieldTables & T12)
+            output.append(getT12(selectedNode));
+    }
+
+    if(bitFieldGraphics!=0)
+    {
+        //Graphics, a little too verbose
+        //getGx draw the plot in the hidden QCustomPlot widget, which can be exported to pixmap and inserted into html with <img>
+        QString mime;
+        if(png==false)
+            mime="image/jpeg";
+        else
+            mime="image/png";
+
+        if(bitFieldGraphics & G1)
+        {
+            output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G1' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+        if(bitFieldGraphics & G2)
+        {
+            output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G2' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+        if(bitFieldGraphics & G3)
+        {
+            output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G3' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+        if(bitFieldGraphics & G4)
+        {
+            output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G4' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+        if(bitFieldGraphics & G5)
+        {
+            output.append("<p align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G5' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+        if(bitFieldGraphics & G6)
+        {
+            output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G6' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+        if(bitFieldGraphics & G7)
+        {
+            output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G7' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+
+        }
+        if(bitFieldGraphics & G8)
+        {
+            output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G8' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+
+        if(bitFieldGraphics & G9)
+        {
+            output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
+            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
+            output.append(QString("<img width='%1' height='%2' alt='G9' src='data:"+mime+";base64,")
+                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+        }
+    }
+
+    //NOTE : For vectorized graphics
+    //cursor.insertText(QString(QChar::ObjectReplacementCharacter), QCPDocumentObject::generatePlotFormat(ui->plot, 600, 400));
+
+    output.append("</body></html>");
+    return output;
+}
 

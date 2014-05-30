@@ -33,7 +33,7 @@ private slots:
     void on_checkBoxEvolutionCumul_toggled(bool checked);
     void on_checkBoxBase100_toggled(bool checked);
     void on_checkBoxJoursAct_toggled(bool checked);
-    void on_printButton_clicked();
+    //void on_printButton_clicked();
     void on_saveButton_clicked();
     void on_checkBoxResults_toggled(bool checked);
     void on_checkBoxRecapGraph_toggled(bool checked);
@@ -50,12 +50,12 @@ private:
     Ui::DialogTablesGraphics *ui;
     void updateListOfAudits();
     void updateTextBrowser();
-
-    QByteArray plotToBase64ByteArray(QCustomPlot *plot, int width, int height) const;
+    void getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode);
 
     QTextDocument *doc;
     PCx_AuditModel *model;
     bool ready;
+    int favoriteGraphicsWidth,favoriteGraphicsHeight;
     };
 
 #endif // DIALOGTABLESGRAPHICS_H

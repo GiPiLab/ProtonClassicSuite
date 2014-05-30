@@ -7,7 +7,7 @@ QString PCx_AuditModel::getT1(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
-    QString output=QString("<table align='center' width='100%' cellpadding='5'>"
+    QString output=QString("<table align='center' width='98%' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
                            "<th>R&eacute;alis&eacute;</th><th>%/pr&eacute;vu</th>"
@@ -59,7 +59,7 @@ QString PCx_AuditModel::getT2(unsigned int node, DFRFDIRI mode) const
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
     QString output=QString("<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
-                           "<b>Evolution cumul&eacute;e du compte administratif de la Collectivit&eacute; "
+                           "<b>&Eacute;volution cumul&eacute;e du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
@@ -130,11 +130,11 @@ QString PCx_AuditModel::getT2(unsigned int node, DFRFDIRI mode) const
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
             diffCurrentYearFirstYearRealises=diffRootNodeRealises-diffFirstYearRootNodeRealises;
-            if(diffFirstYearRootNodeOuverts!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeOuverts))
             {
                 percentOuverts=diffCurrentYearFirstYearOuverts*100/diffFirstYearRootNodeOuverts;
             }
-            if(diffFirstYearRootNodeRealises!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeRealises))
             {
                 percentRealises=diffCurrentYearFirstYearRealises*100/diffFirstYearRootNodeRealises;
             }
@@ -155,7 +155,7 @@ QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
     //The classes "t3xxx" are not a mistake
     QString output=QString("<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
-                           "<b>Evolution du compte administratif de la Collectivit&eacute; "
+                           "<b>&Eacute;volution du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
@@ -228,11 +228,11 @@ QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
             diffCurrentYearFirstYearRealises=diffRootNodeRealises-diffFirstYearRootNodeRealises;
-            if(diffFirstYearRootNodeOuverts!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeOuverts))
             {
                 percentOuverts=diffCurrentYearFirstYearOuverts*100/diffFirstYearRootNodeOuverts;
             }
-            if(diffFirstYearRootNodeRealises!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeRealises))
             {
                 percentRealises=diffCurrentYearFirstYearRealises*100/diffFirstYearRootNodeRealises;
             }
@@ -257,7 +257,7 @@ QString PCx_AuditModel::getT3(unsigned int node, DFRFDIRI mode) const
     //The classes "t2xxx" are not a mistake
     QString output=QString("<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
-                           "<b>Evolution cumul&eacute;e du compte administratif de<br>[ %1 ] "
+                           "<b>&Eacute;volution cumul&eacute;e du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
@@ -295,11 +295,11 @@ QString PCx_AuditModel::getT3(unsigned int node, DFRFDIRI mode) const
         {
             diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
             diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
-            if(firstYearOuvertsNode!=0.0)
+            if(!qFuzzyIsNull(firstYearOuvertsNode))
             {
                 percentOuverts=diffCurrentYearFirstYearOuverts*100/firstYearOuvertsNode;
             }
-            if(firstYearRealisesNode!=0.0)
+            if(!qFuzzyIsNull(firstYearRealisesNode))
             {
                 percentRealises=diffCurrentYearFirstYearRealises*100/firstYearRealisesNode;
             }
@@ -318,7 +318,7 @@ QString PCx_AuditModel::getT3bis(unsigned int node, DFRFDIRI mode) const
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
     QString output=QString("<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
-                           "<b>Evolution du compte administratif de<br>[ %1 ] "
+                           "<b>&Eacute;volution du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
@@ -356,11 +356,11 @@ QString PCx_AuditModel::getT3bis(unsigned int node, DFRFDIRI mode) const
         {
             diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
             diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
-            if(firstYearOuvertsNode!=0.0)
+            if(!qFuzzyIsNull(firstYearOuvertsNode))
             {
                 percentOuverts=diffCurrentYearFirstYearOuverts*100/firstYearOuvertsNode;
             }
-            if(firstYearRealisesNode!=0.0)
+            if(!qFuzzyIsNull(firstYearRealisesNode))
             {
                 percentRealises=diffCurrentYearFirstYearRealises*100/firstYearRealisesNode;
             }
@@ -423,11 +423,11 @@ QString PCx_AuditModel::getT4(unsigned int node, DFRFDIRI mode) const
 
         double percentOuvertsRoot=0.0,percentRealisesRoot=0.0;
 
-        if(ouvertsRoot[annee]!=0.0)
+        if(!qFuzzyIsNull(ouvertsRoot[annee]))
         {
             percentOuvertsRoot=ouverts*100/ouvertsRoot[annee];
         }
-        if(realisesRoot[annee]!=0.0)
+        if(!qFuzzyIsNull(realisesRoot[annee]))
         {
             percentRealisesRoot=realises*100/realisesRoot[annee];
         }
@@ -547,19 +547,19 @@ QString PCx_AuditModel::getT5(unsigned int node, DFRFDIRI mode) const
             diffRootNodeDisponibles=disponiblesRoot[annee]-disponibles;
             diffRootNodeNC=diffRootNodeEngages+diffRootNodeDisponibles;
 
-            if(diffFirstYearRootNodeOuverts*diffRootNodeOuverts!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeOuverts*diffRootNodeOuverts))
                 percentOuverts=100/diffFirstYearRootNodeOuverts*diffRootNodeOuverts;
 
-            if(diffFirstYearRootNodeRealises*diffRootNodeRealises!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeRealises*diffRootNodeRealises))
                 percentRealises=100/diffFirstYearRootNodeRealises*diffRootNodeRealises;
 
-            if(diffFirstYearRootNodeEngages*diffRootNodeEngages!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeEngages*diffRootNodeEngages))
                 percentEngages=100/diffFirstYearRootNodeEngages*diffRootNodeEngages;
 
-            if(diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles!=0.0)
+            if(!qFuzzyIsNull(diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles))
                 percentDisponibles=100/diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles;
 
-            if(diffRootNodeNC+diffFirstYearRootNodeNC!=0.0)
+            if(!qFuzzyIsNull(diffRootNodeNC+diffFirstYearRootNodeNC))
                 percentNC=100/diffFirstYearRootNodeNC*diffRootNodeNC;
 
 
@@ -628,19 +628,19 @@ QString PCx_AuditModel::getT6(unsigned int node, DFRFDIRI mode) const
         }
         else
         {
-            if(ouverts*firstYearOuvertsNode!=0.0)
+            if(!qFuzzyIsNull(ouverts*firstYearOuvertsNode))
                 percentOuverts=100/firstYearOuvertsNode*ouverts;
 
-            if(realises*firstYearRealisesNode!=0.0)
+            if(!qFuzzyIsNull(realises*firstYearRealisesNode))
                 percentRealises=100/firstYearRealisesNode*realises;
 
-            if(engages*firstYearEngagesNode!=0.0)
+            if(!qFuzzyIsNull(engages*firstYearEngagesNode))
                 percentEngages=100/firstYearEngagesNode*engages;
 
-            if(disponibles*firstYearDisponiblesNode!=0.0)
+            if(!qFuzzyIsNull(disponibles*firstYearDisponiblesNode))
                 percentDisponibles=100/firstYearDisponiblesNode*disponibles;
 
-            if(nc*firstYearNodeNC!=0.0)
+            if(!qFuzzyIsNull(nc*firstYearNodeNC))
                 percentNC=100/firstYearNodeNC*nc;
 
 
@@ -691,7 +691,7 @@ QString PCx_AuditModel::getT7(unsigned int node, DFRFDIRI mode) const
         double disponibles=q.value("disponibles").toDouble();
         double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0;
 
-        if(realises!=0.0)
+        if(!qFuzzyIsNull(realises))
         {
             percentOuverts=365*ouverts/realises;
             percentRealises=365.0;
@@ -742,7 +742,7 @@ QString PCx_AuditModel::getT8(unsigned int node, DFRFDIRI mode) const
 
     double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
 
-    if(sumOuverts!=0.0)
+    if(!qFuzzyIsNull(sumOuverts))
     {
         percentRealisesOuverts=sumRealises*100/sumOuverts;
         percentEngagesOuverts=sumEngages*100/sumOuverts;
@@ -793,7 +793,7 @@ QString PCx_AuditModel::getT9(unsigned int node, DFRFDIRI mode) const
         sumEngages+=q.value("engages").toDouble();
         sumDisponibles+=q.value("disponibles").toDouble();
     }
-    if(sumRealises!=0.0)
+    if(!qFuzzyIsNull(sumRealises))
     {
         percentOuverts=sumOuverts*365/sumRealises;
         percentEngages=sumEngages*365/sumRealises;
@@ -848,7 +848,7 @@ QString PCx_AuditModel::getT10(unsigned int node) const
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
-        if(diff_ouverts==0.0)
+        if(qFuzzyIsNull(diff_ouverts))
             output.append("<span style='color:black'>");
         else if(diff_ouverts>0.0)
             output.append("<span style='color:#008000'>");
@@ -857,7 +857,7 @@ QString PCx_AuditModel::getT10(unsigned int node) const
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_ouverts)));
 
-        if(diff_realises==0.0)
+        if(qFuzzyIsNull(diff_realises))
             output.append("<span style='color:black'>");
         else if(diff_realises>0.0)
             output.append("<span style='color:#008000'>");
@@ -866,7 +866,7 @@ QString PCx_AuditModel::getT10(unsigned int node) const
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_realises)));
 
-        if(diff_engages==0.0)
+        if(qFuzzyIsNull(diff_engages))
             output.append("<span style='color:black'>");
         else if(diff_engages>0.0)
             output.append("<span style='color:#008000'>");
@@ -915,7 +915,7 @@ QString PCx_AuditModel::getT11(unsigned int node) const
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
-        if(diff_ouverts==0.0)
+        if(qFuzzyIsNull(diff_ouverts))
             output.append("<span style='color:black'>");
         else if(diff_ouverts>0.0)
             output.append("<span style='color:#008000'>");
@@ -924,7 +924,7 @@ QString PCx_AuditModel::getT11(unsigned int node) const
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_ouverts)));
 
-        if(diff_realises==0.0)
+        if(qFuzzyIsNull(diff_realises))
             output.append("<span style='color:black'>");
         else if(diff_realises>0.0)
             output.append("<span style='color:#008000'>");
@@ -933,7 +933,7 @@ QString PCx_AuditModel::getT11(unsigned int node) const
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_realises)));
 
-        if(diff_engages==0.0)
+        if(qFuzzyIsNull(diff_engages))
             output.append("<span style='color:black'>");
         else if(diff_engages>0.0)
             output.append("<span style='color:#008000'>");
@@ -987,7 +987,7 @@ QString PCx_AuditModel::getT12(unsigned int node) const
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
-        if(diff_ouverts==0.0)
+        if(qFuzzyIsNull(diff_ouverts))
             output.append("<span style='color:black'>");
         else if(diff_ouverts>0.0)
             output.append("<span style='color:#008000'>");
@@ -996,7 +996,7 @@ QString PCx_AuditModel::getT12(unsigned int node) const
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_ouverts)));
 
-        if(diff_realises==0.0)
+        if(qFuzzyIsNull(diff_realises))
             output.append("<span style='color:black'>");
         else if(diff_realises>0.0)
             output.append("<span style='color:#008000'>");
@@ -1005,7 +1005,7 @@ QString PCx_AuditModel::getT12(unsigned int node) const
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_realises)));
 
-        if(diff_engages==0.0)
+        if(qFuzzyIsNull(diff_engages))
             output.append("<span style='color:black'>");
         else if(diff_engages>0.0)
             output.append("<span style='color:#008000'>");

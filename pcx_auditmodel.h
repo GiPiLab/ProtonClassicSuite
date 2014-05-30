@@ -16,13 +16,46 @@
 #define COL_ENGAGES 5
 #define COL_DISPONIBLES 6
 
+//MASKS FOR TABLE AND GRAPHICS BITSETS
+#define TABRESULTS 1
+#define TABRECAP 2
+#define TABEVOLUTION 4
+#define TABEVOLUTIONCUMUL 8
+#define TABBASE100 16
+#define TABJOURSACT 32
+
+#define T1 1
+#define T2 2
+#define T2BIS 4
+#define T3 8
+#define T3BIS 16
+#define T4 32
+#define T5 64
+#define T6 128
+#define T7 256
+#define T8 512
+#define T9 1024
+#define T10 2048
+#define T11 4096
+#define T12 8192
+
+#define G1 1
+#define G2 2
+#define G3 4
+#define G4 8
+#define G5 16
+#define G6 32
+#define G7 64
+#define G8 128
+#define G9 256
 
 enum DFRFDIRI
 {
     DF,
     RF,
     DI,
-    RI
+    RI,
+    GLOBAL
 };
 
 enum ORED
@@ -121,6 +154,9 @@ public:
     QString getG8(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,disponibles,true,plot);}
 
     QString getG9(unsigned int node, QCustomPlot *plot) const;
+    QString generateHTMLReportForNode(quint8 bitFieldPagesOfTables,quint16 bitFieldTables,quint16 bitFieldGraphics,unsigned int selectedNode, DFRFDIRI mode,
+                                      QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight,double scale=1.0,bool png=false) const;
+
 signals:
 
 public slots:
@@ -138,11 +174,12 @@ private:
 
     //Returns the title of the graphic in html
     QString getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const;
-
+    QByteArray plotToBase64ByteArray(QCustomPlot *plot, int width, int height, double scale=1.0, bool png=false) const;
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 };
+
 
 
 

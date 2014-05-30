@@ -72,7 +72,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
             diffRootNode=diffRootNode2-diffRootNode1;
             diffNode=dataNode.value(key)-firstYearDataNode;
 
-            if(diffRootNode1!=0.0)
+            if(!qFuzzyIsNull(diffRootNode1))
             {
                 percentRoot=diffRootNode*100/diffRootNode1;
 
@@ -83,7 +83,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
                 maxYRange=percentRoot;
             dataPlotRoot.insert(key,percentRoot);
 
-            if(firstYearDataNode!=0.0)
+            if(!qFuzzyIsNull(firstYearDataNode))
             {
                 percentNode=diffNode*100/firstYearDataNode;
             }
@@ -391,5 +391,22 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
     return plotTitle;
 
 }
+
+QByteArray PCx_AuditModel::plotToBase64ByteArray(QCustomPlot *plot, int width,int height,double scale,bool png) const
+{
+    QPixmap pixmap;
+    pixmap=plot->toPixmap(width,height,scale);
+    QByteArray ba;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::WriteOnly);
+
+    if(png==false)
+        pixmap.save(&buffer,"JPEG",100);
+    else
+        pixmap.save(&buffer,"PNG");
+    buffer.close();
+    return ba.toBase64();
+}
+
 
 
