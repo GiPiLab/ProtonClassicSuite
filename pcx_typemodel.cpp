@@ -59,7 +59,7 @@ bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QM
 
 bool PCx_TypeModel::validateType(const QString &newType)
 {
-    qDebug()<<"Type = "<<newType;
+    //qDebug()<<"Type = "<<newType;
     if(newType.isEmpty() || newType.contains(QRegExp("^( )+$")))
     {
         QMessageBox::warning(NULL,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
@@ -121,7 +121,7 @@ bool PCx_TypeModel::deleteType(const QString &type)
     if(query.next())
     {
         typeId=query.value(0).toUInt();
-        qDebug()<<"typeId = "<<typeId<<"Text = "<<type;
+        //qDebug()<<"typeId = "<<typeId<<"Text = "<<type;
     }
     else return false;
 
@@ -145,7 +145,7 @@ bool PCx_TypeModel::deleteType(unsigned int id)
 
     if(query.next())
     {
-        qDebug()<<"Nombre de noeuds de type "<<id<<" = "<<query.value(0).toInt();
+        //qDebug()<<"Nombre de noeuds de type "<<id<<" = "<<query.value(0).toInt();
         if(query.value(0).toInt()>0)
         {
             QMessageBox::warning(NULL,tr("Attention"),tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord."));

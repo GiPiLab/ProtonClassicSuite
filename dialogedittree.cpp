@@ -49,6 +49,12 @@ void DialogEditTree::updateListOfTree()
     ui->comboBox->clear();
 
     QList<QPair<unsigned int,QString> > lot=PCx_TreeModel::getListOfTrees();
+    bool nonEmpty=!lot.isEmpty();
+    setReadOnly(!nonEmpty);
+    ui->deleteTreeButton->setEnabled(nonEmpty);
+    ui->duplicateTreeButton->setEnabled(nonEmpty);
+    ui->viewTreeButton->setEnabled(nonEmpty);
+    ui->statsTreeButton->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;
     foreach(p,lot)
     {
@@ -88,7 +94,7 @@ void DialogEditTree::on_deleteTreeButton_clicked()
         }
 
         unsigned int treeId=model->getTreeId();
-        qDebug()<<"Deleting tree "<<treeId;
+        //qDebug()<<"Deleting tree "<<treeId;
 
         int result=PCx_TreeModel::deleteTree(treeId);
 
@@ -114,7 +120,7 @@ void DialogEditTree::on_deleteTreeButton_clicked()
 
 void DialogEditTree::onTypesChanged()
 {
-    qDebug()<<"Types changed !";
+    //qDebug()<<"Types changed !";
     model->updateTree();
     ui->treeView->expandToDepth(1);
 }
@@ -143,7 +149,7 @@ void DialogEditTree::on_deleteTypeButton_clicked()
     if(model!=NULL)
     {
         QModelIndex index=ui->listTypesView->currentIndex();
-        qDebug()<<index;
+        //qDebug()<<index;
         if(index.row()>-1)
         {
             model->getTypes()->deleteType(model->getTypes()->getTableModel()->record(index.row()).field("id").value().toInt());
@@ -159,7 +165,7 @@ void DialogEditTree::on_addNodeButton_clicked()
     if(!selection.isEmpty())
     {
         unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
-        qDebug()<<"Node Selected Id : "<<selectedId;
+        //qDebug()<<"Node Selected Id : "<<selectedId;
 
         QModelIndex indexType=ui->listTypesView->currentIndex();
         if(indexType.row()<0)
@@ -170,7 +176,7 @@ void DialogEditTree::on_addNodeButton_clicked()
 
         unsigned int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toUInt();
 
-        qDebug()<<"Type selected ID : "<<selectedTypeId;
+        //qDebug()<<"Type selected ID : "<<selectedTypeId;
 
         bool ok;
         QString text;
@@ -203,7 +209,7 @@ void DialogEditTree::on_modifyNodeButton_clicked()
     if(!selection.isEmpty())
     {
         unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
-        qDebug()<<"Node Selected Id : "<<selectedId;
+        //qDebug()<<"Node Selected Id : "<<selectedId;
 
         //No modification for the root
         if(selectedId==1)
@@ -253,7 +259,7 @@ void DialogEditTree::on_deleteNodeButton_clicked()
     {
         //Assume only single selection
         unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
-        qDebug()<<"Node Selected Id : "<<selectedId;
+        //qDebug()<<"Node Selected Id : "<<selectedId;
 
         //No modification for the root
         if(selectedId==1)

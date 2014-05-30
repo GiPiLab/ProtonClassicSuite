@@ -27,6 +27,7 @@ void DialogManageAudits::updateListOfAudits()
     ui->comboListOfAudits->clear();
 
     QList<QPair<unsigned int,QString> > listOfAudits=PCx_AuditModel::getListOfAudits(AllAudits);
+    ui->groupBoxAudits->setEnabled(!listOfAudits.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfAudits)
     {
@@ -46,6 +47,7 @@ void DialogManageAudits::updateListOfTrees()
     ui->comboListOfTrees->clear();
 
     QList<QPair<unsigned int,QString> > lot=PCx_TreeModel::getListOfTrees(true);
+    setEnabled(!lot.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,lot)
     {
@@ -58,7 +60,7 @@ void DialogManageAudits::on_addAuditButton_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qDebug()<<"Pas d'arbre";
+        qDebug()<<"No tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();
@@ -99,7 +101,7 @@ void DialogManageAudits::on_addAuditButton_clicked()
 
     if(ok)
     {
-        qDebug()<<"Add audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
+        //qDebug()<<"Add audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
         PCx_AuditModel::addNewAudit(text,years,selectedTree);
         updateListOfAudits();
         emit(listOfAuditsChanged());
@@ -110,7 +112,7 @@ void DialogManageAudits::on_comboListOfAudits_activated(int index)
 {
     if(index==-1 || ui->comboListOfAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
-    qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
+    //qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
     PCx_AuditInfos infos(selectedAuditId);
     if(infos.valid==true)
     {

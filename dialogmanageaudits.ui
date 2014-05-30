@@ -100,7 +100,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBoxAudits">
      <property name="title">
       <string>Gestion des audits</string>
      </property>

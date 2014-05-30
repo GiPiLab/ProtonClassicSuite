@@ -110,7 +110,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
 {
     Q_ASSERT(nodeIndex.isValid() && !newName.isNull()&& !newName.isEmpty() && newType>0);
     unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
-    qDebug()<<"Node ID = "<<nodeId;
+    //qDebug()<<"Node ID = "<<nodeId;
 
     QSqlQuery q;
 
@@ -203,7 +203,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         die();
     }
 
-    qDebug()<<"Last inserted id = "<<lastId.toUInt();
+    //qDebug()<<"Last inserted id = "<<lastId.toUInt();
 
     query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toUInt()));
 
@@ -246,7 +246,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         die();
     }
     QSqlDatabase::database().commit();
-    qDebug()<<"Tree "<<lastId.toUInt()<< " inserted";
+    //qDebug()<<"Tree "<<lastId.toUInt()<< " inserted";
 
     return true;
 }
@@ -267,7 +267,7 @@ QList<unsigned int> PCx_TreeModel::getLeavesId() const
             leaves.append(node);
         }
     }
-    qDebug()<<"Leaves for tree "<<treeId<< " = "<<leaves;
+    //qDebug()<<"Leaves for tree "<<treeId<< " = "<<leaves;
     return leaves;
 }
 
@@ -296,7 +296,7 @@ QList<unsigned int> PCx_TreeModel::getNonLeavesId() const
             nonleaves.append(node);
         }
     }
-    qDebug()<<"Non-leaves for tree "<<treeId<< " = "<<nonleaves;
+    //qDebug()<<"Non-leaves for tree "<<treeId<< " = "<<nonleaves;
     return nonleaves;
 }
 
@@ -421,7 +421,7 @@ int PCx_TreeModel::deleteTree(unsigned int treeId)
 
     QSqlDatabase::database().commit();
 
-    qDebug()<<"Tree "<<treeId<<" deleted.";
+    //qDebug()<<"Tree "<<treeId<<" deleted.";
     return 1;
 }
 
@@ -458,7 +458,7 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
     }
     else
     {
-        qDebug()<<"Arbre inconnu";
+        qDebug()<<"Bad Tree";
         return false;
     }
     return updateTree();
@@ -477,7 +477,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
     if(!parent.isValid())
     {
-        qDebug()<<"Hors racine";
+       // qDebug()<<"Not root";
         return false;
     }
 
@@ -485,7 +485,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
     dropId=parent.data(Qt::UserRole+1).toUInt();
 
-    qDebug()<<"DROP ID = "<<dropId;
+    //qDebug()<<"DROP ID = "<<dropId;
 
     QByteArray encodedData=data->data("application/x-qstandarditemmodeldatalist");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
@@ -497,7 +497,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     qDebug()<<"DRAG ID = "<<dragId;
     if(dragId==1)
     {
-        qDebug()<<"NOT DRAGGING THE ROOT";
+       // qDebug()<<"NOT DRAGGING THE ROOT";
         return false;
     }
 
@@ -574,7 +574,7 @@ QString PCx_TreeModel::getNodeName(unsigned int node) const
     }
     else
     {
-        qDebug()<<"Bad node id";
+        qCritical()<<"Bad node id";
     }
     return QString();
 }

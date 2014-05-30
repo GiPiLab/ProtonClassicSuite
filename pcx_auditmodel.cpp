@@ -56,7 +56,7 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     }
     yearsString.chop(1);
 
-    qDebug()<<"years string = "<<yearsString;
+    //qDebug()<<"years string = "<<yearsString;
 
     QSqlQuery q;
     q.prepare("select count(*) from index_audits where nom=:nom");
@@ -164,7 +164,7 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     //Populate tables with years for each node of the attached tree
 
     QList<unsigned int> nodes=PCx_TreeModel::getNodesId(attachedTreeId);
-    qDebug()<<"Nodes ids = "<<nodes;
+    //qDebug()<<"Nodes ids = "<<nodes;
 
     foreach(unsigned int node,nodes)
     {
@@ -276,7 +276,7 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
         die();
     }
     QSqlDatabase::database().commit();
-    qDebug()<<"Audit "<<auditId<<" supprimé";
+    //qDebug()<<"Audit "<<auditId<<" supprimé";
     return true;
 }
 
@@ -420,7 +420,7 @@ bool PCx_AuditModel::propagateToAncestors(const QModelIndex &node)
     unsigned int nodeId=model->index(row,COL_IDNODE).data().toUInt();
     unsigned int annee=model->index(row,COL_ANNEE).data().toUInt();
     QString tableName=model->tableName();
-    qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
+    //qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
 
     QSqlDatabase::database().transaction();
     if(updateParent(tableName,annee,nodeId))

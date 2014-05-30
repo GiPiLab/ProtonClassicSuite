@@ -28,9 +28,6 @@ DialogTablesGraphics::DialogTablesGraphics(QWidget *parent) :
     updateTextBrowser();
     ui->textEdit->moveCursor(QTextCursor::Start);
     //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
-    //Fit A4 paper width
-
-
 }
 
 DialogTablesGraphics::~DialogTablesGraphics()
@@ -54,7 +51,9 @@ void DialogTablesGraphics::updateListOfAudits()
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(FinishedAuditsOnly);
     //do not update text browser if no audit are available
-    ready=!listOfAudits.isEmpty();
+    bool nonEmpty=!listOfAudits.isEmpty();
+    this->setEnabled(nonEmpty);
+    ready=nonEmpty;
     QPair<unsigned int, QString> p;
     foreach(p,listOfAudits)
     {
@@ -67,7 +66,6 @@ void DialogTablesGraphics::updateListOfAudits()
 
 void DialogTablesGraphics::updateTextBrowser()
 {
-
     ui->saveButton->setEnabled(ready);
     if(!ready)
     {
@@ -75,8 +73,6 @@ void DialogTablesGraphics::updateTextBrowser()
         return;
     }
 
-    QElapsedTimer timer;
-    timer.start();
     unsigned int selectedNode;
     quint8 tabsMask=0;
     quint16 graphicsMask=0;
@@ -88,12 +84,10 @@ void DialogTablesGraphics::updateTextBrowser()
 
     doc->clear();
 
-
     QString output=model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,ui->plotG1G8,
                                                     favoriteGraphicsWidth,favoriteGraphicsHeight);
     doc->setHtml(output);
     sb->setValue(sbval);
-    qDebug()<<timer.elapsed()<<"ms";
 }
 
 void DialogTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode)
@@ -338,26 +332,17 @@ void DialogTablesGraphics::on_saveButton_clicked()
     unsigned int node;
     getSelections(&node,&tabs,&graphs,&mode);
 
-    //BUG : Scaling with libreoffice : when scale>2.0 garbage is displayed
-    //BUG : Bad character encoding when opening html with chromium
-
     QString output=model->generateHTMLReportForNode(tabs,0,graphs,node,mode,ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight,2.0,true);
-    //Pass HTML through a temp QTextDocument to inject css into tags (more compatible with text editors)
+    //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
     QTextDocument formattedOut;
     formattedOut.setHtml(output);
-    stream<<formattedOut.toHtml();
+    stream<<formattedOut.toHtml("utf-8");
     stream.flush();
     if(stream.status()==QTextStream::Ok)
         QMessageBox::information(this,tr("Information"),"Le document a bien été enregistré");
     else
         QMessageBox::critical(this,tr("Attention"),"Le document n'a pas pu être enregistré !");
     file.close();
-
-
-    /*QTextDocumentWriter writer(fileName);
-    writer.setFormat("html");
-    writer.write(doc);*/
-
 }
 
 void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)

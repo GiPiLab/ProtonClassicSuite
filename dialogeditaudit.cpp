@@ -52,6 +52,9 @@ void DialogEditAudit::updateListOfAudits()
     ui->comboListAudits->clear();
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(UnFinishedAuditsOnly);
+    bool nonEmpty=!listOfAudits.isEmpty();
+    ui->splitter->setEnabled(nonEmpty);
+
     QPair<unsigned int, QString> p;
     foreach(p,listOfAudits)
     {
@@ -65,7 +68,7 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
-    qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
     if(auditModel!=NULL)
     {
         delete auditModel;
