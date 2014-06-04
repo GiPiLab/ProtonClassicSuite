@@ -317,6 +317,8 @@ void DialogTablesGraphics::on_saveButton_clicked()
     QFileDialog fileDialog;
     fileDialog.setDirectory(QDir::home());
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    if(fileName.isEmpty())
+        return;
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {

@@ -4,14 +4,12 @@
 #include <QSqlDatabase>
 #include <QString>
 
-#define DBNAME "pcxdb.sqlite3"
-
 
 void die(int retcode=1);
 
-void emptyDb(void);
-QSqlDatabase loadDb(bool addDriver);
-void initDb(void);
+QString newDb();
+bool loadDb(const QString &databaseName);
+void initCurrentDb(void);
 QString formatDouble(double num,unsigned int decimals=2);
 
 

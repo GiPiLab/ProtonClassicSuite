@@ -25,8 +25,6 @@ public:
 private slots:
     void on_actionManageTree_triggered();
 
-    void on_actionReset_triggered();
-
     void on_actionExit_triggered();
 
     void onDialogEditTreeWindowsDestroyed();
@@ -37,11 +35,16 @@ private slots:
 
     void onDialogTablesWindowsDestroyed(QObject *);
 
-    void on_actionGerer_les_audits_triggered();
+    void on_actionManageAudits_triggered();
 
-    void on_actionSaisie_des_donnees_triggered();
+    void on_actionEditAudit_triggered();
 
-    void on_actionTableaux_triggered();
+    void on_actionTablesGraphics_triggered();
+
+    void on_actionNewDb_triggered();
+
+
+    void on_actionOpenDb_triggered();
 
 private:
 
@@ -55,8 +58,8 @@ private:
     //Multiple "tables" dialogs are allowed
     QList<DialogTablesGraphics *>listOfDialogTablesGraphics;
 
-
-
+    void updateTitle();
+    void setEnabledMenus();
 };
 
 #endif // MAINWINDOW_H

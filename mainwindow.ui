@@ -31,31 +31,32 @@
    </property>
    <widget class="QMenu" name="menuBases">
     <property name="title">
-     <string>&amp;Fichiers</string>
+     <string>&amp;Bases de données</string>
     </property>
-    <addaction name="actionAudit_rapide"/>
-    <addaction name="actionReset"/>
+    <addaction name="actionNewDb"/>
+    <addaction name="actionOpenDb"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuArbres">
+   <widget class="QMenu" name="menuDataInput">
     <property name="title">
-     <string>&amp;Saisie des données</string>
+     <string>&amp;Arbres et audits</string>
     </property>
     <addaction name="actionManageTree"/>
-    <addaction name="actionGerer_les_audits"/>
-    <addaction name="actionSaisie_des_donnees"/>
+    <addaction name="actionManageAudits"/>
+    <addaction name="actionEditAudit"/>
+    <addaction name="actionQuickAudit"/>
    </widget>
-   <widget class="QMenu" name="menuAudits">
+   <widget class="QMenu" name="menuExploitation">
     <property name="title">
-     <string>&amp;Exploitation des données</string>
+     <string>&amp;Exploitations des résultats</string>
     </property>
-    <addaction name="actionTableaux"/>
-    <addaction name="actionG_n_rateur_de_rapports"/>
-    <addaction name="actionRequ_tes_personnalis_es"/>
+    <addaction name="actionTablesGraphics"/>
+    <addaction name="actionReport"/>
+    <addaction name="actionRequests"/>
    </widget>
    <addaction name="menuBases"/>
-   <addaction name="menuArbres"/>
-   <addaction name="menuAudits"/>
+   <addaction name="menuDataInput"/>
+   <addaction name="menuExploitation"/>
   </widget>
   <action name="actionManageTree">
    <property name="text">
@@ -65,44 +66,49 @@
     <string>Gestion des arbres</string>
    </property>
   </action>
-  <action name="actionReset">
-   <property name="text">
-    <string>&amp;Effacer toutes les données</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="text">
     <string>&amp;Quitter</string>
    </property>
   </action>
-  <action name="actionGerer_les_audits">
+  <action name="actionManageAudits">
    <property name="text">
     <string>Gestion des a&amp;udits</string>
    </property>
   </action>
-  <action name="actionSaisie_des_donnees">
+  <action name="actionEditAudit">
    <property name="text">
-    <string>Saisie des &amp;données</string>
+    <string>&amp;Saisie des données</string>
    </property>
   </action>
-  <action name="actionTableaux">
+  <action name="actionTablesGraphics">
    <property name="text">
     <string>E&amp;xplorateur d'audits</string>
    </property>
   </action>
-  <action name="actionAudit_rapide">
+  <action name="actionQuickAudit">
    <property name="text">
     <string>Audit rapide</string>
    </property>
   </action>
-  <action name="actionG_n_rateur_de_rapports">
+  <action name="actionReport">
    <property name="text">
     <string>Générateur de &amp;rapports</string>
    </property>
   </action>
-  <action name="actionRequ_tes_personnalis_es">
+  <action name="actionRequests">
    <property name="text">
     <string>Requêtes &amp;personnalisées</string>
+   </property>
+  </action>
+  <action name="actionNewDb">
+   <property name="text">
+    <string>&amp;Nouvelle base</string>
+   </property>
+  </action>
+  <action name="actionOpenDb">
+   <property name="text">
+    <string>&amp;Ouvrir base</string>
    </property>
   </action>
  </widget>

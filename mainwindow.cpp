@@ -23,6 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     dialogEditTreeWin=NULL;
     dialogManageAudits=NULL;
     dialogEditAudit=NULL;
+    updateTitle();
+    setEnabledMenus();
 }
 
 MainWindow::~MainWindow()
@@ -49,15 +51,6 @@ void MainWindow::on_actionManageTree_triggered()
 }
 
 
-void MainWindow::on_actionReset_triggered()
-{
-    if(QMessageBox::question(this,tr("Attention"),tr("Vous allez supprimer tous les arbres et tous les audits pour repartir sur une base de données neuve. Cette action ne peut pas être annulée. En êtes-vous sûr ?"))==QMessageBox::Yes)
-    {
-        ui->mdiArea->closeAllSubWindows();
-        emptyDb();
-    }
-}
-
 void MainWindow::on_actionExit_triggered()
 {
     this->close();
@@ -66,7 +59,7 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::onDialogEditTreeWindowsDestroyed()
 {
     dialogEditTreeWin=NULL;
-    qDebug()<<"Closed";
+    //qDebug()<<"Closed";
 }
 
 void MainWindow::onDialogManageAuditsWindowsDestroyed()
@@ -86,7 +79,7 @@ void MainWindow::onDialogTablesWindowsDestroyed(QObject *obj)
     //qDebug()<<listOfDialogTables;
 }
 
-void MainWindow::on_actionGerer_les_audits_triggered()
+void MainWindow::on_actionManageAudits_triggered()
 {
     if(dialogManageAudits==NULL)
     {
@@ -113,7 +106,7 @@ void MainWindow::on_actionGerer_les_audits_triggered()
     }
 }
 
-void MainWindow::on_actionSaisie_des_donnees_triggered()
+void MainWindow::on_actionEditAudit_triggered()
 {
     if(dialogEditAudit==NULL)
     {
@@ -130,7 +123,7 @@ void MainWindow::on_actionSaisie_des_donnees_triggered()
     }
 }
 
-void MainWindow::on_actionTableaux_triggered()
+void MainWindow::on_actionTablesGraphics_triggered()
 {
     DialogTablesGraphics *dlg=new DialogTablesGraphics();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
@@ -145,4 +138,80 @@ void MainWindow::on_actionTableaux_triggered()
     {
         connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
     }
+}
+
+void MainWindow::updateTitle()
+{
+    QFileInfo fi(QSqlDatabase::database().databaseName());
+    setWindowTitle("ProtonClassicSuite - "+fi.baseName());
+}
+
+void MainWindow::on_actionNewDb_triggered()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Nouvelle base de données"), "",tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("pcxdb",Qt::CaseInsensitive))
+        fileName.append(".pcxdb");
+
+    QFile newFile(fileName);
+
+    if(!fi.isWritable())
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Le fichier n'est pas accessible en lecture/écriture"));
+        return;
+    }
+
+    if(newFile.exists())
+    {
+        if(!newFile.remove())
+        {
+            QMessageBox::critical(this,tr("Attention"),newFile.errorString());
+            return;
+        }
+    }
+
+    ui->mdiArea->closeAllSubWindows();
+    loadDb(fileName);
+    initCurrentDb();
+    updateTitle();
+    setEnabledMenus();
+}
+
+void MainWindow::setEnabledMenus()
+{
+    if(QSqlDatabase::database().databaseName().isEmpty())
+    {
+        ui->menuExploitation->setEnabled(false);
+        ui->menuDataInput->setEnabled(false);
+    }
+    else
+    {
+        ui->menuExploitation->setEnabled(true);
+        ui->menuDataInput->setEnabled(true);
+    }
+}
+
+
+void MainWindow::on_actionOpenDb_triggered()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir une base de données"), "",tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(!fi.isWritable()||!fi.isFile()||!fi.isReadable())
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Le fichier n'est pas accessible en lecture/écriture"));
+        return;
+    }
+
+    ui->mdiArea->closeAllSubWindows();
+    loadDb(fileName);
+    updateTitle();
+    setEnabledMenus();
 }

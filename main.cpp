@@ -14,7 +14,6 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
 
     QTranslator qtTranslator;
     qtTranslator.load(
@@ -27,13 +26,12 @@ int main(int argc, char *argv[])
     int retval;
     qsrand(time(NULL));
 
+    QSqlDatabase::addDatabase("QSQLITE");
 
-    QSqlDatabase db=loadDb(true);
-
-
+    MainWindow w;
     w.show();
 
     retval=a.exec();
-    db.close();
+    QSqlDatabase::database().close();
     return retval;
 }
