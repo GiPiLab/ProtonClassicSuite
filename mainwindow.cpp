@@ -23,14 +23,63 @@ MainWindow::MainWindow(QWidget *parent) :
     dialogEditTreeWin=NULL;
     dialogManageAudits=NULL;
     dialogEditAudit=NULL;
+
+    restoreSettings();
     updateTitle();
-    setEnabledMenus();
+    setMenusState();
 }
 
 MainWindow::~MainWindow()
 {
+    saveSettings();
     delete ui;
 }
+
+void MainWindow::restoreSettings(void)
+{
+    QSettings settings("GiPiLab","ProtonClassicSuite");
+    if(settings.value("mainwindow/maximised",false).toBool()==true)
+        setWindowState(Qt::WindowMaximized);
+    this->move(settings.value("mainwindow/position",QVariant(this->pos())).toPoint());
+    this->resize(settings.value("mainwindow/size",QVariant(this->size())).toSize());
+
+    recentDb=settings.value("database/recentdb").toString();
+    if(!recentDb.isEmpty())
+    {
+        QFileInfo fi(recentDb);
+        if(fi.exists() && fi.isFile() && fi.isReadable() && fi.isWritable())
+            loadDb(recentDb);
+    }
+
+}
+
+void MainWindow::saveSettings(void)
+{
+    QSettings settings("GiPiLab","ProtonClassicSuite");
+    settings.setValue("mainwindow/maximised",this->isMaximized());
+    settings.setValue("mainwindow/position",this->pos());
+    settings.setValue("mainwindow/size",this->size());
+
+    if(!recentDb.isEmpty())
+        settings.setValue("database/recentdb",recentDb);
+
+}
+
+void MainWindow::setMenusState()
+{
+    if(QSqlDatabase::database().databaseName().isEmpty())
+    {
+        ui->menuExploitation->setEnabled(false);
+        ui->menuDataInput->setEnabled(false);
+    }
+    else
+    {
+        ui->menuExploitation->setEnabled(true);
+        ui->menuDataInput->setEnabled(true);
+    }
+}
+
+
 
 void MainWindow::on_actionManageTree_triggered()
 {
@@ -150,6 +199,16 @@ void MainWindow::on_actionNewDb_triggered()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    if(!recentDb.isEmpty())
+    {
+        QFileInfo fi(recentDb);
+        QDir dir=fi.dir();
+        if(dir.isReadable())
+        {
+            fileDialog.setDirectory(dir);
+        }
+    }
+
     QString fileName = fileDialog.getSaveFileName(this, tr("Nouvelle base de données"), "",tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
     if(fileName.isEmpty())
         return;
@@ -159,12 +218,6 @@ void MainWindow::on_actionNewDb_triggered()
 
     QFile newFile(fileName);
 
-    if(!fi.isWritable())
-    {
-        QMessageBox::critical(this,tr("Attention"),tr("Le fichier n'est pas accessible en lecture/écriture"));
-        return;
-    }
-
     if(newFile.exists())
     {
         if(!newFile.remove())
@@ -173,33 +226,41 @@ void MainWindow::on_actionNewDb_triggered()
             return;
         }
     }
+    else
+    {
+        if(!newFile.open(QIODevice::ReadWrite))
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Le fichier n'est pas accessible en lecture/écriture"));
+            return;
+        }
+        newFile.close();
+    }
 
     ui->mdiArea->closeAllSubWindows();
     loadDb(fileName);
     initCurrentDb();
+    recentDb=fileName;
     updateTitle();
-    setEnabledMenus();
+    setMenusState();
 }
 
-void MainWindow::setEnabledMenus()
-{
-    if(QSqlDatabase::database().databaseName().isEmpty())
-    {
-        ui->menuExploitation->setEnabled(false);
-        ui->menuDataInput->setEnabled(false);
-    }
-    else
-    {
-        ui->menuExploitation->setEnabled(true);
-        ui->menuDataInput->setEnabled(true);
-    }
-}
 
 
 void MainWindow::on_actionOpenDb_triggered()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    if(!recentDb.isEmpty())
+    {
+        QFileInfo fi(recentDb);
+        QDir dir=fi.dir();
+        if(dir.isReadable())
+        {
+            fileDialog.setDirectory(dir);
+        }
+    }
+
+
     QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir une base de données"), "",tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
     if(fileName.isEmpty())
         return;
@@ -212,6 +273,7 @@ void MainWindow::on_actionOpenDb_triggered()
 
     ui->mdiArea->closeAllSubWindows();
     loadDb(fileName);
+    recentDb=fileName;
     updateTitle();
-    setEnabledMenus();
+    setMenusState();
 }

@@ -13,6 +13,8 @@ namespace Ui {
 class MainWindow;
 }
 
+#define MAXRECENTFILES 4
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -43,7 +45,6 @@ private slots:
 
     void on_actionNewDb_triggered();
 
-
     void on_actionOpenDb_triggered();
 
 private:
@@ -57,9 +58,12 @@ private:
 
     //Multiple "tables" dialogs are allowed
     QList<DialogTablesGraphics *>listOfDialogTablesGraphics;
+    QString recentDb;
 
     void updateTitle();
-    void setEnabledMenus();
+    void setMenusState();
+    void saveSettings();
+    void restoreSettings();
 };
 
 #endif // MAINWINDOW_H
