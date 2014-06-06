@@ -85,7 +85,7 @@ void DialogTablesGraphics::updateTextBrowser()
     doc->clear();
 
     QString output=model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,ui->plotG1G8,
-                                                    favoriteGraphicsWidth,favoriteGraphicsHeight);
+                                                    favoriteGraphicsWidth,favoriteGraphicsHeight,1.0,doc);
     doc->setHtml(output);
     sb->setValue(sbval);
 }
@@ -315,15 +315,45 @@ void DialogTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
 void DialogTablesGraphics::on_saveButton_clicked()
 {
     QFileDialog fileDialog;
-    fileDialog.setDirectory(QDir::home());
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
     if(fileName.isEmpty())
         return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
+        fileName.append(".html");
+    fi=QFileInfo(fileName);
+
+
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
         QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
         return;
+    }
+
+    QString relativeImagePath=fi.fileName()+"_files";
+    QString absoluteImagePath=fi.absoluteFilePath()+"_files";
+
+    QFileInfo imageDirInfo(absoluteImagePath);
+
+    if(!imageDirInfo.exists())
+    {
+        if(!fi.absoluteDir().mkdir(relativeImagePath))
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Création du dossier des images impossible"));
+            file.close();
+            return;
+        }
+    }
+    else
+    {
+        if(!imageDirInfo.isWritable())
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Ecriture impossible dans le dossier des images"));
+            file.close();
+            return;
+        }
     }
 
     QTextStream stream(&file);
@@ -332,19 +362,44 @@ void DialogTablesGraphics::on_saveButton_clicked()
     quint16 graphs;
     DFRFDIRI mode;
     unsigned int node;
+
+    int maximumProgressValue=0;
     getSelections(&node,&tabs,&graphs,&mode);
 
-    QString output=model->generateHTMLReportForNode(tabs,0,graphs,node,mode,ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight,2.0,true);
+    for(int i=0;i<9;i++)
+    {
+        maximumProgressValue+=((graphs&(1<<i))>0);
+    }
+
+    QProgressDialog progress(tr("Enregistrement en cours..."),"",0,maximumProgressValue);
+    progress.setMinimumDuration(1000);
+
+    progress.setCancelButton(0);
+    progress.setWindowModality(Qt::WindowModal);
+
+
+    progress.setValue(0);
+
+    //Generate report in non-embedded mode, saving images
+    QString output=model->generateHTMLReportForNode(tabs,0,graphs,node,mode,ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress);
+
     //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
     QTextDocument formattedOut;
     formattedOut.setHtml(output);
-    stream<<formattedOut.toHtml("utf-8");
+    QString output2=formattedOut.toHtml("utf-8");
+
+    //Cleanup the output a bit
+    output2.replace(" -qt-block-indent:0;","");
+
+    stream<<output2;
     stream.flush();
-    if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(this,tr("Information"),"Le document a bien été enregistré");
-    else
-        QMessageBox::critical(this,tr("Attention"),"Le document n'a pas pu être enregistré !");
     file.close();
+    progress.setValue(maximumProgressValue);
+    if(stream.status()==QTextStream::Ok)
+        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName()).arg(relativeImagePath));
+    else
+        QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
+
 }
 
 void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)

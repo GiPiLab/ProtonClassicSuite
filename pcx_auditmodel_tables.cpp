@@ -1,6 +1,9 @@
 #include "pcx_auditmodel.h"
 #include "utils.h"
 
+
+//NOTE : Perhaps separate HTML generation from model (as in a true MVC approach), but it may decrease performances for the same result
+
 QString PCx_AuditModel::getT1(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
@@ -442,9 +445,6 @@ QString PCx_AuditModel::getT4(unsigned int node, DFRFDIRI mode) const
 }
 
 
-
-
-
 QString PCx_AuditModel::getT5(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
@@ -818,9 +818,9 @@ QString PCx_AuditModel::getT10(unsigned int node) const
     Q_ASSERT(node>0);
 
     QString output=QString("<table width='80%' align='center' cellpadding='5'>"
-                           "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ <b>%1</b> ]"
+                           "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
-                           "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></td></tr>"
+                           "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped());
 
@@ -885,9 +885,9 @@ QString PCx_AuditModel::getT11(unsigned int node) const
     Q_ASSERT(node>0);
 
     QString output=QString("<table width='80%' align='center' cellpadding='5'>"
-                           "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS d'INVESTISSEMENT de [ <b>%1</b> ]"
+                           "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS d'INVESTISSEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
-                           "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></td></tr>"
+                           "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped());
 
@@ -952,9 +952,9 @@ QString PCx_AuditModel::getT12(unsigned int node) const
     Q_ASSERT(node>0);
 
     QString output=QString("<table width='80%' align='center' cellpadding='5'>"
-                           "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS BUDG&Eacute;TAIRES de [ <b>%1</b> ]"
+                           "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS BUDG&Eacute;TAIRES de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
-                           "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></td></tr>"
+                           "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped());
 
@@ -1063,7 +1063,8 @@ QString PCx_AuditModel::getCSS() const
 {
     //Original PCA stylesheet with slight incoherencies between t2, t2bis, t3 and t3bis
     QString css=
-            ".bg1{padding-left:5px;padding-right:5px;background-color:#ABC;}"
+            "body{font-family:Sans Serif;font-size:9pt;background-color:white;color:black;}"
+            "\n.bg1{padding-left:5px;padding-right:5px;background-color:#ABC;}"
             ".bg2{padding-left:5px;padding-right:5px;background-color:#CAC;}"
             ".bg3{padding-left:5px;padding-right:5px;background-color:#CDB;}"
             ".req1{background-color:#FAB;padding:5px;}"
@@ -1097,7 +1098,7 @@ QString PCx_AuditModel::getCSS() const
             "tr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
             "tr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
             "tr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
-            "tr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}";
+            "tr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
 
     return css;
 }

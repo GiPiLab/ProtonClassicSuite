@@ -712,13 +712,13 @@ bool PCx_AuditModel::finishAudit(unsigned int id)
 }
 
 
-
 QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, quint16 bitFieldTables, quint16 bitFieldGraphics, unsigned int selectedNode, DFRFDIRI mode,
-                                                  QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight,double scale,bool png) const
+                                                  QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight,double scale,QTextDocument *document,
+                                                  const QString &absoluteImagePath, const QString &relativeImagePath,QProgressDialog *progress) const
 {
     Q_ASSERT(selectedNode>0 && plot!=NULL);
 
-    QString output=QString("<html><head><title>Audit %1</title><style type='text/css'>%2</style></head><body>"
+    QString output=QString("<html><head><title>Audit %1</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'><style type='text/css'>\n%2\n</style></head>\n<body>"
                            "<h3>Audit %1</h3>").arg(auditInfos.name.toHtmlEscaped()).arg(getCSS());
 
 
@@ -780,76 +780,311 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
     {
         //Graphics, a little too verbose
         //getGx draw the plot in the hidden QCustomPlot widget, which can be exported to pixmap and inserted into html with <img>
-        QString mime;
-        if(png==false)
-            mime="image/jpeg";
+        QString mime="image/jpeg";
+
+        //inline mode
+        if(document!=NULL)
+        {
+            if(bitFieldGraphics & G1)
+            {
+                output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G1' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+
+            }
+            if(bitFieldGraphics & G2)
+            {
+                output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G2' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+            if(bitFieldGraphics & G3)
+            {
+                output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G3' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+
+            if(bitFieldGraphics & G4)
+            {
+                output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G4' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+
+            if(bitFieldGraphics & G5)
+            {
+                output.append("<div align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G5' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+            if(bitFieldGraphics & G6)
+            {
+                output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G6' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+            if(bitFieldGraphics & G7)
+            {
+                output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G7' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+            if(bitFieldGraphics & G8)
+            {
+                output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' alt='G8' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+
+            if(bitFieldGraphics & G9)
+            {
+                output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
+                output.append(QString("<img width='%1' height='%2' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
+            }
+        }
+
+        //Linked images mode. Images are saved into imagePath
         else
-            mime="image/png";
+        {
+            /*Sleep to test progressDialog
+            QTime dieTime = QTime::currentTime().addMSecs(5000 );
+            while( QTime::currentTime() < dieTime )
+            {
+                QCoreApplication::processEvents( QEventLoop::AllEvents, 100 );
+            }*/
 
-        if(bitFieldGraphics & G1)
-        {
-            output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G1' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(bitFieldGraphics & G2)
-        {
-            output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G2' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(bitFieldGraphics & G3)
-        {
-            output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G3' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(bitFieldGraphics & G4)
-        {
-            output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G4' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(bitFieldGraphics & G5)
-        {
-            output.append("<p align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G5' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(bitFieldGraphics & G6)
-        {
-            output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G6' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
-        if(bitFieldGraphics & G7)
-        {
-            output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G7' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
 
-        }
-        if(bitFieldGraphics & G8)
-        {
-            output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G8' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
-        }
+            int progressValue=0;
+            if(progress!=NULL)
+            {
+                progressValue=progress->value();
+            }
 
-        if(bitFieldGraphics & G9)
-        {
-            output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
-            QByteArray image=plotToBase64ByteArray(plot,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,png);
-            output.append(QString("<img width='%1' height='%2' alt='G9' src='data:"+mime+";base64,")
-                          .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight)+image+"'></div>");
+            if(absoluteImagePath.isEmpty()|| relativeImagePath.isEmpty())
+            {
+                qCritical()<<"Please pass an absolute and relative path to store images";
+                return QString();
+            }
+
+            if(bitFieldGraphics & G1)
+            {
+                output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G1' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+            if(bitFieldGraphics & G2)
+            {
+                output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G2' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+
+            if(bitFieldGraphics & G3)
+            {
+                output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G3' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+            if(bitFieldGraphics & G4)
+            {
+                output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G4' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+            if(bitFieldGraphics & G5)
+            {
+                output.append("<div align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G5' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+
+            if(bitFieldGraphics & G6)
+            {
+               // QCoreApplication::processEvents( QEventLoop::AllEvents);
+                output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G6' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+            if(bitFieldGraphics & G7)
+            {
+                output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G7' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+            if(bitFieldGraphics & G8)
+            {
+                output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G8' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
+
+            }
+
+            if(bitFieldGraphics & G9)
+            {
+                output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
+                QString imageName=QUuid::createUuid().toString();
+                imageName.chop(1);
+                imageName=imageName.remove(0,1).append(".png");
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                }
+                output.append(QString("<img width='%1' height='%2' alt='G9' src='%3'></div>")
+                              .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
+                if(progress!=NULL)
+                    progress->setValue(++progressValue);
+            }
         }
     }
 

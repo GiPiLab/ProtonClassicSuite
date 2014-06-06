@@ -219,14 +219,16 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     plot->graph(1)->setPen(QPen(QColor(0,0,255)));
     plot->graph(1)->setBrush(QBrush(QColor(0,0,255,70)));
 
+    plot->xAxis->setAutoTicks(true);
+    plot->xAxis->setAutoTickLabels(true);
     plot->xAxis->setAutoTickStep(false);
     plot->xAxis->setAutoSubTicks(false);
     plot->xAxis->setTickLength(0,4);
     plot->xAxis->setTickStep(1);
     plot->xAxis->setSubTickCount(0);
+    plot->xAxis->setTickLabelRotation(0);
     plot->xAxis->grid()->setVisible(false);
     plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
-
     plot->xAxis->setRange(dataPlotNodeX.first()-0.8,dataPlotNodeX.last()+0.8);
 
     // qDebug()<<minYRange<<maxYRange;
@@ -392,21 +394,6 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
 
 }
 
-QByteArray PCx_AuditModel::plotToBase64ByteArray(QCustomPlot *plot, int width,int height,double scale,bool png) const
-{
-    QPixmap pixmap;
-    pixmap=plot->toPixmap(width,height,scale);
-    QByteArray ba;
-    QBuffer buffer(&ba);
-    buffer.open(QIODevice::WriteOnly);
-
-    if(png==false)
-        pixmap.save(&buffer,"JPEG",100);
-    else
-        pixmap.save(&buffer,"PNG");
-    buffer.close();
-    return ba.toBase64();
-}
 
 
 

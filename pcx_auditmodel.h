@@ -154,8 +154,10 @@ public:
     QString getG8(unsigned int node,DFRFDIRI mode, QCustomPlot *plot) const {return getG1G8(node,mode,disponibles,true,plot);}
 
     QString getG9(unsigned int node, QCustomPlot *plot) const;
-    QString generateHTMLReportForNode(quint8 bitFieldPagesOfTables,quint16 bitFieldTables,quint16 bitFieldGraphics,unsigned int selectedNode, DFRFDIRI mode,
-                                      QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight,double scale=1.0,bool png=false) const;
+
+    QString generateHTMLReportForNode(quint8 bitFieldPagesOfTables, quint16 bitFieldTables, quint16 bitFieldGraphics, unsigned int selectedNode, DFRFDIRI mode,
+                                      QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight, double scale=1.0, QTextDocument *document=NULL,
+                                      const QString &absoluteImagePath="", const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
 
 signals:
 
@@ -174,7 +176,7 @@ private:
 
     //Returns the title of the graphic in html
     QString getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const;
-    QByteArray plotToBase64ByteArray(QCustomPlot *plot, int width, int height, double scale=1.0, bool png=false) const;
+
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

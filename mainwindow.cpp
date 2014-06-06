@@ -215,6 +215,7 @@ void MainWindow::on_actionNewDb_triggered()
     QFileInfo fi(fileName);
     if(fi.suffix().compare("pcxdb",Qt::CaseInsensitive))
         fileName.append(".pcxdb");
+    fi=QFileInfo(fileName);
 
     QFile newFile(fileName);
 
