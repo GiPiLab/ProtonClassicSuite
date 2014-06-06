@@ -357,6 +357,7 @@ void DialogTablesGraphics::on_saveButton_clicked()
     }
 
     QTextStream stream(&file);
+    stream.setCodec("UTF-8");
 
     quint8 tabs;
     quint16 graphs;
