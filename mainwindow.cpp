@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "utils.h"
-#include "dialogedittree.h"
+#include "formedittree.h"
 #include <QFileDialog>
 #include <QString>
 #include <QtSql/QSqlDatabase>
@@ -20,9 +20,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setCentralWidget(ui->mdiArea);
-    dialogEditTreeWin=NULL;
-    dialogManageAudits=NULL;
-    dialogEditAudit=NULL;
+    formEditTreeWin=NULL;
+    formManageAudits=NULL;
+    formEditAudit=NULL;
 
     restoreSettings();
     updateTitle();
@@ -84,18 +84,18 @@ void MainWindow::setMenusState()
 void MainWindow::on_actionManageTree_triggered()
 {
     //Only one instance allowed
-    if(dialogEditTreeWin==NULL)
+    if(formEditTreeWin==NULL)
     {
-        dialogEditTreeWin=new DialogEditTree(this,ui->mdiArea);
-        dialogEditTreeWin->setAttribute(Qt::WA_DeleteOnClose);
+        formEditTreeWin=new FormEditTree(this,ui->mdiArea);
+        formEditTreeWin->setAttribute(Qt::WA_DeleteOnClose);
 
-        ui->mdiArea->addSubWindow(dialogEditTreeWin);
-        dialogEditTreeWin->show();
-        if(dialogManageAudits!=NULL)
+        ui->mdiArea->addSubWindow(formEditTreeWin);
+        formEditTreeWin->show();
+        if(formManageAudits!=NULL)
         {
-            connect(dialogEditTreeWin,SIGNAL(listOfTreeChanged()),dialogManageAudits,SLOT(onLOTchanged()));
+            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
         }
-        connect(dialogEditTreeWin,SIGNAL(destroyed()),this,SLOT(onDialogEditTreeWindowsDestroyed()));     
+        connect(formEditTreeWin,SIGNAL(destroyed()),this,SLOT(onFormEditTreeWindowsDestroyed()));
     }
 }
 
@@ -105,87 +105,87 @@ void MainWindow::on_actionExit_triggered()
     this->close();
 }
 
-void MainWindow::onDialogEditTreeWindowsDestroyed()
+void MainWindow::onFormEditTreeWindowsDestroyed()
 {
-    dialogEditTreeWin=NULL;
+    formEditTreeWin=NULL;
     //qDebug()<<"Closed";
 }
 
-void MainWindow::onDialogManageAuditsWindowsDestroyed()
+void MainWindow::onFormManageAuditsWindowsDestroyed()
 {
-    dialogManageAudits=NULL;
+    formManageAudits=NULL;
 }
 
-void MainWindow::onDialogEditAuditWindowsDestroyed()
+void MainWindow::onFormEditAuditWindowsDestroyed()
 {
-    dialogEditAudit=NULL;
+    formEditAudit=NULL;
 }
 
 void MainWindow::onDialogTablesWindowsDestroyed(QObject *obj)
 {
     //qDebug()<<listOfDialogTables;
-    listOfDialogTablesGraphics.removeAt(listOfDialogTablesGraphics.indexOf((DialogTablesGraphics *)obj));
+    listOfFormTablesGraphics.removeAt(listOfFormTablesGraphics.indexOf((FormTablesGraphics *)obj));
     //qDebug()<<listOfDialogTables;
 }
 
 void MainWindow::on_actionManageAudits_triggered()
 {
-    if(dialogManageAudits==NULL)
+    if(formManageAudits==NULL)
     {
-        dialogManageAudits=new DialogManageAudits(this,ui->mdiArea);
-        dialogManageAudits->setAttribute(Qt::WA_DeleteOnClose);
+        formManageAudits=new FormManageAudits(this,ui->mdiArea);
+        formManageAudits->setAttribute(Qt::WA_DeleteOnClose);
 
-        ui->mdiArea->addSubWindow(dialogManageAudits);
-        dialogManageAudits->show();
-        connect(dialogManageAudits,SIGNAL(destroyed()),this,SLOT(onDialogManageAuditsWindowsDestroyed()));
+        ui->mdiArea->addSubWindow(formManageAudits);
+        formManageAudits->show();
+        connect(formManageAudits,SIGNAL(destroyed()),this,SLOT(onFormManageAuditsWindowsDestroyed()));
 
-        if(dialogEditTreeWin!=NULL)
+        if(formEditTreeWin!=NULL)
         {
-            connect(dialogEditTreeWin,SIGNAL(listOfTreeChanged()),dialogManageAudits,SLOT(onLOTchanged()));
+            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
         }
 
-        if(dialogEditAudit!=NULL)
+        if(formEditAudit!=NULL)
         {
-            connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dialogEditAudit,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
         }
-        foreach(DialogTablesGraphics *dlg,listOfDialogTablesGraphics)
+        foreach(FormTablesGraphics *dlg,listOfFormTablesGraphics)
         {
-            connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
         }
     }
 }
 
 void MainWindow::on_actionEditAudit_triggered()
 {
-    if(dialogEditAudit==NULL)
+    if(formEditAudit==NULL)
     {
-        dialogEditAudit=new DialogEditAudit(this);
-        dialogEditAudit->setAttribute(Qt::WA_DeleteOnClose);
-        ui->mdiArea->addSubWindow(dialogEditAudit);
-        dialogEditAudit->show();
-        connect(dialogEditAudit,SIGNAL(destroyed()),this,SLOT(onDialogEditAuditWindowsDestroyed()));
+        formEditAudit=new FormEditAudit(this);
+        formEditAudit->setAttribute(Qt::WA_DeleteOnClose);
+        ui->mdiArea->addSubWindow(formEditAudit);
+        formEditAudit->show();
+        connect(formEditAudit,SIGNAL(destroyed()),this,SLOT(onFormEditAuditWindowsDestroyed()));
 
-        if(dialogManageAudits!=NULL)
+        if(formManageAudits!=NULL)
         {
-            connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dialogEditAudit,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
         }
     }
 }
 
 void MainWindow::on_actionTablesGraphics_triggered()
 {
-    DialogTablesGraphics *dlg=new DialogTablesGraphics();
+    FormTablesGraphics *dlg=new FormTablesGraphics();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     ui->mdiArea->addSubWindow(dlg);
     dlg->show();
-    listOfDialogTablesGraphics.append(dlg);
+    listOfFormTablesGraphics.append(dlg);
 
     connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onDialogTablesWindowsDestroyed(QObject *)));
 
-    if(dialogManageAudits!=NULL)
+    if(formManageAudits!=NULL)
     {
-        connect(dialogManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+        connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
     }
 }
 

@@ -1,20 +1,20 @@
-#ifndef DIALOGTABLESGRAPHICS_H
-#define DIALOGTABLESGRAPHICS_H
+#ifndef FORMTABLESGRAPHICS_H
+#define FORMTABLESGRAPHICS_H
 
 #include <QWidget>
 #include "pcx_auditmodel.h"
 
 namespace Ui {
-class DialogTablesGraphics;
+class FormTablesGraphics;
 }
 
-class DialogTablesGraphics : public QWidget
+class FormTablesGraphics : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DialogTablesGraphics(QWidget *parent = 0);
-    ~DialogTablesGraphics();
+    explicit FormTablesGraphics(QWidget *parent = 0);
+    ~FormTablesGraphics();
 
 public slots:
     void onListOfAuditsChanged();
@@ -47,7 +47,7 @@ private slots:
     void on_checkBoxDisponibleCumul_toggled(bool checked);
 
 private:
-    Ui::DialogTablesGraphics *ui;
+    Ui::FormTablesGraphics *ui;
     void updateListOfAudits();
     void updateTextBrowser();
     void getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode);
@@ -58,4 +58,4 @@ private:
     int favoriteGraphicsWidth,favoriteGraphicsHeight;
     };
 
-#endif // DIALOGTABLESGRAPHICS_H
+#endif // FORMTABLESGRAPHICS_H

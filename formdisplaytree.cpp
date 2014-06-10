@@ -1,11 +1,11 @@
-#include "dialogdisplaytree.h"
-#include "ui_dialogdisplaytree.h"
+#include "formdisplaytree.h"
+#include "ui_formdisplaytree.h"
 #include <QtPrintSupport/QtPrintSupport>
 
 
-DialogDisplayTree::DialogDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
+FormDisplayTree::FormDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DialogDisplayTree)
+    ui(new Ui::FormDisplayTree)
 {
     ui->setupUi(this);
     model=new PCx_TreeModel(treeModel->getTreeId());
@@ -15,14 +15,14 @@ DialogDisplayTree::DialogDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) 
     ui->treeView->expandToDepth(1);
 }
 
-DialogDisplayTree::~DialogDisplayTree()
+FormDisplayTree::~FormDisplayTree()
 {
     delete model;
     delete ui;
 }
 
 //TODO : better tree printing support
-void DialogDisplayTree::on_printViewButton_clicked()
+void FormDisplayTree::on_printViewButton_clicked()
 {
     QPrinter printer;
 

@@ -1,11 +1,11 @@
-#include "dialogeditaudit.h"
-#include "ui_dialogeditaudit.h"
+#include "formeditaudit.h"
+#include "ui_formeditaudit.h"
 #include "pcx_auditmodel.h"
 #include "auditdatadelegate.h"
 
-DialogEditAudit::DialogEditAudit(QWidget *parent) :
+FormEditAudit::FormEditAudit(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DialogEditAudit)
+    ui(new Ui::FormEditAudit)
 {
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
@@ -29,7 +29,7 @@ DialogEditAudit::DialogEditAudit(QWidget *parent) :
     updateListOfAudits();
 }
 
-DialogEditAudit::~DialogEditAudit()
+FormEditAudit::~FormEditAudit()
 {
     delete ui;
     if(auditModel!=NULL)
@@ -42,12 +42,12 @@ DialogEditAudit::~DialogEditAudit()
     delete(delegateRI);
 }
 
-void DialogEditAudit::onListOfAuditsChanged()
+void FormEditAudit::onListOfAuditsChanged()
 {
     updateListOfAudits();
 }
 
-void DialogEditAudit::updateListOfAudits()
+void FormEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
@@ -64,7 +64,7 @@ void DialogEditAudit::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
-void DialogEditAudit::on_comboListAudits_activated(int index)
+void FormEditAudit::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
@@ -109,7 +109,7 @@ void DialogEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewRI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
 }
 
-void DialogEditAudit::on_treeView_clicked(const QModelIndex &index)
+void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
 {
     unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
     Q_ASSERT(selectedNode>0);

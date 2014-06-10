@@ -1,5 +1,5 @@
-#ifndef DIALOGEDITTREE_H
-#define DIALOGEDITTREE_H
+#ifndef FORMEDITTREE_H
+#define FORMEDITTREE_H
 
 #include <QDialog>
 #include <QList>
@@ -7,20 +7,20 @@
 #include <QtSql/QSqlTableModel>
 #include <QtSql/QSqlQueryModel>
 
-#include "dialogdisplaytree.h"
+#include "formdisplaytree.h"
 #include "pcx_treemodel.h"
 
 namespace Ui {
-class DialogEditTree;
+class FormEditTree;
 }
 
-class DialogEditTree : public QWidget
+class FormEditTree : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DialogEditTree(QWidget *parent = 0, QMdiArea *mdiArea = 0);
-    ~DialogEditTree();
+    explicit FormEditTree(QWidget *parent = 0, QMdiArea *mdiArea = 0);
+    ~FormEditTree();
 
 private slots:
 
@@ -52,14 +52,13 @@ signals:
     void listOfTreeChanged();
 
 private:
-    Ui::DialogEditTree *ui;
+    Ui::FormEditTree *ui;
     PCx_TreeModel *model;
     QMdiArea *mdiArea;
-    //QList<DialogDisplayTree *> displayTrees;
 
     void updateListOfTree();
     //Disable editing
     void setReadOnly(bool state);
 };
 
-#endif // DIALOGEDITTREE_H
+#endif // FORMEDITTREE_H

@@ -1,20 +1,19 @@
-#ifndef DIALOGMANAGEAUDITS_H
-#define DIALOGMANAGEAUDITS_H
+#ifndef FORMMANAGEAUDITS_H
+#define FORMMANAGEAUDITS_H
 
-#include <QDialog>
 #include <QMdiArea>
 
 namespace Ui {
-class DialogManageAudits;
+class FormManageAudits;
 }
 
-class DialogManageAudits : public QWidget
+class FormManageAudits : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DialogManageAudits(QWidget *parent = 0, QMdiArea *mdiarea=0);
-    ~DialogManageAudits();
+    explicit FormManageAudits(QWidget *parent = 0, QMdiArea *mdiarea=0);
+    ~FormManageAudits();
 
 public slots:
     void onLOTchanged();
@@ -33,10 +32,10 @@ signals:
     void listOfAuditsChanged();
 
 private:
-    Ui::DialogManageAudits *ui;
+    Ui::FormManageAudits *ui;
     QMdiArea *mdiarea;
     void updateListOfTrees();
     void updateListOfAudits();
 };
 
-#endif // DIALOGMANAGEAUDITS_H
+#endif // FORMMANAGEAUDITS_H

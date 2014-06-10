@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogManageAudits</class>
- <widget class="QWidget" name="DialogManageAudits">
+ <class>FormManageAudits</class>
+ <widget class="QWidget" name="FormManageAudits">
   <property name="modal" stdset="0">
    <bool>false</bool>
   </property>

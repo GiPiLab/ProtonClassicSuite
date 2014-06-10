@@ -1,5 +1,5 @@
-#include "dialogtablesgraphics.h"
-#include "ui_dialogtablesgraphics.h"
+#include "formtablesgraphics.h"
+#include "ui_formtablesgraphics.h"
 #include "utils.h"
 #include <QScrollBar>
 #include <QPrinter>
@@ -7,9 +7,9 @@
 #include <QFileDialog>
 //#include "QCustomPlot/qcpdocumentobject.h"
 
-DialogTablesGraphics::DialogTablesGraphics(QWidget *parent) :
+FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::DialogTablesGraphics)
+    ui(new Ui::FormTablesGraphics)
 {
     model=NULL;
     ready=false;
@@ -30,7 +30,7 @@ DialogTablesGraphics::DialogTablesGraphics(QWidget *parent) :
     //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
 }
 
-DialogTablesGraphics::~DialogTablesGraphics()
+FormTablesGraphics::~FormTablesGraphics()
 {
     delete ui;
     delete doc;
@@ -39,13 +39,13 @@ DialogTablesGraphics::~DialogTablesGraphics()
         delete model;
 }
 
-void DialogTablesGraphics::onListOfAuditsChanged()
+void FormTablesGraphics::onListOfAuditsChanged()
 {
     updateListOfAudits();
 }
 
 
-void DialogTablesGraphics::updateListOfAudits()
+void FormTablesGraphics::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
@@ -64,7 +64,7 @@ void DialogTablesGraphics::updateListOfAudits()
 }
 
 
-void DialogTablesGraphics::updateTextBrowser()
+void FormTablesGraphics::updateTextBrowser()
 {
     ui->saveButton->setEnabled(ready);
     if(!ready)
@@ -90,7 +90,7 @@ void DialogTablesGraphics::updateTextBrowser()
     sb->setValue(sbval);
 }
 
-void DialogTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode)
+void FormTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode)
 {
     DFRFDIRI mode=DF;
 
@@ -175,7 +175,7 @@ void DialogTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *sel
 }
 
 
-void DialogTablesGraphics::on_comboListAudits_activated(int index)
+void FormTablesGraphics::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
@@ -195,7 +195,7 @@ void DialogTablesGraphics::on_comboListAudits_activated(int index)
     on_treeView_clicked(rootIndex);
 }
 
-void DialogTablesGraphics::on_treeView_clicked(const QModelIndex &index)
+void FormTablesGraphics::on_treeView_clicked(const QModelIndex &index)
 {
     Q_UNUSED(index);
    // ui->groupBoxMode->setTitle(index.data().toString());
@@ -203,7 +203,7 @@ void DialogTablesGraphics::on_treeView_clicked(const QModelIndex &index)
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
+void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
@@ -247,62 +247,62 @@ void DialogTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
     }
 }
 
-void DialogTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_radioButtonDF_toggled(bool checked)
+void FormTablesGraphics::on_radioButtonDF_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_radioButtonRF_toggled(bool checked)
+void FormTablesGraphics::on_radioButtonRF_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_radioButtonDI_toggled(bool checked)
+void FormTablesGraphics::on_radioButtonDI_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_radioButtonRI_toggled(bool checked)
+void FormTablesGraphics::on_radioButtonRI_toggled(bool checked)
 {
     if(checked)
         updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxEvolution_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxEvolution_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxEvolutionCumul_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxEvolutionCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxBase100_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxBase100_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 //FIXME : page split problem
-/*void DialogTablesGraphics::on_printButton_clicked()
+/*void FormTablesGraphics::on_printButton_clicked()
 {
     QPrinter p;
     QPrintDialog *dialog = new QPrintDialog(&p, this);
@@ -312,7 +312,7 @@ void DialogTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
     doc->print(&p);
 }*/
 
-void DialogTablesGraphics::on_saveButton_clicked()
+void FormTablesGraphics::on_saveButton_clicked()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
@@ -403,62 +403,62 @@ void DialogTablesGraphics::on_saveButton_clicked()
 
 }
 
-void DialogTablesGraphics::on_checkBoxResults_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxResults_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
 
-void DialogTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxPrevu_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxPrevu_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxEngage_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxEngage_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxPrevuCumul_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxPrevuCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxEngageCumul_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxEngageCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxRealise_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxRealise_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxDisponible_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxDisponible_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxRealiseCumul_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxRealiseCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void DialogTablesGraphics::on_checkBoxDisponibleCumul_toggled(bool checked)
+void FormTablesGraphics::on_checkBoxDisponibleCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();

@@ -4,10 +4,10 @@
 #include <QMainWindow>
 #include <QMdiSubWindow>
 #include <QList>
-#include "dialogmanageaudits.h"
-#include "dialogedittree.h"
-#include "dialogeditaudit.h"
-#include "dialogtablesgraphics.h"
+#include "formmanageaudits.h"
+#include "formedittree.h"
+#include "formeditaudit.h"
+#include "formtablesgraphics.h"
 
 namespace Ui {
 class MainWindow;
@@ -29,11 +29,11 @@ private slots:
 
     void on_actionExit_triggered();
 
-    void onDialogEditTreeWindowsDestroyed();
+    void onFormEditTreeWindowsDestroyed();
 
-    void onDialogManageAuditsWindowsDestroyed();
+    void onFormManageAuditsWindowsDestroyed();
 
-    void onDialogEditAuditWindowsDestroyed();
+    void onFormEditAuditWindowsDestroyed();
 
     void onDialogTablesWindowsDestroyed(QObject *);
 
@@ -52,12 +52,12 @@ private:
     Ui::MainWindow *ui;
 
     //Only one instance of these dialogs is allowed at once
-    DialogEditTree *dialogEditTreeWin;
-    DialogManageAudits *dialogManageAudits;
-    DialogEditAudit *dialogEditAudit;
+    FormEditTree *formEditTreeWin;
+    FormManageAudits *formManageAudits;
+    FormEditAudit *formEditAudit;
 
     //Multiple "tables" dialogs are allowed
-    QList<DialogTablesGraphics *>listOfDialogTablesGraphics;
+    QList<FormTablesGraphics *>listOfFormTablesGraphics;
     QString recentDb;
 
     void updateTitle();

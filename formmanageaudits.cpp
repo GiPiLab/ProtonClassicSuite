@@ -1,14 +1,14 @@
 #include <QMessageBox>
 #include <QInputDialog>
-#include "dialogmanageaudits.h"
-#include "ui_dialogmanageaudits.h"
+#include "formmanageaudits.h"
+#include "ui_formmanageaudits.h"
 #include "pcx_treemodel.h"
 #include "pcx_auditmodel.h"
 #include "pcx_auditinfos.h"
 
-DialogManageAudits::DialogManageAudits(QWidget *parent,QMdiArea *mdiarea) :
+FormManageAudits::FormManageAudits(QWidget *parent,QMdiArea *mdiarea) :
     QWidget(parent),
-    ui(new Ui::DialogManageAudits)
+    ui(new Ui::FormManageAudits)
 {
     ui->setupUi(this);
     updateListOfTrees();
@@ -16,13 +16,13 @@ DialogManageAudits::DialogManageAudits(QWidget *parent,QMdiArea *mdiarea) :
     this->mdiarea=mdiarea;
 }
 
-DialogManageAudits::~DialogManageAudits()
+FormManageAudits::~FormManageAudits()
 {
     delete ui;
 }
 
 
-void DialogManageAudits::updateListOfAudits()
+void FormManageAudits::updateListOfAudits()
 {
     ui->comboListOfAudits->clear();
 
@@ -37,12 +37,12 @@ void DialogManageAudits::updateListOfAudits()
     this->on_comboListOfAudits_activated(0);
 }
 
-void DialogManageAudits::onLOTchanged()
+void FormManageAudits::onLOTchanged()
 {
     updateListOfTrees();
 }
 
-void DialogManageAudits::updateListOfTrees()
+void FormManageAudits::updateListOfTrees()
 {
     ui->comboListOfTrees->clear();
 
@@ -56,7 +56,7 @@ void DialogManageAudits::updateListOfTrees()
     ui->comboListOfTrees->setCurrentIndex(0);
 }
 
-void DialogManageAudits::on_addAuditButton_clicked()
+void FormManageAudits::on_addAuditButton_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
@@ -108,7 +108,7 @@ void DialogManageAudits::on_addAuditButton_clicked()
     }
 }
 
-void DialogManageAudits::on_comboListOfAudits_activated(int index)
+void FormManageAudits::on_comboListOfAudits_activated(int index)
 {
     if(index==-1 || ui->comboListOfAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
@@ -133,7 +133,7 @@ void DialogManageAudits::on_comboListOfAudits_activated(int index)
     }
 }
 
-void DialogManageAudits::on_deleteAuditButton_clicked()
+void FormManageAudits::on_deleteAuditButton_clicked()
 {
     if(ui->comboListOfAudits->currentIndex()==-1)
     {
@@ -150,7 +150,7 @@ void DialogManageAudits::on_deleteAuditButton_clicked()
 }
 
 
-void DialogManageAudits::on_finishAuditButton_clicked()
+void FormManageAudits::on_finishAuditButton_clicked()
 {
     if(ui->comboListOfAudits->currentIndex()==-1)
     {

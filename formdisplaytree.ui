@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogDisplayTree</class>
- <widget class="QWidget" name="DialogDisplayTree">
+ <class>FormDisplayTree</class>
+ <widget class="QWidget" name="FormDisplayTree">
   <property name="geometry">
    <rect>
     <x>0</x>

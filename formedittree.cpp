@@ -1,6 +1,6 @@
-#include "dialogdisplaytree.h"
-#include "dialogedittree.h"
-#include "ui_dialogedittree.h"
+#include "formdisplaytree.h"
+#include "formedittree.h"
+#include "ui_formedittree.h"
 #include "utils.h"
 #include "pcx_treemodel.h"
 #include <QtSql>
@@ -8,7 +8,7 @@
 #include <QMessageBox>
 #include <QInputDialog>
 
-DialogEditTree::DialogEditTree(QWidget *parent,QMdiArea *mdiArea) : QWidget(parent), ui(new Ui::DialogEditTree)
+FormEditTree::FormEditTree(QWidget *parent,QMdiArea *mdiArea) : QWidget(parent), ui(new Ui::FormEditTree)
 {
     ui->setupUi(this);
     model=NULL;
@@ -17,14 +17,14 @@ DialogEditTree::DialogEditTree(QWidget *parent,QMdiArea *mdiArea) : QWidget(pare
     updateListOfTree();
 }
 
-DialogEditTree::~DialogEditTree()
+FormEditTree::~FormEditTree()
 {
     if(model!=NULL)delete model;
     delete ui;
 }
 
 
-void DialogEditTree::on_addTypeButton_clicked()
+void FormEditTree::on_addTypeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -44,7 +44,7 @@ void DialogEditTree::on_addTypeButton_clicked()
     }
 }
 
-void DialogEditTree::updateListOfTree()
+void FormEditTree::updateListOfTree()
 {
     ui->comboBox->clear();
 
@@ -72,7 +72,7 @@ void DialogEditTree::updateListOfTree()
     }
 }
 
-void DialogEditTree::setReadOnly(bool state)
+void FormEditTree::setReadOnly(bool state)
 {
     ui->deleteNodeButton->setDisabled(state);
     ui->addNodeButton->setDisabled(state);
@@ -84,7 +84,7 @@ void DialogEditTree::setReadOnly(bool state)
     ui->listTypesView->setDisabled(state);
 }
 
-void DialogEditTree::on_deleteTreeButton_clicked()
+void FormEditTree::on_deleteTreeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -118,14 +118,14 @@ void DialogEditTree::on_deleteTreeButton_clicked()
     }
 }
 
-void DialogEditTree::onTypesChanged()
+void FormEditTree::onTypesChanged()
 {
     //qDebug()<<"Types changed !";
     model->updateTree();
     ui->treeView->expandToDepth(1);
 }
 
-void DialogEditTree::on_newTreeButton_clicked()
+void FormEditTree::on_newTreeButton_clicked()
 {
     bool ok;
     QString text;
@@ -144,7 +144,7 @@ void DialogEditTree::on_newTreeButton_clicked()
     }
 }
 
-void DialogEditTree::on_deleteTypeButton_clicked()
+void FormEditTree::on_deleteTypeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -157,7 +157,7 @@ void DialogEditTree::on_deleteTypeButton_clicked()
     }
 }
 
-void DialogEditTree::on_addNodeButton_clicked()
+void FormEditTree::on_addNodeButton_clicked()
 {
     if(model==NULL)return;
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
@@ -200,7 +200,7 @@ void DialogEditTree::on_addNodeButton_clicked()
     }
 }
 
-void DialogEditTree::on_modifyNodeButton_clicked()
+void FormEditTree::on_modifyNodeButton_clicked()
 {
     if(model==NULL)return;
 
@@ -248,7 +248,7 @@ void DialogEditTree::on_modifyNodeButton_clicked()
     }
 }
 
-void DialogEditTree::on_deleteNodeButton_clicked()
+void FormEditTree::on_deleteNodeButton_clicked()
 {
     if(model==NULL)return;
 
@@ -276,7 +276,7 @@ void DialogEditTree::on_deleteNodeButton_clicked()
     }
 }
 
-void DialogEditTree::on_finishTreeButton_clicked()
+void FormEditTree::on_finishTreeButton_clicked()
 {
     if(model!=NULL)
     {
@@ -290,15 +290,15 @@ void DialogEditTree::on_finishTreeButton_clicked()
     }
 }
 
-void DialogEditTree::on_viewTreeButton_clicked()
+void FormEditTree::on_viewTreeButton_clicked()
 {
-    DialogDisplayTree *ddt=new DialogDisplayTree(model,this);
+    FormDisplayTree *ddt=new FormDisplayTree(model,this);
     mdiArea->addSubWindow(ddt);
     //displayTrees.append(ddt);
     ddt->show();
 }
 
-void DialogEditTree::on_comboBox_activated(int index)
+void FormEditTree::on_comboBox_activated(int index)
 {
     if(index==-1)return;
     if(model!=NULL)
@@ -319,7 +319,7 @@ void DialogEditTree::on_comboBox_activated(int index)
     setReadOnly(model->isFinished());
 }
 
-void DialogEditTree::on_treeView_activated(const QModelIndex &index)
+void FormEditTree::on_treeView_activated(const QModelIndex &index)
 {
     Q_UNUSED(index);
     //Only edit unfinished trees
