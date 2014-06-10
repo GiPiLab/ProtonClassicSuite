@@ -342,7 +342,6 @@ unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
 
 QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
 {
-    Q_ASSERT(nodeId > 0);
     QList<unsigned int> listOfChildren;
     QSqlQuery q;
     q.prepare(QString("select * from arbre_%1 where pid=:nodeid").arg(treeId));

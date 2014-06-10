@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formEditTreeWin=NULL;
     formManageAudits=NULL;
     formEditAudit=NULL;
+    formReports=NULL;
 
     restoreSettings();
     updateTitle();
@@ -121,6 +122,12 @@ void MainWindow::onFormEditAuditWindowsDestroyed()
     formEditAudit=NULL;
 }
 
+void MainWindow::onFormReportsWindowsDestroyed()
+{
+    formReports=NULL;
+}
+
+
 void MainWindow::onDialogTablesWindowsDestroyed(QObject *obj)
 {
     //qDebug()<<listOfDialogTables;
@@ -132,7 +139,7 @@ void MainWindow::on_actionManageAudits_triggered()
 {
     if(formManageAudits==NULL)
     {
-        formManageAudits=new FormManageAudits(this,ui->mdiArea);
+        formManageAudits=new FormManageAudits(this);
         formManageAudits->setAttribute(Qt::WA_DeleteOnClose);
 
         ui->mdiArea->addSubWindow(formManageAudits);
@@ -148,6 +155,13 @@ void MainWindow::on_actionManageAudits_triggered()
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
         }
+
+        if(formReports!=NULL)
+        {
+            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
+        }
+
+
         foreach(FormTablesGraphics *dlg,listOfFormTablesGraphics)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
@@ -277,4 +291,22 @@ void MainWindow::on_actionOpenDb_triggered()
     recentDb=fileName;
     updateTitle();
     setMenusState();
+}
+
+void MainWindow::on_actionReport_triggered()
+{
+    if(formReports==NULL)
+    {
+        formReports=new FormReports(this);
+        formReports->setAttribute(Qt::WA_DeleteOnClose);
+        ui->mdiArea->addSubWindow(formReports);
+        formReports->show();
+        connect(formReports,SIGNAL(destroyed()),this,SLOT(onFormReportsWindowsDestroyed()));
+
+        if(formManageAudits!=NULL)
+        {
+            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
+        }
+    }
+
 }

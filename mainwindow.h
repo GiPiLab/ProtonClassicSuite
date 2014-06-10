@@ -8,6 +8,7 @@
 #include "formedittree.h"
 #include "formeditaudit.h"
 #include "formtablesgraphics.h"
+#include "formreports.h"
 
 namespace Ui {
 class MainWindow;
@@ -47,6 +48,9 @@ private slots:
 
     void on_actionOpenDb_triggered();
 
+    void on_actionReport_triggered();
+
+    void onFormReportsWindowsDestroyed();
 private:
 
     Ui::MainWindow *ui;
@@ -55,6 +59,7 @@ private:
     FormEditTree *formEditTreeWin;
     FormManageAudits *formManageAudits;
     FormEditAudit *formEditAudit;
+    FormReports *formReports;
 
     //Multiple "tables" dialogs are allowed
     QList<FormTablesGraphics *>listOfFormTablesGraphics;

@@ -53,6 +53,8 @@ void FormTablesGraphics::updateListOfAudits()
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
+    doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));
+
     ready=nonEmpty;
     QPair<unsigned int, QString> p;
     foreach(p,listOfAudits)
@@ -188,7 +190,9 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
     }
     model=new PCx_AuditModel(selectedAuditId,this);
 
+    QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(model->getAttachedTreeModel());
+    delete m;
     ui->treeView->expandToDepth(1);
     QModelIndex rootIndex=model->getAttachedTreeModel()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);

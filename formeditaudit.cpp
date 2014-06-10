@@ -73,9 +73,12 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     {
         delete auditModel;
     }
+
+    QItemSelectionModel *m=ui->treeView->selectionModel();
     //Read-write audit model
     auditModel=new PCx_AuditModel(selectedAuditId,0,false);
     ui->treeView->setModel(auditModel->getAttachedTreeModel());
+    delete m;
     ui->treeView->expandToDepth(1);
 
     ui->tableViewDF->setModel(auditModel->getTableModelDF());

@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     formdisplaytree.cpp \
     formedittree.cpp \
     formeditaudit.cpp \
-    formmanageaudits.cpp
+    formmanageaudits.cpp \
+    formreports.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -40,11 +41,13 @@ HEADERS  += mainwindow.h \
     formdisplaytree.h \
     formedittree.h \
     formeditaudit.h \
-    formmanageaudits.h
+    formmanageaudits.h \
+    formreports.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
     formdisplaytree.ui \
     formedittree.ui \
     formeditaudit.ui \
-    formmanageaudits.ui
+    formmanageaudits.ui \
+    formreports.ui

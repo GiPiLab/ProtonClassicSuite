@@ -6,14 +6,13 @@
 #include "pcx_auditmodel.h"
 #include "pcx_auditinfos.h"
 
-FormManageAudits::FormManageAudits(QWidget *parent,QMdiArea *mdiarea) :
+FormManageAudits::FormManageAudits(QWidget *parent):
     QWidget(parent),
     ui(new Ui::FormManageAudits)
 {
     ui->setupUi(this);
     updateListOfTrees();
     updateListOfAudits();
-    this->mdiarea=mdiarea;
 }
 
 FormManageAudits::~FormManageAudits()

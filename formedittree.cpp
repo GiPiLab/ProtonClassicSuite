@@ -303,13 +303,17 @@ void FormEditTree::on_comboBox_activated(int index)
     if(index==-1)return;
     if(model!=NULL)
     {
+        QItemSelectionModel *m=ui->listTypesView->selectionModel();
         ui->listTypesView->setModel(NULL);
+        delete m;
         delete model;
     }
 
     model=new PCx_TreeModel(ui->comboBox->currentData().toUInt());
 
+    QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(model);
+    delete m;
     ui->treeView->expandToDepth(1);
 
     ui->listTypesView->setModel(model->getTypes()->getTableModel());

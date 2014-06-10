@@ -1,7 +1,7 @@
 #ifndef FORMMANAGEAUDITS_H
 #define FORMMANAGEAUDITS_H
 
-#include <QMdiArea>
+#include<QWidget>
 
 namespace Ui {
 class FormManageAudits;
@@ -12,7 +12,7 @@ class FormManageAudits : public QWidget
     Q_OBJECT
 
 public:
-    explicit FormManageAudits(QWidget *parent = 0, QMdiArea *mdiarea=0);
+    explicit FormManageAudits(QWidget *parent = 0);
     ~FormManageAudits();
 
 public slots:
@@ -33,7 +33,6 @@ signals:
 
 private:
     Ui::FormManageAudits *ui;
-    QMdiArea *mdiarea;
     void updateListOfTrees();
     void updateListOfAudits();
 };
