@@ -23,11 +23,38 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButtonPoidsRelatifs_clicked();
+
+    void on_pushButtonBase100_clicked();
+
+    void on_pushButtonEvolution_clicked();
+
+    void on_pushButtonEvolutionCumul_clicked();
+
+    void on_pushButtonJoursAct_clicked();
+
+    void on_pushButtonResultats_clicked();
+
+    void on_pushButtonExpandAll_clicked();
+
+    void on_pushButtonCollapseAll_clicked();
+
+    void on_pushButtonSelectAll_clicked();
+
+    void on_pushButtonSelectNone_clicked();
+
+
+    void on_pushButtonSelectType_clicked();
+
+    void on_pushButtonSelectAllNodes_clicked();
+
+    void on_pushButtonUnSelectAllNodes_clicked();
+
 private:
     Ui::FormReports *ui;
     void updateListOfAudits();
-    void setEnabled(bool state);
     PCx_AuditModel *model;
+    void populateLists();
 };
 
 #endif // FORMREPORTS_H

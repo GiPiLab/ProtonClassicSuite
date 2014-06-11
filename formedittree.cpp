@@ -293,6 +293,7 @@ void FormEditTree::on_finishTreeButton_clicked()
 void FormEditTree::on_viewTreeButton_clicked()
 {
     FormDisplayTree *ddt=new FormDisplayTree(model,this);
+    ddt->setAttribute(Qt::WA_DeleteOnClose);
     mdiArea->addSubWindow(ddt);
     //displayTrees.append(ddt);
     ddt->show();
@@ -309,15 +310,19 @@ void FormEditTree::on_comboBox_activated(int index)
         delete model;
     }
 
-    model=new PCx_TreeModel(ui->comboBox->currentData().toUInt());
+    //Read-write types
+    model=new PCx_TreeModel(ui->comboBox->currentData().toUInt(),false);
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(model);
     delete m;
     ui->treeView->expandToDepth(1);
 
+    m=ui->listTypesView->selectionModel();
+    Q_ASSERT(model->getTypes()->getTableModel()!=NULL);
     ui->listTypesView->setModel(model->getTypes()->getTableModel());
     ui->listTypesView->setModelColumn(1);
+    delete m;
 
     connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
     setReadOnly(model->isFinished());

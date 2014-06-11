@@ -16,7 +16,7 @@ class PCx_TreeModel:public QStandardItemModel
 {
 
 public:
-    explicit PCx_TreeModel(unsigned int treeId, QObject *parent=0);
+    explicit PCx_TreeModel(unsigned int treeId, bool typesReadOnly=true, QObject *parent=0);
     virtual ~PCx_TreeModel();
 
     unsigned int getTreeId() const {return treeId;}
@@ -37,6 +37,7 @@ public:
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;
     bool isLeaf(unsigned int nodeId) const;
+    QModelIndexList getIndexesOfTypes(unsigned int typeId) const;
 
     unsigned int getParentId(unsigned int nodeId) const;
     QList<unsigned int> getChildren(unsigned int nodeId) const;
@@ -53,10 +54,10 @@ public:
     static bool addNewTree(const QString &name);
     static int deleteTree(unsigned int treeId);
     static QString idTreeToName(unsigned int treeId);
+
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 
 private:
-    QStandardItem *root;
     PCx_TypeModel *types;
 
     unsigned int treeId;

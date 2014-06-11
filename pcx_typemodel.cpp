@@ -4,11 +4,17 @@
 #include <QtSql>
 #include <QMessageBox>
 
-PCx_TypeModel::PCx_TypeModel(unsigned int treeId, QObject *parent):QObject(parent)
+PCx_TypeModel::PCx_TypeModel(unsigned int treeId, bool readOnly, QObject *parent):QObject(parent)
 {
     this->treeId=treeId;
     loadFromDatabase(treeId);
-    loadSqlTableModel();
+    typesTableModel=NULL;
+    typesQueryModel=NULL;
+
+    if(readOnly==false)
+        loadSqlTableModel();
+    else
+        loadSqlQueryModel();
 //    qDebug()<<"Loaded PCx_TypeModel with "<<typesTableModel->rowCount()<<" rows";
 }
 
@@ -23,12 +29,19 @@ bool PCx_TypeModel::loadSqlTableModel()
     return true;
 }
 
+bool PCx_TypeModel::loadSqlQueryModel()
+{
+    Q_ASSERT(treeId>0);
+    typesQueryModel=new QSqlQueryModel();
+    typesQueryModel->setQuery(QString("select * from types_%1").arg(treeId));
+    return true;
+}
+
 QStringList PCx_TypeModel::getListOfDefaultTypes()
 {
     QStringList listOfTypes;
     listOfTypes<<tr("Maire adjoint")<<tr("Conseiller")<<tr("Division")<<tr("Service");
     return listOfTypes;
-
 }
 
 /*Check if the new type does not already exists in the table
@@ -75,12 +88,43 @@ bool PCx_TypeModel::validateType(const QString &newType)
 
 PCx_TypeModel::~PCx_TypeModel()
 {
-    typesTableModel->clear();
-    delete typesTableModel;
+    if(typesTableModel!=NULL)
+    {
+        typesTableModel->clear();
+        delete typesTableModel;
+    }
+    if(typesQueryModel!=NULL)
+    {
+        typesQueryModel->clear();
+        delete typesQueryModel;
+    }
+}
+
+QList<QPair<unsigned int, QString> > PCx_TypeModel::getTypes() const
+{
+    QList<QPair<unsigned int,QString> > types;
+    QSqlQuery query(QString("select * from types_%1").arg(treeId));
+    if(!query.isActive())
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    while(query.next())
+    {
+        QPair<unsigned int,QString> p;
+        p.first=query.value(0).toUInt();
+        p.second=query.value(1).toString();
+        types.append(p);
+    }
+    return types;
 }
 
 bool PCx_TypeModel::addType(const QString &type)
 {
+    //Read-only mode
+    if(typesTableModel==NULL)return false;
+
     if(validateType(type)==false)
         return false;
 
@@ -105,6 +149,8 @@ bool PCx_TypeModel::addType(const QString &type)
 bool PCx_TypeModel::deleteType(const QString &type)
 {
     if(type.isNull() || type.isEmpty())return false;
+    if(typesTableModel==NULL)return false;
+
     QSqlQuery query;
     unsigned int typeId=0;
 
@@ -131,6 +177,7 @@ bool PCx_TypeModel::deleteType(const QString &type)
 bool PCx_TypeModel::deleteType(unsigned int id)
 {
     Q_ASSERT(id>0);
+    if(typesTableModel==NULL)return false;
     QSqlQuery query;
 
     query.prepare(QString("select count(*) from arbre_%1 where type=:type").arg(treeId));

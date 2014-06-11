@@ -181,17 +181,17 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     if(cumule==false)
     {
         if(modeORED!=engages)
-            plotTitle=tr("&Eacute;volution du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+            plotTitle=tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
         else
-            plotTitle=tr("&Eacute;volution de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+            plotTitle=tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
     }
 
     else
     {
         if(modeORED!=engages)
-            plotTitle=tr("&Eacute;volution du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+            plotTitle=tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
         else
-            plotTitle=tr("&Eacute;volution du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+            plotTitle=tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
     }
 
     /*

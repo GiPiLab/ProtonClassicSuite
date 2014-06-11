@@ -7,11 +7,13 @@ class PCx_TypeModel:public QObject
 {
     Q_OBJECT
 public:
-    explicit PCx_TypeModel(unsigned int treeId, QObject *parent=0);
+    explicit PCx_TypeModel(unsigned int treeId, bool readOnly=true, QObject *parent=0);
     ~PCx_TypeModel();
 
     QString getNomType(unsigned int id) const{return idTypesToNom[id];}
     const QStringList &getNomTypes() const {return nomTypes;}
+    QList<QPair<unsigned int,QString> > getTypes() const;
+
 
     bool addType(const QString &type);
     bool deleteType(const QString &type);
@@ -19,6 +21,7 @@ public:
 
     unsigned int getTreeId() const{return treeId;}
     QSqlTableModel *getTableModel(){return typesTableModel;}
+    QSqlQueryModel *getSqlQueryModel(){return typesQueryModel;}
 
     static QStringList getListOfDefaultTypes();
 
@@ -34,11 +37,13 @@ private:
     bool validateType(const QString &newType);
     bool loadFromDatabase(unsigned int treeId);
     bool loadSqlTableModel();
+    bool loadSqlQueryModel();
 
     QHash<unsigned int,QString> idTypesToNom;
     unsigned int treeId;
     QStringList nomTypes;
     QSqlTableModel *typesTableModel;
+    QSqlQueryModel *typesQueryModel;
 };
 
 #endif // PCX_TYPEMODEL_H

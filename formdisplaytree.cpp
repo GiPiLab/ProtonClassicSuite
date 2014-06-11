@@ -41,5 +41,4 @@ void FormDisplayTree::on_printViewButton_clicked()
        painter.translate(-width()/2, -height()/2);
 
        ui->treeView->render(&painter);
-
 }

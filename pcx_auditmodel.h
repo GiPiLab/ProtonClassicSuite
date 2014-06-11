@@ -74,7 +74,8 @@ enum ListAuditsMode
 };
 
 
-class PCx_AuditModel : public QObject
+class
+        PCx_AuditModel : public QObject
 {
     Q_OBJECT
 

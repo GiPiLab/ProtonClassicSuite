@@ -6,9 +6,9 @@
 #include <QMessageBox>
 
 
-PCx_TreeModel::PCx_TreeModel(unsigned int treeId,QObject *parent):QStandardItemModel(parent)
+PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, QObject *parent):QStandardItemModel(parent)
 {
-    types=new PCx_TypeModel(treeId);
+    types=new PCx_TypeModel(treeId,typesReadOnly);
     loadFromDatabase(treeId);
 }
 
@@ -321,6 +321,11 @@ bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
     return false;
 }
 
+QModelIndexList PCx_TreeModel::getIndexesOfTypes(unsigned int typeId) const
+{
+    return match(index(0,0),Qt::UserRole+2,QVariant(typeId),-1,Qt::MatchRecursive);
+}
+
 unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
 {
     Q_ASSERT(nodeId > 0);
@@ -545,8 +550,7 @@ bool PCx_TreeModel::finishTree()
 bool PCx_TreeModel::updateTree()
 {
     this->clear();
-    root=this->invisibleRootItem();
-    createChildrenItems(root,0);
+    createChildrenItems(invisibleRootItem(),0);
     return true;
 }
 
