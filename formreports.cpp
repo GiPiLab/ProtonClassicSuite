@@ -9,14 +9,17 @@ FormReports::FormReports(QWidget *parent) :
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
     model=NULL;
+    plot=new QCustomPlot();
     populateLists();
     updateListOfAudits();
-
 }
 
 FormReports::~FormReports()
 {
     delete ui;
+    if(model!=NULL)
+        delete model;
+    delete plot;
 }
 
 void FormReports::populateLists()
@@ -51,7 +54,6 @@ void FormReports::populateLists()
     item=new QListWidgetItem(tr("Résultats budgétaire de [...]"),ui->listTables);
     item->setData(Qt::UserRole+1,T12);
 
-
     item=new QListWidgetItem(tr("Évolution comparée du prévu de la collectivité et de [...]"),ui->listGraphics);
     item->setData(Qt::UserRole+1,G1);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du prévu de la collectivité et de [...]"),ui->listGraphics);
@@ -70,9 +72,6 @@ void FormReports::populateLists()
     item->setData(Qt::UserRole+1,G8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
     item->setData(Qt::UserRole+1,G9);
-
-
-
 }
 
 void FormReports::onListOfAuditsChanged()
@@ -106,7 +105,6 @@ void FormReports::on_comboListAudits_activated(int index)
 
     if(model!=NULL)
     {
-
         delete model;
     }
     model=new PCx_AuditModel(selectedAuditId,this);
@@ -133,11 +131,168 @@ void FormReports::on_pushButton_clicked()
 {
     QItemSelectionModel *sel=ui->treeView->selectionModel();
     QModelIndexList selIndexes=sel->selectedIndexes();
+
+    if(selIndexes.isEmpty())
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez au moins un noeud dans l'arborescence"));
+        return;
+    }
+
+    QList<QListWidgetItem *>selectedTables=ui->listTables->selectedItems();
+    QList<QListWidgetItem *>selectedGraphics=ui->listGraphics->selectedItems();
+
+    quint16 bitFieldTables=0,bitFieldGraphics=0;
+
+    foreach(QListWidgetItem *item, selectedTables)
+    {
+        //qDebug()<<"Selected table "<<item->data(Qt::UserRole+1).toUInt();
+        bitFieldTables|=item->data(Qt::UserRole+1).toUInt();
+    }
+
+    foreach(QListWidgetItem *item, selectedGraphics)
+    {
+        //qDebug()<<"Selected graphic "<<item->data(Qt::UserRole+1).toUInt();
+        bitFieldGraphics|=item->data(Qt::UserRole+1).toUInt();
+    }
+    //qDebug()<<"Tables 1= "<<bitFieldTables;
+    //qDebug()<<"Graphics 1= "<<bitFieldGraphics;
+
+    if(bitFieldGraphics==0 && bitFieldTables==0)
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez au moins un tableau ou un graphique"));
+        return;
+    }
+
+    //Isolate mode-independant tables and graphics
+    quint16 BFTablesTemp=0,BFGraphicsTemp=0;
+    if(bitFieldTables & T10 || bitFieldTables & T11 || bitFieldTables & T12 || bitFieldGraphics & G9)
+    {
+        BFTablesTemp|=bitFieldTables & T10;
+        BFTablesTemp|=bitFieldTables & T11;
+        BFTablesTemp|=bitFieldTables & T12;
+        BFGraphicsTemp|=bitFieldGraphics & G9;
+    }
+
+    //qDebug()<<"Tables Temp = "<<BFTablesTemp;
+    //qDebug()<<"Graphics Temp = "<<BFGraphicsTemp;
+
+    //Now these fields contain only mode-dependant tables/graphics
+    bitFieldTables&=~(T10+T11+T12);
+    bitFieldGraphics&=~G9;
+
+    //qDebug()<<"Tables 2= "<<bitFieldTables;
+    //qDebug()<<"Graphics 2= "<<bitFieldGraphics;
+
+    QString output=model->generateHTMLHeader();
+    QList<DFRFDIRI> listModes;
+    if(ui->checkBoxDF->isChecked())
+        listModes.append(DF);
+    if(ui->checkBoxRF->isChecked())
+        listModes.append(RF);
+    if(ui->checkBoxDI->isChecked())
+        listModes.append(DI);
+    if(ui->checkBoxRI->isChecked())
+        listModes.append(RI);
+
+    if(listModes.isEmpty() && (bitFieldGraphics || bitFieldTables))
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez au moins un mode (dépenses/recettes de fonctionnement/d'investissement)"));
+        return;
+    }
+
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le rapport en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
+        fileName.append(".html");
+    fi=QFileInfo(fileName);
+
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        return;
+    }
+
+    QString relativeImagePath=fi.fileName()+"_files";
+    QString absoluteImagePath=fi.absoluteFilePath()+"_files";
+
+    QFileInfo imageDirInfo(absoluteImagePath);
+
+    if(!imageDirInfo.exists())
+    {
+        if(!fi.absoluteDir().mkdir(relativeImagePath))
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Création du dossier des images impossible"));
+            file.close();
+            return;
+        }
+    }
+    else
+    {
+        if(!imageDirInfo.isWritable())
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Ecriture impossible dans le dossier des images"));
+            file.close();
+            return;
+        }
+    }
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+
+    int maximumProgressValue=selIndexes.count()+2;
+
+    QProgressDialog progress(tr("Enregistrement du rapport en cours..."),"",0,maximumProgressValue);
+    progress.setMinimumDuration(1000);
+
+    progress.setCancelButton(0);
+    progress.setWindowModality(Qt::WindowModal);
+
+    progress.setValue(0);
+    unsigned int i=0;
+
     foreach (const QModelIndex &index, selIndexes)
     {
         unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
-        qDebug()<<"Selected node "<<selectedNode;
+        output.append(QString("<h2>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()));
+
+        if(BFTablesTemp || BFGraphicsTemp)
+        {
+            //Mode-independant
+            output.append(model->generateHTMLReportForNode(0,BFTablesTemp,BFGraphicsTemp,selectedNode,DF,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
+        }
+        foreach(DFRFDIRI mode,listModes)
+        {
+            output.append(model->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append("<br><br><br>");
+        }
+        progress.setValue(++i);
+        output.append("<br><br><br><br>");
     }
+
+    //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
+    QTextDocument formattedOut;
+    formattedOut.setHtml(output);
+    QString output2=formattedOut.toHtml("utf-8");
+
+    //Cleanup the output a bit
+    output2.replace(" -qt-block-indent:0;","");
+    progress.setValue(++i);
+
+    stream<<output2;
+    stream.flush();
+    file.close();
+    progress.setValue(maximumProgressValue);
+    if(stream.status()==QTextStream::Ok)
+        QMessageBox::information(this,tr("Information"),tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName()).arg(relativeImagePath));
+    else
+        QMessageBox::critical(this,tr("Attention"),tr("Le rapport n'a pas pu être enregistré !"));
+
 }
 
 //NOTE : Preselections are done with fixed indexing, refers to populateLists

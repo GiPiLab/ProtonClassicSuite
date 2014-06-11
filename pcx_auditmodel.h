@@ -160,6 +160,7 @@ public:
                                       QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight, double scale=1.0, QTextDocument *document=NULL,
                                       const QString &absoluteImagePath="", const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
 
+    QString generateHTMLHeader() const;
 signals:
 
 public slots:

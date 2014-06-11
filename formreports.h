@@ -2,6 +2,7 @@
 #define FORMREPORTS_H
 
 #include "pcx_auditmodel.h"
+#include "QCustomPlot/qcustomplot.h"
 #include <QWidget>
 
 namespace Ui {
@@ -43,7 +44,6 @@ private slots:
 
     void on_pushButtonSelectNone_clicked();
 
-
     void on_pushButtonSelectType_clicked();
 
     void on_pushButtonSelectAllNodes_clicked();
@@ -55,6 +55,7 @@ private:
     void updateListOfAudits();
     PCx_AuditModel *model;
     void populateLists();
+    QCustomPlot *plot;
 };
 
 #endif // FORMREPORTS_H

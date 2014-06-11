@@ -711,6 +711,12 @@ bool PCx_AuditModel::finishAudit(unsigned int id)
     return true;
 }
 
+QString PCx_AuditModel::generateHTMLHeader() const
+{
+    return QString("<html><head><title>Audit %1</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'><style type='text/css'>\n%2\n</style></head>\n<body>"
+                               "<h3>Audit %1</h3>").arg(auditInfos.name.toHtmlEscaped()).arg(getCSS());
+
+}
 
 QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, quint16 bitFieldTables, quint16 bitFieldGraphics, unsigned int selectedNode, DFRFDIRI mode,
                                                   QCustomPlot *plot, unsigned int favoriteGraphicsWidth, unsigned int favoriteGraphicsHeight,double scale,QTextDocument *document,
@@ -718,9 +724,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
 {
     Q_ASSERT(selectedNode>0 && plot!=NULL);
 
-    QString output=QString("<html><head><title>Audit %1</title><meta http-equiv='Content-Type' content='text/html;charset=utf-8'><style type='text/css'>\n%2\n</style></head>\n<body>"
-                           "<h3>Audit %1</h3>").arg(auditInfos.name.toHtmlEscaped()).arg(getCSS());
-
+    QString output;
 
     //Either group of tables, or individual tables
     if(bitFieldPagesOfTables!=0)
@@ -747,33 +751,33 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
     else if(bitFieldTables!=0)
     {
         if(bitFieldTables & T1)
-            output.append(getT1(selectedNode,mode));
+            output.append(getT1(selectedNode,mode)+"<br>");
         if(bitFieldTables & T2)
-            output.append(getT2(selectedNode,mode));
+            output.append(getT2(selectedNode,mode)+"<br>");
         if(bitFieldTables & T2BIS)
-            output.append(getT2bis(selectedNode,mode));
+            output.append(getT2bis(selectedNode,mode)+"<br>");
         if(bitFieldTables & T3)
-            output.append(getT3(selectedNode,mode));
+            output.append(getT3(selectedNode,mode)+"<br>");
         if(bitFieldTables & T3BIS)
-            output.append(getT3bis(selectedNode,mode));
+            output.append(getT3bis(selectedNode,mode)+"<br>");
         if(bitFieldTables & T4)
-            output.append(getT4(selectedNode,mode));
+            output.append(getT4(selectedNode,mode)+"<br>");
         if(bitFieldTables & T5)
-            output.append(getT5(selectedNode,mode));
+            output.append(getT5(selectedNode,mode)+"<br>");
         if(bitFieldTables & T6)
-            output.append(getT6(selectedNode,mode));
+            output.append(getT6(selectedNode,mode)+"<br>");
         if(bitFieldTables & T7)
-            output.append(getT7(selectedNode,mode));
+            output.append(getT7(selectedNode,mode)+"<br>");
         if(bitFieldTables & T8)
-            output.append(getT8(selectedNode,mode));
+            output.append(getT8(selectedNode,mode)+"<br>");
         if(bitFieldTables & T9)
-            output.append(getT9(selectedNode,mode));
+            output.append(getT9(selectedNode,mode)+"<br>");
         if(bitFieldTables & T10)
-            output.append(getT10(selectedNode));
+            output.append(getT10(selectedNode)+"<br>");
         if(bitFieldTables & T11)
-            output.append(getT11(selectedNode));
+            output.append(getT11(selectedNode)+"<br>");
         if(bitFieldTables & T12)
-            output.append(getT12(selectedNode));
+            output.append(getT12(selectedNode)+"<br>");
     }
 
     if(bitFieldGraphics!=0)
@@ -790,7 +794,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G1' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G1' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
 
             }
@@ -799,7 +803,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G2' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G2' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
             if(bitFieldGraphics & G3)
@@ -807,7 +811,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G3' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G3' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
 
@@ -816,7 +820,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G4' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G4' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
 
@@ -825,7 +829,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G5' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G5' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
             if(bitFieldGraphics & G6)
@@ -833,7 +837,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G6' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G6' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
             if(bitFieldGraphics & G7)
@@ -841,7 +845,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G7' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G7' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
             if(bitFieldGraphics & G8)
@@ -849,7 +853,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' alt='G8' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G8' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
 
@@ -858,7 +862,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
                 QString name="mydata://"+QString::number(qrand());
                 document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(favoriteGraphicsWidth,favoriteGraphicsHeight,scale)));
-                output.append(QString("<img width='%1' height='%2' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(name));
             }
         }
@@ -900,7 +904,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G1' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G1' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -922,7 +926,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G2' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G2' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -945,7 +949,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G3' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G3' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
 
                 if(progress!=NULL)
@@ -968,7 +972,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G4' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G4' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -990,7 +994,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G5' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G5' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -1014,7 +1018,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G6' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G6' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -1036,7 +1040,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G7' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G7' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -1058,7 +1062,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G8' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G8' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
@@ -1080,7 +1084,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
-                output.append(QString("<img width='%1' height='%2' alt='G9' src='%3'></div>")
+                output.append(QString("<img width='%1' height='%2' alt='G9' src='%3'></div><br>")
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);

@@ -1063,7 +1063,7 @@ QString PCx_AuditModel::getCSS() const
 {
     //Original PCA stylesheet with slight incoherencies between t2, t2bis, t3 and t3bis
     QString css=
-            "body{font-family:Sans Serif;font-size:9pt;background-color:white;color:black;}"
+            "body{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
             "\n.bg1{padding-left:5px;padding-right:5px;background-color:#ABC;}"
             ".bg2{padding-left:5px;padding-right:5px;background-color:#CAC;}"
             ".bg3{padding-left:5px;padding-right:5px;background-color:#CDB;}"

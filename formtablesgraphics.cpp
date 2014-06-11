@@ -17,7 +17,7 @@ FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
     favoriteGraphicsHeight=400;
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
-    ui->plotG1G8->setHidden(true);
+    plot=new QCustomPlot();
 
     doc=new QTextDocument();
     ui->textEdit->setDocument(doc);
@@ -34,6 +34,7 @@ FormTablesGraphics::~FormTablesGraphics()
 {
     delete ui;
     delete doc;
+    delete plot;
     //delete interface;
     if(model!=NULL)
         delete model;
@@ -86,8 +87,9 @@ void FormTablesGraphics::updateTextBrowser()
 
     doc->clear();
 
-    QString output=model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,ui->plotG1G8,
-                                                    favoriteGraphicsWidth,favoriteGraphicsHeight,1.0,doc);
+    QString output=model->generateHTMLHeader();
+    output.append(model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,plot,
+                                                    favoriteGraphicsWidth,favoriteGraphicsHeight,1.0,doc));
     doc->setHtml(output);
     sb->setValue(sbval);
 }
@@ -386,7 +388,8 @@ void FormTablesGraphics::on_saveButton_clicked()
     progress.setValue(0);
 
     //Generate report in non-embedded mode, saving images
-    QString output=model->generateHTMLReportForNode(tabs,0,graphs,node,mode,ui->plotG1G8,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress);
+    QString output=model->generateHTMLHeader();
+    output.append(model->generateHTMLReportForNode(tabs,0,graphs,node,mode,plot,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress));
 
     //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
     QTextDocument formattedOut;
