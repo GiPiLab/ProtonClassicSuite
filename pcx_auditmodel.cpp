@@ -784,7 +784,6 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
     {
         //Graphics, a little too verbose
         //getGx draw the plot in the hidden QCustomPlot widget, which can be exported to pixmap and inserted into html with <img>
-        QString mime="image/jpeg";
 
         //inline mode
         if(document!=NULL)
@@ -890,17 +889,18 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 return QString();
             }
 
+            //FIXME : save to JPG quality 100 as a workaround because saving to PNG is very slow
             if(bitFieldGraphics & G1)
             {
                 output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -917,12 +917,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -940,12 +940,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -963,12 +963,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -985,12 +985,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -1009,12 +1009,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -1031,12 +1031,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -1053,12 +1053,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -1075,12 +1075,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                 output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
                 QString imageName=QUuid::createUuid().toString();
                 imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".png");
+                imageName=imageName.remove(0,1).append(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->savePng(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale))
+                if(!plot->saveJpg(imageAbsoluteName,favoriteGraphicsWidth,favoriteGraphicsHeight,scale,100))
                 {
                     qCritical()<<"Unable to save "<<imageAbsoluteName;
                 }
@@ -1095,7 +1095,6 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
     //NOTE : For vectorized graphics
     //cursor.insertText(QString(QChar::ObjectReplacementCharacter), QCPDocumentObject::generatePlotFormat(ui->plot, 600, 400));
 
-    output.append("</body></html>");
     return output;
 }
 

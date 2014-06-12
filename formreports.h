@@ -22,7 +22,7 @@ public slots:
 private slots:
     void on_comboListAudits_activated(int index);
 
-    void on_pushButton_clicked();
+    void on_saveButton_clicked();
 
     void on_pushButtonPoidsRelatifs_clicked();
 

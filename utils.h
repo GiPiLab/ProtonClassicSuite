@@ -14,5 +14,4 @@ QString formatDouble(double num,unsigned int decimals=2);
 
 
 
-
 #endif // UTILS_H

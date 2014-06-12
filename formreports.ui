@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>828</width>
-    <height>566</height>
+    <height>612</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Générateur de rapports</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_4">
+   <item row="0" column="0" colspan="2">
     <widget class="QSplitter" name="splitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -204,10 +204,10 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="pushButtonResultats">
+          <item row="1" column="3">
+           <widget class="QPushButton" name="pushButtonSelectNone">
             <property name="text">
-             <string>Résultats</string>
+             <string>Rien</string>
             </property>
            </widget>
           </item>
@@ -218,10 +218,10 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pushButtonSelectNone">
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pushButtonResultats">
             <property name="text">
-             <string>Rien</string>
+             <string>Résultats</string>
             </property>
            </widget>
           </item>
@@ -246,8 +246,46 @@
      </widget>
     </widget>
    </item>
-   <item>
-    <widget class="QPushButton" name="pushButton">
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="groupBoxTraversal">
+     <property name="title">
+      <string>Ordre d'affichage des noeuds</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="radioButtonDFS">
+        <property name="text">
+         <string>Profondeur d'abord</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButtonBFS">
+        <property name="text">
+         <string>Largeur d'abord</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="saveButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
       <string>Générer le rapport</string>
      </property>

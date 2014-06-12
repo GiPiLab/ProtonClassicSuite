@@ -321,9 +321,42 @@ bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
     return false;
 }
 
-QModelIndexList PCx_TreeModel::getIndexesOfTypes(unsigned int typeId) const
+QModelIndexList PCx_TreeModel::getIndexesOfNodesWithThisType(unsigned int typeId) const
 {
     return match(index(0,0),Qt::UserRole+2,QVariant(typeId),-1,Qt::MatchRecursive);
+}
+
+QList<unsigned int> PCx_TreeModel::sortNodesBFS(QList<unsigned int> &nodes) const
+{
+    QList<unsigned int>sortedNodes;
+
+    QList<unsigned int>toCheck;
+    toCheck.append(1);
+
+    while(!toCheck.isEmpty())
+    {
+        unsigned int node=toCheck.takeFirst();
+        if(nodes.contains(node))
+            sortedNodes.append(node);
+        toCheck.append(getChildren(node));
+    }
+    return sortedNodes;
+}
+
+
+QList<unsigned int> PCx_TreeModel::sortNodesDFS(QList<unsigned int> &nodes,unsigned int currentNode) const
+{
+    QList<unsigned int> sortedNodes;
+
+    if(nodes.contains(currentNode))
+        sortedNodes.append(currentNode);
+
+    QList<unsigned int> children=getChildren(currentNode);
+    foreach(unsigned int childId,children)
+    {
+        sortedNodes.append(sortNodesDFS(nodes,childId));
+    }
+    return sortedNodes;
 }
 
 unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
@@ -349,7 +382,7 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
 {
     QList<unsigned int> listOfChildren;
     QSqlQuery q;
-    q.prepare(QString("select * from arbre_%1 where pid=:nodeid").arg(treeId));
+    q.prepare(QString("select * from arbre_%1 where pid=:nodeid order by nom").arg(treeId));
     q.bindValue(":nodeid",nodeId);
     q.exec();
 

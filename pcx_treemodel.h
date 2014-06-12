@@ -37,11 +37,14 @@ public:
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;
     bool isLeaf(unsigned int nodeId) const;
-    QModelIndexList getIndexesOfTypes(unsigned int typeId) const;
 
     unsigned int getParentId(unsigned int nodeId) const;
     QList<unsigned int> getChildren(unsigned int nodeId) const;
 
+    QModelIndexList getIndexesOfNodesWithThisType(unsigned int typeId) const;
+
+    QList<unsigned int> sortNodesDFS(QList<unsigned int> &nodes, unsigned int currentNode=1) const;
+    QList<unsigned int> sortNodesBFS(QList<unsigned int> &nodes) const;
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
@@ -56,6 +59,7 @@ public:
     static QString idTreeToName(unsigned int treeId);
 
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
+
 
 private:
     PCx_TypeModel *types;

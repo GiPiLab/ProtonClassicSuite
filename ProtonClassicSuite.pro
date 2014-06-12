@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ProtonClassicSuite
 TEMPLATE = app
 
+
 SOURCES += main.cpp\
 	mainwindow.cpp \
     pcx_treemodel.cpp \

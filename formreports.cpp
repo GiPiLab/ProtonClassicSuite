@@ -127,7 +127,7 @@ void FormReports::on_comboListAudits_activated(int index)
     ui->comboListTypes->setCurrentIndex(0);
 }
 
-void FormReports::on_pushButton_clicked()
+void FormReports::on_saveButton_clicked()
 {
     QItemSelectionModel *sel=ui->treeView->selectionModel();
     QModelIndexList selIndexes=sel->selectedIndexes();
@@ -137,6 +137,26 @@ void FormReports::on_pushButton_clicked()
         QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez au moins un noeud dans l'arborescence"));
         return;
     }
+
+    QList<unsigned int> selectedNodes;
+    foreach(const QModelIndex &idx,selIndexes)
+    {
+        selectedNodes.append(idx.data(Qt::UserRole+1).toUInt());
+    }
+
+    //qDebug()<<selectedNodes;
+    QList<unsigned int>sortedSelectedNodes;
+    if(ui->radioButtonBFS->isChecked())
+        sortedSelectedNodes=model->getAttachedTreeModel()->sortNodesBFS(selectedNodes);
+    else if(ui->radioButtonDFS->isChecked())
+        sortedSelectedNodes=model->getAttachedTreeModel()->sortNodesDFS(selectedNodes);
+    else
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Choisissez l'ordre d'affichage des noeuds sélectionnés dans le rapport !"));
+        return;
+    }
+    //qDebug()<<"Sorted : "<<sortedSelectedNodes;
+
 
     QList<QListWidgetItem *>selectedTables=ui->listTables->selectedItems();
     QList<QListWidgetItem *>selectedGraphics=ui->listGraphics->selectedItems();
@@ -217,6 +237,9 @@ void FormReports::on_pushButton_clicked()
         QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
         return;
     }
+    //Will reopen later
+    file.close();
+    file.remove();
 
     QString relativeImagePath=fi.fileName()+"_files";
     QString absoluteImagePath=fi.absoluteFilePath()+"_files";
@@ -228,7 +251,6 @@ void FormReports::on_pushButton_clicked()
         if(!fi.absoluteDir().mkdir(relativeImagePath))
         {
             QMessageBox::critical(this,tr("Attention"),tr("Création du dossier des images impossible"));
-            file.close();
             return;
         }
     }
@@ -236,29 +258,25 @@ void FormReports::on_pushButton_clicked()
     {
         if(!imageDirInfo.isWritable())
         {
-            QMessageBox::critical(this,tr("Attention"),tr("Ecriture impossible dans le dossier des images"));
-            file.close();
+            QMessageBox::critical(this,tr("Attention"),tr("Écriture impossible dans le dossier des images"));
             return;
         }
     }
 
-    QTextStream stream(&file);
-    stream.setCodec("UTF-8");
+    int maximumProgressValue=selIndexes.count()+1;
 
-    int maximumProgressValue=selIndexes.count()+2;
-
-    QProgressDialog progress(tr("Enregistrement du rapport en cours..."),"",0,maximumProgressValue);
+    QProgressDialog progress(tr("Enregistrement du rapport en cours..."),tr("Annuler"),0,maximumProgressValue);
     progress.setMinimumDuration(1000);
 
-    progress.setCancelButton(0);
     progress.setWindowModality(Qt::WindowModal);
 
     progress.setValue(0);
     unsigned int i=0;
+    QElapsedTimer timer;
+    timer.start();
 
-    foreach (const QModelIndex &index, selIndexes)
+    foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
-        unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
         output.append(QString("<h2>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()));
 
         if(BFTablesTemp || BFGraphicsTemp)
@@ -271,9 +289,18 @@ void FormReports::on_pushButton_clicked()
             output.append(model->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
             output.append("<br><br><br>");
         }
-        progress.setValue(++i);
+        if(!progress.wasCanceled())
+            progress.setValue(++i);
+        else
+        {
+            QDir dir(absoluteImagePath);
+            dir.removeRecursively();
+            return;
+        }
         output.append("<br><br><br><br>");
     }
+    output.append("</body></html>");
+    qDebug()<<"Report generated in "<<timer.elapsed()<<"ms";
 
     //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
     QTextDocument formattedOut;
@@ -282,11 +309,21 @@ void FormReports::on_pushButton_clicked()
 
     //Cleanup the output a bit
     output2.replace(" -qt-block-indent:0;","");
-    progress.setValue(++i);
 
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        QDir dir(absoluteImagePath);
+        dir.removeRecursively();
+        return;
+    }
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
     stream<<output2;
     stream.flush();
     file.close();
+
     progress.setValue(maximumProgressValue);
     if(stream.status()==QTextStream::Ok)
         QMessageBox::information(this,tr("Information"),tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName()).arg(relativeImagePath));
@@ -382,7 +419,7 @@ void FormReports::on_pushButtonSelectType_clicked()
 {
     PCx_TreeModel *treeModel=model->getAttachedTreeModel();
     unsigned int selectedType=ui->comboListTypes->currentData().toUInt();
-    QModelIndexList indexOfTypes=treeModel->getIndexesOfTypes(selectedType);
+    QModelIndexList indexOfTypes=treeModel->getIndexesOfNodesWithThisType(selectedType);
 
     foreach(const QModelIndex &index,indexOfTypes)
     {

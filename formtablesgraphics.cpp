@@ -90,6 +90,7 @@ void FormTablesGraphics::updateTextBrowser()
     QString output=model->generateHTMLHeader();
     output.append(model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,plot,
                                                     favoriteGraphicsWidth,favoriteGraphicsHeight,1.0,doc));
+    output.append("</body></html>");
     doc->setHtml(output);
     sb->setValue(sbval);
 }
@@ -337,6 +338,9 @@ void FormTablesGraphics::on_saveButton_clicked()
         QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
         return;
     }
+    //Will reopen after computation
+    file.close();
+    file.remove();
 
     QString relativeImagePath=fi.fileName()+"_files";
     QString absoluteImagePath=fi.absoluteFilePath()+"_files";
@@ -348,7 +352,6 @@ void FormTablesGraphics::on_saveButton_clicked()
         if(!fi.absoluteDir().mkdir(relativeImagePath))
         {
             QMessageBox::critical(this,tr("Attention"),tr("Création du dossier des images impossible"));
-            file.close();
             return;
         }
     }
@@ -357,13 +360,9 @@ void FormTablesGraphics::on_saveButton_clicked()
         if(!imageDirInfo.isWritable())
         {
             QMessageBox::critical(this,tr("Attention"),tr("Ecriture impossible dans le dossier des images"));
-            file.close();
             return;
         }
     }
-
-    QTextStream stream(&file);
-    stream.setCodec("UTF-8");
 
     quint8 tabs;
     quint16 graphs;
@@ -378,18 +377,16 @@ void FormTablesGraphics::on_saveButton_clicked()
         maximumProgressValue+=((graphs&(1<<i))>0);
     }
 
-    QProgressDialog progress(tr("Enregistrement en cours..."),"",0,maximumProgressValue);
+    QProgressDialog progress(tr("Enregistrement en cours..."),0,0,maximumProgressValue);
     progress.setMinimumDuration(1000);
 
-    progress.setCancelButton(0);
     progress.setWindowModality(Qt::WindowModal);
-
-
     progress.setValue(0);
 
     //Generate report in non-embedded mode, saving images
     QString output=model->generateHTMLHeader();
     output.append(model->generateHTMLReportForNode(tabs,0,graphs,node,mode,plot,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress));
+    output.append("</body></html>");
 
     //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
     QTextDocument formattedOut;
@@ -399,6 +396,15 @@ void FormTablesGraphics::on_saveButton_clicked()
     //Cleanup the output a bit
     output2.replace(" -qt-block-indent:0;","");
 
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        QDir dir(absoluteImagePath);
+        dir.removeRecursively();
+        return;
+    }
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
     stream<<output2;
     stream.flush();
     file.close();

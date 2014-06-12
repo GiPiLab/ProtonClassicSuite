@@ -219,6 +219,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     plot->graph(1)->setPen(QPen(QColor(0,0,255)));
     plot->graph(1)->setBrush(QBrush(QColor(0,0,255,70)));
 
+
     plot->xAxis->setAutoTicks(true);
     plot->xAxis->setAutoTickLabels(true);
     plot->xAxis->setAutoTickStep(false);
