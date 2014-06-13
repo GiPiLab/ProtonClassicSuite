@@ -38,7 +38,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreSettings(void)
 {
-    QSettings settings("GiPiLab","ProtonClassicSuite");
+    QCoreApplication::setOrganizationName("GiPiLab");
+    QCoreApplication::setApplicationName("ProtonClassicSuite");
+    QSettings settings;
     if(settings.value("mainwindow/maximised",false).toBool()==true)
         setWindowState(Qt::WindowMaximized);
     this->move(settings.value("mainwindow/position",QVariant(this->pos())).toPoint());
@@ -56,7 +58,7 @@ void MainWindow::restoreSettings(void)
 
 void MainWindow::saveSettings(void)
 {
-    QSettings settings("GiPiLab","ProtonClassicSuite");
+    QSettings settings;
     settings.setValue("mainwindow/maximised",this->isMaximized());
     settings.setValue("mainwindow/position",this->pos());
     settings.setValue("mainwindow/size",this->size());
@@ -109,30 +111,32 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::onFormEditTreeWindowsDestroyed()
 {
     formEditTreeWin=NULL;
-    //qDebug()<<"Closed";
+    qDebug()<<"FormEditTree window closed";
 }
 
 void MainWindow::onFormManageAuditsWindowsDestroyed()
 {
     formManageAudits=NULL;
+    qDebug()<<"FormManageAudits window closed";
 }
 
 void MainWindow::onFormEditAuditWindowsDestroyed()
 {
     formEditAudit=NULL;
+    qDebug()<<"FormEditAudit window closed";
 }
 
 void MainWindow::onFormReportsWindowsDestroyed()
 {
     formReports=NULL;
+    qDebug()<<"FormReports window closed";
 }
 
 
-void MainWindow::onDialogTablesWindowsDestroyed(QObject *obj)
+void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
 {
-    //qDebug()<<listOfDialogTables;
     listOfFormTablesGraphics.removeAt(listOfFormTablesGraphics.indexOf((FormTablesGraphics *)obj));
-    //qDebug()<<listOfDialogTables;
+    qDebug()<<"FormTables window closed, remaining :"<<listOfFormTablesGraphics;
 }
 
 void MainWindow::on_actionManageAudits_triggered()
@@ -195,7 +199,7 @@ void MainWindow::on_actionTablesGraphics_triggered()
     dlg->show();
     listOfFormTablesGraphics.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onDialogTablesWindowsDestroyed(QObject *)));
+    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormTablesWindowsDestroyed(QObject *)));
 
     if(formManageAudits!=NULL)
     {
@@ -308,5 +312,10 @@ void MainWindow::on_actionReport_triggered()
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
         }
     }
+}
 
+void MainWindow::on_actionO_ptions_triggered()
+{
+    DialogOptions dialogOptions(this);
+    dialogOptions.exec();
 }

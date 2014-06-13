@@ -35,6 +35,7 @@
     </property>
     <addaction name="actionNewDb"/>
     <addaction name="actionOpenDb"/>
+    <addaction name="actionO_ptions"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuDataInput">
@@ -109,6 +110,11 @@
   <action name="actionOpenDb">
    <property name="text">
     <string>&amp;Ouvrir base</string>
+   </property>
+  </action>
+  <action name="actionO_ptions">
+   <property name="text">
+    <string>O&amp;ptions</string>
    </property>
   </action>
  </widget>

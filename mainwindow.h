@@ -9,6 +9,7 @@
 #include "formeditaudit.h"
 #include "formtablesgraphics.h"
 #include "formreports.h"
+#include "dialogoptions.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,7 +37,7 @@ private slots:
 
     void onFormEditAuditWindowsDestroyed();
 
-    void onDialogTablesWindowsDestroyed(QObject *);
+    void onFormTablesWindowsDestroyed(QObject *);
 
     void on_actionManageAudits_triggered();
 
@@ -51,6 +52,8 @@ private slots:
     void on_actionReport_triggered();
 
     void onFormReportsWindowsDestroyed();
+    void on_actionO_ptions_triggered();
+
 private:
 
     Ui::MainWindow *ui;

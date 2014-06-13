@@ -232,7 +232,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
     plot->xAxis->setRange(dataPlotNodeX.first()-0.8,dataPlotNodeX.last()+0.8);
 
-    // qDebug()<<minYRange<<maxYRange;
+    //qDebug()<<"Min YRange="<<minYRange<<" Max YRange="<<maxYRange;
     double padding=(maxYRange-minYRange)*0.2;
 
     plot->yAxis->setRange(minYRange-(padding*2),maxYRange+padding);
@@ -358,11 +358,11 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
         valuesDI.append(0.0);
         valuesRI.append(0.0);
     }
-    //qDebug()<<ticks;
-    //qDebug()<<"ValueDF = "<<valuesDF;
-    //qDebug()<<"ValueRF = "<<valuesRF;
-    //qDebug()<<"ValueDI = "<<valuesDI;
-    //qDebug()<<"ValueRI = "<<valuesRI;
+    /*qDebug()<<"G9:ticks = "<<ticks;
+    qDebug()<<"G9:ValueDF = "<<valuesDF;
+    qDebug()<<"G9:ValueRF = "<<valuesRF;
+    qDebug()<<"G9:ValueDI = "<<valuesDI;
+    qDebug()<<"G9:ValueRI = "<<valuesRI;*/
 
     dfBar->setData(ticks,valuesDF);
     rfBar->setData(ticks,valuesRF);

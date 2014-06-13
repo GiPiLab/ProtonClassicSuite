@@ -25,7 +25,6 @@ FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
     //interface = new QCPDocumentObject(this);
     //ui->textEdit->document()->documentLayout()->registerHandler(QCPDocumentObject::PlotTextFormat, interface);
     updateListOfAudits();
-    updateTextBrowser();
     ui->textEdit->moveCursor(QTextCursor::Start);
     //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
 }
@@ -185,7 +184,7 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
     Q_ASSERT(selectedAuditId>0);
-    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=NULL)
     {
@@ -199,7 +198,7 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
     ui->treeView->expandToDepth(1);
     QModelIndex rootIndex=model->getAttachedTreeModel()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
-    on_treeView_clicked(rootIndex);
+    updateTextBrowser();
 }
 
 void FormTablesGraphics::on_treeView_clicked(const QModelIndex &index)
@@ -388,13 +387,18 @@ void FormTablesGraphics::on_saveButton_clicked()
     output.append(model->generateHTMLReportForNode(tabs,0,graphs,node,mode,plot,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
-    //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(output);
-    QString output2=formattedOut.toHtml("utf-8");
+    QSettings settings;
+    QString settingStyle=settings.value("output/style","INLINE").toString();
+    if(settingStyle=="INLINE")
+    {
+        //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
+        QTextDocument formattedOut;
+        formattedOut.setHtml(output);
+        output=formattedOut.toHtml("utf-8");
 
-    //Cleanup the output a bit
-    output2.replace(" -qt-block-indent:0;","");
+        //Cleanup the output a bit
+        output.replace(" -qt-block-indent:0;","");
+    }
 
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
@@ -405,7 +409,7 @@ void FormTablesGraphics::on_saveButton_clicked()
     }
     QTextStream stream(&file);
     stream.setCodec("UTF-8");
-    stream<<output2;
+    stream<<output;
     stream.flush();
     file.close();
     progress.setValue(maximumProgressValue);

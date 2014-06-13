@@ -6,6 +6,8 @@
 
 QT       += core gui sql printsupport
 
+CONFIG += console
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ProtonClassicSuite
@@ -28,7 +30,8 @@ SOURCES += main.cpp\
     formedittree.cpp \
     formeditaudit.cpp \
     formmanageaudits.cpp \
-    formreports.cpp
+    formreports.cpp \
+    dialogoptions.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -43,7 +46,8 @@ HEADERS  += mainwindow.h \
     formedittree.h \
     formeditaudit.h \
     formmanageaudits.h \
-    formreports.h
+    formreports.h \
+    dialogoptions.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -51,4 +55,5 @@ FORMS    += mainwindow.ui \
     formedittree.ui \
     formeditaudit.ui \
     formmanageaudits.ui \
-    formreports.ui
+    formreports.ui \
+    dialogoptions.ui

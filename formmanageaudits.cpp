@@ -100,7 +100,7 @@ void FormManageAudits::on_addAuditButton_clicked()
 
     if(ok)
     {
-        //qDebug()<<"Add audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
+        qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
         PCx_AuditModel::addNewAudit(text,years,selectedTree);
         updateListOfAudits();
         emit(listOfAuditsChanged());
@@ -111,7 +111,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
 {
     if(index==-1 || ui->comboListOfAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
-    //qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
+    qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
     PCx_AuditInfos infos(selectedAuditId);
     if(infos.valid==true)
     {

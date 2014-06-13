@@ -10,7 +10,7 @@ QString PCx_AuditModel::getT1(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
-    QString output=QString("<table align='center' width='98%' cellpadding='5'>"
+    QString output=QString("\n<table align='center' width='98%' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
                            "<th>R&eacute;alis&eacute;</th><th>%/pr&eacute;vu</th>"
@@ -60,7 +60,7 @@ QString PCx_AuditModel::getT2(unsigned int node, DFRFDIRI mode) const
     Q_ASSERT(node>0);
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -156,7 +156,7 @@ QString PCx_AuditModel::getT2bis(unsigned int node, DFRFDIRI mode) const
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
     //The classes "t3xxx" are not a mistake
-    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -258,7 +258,7 @@ QString PCx_AuditModel::getT3(unsigned int node, DFRFDIRI mode) const
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
     //The classes "t2xxx" are not a mistake
-    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -319,7 +319,7 @@ QString PCx_AuditModel::getT3bis(unsigned int node, DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -385,7 +385,7 @@ QString PCx_AuditModel::getT4(unsigned int node, DFRFDIRI mode) const
     Q_ASSERT(node>0);
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table align='center' width='65%' cellpadding='5'>"
+    QString output=QString("\n<table align='center' width='65%' cellpadding='5'>"
                            "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>au sein de la Collectivit&eacute; "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t4entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
@@ -451,7 +451,7 @@ QString PCx_AuditModel::getT5(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
-    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t5entete'><td colspan=6 align='center'>"
                            "<b>Analyse en base 100 du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -580,7 +580,7 @@ QString PCx_AuditModel::getT6(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
-    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t6entete'><td colspan=6 align='center'>"
                            "<b>Analyse en base 100 du compte administratif de [ %1 ]"
                            "<br>(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -661,7 +661,7 @@ QString PCx_AuditModel::getT7(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
-    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t7entete'><td colspan=5 align='center'>"
                            "<b>Transcription en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>"
                            "[ %1 ] (<span style='color:#7c0000'>%2</span>)<br><u>sur la base d'une &eacute;quivalence de"
@@ -713,7 +713,7 @@ QString PCx_AuditModel::getT8(unsigned int node, DFRFDIRI mode) const
     Q_ASSERT(node>0);
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
-    QString output=QString("<table width='50%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='50%' align='center' cellpadding='5'>"
                            "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
             .arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
@@ -766,7 +766,7 @@ QString PCx_AuditModel::getT9(unsigned int node, DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(modetoTableString(mode)).arg(auditId);
 
-    QString output=QString("<table width='60%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='60%' align='center' cellpadding='5'>"
                            "<tr class='t9entete'><td colspan=2 align='center'>"
                            "<b>&Eacute;quivalences moyennes en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>[ %1 ]"
                            " (<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b>"
@@ -817,7 +817,7 @@ QString PCx_AuditModel::getT10(unsigned int node) const
 {
     Q_ASSERT(node>0);
 
-    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
@@ -884,7 +884,7 @@ QString PCx_AuditModel::getT11(unsigned int node) const
 {
     Q_ASSERT(node>0);
 
-    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS d'INVESTISSEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
@@ -951,7 +951,7 @@ QString PCx_AuditModel::getT12(unsigned int node) const
 {
     Q_ASSERT(node>0);
 
-    QString output=QString("<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS BUDG&Eacute;TAIRES de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
@@ -1021,40 +1021,40 @@ QString PCx_AuditModel::getT12(unsigned int node) const
 
 QString PCx_AuditModel::getTabRecap(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT1(node,mode)+"<br>"+getT4(node,mode)+"<br>"+getT8(node,mode)+"<br>";
+    QString out=getT1(node,mode)+"<br>\n"+getT4(node,mode)+"<br>\n"+getT8(node,mode)+"<br>\n";
     return out;
 }
 
 QString PCx_AuditModel::getTabResults(unsigned int node) const
 {
-    QString out=getT10(node)+"<br>"+getT11(node)+"<br>"+getT12(node)+"<br>";
+    QString out=getT10(node)+"<br>\n"+getT11(node)+"<br>\n"+getT12(node)+"<br>\n";
     return out;
 }
 
 QString PCx_AuditModel::getTabEvolution(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT2bis(node,mode)+"<br>"+getT3bis(node,mode)+"<br>";
+    QString out=getT2bis(node,mode)+"<br>\n"+getT3bis(node,mode)+"<br>\n";
     return out;
 }
 
 
 QString PCx_AuditModel::getTabEvolutionCumul(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT2(node,mode)+"<br>"+getT3(node,mode)+"<br>";
+    QString out=getT2(node,mode)+"<br>\n"+getT3(node,mode)+"<br>\n";
     return out;
 }
 
 
 QString PCx_AuditModel::getTabBase100(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT5(node,mode)+"<br>"+getT6(node,mode)+"<br>";
+    QString out=getT5(node,mode)+"<br>\n"+getT6(node,mode)+"<br>\n";
     return out;
 }
 
 
 QString PCx_AuditModel::getTabJoursAct(unsigned int node, DFRFDIRI mode) const
 {
-    QString out=getT7(node,mode)+"<br>"+getT9(node,mode)+"<br>";
+    QString out=getT7(node,mode)+"<br>\n"+getT9(node,mode)+"<br>\n";
     return out;
 }
 
@@ -1063,42 +1063,36 @@ QString PCx_AuditModel::getCSS() const
 {
     //Original PCA stylesheet with slight incoherencies between t2, t2bis, t3 and t3bis
     QString css=
-            "body{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
-            "\n.bg1{padding-left:5px;padding-right:5px;background-color:#ABC;}"
-            ".bg2{padding-left:5px;padding-right:5px;background-color:#CAC;}"
-            ".bg3{padding-left:5px;padding-right:5px;background-color:#CDB;}"
-            ".req1{background-color:#FAB;padding:5px;}"
-            ".req1normal{background-color:#FAB;}"
-            ".req2{background-color:#BFA;padding:5px;}"
-            ".req2normal{background-color:#BFA;}"
-            ".req3{background-color:#BAF;padding:5px;}"
-            ".req3normal{background-color:#BAF;}"
-            "a:visited{font-weight:700;}"
-            "dd.synop{margin:0;}"
-            "dt.synop{font-weight:700;padding-top:1em;}"
-            "h1{color:#A00;}"
-            "h2{color:navy;}"
-            "h3{color:green;font-size:larger;}"
-            "li{line-height:30px;}"
-            "table{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
-            "td.t1annee,td.t3annee{background-color:#b3b3b3;}"
-            "td.t1pourcent{background-color:#b3b3b3;color:#FFF;}"
-            "td.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee{background-color:#e6e6e6;}"
-            "td.t2annee{background-color:#b3b3b3;color:green;}"
-            "td.t2pourcent,td.t3pourcent{background-color:#e6e6e6;color:#000;}"
-            "td.t5pourcent,td.t6pourcent{background-color:#b3b3b3;color:#000;}"
-            "td.t5valeur,td.t6valeur,td.t7valeur{background-color:#b3b3b3;color:#000;font-weight:400;}"
-            "td.t6annee{background-color:#e6e6e6;color:green;}"
-            "td.t7pourcent{background-color:#666;color:#FFF;}"
-            "td.t8pourcent{background-color:#e6e6e6;text-align:center;color:#000;}"
-            "td.t8valeur{background-color:#e6e6e6;font-weight:400;text-align:center;color:#000;}"
-            "td.t9pourcent{background-color:#666;text-align:center;color:#FFF;}"
-            "td.t9valeur{background-color:#666;color:#FFF;font-weight:400;text-align:center;}"
-            "tr.t1entete,tr.t3entete,td.t9annee{background-color:#b3b3b3;text-align:center;}"
-            "tr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
-            "tr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
-            "tr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
-            "tr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
+            "\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
+            "\n.req1{background-color:#FAB;padding:5px;}"
+            "\n.req1normal{background-color:#FAB;}"
+            "\n.req2{background-color:#BFA;padding:5px;}"
+            "\n.req2normal{background-color:#BFA;}"
+            "\n.req3{background-color:#BAF;padding:5px;}"
+            "\n.req3normal{background-color:#BAF;}"
+            "\nh1{color:#A00;}"
+            "\nh2{color:navy;}"
+            "\nh3{color:green;font-size:larger;}"
+            "\ndiv.g{margin-left:auto;margin-right:auto;page-break-inside:avoid;}"
+            "\ntable{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
+            "\ntd.t1annee,td.t3annee{background-color:#b3b3b3;}"
+            "\ntd.t1pourcent{background-color:#b3b3b3;color:#FFF;}"
+            "\ntd.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee{background-color:#e6e6e6;}"
+            "\ntd.t2annee{background-color:#b3b3b3;color:green;}"
+            "\ntd.t2pourcent,td.t3pourcent{background-color:#e6e6e6;color:#000;}"
+            "\ntd.t5pourcent,td.t6pourcent{background-color:#b3b3b3;color:#000;}"
+            "\ntd.t5valeur,td.t6valeur,td.t7valeur{background-color:#b3b3b3;color:#000;font-weight:400;}"
+            "\ntd.t6annee{background-color:#e6e6e6;color:green;}"
+            "\ntd.t7pourcent{background-color:#666;color:#FFF;}"
+            "\ntd.t8pourcent{background-color:#e6e6e6;text-align:center;color:#000;}"
+            "\ntd.t8valeur{background-color:#e6e6e6;font-weight:400;text-align:center;color:#000;}"
+            "\ntd.t9pourcent{background-color:#666;text-align:center;color:#FFF;}"
+            "\ntd.t9valeur{background-color:#666;color:#FFF;font-weight:400;text-align:center;}"
+            "\ntr.t1entete,tr.t3entete,td.t9annee{background-color:#b3b3b3;text-align:center;}"
+            "\ntr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
+            "\ntr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
+            "\ntr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
+            "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
 
     return css;
 }

@@ -101,7 +101,7 @@ void FormReports::on_comboListAudits_activated(int index)
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
     Q_ASSERT(selectedAuditId>0);
-    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=NULL)
     {
@@ -144,7 +144,7 @@ void FormReports::on_saveButton_clicked()
         selectedNodes.append(idx.data(Qt::UserRole+1).toUInt());
     }
 
-    //qDebug()<<selectedNodes;
+    qDebug()<<"Selected nodes : "<<selectedNodes;
     QList<unsigned int>sortedSelectedNodes;
     if(ui->radioButtonBFS->isChecked())
         sortedSelectedNodes=model->getAttachedTreeModel()->sortNodesBFS(selectedNodes);
@@ -155,7 +155,7 @@ void FormReports::on_saveButton_clicked()
         QMessageBox::warning(this,tr("Attention"),tr("Choisissez l'ordre d'affichage des noeuds sélectionnés dans le rapport !"));
         return;
     }
-    //qDebug()<<"Sorted : "<<sortedSelectedNodes;
+    qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
 
 
     QList<QListWidgetItem *>selectedTables=ui->listTables->selectedItems();
@@ -165,17 +165,17 @@ void FormReports::on_saveButton_clicked()
 
     foreach(QListWidgetItem *item, selectedTables)
     {
-        //qDebug()<<"Selected table "<<item->data(Qt::UserRole+1).toUInt();
+        qDebug()<<"Selecting table "<<item->data(Qt::UserRole+1).toUInt();
         bitFieldTables|=item->data(Qt::UserRole+1).toUInt();
     }
 
     foreach(QListWidgetItem *item, selectedGraphics)
     {
-        //qDebug()<<"Selected graphic "<<item->data(Qt::UserRole+1).toUInt();
+        qDebug()<<"Selecting graphic "<<item->data(Qt::UserRole+1).toUInt();
         bitFieldGraphics|=item->data(Qt::UserRole+1).toUInt();
     }
-    //qDebug()<<"Tables 1= "<<bitFieldTables;
-    //qDebug()<<"Graphics 1= "<<bitFieldGraphics;
+    qDebug()<<"Selected tables bitfield = "<<bitFieldTables;
+    qDebug()<<"Selected graphics bitfield = "<<bitFieldGraphics;
 
     if(bitFieldGraphics==0 && bitFieldTables==0)
     {
@@ -193,15 +193,15 @@ void FormReports::on_saveButton_clicked()
         BFGraphicsTemp|=bitFieldGraphics & G9;
     }
 
-    //qDebug()<<"Tables Temp = "<<BFTablesTemp;
-    //qDebug()<<"Graphics Temp = "<<BFGraphicsTemp;
+    qDebug()<<"Mode-independant selected tables bitfield = "<<BFTablesTemp;
+    qDebug()<<"Mode-independant selected graphics bitfield = "<<BFGraphicsTemp;
 
     //Now these fields contain only mode-dependant tables/graphics
     bitFieldTables&=~(T10+T11+T12);
     bitFieldGraphics&=~G9;
 
-    //qDebug()<<"Tables 2= "<<bitFieldTables;
-    //qDebug()<<"Graphics 2= "<<bitFieldGraphics;
+    qDebug()<<"Mode-dependant selected tables bitfield = "<<bitFieldTables;
+    qDebug()<<"Mode-dependant selected graphics bitfield = "<<bitFieldGraphics;
 
     QString output=model->generateHTMLHeader();
     QList<DFRFDIRI> listModes;
@@ -300,15 +300,20 @@ void FormReports::on_saveButton_clicked()
         output.append("<br><br><br><br>");
     }
     output.append("</body></html>");
-    qDebug()<<"Report generated in "<<timer.elapsed()<<"ms";
 
-    //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(output);
-    QString output2=formattedOut.toHtml("utf-8");
+    QSettings settings;
+    QString settingStyle=settings.value("output/style","INLINE").toString();
+    if(settingStyle=="INLINE")
+    {
+        //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
+        QTextDocument formattedOut;
+        formattedOut.setHtml(output);
+        output=formattedOut.toHtml("utf-8");
 
-    //Cleanup the output a bit
-    output2.replace(" -qt-block-indent:0;","");
+        //Cleanup the output a bit
+        output.replace(" -qt-block-indent:0;","");
+    }
+
     if(!progress.wasCanceled())
         progress.setValue(maximumProgressValue-1);
     else
@@ -317,6 +322,8 @@ void FormReports::on_saveButton_clicked()
         dir.removeRecursively();
         return;
     }
+
+    qDebug()<<"Report generated in "<<timer.elapsed()<<"ms";
 
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
@@ -328,7 +335,7 @@ void FormReports::on_saveButton_clicked()
 
     QTextStream stream(&file);
     stream.setCodec("UTF-8");
-    stream<<output2;
+    stream<<output;
     stream.flush();
     file.close();
 
