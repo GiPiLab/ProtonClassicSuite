@@ -472,7 +472,7 @@ QString PCx_TreeModel::idTreeToName(unsigned int treeId)
     }
     else
     {
-        qDebug()<<"Missing tree";
+        qCritical()<<"Missing tree";
         return NULL;
     }
 }
@@ -495,7 +495,7 @@ bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
     }
     else
     {
-        qDebug()<<"Bad Tree";
+        qCritical()<<"Bad Tree";
         return false;
     }
     return updateTree();
@@ -531,7 +531,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     stream >> arow>>acol>>roleDataMap;
 
     dragId=roleDataMap[Qt::UserRole+1].toUInt();
-    qDebug()<<"DRAG ID = "<<dragId;
+    //qDebug()<<"DRAG ID = "<<dragId;
     if(dragId==1)
     {
        // qDebug()<<"NOT DRAGGING THE ROOT";

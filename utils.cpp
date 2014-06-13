@@ -4,6 +4,7 @@
 #include <QtSql>
 #include <QApplication>
 
+
 void die(int retcode)
 {
     QSqlDatabase::database().close();
@@ -24,14 +25,14 @@ void initCurrentDb(void)
     query.exec("create table if not exists index_arbres(id integer primary key autoincrement, nom text unique not null, termine integer not null default 0, le_timestamp text default current_timestamp)");
     if(query.numRowsAffected()==-1)
     {
-        qCritical()<<query.lastError().text();
+        qFatal(query.lastError().text().toLocal8Bit());
         exit(-1);
     }
 
     query.exec("create table if not exists index_audits(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, annees text not null, termine integer not null default 0, le_timestamp text default current_timestamp)");
     if(query.numRowsAffected()==-1)
     {
-        qCritical()<<query.lastError().text();
+        qFatal(query.lastError().text().toLocal8Bit());
         exit(-1);
     }
 }
@@ -44,7 +45,7 @@ bool loadDb(const QString &databaseName)
 
     if(!db.open())
     {
-        qCritical()<<db.lastError();
+        qFatal(db.lastError().text().toLocal8Bit());
         exit(-1);
     }
     return true;
@@ -62,3 +63,15 @@ QString newDb()
     tmpDbName.prepend(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
     return tmpDbName;
 }
+
+QString generateUniqueFileName(const QString &suffix)
+{
+    QString imageName=QUuid::createUuid().toString();
+    imageName.chop(1);
+    imageName=imageName.remove(0,1).append(suffix);
+    return imageName;
+}
+
+
+
+

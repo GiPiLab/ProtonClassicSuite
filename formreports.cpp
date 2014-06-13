@@ -309,6 +309,14 @@ void FormReports::on_saveButton_clicked()
 
     //Cleanup the output a bit
     output2.replace(" -qt-block-indent:0;","");
+    if(!progress.wasCanceled())
+        progress.setValue(maximumProgressValue-1);
+    else
+    {
+        QDir dir(absoluteImagePath);
+        dir.removeRecursively();
+        return;
+    }
 
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {

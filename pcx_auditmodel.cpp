@@ -545,7 +545,7 @@ QString PCx_AuditModel::modetoTableString(DFRFDIRI mode) const
     case RI:
         return "RI";
     default:
-        qDebug()<<"Invalid mode specified !";
+        qCritical()<<"Invalid mode specified !";
     }
     return QString();
 }
@@ -565,7 +565,7 @@ QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode) const
     case RI:
         return tr("Recettes d'investissement");
     default:
-        qDebug()<<"Invalid mode specified !";
+        qCritical()<<"Invalid mode specified !";
     }
     return QString();
 }
@@ -583,7 +583,7 @@ QString PCx_AuditModel::OREDtoTableString(ORED ored) const
     case disponibles:
         return "disponibles";
     default:
-        qDebug()<<"Invalid ORED specified !";
+        qCritical()<<"Invalid ORED specified !";
     }
     return QString();
 }
@@ -601,7 +601,7 @@ QString PCx_AuditModel::OREDtoCompleteString(ORED ored) const
     case disponibles:
         return tr("disponible");
     default:
-        qDebug()<<"Invalid ORED specified !";
+        qCritical()<<"Invalid ORED specified !";
     }
     return QString();
 }
@@ -893,9 +893,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
             if(bitFieldGraphics & G1)
             {
                 output.append("<div align='center'><b>"+getG1(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -908,16 +906,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
             if(bitFieldGraphics & G2)
             {
                 output.append("<div align='center'><b>"+getG2(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -930,17 +924,13 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
 
             if(bitFieldGraphics & G3)
             {
                 output.append("<div align='center'><b>"+getG3(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -954,16 +944,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
 
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
             if(bitFieldGraphics & G4)
             {
                 output.append("<div align='center'><b>"+getG4(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -976,16 +962,14 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
+
+            QCoreApplication::processEvents( QEventLoop::AllEvents,100);
 
             if(bitFieldGraphics & G5)
             {
                 output.append("<div align='center'><b>"+getG5(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -998,18 +982,13 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
 
             if(bitFieldGraphics & G6)
             {
-               // QCoreApplication::processEvents( QEventLoop::AllEvents);
                 output.append("<div align='center'><b>"+getG6(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -1022,16 +1001,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
             if(bitFieldGraphics & G7)
             {
                 output.append("<div align='center'><b>"+getG7(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -1044,16 +1019,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
             if(bitFieldGraphics & G8)
             {
                 output.append("<div align='center'><b>"+getG8(selectedNode,mode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
@@ -1066,16 +1037,12 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
                               .arg(favoriteGraphicsWidth).arg(favoriteGraphicsHeight).arg(imageName));
                 if(progress!=NULL)
                     progress->setValue(++progressValue);
-                QCoreApplication::processEvents( QEventLoop::AllEvents,100);
-
             }
 
             if(bitFieldGraphics & G9)
             {
                 output.append("<div align='center'><b>"+getG9(selectedNode,plot)+"</b><br>");
-                QString imageName=QUuid::createUuid().toString();
-                imageName.chop(1);
-                imageName=imageName.remove(0,1).append(".jpg");
+                QString imageName=generateUniqueFileName(".jpg");
                 QString imageAbsoluteName=imageName;
                 imageName.prepend(relativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");

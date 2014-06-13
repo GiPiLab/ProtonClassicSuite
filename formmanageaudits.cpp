@@ -59,7 +59,7 @@ void FormManageAudits::on_addAuditButton_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qDebug()<<"No tree";
+        qCritical()<<"No finished tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();

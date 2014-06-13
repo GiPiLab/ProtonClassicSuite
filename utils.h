@@ -11,6 +11,8 @@ QString newDb();
 bool loadDb(const QString &databaseName);
 void initCurrentDb(void);
 QString formatDouble(double num,unsigned int decimals=2);
+QString generateUniqueFileName(const QString &suffix="");
+
 
 
 
