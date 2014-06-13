@@ -388,7 +388,7 @@ void FormTablesGraphics::on_saveButton_clicked()
     output.append("</body></html>");
 
     QSettings settings;
-    QString settingStyle=settings.value("output/style","INLINE").toString();
+    QString settingStyle=settings.value("output/style","CSS").toString();
     if(settingStyle=="INLINE")
     {
         //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)

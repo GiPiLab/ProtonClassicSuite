@@ -876,8 +876,8 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
 
             QSettings settings;
             QString imageFormat=settings.value("output/imageFormat","png").toString();
-            const char *imgFormat;
-            int quality;
+            const char *imgFormat="png";
+            int quality=-1;
             if(imageFormat=="png")
             {
                 imgFormat="png";
@@ -888,7 +888,7 @@ QString PCx_AuditModel::generateHTMLReportForNode(quint8 bitFieldPagesOfTables, 
             else if(imageFormat=="jpg")
             {
                 imgFormat="jpeg";
-                quality=100;
+                quality=96;
             }
             else
             {
