@@ -1,7 +1,8 @@
 #ifndef PCX_TYPEMODEL_H
 #define PCX_TYPEMODEL_H
-#include <QtGui>
-#include <QtSql>
+
+#include <QSqlTableModel>
+#include <QSqlQueryModel>
 
 class PCx_TypeModel:public QObject
 {

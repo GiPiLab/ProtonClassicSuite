@@ -1,8 +1,13 @@
 #include "utils.h"
 
-#include <QtGui>
-#include <QtSql>
 #include <QApplication>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlDatabase>
+#include <QUuid>
+#include <QStandardPaths>
+#include <QDir>
+
 
 
 void die(int retcode)

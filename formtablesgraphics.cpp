@@ -2,7 +2,6 @@
 #include "ui_formtablesgraphics.h"
 #include "utils.h"
 #include <QScrollBar>
-#include <QPrinter>
 #include <QPrintDialog>
 #include <QFileDialog>
 //#include "QCustomPlot/qcpdocumentobject.h"

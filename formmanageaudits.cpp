@@ -2,9 +2,8 @@
 #include <QInputDialog>
 #include "formmanageaudits.h"
 #include "ui_formmanageaudits.h"
-#include "pcx_treemodel.h"
 #include "pcx_auditmodel.h"
-#include "pcx_auditinfos.h"
+
 
 FormManageAudits::FormManageAudits(QWidget *parent):
     QWidget(parent),

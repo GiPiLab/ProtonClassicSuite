@@ -1,7 +1,6 @@
 #ifndef FORMEDITAUDIT_H
 #define FORMEDITAUDIT_H
 
-#include <QtSql>
 #include "pcx_auditmodel.h"
 #include "auditdatadelegate.h"
 

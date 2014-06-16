@@ -4,12 +4,14 @@
 #include <QMainWindow>
 #include <QMdiSubWindow>
 #include <QList>
+
 #include "formmanageaudits.h"
 #include "formedittree.h"
 #include "formeditaudit.h"
 #include "formtablesgraphics.h"
 #include "formreports.h"
 #include "dialogoptions.h"
+#include "utils.h"
 
 namespace Ui {
 class MainWindow;

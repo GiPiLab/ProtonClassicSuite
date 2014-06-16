@@ -1,8 +1,7 @@
 #include "auditdatadelegate.h"
 #include "pcx_auditmodel.h"
 #include "utils.h"
-#include <QtGui>
-#include <QApplication>
+
 #include <QDoubleSpinBox>
 #include <float.h>
 

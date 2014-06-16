@@ -1,7 +1,6 @@
 #include "formeditaudit.h"
 #include "ui_formeditaudit.h"
-#include "pcx_auditmodel.h"
-#include "auditdatadelegate.h"
+
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
     QWidget(parent),

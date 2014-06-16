@@ -1,6 +1,8 @@
 #include "pcx_auditmodel.h"
 #include "utils.h"
 #include <float.h>
+#include <QSqlQuery>
+#include <QSqlError>
 
 
 QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const

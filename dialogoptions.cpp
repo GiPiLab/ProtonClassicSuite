@@ -1,7 +1,8 @@
 #include "dialogoptions.h"
 #include "ui_dialogoptions.h"
-#include <QtGui>
 
+#include <QSettings>
+#include <QDebug>
 
 DialogOptions::DialogOptions(QWidget *parent) :
     QDialog(parent),

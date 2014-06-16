@@ -1,11 +1,9 @@
 #include "mainwindow.h"
 #include "utils.h"
 #include <QApplication>
-#include <QtSql/QSqlDatabase>
+#include <QSqlDatabase>
 #include <QTranslator>
 #include <QLibraryInfo>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
 #include <QDebug>
 #include <QLocale>
 #include <time.h>

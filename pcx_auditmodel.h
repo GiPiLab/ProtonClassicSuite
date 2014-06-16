@@ -1,8 +1,6 @@
 #ifndef PCX_AUDITMODEL_H
 #define PCX_AUDITMODEL_H
 
-#include <QtGui>
-#include <QtSql>
 #include "QCustomPlot/qcustomplot.h"
 #include "pcx_auditinfos.h"
 #include "pcx_treemodel.h"

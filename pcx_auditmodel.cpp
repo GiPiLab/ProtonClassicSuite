@@ -1,6 +1,8 @@
 #include "pcx_auditmodel.h"
 #include "utils.h"
 #include <QMessageBox>
+#include <QSqlQuery>
+#include <QSqlError>
 
 PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly) :
     QObject(parent)

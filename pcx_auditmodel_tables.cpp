@@ -1,5 +1,7 @@
 #include "pcx_auditmodel.h"
 #include "utils.h"
+#include <QSqlQuery>
+#include <QSqlError>
 
 
 //NOTE : Perhaps separate HTML generation from model (as in a true MVC approach), but it may decrease performances for the same result

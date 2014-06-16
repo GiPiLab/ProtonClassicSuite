@@ -1,9 +1,11 @@
 #include "pcx_treemodel.h"
 #include "utils.h"
 #include "pcx_typemodel.h"
-#include <QtGui>
-#include <QtSql>
 #include <QMessageBox>
+#include <QDateTime>
+#include <QSqlQuery>
+#include <QDebug>
+#include <QSqlError>
 
 
 PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, QObject *parent):QStandardItemModel(parent)

@@ -1,8 +1,9 @@
 #include "pcx_typemodel.h"
 #include "utils.h"
-#include <QtGui>
-#include <QtSql>
 #include <QMessageBox>
+#include <QDebug>
+#include <QSqlQuery>
+#include <QSqlError>
 
 PCx_TypeModel::PCx_TypeModel(unsigned int treeId, bool readOnly, QObject *parent):QObject(parent)
 {

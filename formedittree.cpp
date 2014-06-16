@@ -3,8 +3,9 @@
 #include "ui_formedittree.h"
 #include "utils.h"
 #include "pcx_treemodel.h"
-#include <QtSql>
-#include <QtGui>
+#include <QDebug>
+#include <QSqlRecord>
+#include <QSqlField>
 #include <QMessageBox>
 #include <QInputDialog>
 

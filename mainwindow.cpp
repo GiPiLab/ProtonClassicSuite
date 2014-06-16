@@ -1,18 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "utils.h"
-#include "formedittree.h"
-#include <QFileDialog>
-#include <QString>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
-#include <QDebug>
-#include <QMessageBox>
-#include <QList>
-#include <QMdiSubWindow>
 
-
-//TODO : MANAGE EMPTY DATABASE GRAYED MENUS
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

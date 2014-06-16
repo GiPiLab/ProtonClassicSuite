@@ -1,6 +1,8 @@
 #ifndef FORMDISPLAYTREE_H
 #define FORMDISPLAYTREE_H
 
+#include <QWidget>
+
 #include "pcx_treemodel.h"
 
 namespace Ui {

@@ -1,12 +1,7 @@
 #ifndef FORMEDITTREE_H
 #define FORMEDITTREE_H
 
-#include <QDialog>
-#include <QList>
 #include <QMdiArea>
-#include <QtSql/QSqlTableModel>
-#include <QtSql/QSqlQueryModel>
-
 #include "formdisplaytree.h"
 #include "pcx_treemodel.h"
 

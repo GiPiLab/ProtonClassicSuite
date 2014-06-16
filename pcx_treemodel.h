@@ -7,7 +7,6 @@
 #include <QList>
 #include <QModelIndex>
 #include <QString>
-#include <QtGlobal>
 #include <QSqlTableModel>
 #include <QMimeData>
 

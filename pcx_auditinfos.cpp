@@ -1,8 +1,8 @@
 #include "pcx_auditinfos.h"
 #include "pcx_treemodel.h"
 #include "utils.h"
-#include <QtSql>
-#include <QtGui>
+#include <QSqlQuery>
+#include <QSet>
 
 PCx_AuditInfos::PCx_AuditInfos()
 {
