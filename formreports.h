@@ -2,6 +2,7 @@
 #define FORMREPORTS_H
 
 #include "pcx_auditmodel.h"
+#include "pcx_report.h"
 #include "QCustomPlot/qcustomplot.h"
 #include <QWidget>
 
@@ -54,6 +55,7 @@ private:
     Ui::FormReports *ui;
     void updateListOfAudits();
     PCx_AuditModel *model;
+    PCx_Report *report;
     void populateLists();
     QCustomPlot *plot;
 };

@@ -3,6 +3,7 @@
 #include "formmanageaudits.h"
 #include "ui_formmanageaudits.h"
 #include "pcx_auditmodel.h"
+#include <QDebug>
 
 
 FormManageAudits::FormManageAudits(QWidget *parent):
@@ -24,7 +25,7 @@ void FormManageAudits::updateListOfAudits()
 {
     ui->comboListOfAudits->clear();
 
-    QList<QPair<unsigned int,QString> > listOfAudits=PCx_AuditModel::getListOfAudits(AllAudits);
+    QList<QPair<unsigned int,QString> > listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::AllAudits);
     ui->groupBoxAudits->setEnabled(!listOfAudits.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfAudits)

@@ -22,16 +22,17 @@ SOURCES += main.cpp\
     pcx_auditinfos.cpp \
     auditdatadelegate.cpp \
     utils.cpp \
-    pcx_auditmodel_tables.cpp \
     QCustomPlot/qcustomplot.cpp \
-    pcx_auditmodel_graphics.cpp \
     formtablesgraphics.cpp \
     formdisplaytree.cpp \
     formedittree.cpp \
     formeditaudit.cpp \
     formmanageaudits.cpp \
     formreports.cpp \
-    dialogoptions.cpp
+    dialogoptions.cpp \
+    pcx_tables.cpp \
+    pcx_report.cpp \
+    pcx_graphics.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -47,7 +48,10 @@ HEADERS  += mainwindow.h \
     formeditaudit.h \
     formmanageaudits.h \
     formreports.h \
-    dialogoptions.h
+    dialogoptions.h \
+    pcx_tables.h \
+    pcx_report.h \
+    pcx_graphics.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \

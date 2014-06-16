@@ -18,7 +18,10 @@ FormReports::~FormReports()
 {
     delete ui;
     if(model!=NULL)
+    {
         delete model;
+        delete report;
+    }
     delete plot;
 }
 
@@ -26,52 +29,52 @@ void FormReports::populateLists()
 {
     QListWidgetItem *item;
     item=new QListWidgetItem(tr("Récapitulatif"),ui->listTables);
-    item->setData(Qt::UserRole+1,T1);
+    item->setData(Qt::UserRole+1,PCx_Tables::T1);
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T2);
+    item->setData(Qt::UserRole+1,PCx_Tables::T2);
     item=new QListWidgetItem(tr("Évolution du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T2BIS);
+    item->setData(Qt::UserRole+1,PCx_Tables::T2BIS);
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T3);
+    item->setData(Qt::UserRole+1,PCx_Tables::T3);
     item=new QListWidgetItem(tr("Évolution du compte administratif de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T3BIS);
+    item->setData(Qt::UserRole+1,PCx_Tables::T3BIS);
     item=new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"),ui->listTables);
-    item->setData(Qt::UserRole+1,T4);
+    item->setData(Qt::UserRole+1,PCx_Tables::T4);
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T5);
+    item->setData(Qt::UserRole+1,PCx_Tables::T5);
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T6);
+    item->setData(Qt::UserRole+1,PCx_Tables::T6);
     item=new QListWidgetItem(tr("Transcription en \"jours/activité\" de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T7);
+    item->setData(Qt::UserRole+1,PCx_Tables::T7);
     item=new QListWidgetItem(tr("Moyennes budgétaires de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T8);
+    item->setData(Qt::UserRole+1,PCx_Tables::T8);
     item=new QListWidgetItem(tr("Equivalences moyennes en \"jours activité\" de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T9);
+    item->setData(Qt::UserRole+1,PCx_Tables::T9);
     item=new QListWidgetItem(tr("Résultats de fonctionnement de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T10);
+    item->setData(Qt::UserRole+1,PCx_Tables::T10);
     item=new QListWidgetItem(tr("Résultats d'investissement de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T11);
+    item->setData(Qt::UserRole+1,PCx_Tables::T11);
     item=new QListWidgetItem(tr("Résultats budgétaire de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,T12);
+    item->setData(Qt::UserRole+1,PCx_Tables::T12);
 
     item=new QListWidgetItem(tr("Évolution comparée du prévu de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G1);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G1);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du prévu de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G2);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G2);
     item=new QListWidgetItem(tr("Évolution comparée du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G3);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G3);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G4);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G4);
     item=new QListWidgetItem(tr("Évolution comparée de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G5);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G5);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G6);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G6);
     item=new QListWidgetItem(tr("Évolution comparée du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G7);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G7);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G8);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,G9);
+    item->setData(Qt::UserRole+1,PCx_Graphics::G9);
 }
 
 void FormReports::onListOfAuditsChanged()
@@ -84,7 +87,7 @@ void FormReports::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::FinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;
@@ -106,8 +109,10 @@ void FormReports::on_comboListAudits_activated(int index)
     if(model!=NULL)
     {
         delete model;
+        delete report;
     }
     model=new PCx_AuditModel(selectedAuditId,this);
+    report=new PCx_Report(model);
     QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(model->getAttachedTreeModel());
     delete m;
@@ -185,34 +190,34 @@ void FormReports::on_saveButton_clicked()
 
     //Isolate mode-independant tables and graphics
     quint16 BFTablesTemp=0,BFGraphicsTemp=0;
-    if(bitFieldTables & T10 || bitFieldTables & T11 || bitFieldTables & T12 || bitFieldGraphics & G9)
+    if(bitFieldTables & PCx_Tables::T10 || bitFieldTables & PCx_Tables::T11 || bitFieldTables & PCx_Tables::T12 || bitFieldGraphics & PCx_Graphics::G9)
     {
-        BFTablesTemp|=bitFieldTables & T10;
-        BFTablesTemp|=bitFieldTables & T11;
-        BFTablesTemp|=bitFieldTables & T12;
-        BFGraphicsTemp|=bitFieldGraphics & G9;
+        BFTablesTemp|=bitFieldTables & PCx_Tables::T10;
+        BFTablesTemp|=bitFieldTables & PCx_Tables::T11;
+        BFTablesTemp|=bitFieldTables & PCx_Tables::T12;
+        BFGraphicsTemp|=bitFieldGraphics & PCx_Graphics::G9;
     }
 
     qDebug()<<"Mode-independant selected tables bitfield = "<<BFTablesTemp;
     qDebug()<<"Mode-independant selected graphics bitfield = "<<BFGraphicsTemp;
 
     //Now these fields contain only mode-dependant tables/graphics
-    bitFieldTables&=~(T10+T11+T12);
-    bitFieldGraphics&=~G9;
+    bitFieldTables&=~(PCx_Tables::T10+PCx_Tables::T11+PCx_Tables::T12);
+    bitFieldGraphics&=~PCx_Graphics::G9;
 
     qDebug()<<"Mode-dependant selected tables bitfield = "<<bitFieldTables;
     qDebug()<<"Mode-dependant selected graphics bitfield = "<<bitFieldGraphics;
 
-    QString output=model->generateHTMLHeader();
-    QList<DFRFDIRI> listModes;
+    QString output=report->generateHTMLHeader();
+    QList<PCx_AuditModel::DFRFDIRI> listModes;
     if(ui->checkBoxDF->isChecked())
-        listModes.append(DF);
+        listModes.append(PCx_AuditModel::DF);
     if(ui->checkBoxRF->isChecked())
-        listModes.append(RF);
+        listModes.append(PCx_AuditModel::RF);
     if(ui->checkBoxDI->isChecked())
-        listModes.append(DI);
+        listModes.append(PCx_AuditModel::DI);
     if(ui->checkBoxRI->isChecked())
-        listModes.append(RI);
+        listModes.append(PCx_AuditModel::RI);
 
     if(listModes.isEmpty() && (bitFieldGraphics || bitFieldTables))
     {
@@ -282,11 +287,11 @@ void FormReports::on_saveButton_clicked()
         if(BFTablesTemp || BFGraphicsTemp)
         {
             //Mode-independant
-            output.append(model->generateHTMLReportForNode(0,BFTablesTemp,BFGraphicsTemp,selectedNode,DF,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(0,BFTablesTemp,BFGraphicsTemp,selectedNode,PCx_AuditModel::DF,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
         }
-        foreach(DFRFDIRI mode,listModes)
+        foreach(PCx_AuditModel::DFRFDIRI mode,listModes)
         {
-            output.append(model->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
             output.append("<br><br><br>");
         }
         if(!progress.wasCanceled())

@@ -35,7 +35,10 @@ FormTablesGraphics::~FormTablesGraphics()
     delete plot;
     //delete interface;
     if(model!=NULL)
+    {
         delete model;
+        delete report;
+    }
 }
 
 void FormTablesGraphics::onListOfAuditsChanged()
@@ -48,7 +51,7 @@ void FormTablesGraphics::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
@@ -77,7 +80,7 @@ void FormTablesGraphics::updateTextBrowser()
     unsigned int selectedNode;
     quint8 tabsMask=0;
     quint16 graphicsMask=0;
-    DFRFDIRI mode=DF;
+    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
     getSelections(&selectedNode,&tabsMask,&graphicsMask,&mode);
 
     QScrollBar *sb=ui->textEdit->verticalScrollBar();
@@ -85,32 +88,32 @@ void FormTablesGraphics::updateTextBrowser()
 
     doc->clear();
 
-    QString output=model->generateHTMLHeader();
-    output.append(model->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,plot,
+    QString output=report->generateHTMLHeader();
+    output.append(report->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,plot,
                                                     favoriteGraphicsWidth,favoriteGraphicsHeight,1.0,doc));
     output.append("</body></html>");
     doc->setHtml(output);
     sb->setValue(sbval);
 }
 
-void FormTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode)
+void FormTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, PCx_AuditModel::DFRFDIRI *selectedMode)
 {
-    DFRFDIRI mode=DF;
+    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
 
     if(ui->radioButtonDF->isChecked())
-        mode=DF;
+        mode=PCx_AuditModel::DF;
 
     else if(ui->radioButtonRF->isChecked())
-        mode=RF;
+        mode=PCx_AuditModel::RF;
 
     else if(ui->radioButtonDI->isChecked())
-        mode=DI;
+        mode=PCx_AuditModel::DI;
 
     else if(ui->radioButtonRI->isChecked())
-        mode=RI;
+        mode=PCx_AuditModel::RI;
 
     else if(ui->radioButtonGlobal->isChecked())
-        mode=GLOBAL;
+        mode=PCx_AuditModel::GLOBAL;
 
     else
     {
@@ -121,55 +124,55 @@ void FormTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selec
     quint8 tabsMask=0;
     quint16 graphicsMask=0;
 
-    if(mode!=GLOBAL)
+    if(mode!=PCx_AuditModel::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
-            tabsMask|=TABRECAP;
+            tabsMask|=PCx_Tables::TABRECAP;
 
         if(ui->checkBoxEvolution->isChecked())
-            tabsMask|=TABEVOLUTION;
+            tabsMask|=PCx_Tables::TABEVOLUTION;
 
         if(ui->checkBoxEvolutionCumul->isChecked())
-            tabsMask|=TABEVOLUTIONCUMUL;
+            tabsMask|=PCx_Tables::TABEVOLUTIONCUMUL;
 
         if(ui->checkBoxBase100->isChecked())
-            tabsMask|=TABBASE100;
+            tabsMask|=PCx_Tables::TABBASE100;
 
         if(ui->checkBoxJoursAct->isChecked())
-            tabsMask|=TABJOURSACT;
+            tabsMask|=PCx_Tables::TABJOURSACT;
 
         if(ui->checkBoxPrevu->isChecked())
-            graphicsMask|=G1;
+            graphicsMask|=PCx_Graphics::G1;
 
         if(ui->checkBoxPrevuCumul->isChecked())
-            graphicsMask|=G2;
+            graphicsMask|=PCx_Graphics::G2;
 
         if(ui->checkBoxRealise->isChecked())
-            graphicsMask|=G3;
+            graphicsMask|=PCx_Graphics::G3;
 
         if(ui->checkBoxRealiseCumul->isChecked())
-            graphicsMask|=G4;
+            graphicsMask|=PCx_Graphics::G4;
 
         if(ui->checkBoxEngage->isChecked())
-            graphicsMask|=G5;
+            graphicsMask|=PCx_Graphics::G5;
 
         if(ui->checkBoxEngageCumul->isChecked())
-            graphicsMask|=G6;
+            graphicsMask|=PCx_Graphics::G6;
 
         if(ui->checkBoxDisponible->isChecked())
-            graphicsMask|=G7;
+            graphicsMask|=PCx_Graphics::G7;
 
         if(ui->checkBoxDisponibleCumul->isChecked())
-            graphicsMask|=G8;
+            graphicsMask|=PCx_Graphics::G8;
     }
 
     else
     {
         if(ui->checkBoxResults->isChecked())
-            tabsMask|=TABRESULTS;
+            tabsMask|=PCx_Tables::TABRESULTS;
 
         if(ui->checkBoxRecapGraph->isChecked())
-            graphicsMask|=G9;
+            graphicsMask|=PCx_Graphics::G9;
     }
     *selectedTablePages=tabsMask;
     *selectedGraphics=graphicsMask;
@@ -188,8 +191,10 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
     if(model!=NULL)
     {
         delete model;
+        delete report;
     }
     model=new PCx_AuditModel(selectedAuditId,this);
+    report=new PCx_Report(model);
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(model->getAttachedTreeModel());
@@ -364,7 +369,7 @@ void FormTablesGraphics::on_saveButton_clicked()
 
     quint8 tabs;
     quint16 graphs;
-    DFRFDIRI mode;
+    PCx_AuditModel::DFRFDIRI mode;
     unsigned int node;
 
     int maximumProgressValue=0;
@@ -382,8 +387,8 @@ void FormTablesGraphics::on_saveButton_clicked()
     progress.setValue(0);
 
     //Generate report in non-embedded mode, saving images
-    QString output=model->generateHTMLHeader();
-    output.append(model->generateHTMLReportForNode(tabs,0,graphs,node,mode,plot,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress));
+    QString output=report->generateHTMLHeader();
+    output.append(report->generateHTMLReportForNode(tabs,0,graphs,node,mode,plot,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
     QSettings settings;

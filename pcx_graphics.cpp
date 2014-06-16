@@ -1,22 +1,32 @@
-#include "pcx_auditmodel.h"
+#include "pcx_graphics.h"
 #include "utils.h"
 #include <float.h>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QObject>
 
 
-QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED, bool cumule, QCustomPlot *plot) const
+
+
+PCx_Graphics::PCx_Graphics(PCx_AuditModel *model)
+{
+    this->model=model;
+}
+
+
+
+QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, PCx_AuditModel::ORED modeORED, bool cumule, QCustomPlot *plot) const
 {
     Q_ASSERT(node>0 && plot!=NULL);
-    QString tableName=modetoTableString(mode);
-    QString oredName=OREDtoTableString(modeORED);
+    QString tableName=model->modeToTableString(mode);
+    QString oredName=model->OREDtoTableString(modeORED);
 
     QSqlQuery q;
 
     //Will contain data read from db
     QMap<double, double> dataRoot,dataNode;
 
-    q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=1 order by annee").arg(tableName).arg(auditId));
+    q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=1 order by annee").arg(tableName).arg(model->getAuditId()));
     q.bindValue(":id",node);
     q.exec();
 
@@ -120,8 +130,9 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     plot->graph(1)->setData(dataPlotRootX,dataPlotRootY);
 
     //Legend
-    plot->graph(0)->setName(QString(attachedTree->getNodeName(node)));
-    plot->graph(1)->setName(tr("Total - %1").arg(attachedTree->getNodeName(node)));
+    QString nodeName=model->getAttachedTreeModel()->getNodeName(node);
+    plot->graph(0)->setName(nodeName);
+    plot->graph(1)->setName(QString("Total - %1").arg(nodeName));
 
     plot->legend->setVisible(true);
     plot->legend->setFont(QFont(QFont().family(),8));
@@ -182,18 +193,18 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     QString plotTitle;
     if(cumule==false)
     {
-        if(modeORED!=engages)
-            plotTitle=tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+        if(modeORED!=PCx_AuditModel::engages)
+            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
         else
-            plotTitle=tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
     }
 
     else
     {
-        if(modeORED!=engages)
-            plotTitle=tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+        if(modeORED!=PCx_AuditModel::engages)
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
         else
-            plotTitle=tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(OREDtoCompleteString(modeORED)).arg(attachedTree->getNodeName(node).toHtmlEscaped()).arg(modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
     }
 
     /*
@@ -241,7 +252,7 @@ QString PCx_AuditModel::getG1G8(unsigned int node, DFRFDIRI mode, ORED modeORED,
     return plotTitle;
 }
 
-QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
+QString PCx_Graphics::getG9(unsigned int node,QCustomPlot *plot) const
 {
     Q_ASSERT(node>0 && plot!=NULL);
     QString plotTitle;
@@ -262,22 +273,22 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
     QPen pen;
     pen.setWidth(0);
 
-    dfBar->setName(modeToCompleteString(DF));
+    dfBar->setName(model->modeToCompleteString(PCx_AuditModel::DF));
     pen.setColor(QColor(255,0,0,70));
     dfBar->setPen(pen);
     dfBar->setBrush(QColor(255,0,0,70));
 
-    rfBar->setName(modeToCompleteString(RF));
+    rfBar->setName(model->modeToCompleteString(PCx_AuditModel::RF));
     pen.setColor(QColor(0,255,0,70));
     rfBar->setPen(pen);
     rfBar->setBrush(QColor(0,255,0,70));
 
-    diBar->setName(modeToCompleteString(DI));
+    diBar->setName(model->modeToCompleteString(PCx_AuditModel::DI));
     pen.setColor(QColor(0,0,255,70));
     diBar->setPen(pen);
     diBar->setBrush(QColor(0,0,255,70));
 
-    riBar->setName(modeToCompleteString(RI));
+    riBar->setName(model->modeToCompleteString(PCx_AuditModel::RI));
     pen.setColor(QColor(0,255,255,70));
     riBar->setPen(pen);
     riBar->setBrush(QColor(0,255,255,70));
@@ -294,7 +305,7 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
                       "from audit_DF_%1 a, audit_RF_%1 b, audit_DI_%1 c,audit_RI_%1 d "
                       "where a.id_node=:id_node and a.id_node=b.id_node and b.id_node=c.id_node "
                       "and c.id_node=d.id_node and a.annee=b.annee and b.annee=c.annee and c.annee=d.annee "
-                      "order by a.annee").arg(auditId));
+                      "order by a.annee").arg(model->getAuditId()));
     q.bindValue(":id_node",node);
     q.exec();
     if(!q.isActive())
@@ -304,10 +315,10 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
     }
 
     QList<QPair<QString,QString> > listModesAndLabels;
-    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(ouverts),OREDtoCompleteString(ouverts)));
-    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(realises),OREDtoCompleteString(realises)));
-    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(engages),OREDtoCompleteString(engages)));
-    listModesAndLabels.append(QPair<QString,QString>(OREDtoTableString(disponibles),OREDtoCompleteString(disponibles)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::ouverts),model->OREDtoCompleteString(PCx_AuditModel::ouverts)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::realises),model->OREDtoCompleteString(PCx_AuditModel::realises)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::engages),model->OREDtoCompleteString(PCx_AuditModel::engages)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::disponibles),model->OREDtoCompleteString(PCx_AuditModel::disponibles)));
 
     QVector<double> ticks;
     QVector<QString> labels;
@@ -392,11 +403,7 @@ QString PCx_AuditModel::getG9(unsigned int node,QCustomPlot *plot) const
     plot->xAxis->setRange(0,tickCounter);
     plot->yAxis->setRange(0,150);
 
-    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(attachedTree->getNodeName(node).toHtmlEscaped());
+    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped());
     return plotTitle;
 
 }
-
-
-
-

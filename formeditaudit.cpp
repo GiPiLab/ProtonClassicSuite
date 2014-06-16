@@ -1,5 +1,6 @@
 #include "formeditaudit.h"
 #include "ui_formeditaudit.h"
+#include <QDebug>
 
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
@@ -50,7 +51,7 @@ void FormEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(UnFinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::UnFinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     ui->splitter->setEnabled(nonEmpty);
 
@@ -105,10 +106,10 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewDI->setEnabled(false);
     ui->tableViewRI->setEnabled(false);
 
-    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
 }
 
 void FormEditAudit::on_treeView_clicked(const QModelIndex &index)

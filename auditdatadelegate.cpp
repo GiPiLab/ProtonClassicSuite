@@ -2,6 +2,7 @@
 #include "pcx_auditmodel.h"
 #include "utils.h"
 
+#include <QPainter>
 #include <QDoubleSpinBox>
 #include <float.h>
 
@@ -20,7 +21,7 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     rect.setLeft(rect.left()+5);
     painter->save();
 
-    if(!index.data().isNull() && (index.column()==COL_OUVERTS||index.column()==COL_REALISES||index.column()==COL_ENGAGES||index.column()==COL_DISPONIBLES))
+    if(!index.data().isNull() && (index.column()==PCx_AuditModel::COL_OUVERTS||index.column()==PCx_AuditModel::COL_REALISES||index.column()==PCx_AuditModel::COL_ENGAGES||index.column()==PCx_AuditModel::COL_DISPONIBLES))
     {
         if(index.data().toDouble()<0.0)
         {
@@ -29,7 +30,7 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         QString formattedNum=formatDouble(index.data().toDouble());
         painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
     }
-    else if(index.column()==COL_ANNEE)
+    else if(index.column()==PCx_AuditModel::COL_ANNEE)
     {
         painter->drawText(rect,index.data().toString(),QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
     }
@@ -40,7 +41,7 @@ QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionView
 {
     Q_UNUSED(option);
 
-    if(index.column()==COL_DISPONIBLES || index.column()==COL_ANNEE)
+    if(index.column()==PCx_AuditModel::COL_DISPONIBLES || index.column()==PCx_AuditModel::COL_ANNEE)
     {
         return 0;
     }

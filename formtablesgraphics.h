@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "pcx_auditmodel.h"
+#include "pcx_report.h"
 
 namespace Ui {
 class FormTablesGraphics;
@@ -50,10 +51,12 @@ private:
     Ui::FormTablesGraphics *ui;
     void updateListOfAudits();
     void updateTextBrowser();
-    void getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, DFRFDIRI *selectedMode);
+    void getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, PCx_AuditModel::DFRFDIRI *selectedMode);
 
     QTextDocument *doc;
     PCx_AuditModel *model;
+    PCx_Report *report;
+
     bool ready;
     int favoriteGraphicsWidth,favoriteGraphicsHeight;
     QCustomPlot *plot;
