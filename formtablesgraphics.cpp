@@ -12,11 +12,8 @@ FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
 {
     model=NULL;
     ready=false;
-    favoriteGraphicsWidth=650;
-    favoriteGraphicsHeight=400;
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
-    plot=new QCustomPlot();
 
     doc=new QTextDocument();
     ui->textEdit->setDocument(doc);
@@ -25,14 +22,12 @@ FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
     //ui->textEdit->document()->documentLayout()->registerHandler(QCPDocumentObject::PlotTextFormat, interface);
     updateListOfAudits();
     ui->textEdit->moveCursor(QTextCursor::Start);
-    //int favoriteGraphicsWidth=(int)(ui->textEdit->width()*0.85);
 }
 
 FormTablesGraphics::~FormTablesGraphics()
 {
     delete ui;
     delete doc;
-    delete plot;
     //delete interface;
     if(model!=NULL)
     {
@@ -88,9 +83,15 @@ void FormTablesGraphics::updateTextBrowser()
 
     doc->clear();
 
+    QSettings settings;
+    report->getGraphics().setGraphicsWidth(settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt());
+    report->getGraphics().setGraphicsHeight(settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt());
+
+    //Always scale 1.0 when displaying
+    report->getGraphics().setScale(1.0);
+
     QString output=report->generateHTMLHeader();
-    output.append(report->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,plot,
-                                                    favoriteGraphicsWidth,favoriteGraphicsHeight,1.0,doc));
+    output.append(report->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,doc));
     output.append("</body></html>");
     doc->setHtml(output);
     sb->setValue(sbval);
@@ -386,12 +387,18 @@ void FormTablesGraphics::on_saveButton_clicked()
     progress.setWindowModality(Qt::WindowModal);
     progress.setValue(0);
 
+    QSettings settings;
+
+    report->getGraphics().setGraphicsWidth(settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt());
+    report->getGraphics().setGraphicsHeight(settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt());
+    report->getGraphics().setScale(settings.value("graphics/scale",PCx_Graphics::DEFAULTSCALE).toDouble());
+
     //Generate report in non-embedded mode, saving images
     QString output=report->generateHTMLHeader();
-    output.append(report->generateHTMLReportForNode(tabs,0,graphs,node,mode,plot,favoriteGraphicsWidth,favoriteGraphicsHeight,2,NULL,absoluteImagePath,relativeImagePath,&progress));
+    output.append(report->generateHTMLReportForNode(tabs,0,graphs,node,mode,NULL,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
-    QSettings settings;
+
     QString settingStyle=settings.value("output/style","CSS").toString();
     if(settingStyle=="INLINE")
     {

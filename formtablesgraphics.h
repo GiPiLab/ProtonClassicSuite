@@ -58,8 +58,6 @@ private:
     PCx_Report *report;
 
     bool ready;
-    int favoriteGraphicsWidth,favoriteGraphicsHeight;
-    QCustomPlot *plot;
-    };
+};
 
 #endif // FORMTABLESGRAPHICS_H

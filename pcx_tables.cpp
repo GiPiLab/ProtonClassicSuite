@@ -6,6 +6,7 @@
 
 PCx_Tables::PCx_Tables(PCx_AuditModel *model)
 {
+    Q_ASSERT(model!=NULL);
     this->model=model;
 }
 

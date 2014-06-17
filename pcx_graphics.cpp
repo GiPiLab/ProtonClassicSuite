@@ -6,16 +6,34 @@
 #include <QObject>
 
 
-
-
-PCx_Graphics::PCx_Graphics(PCx_AuditModel *model)
+PCx_Graphics::PCx_Graphics(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale)
 {
+    Q_ASSERT(model!=NULL);
     this->model=model;
+    setGraphicsWidth(graphicsWidth);
+    setGraphicsHeight(graphicsHeight);
+    setScale(scale);
+
+    if(plot==0)
+    {
+        this->plot=new QCustomPlot();
+        ownPlot=true;
+    }
+    else
+    {
+        this->plot=plot;
+        ownPlot=false;
+    }
+}
+
+PCx_Graphics::~PCx_Graphics()
+{
+    if(ownPlot==true)
+        delete plot;
 }
 
 
-
-QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, PCx_AuditModel::ORED modeORED, bool cumule, QCustomPlot *plot) const
+QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, PCx_AuditModel::ORED modeORED, bool cumule) const
 {
     Q_ASSERT(node>0 && plot!=NULL);
     QString tableName=model->modeToTableString(mode);
@@ -252,7 +270,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
     return plotTitle;
 }
 
-QString PCx_Graphics::getG9(unsigned int node,QCustomPlot *plot) const
+QString PCx_Graphics::getG9(unsigned int node) const
 {
     Q_ASSERT(node>0 && plot!=NULL);
     QString plotTitle;
@@ -407,3 +425,33 @@ QString PCx_Graphics::getG9(unsigned int node,QCustomPlot *plot) const
     return plotTitle;
 
 }
+
+void PCx_Graphics::setGraphicsWidth(int width)
+{
+    graphicsWidth=width;
+    if(graphicsWidth<MINWIDTH)
+        graphicsWidth=MINWIDTH;
+    if(graphicsWidth>MAXWIDTH)
+        graphicsWidth=MAXWIDTH;
+}
+
+void PCx_Graphics::setGraphicsHeight(int height)
+{
+    graphicsHeight=height;
+    if(graphicsHeight<MINHEIGHT)
+        graphicsHeight=MINHEIGHT;
+    if(graphicsHeight>MAXHEIGHT)
+        graphicsHeight=MAXHEIGHT;
+}
+
+void PCx_Graphics::setScale(double scale)
+{
+    this->scale=scale;
+    if(this->scale<MINSCALE)
+        this->scale=MINSCALE;
+    if(this->scale>MAXSCALE)
+        this->scale=MAXSCALE;
+}
+
+
+

@@ -277,6 +277,12 @@ void FormReports::on_saveButton_clicked()
 
     progress.setValue(0);
     unsigned int i=0;
+    QSettings settings;
+
+    report->getGraphics().setGraphicsWidth(settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt());
+    report->getGraphics().setGraphicsHeight(settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt());
+    report->getGraphics().setScale(settings.value("graphics/scale",PCx_Graphics::DEFAULTSCALE).toDouble());
+
     QElapsedTimer timer;
     timer.start();
 
@@ -287,11 +293,11 @@ void FormReports::on_saveButton_clicked()
         if(BFTablesTemp || BFGraphicsTemp)
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(0,BFTablesTemp,BFGraphicsTemp,selectedNode,PCx_AuditModel::DF,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(0,BFTablesTemp,BFGraphicsTemp,selectedNode,PCx_AuditModel::DF,NULL,absoluteImagePath,relativeImagePath,NULL));
         }
         foreach(PCx_AuditModel::DFRFDIRI mode,listModes)
         {
-            output.append(report->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,plot,650,400,2.0,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,NULL,absoluteImagePath,relativeImagePath,NULL));
             output.append("<br><br><br>");
         }
         if(!progress.wasCanceled())
@@ -306,7 +312,6 @@ void FormReports::on_saveButton_clicked()
     }
     output.append("</body></html>");
 
-    QSettings settings;
     QString settingStyle=settings.value("output/style","CSS").toString();
     if(settingStyle=="INLINE")
     {
