@@ -71,10 +71,10 @@ public:
 
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 
-    QString modeToTableString(DFRFDIRI mode) const;
-    QString modeToCompleteString(DFRFDIRI mode) const;
-    QString OREDtoCompleteString(ORED ored) const;
-    QString OREDtoTableString(ORED ored) const;
+    static QString modeToTableString(DFRFDIRI mode);
+    static QString modeToCompleteString(DFRFDIRI mode);
+    static QString OREDtoCompleteString(ORED ored);
+    static QString OREDtoTableString(ORED ored);
 
 signals:
 

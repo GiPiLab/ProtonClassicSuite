@@ -35,6 +35,12 @@ void PCx_AuditInfos::updateInfos(unsigned int auditId)
         years=yearsTemp.toList();
         qSort(years);
 
+        foreach(unsigned int annee,years)
+        {
+            yearsStringList.append(QString::number(annee));
+        }
+
+
         yearsString=QString("%1 - %2").arg(years.first()).arg(years.last());
 
         finished=q.value("termine").toBool();

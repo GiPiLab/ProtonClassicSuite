@@ -1,8 +1,7 @@
 #ifndef PCX_AUDITINFOS_H
 #define PCX_AUDITINFOS_H
 
-#include <QString>
-#include <QList>
+#include <QStringList>
 #include <QDateTime>
 
 class PCx_AuditInfos
@@ -16,9 +15,11 @@ public:
     unsigned int id;
     QString attachedTreeName;
     unsigned int attachedTreeId;
-    QList<unsigned int> years;
 
+    QList<unsigned int> years;
     QString yearsString;
+    QStringList yearsStringList;
+
     bool finished;
 
     QDateTime creationTimeUTC;

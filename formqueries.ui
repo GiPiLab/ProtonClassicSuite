@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormQueries</class>
+ <widget class="QWidget" name="FormQueries">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>821</width>
+    <height>522</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="1" column="0" colspan="4">
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="1" column="5">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>entre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>et</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Sélectionner tou(te)s les </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QComboBox" name="comboBoxORED"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>à/de</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>dont les crédits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+      </item>
+      <item row="0" column="11">
+       <widget class="QComboBox" name="comboBoxAugDim">
+        <item>
+         <property name="text">
+          <string>augmentation</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>diminution</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBoxTypes"/>
+      </item>
+      <item row="1" column="3" colspan="2">
+       <widget class="QComboBox" name="comboBoxPercentEuro">
+        <item>
+         <property name="text">
+          <string>%</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>€</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="comboBoxOperator">
+        <item>
+         <property name="text">
+          <string>inférieure</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>inférieure ou égale</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>égale</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>différente</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>supérieure ou égale</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>supérieure</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="0" column="10">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>ont connu une</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>des</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="8" colspan="2">
+       <widget class="QComboBox" name="comboBoxYear2"/>
+      </item>
+      <item row="0" column="8" colspan="2">
+       <widget class="QComboBox" name="comboBoxDFRFDIRI"/>
+      </item>
+      <item row="1" column="6">
+       <widget class="QComboBox" name="comboBoxYear1"/>
+      </item>
+      <item row="1" column="10">
+       <widget class="QPushButton" name="pushButtonExecReq1">
+        <property name="text">
+         <string>Exécuter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="11">
+       <widget class="QPushButton" name="pushButtonSaveReq1">
+        <property name="text">
+         <string>Enregistrer</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QPushButton" name="pushButtonExecFromList">
+     <property name="text">
+      <string>Exécuter</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Supprimer</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QListWidget" name="listWidget"/>
+   </item>
+   <item row="2" column="0" colspan="4">
+    <widget class="QFrame" name="frame_2">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>Sélectionner les </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="comboBoxTypes_2"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>dont les crédits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QComboBox" name="comboBoxORED_2"/>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>des</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5" colspan="2">
+       <widget class="QComboBox" name="comboBoxDFRFDIRI_2"/>
+      </item>
+      <item row="0" column="7">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>sont parmis les</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QSpinBox" name="spinBox"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="comboBoxBiggerSmaller">
+        <item>
+         <property name="text">
+          <string>plus grands</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>plus petits</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>entre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QComboBox" name="comboBoxYear1_2"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>et</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" colspan="2">
+       <widget class="QComboBox" name="comboBoxYear2_2"/>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="pushButtonExecReq1_2">
+        <property name="text">
+         <string>Exécuter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QPushButton" name="pushButtonSaveReq1_2">
+        <property name="text">
+         <string>Enregistrer</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="4">
+    <widget class="QComboBox" name="comboBoxListAudits"/>
+   </item>
+   <item row="3" column="3">
+    <widget class="QTextBrowser" name="textBrowser"/>
+   </item>
+   <item row="4" column="3">
+    <widget class="QPushButton" name="pushButtonSave">
+     <property name="text">
+      <string>Enregistrer</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

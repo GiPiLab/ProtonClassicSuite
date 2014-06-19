@@ -537,7 +537,7 @@ bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, 
     return true;
 }
 
-QString PCx_AuditModel::modeToTableString(DFRFDIRI mode) const
+QString PCx_AuditModel::modeToTableString(DFRFDIRI mode)
 {
     switch(mode)
     {
@@ -557,7 +557,7 @@ QString PCx_AuditModel::modeToTableString(DFRFDIRI mode) const
 
 
 
-QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode) const
+QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode)
 {
     switch(mode)
     {
@@ -575,7 +575,7 @@ QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode) const
     return QString();
 }
 
-QString PCx_AuditModel::OREDtoTableString(ORED ored) const
+QString PCx_AuditModel::OREDtoTableString(ORED ored)
 {
     switch(ored)
     {
@@ -593,7 +593,7 @@ QString PCx_AuditModel::OREDtoTableString(ORED ored) const
     return QString();
 }
 
-QString PCx_AuditModel::OREDtoCompleteString(ORED ored) const
+QString PCx_AuditModel::OREDtoCompleteString(ORED ored)
 {
     switch(ored)
     {

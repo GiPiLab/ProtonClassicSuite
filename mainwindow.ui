@@ -53,7 +53,7 @@
     </property>
     <addaction name="actionTablesGraphics"/>
     <addaction name="actionReport"/>
-    <addaction name="actionRequests"/>
+    <addaction name="actionQueries"/>
    </widget>
    <addaction name="menuBases"/>
    <addaction name="menuDataInput"/>
@@ -97,7 +97,7 @@
     <string>Générateur de &amp;rapports</string>
    </property>
   </action>
-  <action name="actionRequests">
+  <action name="actionQueries">
    <property name="text">
     <string>Requêtes &amp;personnalisées</string>
    </property>

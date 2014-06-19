@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     dialogoptions.cpp \
     pcx_tables.cpp \
     pcx_report.cpp \
-    pcx_graphics.cpp
+    pcx_graphics.cpp \
+    formqueries.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -51,7 +52,8 @@ HEADERS  += mainwindow.h \
     dialogoptions.h \
     pcx_tables.h \
     pcx_report.h \
-    pcx_graphics.h
+    pcx_graphics.h \
+    formqueries.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -60,4 +62,5 @@ FORMS    += mainwindow.ui \
     formeditaudit.ui \
     formmanageaudits.ui \
     formreports.ui \
-    dialogoptions.ui
+    dialogoptions.ui \
+    formqueries.ui

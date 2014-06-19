@@ -11,6 +11,7 @@
 #include "formtablesgraphics.h"
 #include "formreports.h"
 #include "dialogoptions.h"
+#include "formqueries.h"
 #include "utils.h"
 
 namespace Ui {
@@ -41,6 +42,8 @@ private slots:
 
     void onFormTablesWindowsDestroyed(QObject *);
 
+    void onFormQueriesWindowsDestroyed(QObject *obj);
+
     void on_actionManageAudits_triggered();
 
     void on_actionEditAudit_triggered();
@@ -54,7 +57,10 @@ private slots:
     void on_actionReport_triggered();
 
     void onFormReportsWindowsDestroyed();
+
     void on_actionO_ptions_triggered();
+
+    void on_actionQueries_triggered();
 
 private:
 
@@ -68,6 +74,8 @@ private:
 
     //Multiple "tables" dialogs are allowed
     QList<FormTablesGraphics *>listOfFormTablesGraphics;
+
+    QList<FormQueries *>listOfFormQueries;
     QString recentDb;
 
     void updateTitle();

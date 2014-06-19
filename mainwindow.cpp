@@ -127,6 +127,12 @@ void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
     qDebug()<<"FormTables window closed, remaining :"<<listOfFormTablesGraphics;
 }
 
+void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
+{
+    listOfFormQueries.removeAt(listOfFormQueries.indexOf((FormQueries *)obj));
+    qDebug()<<"FormQueries window closed, remaining :"<<listOfFormQueries;
+}
+
 void MainWindow::on_actionManageAudits_triggered()
 {
     if(formManageAudits==NULL)
@@ -153,11 +159,15 @@ void MainWindow::on_actionManageAudits_triggered()
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
         }
 
-
         foreach(FormTablesGraphics *dlg,listOfFormTablesGraphics)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
         }
+        foreach(FormQueries *dlg,listOfFormQueries)
+        {
+            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+        }
+
     }
 }
 
@@ -267,7 +277,6 @@ void MainWindow::on_actionOpenDb_triggered()
         }
     }
 
-
     QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir une base de données"), "",tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
     if(fileName.isEmpty())
         return;
@@ -306,4 +315,22 @@ void MainWindow::on_actionO_ptions_triggered()
 {
     DialogOptions dialogOptions(this);
     dialogOptions.exec();
+}
+
+void MainWindow::on_actionQueries_triggered()
+{
+    FormQueries *dlg=new FormQueries(this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    ui->mdiArea->addSubWindow(dlg);
+    dlg->show();
+    listOfFormQueries.append(dlg);
+
+    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormQueriesWindowsDestroyed(QObject *)));
+
+    if(formManageAudits!=NULL)
+    {
+        connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+    }
+
 }
