@@ -134,6 +134,7 @@ void FormReports::on_comboListAudits_activated(int index)
 
 void FormReports::on_saveButton_clicked()
 {
+    //TODO for V2 : Order tables and graphics
     QItemSelectionModel *sel=ui->treeView->selectionModel();
     QModelIndexList selIndexes=sel->selectedIndexes();
 
@@ -163,50 +164,61 @@ void FormReports::on_saveButton_clicked()
     qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
 
 
-    QList<QListWidgetItem *>selectedTables=ui->listTables->selectedItems();
-    QList<QListWidgetItem *>selectedGraphics=ui->listGraphics->selectedItems();
+    QList<QListWidgetItem *>selectedItemsTables=ui->listTables->selectedItems();
+    QList<QListWidgetItem *>selectedItemsGraphics=ui->listGraphics->selectedItems();
 
-    quint16 bitFieldTables=0,bitFieldGraphics=0;
+    QList<PCx_Tables::TABLES> selectedTables;
+    QList<PCx_Graphics::GRAPHICS> selectedGraphics;
 
-    foreach(QListWidgetItem *item, selectedTables)
+    foreach(QListWidgetItem *item, selectedItemsTables)
     {
         qDebug()<<"Selecting table "<<item->data(Qt::UserRole+1).toUInt();
-        bitFieldTables|=item->data(Qt::UserRole+1).toUInt();
+        selectedTables.append((PCx_Tables::TABLES)item->data(Qt::UserRole+1).toUInt());
     }
 
-    foreach(QListWidgetItem *item, selectedGraphics)
+    foreach(QListWidgetItem *item, selectedItemsGraphics)
     {
         qDebug()<<"Selecting graphic "<<item->data(Qt::UserRole+1).toUInt();
-        bitFieldGraphics|=item->data(Qt::UserRole+1).toUInt();
+        selectedGraphics.append((PCx_Graphics::GRAPHICS)item->data(Qt::UserRole+1).toUInt());
     }
-    qDebug()<<"Selected tables bitfield = "<<bitFieldTables;
-    qDebug()<<"Selected graphics bitfield = "<<bitFieldGraphics;
 
-    if(bitFieldGraphics==0 && bitFieldTables==0)
+    if(selectedTables.isEmpty() && selectedGraphics.isEmpty())
     {
         QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez au moins un tableau ou un graphique"));
         return;
     }
 
+    QList<PCx_Tables::TABLES> modeIndependantTables;
+    QList<PCx_Graphics::GRAPHICS> modeIndependantGraphics;
+
     //Isolate mode-independant tables and graphics
-    quint16 BFTablesTemp=0,BFGraphicsTemp=0;
-    if(bitFieldTables & PCx_Tables::T10 || bitFieldTables & PCx_Tables::T11 || bitFieldTables & PCx_Tables::T12 || bitFieldGraphics & PCx_Graphics::G9)
+    if(selectedTables.contains(PCx_Tables::T10))
     {
-        BFTablesTemp|=bitFieldTables & PCx_Tables::T10;
-        BFTablesTemp|=bitFieldTables & PCx_Tables::T11;
-        BFTablesTemp|=bitFieldTables & PCx_Tables::T12;
-        BFGraphicsTemp|=bitFieldGraphics & PCx_Graphics::G9;
+        modeIndependantTables.append(PCx_Tables::T10);
+        selectedTables.removeAll(PCx_Tables::T10);
+    }
+    if(selectedTables.contains(PCx_Tables::T11))
+    {
+        modeIndependantTables.append(PCx_Tables::T11);
+        selectedTables.removeAll(PCx_Tables::T11);
+    }
+    if(selectedTables.contains(PCx_Tables::T12))
+    {
+        modeIndependantTables.append(PCx_Tables::T12);
+        selectedTables.removeAll(PCx_Tables::T12);
+    }
+    if(selectedGraphics.contains(PCx_Graphics::G9))
+    {
+        modeIndependantGraphics.append(PCx_Graphics::G9);
+        selectedGraphics.removeAll(PCx_Graphics::G9);
     }
 
-    qDebug()<<"Mode-independant selected tables bitfield = "<<BFTablesTemp;
-    qDebug()<<"Mode-independant selected graphics bitfield = "<<BFGraphicsTemp;
 
-    //Now these fields contain only mode-dependant tables/graphics
-    bitFieldTables&=~(PCx_Tables::T10+PCx_Tables::T11+PCx_Tables::T12);
-    bitFieldGraphics&=~PCx_Graphics::G9;
+    qDebug()<<"Mode-independant selected tables = "<<modeIndependantTables;
+    qDebug()<<"Mode-independant selected graphics = "<<modeIndependantGraphics;
 
-    qDebug()<<"Mode-dependant selected tables bitfield = "<<bitFieldTables;
-    qDebug()<<"Mode-dependant selected graphics bitfield = "<<bitFieldGraphics;
+    qDebug()<<"Mode-dependant selected tables = "<<selectedTables;
+    qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;
 
     QString output=report->generateHTMLHeader();
     QList<PCx_AuditModel::DFRFDIRI> listModes;
@@ -219,7 +231,7 @@ void FormReports::on_saveButton_clicked()
     if(ui->checkBoxRI->isChecked())
         listModes.append(PCx_AuditModel::RI);
 
-    if(listModes.isEmpty() && (bitFieldGraphics || bitFieldTables))
+    if(listModes.isEmpty() && (!selectedGraphics.isEmpty() || !selectedTables.isEmpty()))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez au moins un mode (dépenses/recettes de fonctionnement/d'investissement)"));
         return;
@@ -270,10 +282,10 @@ void FormReports::on_saveButton_clicked()
 
     int maximumProgressValue=selIndexes.count()+1;
 
-    QProgressDialog progress(tr("Enregistrement du rapport en cours..."),tr("Annuler"),0,maximumProgressValue);
+    QProgressDialog progress(tr("Enregistrement du rapport en cours..."),tr("Annuler"),0,maximumProgressValue,this);
     progress.setMinimumDuration(1000);
 
-    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowModality(Qt::ApplicationModal);
 
     progress.setValue(0);
     unsigned int i=0;
@@ -286,24 +298,29 @@ void FormReports::on_saveButton_clicked()
     QElapsedTimer timer;
     timer.start();
 
+    //FIXME : better cleanup and progress, count maximum value with selected graphics
+
     foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
         output.append(QString("<h2>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()));
 
-        if(BFTablesTemp || BFGraphicsTemp)
+        if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(0,BFTablesTemp,BFGraphicsTemp,selectedNode,PCx_AuditModel::DF,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_AuditModel::DF,NULL,absoluteImagePath,relativeImagePath,NULL));
         }
         foreach(PCx_AuditModel::DFRFDIRI mode,listModes)
         {
-            output.append(report->generateHTMLReportForNode(0,bitFieldTables,bitFieldGraphics,selectedNode,mode,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),selectedTables,selectedGraphics,selectedNode,mode,NULL,absoluteImagePath,relativeImagePath,NULL));
+            if(progress.wasCanceled())
+                goto cleanup;
             output.append("<br><br><br>");
         }
         if(!progress.wasCanceled())
             progress.setValue(++i);
         else
         {
+            cleanup:
             QDir dir(absoluteImagePath);
             dir.removeRecursively();
             return;
@@ -357,7 +374,7 @@ void FormReports::on_saveButton_clicked()
 
 }
 
-//NOTE : Preselections are done with fixed indexing, refers to populateLists
+//WARNING : Preselections are done with fixed indexing, refers to populateLists
 void FormReports::on_pushButtonPoidsRelatifs_clicked()
 {
     //T1,T4,T8

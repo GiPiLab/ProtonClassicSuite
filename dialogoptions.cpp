@@ -59,7 +59,7 @@ DialogOptions::DialogOptions(QWidget *parent) :
     ui->spinBoxWidth->setMaximum(PCx_Graphics::MAXWIDTH);
     ui->spinBoxWidth->setValue(imageWidth);
 
-    //TODO : PRECISION
+    //FIXME : PRECISION
 }
 
 DialogOptions::~DialogOptions()
@@ -109,5 +109,5 @@ void DialogOptions::on_pushButtonReset_clicked()
     ui->spinBoxHeight->setValue(PCx_Graphics::DEFAULTHEIGHT);
     ui->spinBoxWidth->setValue(PCx_Graphics::DEFAULTWIDTH);
     ui->doubleSpinBoxScale->setValue(PCx_Graphics::DEFAULTSCALE);
-    //TODO : Precision
+    //FIXME : Precision
 }

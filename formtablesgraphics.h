@@ -51,11 +51,15 @@ private:
     Ui::FormTablesGraphics *ui;
     void updateListOfAudits();
     void updateTextBrowser();
-    void getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, PCx_AuditModel::DFRFDIRI *selectedMode);
+    void getSelections();
 
     QTextDocument *doc;
     PCx_AuditModel *model;
     PCx_Report *report;
+
+    QList<PCx_Tables::TABS> selectedTabs;
+    QList<PCx_Graphics::GRAPHICS> selectedGraphics;
+    PCx_AuditModel::DFRFDIRI selectedMode;
 
     bool ready;
 };

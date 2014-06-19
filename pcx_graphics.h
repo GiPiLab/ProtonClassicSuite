@@ -13,22 +13,22 @@ public:
     static const int MINWIDTH=350;
     static const int MINHEIGHT=350;
     static const double MINSCALE=1.0;
-    static const double MAXSCALE=4.0;
+    static const double MAXSCALE=3.0;
     static const int DEFAULTWIDTH=650;
     static const int DEFAULTHEIGHT=400;
-    static const double DEFAULTSCALE=2.0;
+    static const double DEFAULTSCALE=1.0;
 
-    enum GRAPHICSMASK
+    enum GRAPHICS
     {
-        G1=1,
-        G2=2,
-        G3=4,
-        G4=8,
-        G5=16,
-        G6=32,
-        G7=64,
-        G8=128,
-        G9=256
+        G1,
+        G2,
+        G3,
+        G4,
+        G5,
+        G6,
+        G7,
+        G8,
+        G9
     };
 
     PCx_Graphics(PCx_AuditModel *model, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);

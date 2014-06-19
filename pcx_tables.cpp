@@ -10,7 +10,6 @@ PCx_Tables::PCx_Tables(PCx_AuditModel *model)
     this->model=model;
 }
 
-//NOTE : Perhaps separate HTML generation from model (as in a true MVC approach), but it may decrease performances for the same result
 
 QString PCx_Tables::getT1(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
 {

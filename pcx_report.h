@@ -11,8 +11,13 @@ public:
     PCx_Report(PCx_AuditModel *model,QCustomPlot *plot=0,int graphicsWidth=650,int graphicsHeight=400,double scale=1.0);
 
     QString getCSS() const;
-    QString generateHTMLReportForNode(quint8 bitFieldPagesOfTables, quint16 bitFieldTables, quint16 bitFieldGraphics, unsigned int selectedNode, PCx_AuditModel::DFRFDIRI mode,
-                                       QTextDocument *document=NULL, const QString &absoluteImagePath="", const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
+    //QString generateHTMLReportForNode(quint8 bitFieldPagesOfTables, quint16 bitFieldTables, quint16 bitFieldGraphics, unsigned int selectedNode, PCx_AuditModel::DFRFDIRI mode,
+    //                                   QTextDocument *document=NULL, const QString &absoluteImagePath="", const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
+
+    QString generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
+                                      unsigned int selectedNode, PCx_AuditModel::DFRFDIRI mode,QTextDocument *document=NULL, const QString &absoluteImagePath="",
+                                      const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
+
 
     QString generateHTMLHeader() const;
     const PCx_Tables &getTables() const{return tables;}

@@ -21,7 +21,7 @@ FormDisplayTree::~FormDisplayTree()
     delete ui;
 }
 
-//TODO : better tree printing support
+//FIXME : better tree printing support
 void FormDisplayTree::on_printViewButton_clicked()
 {
     QPrinter printer;

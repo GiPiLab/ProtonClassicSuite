@@ -72,12 +72,9 @@ void FormTablesGraphics::updateTextBrowser()
         return;
     }
 
-    unsigned int selectedNode;
-    quint8 tabsMask=0;
-    quint16 graphicsMask=0;
-    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
-    getSelections(&selectedNode,&tabsMask,&graphicsMask,&mode);
+    unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 
+    getSelections();
     QScrollBar *sb=ui->textEdit->verticalScrollBar();
     int sbval=sb->value();
 
@@ -91,30 +88,29 @@ void FormTablesGraphics::updateTextBrowser()
     report->getGraphics().setScale(1.0);
 
     QString output=report->generateHTMLHeader();
-    output.append(report->generateHTMLReportForNode(tabsMask,0,graphicsMask,selectedNode,mode,doc));
+    output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,selectedNode,selectedMode,doc));
     output.append("</body></html>");
     doc->setHtml(output);
     sb->setValue(sbval);
 }
 
-void FormTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selectedTablePages, quint16 *selectedGraphics, PCx_AuditModel::DFRFDIRI *selectedMode)
-{
-    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
 
+void FormTablesGraphics::getSelections()
+{
     if(ui->radioButtonDF->isChecked())
-        mode=PCx_AuditModel::DF;
+        selectedMode=PCx_AuditModel::DF;
 
     else if(ui->radioButtonRF->isChecked())
-        mode=PCx_AuditModel::RF;
+        selectedMode=PCx_AuditModel::RF;
 
     else if(ui->radioButtonDI->isChecked())
-        mode=PCx_AuditModel::DI;
+        selectedMode=PCx_AuditModel::DI;
 
     else if(ui->radioButtonRI->isChecked())
-        mode=PCx_AuditModel::RI;
+        selectedMode=PCx_AuditModel::RI;
 
     else if(ui->radioButtonGlobal->isChecked())
-        mode=PCx_AuditModel::GLOBAL;
+        selectedMode=PCx_AuditModel::GLOBAL;
 
     else
     {
@@ -122,64 +118,61 @@ void FormTablesGraphics::getSelections(unsigned int *selectedNode, quint8 *selec
         die();
     }
 
-    quint8 tabsMask=0;
-    quint16 graphicsMask=0;
+    selectedGraphics.clear();
+    selectedTabs.clear();
 
-    if(mode!=PCx_AuditModel::GLOBAL)
+    if(selectedMode!=PCx_AuditModel::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
-            tabsMask|=PCx_Tables::TABRECAP;
+            selectedTabs.append(PCx_Tables::TABRECAP);
 
         if(ui->checkBoxEvolution->isChecked())
-            tabsMask|=PCx_Tables::TABEVOLUTION;
+            selectedTabs.append(PCx_Tables::TABEVOLUTION);
 
         if(ui->checkBoxEvolutionCumul->isChecked())
-            tabsMask|=PCx_Tables::TABEVOLUTIONCUMUL;
+            selectedTabs.append(PCx_Tables::TABEVOLUTIONCUMUL);
 
         if(ui->checkBoxBase100->isChecked())
-            tabsMask|=PCx_Tables::TABBASE100;
+            selectedTabs.append(PCx_Tables::TABBASE100);
 
         if(ui->checkBoxJoursAct->isChecked())
-            tabsMask|=PCx_Tables::TABJOURSACT;
+            selectedTabs.append(PCx_Tables::TABJOURSACT);
 
         if(ui->checkBoxPrevu->isChecked())
-            graphicsMask|=PCx_Graphics::G1;
+            selectedGraphics.append(PCx_Graphics::G1);
 
         if(ui->checkBoxPrevuCumul->isChecked())
-            graphicsMask|=PCx_Graphics::G2;
+            selectedGraphics.append(PCx_Graphics::G2);
 
         if(ui->checkBoxRealise->isChecked())
-            graphicsMask|=PCx_Graphics::G3;
+            selectedGraphics.append(PCx_Graphics::G3);
 
         if(ui->checkBoxRealiseCumul->isChecked())
-            graphicsMask|=PCx_Graphics::G4;
+            selectedGraphics.append(PCx_Graphics::G4);
 
         if(ui->checkBoxEngage->isChecked())
-            graphicsMask|=PCx_Graphics::G5;
+            selectedGraphics.append(PCx_Graphics::G5);
 
         if(ui->checkBoxEngageCumul->isChecked())
-            graphicsMask|=PCx_Graphics::G6;
+            selectedGraphics.append(PCx_Graphics::G6);
 
         if(ui->checkBoxDisponible->isChecked())
-            graphicsMask|=PCx_Graphics::G7;
+            selectedGraphics.append(PCx_Graphics::G7);
 
         if(ui->checkBoxDisponibleCumul->isChecked())
-            graphicsMask|=PCx_Graphics::G8;
+            selectedGraphics.append(PCx_Graphics::G8);
     }
 
     else
     {
         if(ui->checkBoxResults->isChecked())
-            tabsMask|=PCx_Tables::TABRESULTS;
+            selectedTabs.append(PCx_Tables::TABRESULTS);
 
         if(ui->checkBoxRecapGraph->isChecked())
-            graphicsMask|=PCx_Graphics::G9;
+            selectedGraphics.append(PCx_Graphics::G9);
     }
-    *selectedTablePages=tabsMask;
-    *selectedGraphics=graphicsMask;
-    *selectedMode=mode;
-    *selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
 }
+
 
 
 void FormTablesGraphics::on_comboListAudits_activated(int index)
@@ -218,6 +211,7 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
+        selectedMode=PCx_AuditModel::GLOBAL;
         updateTextBrowser();
 
         ui->checkBoxPoidsRelatif->setEnabled(false);
@@ -258,59 +252,6 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
     }
 }
 
-void FormTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
-{
-    Q_UNUSED(checked);
-    updateTextBrowser();
-}
-
-void FormTablesGraphics::on_radioButtonDF_toggled(bool checked)
-{
-    if(checked)
-        updateTextBrowser();
-}
-
-void FormTablesGraphics::on_radioButtonRF_toggled(bool checked)
-{
-    if(checked)
-        updateTextBrowser();
-}
-
-void FormTablesGraphics::on_radioButtonDI_toggled(bool checked)
-{
-    if(checked)
-        updateTextBrowser();
-}
-
-void FormTablesGraphics::on_radioButtonRI_toggled(bool checked)
-{
-    if(checked)
-        updateTextBrowser();
-}
-
-void FormTablesGraphics::on_checkBoxEvolution_toggled(bool checked)
-{
-    Q_UNUSED(checked);
-    updateTextBrowser();
-}
-
-void FormTablesGraphics::on_checkBoxEvolutionCumul_toggled(bool checked)
-{
-    Q_UNUSED(checked);
-    updateTextBrowser();
-}
-
-void FormTablesGraphics::on_checkBoxBase100_toggled(bool checked)
-{
-    Q_UNUSED(checked);
-    updateTextBrowser();
-}
-
-void FormTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
-{
-    Q_UNUSED(checked);
-    updateTextBrowser();
-}
 
 //FIXME : page split problem
 /*void FormTablesGraphics::on_printButton_clicked()
@@ -368,23 +309,15 @@ void FormTablesGraphics::on_saveButton_clicked()
         }
     }
 
-    quint8 tabs;
-    quint16 graphs;
-    PCx_AuditModel::DFRFDIRI mode;
-    unsigned int node;
+    unsigned int node=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
+    getSelections();
 
-    int maximumProgressValue=0;
-    getSelections(&node,&tabs,&graphs,&mode);
-
-    for(int i=0;i<9;i++)
-    {
-        maximumProgressValue+=((graphs&(1<<i))>0);
-    }
+    int maximumProgressValue=selectedGraphics.count();
 
     QProgressDialog progress(tr("Enregistrement en cours..."),0,0,maximumProgressValue);
     progress.setMinimumDuration(1000);
 
-    progress.setWindowModality(Qt::WindowModal);
+    progress.setWindowModality(Qt::ApplicationModal);
     progress.setValue(0);
 
     QSettings settings;
@@ -395,7 +328,7 @@ void FormTablesGraphics::on_saveButton_clicked()
 
     //Generate report in non-embedded mode, saving images
     QString output=report->generateHTMLHeader();
-    output.append(report->generateHTMLReportForNode(tabs,0,graphs,node,mode,NULL,absoluteImagePath,relativeImagePath,&progress));
+    output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,node,selectedMode,NULL,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
 
@@ -436,7 +369,6 @@ void FormTablesGraphics::on_checkBoxResults_toggled(bool checked)
     Q_UNUSED(checked);
     updateTextBrowser();
 }
-
 
 void FormTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)
 {
@@ -487,6 +419,69 @@ void FormTablesGraphics::on_checkBoxRealiseCumul_toggled(bool checked)
 }
 
 void FormTablesGraphics::on_checkBoxDisponibleCumul_toggled(bool checked)
+{
+    Q_UNUSED(checked);
+    updateTextBrowser();
+}
+
+void FormTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
+{
+    Q_UNUSED(checked);
+    updateTextBrowser();
+}
+
+void FormTablesGraphics::on_radioButtonDF_toggled(bool checked)
+{
+    if(checked)
+    {
+        updateTextBrowser();
+    }
+}
+
+void FormTablesGraphics::on_radioButtonRF_toggled(bool checked)
+{
+    if(checked)
+    {
+        updateTextBrowser();
+    }
+
+}
+
+void FormTablesGraphics::on_radioButtonDI_toggled(bool checked)
+{
+    if(checked)
+    {
+        updateTextBrowser();
+    }
+}
+
+void FormTablesGraphics::on_radioButtonRI_toggled(bool checked)
+{
+    if(checked)
+    {
+        updateTextBrowser();
+    }
+}
+
+void FormTablesGraphics::on_checkBoxEvolution_toggled(bool checked)
+{
+    Q_UNUSED(checked);
+    updateTextBrowser();
+}
+
+void FormTablesGraphics::on_checkBoxEvolutionCumul_toggled(bool checked)
+{
+    Q_UNUSED(checked);
+    updateTextBrowser();
+}
+
+void FormTablesGraphics::on_checkBoxBase100_toggled(bool checked)
+{
+    Q_UNUSED(checked);
+    updateTextBrowser();
+}
+
+void FormTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();

@@ -7,30 +7,30 @@ class PCx_Tables
 {
 public:
 
-    enum TABSMASK{
-        TABRESULTS=1,
-        TABRECAP=2,
-        TABEVOLUTION=4,
-        TABEVOLUTIONCUMUL=8,
-        TABBASE100=16,
-        TABJOURSACT=32
+    enum TABS{
+        TABRESULTS,
+        TABRECAP,
+        TABEVOLUTION,
+        TABEVOLUTIONCUMUL,
+        TABBASE100,
+        TABJOURSACT
     };
 
-    enum TABLESMASK{
-        T1=1,
-        T2=2,
-        T2BIS=4,
-        T3=8,
-        T3BIS=16,
-        T4=32,
-        T5=64,
-        T6=128,
-        T7=256,
-        T8=512,
-        T9=1024,
-        T10=2048,
-        T11=4096,
-        T12=8192
+    enum TABLES{
+        T1,
+        T2,
+        T2BIS,
+        T3,
+        T3BIS,
+        T4,
+        T5,
+        T6,
+        T7,
+        T8,
+        T9,
+        T10,
+        T11,
+        T12
     };
 
     PCx_Tables(PCx_AuditModel *model);
