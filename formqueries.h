@@ -2,7 +2,10 @@
 #define FORMQUERIES_H
 
 #include "pcx_auditmodel.h"
+#include "pcx_report.h"
+#include "pcx_queryvariation.h"
 #include <QWidget>
+#include <QTextDocument>
 
 namespace Ui {
 class FormQueries;
@@ -19,10 +22,17 @@ public:
 private slots:
     void on_comboBoxListAudits_activated(int index);
 
+    void on_pushButtonExecReq1_clicked();
+
 private:
     Ui::FormQueries *ui;
     void updateListOfAudits();
     PCx_AuditModel *model;
+    PCx_Report *report;
+    QTextDocument *doc;
+    void getParamsReq1(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
+                       PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
+                       PCx_QueryVariation::OPERATORS &oper, double &val, unsigned int &year1, unsigned int &year2) const;
 };
 
 #endif // FORMQUERIES_H

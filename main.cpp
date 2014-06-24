@@ -26,6 +26,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         break;
     case QtFatalMsg:
         message.prepend("[Fatal]");
+        std::cerr<<qPrintable(message);
         abort();
     }
     std::cerr<<qPrintable(message);

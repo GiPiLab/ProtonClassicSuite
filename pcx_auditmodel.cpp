@@ -1,4 +1,5 @@
 #include "pcx_auditmodel.h"
+#include "pcx_queries.h"
 #include "utils.h"
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -125,7 +126,6 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     {
         qCritical()<<q.lastError().text();
         QSqlDatabase::database().rollback();
-        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
         die();
     }
 
@@ -135,8 +135,6 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     {
         qCritical()<<q.lastError().text();
         QSqlDatabase::database().rollback();
-        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
-        //q.exec(QString("drop table audit_DF_%1").arg(uLastId));
         die();
     }
 
@@ -146,9 +144,6 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     {
         qCritical()<<q.lastError().text();
         QSqlDatabase::database().rollback();
-        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
-        //q.exec(QString("drop table audit_DF_%1").arg(uLastId));
-        //q.exec(QString("drop table audit_RF_%1").arg(uLastId));
         die();
     }
 
@@ -158,10 +153,14 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     {
         qCritical()<<q.lastError().text();
         QSqlDatabase::database().rollback();
-        //q.exec(QString("delete from index_audits where id=%1").arg(uLastId));
-        //q.exec(QString("drop table audit_DF_%1").arg(uLastId));
-        //q.exec(QString("drop table audit_RF_%1").arg(uLastId));
-        //q.exec(QString("drop table audit_DI_%1").arg(uLastId));
+        die();
+    }
+
+    bool res=PCx_Queries::createTableQueries(uLastId);
+
+    if(res==false)
+    {
+        QSqlDatabase::database().rollback();
         die();
     }
 
@@ -591,6 +590,36 @@ QString PCx_AuditModel::OREDtoTableString(ORED ored)
         qCritical()<<"Invalid ORED specified !";
     }
     return QString();
+}
+
+PCx_AuditModel::ORED PCx_AuditModel::OREDFromTableString(const QString &ored)
+{
+    if(ored==OREDtoTableString(ouverts))
+        return ouverts;
+    if(ored==OREDtoTableString(realises))
+        return realises;
+    if(ored==OREDtoTableString(engages))
+        return engages;
+    if(ored==OREDtoTableString(disponibles))
+        return disponibles;
+
+    qCritical()<<"Invalid ORED string specified, defaulting to ouverts";
+    return ouverts;
+}
+
+PCx_AuditModel::DFRFDIRI PCx_AuditModel::modeFromTableString(const QString &mode)
+{
+    if(mode==modeToTableString(DF))
+        return DF;
+    if(mode==modeToTableString(RF))
+        return RF;
+    if(mode==modeToTableString(DI))
+        return DI;
+    if(mode==modeToTableString(RI))
+        return RI;
+
+    qCritical()<<"Invalid DFRFDIRI string specified, defaulting to DF";
+    return DF;
 }
 
 QString PCx_AuditModel::OREDtoCompleteString(ORED ored)

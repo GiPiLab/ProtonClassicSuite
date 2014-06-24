@@ -76,6 +76,10 @@ public:
     static QString OREDtoCompleteString(ORED ored);
     static QString OREDtoTableString(ORED ored);
 
+    static ORED OREDFromTableString(const QString &ored);
+    static DFRFDIRI modeFromTableString(const QString &mode);
+
+
 signals:
 
 public slots:

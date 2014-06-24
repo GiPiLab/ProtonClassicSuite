@@ -33,7 +33,9 @@ SOURCES += main.cpp\
     pcx_tables.cpp \
     pcx_report.cpp \
     pcx_graphics.cpp \
-    formqueries.cpp
+    formqueries.cpp \
+    pcx_queries.cpp \
+    pcx_queryvariation.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -53,7 +55,9 @@ HEADERS  += mainwindow.h \
     pcx_tables.h \
     pcx_report.h \
     pcx_graphics.h \
-    formqueries.h
+    formqueries.h \
+    pcx_queries.h \
+    pcx_queryvariation.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
