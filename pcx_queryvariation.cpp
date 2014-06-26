@@ -63,7 +63,8 @@ bool PCx_QueryVariation::save(const QString &name)
 QString PCx_QueryVariation::exec()
 {
 
-    QMap<unsigned int,double> valuesForYear1,valuesForYear2,variations,matchingNodes;
+    QMap<unsigned int,qint64> valuesForYear1,valuesForYear2;
+    QMap<unsigned int,double> variations,matchingNodes;
     QList<unsigned int>nodesOfThisType;
 
     QSqlQuery q;
@@ -104,10 +105,10 @@ QString PCx_QueryVariation::exec()
 
         if(q.value("annee").toUInt()==year1)
         {
-            valuesForYear1.insert(node,q.value(oredString).toDouble());
+            valuesForYear1.insert(node,q.value(oredString).toLongLong());
         }
         else if(q.value("annee").toUInt()==year2)
-            valuesForYear2.insert(node,q.value(oredString).toDouble());
+            valuesForYear2.insert(node,q.value(oredString).toLongLong());
         else
         {
             Q_UNREACHABLE();
@@ -117,15 +118,15 @@ QString PCx_QueryVariation::exec()
 
     Q_ASSERT(valuesForYear1.keys()==valuesForYear2.keys());
 
-    QMapIterator<unsigned int,double> i(valuesForYear1);
+    QMapIterator<unsigned int,qint64> i(valuesForYear1);
     while(i.hasNext())
     {
         i.next();
-        double val1=i.value();
-        double val2=valuesForYear2.value(i.key());
+        qint64 val1=i.value();
+        qint64 val2=valuesForYear2.value(i.key());
         double variation;
         if(percentOrPoints==PERCENT)
-            variation=(val2-val1)/val1;
+            variation=((double)val2-val1)/val1;
         else
             variation=val2-val1;
 
@@ -179,12 +180,12 @@ QString PCx_QueryVariation::exec()
 
         if(incDec==INCREASE)
         {
-            if(j.value()<0)
+            if(j.value()<0.0)
                 continue;
         }
         else if(incDec==DECREASE)
         {
-            if(j.value()>0)
+            if(j.value()>0.0)
                 continue;
         }
         trueVal=qAbs(trueVal);
@@ -242,8 +243,8 @@ QString PCx_QueryVariation::exec()
         if(incDec!=VARIATION)val=qAbs(val);
         output.append(QString("<tr><td>%1</td><td>%2</td><td>%3</td><td align='right'>%4 %5</td></tr>")
                 .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
-                .arg(formatDouble(valuesForYear1.value(node)))
-                .arg(formatDouble(valuesForYear2.value(node)))
+                .arg(formatCurrency(valuesForYear1.value(node)))
+                .arg(formatCurrency(valuesForYear2.value(node)))
                 .arg(formatDouble(val))
                 .arg(percentOrPointToString(percentOrPoints)));
     }

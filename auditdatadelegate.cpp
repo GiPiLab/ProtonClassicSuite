@@ -4,7 +4,7 @@
 
 #include <QPainter>
 #include <QDoubleSpinBox>
-#include <float.h>
+#include <QDebug>
 
 auditDataDelegate::auditDataDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
@@ -23,11 +23,12 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
     if(!index.data().isNull() && (index.column()==PCx_AuditModel::COL_OUVERTS||index.column()==PCx_AuditModel::COL_REALISES||index.column()==PCx_AuditModel::COL_ENGAGES||index.column()==PCx_AuditModel::COL_DISPONIBLES))
     {
-        if(index.data().toDouble()<0.0)
+        qint64 data=index.data().toLongLong();
+        if(data<0)
         {
             painter->setPen(QColor(255,0,0));
         }
-        QString formattedNum=formatDouble(index.data().toDouble());
+        QString formattedNum=formatCurrency(data);
         painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
     }
     else if(index.column()==PCx_AuditModel::COL_ANNEE)
@@ -35,6 +36,23 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         painter->drawText(rect,index.data().toString(),QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
     }
     painter->restore();
+}
+
+void auditDataDelegate::setEditorData(QWidget *editor,const QModelIndex &index) const
+{
+    QDoubleSpinBox *edit=(QDoubleSpinBox *)editor;
+    //Convert fixed point arithmetics to double for displaying
+    edit->setValue(index.data().toLongLong()/(double)FIXEDPOINTCOEFF);
+}
+
+
+void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+{
+    QDoubleSpinBox *edit=(QDoubleSpinBox *)editor;
+    double value=edit->value();
+    if(value>MAX_NUM)value=MAX_NUM;
+    edit->setValue(value*FIXEDPOINTCOEFF);
+    QStyledItemDelegate::setModelData(edit,model,index);
 }
 
 QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -46,8 +64,8 @@ QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionView
         return 0;
     }
     QDoubleSpinBox *spin=new QDoubleSpinBox(parent);
-    spin->setRange(0.0,DBL_MAX-1);
+
+    spin->setRange(0.0,Q_INFINITY);
     return spin;
-    //return QStyledItemDelegate::createEditor(parent,option,index);
 }
 

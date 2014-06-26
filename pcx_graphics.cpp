@@ -42,7 +42,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
     QSqlQuery q;
 
     //Will contain data read from db
-    QMap<double, double> dataRoot,dataNode;
+    QMap<unsigned int, qint64> dataRoot,dataNode;
 
     q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=1 order by annee").arg(tableName).arg(model->getAuditId()));
     q.bindValue(":id",node);
@@ -58,12 +58,11 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
 
     while(q.next())
     {
-        //Plotting requires double
-        double annee=q.value("annee").toDouble();
+        unsigned int annee=q.value("annee").toUInt();
         if(firstYear==0)
             firstYear=annee;
 
-        double data=q.value(oredName).toDouble();
+        qint64 data=q.value(oredName).toLongLong();
 
         if(q.value("id_node").toUInt()==1)
         {
@@ -80,9 +79,9 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
     //dataRoot and dataNode must have the same keys
     Q_ASSERT(dataRoot.keys()==dataNode.keys());
 
-    double firstYearDataRoot=dataRoot.value(firstYear);
-    double firstYearDataNode=dataNode.value(firstYear);
-    double diffRootNode1=firstYearDataRoot-firstYearDataNode;
+    qint64 firstYearDataRoot=dataRoot.value(firstYear);
+    qint64 firstYearDataNode=dataNode.value(firstYear);
+    qint64 diffRootNode1=firstYearDataRoot-firstYearDataNode;
 
     //Will contains computed data
     QMap<double,double> dataPlotRoot,dataPlotNode;
@@ -92,7 +91,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
     foreach(unsigned int key,dataRoot.keys())
     {
         double percentRoot=0.0,percentNode=0.0;
-        double diffRootNode2=0.0,diffRootNode=0.0,diffNode=0.0;
+        qint64 diffRootNode2=0,diffRootNode=0,diffNode=0;
 
         //Skip the first year
         if(key>firstYear)
@@ -102,26 +101,26 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
             diffRootNode=diffRootNode2-diffRootNode1;
             diffNode=dataNode.value(key)-firstYearDataNode;
 
-            if(!qFuzzyIsNull(diffRootNode1))
+            if(diffRootNode1!=0)
             {
-                percentRoot=diffRootNode*100/diffRootNode1;
+                percentRoot=diffRootNode*100.0/diffRootNode1;
 
             }
             if(percentRoot<minYRange)
                 minYRange=percentRoot;
             if(percentRoot>maxYRange)
                 maxYRange=percentRoot;
-            dataPlotRoot.insert(key,percentRoot);
+            dataPlotRoot.insert((double)key,percentRoot);
 
-            if(!qFuzzyIsNull(firstYearDataNode))
+            if(firstYearDataNode!=0)
             {
-                percentNode=diffNode*100/firstYearDataNode;
+                percentNode=diffNode*100.0/firstYearDataNode;
             }
             if(percentNode<minYRange)
                 minYRange=percentNode;
             if(percentNode>maxYRange)
                 maxYRange=percentNode;
-            dataPlotNode.insert(key,percentNode);
+            dataPlotNode.insert((double)key,percentNode);
 
             //cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
             if(cumule==false)
@@ -350,30 +349,30 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
         foreach (mode,listModesAndLabels)
         {
-            double dataDF=0.0,dataRF=0.0,dataDI=0.0,dataRI=0.0,sum=0.0;
+            qint64 dataDF=0,dataRF=0,dataDI=0,dataRI=0,sum=0;
             double percentDF=0.0,percentRF=0.0,percentDI=0.0,percentRI=0.0;
-            dataDF=q.value(mode.first+"DF").toDouble();
-            dataRF=q.value(mode.first+"RF").toDouble();
-            dataDI=q.value(mode.first+"DI").toDouble();
-            dataRI=q.value(mode.first+"RI").toDouble();
+            dataDF=q.value(mode.first+"DF").toLongLong();
+            dataRF=q.value(mode.first+"RF").toLongLong();
+            dataDI=q.value(mode.first+"DI").toLongLong();
+            dataRI=q.value(mode.first+"RI").toLongLong();
 
             //In case of negative disponible
-            if(dataDF<0.0)
-                dataDF=0.0;
-            if(dataRF<0.0)
-                dataRF=0.0;
-            if(dataDI<0.0)
-                dataDI=0.0;
-            if(dataRI<0.0)
-                dataRI=0.0;
+            if(dataDF<0)
+                dataDF=0;
+            if(dataRF<0)
+                dataRF=0;
+            if(dataDI<0)
+                dataDI=0;
+            if(dataRI<0)
+                dataRI=0;
 
             sum=dataDF+dataRF+dataDI+dataRI;
-            if(sum>0.0)
+            if(sum>0)
             {
-                percentDF=100*dataDF/sum;
-                percentRF=100*dataRF/sum;
-                percentDI=100*dataDI/sum;
-                percentRI=100*dataRI/sum;
+                percentDF=100.0*dataDF/sum;
+                percentRF=100.0*dataRF/sum;
+                percentDI=100.0*dataDI/sum;
+                percentRI=100.0*dataRI/sum;
             }
             valuesDF.append(percentDF);
             valuesRF.append(percentRF);

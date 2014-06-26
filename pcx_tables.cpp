@@ -37,25 +37,25 @@ QString PCx_Tables::getT1(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     while(q.next())
     {
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
-        double engages=q.value("engages").toDouble();
-        double disponibles=q.value("disponibles").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
+        qint64 engages=q.value("engages").toLongLong();
+        qint64 disponibles=q.value("disponibles").toLongLong();
 
         double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
 
-        if(ouverts!=0.0)
+        if(ouverts!=0)
         {
-            percentRealisesOuverts=realises*100/ouverts;
-            percentEngagesOuverts=engages*100/ouverts;
-            percentDisponiblesOuverts=disponibles*100/ouverts;
+            percentRealisesOuverts=realises*100.0/ouverts;
+            percentEngagesOuverts=engages*100.0/ouverts;
+            percentDisponiblesOuverts=disponibles*100.0/ouverts;
         }
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
                               "<td align='right' class='t1pourcent'>%4\%</td><td align='right' class='t1valeur'>%5</td><td align='right' class='t1pourcent'>%6\%</td>"
                               "<td align='right' class='t1valeur'>%7</td><td align='right' class='t1pourcent'>%8\%</td></tr>").arg(q.value("annee").toUInt())
-                      .arg(formatDouble(ouverts)).arg(formatDouble(realises)).arg(formatDouble(percentRealisesOuverts))
-                      .arg(formatDouble(engages)).arg(formatDouble(percentEngagesOuverts))
-                      .arg(formatDouble(disponibles)).arg(formatDouble(percentDisponiblesOuverts)));
+                      .arg(formatCurrency(ouverts)).arg(formatCurrency(realises)).arg(formatDouble(percentRealisesOuverts))
+                      .arg(formatCurrency(engages)).arg(formatDouble(percentEngagesOuverts))
+                      .arg(formatCurrency(disponibles)).arg(formatDouble(percentDisponiblesOuverts)));
     }
 
     output.append("</table>");
@@ -75,8 +75,8 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
             .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
 
 
-    QMap<unsigned int,double> ouvertsRoot,realisesRoot;
-    double firstYearOuvertsRoot=0.0,firstYearRealisesRoot=0.0;
+    QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
+    qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0;
 
     QSqlQuery q;
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
@@ -89,8 +89,8 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     bool doneFirstForRoot=false;
     while(q.next())
     {
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         ouvertsRoot.insert(q.value("annee").toUInt(),ouverts);
         realisesRoot.insert(q.value("annee").toUInt(),realises);
         if(doneFirstForRoot==false)
@@ -112,18 +112,18 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     }
 
     bool doneFirstForNode=false;
-    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
-    double diffFirstYearRootNodeOuverts=0.0,diffFirstYearRootNodeRealises=0.0;
+    qint64 firstYearOuvertsNode=0,firstYearRealisesNode=0;
+    qint64 diffFirstYearRootNodeOuverts=0,diffFirstYearRootNodeRealises=0;
 
 
     while(q.next())
     {
-        double diffRootNodeOuverts=0.0,diffRootNodeRealises=0.0;
-        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+        qint64 diffRootNodeOuverts=0,diffRootNodeRealises=0;
+        qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
@@ -140,13 +140,13 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
             diffCurrentYearFirstYearRealises=diffRootNodeRealises-diffFirstYearRootNodeRealises;
-            if(!qFuzzyIsNull(diffFirstYearRootNodeOuverts))
+            if(diffFirstYearRootNodeOuverts!=0)
             {
-                percentOuverts=diffCurrentYearFirstYearOuverts*100/diffFirstYearRootNodeOuverts;
+                percentOuverts=diffCurrentYearFirstYearOuverts*100.0/diffFirstYearRootNodeOuverts;
             }
-            if(!qFuzzyIsNull(diffFirstYearRootNodeRealises))
+            if(diffFirstYearRootNodeRealises!=0)
             {
-                percentRealises=diffCurrentYearFirstYearRealises*100/diffFirstYearRootNodeRealises;
+                percentRealises=diffCurrentYearFirstYearRealises*100.0/diffFirstYearRootNodeRealises;
             }
             output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
                           .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
@@ -171,8 +171,8 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
             .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
 
 
-    QMap<unsigned int,double> ouvertsRoot,realisesRoot;
-    double firstYearOuvertsRoot=0.0,firstYearRealisesRoot=0.0;
+    QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
+    qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0;
 
     QSqlQuery q;
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
@@ -185,8 +185,8 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
     bool doneFirstForRoot=false;
     while(q.next())
     {
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         ouvertsRoot.insert(q.value("annee").toUInt(),ouverts);
         realisesRoot.insert(q.value("annee").toUInt(),realises);
         if(doneFirstForRoot==false)
@@ -208,18 +208,18 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
     }
 
     bool doneFirstForNode=false;
-    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
-    double diffFirstYearRootNodeOuverts=0.0,diffFirstYearRootNodeRealises=0.0;
+    qint64 firstYearOuvertsNode=0,firstYearRealisesNode=0;
+    qint64 diffFirstYearRootNodeOuverts=0,diffFirstYearRootNodeRealises=0;
 
 
     while(q.next())
     {
-        double diffRootNodeOuverts=0.0,diffRootNodeRealises=0.0;
-        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+        qint64 diffRootNodeOuverts=0,diffRootNodeRealises=0;
+        qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
@@ -238,13 +238,13 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
             diffCurrentYearFirstYearRealises=diffRootNodeRealises-diffFirstYearRootNodeRealises;
-            if(!qFuzzyIsNull(diffFirstYearRootNodeOuverts))
+            if(diffFirstYearRootNodeOuverts!=0)
             {
-                percentOuverts=diffCurrentYearFirstYearOuverts*100/diffFirstYearRootNodeOuverts;
+                percentOuverts=diffCurrentYearFirstYearOuverts*100.0/diffFirstYearRootNodeOuverts;
             }
-            if(!qFuzzyIsNull(diffFirstYearRootNodeRealises))
+            if(diffFirstYearRootNodeRealises!=0)
             {
-                percentRealises=diffCurrentYearFirstYearRealises*100/diffFirstYearRootNodeRealises;
+                percentRealises=diffCurrentYearFirstYearRealises*100.0/diffFirstYearRootNodeRealises;
             }
             output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
                           .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
@@ -284,15 +284,15 @@ QString PCx_Tables::getT3(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     }
 
     bool doneFirstForNode=false;
-    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
+    qint64 firstYearOuvertsNode=0,firstYearRealisesNode=0;
 
     while(q.next())
     {
-        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+        qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
@@ -305,13 +305,13 @@ QString PCx_Tables::getT3(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         {
             diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
             diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
-            if(!qFuzzyIsNull(firstYearOuvertsNode))
+            if(firstYearOuvertsNode!=0)
             {
-                percentOuverts=diffCurrentYearFirstYearOuverts*100/firstYearOuvertsNode;
+                percentOuverts=diffCurrentYearFirstYearOuverts*100.0/firstYearOuvertsNode;
             }
-            if(!qFuzzyIsNull(firstYearRealisesNode))
+            if(firstYearRealisesNode!=0)
             {
-                percentRealises=diffCurrentYearFirstYearRealises*100/firstYearRealisesNode;
+                percentRealises=diffCurrentYearFirstYearRealises*100.0/firstYearRealisesNode;
             }
             output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
                           .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
@@ -345,15 +345,15 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
     }
 
     bool doneFirstForNode=false;
-    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0;
+    qint64 firstYearOuvertsNode=0,firstYearRealisesNode=0;
 
     while(q.next())
     {
-        double diffCurrentYearFirstYearOuverts=0.0,diffCurrentYearFirstYearRealises=0.0;
+        qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
@@ -366,13 +366,13 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
         {
             diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
             diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
-            if(!qFuzzyIsNull(firstYearOuvertsNode))
+            if(firstYearOuvertsNode!=0)
             {
-                percentOuverts=diffCurrentYearFirstYearOuverts*100/firstYearOuvertsNode;
+                percentOuverts=diffCurrentYearFirstYearOuverts*100.0/firstYearOuvertsNode;
             }
-            if(!qFuzzyIsNull(firstYearRealisesNode))
+            if(firstYearRealisesNode!=0)
             {
-                percentRealises=diffCurrentYearFirstYearRealises*100/firstYearRealisesNode;
+                percentRealises=diffCurrentYearFirstYearRealises*100.0/firstYearRealisesNode;
             }
             output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
                           .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
@@ -398,7 +398,7 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
                            "<tr class='t4entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
 
-    QHash<unsigned int,double> ouvertsRoot,realisesRoot;
+    QHash<unsigned int,qint64> ouvertsRoot,realisesRoot;
 
     QSqlQuery q;
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
@@ -410,8 +410,8 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     while(q.next())
     {
-        ouvertsRoot.insert(q.value("annee").toUInt(),q.value("ouverts").toDouble());
-        realisesRoot.insert(q.value("annee").toUInt(),q.value("realises").toDouble());
+        ouvertsRoot.insert(q.value("annee").toUInt(),q.value("ouverts").toLongLong());
+        realisesRoot.insert(q.value("annee").toUInt(),q.value("realises").toLongLong());
     }
 
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -426,20 +426,20 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     while(q.next())
     {
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
         unsigned int annee=q.value("annee").toUInt();
         Q_ASSERT(annee>0);
 
         double percentOuvertsRoot=0.0,percentRealisesRoot=0.0;
 
-        if(!qFuzzyIsNull(ouvertsRoot[annee]))
+        if(ouvertsRoot[annee]!=0)
         {
-            percentOuvertsRoot=ouverts*100/ouvertsRoot[annee];
+            percentOuvertsRoot=ouverts*100.0/ouvertsRoot[annee];
         }
-        if(!qFuzzyIsNull(realisesRoot[annee]))
+        if(realisesRoot[annee]!=0)
         {
-            percentRealisesRoot=realises*100/realisesRoot[annee];
+            percentRealisesRoot=realises*100.0/realisesRoot[annee];
         }
 
         output.append(QString("<tr><td class='t4annee'>%1</td><td align='right' class='t4pourcent'>%2\%</td><td align='right' class='t4pourcent'>"
@@ -467,8 +467,8 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
                            "<tr class='t5entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
             .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
 
-    QMap<unsigned int,double> ouvertsRoot,realisesRoot,engagesRoot,disponiblesRoot;
-    double firstYearOuvertsRoot=0.0,firstYearRealisesRoot=0.0,firstYearEngagesRoot=0.0,firstYearDisponiblesRoot=0.0;
+    QMap<unsigned int,qint64> ouvertsRoot,realisesRoot,engagesRoot,disponiblesRoot;
+    qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0,firstYearEngagesRoot=0,firstYearDisponiblesRoot=0;
 
     QSqlQuery q;
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
@@ -481,10 +481,10 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     bool doneFirstForRoot=false;
     while(q.next())
     {
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
-        double engages=q.value("engages").toDouble();
-        double disponibles=q.value("disponibles").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
+        qint64 engages=q.value("engages").toLongLong();
+        qint64 disponibles=q.value("disponibles").toLongLong();
         unsigned int annee=q.value("annee").toUInt();
         ouvertsRoot.insert(annee,ouverts);
         realisesRoot.insert(annee,realises);
@@ -511,20 +511,20 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     }
 
     bool doneFirstForNode=false;
-    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0,firstYearEngagesNode=0.0,firstYearDisponiblesNode=0.0;
-    double diffFirstYearRootNodeOuverts=0.0,diffFirstYearRootNodeRealises=0.0,diffFirstYearRootNodeEngages=0.0,
-            diffFirstYearRootNodeDisponibles=0.0,diffFirstYearRootNodeNC=0.0;
+    qint64 firstYearOuvertsNode=0,firstYearRealisesNode=0,firstYearEngagesNode=0,firstYearDisponiblesNode=0;
+    qint64 diffFirstYearRootNodeOuverts=0,diffFirstYearRootNodeRealises=0,diffFirstYearRootNodeEngages=0,
+            diffFirstYearRootNodeDisponibles=0,diffFirstYearRootNodeNC=0;
 
 
     while(q.next())
     {
-        double diffRootNodeOuverts=0.0,diffRootNodeRealises=0.0,diffRootNodeEngages=0.0,diffRootNodeDisponibles=0.0,diffRootNodeNC=0.0;
+        qint64 diffRootNodeOuverts=0,diffRootNodeRealises=0,diffRootNodeEngages=0,diffRootNodeDisponibles=0,diffRootNodeNC=0;
 
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
-        double engages=q.value("engages").toDouble();
-        double disponibles=q.value("disponibles").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
+        qint64 engages=q.value("engages").toLongLong();
+        qint64 disponibles=q.value("disponibles").toLongLong();
         double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
         if(doneFirstForNode==false)
         {
@@ -554,20 +554,20 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
             diffRootNodeDisponibles=disponiblesRoot[annee]-disponibles;
             diffRootNodeNC=diffRootNodeEngages+diffRootNodeDisponibles;
 
-            if(!qFuzzyIsNull(diffFirstYearRootNodeOuverts*diffRootNodeOuverts))
-                percentOuverts=100/diffFirstYearRootNodeOuverts*diffRootNodeOuverts;
+            if(diffFirstYearRootNodeOuverts*diffRootNodeOuverts!=0)
+                percentOuverts=100.0/diffFirstYearRootNodeOuverts*diffRootNodeOuverts;
 
-            if(!qFuzzyIsNull(diffFirstYearRootNodeRealises*diffRootNodeRealises))
-                percentRealises=100/diffFirstYearRootNodeRealises*diffRootNodeRealises;
+            if(diffFirstYearRootNodeRealises*diffRootNodeRealises!=0)
+                percentRealises=100.0/diffFirstYearRootNodeRealises*diffRootNodeRealises;
 
-            if(!qFuzzyIsNull(diffFirstYearRootNodeEngages*diffRootNodeEngages))
-                percentEngages=100/diffFirstYearRootNodeEngages*diffRootNodeEngages;
+            if(diffFirstYearRootNodeEngages*diffRootNodeEngages!=0)
+                percentEngages=100.0/diffFirstYearRootNodeEngages*diffRootNodeEngages;
 
-            if(!qFuzzyIsNull(diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles))
-                percentDisponibles=100/diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles;
+            if(diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles!=0)
+                percentDisponibles=100.0/diffFirstYearRootNodeDisponibles*diffRootNodeDisponibles;
 
-            if(!qFuzzyIsNull(diffRootNodeNC+diffFirstYearRootNodeNC))
-                percentNC=100/diffFirstYearRootNodeNC*diffRootNodeNC;
+            if(diffRootNodeNC+diffFirstYearRootNodeNC!=0)
+                percentNC=100.0/diffFirstYearRootNodeNC*diffRootNodeNC;
 
 
             output.append(QString("<tr><td class='t5annee'>%1</td><td align='right' class='t5pourcent'>%2</td>"
@@ -609,16 +609,16 @@ QString PCx_Tables::getT6(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     }
 
     bool doneFirstForNode=false;
-    double firstYearOuvertsNode=0.0,firstYearRealisesNode=0.0,firstYearEngagesNode=0.0,firstYearDisponiblesNode=0.0,firstYearNodeNC=0.0;
+    qint64 firstYearOuvertsNode=0,firstYearRealisesNode=0,firstYearEngagesNode=0,firstYearDisponiblesNode=0,firstYearNodeNC=0;
 
     while(q.next())
     {
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
-        double engages=q.value("engages").toDouble();
-        double disponibles=q.value("disponibles").toDouble();
-        double nc=engages+disponibles;
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
+        qint64 engages=q.value("engages").toLongLong();
+        qint64 disponibles=q.value("disponibles").toLongLong();
+        qint64 nc=engages+disponibles;
         double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
         if(doneFirstForNode==false)
         {
@@ -635,20 +635,20 @@ QString PCx_Tables::getT6(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         }
         else
         {
-            if(!qFuzzyIsNull(ouverts*firstYearOuvertsNode))
-                percentOuverts=100/firstYearOuvertsNode*ouverts;
+            if(ouverts*firstYearOuvertsNode!=0)
+                percentOuverts=100.0/firstYearOuvertsNode*ouverts;
 
-            if(!qFuzzyIsNull(realises*firstYearRealisesNode))
-                percentRealises=100/firstYearRealisesNode*realises;
+            if(realises*firstYearRealisesNode!=0)
+                percentRealises=100.0/firstYearRealisesNode*realises;
 
-            if(!qFuzzyIsNull(engages*firstYearEngagesNode))
-                percentEngages=100/firstYearEngagesNode*engages;
+            if(engages*firstYearEngagesNode!=0)
+                percentEngages=100.0/firstYearEngagesNode*engages;
 
-            if(!qFuzzyIsNull(disponibles*firstYearDisponiblesNode))
-                percentDisponibles=100/firstYearDisponiblesNode*disponibles;
+            if(disponibles*firstYearDisponiblesNode!=0)
+                percentDisponibles=100.0/firstYearDisponiblesNode*disponibles;
 
-            if(!qFuzzyIsNull(nc*firstYearNodeNC))
-                percentNC=100/firstYearNodeNC*nc;
+            if(nc*firstYearNodeNC!=0)
+                percentNC=100.0/firstYearNodeNC*nc;
 
 
             output.append(QString("<tr><td class='t6annee'>%1</td><td align='right' class='t6pourcent'>%2</td>"
@@ -692,18 +692,18 @@ QString PCx_Tables::getT7(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     while(q.next())
     {
         unsigned int annee=q.value("annee").toUInt();
-        double ouverts=q.value("ouverts").toDouble();
-        double realises=q.value("realises").toDouble();
-        double engages=q.value("engages").toDouble();
-        double disponibles=q.value("disponibles").toDouble();
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
+        qint64 engages=q.value("engages").toLongLong();
+        qint64 disponibles=q.value("disponibles").toLongLong();
         double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0;
 
-        if(!qFuzzyIsNull(realises))
+        if(realises!=0)
         {
-            percentOuverts=365*ouverts/realises;
+            percentOuverts=365.0*ouverts/realises;
             percentRealises=365.0;
-            percentEngages=365*engages/realises;
-            percentDisponibles=365*disponibles/realises;
+            percentEngages=365.0*engages/realises;
+            percentDisponibles=365.0*disponibles/realises;
         }
         output.append(QString("<tr><td class='t7annee'>%1</td><td align='right' class='t7pourcent'>%2</td>"
                               "<td align='right' class='t7pourcent'>%3</td><td align='right' class='t7pourcent'>%4</td>"
@@ -737,23 +737,23 @@ QString PCx_Tables::getT8(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         die();
     }
 
-    double sumOuverts=0.0,sumRealises=0.0,sumEngages=0.0,sumDisponibles=0.0;
+    qint64 sumOuverts=0,sumRealises=0,sumEngages=0,sumDisponibles=0;
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toDouble();
-        sumRealises+=q.value("realises").toDouble();
-        sumEngages+=q.value("engages").toDouble();
-        sumDisponibles+=q.value("disponibles").toDouble();
+        sumOuverts+=q.value("ouverts").toLongLong();
+        sumRealises+=q.value("realises").toLongLong();
+        sumEngages+=q.value("engages").toLongLong();
+        sumDisponibles+=q.value("disponibles").toLongLong();
     }
 
     double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
 
-    if(!qFuzzyIsNull(sumOuverts))
+    if(sumOuverts!=0)
     {
-        percentRealisesOuverts=sumRealises*100/sumOuverts;
-        percentEngagesOuverts=sumEngages*100/sumOuverts;
-        percentDisponiblesOuverts=sumDisponibles*100/sumOuverts;
+        percentRealisesOuverts=sumRealises*100.0/sumOuverts;
+        percentEngagesOuverts=sumEngages*100.0/sumOuverts;
+        percentDisponiblesOuverts=sumDisponibles*100.0/sumOuverts;
     }
 
     output.append(QString("<tr><td class='t8annee' align='center'>R&eacute;alis&eacute;</td><td align='right' class='t8pourcent'>%1\%</td></tr>"
@@ -790,21 +790,21 @@ QString PCx_Tables::getT9(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         die();
     }
 
-    double sumOuverts=0.0,sumRealises=0.0,sumEngages=0.0,sumDisponibles=0.0;
+    qint64 sumOuverts=0,sumRealises=0,sumEngages=0,sumDisponibles=0;
     double percentOuverts=0.0,percentNC=0.0,percentEngages=0.0,percentDisponibles=0.0;
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toDouble();
-        sumRealises+=q.value("realises").toDouble();
-        sumEngages+=q.value("engages").toDouble();
-        sumDisponibles+=q.value("disponibles").toDouble();
+        sumOuverts+=q.value("ouverts").toLongLong();
+        sumRealises+=q.value("realises").toLongLong();
+        sumEngages+=q.value("engages").toLongLong();
+        sumDisponibles+=q.value("disponibles").toLongLong();
     }
-    if(!qFuzzyIsNull(sumRealises))
+    if(sumRealises!=0)
     {
-        percentOuverts=sumOuverts*365/sumRealises;
-        percentEngages=sumEngages*365/sumRealises;
-        percentDisponibles=sumDisponibles*365/sumRealises;
+        percentOuverts=sumOuverts*365.0/sumRealises;
+        percentEngages=sumEngages*365.0/sumRealises;
+        percentDisponibles=sumDisponibles*365.0/sumRealises;
         percentNC=percentEngages+percentDisponibles;
     }
     output.append(QString("<tr><td colspan='2' align='center' class='t9annee'>Face aux cr&eacute;dits r&eacute;alis&eacute;s, les pr&eacute;visions correspondent"
@@ -832,9 +832,9 @@ QString PCx_Tables::getT10(unsigned int node) const
             .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
-    q.prepare(QString("select a.annee,coalesce(a.ouverts,0.0)-coalesce(b.ouverts,0.0) as diff_ouverts, "
-                      "coalesce(a.realises,0.0)-coalesce(b.realises,0.0) as diff_realises, "
-                      "coalesce(a.engages,0.0)-coalesce(b.engages,0.0) as diff_engages "
+    q.prepare(QString("select a.annee,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as diff_ouverts, "
+                      "coalesce(a.realises,0)-coalesce(b.realises,0) as diff_realises, "
+                      "coalesce(a.engages,0)-coalesce(b.engages,0) as diff_engages "
                       "from audit_RF_%1 as a, audit_DF_%1 as b where a.id_node=:id and b.id_node=:id "
                       "and a.annee=b.annee order by a.annee").arg(model->getAuditId()));
     q.bindValue(":id",node);
@@ -849,38 +849,38 @@ QString PCx_Tables::getT10(unsigned int node) const
     while(q.next())
     {
         unsigned int annee=q.value("annee").toUInt();
-        double diff_ouverts=q.value("diff_ouverts").toDouble();
-        double diff_realises=q.value("diff_realises").toDouble();
-        double diff_engages=q.value("diff_engages").toDouble();
+        qint64 diff_ouverts=q.value("diff_ouverts").toLongLong();
+        qint64 diff_realises=q.value("diff_realises").toLongLong();
+        qint64 diff_engages=q.value("diff_engages").toLongLong();
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
-        if(qFuzzyIsNull(diff_ouverts))
+        if(diff_ouverts==0)
             output.append("<span style='color:black'>");
-        else if(diff_ouverts>0.0)
+        else if(diff_ouverts>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_ouverts)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_ouverts)));
 
-        if(qFuzzyIsNull(diff_realises))
+        if(diff_realises==0)
             output.append("<span style='color:black'>");
-        else if(diff_realises>0.0)
+        else if(diff_realises>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_realises)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_realises)));
 
-        if(qFuzzyIsNull(diff_engages))
+        if(diff_engages==0)
             output.append("<span style='color:black'>");
-        else if(diff_engages>0.0)
+        else if(diff_engages>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td></tr>").arg(formatDouble(diff_engages)));
+        output.append(QString("%1</span></td></tr>").arg(formatCurrency(diff_engages)));
     }
 
     output.append("</table>");
@@ -899,9 +899,9 @@ QString PCx_Tables::getT11(unsigned int node) const
             .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
-    q.prepare(QString("select a.annee,coalesce(a.ouverts,0.0)-coalesce(b.ouverts,0.0) as diff_ouverts, "
-                      "coalesce(a.realises,0.0)-coalesce(b.realises,0.0) as diff_realises, "
-                      "coalesce(a.engages,0.0)-coalesce(b.engages,0.0) as diff_engages "
+    q.prepare(QString("select a.annee,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as diff_ouverts, "
+                      "coalesce(a.realises,0)-coalesce(b.realises,0) as diff_realises, "
+                      "coalesce(a.engages,0)-coalesce(b.engages,0) as diff_engages "
                       "from audit_RI_%1 as a, audit_DI_%1 as b where a.id_node=:id and b.id_node=:id "
                       "and a.annee=b.annee order by a.annee").arg(model->getAuditId()));
     q.bindValue(":id",node);
@@ -916,38 +916,38 @@ QString PCx_Tables::getT11(unsigned int node) const
     while(q.next())
     {
         unsigned int annee=q.value("annee").toUInt();
-        double diff_ouverts=q.value("diff_ouverts").toDouble();
-        double diff_realises=q.value("diff_realises").toDouble();
-        double diff_engages=q.value("diff_engages").toDouble();
+        qint64 diff_ouverts=q.value("diff_ouverts").toLongLong();
+        qint64 diff_realises=q.value("diff_realises").toLongLong();
+        qint64 diff_engages=q.value("diff_engages").toLongLong();
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
-        if(qFuzzyIsNull(diff_ouverts))
+        if(diff_ouverts==0)
             output.append("<span style='color:black'>");
-        else if(diff_ouverts>0.0)
+        else if(diff_ouverts>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_ouverts)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_ouverts)));
 
-        if(qFuzzyIsNull(diff_realises))
+        if(diff_realises==0)
             output.append("<span style='color:black'>");
-        else if(diff_realises>0.0)
+        else if(diff_realises>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_realises)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_realises)));
 
-        if(qFuzzyIsNull(diff_engages))
+        if(diff_engages==0)
             output.append("<span style='color:black'>");
-        else if(diff_engages>0.0)
+        else if(diff_engages>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td></tr>").arg(formatDouble(diff_engages)));
+        output.append(QString("%1</span></td></tr>").arg(formatCurrency(diff_engages)));
     }
 
     output.append("</table>");
@@ -967,12 +967,12 @@ QString PCx_Tables::getT12(unsigned int node) const
 
     QSqlQuery q;
     q.prepare(QString("select a.annee, "
-                      "(coalesce(a.ouverts,0.0)-coalesce(b.ouverts,0.0)) "
-                      " + (coalesce(c.ouverts,0.0)-coalesce(d.ouverts,0.0)) as diff_ouverts, "
-                      "(coalesce(a.realises,0.0)-coalesce(b.realises,0.0)) "
-                      " + (coalesce(c.realises,0.0)-coalesce(d.realises,0.0)) as diff_realises, "
-                      "(coalesce(a.engages,0.0)-coalesce(b.engages,0.0)) "
-                      " + (coalesce(c.engages,0.0)-coalesce(d.engages,0.0)) as diff_engages "
+                      "(coalesce(a.ouverts,0)-coalesce(b.ouverts,0)) "
+                      " + (coalesce(c.ouverts,0)-coalesce(d.ouverts,0)) as diff_ouverts, "
+                      "(coalesce(a.realises,0)-coalesce(b.realises,0)) "
+                      " + (coalesce(c.realises,0)-coalesce(d.realises,0)) as diff_realises, "
+                      "(coalesce(a.engages,0)-coalesce(b.engages,0)) "
+                      " + (coalesce(c.engages,0)-coalesce(d.engages,0)) as diff_engages "
                       "from audit_RF_%1 as a, audit_DF_%1 as b, audit_RI_%1 as c, audit_DI_%1 as d"
                       " where a.id_node=:id and b.id_node=:id and c.id_node=:id and d.id_node=:id "
                       "and a.annee=b.annee and b.annee=c.annee and c.annee=d.annee order by a.annee").arg(model->getAuditId()));
@@ -988,38 +988,38 @@ QString PCx_Tables::getT12(unsigned int node) const
     while(q.next())
     {
         unsigned int annee=q.value("annee").toUInt();
-        double diff_ouverts=q.value("diff_ouverts").toDouble();
-        double diff_realises=q.value("diff_realises").toDouble();
-        double diff_engages=q.value("diff_engages").toDouble();
+        qint64 diff_ouverts=q.value("diff_ouverts").toLongLong();
+        qint64 diff_realises=q.value("diff_realises").toLongLong();
+        qint64 diff_engages=q.value("diff_engages").toLongLong();
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
-        if(qFuzzyIsNull(diff_ouverts))
+        if(diff_ouverts==0)
             output.append("<span style='color:black'>");
-        else if(diff_ouverts>0.0)
+        else if(diff_ouverts>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_ouverts)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_ouverts)));
 
-        if(qFuzzyIsNull(diff_realises))
+        if(diff_realises==0)
             output.append("<span style='color:black'>");
-        else if(diff_realises>0.0)
+        else if(diff_realises>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatDouble(diff_realises)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_realises)));
 
-        if(qFuzzyIsNull(diff_engages))
+        if(diff_engages==0)
             output.append("<span style='color:black'>");
-        else if(diff_engages>0.0)
+        else if(diff_engages>0)
             output.append("<span style='color:#008000'>");
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td></tr>").arg(formatDouble(diff_engages)));
+        output.append(QString("%1</span></td></tr>").arg(formatCurrency(diff_engages)));
     }
 
     output.append("</table>");

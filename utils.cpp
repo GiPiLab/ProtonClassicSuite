@@ -17,6 +17,15 @@ void die(int retcode)
     exit(retcode);
 }
 
+
+QString formatCurrency(qint64 num)
+{
+    QLocale locale;
+    return locale.toString(((double)num/FIXEDPOINTCOEFF),'f',2);
+}
+
+
+
 QString formatDouble(double num, unsigned int decimals)
 {
     QLocale locale;

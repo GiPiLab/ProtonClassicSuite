@@ -120,7 +120,8 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
     }
     unsigned int uLastId=lastId.toUInt();
 
-    q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
+    //Data are integer for fixed points arithmetics, stored with 3 decimals
+    q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
@@ -129,7 +130,7 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
         die();
     }
 
-    q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
+    q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
@@ -138,7 +139,7 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
         die();
     }
 
-    q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
+    q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
@@ -147,7 +148,7 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
         die();
     }
 
-    q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts real, realises real, engages real, disponibles real)").arg(uLastId));
+    q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
     {
@@ -461,10 +462,10 @@ bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, 
         die();
     }
 
-    double sumOuverts=0.0;
-    double sumRealises=0.0;
-    double sumEngages=0.0;
-    double sumDisponibles=0.0;
+    qint64 sumOuverts=0;
+    qint64 sumRealises=0;
+    qint64 sumEngages=0;
+    qint64 sumDisponibles=0;
 
     //To check if we need to insert 0.0 or NULL
     bool nullOuverts=true;
@@ -478,45 +479,45 @@ bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, 
         qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
         if(!q.value("ouverts").isNull())
         {
-            sumOuverts+=q.value("ouverts").toDouble();
+            sumOuverts+=q.value("ouverts").toLongLong();
             nullOuverts=false;
         }
 
         if(!q.value("realises").isNull())
         {
-            sumRealises+=q.value("realises").toDouble();
+            sumRealises+=q.value("realises").toLongLong();
             nullRealises=false;
         }
         if(!q.value("engages").isNull())
         {
-            sumEngages+=q.value("engages").toDouble();
+            sumEngages+=q.value("engages").toLongLong();
             nullEngages=false;
         }
         if(!q.value("disponibles").isNull())
         {
-            sumDisponibles+=q.value("disponibles").toDouble();
+            sumDisponibles+=q.value("disponibles").toLongLong();
             nullDisponibles=false;
         }
     }
 
     q.prepare(QString("update %1 set ouverts=:ouverts,realises=:realises,engages=:engages,disponibles=:disponibles where annee=:annee and id_node=:id_node").arg(tableName));
     if(nullOuverts)
-        q.bindValue(":ouverts",QVariant(QVariant::Double));
+        q.bindValue(":ouverts",QVariant(QVariant::LongLong));
     else
         q.bindValue(":ouverts",sumOuverts);
 
     if(nullRealises)
-        q.bindValue(":realises",QVariant(QVariant::Double));
+        q.bindValue(":realises",QVariant(QVariant::LongLong));
     else
         q.bindValue(":realises",sumRealises);
 
     if(nullEngages)
-        q.bindValue(":engages",QVariant(QVariant::Double));
+        q.bindValue(":engages",QVariant(QVariant::LongLong));
     else
         q.bindValue(":engages",sumEngages);
 
     if(nullDisponibles)
-        q.bindValue(":disponibles",QVariant(QVariant::Double));
+        q.bindValue(":disponibles",QVariant(QVariant::LongLong));
     else
         q.bindValue(":disponibles",sumDisponibles);
 
@@ -654,9 +655,11 @@ void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModel
     QVariant vRealises=model->index(row,COL_REALISES).data();
     QVariant vEngages=model->index(row,COL_ENGAGES).data();
 
-    double ouverts=vOuverts.toDouble();
-    double realises=vRealises.toDouble();
-    double engages=vEngages.toDouble();
+    qDebug()<<"VOUVERTS = "<<vOuverts;
+
+    qint64 ouverts=vOuverts.toLongLong();
+    qint64 realises=vRealises.toLongLong();
+    qint64 engages=vEngages.toLongLong();
 
     if(!vRealises.isNull() && !vOuverts.isNull() && !vEngages.isNull())
     {
