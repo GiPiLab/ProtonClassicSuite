@@ -55,17 +55,76 @@ bool PCx_QueryVariation::load(unsigned int queryId)
     return true;
 }
 
-bool PCx_QueryVariation::save(const QString &name)
+bool PCx_QueryVariation::save(const QString &name) const
 {
+    Q_ASSERT(!name.isEmpty());
 
+    QSqlQuery q;
+    q.prepare(QString("insert into audit_queries_%1 (name,query_mode,target_type,ored,dfrfdiri,oper,percent_or_point,"
+                      "increase_decrease,val1,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,:oper,:pop,"
+                      ":incdec,:val1,:y1,:y2)").arg(model->getAuditId()));
+    q.bindValue(":name",name);
+    q.bindValue(":qmode",VARIATION);
+    q.bindValue(":type",typeId);
+    q.bindValue(":ored",ored);
+    q.bindValue(":dfrfdiri",dfrfdiri);
+    q.bindValue(":oper",op);
+    q.bindValue(":pop",percentOrPoints);
+    q.bindValue(":incdec",incDec);
+    q.bindValue(":val1",val);
+    q.bindValue(":y1",year1);
+    q.bindValue(":y2",year2);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError();
+        return false;
+    }
+
+    return true;
 }
 
-QString PCx_QueryVariation::exec()
+bool PCx_QueryVariation::canSave(const QString &name) const
 {
+    if(name.isEmpty())
+        return false;
 
+    QSqlQuery q;
+    q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
+    q.bindValue(":name",name);
+    q.bindValue(":qmode",VARIATION);
+    q.exec();
+
+    if(q.next())
+        return false;
+
+    return true;
+}
+
+QString PCx_QueryVariation::getDescription() const
+{
+    QString out;
+    if(typeId==0)
+        out=QObject::tr("Tous les noeuds");
+    else
+        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->getNomType(typeId));
+
+    out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5 %6 entre %7 et %8")
+            .arg(PCx_AuditModel::OREDtoCompleteString(ored))
+            .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower())
+            .arg(incDecToString(incDec)).arg(operatorToString(op))
+            .arg(val).arg(percentOrPointToString(percentOrPoints))
+            .arg(year1).arg(year2));
+    return out;
+}
+
+QString PCx_QueryVariation::exec() const
+{
     QMap<unsigned int,qint64> valuesForYear1,valuesForYear2;
-    QMap<unsigned int,double> variations,matchingNodes;
-    QList<unsigned int>nodesOfThisType;
+    QMap<unsigned int,qint64> variations,matchingNodes;
+    QList<unsigned int>nodesOfThisType,problemNodes;
+
 
     QSqlQuery q;
 
@@ -81,7 +140,7 @@ QString PCx_QueryVariation::exec()
         }
     }
 
-    qDebug()<<"Nodes of type "<<typeId<<nodesOfThisType;
+    //qDebug()<<"Nodes of type "<<typeId<<nodesOfThisType;
 
     q.prepare(QString("select * from audit_%1_%2 where annee=:year1 or annee=:year2").arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId()));
     q.bindValue(":year1",year1);
@@ -97,7 +156,6 @@ QString PCx_QueryVariation::exec()
 
     while(q.next())
     {
-        //FIXME : NAN and INF
         unsigned int node=q.value("id_node").toUInt();
 
         if(typeId!=ALLTYPES&&!nodesOfThisType.contains(node))
@@ -124,130 +182,132 @@ QString PCx_QueryVariation::exec()
         i.next();
         qint64 val1=i.value();
         qint64 val2=valuesForYear2.value(i.key());
-        double variation;
-        if(percentOrPoints==PERCENT)
-            variation=((double)val2-val1)/val1;
-        else
-            variation=val2-val1;
+        qint64 variation;
 
-        variations.insert(i.key(),variation);
+
+        if(val1!=0)
+        {
+            if(percentOrPoints==PERCENT)
+            {
+                //Convert to fixed point percents with two decimals
+                variation=100*100*(((double)val2-val1)/val1);
+            }
+
+            else
+            {
+                variation=val2-val1;
+            }
+            variations.insert(i.key(),variation);
+        }
+        else
+        {
+            problemNodes.append(i.key());
+        }
     }
 
     OPERATORS trueOp=op;
-    double trueVal;
 
-    if(percentOrPoints==PERCENT)
-    {
-        trueVal=val/100;
-    }
-    else
-    {
-        trueVal=val;
-    }
-/*
-    if(incDec==INCREASE)
-    {
-        trueOp=op;
-    }
-    //Reverse value and operator in case of decrease
-    else
-    {
-        trueVal=-trueVal;
-        switch(op)
-        {
-        case LOWERTHAN:
-            trueOp=GREATERTHAN;
-            break;
-        case GREATERTHAN:
-            trueOp=LOWERTHAN;
-            break;
-        case LOWEROREQUAL:
-            trueOp=GREATEROREQUAL;
-            break;
-        case GREATEROREQUAL:
-            trueOp=LOWEROREQUAL;
-            break;
-        default:
-            trueOp=op;
-        }
-    }
-*/
-    qDebug()<<variations;
-    QMapIterator<unsigned int,double> j(variations);
+    //qDebug()<<variations;
+    QMapIterator<unsigned int,qint64> j(variations);
     while(j.hasNext())
     {
         j.next();
+        qint64 nodeVariation=j.value();
 
         if(incDec==INCREASE)
         {
-            if(j.value()<0.0)
+            if(nodeVariation<0)
                 continue;
         }
         else if(incDec==DECREASE)
         {
-            if(j.value()>0.0)
-                continue;
+            if(nodeVariation>0)
+               continue;
+            nodeVariation=qAbs(nodeVariation);
         }
-        trueVal=qAbs(trueVal);
 
-        qDebug()<<"Comparing "<<j.value()<<" with "<<trueVal;
+        qint64 trueVal;
+        if(percentOrPoints==PERCENT)
+            //Convert to fixed point with 2 decimals
+            trueVal=val*100;
+        else
+            //Convert to usual fixed point as stored in db
+            trueVal=val*FIXEDPOINTCOEFF;
 
-        //NOTE : check floating point arithmetics
+        qDebug()<<"Comparing "<<nodeVariation<<" with "<<trueVal;
+
         switch(trueOp)
         {
         case LOWERTHAN:
-            if(j.value()<trueVal)
+            if(nodeVariation<trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
         case GREATERTHAN:
-            if(j.value()>trueVal)
+            if(nodeVariation>trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
         case LOWEROREQUAL:
-            if(j.value()<=trueVal)
+            if(nodeVariation<=trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
         case GREATEROREQUAL:
-            if(j.value()>=trueVal)
+            if(nodeVariation>=trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
         case EQUAL:
-            if(qFuzzyCompare(j.value()+1.0,trueVal+1.0))
+            if(nodeVariation==trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
         case NOTEQUAL:
-            if(!qFuzzyCompare(j.value()+1.0,trueVal+1.0))
+            if(nodeVariation!=trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
         }
     }
 
     QString output=QString("<h4>Requ&ecirc;te %1</h4>").arg(name.toHtmlEscaped());
-    //output.append(reqName());
+    output.append("<p><i>"+getDescription().toHtmlEscaped()+"</i></p>");
 
     output.append(QString("<table class='req1' align='center' cellpadding='5' style='margin-left:auto;margin-right:auto'>"
                   "<tr><th>&nbsp;</th><th>%1</th><th>%2</th><th>%3</th>").arg(year1).arg(year2).arg(incDecToString(incDec)));
 
-    QMapIterator<unsigned int,double> matchIter(matchingNodes);
+    QMapIterator<unsigned int,qint64> matchIter(matchingNodes);
     while(matchIter.hasNext())
     {
         matchIter.next();
         unsigned int node=matchIter.key();
-        double val=matchIter.value();
-        if(percentOrPoints==PERCENT)val*=100;
+        qint64 val=matchIter.value();
+
+        if(percentOrPoints==PERCENT)
+            //Add the last decimal to fit FIXEDPOINTCOEFF
+            val=val*10;
+
         if(incDec!=VARIATION)val=qAbs(val);
         output.append(QString("<tr><td>%1</td><td>%2</td><td>%3</td><td align='right'>%4 %5</td></tr>")
                 .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
                 .arg(formatCurrency(valuesForYear1.value(node)))
                 .arg(formatCurrency(valuesForYear2.value(node)))
-                .arg(formatDouble(val))
+                .arg(formatCurrency(val))
                 .arg(percentOrPointToString(percentOrPoints)));
     }
+
+    if(!problemNodes.isEmpty())
+    {
+        output.append(QString("<tr><td colspan='4'><i>Non encore pourvus en %1</i></td></tr>").arg(year1));
+    }
+    foreach(unsigned int probNode,problemNodes)
+    {
+        output.append(QString("<tr><td><i>%1</i></td><td><i>%2</i></td><td><i>%3</i></td><td align='right'><i>NA</i></td></tr>")
+                .arg(model->getAttachedTreeModel()->getNodeName(probNode).toHtmlEscaped())
+                .arg(formatCurrency(valuesForYear1.value(probNode)))
+                .arg(formatCurrency(valuesForYear2.value(probNode))));
+    }
+
 
     output.append("</table>");
     return output;

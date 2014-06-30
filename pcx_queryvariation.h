@@ -43,9 +43,13 @@ public:
 
     bool load(unsigned int queryId);
 
-    bool save(const QString &name);
+    bool save(const QString &name) const;
 
-    QString exec();
+    bool canSave(const QString &name) const;
+
+    QString getDescription() const;
+
+    QString exec() const;
 
     void setOperator(OPERATORS op){this->op=op;}
     OPERATORS getOperator() const{return op;}
@@ -63,7 +67,6 @@ public:
 
     double getValue()const{return val;}
     void setValue(double val){this->val=val;}
-
 
 
 private:

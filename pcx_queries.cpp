@@ -22,6 +22,7 @@ PCx_Queries::PCx_Queries(PCx_AuditModel *model, unsigned int typeId, PCx_AuditMo
 void PCx_Queries::setYears(unsigned int year1, unsigned int year2)
 {
     unsigned int yeartmp;
+    Q_ASSERT(year1!=year2);
 
     if(year1>year2)
     {

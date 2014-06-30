@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>821</width>
+    <width>841</width>
     <height>522</height>
    </rect>
   </property>
@@ -222,9 +222,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QComboBox" name="comboBoxOperator"/>
-      </item>
       <item row="1" column="2">
        <widget class="QDoubleSpinBox" name="doubleSpinBox">
         <property name="alignment">
@@ -234,6 +231,9 @@
          <double>1000000000.000000000000000</double>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QComboBox" name="comboBoxOperator"/>
       </item>
      </layout>
     </widget>

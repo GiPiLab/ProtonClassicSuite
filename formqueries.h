@@ -24,15 +24,19 @@ private slots:
 
     void on_pushButtonExecReq1_clicked();
 
+    void on_comboBoxAugDim_activated(int index);
+
+    void on_pushButtonSaveReq1_clicked();
+
 private:
     Ui::FormQueries *ui;
     void updateListOfAudits();
     PCx_AuditModel *model;
     PCx_Report *report;
     QTextDocument *doc;
-    void getParamsReq1(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
+    bool getParamsReq1(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
                        PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
-                       PCx_QueryVariation::OPERATORS &oper, double &val, unsigned int &year1, unsigned int &year2) const;
+                       PCx_QueryVariation::OPERATORS &oper, double &val, unsigned int &year1, unsigned int &year2);
 };
 
 #endif // FORMQUERIES_H

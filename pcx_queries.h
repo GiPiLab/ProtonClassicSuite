@@ -43,10 +43,12 @@ public:
 
     bool remove(unsigned int queryId);
 
-    virtual bool save(const QString &name)=0;
+    virtual bool save(const QString &name) const =0;
+    virtual bool canSave(const QString &name) const =0;
     virtual bool load(unsigned int queryId)=0;
 
-    virtual QString exec()=0;
+    virtual QString getDescription() const =0;
+    virtual QString exec() const =0;
 
 
     static bool createTableQueries(unsigned int auditId);
