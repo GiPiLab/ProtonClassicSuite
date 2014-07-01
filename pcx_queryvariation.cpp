@@ -5,18 +5,18 @@
 #include <QtGlobal>
 #include "utils.h"
 
-PCx_QueryVariation::PCx_QueryVariation():PCx_Queries()
+PCx_QueryVariation::PCx_QueryVariation():PCx_Query()
 {
 }
 
-PCx_QueryVariation::PCx_QueryVariation(PCx_AuditModel *model, unsigned int queryId):PCx_Queries(model)
+PCx_QueryVariation::PCx_QueryVariation(PCx_AuditModel *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
 }
 
 PCx_QueryVariation::PCx_QueryVariation(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
                                        INCREASEDECREASE increase,PERCENTORPOINTS percent, OPERATORS op, double val,unsigned int year1,unsigned int year2,
-                                       const QString &name):PCx_Queries(model,typeId,ored,dfrfdiri,year1,year2,name),
+                                       const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),
                                         incDec(increase),percentOrPoints(percent),op(op),val(val)
 {
 }
@@ -35,7 +35,7 @@ bool PCx_QueryVariation::load(unsigned int queryId)
     }
     else
     {
-        if((PCx_Queries::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Queries::VARIATION)
+        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::VARIATION)
         {
             qCritical()<<"Invalid PCx_query mode !";
             return false;
@@ -51,7 +51,7 @@ bool PCx_QueryVariation::load(unsigned int queryId)
         incDec=(INCREASEDECREASE)q.value("increase_decrease").toUInt();
         setYears(q.value("year1").toUInt(),q.value("year2").toUInt());
     }
-
+    this->queryId=queryId;
     return true;
 }
 
@@ -64,7 +64,7 @@ bool PCx_QueryVariation::save(const QString &name) const
                       "increase_decrease,val1,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,:oper,:pop,"
                       ":incdec,:val1,:y1,:y2)").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",VARIATION);
+    q.bindValue(":qmode",PCx_Query::VARIATION);
     q.bindValue(":type",typeId);
     q.bindValue(":ored",ored);
     q.bindValue(":dfrfdiri",dfrfdiri);
@@ -234,7 +234,7 @@ QString PCx_QueryVariation::exec() const
             //Convert to usual fixed point as stored in db
             trueVal=val*FIXEDPOINTCOEFF;
 
-        qDebug()<<"Comparing "<<nodeVariation<<" with "<<trueVal;
+        //qDebug()<<"Comparing "<<nodeVariation<<" with "<<trueVal;
 
         switch(trueOp)
         {

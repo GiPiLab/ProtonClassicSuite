@@ -1,9 +1,12 @@
 #include "formqueries.h"
 #include "ui_formqueries.h"
 #include <QDebug>
-#include "pcx_queries.h"
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include "pcx_query.h"
 #include "pcx_queryvariation.h"
 #include "utils.h"
+
 
 
 FormQueries::FormQueries(QWidget *parent) :
@@ -12,6 +15,8 @@ FormQueries::FormQueries(QWidget *parent) :
 {
     ui->setupUi(this);
     model=NULL;
+    queriesModel=NULL;
+    report=NULL;
     ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ouverts)+"s",PCx_AuditModel::ouverts);
     ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::realises)+"s",PCx_AuditModel::realises);
     ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::engages)+"s",PCx_AuditModel::engages);
@@ -72,6 +77,8 @@ FormQueries::~FormQueries()
     {
         delete model;
     }
+    if(queriesModel!=NULL)
+        delete queriesModel;
     delete doc;
     delete ui;
 }
@@ -104,12 +111,19 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=NULL)
-    {
         delete model;
+
+    if(report!=NULL)
         delete report;
-    }
+
+    if(queriesModel!=NULL)
+        delete queriesModel;
+
     model=new PCx_AuditModel(selectedAuditId,this);
     report=new PCx_Report(model);
+    queriesModel=new PCx_QueriesModel(selectedAuditId,this);
+
+    ui->listView->setModel(queriesModel);
 
     ui->comboBoxTypes->clear();
     ui->comboBoxTypes_2->clear();
@@ -123,9 +137,9 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
         ui->comboBoxTypes_2->addItem(p.second,p.first);
         ui->comboBoxTypes_3->addItem(p.second,p.first);
     }
-    ui->comboBoxTypes->insertItem(0,tr("[noeuds]"),PCx_Queries::ALLTYPES);
-    ui->comboBoxTypes_2->insertItem(0,tr("[noeuds]"),PCx_Queries::ALLTYPES);
-    ui->comboBoxTypes_3->insertItem(0,tr("[noeuds]"),PCx_Queries::ALLTYPES);
+    ui->comboBoxTypes->insertItem(0,tr("[noeuds]"),PCx_Query::ALLTYPES);
+    ui->comboBoxTypes_2->insertItem(0,tr("[noeuds]"),PCx_Query::ALLTYPES);
+    ui->comboBoxTypes_3->insertItem(0,tr("[noeuds]"),PCx_Query::ALLTYPES);
 
     ui->comboBoxTypes->setCurrentIndex(0);
     ui->comboBoxTypes_2->setCurrentIndex(0);
@@ -193,9 +207,10 @@ void FormQueries::on_pushButtonExecReq1_clicked()
 
     PCx_QueryVariation qv(model,typeId,ored,dfrfdiri,incdec,pop,oper,val,year1,year2);
 
-    QString output=report->generateHTMLHeader();
-    output.append(qv.exec());
-    doc->setHtml(output);
+    currentHtmlDoc=report->generateHTMLHeader();
+    currentHtmlDoc.append(qv.exec());
+    currentHtmlDoc.append("</body></html>");
+    doc->setHtml(currentHtmlDoc);
 }
 
 
@@ -248,5 +263,108 @@ void FormQueries::on_pushButtonSaveReq1_clicked()
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;
         }
+        queriesModel->update();
     }
+}
+
+void FormQueries::on_pushButtonDelete_clicked()
+{
+    QModelIndexList selection=ui->listView->selectionModel()->selectedIndexes();
+    if(selection.isEmpty())return;
+
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> les requêtes sélectionnées ? Cette action ne peut être annulée"))==QMessageBox::No)
+    {
+        return;
+    }
+
+    foreach (QModelIndex idx,selection)
+    {
+        unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
+        PCx_Query::deleteQuery(model->getAuditId(),selectedQueryId);
+    }
+    queriesModel->update();
+}
+
+QString FormQueries::execQueries(QModelIndexList items)
+{
+    QString output=report->generateHTMLHeader();
+
+    foreach(QModelIndex idx,items)
+    {
+        unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
+        PCx_Query::QUERIESTYPES selectedQueryType=(PCx_Query::QUERIESTYPES)queriesModel->record(idx.row()).value("query_mode").toUInt();
+        switch(selectedQueryType)
+        {
+            case PCx_Query::VARIATION:
+            PCx_QueryVariation pqv(model,selectedQueryId);
+            output.append(pqv.exec());
+            break;
+
+        //case PCx_Query::BOUND:
+          //  break;
+
+        //case PCx_Query::MINMAX:
+          //  break;
+        }
+    }
+    output.append("</body></html>");
+    return output;
+}
+
+
+void FormQueries::on_pushButtonExecFromList_clicked()
+{
+    QModelIndexList selection=ui->listView->selectionModel()->selectedIndexes();
+    if(selection.isEmpty())return;
+
+    doc->clear();
+    currentHtmlDoc=execQueries(selection);
+    doc->setHtml(currentHtmlDoc);
+}
+
+void FormQueries::on_listView_activated(const QModelIndex &index)
+{
+    Q_UNUSED(index);
+    on_pushButtonExecFromList_clicked();
+}
+
+void FormQueries::on_pushButtonSave_clicked()
+{
+    if(doc->isEmpty())return;
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le rapport en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
+        fileName.append(".html");
+    fi=QFileInfo(fileName);
+
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        return;
+    }
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+
+    QSettings settings;
+    QString settingStyle=settings.value("output/style","CSS").toString();
+
+    if(settingStyle=="INLINE")
+    {
+        stream<<doc->toHtml("utf-8");
+    }
+    else
+    {
+        stream<<currentHtmlDoc;
+    }
+
+    stream.flush();
+    file.close();
+
 }

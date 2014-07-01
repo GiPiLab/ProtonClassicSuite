@@ -1,9 +1,9 @@
-#ifndef PCX_QUERIES_H
-#define PCX_QUERIES_H
+#ifndef PCX_QUERY_H
+#define PCX_QUERY_H
 
 #include "pcx_auditmodel.h"
 
-class PCx_Queries
+class PCx_Query
 {
 public:
 
@@ -17,9 +17,9 @@ public:
     static const unsigned int ALLTYPES=0;
 
 
-    PCx_Queries();
-    PCx_Queries(PCx_AuditModel *model);
-    PCx_Queries(PCx_AuditModel *model,unsigned int typeId,PCx_AuditModel::ORED ored,PCx_AuditModel::DFRFDIRI dfrfdiri,
+    PCx_Query();
+    PCx_Query(PCx_AuditModel *model);
+    PCx_Query(PCx_AuditModel *model,unsigned int typeId,PCx_AuditModel::ORED ored,PCx_AuditModel::DFRFDIRI dfrfdiri,
                                       unsigned int year1, unsigned int year2,const QString &name="");
 
     QPair<unsigned int,unsigned int> getYears() const {return QPair<unsigned int, unsigned int>(year1,year2);}
@@ -40,18 +40,20 @@ public:
     const QString &getName() const{return name;}
     void setName(const QString &name){this->name=name;}
 
-
     bool remove(unsigned int queryId);
 
     virtual bool save(const QString &name) const =0;
     virtual bool canSave(const QString &name) const =0;
     virtual bool load(unsigned int queryId)=0;
+    static bool deleteQuery(unsigned int auditId,unsigned int queryId);
 
     virtual QString getDescription() const =0;
     virtual QString exec() const =0;
 
 
     static bool createTableQueries(unsigned int auditId);
+
+
 
 
 
@@ -64,7 +66,8 @@ protected:
     PCx_AuditModel::DFRFDIRI dfrfdiri;
     unsigned int year1,year2;
     QString name;
+    unsigned int queryId;
 
 };
 
-#endif // PCX_QUERIES_H
+#endif // PCX_QUERY_H

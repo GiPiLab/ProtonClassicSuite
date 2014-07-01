@@ -1,25 +1,25 @@
-#include "pcx_queries.h"
+#include "pcx_query.h"
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 
 
-PCx_Queries::PCx_Queries():model(NULL)
+PCx_Query::PCx_Query():model(NULL),queryId(0)
 {
 }
 
-PCx_Queries::PCx_Queries(PCx_AuditModel *model):model(model)
+PCx_Query::PCx_Query(PCx_AuditModel *model):model(model),queryId(0)
 {
 }
 
-PCx_Queries::PCx_Queries(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
+PCx_Query::PCx_Query(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
                          unsigned int year1, unsigned int year2, const QString &name):model(model),typeId(typeId),ored(ored),dfrfdiri(dfrfdiri),
-                        name(name)
+                        name(name),queryId(0)
 {
     setYears(year1,year2);
 }
 
-void PCx_Queries::setYears(unsigned int year1, unsigned int year2)
+void PCx_Query::setYears(unsigned int year1, unsigned int year2)
 {
     unsigned int yeartmp;
     Q_ASSERT(year1!=year2);
@@ -46,7 +46,7 @@ void PCx_Queries::setYears(unsigned int year1, unsigned int year2)
     this->year2=year2;
 }
 
-bool PCx_Queries::remove(unsigned int queryId)
+bool PCx_Query::remove(unsigned int queryId)
 {
     QSqlQuery q;
     if(model==NULL)return false;
@@ -61,7 +61,7 @@ bool PCx_Queries::remove(unsigned int queryId)
     return true;
 }
 
-bool PCx_Queries::createTableQueries(unsigned int auditId)
+bool PCx_Query::createTableQueries(unsigned int auditId)
 {
     QSqlQuery q;
     q.exec(QString("create table audit_queries_%1(id integer primary key autoincrement, name text unique not null, "
@@ -73,6 +73,22 @@ bool PCx_Queries::createTableQueries(unsigned int auditId)
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+bool PCx_Query::deleteQuery(unsigned int auditId,unsigned int queryId)
+{
+    Q_ASSERT(queryId>0 && auditId>0);
+    QSqlQuery q;
+    q.prepare(QString("delete from audit_queries_%1 where id=:id").arg(auditId));
+    q.bindValue(":id",queryId);
+    q.exec();
+
+    if(q.numRowsAffected()==0)
+    {
+        qCritical()<<q.lastError();
         return false;
     }
     return true;

@@ -2,9 +2,9 @@
 #define PCX_QUERYVARIATION_H
 
 #include "pcx_auditmodel.h"
-#include "pcx_queries.h"
+#include "pcx_query.h"
 
-class PCx_QueryVariation : public PCx_Queries
+class PCx_QueryVariation : public PCx_Query
 {
 
 public:

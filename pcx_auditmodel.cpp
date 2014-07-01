@@ -1,5 +1,5 @@
 #include "pcx_auditmodel.h"
-#include "pcx_queries.h"
+#include "pcx_query.h"
 #include "utils.h"
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -157,7 +157,7 @@ bool PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years,
         die();
     }
 
-    bool res=PCx_Queries::createTableQueries(uLastId);
+    bool res=PCx_Query::createTableQueries(uLastId);
 
     if(res==false)
     {
