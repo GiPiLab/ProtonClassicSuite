@@ -53,7 +53,7 @@ bool PCx_Query::remove(unsigned int queryId)
 bool PCx_Query::createTableQueries(unsigned int auditId)
 {
     QSqlQuery q;
-    q.exec(QString("create table audit_queries_%1(id integer primary key autoincrement, name text unique not null, "
+    q.exec(QString("create table audit_queries_%1(id integer primary key autoincrement, name text not null, "
                    "query_mode integer not null, target_type integer check (target_type>=0) not null, "
                    "ored integer not null, dfrfdiri integer not null, oper integer, "
                    "percent_or_point integer, increase_decrease integer,val1 real not null default '0.0', val2 real,"

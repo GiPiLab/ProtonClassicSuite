@@ -28,9 +28,9 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const
         {
         case PCx_Query::VARIATION:
             return QVariant(QBrush(QColor(0xFF,0xAA,0xBB)));
-        case PCx_Query::MINMAX:
-            return QVariant(QBrush(QColor(0xBB,0xFF,0xAA)));
         case PCx_Query::RANK:
+            return QVariant(QBrush(QColor(0xBB,0xFF,0xAA)));
+        case PCx_Query::MINMAX:
             return QVariant(QBrush(QColor(0xBB,0xAA,0xFF)));
         default:
             Q_UNREACHABLE();

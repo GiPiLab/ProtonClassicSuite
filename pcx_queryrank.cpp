@@ -21,7 +21,29 @@ PCx_QueryRank::PCx_QueryRank(PCx_AuditModel *model, unsigned int typeId, PCx_Aud
 
 bool PCx_QueryRank::save(const QString &name) const
 {
+    Q_ASSERT(!name.isEmpty());
 
+    QSqlQuery q;
+    q.prepare(QString("insert into audit_queries_%1 (name,query_mode,target_type,ored,dfrfdiri,"
+                      "increase_decrease,val1,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,"
+                      ":incdec,:val1,:y1,:y2)").arg(model->getAuditId()));
+    q.bindValue(":name",name);
+    q.bindValue(":qmode",PCx_Query::RANK);
+    q.bindValue(":type",typeId);
+    q.bindValue(":ored",ored);
+    q.bindValue(":dfrfdiri",dfrfdiri);
+    q.bindValue(":incdec",grSm);
+    q.bindValue(":val1",number);
+    q.bindValue(":y1",year1);
+    q.bindValue(":y2",year2);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError();
+        return false;
+    }
+    return true;
 }
 
 QString PCx_QueryRank::exec() const
@@ -44,8 +66,8 @@ QString PCx_QueryRank::exec() const
     }
     else
     {
-        q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where %1 not null and annee>=:year1 "
-                          "and annee<=:year2 order by %1 %4 limit %5")
+        q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where annee>=:year1 "
+                          "and annee<=:year2 and %1 not null order by %1 %4 limit %5")
                   .arg(oredString).arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(order).arg(number));
     }
@@ -79,12 +101,51 @@ QString PCx_QueryRank::exec() const
 
 bool PCx_QueryRank::load(unsigned int queryId)
 {
+    QSqlQuery q;
+    q.prepare(QString("select * from audit_queries_%1 where id=:qid").arg(model->getAuditId()));
+    q.bindValue(":qid",queryId);
+    q.exec();
+
+    if(!q.next())
+    {
+        qCritical()<<"Invalid PCx_query specified";
+        return false;
+    }
+    else
+    {
+        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::RANK)
+        {
+            qCritical()<<"Invalid PCx_query mode !";
+            return false;
+        }
+        name=q.value("name").toString();
+        typeId=q.value("target_type").toUInt();
+        ored=(PCx_AuditModel::ORED)q.value("ored").toUInt();
+        dfrfdiri=(PCx_AuditModel::DFRFDIRI)q.value("dfrfdiri").toUInt();
+        setYears(q.value("year1").toUInt(),q.value("year2").toUInt());
+        grSm=(GREATERSMALLER)q.value("increase_decrease").toUInt();
+        number=q.value("val1").toUInt();
+    }
+    this->queryId=queryId;
+    return true;
 
 }
 
 bool PCx_QueryRank::canSave(const QString &name) const
 {
+    if(name.isEmpty())
+        return false;
 
+    QSqlQuery q;
+    q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
+    q.bindValue(":name",name);
+    q.bindValue(":qmode",PCx_Query::RANK);
+    q.exec();
+
+    if(q.next())
+        return false;
+
+    return true;
 }
 
 QString PCx_QueryRank::getDescription() const

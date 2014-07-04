@@ -234,6 +234,7 @@ void FormQueries::on_pushButtonExecReqVariation_clicked()
 
 void FormQueries::on_comboBoxAugDim_activated(int index)
 {
+    Q_UNUSED(index);
     if((PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toInt()==PCx_QueryVariation::VARIATION)
     {
         ui->doubleSpinBox->setMinimum(-MAX_NUM);
@@ -311,15 +312,22 @@ QString FormQueries::execQueries(QModelIndexList items)
     {
         unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
         PCx_Query::QUERIESTYPES selectedQueryType=(PCx_Query::QUERIESTYPES)queriesModel->record(idx.row()).value("query_mode").toUInt();
+
         switch(selectedQueryType)
         {
-            case PCx_Query::VARIATION:
+        case PCx_Query::VARIATION:
+        {
             PCx_QueryVariation pqv(model,selectedQueryId);
             output.append(pqv.exec());
             break;
+        }
 
-        //case PCx_Query::BOUND:
-          //  break;
+        case PCx_Query::RANK:
+        {
+            PCx_QueryRank pqr(model,selectedQueryId);
+            output.append(pqr.exec());
+            break;
+        }
 
         //case PCx_Query::MINMAX:
           //  break;
@@ -405,4 +413,44 @@ void FormQueries::on_pushButtonExecReqRank_clicked()
     currentHtmlDoc.append(qr.exec());
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);
+}
+
+void FormQueries::on_pushButtonSaveReqRank_clicked()
+{
+    bool ok;
+    QString text;
+
+    do
+    {
+        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok);
+
+    }while(ok && text.isEmpty());
+
+    if(ok)
+    {
+        unsigned int typeId,number,year1,year2;
+        PCx_AuditModel::ORED ored;
+        PCx_AuditModel::DFRFDIRI dfrfdiri;
+        PCx_QueryRank::GREATERSMALLER grSm;
+
+        if(getParamsReqRank(typeId,ored,dfrfdiri,number,grSm,year1,year2)==false)
+        {
+            return;
+        }
+
+        PCx_QueryRank qr(model,typeId,ored,dfrfdiri,grSm,number,year1,year2);
+
+
+        if(!qr.canSave(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
+            return;
+        }
+        if(!qr.save(text))
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
+            return;
+        }
+        queriesModel->update();
+    }
 }

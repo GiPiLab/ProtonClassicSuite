@@ -94,7 +94,7 @@ bool PCx_QueryVariation::canSave(const QString &name) const
     QSqlQuery q;
     q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",VARIATION);
+    q.bindValue(":qmode",PCx_Query::VARIATION);
     q.exec();
 
     if(q.next())

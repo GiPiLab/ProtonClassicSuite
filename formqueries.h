@@ -40,6 +40,8 @@ private slots:
 
     void on_pushButtonExecReqRank_clicked();
 
+    void on_pushButtonSaveReqRank_clicked();
+
 private:
     Ui::FormQueries *ui;
     void updateListOfAudits();
