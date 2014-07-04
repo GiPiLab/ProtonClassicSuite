@@ -64,6 +64,8 @@ QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionView
         return 0;
     }
     QDoubleSpinBox *spin=new QDoubleSpinBox(parent);
+    spin->setButtonSymbols(QAbstractSpinBox::NoButtons);
+    spin->setCorrectionMode(QAbstractSpinBox::CorrectToNearestValue);
 
     spin->setRange(0.0,Q_INFINITY);
     return spin;

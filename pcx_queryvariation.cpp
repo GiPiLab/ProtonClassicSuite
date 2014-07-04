@@ -19,6 +19,7 @@ PCx_QueryVariation::PCx_QueryVariation(PCx_AuditModel *model, unsigned int typeI
                                        const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),
                                         incDec(increase),percentOrPoints(percent),op(op),val(val)
 {
+    setYears(year1,year2);
 }
 
 bool PCx_QueryVariation::load(unsigned int queryId)
@@ -105,16 +106,16 @@ bool PCx_QueryVariation::canSave(const QString &name) const
 QString PCx_QueryVariation::getDescription() const
 {
     QString out;
-    if(typeId==0)
+    if(typeId==PCx_Query::ALLTYPES)
         out=QObject::tr("Tous les noeuds");
     else
-        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->getNomType(typeId));
+        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->getNomType(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5 %6 entre %7 et %8")
-            .arg(PCx_AuditModel::OREDtoCompleteString(ored))
-            .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower())
-            .arg(incDecToString(incDec)).arg(operatorToString(op))
-            .arg(val).arg(percentOrPointToString(percentOrPoints))
+            .arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped())
+            .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
+            .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
+            .arg(val).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;
 }
@@ -125,8 +126,8 @@ QString PCx_QueryVariation::exec() const
     QMap<unsigned int,qint64> variations,matchingNodes;
     QList<unsigned int>nodesOfThisType,problemNodes;
 
-
     QSqlQuery q;
+    QString oredString=model->OREDtoTableString(ored);
 
     if(typeId!=ALLTYPES)
     {
@@ -142,7 +143,11 @@ QString PCx_QueryVariation::exec() const
 
     //qDebug()<<"Nodes of type "<<typeId<<nodesOfThisType;
 
-    q.prepare(QString("select * from audit_%1_%2 where annee=:year1 or annee=:year2").arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId()));
+
+
+
+    q.prepare(QString("select id_node,annee,%3 from audit_%1_%2 where annee=:year1 or annee=:year2")
+              .arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId()).arg(oredString));
     q.bindValue(":year1",year1);
     q.bindValue(":year2",year2);
     q.exec();
@@ -152,7 +157,6 @@ QString PCx_QueryVariation::exec() const
         qCritical()<<q.lastError();
         die();
     }
-    QString oredString=model->OREDtoTableString(ored);
 
     while(q.next())
     {
@@ -271,10 +275,10 @@ QString PCx_QueryVariation::exec() const
     }
 
     QString output=QString("<h4>Requ&ecirc;te %1</h4>").arg(name.toHtmlEscaped());
-    output.append("<p><i>"+getDescription().toHtmlEscaped()+"</i></p>");
+    output.append("<p><i>"+getDescription()+"</i></p>");
 
     output.append(QString("<table class='req1' align='center' cellpadding='5' style='margin-left:auto;margin-right:auto'>"
-                  "<tr><th>&nbsp;</th><th>%1</th><th>%2</th><th>%3</th>").arg(year1).arg(year2).arg(incDecToString(incDec)));
+                  "<tr><th>&nbsp;</th><th>%1</th><th>%2</th><th>%3</th>").arg(year1).arg(year2).arg(incDecToString(incDec).toHtmlEscaped()));
 
     QMapIterator<unsigned int,qint64> matchIter(matchingNodes);
     while(matchIter.hasNext())
@@ -293,7 +297,7 @@ QString PCx_QueryVariation::exec() const
                 .arg(formatCurrency(valuesForYear1.value(node)))
                 .arg(formatCurrency(valuesForYear2.value(node)))
                 .arg(formatCurrency(val))
-                .arg(percentOrPointToString(percentOrPoints)));
+                .arg(percentOrPointToString(percentOrPoints).toHtmlEscaped()));
     }
 
     if(!problemNodes.isEmpty())
@@ -397,4 +401,10 @@ const QString PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::PER
         Q_UNREACHABLE();
     }
     return out;
+}
+
+void PCx_QueryVariation::setYears(unsigned int year1, unsigned int year2)
+{
+    //This query needs at least two years, this is checked in ui
+    Q_ASSERT(year1!=year2);
 }

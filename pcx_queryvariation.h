@@ -68,6 +68,9 @@ public:
     double getValue()const{return val;}
     void setValue(double val){this->val=val;}
 
+    //Forbid same years for this query
+    void setYears(unsigned int year1,unsigned int year2);
+
 
 private:
 

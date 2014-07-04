@@ -1,6 +1,7 @@
 #ifndef PCX_QUERY_H
 #define PCX_QUERY_H
 
+#include <climits>
 #include "pcx_auditmodel.h"
 
 class PCx_Query
@@ -11,10 +12,10 @@ public:
     {
         VARIATION,
         MINMAX,
-        BOUND
+        RANK
     };
 
-    static const unsigned int ALLTYPES=0;
+    static const unsigned int ALLTYPES=UINT_MAX;
 
 
     PCx_Query();
@@ -23,7 +24,7 @@ public:
                                       unsigned int year1, unsigned int year2,const QString &name="");
 
     QPair<unsigned int,unsigned int> getYears() const {return QPair<unsigned int, unsigned int>(year1,year2);}
-    void setYears(unsigned int year1, unsigned int year2);
+    virtual void setYears(unsigned int year1, unsigned int year2);
 
     void setORED(PCx_AuditModel::ORED ored){this->ored=ored;}
     PCx_AuditModel::ORED getORED() const{return ored;}

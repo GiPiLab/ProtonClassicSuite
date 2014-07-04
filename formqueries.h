@@ -5,6 +5,7 @@
 #include "pcx_report.h"
 #include "pcx_queryvariation.h"
 #include "pcx_queriesmodel.h"
+#include "pcx_queryrank.h"
 #include <QWidget>
 #include <QTextDocument>
 
@@ -23,11 +24,11 @@ public:
 private slots:
     void on_comboBoxListAudits_activated(int index);
 
-    void on_pushButtonExecReq1_clicked();
+    void on_pushButtonExecReqVariation_clicked();
 
     void on_comboBoxAugDim_activated(int index);
 
-    void on_pushButtonSaveReq1_clicked();
+    void on_pushButtonSaveReqVariation_clicked();
 
     void on_pushButtonDelete_clicked();
 
@@ -36,6 +37,8 @@ private slots:
     void on_listView_activated(const QModelIndex &index);
 
     void on_pushButtonSave_clicked();
+
+    void on_pushButtonExecReqRank_clicked();
 
 private:
     Ui::FormQueries *ui;
@@ -46,10 +49,11 @@ private:
     QTextDocument *doc;
     QString currentHtmlDoc;
 
-    bool getParamsReq1(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
+    bool getParamsReqVariation(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
                        PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
                        PCx_QueryVariation::OPERATORS &oper, double &val, unsigned int &year1, unsigned int &year2);
     QString execQueries(QModelIndexList items);
+    bool getParamsReqRank(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri, unsigned int &number, PCx_QueryRank::GREATERSMALLER &grSm, unsigned int &year1, unsigned int &year2);
 };
 
 #endif // FORMQUERIES_H

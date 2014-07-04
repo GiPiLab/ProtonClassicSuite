@@ -22,7 +22,6 @@ PCx_Query::PCx_Query(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel:
 void PCx_Query::setYears(unsigned int year1, unsigned int year2)
 {
     unsigned int yeartmp;
-    Q_ASSERT(year1!=year2);
 
     if(year1>year2)
     {
@@ -48,17 +47,7 @@ void PCx_Query::setYears(unsigned int year1, unsigned int year2)
 
 bool PCx_Query::remove(unsigned int queryId)
 {
-    QSqlQuery q;
-    if(model==NULL)return false;
-    q.prepare(QString("delete from audit_requetes_%1 where id=:id").arg(model->getAuditId()));
-    q.bindValue(":id",queryId);
-    q.exec();
-    if(q.numRowsAffected()<=0)
-    {
-        qCritical()<<q.lastError().text();
-        return false;
-    }
-    return true;
+    return deleteQuery(model->getAuditId(),queryId);
 }
 
 bool PCx_Query::createTableQueries(unsigned int auditId)

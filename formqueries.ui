@@ -6,377 +6,172 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>860</width>
-    <height>610</height>
+    <width>1005</width>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Requêtes personnalisées</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_5">
-   <item>
-    <widget class="QComboBox" name="comboBoxListAudits"/>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="2">
+    <widget class="QFrame" name="frame_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(170, 255, 187)</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>des</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>sont parmis les</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>entre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>et</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3">
+       <widget class="QComboBox" name="comboBoxDFRFDIRI_2"/>
+      </item>
+      <item row="7" column="2">
+       <widget class="QComboBox" name="comboBoxYear2_2"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>dont les crédits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1" colspan="2">
+       <widget class="QPushButton" name="pushButtonExecReqRank">
+        <property name="text">
+         <string>Exécuter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QPushButton" name="pushButtonSaveReqRank">
+        <property name="text">
+         <string>Enregistrer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QComboBox" name="comboBoxYear1_2"/>
+      </item>
+      <item row="0" column="0" colspan="3">
+       <widget class="QComboBox" name="comboBoxTypes_2"/>
+      </item>
+      <item row="5" column="2">
+       <widget class="QComboBox" name="comboBoxBiggerSmaller"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QSpinBox" name="spinBoxNumRank">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="correctionMode">
+         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QComboBox" name="comboBoxORED_2"/>
+      </item>
+     </layout>
+    </widget>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item row="1" column="4">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QFrame" name="frame">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="spacing">
-           <number>3</number>
-          </property>
-          <item>
-           <widget class="QComboBox" name="comboBoxTypes"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>dont les crédits</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxORED"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>des</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxDFRFDIRI"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>ont connu une</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxAugDim"/>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxOperator"/>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox">
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="maximum">
-             <double>1000000000.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxPercentEuro"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>entre</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxYear1"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>et</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxYear2"/>
-          </item>
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonExecReq1">
-            <property name="text">
-             <string>Exécuter</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonSaveReq1">
-            <property name="text">
-             <string>Enregistrer</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QFrame" name="frame_2">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QComboBox" name="comboBoxTypes_2"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>dont les crédits</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxORED_2"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>des</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxDFRFDIRI_2"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>sont parmis les</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="spinBox">
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxBiggerSmaller">
-            <item>
-             <property name="text">
-              <string>plus grands</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>plus petits</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>entre</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxYear1_2"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>et</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxYear2_2"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonExecReq2">
-            <property name="text">
-             <string>Exécuter</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonSaveReq2">
-            <property name="text">
-             <string>Enregistrer</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QFrame" name="frame_3">
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Raised</enum>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="QComboBox" name="comboBoxTypes_3"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>dont les crédits</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxORED_3"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>des</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxDFRFDIRI_3"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_18">
-            <property name="text">
-             <string>sont compris entre</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="maximum">
-             <double>1000000000.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_19">
-            <property name="text">
-             <string>et</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="maximum">
-             <double>1000000000.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_20">
-            <property name="text">
-             <string>entre</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxYear1_3"/>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_17">
-            <property name="text">
-             <string>et</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="comboBoxYear2_3"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonExecReq3">
-            <property name="text">
-             <string>Exécuter</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButtonSaveReq3">
-            <property name="text">
-             <string>Enregistrer</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QListView" name="listView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+      </widget>
      </item>
      <item>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="1" column="1">
-        <widget class="QPushButton" name="pushButtonExecFromList">
-         <property name="text">
-          <string>Exécuter</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="pushButtonDelete">
-         <property name="text">
-          <string>Supprimer</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QListView" name="listView">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="showDropIndicator" stdset="0">
-          <bool>false</bool>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::ExtendedSelection</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QPushButton" name="pushButtonExecFromList">
+       <property name="text">
+        <string>Exécuter</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonDelete">
+       <property name="text">
+        <string>Supprimer</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
-   <item>
+   <item row="0" column="0" colspan="5">
+    <widget class="QComboBox" name="comboBoxListAudits"/>
+   </item>
+   <item row="2" column="0" colspan="5">
     <layout class="QVBoxLayout" name="verticalLayout_4">
      <item>
-      <widget class="QTextBrowser" name="textBrowser"/>
+      <widget class="QTextEdit" name="textEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="undoRedoEnabled">
+        <bool>false</bool>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonSave">
@@ -387,18 +182,256 @@
      </item>
     </layout>
    </item>
+   <item row="1" column="0">
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(255, 170, 187)</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="4" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBoxAugDim"/>
+      </item>
+      <item row="9" column="1" colspan="3">
+       <widget class="QPushButton" name="pushButtonExecReqVariation">
+        <property name="text">
+         <string>Exécuter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>ont connu une</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBoxYear1"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>dont les crédits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBoxORED"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>des</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="4">
+       <widget class="QComboBox" name="comboBoxDFRFDIRI"/>
+      </item>
+      <item row="5" column="0" colspan="4">
+       <widget class="QComboBox" name="comboBoxOperator"/>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>et</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBoxYear2"/>
+      </item>
+      <item row="6" column="2" colspan="2">
+       <widget class="QComboBox" name="comboBoxPercentEuro"/>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>entre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QPushButton" name="pushButtonSaveReqVariation">
+        <property name="text">
+         <string>Enregistrer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="4">
+       <widget class="QComboBox" name="comboBoxTypes"/>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="accelerated">
+         <bool>true</bool>
+        </property>
+        <property name="correctionMode">
+         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>true</bool>
+        </property>
+        <property name="maximum">
+         <double>1000000000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QFrame" name="frame_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(170, 187, 255)</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_4">
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>dont les crédits</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QComboBox" name="comboBoxYear2_3"/>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_18">
+        <property name="text">
+         <string>sont entre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_19">
+        <property name="text">
+         <string>et</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QComboBox" name="comboBoxTypes_3"/>
+      </item>
+      <item row="13" column="0">
+       <widget class="QPushButton" name="pushButtonSaveReq3">
+        <property name="text">
+         <string>Enregistrer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0">
+       <widget class="QLabel" name="label_17">
+        <property name="text">
+         <string>et</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="label_20">
+        <property name="text">
+         <string>entre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_15">
+        <property name="text">
+         <string>des</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QComboBox" name="comboBoxDFRFDIRI_3"/>
+      </item>
+      <item row="11" column="1">
+       <widget class="QComboBox" name="comboBoxYear1_3"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="comboBoxORED_3"/>
+      </item>
+      <item row="13" column="1">
+       <widget class="QPushButton" name="pushButtonExecReq3">
+        <property name="text">
+         <string>Exécuter</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="accelerated">
+         <bool>true</bool>
+        </property>
+        <property name="correctionMode">
+         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>true</bool>
+        </property>
+        <property name="minimum">
+         <double>-400000000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>400000000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="accelerated">
+         <bool>true</bool>
+        </property>
+        <property name="correctionMode">
+         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>true</bool>
+        </property>
+        <property name="minimum">
+         <double>-400000000.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>400000000.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
   </layout>
-  <zorder>textBrowser</zorder>
-  <zorder>pushButtonExecFromList</zorder>
-  <zorder>pushButtonSave</zorder>
-  <zorder>comboBoxListAudits</zorder>
-  <zorder>listView</zorder>
-  <zorder>frame</zorder>
-  <zorder>frame_2</zorder>
-  <zorder>frame_3</zorder>
-  <zorder>pushButtonDelete</zorder>
-  <zorder>frame</zorder>
-  <zorder>listView</zorder>
  </widget>
  <resources/>
  <connections/>
