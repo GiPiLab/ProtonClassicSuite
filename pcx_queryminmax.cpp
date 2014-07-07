@@ -1,38 +1,51 @@
-#include "pcx_queryrank.h"
+#include "pcx_queryminmax.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
 #include "utils.h"
 
-PCx_QueryRank::PCx_QueryRank():PCx_Query()
+PCx_QueryMinMax::PCx_QueryMinMax():PCx_Query()
 {
 }
 
-PCx_QueryRank::PCx_QueryRank(PCx_AuditModel *model, unsigned int queryId):PCx_Query(model)
+PCx_QueryMinMax::PCx_QueryMinMax(PCx_AuditModel *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
 }
 
-PCx_QueryRank::PCx_QueryRank(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri, PCx_QueryRank::GREATERSMALLER greaterOrSmaller,
-                             unsigned int number, unsigned int year1, unsigned int year2, const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),grSm(greaterOrSmaller),number(number)
+PCx_QueryMinMax::PCx_QueryMinMax(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri, qint64 val1,
+                             qint64 val2, unsigned int year1, unsigned int year2, const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name)
 {
+    setVals(QPair<qint64,qint64>(val1,val2));
 }
 
-bool PCx_QueryRank::save(const QString &name) const
+void PCx_QueryMinMax::setVals(QPair<qint64, qint64> vals)
+{
+    if(vals.first>vals.second)
+    {
+        qint64 temp=vals.first;
+        vals.first=vals.second;
+        vals.second=temp;
+    }
+    val1=vals.first;
+    val2=vals.second;
+}
+
+bool PCx_QueryMinMax::save(const QString &name) const
 {
     Q_ASSERT(!name.isEmpty());
 
     QSqlQuery q;
     q.prepare(QString("insert into audit_queries_%1 (name,query_mode,target_type,ored,dfrfdiri,"
-                      "increase_decrease,val1,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,"
-                      ":incdec,:val1,:y1,:y2)").arg(model->getAuditId()));
+                      "val1,val2,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,"
+                      ":val1,:val2,:y1,:y2)").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::RANK);
+    q.bindValue(":qmode",PCx_Query::MINMAX);
     q.bindValue(":type",typeId);
     q.bindValue(":ored",ored);
     q.bindValue(":dfrfdiri",dfrfdiri);
-    q.bindValue(":incdec",grSm);
-    q.bindValue(":val1",number);
+    q.bindValue(":val1",val1);
+    q.bindValue(":val2",val2);
     q.bindValue(":y1",year1);
     q.bindValue(":y2",year2);
     q.exec();
@@ -45,35 +58,33 @@ bool PCx_QueryRank::save(const QString &name) const
     return true;
 }
 
-QString PCx_QueryRank::exec() const
+QString PCx_QueryMinMax::exec() const
 {
-    Q_ASSERT(year1>0 && year2>0 && year1<=year2 && year1<3000 && year2>1900);
     QSqlQuery q;
 
     QString oredString=model->OREDtoTableString(ored);
-    QString order="asc";
-
-    if(grSm==GREATER)
-        order="desc";
 
     if(typeId!=ALLTYPES)
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 as b where a.id_node=b.id "
-                          "and type=:typeId and %1 not null and annee>=:year1 and annee<=:year2 order by %1 %5 limit %6")
+                          "and type=:typeId and %1 not null and %1>=:val1 and %1<=:val2 and annee>=:year1 and "
+                          "annee<=:year2")
                   .arg(oredString).arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId())
-                  .arg(model->getAttachedTreeModel()->getTreeId()).arg(order).arg(number));
+                  .arg(model->getAttachedTreeModel()->getTreeId()));
         q.bindValue(":typeId",typeId);
     }
     else
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where annee>=:year1 "
-                          "and annee<=:year2 and %1 not null order by %1 %4 limit %5")
-                  .arg(oredString).arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId())
-                  .arg(order).arg(number));
+                          "and annee<=:year2 and %1 not null and %1>=:val1 and %1<=:val2")
+                  .arg(oredString).arg(model->modeToTableString(dfrfdiri)).arg(model->getAuditId()));
+
     }
 
     q.bindValue(":year1",year1);
     q.bindValue(":year2",year2);
+    q.bindValue(":val1",val1);
+    q.bindValue(":val2",val2);
 
     q.exec();
 
@@ -84,8 +95,9 @@ QString PCx_QueryRank::exec() const
     }
 
     QString output=QString("<h4>Requ&ecirc;te %1</h4>").arg(name.toHtmlEscaped());
+
     output.append("<p><i>"+getDescription()+"</i></p>");
-    output.append(QString("<table class='req2' cellpadding='5' align='center' style='margin-left:auto;margin-right:auto;'>"
+    output.append(QString("<table class='req3' cellpadding='5' align='center' style='margin-left:auto;margin-right:auto;'>"
                            "<tr><th>&nbsp;</th><th>année</th><th>%1</th></tr>").arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped()));
 
     while(q.next())
@@ -96,10 +108,11 @@ QString PCx_QueryRank::exec() const
                 .arg(formatCurrency(q.value(oredString).toLongLong())));
     }
     output.append("</table>");
+
     return output;
 }
 
-bool PCx_QueryRank::load(unsigned int queryId)
+bool PCx_QueryMinMax::load(unsigned int queryId)
 {
     QSqlQuery q;
     q.prepare(QString("select * from audit_queries_%1 where id=:qid").arg(model->getAuditId()));
@@ -113,7 +126,7 @@ bool PCx_QueryRank::load(unsigned int queryId)
     }
     else
     {
-        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::RANK)
+        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::MINMAX)
         {
             qCritical()<<"Invalid PCx_query mode !";
             return false;
@@ -123,15 +136,14 @@ bool PCx_QueryRank::load(unsigned int queryId)
         ored=(PCx_AuditModel::ORED)q.value("ored").toUInt();
         dfrfdiri=(PCx_AuditModel::DFRFDIRI)q.value("dfrfdiri").toUInt();
         setYears(q.value("year1").toUInt(),q.value("year2").toUInt());
-        grSm=(GREATERSMALLER)q.value("increase_decrease").toUInt();
-        number=q.value("val1").toUInt();
+        setVals(QPair<qint64,qint64>(q.value("val1").toLongLong(),q.value("val2").toLongLong()));
     }
     this->queryId=queryId;
     return true;
 
 }
 
-bool PCx_QueryRank::canSave(const QString &name) const
+bool PCx_QueryMinMax::canSave(const QString &name) const
 {
     if(name.isEmpty())
         return false;
@@ -139,7 +151,7 @@ bool PCx_QueryRank::canSave(const QString &name) const
     QSqlQuery q;
     q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::RANK);
+    q.bindValue(":qmode",PCx_Query::MINMAX);
     q.exec();
 
     if(q.next())
@@ -148,7 +160,7 @@ bool PCx_QueryRank::canSave(const QString &name) const
     return true;
 }
 
-QString PCx_QueryRank::getDescription() const
+QString PCx_QueryMinMax::getDescription() const
 {
     QString out;
     if(typeId==PCx_Query::ALLTYPES)
@@ -156,29 +168,11 @@ QString PCx_QueryRank::getDescription() const
     else
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->getNomType(typeId).toHtmlEscaped());
 
-    out.append(QObject::tr(" dont les crédits %1s des %2 sont parmi les [%3] %4 entre %5 et %6")
+    out.append(QObject::tr(" dont les crédits %1s des %2 sont compris entre %3€ et %4€ entre %5 et %6")
             .arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped())
             .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
-            .arg(number).arg(greaterSmallerToString(grSm).toHtmlEscaped())
+            .arg(formatCurrency(val1)).arg(formatCurrency(val2))
             .arg(year1).arg(year2));
     return out;
-
-}
-
-
-QString PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATERSMALLER grSm)
-{
-    switch(grSm)
-    {
-    case GREATER:
-        return QObject::tr("plus grands");
-        break;
-    case SMALLER:
-        return QObject::tr("plus petits");
-        break;
-    default:
-        Q_UNREACHABLE();
-        return QString();
-    }
 }
 

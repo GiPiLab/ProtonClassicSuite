@@ -398,11 +398,17 @@
         <property name="showGroupSeparator" stdset="0">
          <bool>true</bool>
         </property>
+        <property name="suffix">
+         <string>€</string>
+        </property>
         <property name="minimum">
          <double>-400000000.000000000000000</double>
         </property>
         <property name="maximum">
          <double>400000000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>10.000000000000000</double>
         </property>
        </widget>
       </item>
@@ -420,11 +426,17 @@
         <property name="showGroupSeparator" stdset="0">
          <bool>true</bool>
         </property>
+        <property name="suffix">
+         <string>€</string>
+        </property>
         <property name="minimum">
          <double>-400000000.000000000000000</double>
         </property>
         <property name="maximum">
          <double>400000000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>10.000000000000000</double>
         </property>
        </widget>
       </item>

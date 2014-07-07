@@ -15,7 +15,7 @@ PCx_QueryVariation::PCx_QueryVariation(PCx_AuditModel *model, unsigned int query
 }
 
 PCx_QueryVariation::PCx_QueryVariation(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
-                                       INCREASEDECREASE increase,PERCENTORPOINTS percent, OPERATORS op, double val,unsigned int year1,unsigned int year2,
+                                       INCREASEDECREASE increase, PERCENTORPOINTS percent, OPERATORS op, qint64 val, unsigned int year1, unsigned int year2,
                                        const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),
                                         incDec(increase),percentOrPoints(percent),op(op),val(val)
 {
@@ -46,7 +46,7 @@ bool PCx_QueryVariation::load(unsigned int queryId)
         ored=(PCx_AuditModel::ORED)q.value("ored").toUInt();
         dfrfdiri=(PCx_AuditModel::DFRFDIRI)q.value("dfrfdiri").toUInt();
         op=(OPERATORS)q.value("oper").toUInt();
-        val=q.value("val1").toDouble();
+        val=q.value("val1").toLongLong();
 
         percentOrPoints=(PERCENTORPOINTS)q.value("percent_or_point").toUInt();
         incDec=(INCREASEDECREASE)q.value("increase_decrease").toUInt();
@@ -111,17 +111,18 @@ QString PCx_QueryVariation::getDescription() const
     else
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->getNomType(typeId).toHtmlEscaped());
 
-    out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5 %6 entre %7 et %8")
+    out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
             .arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped())
             .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
-            .arg(val).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
+            .arg(formatCurrency(val)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;
 }
 
 QString PCx_QueryVariation::exec() const
 {
+    Q_ASSERT(year1>0 && year2>0 && year1<year2 && year1<3000 && year2>1900);
     QMap<unsigned int,qint64> valuesForYear1,valuesForYear2;
     QMap<unsigned int,qint64> variations,matchingNodes;
     QList<unsigned int>nodesOfThisType,problemNodes;
@@ -194,9 +195,9 @@ QString PCx_QueryVariation::exec() const
             if(percentOrPoints==PERCENT)
             {
                 //Convert to fixed point percents with two decimals
-                variation=100*100*(((double)val2-val1)/val1);
+                variation=10000*(((double)val2-val1)/val1);
+                qDebug()<<"val1 = "<<val1<<"val2 = "<<val2<<"variation = "<<variation;
             }
-
             else
             {
                 variation=val2-val1;
@@ -230,15 +231,16 @@ QString PCx_QueryVariation::exec() const
             nodeVariation=qAbs(nodeVariation);
         }
 
-        qint64 trueVal;
-        if(percentOrPoints==PERCENT)
-            //Convert to fixed point with 2 decimals
-            trueVal=val*100;
-        else
-            //Convert to usual fixed point as stored in db
-            trueVal=val*FIXEDPOINTCOEFF;
+        qint64 trueVal=val;
 
-        //qDebug()<<"Comparing "<<nodeVariation<<" with "<<trueVal;
+        if(percentOrPoints==PERCENT)
+        {
+            //Only compare with two decimals
+            if(FIXEDPOINTCOEFF!=100)
+                trueVal/=(FIXEDPOINTCOEFF/100);
+        }
+
+        qDebug()<<"Comparing "<<nodeVariation<<" with "<<trueVal;
 
         switch(trueOp)
         {
@@ -292,7 +294,7 @@ QString PCx_QueryVariation::exec() const
             val=val*10;
 
         if(incDec!=VARIATION)val=qAbs(val);
-        output.append(QString("<tr><td>%1</td><td>%2</td><td>%3</td><td align='right'>%4 %5</td></tr>")
+        output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4 %5</td></tr>")
                 .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
                 .arg(formatCurrency(valuesForYear1.value(node)))
                 .arg(formatCurrency(valuesForYear2.value(node)))
@@ -407,4 +409,5 @@ void PCx_QueryVariation::setYears(unsigned int year1, unsigned int year2)
 {
     //This query needs at least two years, this is checked in ui
     Q_ASSERT(year1!=year2);
+    PCx_Query::setYears(year1,year2);
 }

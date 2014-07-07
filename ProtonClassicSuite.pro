@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     pcx_queryvariation.cpp \
     pcx_queriesmodel.cpp \
     pcx_query.cpp \
-    pcx_queryrank.cpp
+    pcx_queryrank.cpp \
+    pcx_queryminmax.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -61,7 +62,8 @@ HEADERS  += mainwindow.h \
     pcx_queryvariation.h \
     pcx_queriesmodel.h \
     pcx_query.h \
-    pcx_queryrank.h
+    pcx_queryrank.h \
+    pcx_queryminmax.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \

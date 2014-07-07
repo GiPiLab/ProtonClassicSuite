@@ -37,7 +37,7 @@ public:
     PCx_QueryVariation(PCx_AuditModel *model,unsigned int queryId);
 
     PCx_QueryVariation(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
-                       INCREASEDECREASE incDec, PERCENTORPOINTS percentOrPoints, OPERATORS op, double val, unsigned int year1,
+                       INCREASEDECREASE incDec, PERCENTORPOINTS percentOrPoints, OPERATORS op, qint64 val, unsigned int year1,
                        unsigned int year2, const QString &name="");
 
 
@@ -65,8 +65,8 @@ public:
     void setPercentOrPoints(PERCENTORPOINTS pop){percentOrPoints=pop;}
     static const QString percentOrPointToString(PERCENTORPOINTS pop);
 
-    double getValue()const{return val;}
-    void setValue(double val){this->val=val;}
+    qint64 getValue()const{return val;}
+    void setValue(qint64 val){this->val=val;}
 
     //Forbid same years for this query
     void setYears(unsigned int year1,unsigned int year2);
@@ -77,7 +77,7 @@ private:
     INCREASEDECREASE incDec;
     PERCENTORPOINTS percentOrPoints;
     OPERATORS op;
-    double val;
+    qint64 val;
 
 
 };

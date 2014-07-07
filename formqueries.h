@@ -42,6 +42,10 @@ private slots:
 
     void on_pushButtonSaveReqRank_clicked();
 
+    void on_pushButtonExecReq3_clicked();
+
+    void on_pushButtonSaveReq3_clicked();
+
 private:
     Ui::FormQueries *ui;
     void updateListOfAudits();
@@ -53,9 +57,10 @@ private:
 
     bool getParamsReqVariation(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
                        PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
-                       PCx_QueryVariation::OPERATORS &oper, double &val, unsigned int &year1, unsigned int &year2);
+                       PCx_QueryVariation::OPERATORS &oper, qint64 &val, unsigned int &year1, unsigned int &year2);
     QString execQueries(QModelIndexList items);
     bool getParamsReqRank(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri, unsigned int &number, PCx_QueryRank::GREATERSMALLER &grSm, unsigned int &year1, unsigned int &year2);
+    bool getParamsReqMinMax(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri, qint64 &val1, qint64 &val2, unsigned int &year1, unsigned int &year2);
 };
 
 #endif // FORMQUERIES_H

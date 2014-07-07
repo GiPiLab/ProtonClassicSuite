@@ -6,6 +6,7 @@
 #include "pcx_query.h"
 #include "pcx_queryvariation.h"
 #include "pcx_queryrank.h"
+#include "pcx_queryminmax.h"
 #include "utils.h"
 
 
@@ -186,9 +187,21 @@ bool FormQueries::getParamsReqRank(unsigned int &typeId, PCx_AuditModel::ORED &o
     return true;
 }
 
+bool FormQueries::getParamsReqMinMax(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri, qint64 &val1, qint64 &val2, unsigned int &year1, unsigned int &year2)
+{
+    typeId=ui->comboBoxTypes_3->currentData().toUInt();
+    ored=(PCx_AuditModel::ORED)ui->comboBoxORED_3->currentData().toUInt();
+    dfrfdiri=(PCx_AuditModel::DFRFDIRI)ui->comboBoxDFRFDIRI_3->currentData().toUInt();
+    val1=(qint64)ui->doubleSpinBox_2->value()*FIXEDPOINTCOEFF;
+    val2=(qint64)ui->doubleSpinBox_3->value()*FIXEDPOINTCOEFF;
+    year1=ui->comboBoxYear1_3->currentText().toUInt();
+    year2=ui->comboBoxYear2_3->currentText().toUInt();
+    return true;
+}
+
 bool FormQueries::getParamsReqVariation(unsigned int &typeId,PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
                    PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
-                   PCx_QueryVariation::OPERATORS &oper,double &val, unsigned int &year1, unsigned int &year2)
+                   PCx_QueryVariation::OPERATORS &oper,qint64 &val, unsigned int &year1, unsigned int &year2)
 {
     typeId=ui->comboBoxTypes->currentData().toUInt();
     ored=(PCx_AuditModel::ORED)ui->comboBoxORED->currentData().toUInt();
@@ -196,7 +209,7 @@ bool FormQueries::getParamsReqVariation(unsigned int &typeId,PCx_AuditModel::ORE
     increase=(PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toUInt();
     percent=(PCx_QueryVariation::PERCENTORPOINTS)ui->comboBoxPercentEuro->currentData().toUInt();
     oper=(PCx_QueryVariation::OPERATORS)ui->comboBoxOperator->currentData().toUInt();
-    val=ui->doubleSpinBox->value();
+    val=ui->doubleSpinBox->value()*FIXEDPOINTCOEFF;
     year1=ui->comboBoxYear1->currentText().toUInt();
     year2=ui->comboBoxYear2->currentText().toUInt();
     if(year1==year2)
@@ -216,7 +229,7 @@ void FormQueries::on_pushButtonExecReqVariation_clicked()
     PCx_QueryVariation::PERCENTORPOINTS pop;
     PCx_QueryVariation::INCREASEDECREASE incdec;
     PCx_QueryVariation::OPERATORS oper;
-    double val;
+    qint64 val;
     unsigned int year1,year2;
     if(getParamsReqVariation(typeId,ored,dfrfdiri,incdec,pop,oper,val,year1,year2)==false)
     {
@@ -264,7 +277,7 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
         PCx_QueryVariation::PERCENTORPOINTS pop;
         PCx_QueryVariation::INCREASEDECREASE incdec;
         PCx_QueryVariation::OPERATORS oper;
-        double val;
+        qint64 val;
         unsigned int year1,year2;
         if(getParamsReqVariation(typeId,ored,dfrfdiri,incdec,pop,oper,val,year1,year2)==false)
         {
@@ -329,8 +342,12 @@ QString FormQueries::execQueries(QModelIndexList items)
             break;
         }
 
-        //case PCx_Query::MINMAX:
-          //  break;
+        case PCx_Query::MINMAX:
+        {
+            PCx_QueryMinMax pqmm(model,selectedQueryId);
+            output.append(pqmm.exec());
+            break;
+        }
         }
     }
     output.append("</body></html>");
@@ -439,6 +456,67 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
         }
 
         PCx_QueryRank qr(model,typeId,ored,dfrfdiri,grSm,number,year1,year2);
+
+
+        if(!qr.canSave(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
+            return;
+        }
+        if(!qr.save(text))
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
+            return;
+        }
+        queriesModel->update();
+    }
+}
+
+void FormQueries::on_pushButtonExecReq3_clicked()
+{
+    unsigned int typeId,year1,year2;
+    PCx_AuditModel::ORED ored;
+    PCx_AuditModel::DFRFDIRI dfrfdiri;
+    qint64 val1,val2;
+
+
+    if(getParamsReqMinMax(typeId,ored,dfrfdiri,val1,val2,year1,year2)==false)
+    {
+        return;
+    }
+
+    PCx_QueryMinMax qmm(model,typeId,ored,dfrfdiri,val1,val2,year1,year2);
+
+    currentHtmlDoc=report->generateHTMLHeader();
+    currentHtmlDoc.append(qmm.exec());
+    currentHtmlDoc.append("</body></html>");
+    doc->setHtml(currentHtmlDoc);
+}
+
+void FormQueries::on_pushButtonSaveReq3_clicked()
+{
+    bool ok;
+    QString text;
+
+    do
+    {
+        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok);
+
+    }while(ok && text.isEmpty());
+
+    if(ok)
+    {
+        unsigned int typeId,year1,year2;
+        qint64 val1,val2;
+        PCx_AuditModel::ORED ored;
+        PCx_AuditModel::DFRFDIRI dfrfdiri;
+
+        if(getParamsReqMinMax(typeId,ored,dfrfdiri,val1,val2,year1,year2)==false)
+        {
+            return;
+        }
+
+        PCx_QueryMinMax qr(model,typeId,ored,dfrfdiri,val1,val2,year1,year2);
 
 
         if(!qr.canSave(text))
