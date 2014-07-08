@@ -292,6 +292,12 @@ bool PCx_AuditModel::finishAudit()
     return PCx_AuditModel::finishAudit(auditId);
 }
 
+bool PCx_AuditModel::unFinishAudit()
+{
+    auditInfos.finished=false;
+    return PCx_AuditModel::unFinishAudit(auditId);
+}
+
 QSqlTableModel *PCx_AuditModel::getTableModel(const QString &mode) const
 {
     if(0==mode.compare("DF",Qt::CaseInsensitive))
@@ -324,6 +330,152 @@ QSqlTableModel *PCx_AuditModel::getTableModel(DFRFDIRI mode) const
     case GLOBAL:return NULL;
     }
     return NULL;
+}
+
+bool PCx_AuditModel::setLeafValues(unsigned int leafId, PCx_AuditModel::DFRFDIRI mode, unsigned int year, QHash<ORED,double> vals)
+{
+    Q_ASSERT(!vals.isEmpty());
+    if(vals.contains(DISPONIBLES))
+    {
+        qWarning()<<"Not modifying computed column DISPONIBLE";
+        return false;
+    }
+    if(auditInfos.finished)
+    {
+        qWarning()<<"Not modifying finished audit";
+        return false;
+    }
+    if(year<auditInfos.years.first() || year>auditInfos.years.last())
+    {
+        qCritical()<<"Invalid year in setLeaf";
+        return false;
+    }
+    if(!attachedTree->isLeaf(leafId))
+    {
+        qWarning()<<"Not a leaf, abording";
+        return false;
+    }
+
+    QString reqString;
+
+    if(vals.contains(OUVERTS))
+    {
+        if(!reqString.isEmpty())
+            reqString.append(",");
+        reqString.append(OREDtoTableString(OUVERTS)+"=:vouverts");
+    }
+    if(vals.contains(REALISES))
+    {
+        if(!reqString.isEmpty())
+            reqString.append(",");
+        reqString.append(OREDtoTableString(REALISES)+"=:vrealises");
+    }
+    if(vals.contains(ENGAGES))
+    {
+        if(!reqString.isEmpty())
+            reqString.append(",");
+        reqString.append(OREDtoTableString(ENGAGES)+"=:vengages");
+    }
+
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery q;
+    QString tableName=QString("audit_%1_%2").arg(modeToTableString(mode)).arg(auditId);
+
+    //qDebug()<<"Request String ="<<reqString;
+
+    q.prepare(QString("update %1 set %2 where id_node=:id_node and annee=:year")
+              .arg(tableName).arg(reqString));
+
+    if(vals.contains(OUVERTS))
+        q.bindValue(":vouverts",(qint64)vals.value(OUVERTS)*FIXEDPOINTCOEFF);
+
+    if(vals.contains(REALISES))
+        q.bindValue(":vrealises",(qint64)vals.value(REALISES)*FIXEDPOINTCOEFF);
+
+    if(vals.contains(ENGAGES))
+        q.bindValue(":vengages",(qint64)vals.value(ENGAGES)*FIXEDPOINTCOEFF);
+
+    q.bindValue(":id_node",leafId);
+    q.bindValue(":year",year);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<"Error while setting value"<<q.lastError();
+        QSqlDatabase::database().rollback();
+        return false;
+    }
+
+    q.prepare(QString("update %1 set disponibles=ouverts-(realises+engages) where id_node=:id_node and annee=:year").arg(tableName));
+    q.bindValue(":id_node",leafId);
+    q.bindValue(":year",year);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<"Error while setting disponibles values"<<q.lastError();
+        QSqlDatabase::database().rollback();
+        return false;
+    }
+
+    if(updateParent(tableName,year,leafId))
+    {
+        QSqlDatabase::database().commit();
+    }
+    else
+    {
+        qCritical()<<"ERROR DURING PROPAGATING VALUES TO ROOTS, CANCELLING";
+        QSqlDatabase::database().rollback();
+        return false;
+    }
+
+    QSqlTableModel *tblModel=getTableModel(mode);
+    if(tblModel!=NULL)
+        tblModel->select();
+
+    return true;
+}
+
+qint64 PCx_AuditModel::getNodeValue(unsigned int nodeId, PCx_AuditModel::DFRFDIRI mode, PCx_AuditModel::ORED ored, unsigned int year) const
+{
+    if(year<auditInfos.years.first() || year>auditInfos.years.last())
+    {
+        qCritical()<<"Invalid year specified";
+        return -MAX_NUM;
+    }
+    QSqlQuery q;
+    q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored)).arg(modeToTableString(mode)).arg(auditId));
+    q.bindValue(":year",year);
+    q.bindValue(":node",nodeId);
+    q.exec();
+    if(!q.next())
+    {
+        qCritical()<<q.lastError();
+        return false;
+    }
+    if(q.value(OREDtoTableString(ored)).isNull())
+    {
+        qDebug()<<"NULL value";
+        return -MAX_NUM;
+    }
+    return q.value(OREDtoTableString(ored)).toLongLong();
+}
+
+bool PCx_AuditModel::clearAllData(PCx_AuditModel::DFRFDIRI mode)
+{
+    QSqlQuery q(QString("update audit_%1_%2 set ouverts=NULL,realises=NULL,engages=NULL,disponibles=NULL").arg(modeToTableString(mode)).arg(auditId));
+    q.exec();
+    if(q.numRowsAffected()<=0)
+    {
+        qCritical()<<q.lastError();
+        return false;
+    }
+    QSqlTableModel *tblModel=getTableModel(mode);
+    if(tblModel!=NULL)
+        tblModel->select();
+
+    return true;
 }
 
 bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
@@ -367,40 +519,40 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
             modelDF=new QSqlTableModel();
             modelDF->setTable(QString("audit_DF_%1").arg(auditId));
             modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-            modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-            modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-            modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+            modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+            modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+            modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
             modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
             modelDF->select();
 
             modelDI=new QSqlTableModel();
             modelDI->setTable(QString("audit_DI_%1").arg(auditId));
             modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-            modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-            modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-            modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+            modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+            modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+            modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
             modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
             modelDI->select();
 
             modelRI=new QSqlTableModel();
             modelRI->setTable(QString("audit_RI_%1").arg(auditId));
             modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-            modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-            modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-            modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+            modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+            modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+            modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
             modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
             modelRI->select();
 
             modelRF=new QSqlTableModel();
             modelRF->setTable(QString("audit_RF_%1").arg(auditId));
             modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,tr("Ouverts"));
-            modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,tr("Réalisés"));
-            modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,tr("Engagés"));
-            modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,tr("Disponibles"));
+            modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+            modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+            modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+            modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
             modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
             modelRF->select();
 
@@ -445,9 +597,9 @@ bool PCx_AuditModel::propagateToAncestors(const QModelIndex &node)
 bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
 {
     unsigned int parent=attachedTree->getParentId(nodeId);
-    qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
+    //qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
     QList<unsigned int> listOfChildren=attachedTree->getChildren(parent);
-    qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
+    //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
     QSqlQuery q;
     QStringList l;
     foreach (unsigned int childId, listOfChildren)
@@ -476,7 +628,7 @@ bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, 
 
     while(q.next())
     {
-        qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
+        //qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
         if(!q.value("ouverts").isNull())
         {
             sumOuverts+=q.value("ouverts").toLongLong();
@@ -579,13 +731,13 @@ QString PCx_AuditModel::OREDtoTableString(ORED ored)
 {
     switch(ored)
     {
-    case ouverts:
+    case OUVERTS:
         return "ouverts";
-    case realises:
+    case REALISES:
         return "realises";
-    case engages:
+    case ENGAGES:
         return "engages";
-    case disponibles:
+    case DISPONIBLES:
         return "disponibles";
     default:
         qCritical()<<"Invalid ORED specified !";
@@ -595,17 +747,17 @@ QString PCx_AuditModel::OREDtoTableString(ORED ored)
 
 PCx_AuditModel::ORED PCx_AuditModel::OREDFromTableString(const QString &ored)
 {
-    if(ored==OREDtoTableString(ouverts))
-        return ouverts;
-    if(ored==OREDtoTableString(realises))
-        return realises;
-    if(ored==OREDtoTableString(engages))
-        return engages;
-    if(ored==OREDtoTableString(disponibles))
-        return disponibles;
+    if(ored==OREDtoTableString(OUVERTS))
+        return OUVERTS;
+    if(ored==OREDtoTableString(REALISES))
+        return REALISES;
+    if(ored==OREDtoTableString(ENGAGES))
+        return ENGAGES;
+    if(ored==OREDtoTableString(DISPONIBLES))
+        return DISPONIBLES;
 
     qCritical()<<"Invalid ORED string specified, defaulting to ouverts";
-    return ouverts;
+    return OUVERTS;
 }
 
 PCx_AuditModel::DFRFDIRI PCx_AuditModel::modeFromTableString(const QString &mode)
@@ -627,13 +779,13 @@ QString PCx_AuditModel::OREDtoCompleteString(ORED ored)
 {
     switch(ored)
     {
-    case ouverts:
+    case OUVERTS:
         return tr("prévu");
-    case realises:
+    case REALISES:
         return tr("réalisé");
-    case engages:
+    case ENGAGES:
         return tr("engagé");
-    case disponibles:
+    case DISPONIBLES:
         return tr("disponible");
     default:
         qCritical()<<"Invalid ORED specified !";
@@ -735,6 +887,38 @@ bool PCx_AuditModel::finishAudit(unsigned int id)
         die();
     }
     q.prepare("update index_audits set termine=1 where id=:id");
+    q.bindValue(":id",id);
+    q.exec();
+
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    return true;
+}
+
+bool PCx_AuditModel::unFinishAudit(unsigned int id)
+{
+    Q_ASSERT(id>0);
+    QSqlQuery q;
+    q.prepare("select count(*) from index_audits where id=:id");
+    q.bindValue(":id",id);
+    q.exec();
+    if(q.next())
+    {
+        if(q.value(0).toInt()==0)
+        {
+            qCritical()<<"De-terminer Audit inexistant !";
+            return false;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError().text();
+        die();
+    }
+    q.prepare("update index_audits set termine=0 where id=:id");
     q.bindValue(":id",id);
     q.exec();
 

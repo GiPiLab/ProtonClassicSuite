@@ -120,11 +120,13 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
         {
             ui->labelFinished->setText(tr("oui"));
             ui->finishAuditButton->setEnabled(false);
+            ui->unFinishAuditButton->setEnabled(true);
         }
         else
         {
             ui->labelFinished->setText(tr("non"));
             ui->finishAuditButton->setEnabled(true);
+            ui->unFinishAuditButton->setEnabled(false);
         }
         ui->labelTree->setText(infos.attachedTreeName);
         ui->labelYears->setText(infos.yearsString);
@@ -162,4 +164,20 @@ void FormManageAudits::on_finishAuditButton_clicked()
     PCx_AuditModel::finishAudit(ui->comboListOfAudits->currentData().toUInt());
     updateListOfAudits();
     emit(listOfAuditsChanged());
+}
+
+void FormManageAudits::on_unFinishAuditButton_clicked()
+{
+    if(ui->comboListOfAudits->currentIndex()==-1)
+    {
+        return;
+    }
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment dé-terminer l'audit <b>%1</b> ? Celà signifie que vous pourrez en modifier les données, mais plus l'exploiter avant de l'avoir terminé à nouveau").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    {
+        return;
+    }
+    PCx_AuditModel::unFinishAudit(ui->comboListOfAudits->currentData().toUInt());
+    updateListOfAudits();
+    emit(listOfAuditsChanged());
+
 }

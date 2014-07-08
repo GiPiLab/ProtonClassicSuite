@@ -105,9 +105,6 @@
       <string>Gestion des audits</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0" colspan="2">
-       <widget class="QComboBox" name="comboListOfAudits"/>
-      </item>
       <item row="1" column="0" colspan="2">
        <layout class="QFormLayout" name="formLayout">
         <property name="fieldGrowthPolicy">
@@ -206,14 +203,17 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <widget class="QPushButton" name="deleteAuditButton">
         <property name="text">
          <string>Supprimer audit</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="0" column="0" colspan="2">
+       <widget class="QComboBox" name="comboListOfAudits"/>
+      </item>
+      <item row="4" column="1">
        <widget class="QPushButton" name="cloneAuditButton">
         <property name="text">
          <string>Dupliquer audit</string>
@@ -224,6 +224,18 @@
        <widget class="QPushButton" name="finishAuditButton">
         <property name="text">
          <string>Terminer audit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QPushButton" name="unFinishAuditButton">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="text">
+         <string>Dé-terminer audit</string>
         </property>
        </widget>
       </item>

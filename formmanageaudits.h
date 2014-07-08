@@ -28,6 +28,8 @@ private slots:
 
     void on_finishAuditButton_clicked();
 
+    void on_unFinishAuditButton_clicked();
+
 signals:
     void listOfAuditsChanged();
 

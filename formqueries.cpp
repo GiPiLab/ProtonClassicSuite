@@ -19,10 +19,10 @@ FormQueries::FormQueries(QWidget *parent) :
     model=NULL;
     queriesModel=NULL;
     report=NULL;
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ouverts)+"s",PCx_AuditModel::ouverts);
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::realises)+"s",PCx_AuditModel::realises);
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::engages)+"s",PCx_AuditModel::engages);
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::disponibles)+"s",PCx_AuditModel::disponibles);
+    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
+    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
+    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
+    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)+"s",PCx_AuditModel::DISPONIBLES);
 
     ui->comboBoxDFRFDIRI->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DF).toLower(),PCx_AuditModel::DF);
     ui->comboBoxDFRFDIRI->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RF).toLower(),PCx_AuditModel::RF);
@@ -43,10 +43,10 @@ FormQueries::FormQueries(QWidget *parent) :
     ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::GREATEROREQUAL),PCx_QueryVariation::GREATEROREQUAL);
     ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::GREATERTHAN),PCx_QueryVariation::GREATERTHAN);
 
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ouverts)+"s",PCx_AuditModel::ouverts);
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::realises)+"s",PCx_AuditModel::realises);
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::engages)+"s",PCx_AuditModel::engages);
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::disponibles)+"s",PCx_AuditModel::disponibles);
+    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
+    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
+    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
+    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)+"s",PCx_AuditModel::DISPONIBLES);
 
     ui->comboBoxDFRFDIRI_2->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DF).toLower(),PCx_AuditModel::DF);
     ui->comboBoxDFRFDIRI_2->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RF).toLower(),PCx_AuditModel::RF);
@@ -56,10 +56,10 @@ FormQueries::FormQueries(QWidget *parent) :
     ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATER),PCx_QueryRank::GREATER);
     ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::SMALLER),PCx_QueryRank::SMALLER);
 
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ouverts)+"s",PCx_AuditModel::ouverts);
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::realises)+"s",PCx_AuditModel::realises);
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::engages)+"s",PCx_AuditModel::engages);
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::disponibles)+"s",PCx_AuditModel::disponibles);
+    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
+    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
+    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
+    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)+"s",PCx_AuditModel::DISPONIBLES);
 
     ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DF).toLower(),PCx_AuditModel::DF);
     ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RF).toLower(),PCx_AuditModel::RF);
@@ -86,6 +86,11 @@ FormQueries::~FormQueries()
         delete queriesModel;
     delete doc;
     delete ui;
+}
+
+void FormQueries::onListOfAuditsChanged()
+{
+     updateListOfAudits();
 }
 
 

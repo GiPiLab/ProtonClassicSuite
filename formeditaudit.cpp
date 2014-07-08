@@ -1,6 +1,8 @@
 #include "formeditaudit.h"
 #include "ui_formeditaudit.h"
 #include <QDebug>
+#include <QMessageBox>
+#include <QtGlobal>
 
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
@@ -128,4 +130,59 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
     ui->tableViewDI->setEnabled(isLeaf);
     ui->tableViewRI->setEnabled(isLeaf);
     ui->label->setText(index.data().toString());
+}
+
+void FormEditAudit::on_randomDataButton_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Remplir le mode (DF/RF/DI/RI) de l'audit de données aléatoires ?"))==QMessageBox::No)
+    {
+        return;
+    }
+    QList<unsigned int> leaves=auditModel->getAttachedTreeModel()->getLeavesId();
+    QList<unsigned int> years=auditModel->getAuditInfos().years;
+
+    PCx_AuditModel::DFRFDIRI mode;
+    if(ui->tabWidget->currentWidget()==ui->tabDF)
+        mode=PCx_AuditModel::DF;
+    else if(ui->tabWidget->currentWidget()==ui->tabRF)
+        mode=PCx_AuditModel::RF;
+    else if(ui->tabWidget->currentWidget()==ui->tabDI)
+        mode=PCx_AuditModel::DI;
+    else if(ui->tabWidget->currentWidget()==ui->tabRI)
+        mode=PCx_AuditModel::RI;
+
+    QHash<PCx_AuditModel::ORED,double> data;
+    foreach(unsigned int leaf,leaves)
+    {
+        foreach(unsigned int year,years)
+        {
+            data.clear();
+            data.insert(PCx_AuditModel::OUVERTS,(double)(qrand()%100000));
+            data.insert(PCx_AuditModel::REALISES,(double)(qrand()%100000));
+            data.insert(PCx_AuditModel::ENGAGES,(double)(qrand()%100000));
+            auditModel->setLeafValues(leaf,mode,year,data);
+        }
+    }
+}
+
+void FormEditAudit::on_clearDataButton_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Effacer toutes les données du mode (DF/RF/DI/RI) sélectionné ?"))==QMessageBox::No)
+    {
+        return;
+    }
+
+    PCx_AuditModel::DFRFDIRI mode;
+
+
+    if(ui->tabWidget->currentWidget()==ui->tabDF)
+        mode=PCx_AuditModel::DF;
+    else if(ui->tabWidget->currentWidget()==ui->tabRF)
+        mode=PCx_AuditModel::RF;
+    else if(ui->tabWidget->currentWidget()==ui->tabDI)
+        mode=PCx_AuditModel::DI;
+    else if(ui->tabWidget->currentWidget()==ui->tabRI)
+        mode=PCx_AuditModel::RI;
+
+    auditModel->clearAllData(mode);
 }

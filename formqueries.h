@@ -21,6 +21,9 @@ public:
     explicit FormQueries(QWidget *parent = 0);
     ~FormQueries();
 
+public slots:
+    void onListOfAuditsChanged();
+
 private slots:
     void on_comboBoxListAudits_activated(int index);
 

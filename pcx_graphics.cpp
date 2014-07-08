@@ -210,7 +210,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
     QString plotTitle;
     if(cumule==false)
     {
-        if(modeORED!=PCx_AuditModel::engages)
+        if(modeORED!=PCx_AuditModel::ENGAGES)
             plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
         else
             plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
@@ -218,7 +218,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
 
     else
     {
-        if(modeORED!=PCx_AuditModel::engages)
+        if(modeORED!=PCx_AuditModel::ENGAGES)
             plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
         else
             plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(model->OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(model->modeToCompleteString(mode));
@@ -332,10 +332,10 @@ QString PCx_Graphics::getG9(unsigned int node) const
     }
 
     QList<QPair<QString,QString> > listModesAndLabels;
-    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::ouverts),model->OREDtoCompleteString(PCx_AuditModel::ouverts)));
-    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::realises),model->OREDtoCompleteString(PCx_AuditModel::realises)));
-    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::engages),model->OREDtoCompleteString(PCx_AuditModel::engages)));
-    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::disponibles),model->OREDtoCompleteString(PCx_AuditModel::disponibles)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::OUVERTS),model->OREDtoCompleteString(PCx_AuditModel::OUVERTS)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::REALISES),model->OREDtoCompleteString(PCx_AuditModel::REALISES)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::ENGAGES),model->OREDtoCompleteString(PCx_AuditModel::ENGAGES)));
+    listModesAndLabels.append(QPair<QString,QString>(model->OREDtoTableString(PCx_AuditModel::DISPONIBLES),model->OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)));
 
     QVector<double> ticks;
     QVector<QString> labels;

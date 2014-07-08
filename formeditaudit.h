@@ -25,6 +25,10 @@ private slots:
 
     void on_treeView_clicked(const QModelIndex &index);
 
+    void on_randomDataButton_clicked();
+
+    void on_clearDataButton_clicked();
+
 private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();

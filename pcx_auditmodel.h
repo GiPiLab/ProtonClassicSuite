@@ -30,10 +30,10 @@ public:
 
     enum ORED
     {
-        ouverts,
-        realises,
-        engages,
-        disponibles
+        OUVERTS,
+        REALISES,
+        ENGAGES,
+        DISPONIBLES
     };
 
     //Column indexes in sql tables
@@ -59,7 +59,9 @@ public:
     const PCx_AuditInfos &getAuditInfos() const{return auditInfos;}
 
     bool finishAudit();
+    bool unFinishAudit();
     static bool finishAudit(unsigned int id);
+    static bool unFinishAudit(unsigned int id);
 
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     QSqlTableModel *getTableModel(const QString &mode) const;
@@ -68,6 +70,11 @@ public:
     QSqlTableModel *getTableModelDI() const {return modelDI;}
     QSqlTableModel *getTableModelRF() const {return modelRF;}
     QSqlTableModel *getTableModelRI() const {return modelRI;}
+
+    bool setLeafValues(unsigned int leafId, DFRFDIRI mode, unsigned int year, QHash<ORED, double> vals);
+    qint64 getNodeValue(unsigned int nodeId, DFRFDIRI mode, ORED ored, unsigned int year) const;
+
+    bool clearAllData(DFRFDIRI mode);
 
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 

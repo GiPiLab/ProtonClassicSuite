@@ -195,6 +195,30 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="randomDataButton">
+           <property name="font">
+            <font>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="text">
+            <string>Données aléatoires</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="clearDataButton">
+           <property name="font">
+            <font>
+             <italic>true</italic>
+            </font>
+           </property>
+           <property name="text">
+            <string>Vider données</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>

@@ -214,11 +214,11 @@ void FormReports::on_saveButton_clicked()
     }
 
 
-    qDebug()<<"Mode-independant selected tables = "<<modeIndependantTables;
+    /*qDebug()<<"Mode-independant selected tables = "<<modeIndependantTables;
     qDebug()<<"Mode-independant selected graphics = "<<modeIndependantGraphics;
 
     qDebug()<<"Mode-dependant selected tables = "<<selectedTables;
-    qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;
+    qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
     QString output=report->generateHTMLHeader();
     QList<PCx_AuditModel::DFRFDIRI> listModes;

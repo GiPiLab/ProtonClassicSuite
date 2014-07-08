@@ -34,15 +34,15 @@ public:
     PCx_Graphics(PCx_AuditModel *model, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     virtual ~PCx_Graphics();
 
-    QString getG1(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::ouverts,false);}
-    QString getG3(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::realises,false);}
-    QString getG5(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::engages,false);}
-    QString getG7(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::disponibles,false);}
+    QString getG1(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::OUVERTS,false);}
+    QString getG3(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::REALISES,false);}
+    QString getG5(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::ENGAGES,false);}
+    QString getG7(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::DISPONIBLES,false);}
 
-    QString getG2(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::ouverts,true);}
-    QString getG4(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::realises,true);}
-    QString getG6(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::engages,true);}
-    QString getG8(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::disponibles,true);}
+    QString getG2(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::OUVERTS,true);}
+    QString getG4(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::REALISES,true);}
+    QString getG6(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::ENGAGES,true);}
+    QString getG8(unsigned int node,PCx_AuditModel::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditModel::DISPONIBLES,true);}
 
     QString getG9(unsigned int node) const;
 
