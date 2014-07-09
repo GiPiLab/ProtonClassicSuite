@@ -7,6 +7,9 @@ class PCx_QueryRank : public PCx_Query
 {
 public:
 
+    static const unsigned int DEFAULTCOlOR=0xaaffbb;
+
+
     enum GREATERSMALLER
     {
         SMALLER,
@@ -34,18 +37,14 @@ public:
 
     static QString greaterSmallerToString(GREATERSMALLER grSm);
 
+    static QString getCSS();
+    static QColor getColor();
+
 
 private:
 
     GREATERSMALLER grSm;
     unsigned int number;
-
-
-
-
-
-
-
 
 };
 

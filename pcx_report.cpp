@@ -1,5 +1,6 @@
 #include "pcx_report.h"
 #include "utils.h"
+#include "pcx_query.h"
 
 PCx_Report::PCx_Report(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
@@ -10,14 +11,7 @@ PCx_Report::PCx_Report(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth
 QString PCx_Report::getCSS() const
 {
     //Original PCA stylesheet with slight incoherencies between t2, t2bis, t3 and t3bis
-    QString css=
-            "\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
-            "\n.req1{background-color:#FAB;padding:5px;}"
-            "\n.req1normal{background-color:#FAB;}"
-            "\n.req2{background-color:#BFA;padding:5px;}"
-            "\n.req2normal{background-color:#BFA;}"
-            "\n.req3{background-color:#BAF;padding:5px;}"
-            "\n.req3normal{background-color:#BAF;}"
+    QString css="\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
             "\nh1{color:#A00;}"
             "\nh2{color:navy;}"
             "\nh3{color:green;font-size:larger;}"
@@ -42,6 +36,7 @@ QString PCx_Report::getCSS() const
             "\ntr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
             "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
 
+    css.append(PCx_Query::getCSS());
     return css;
 }
 

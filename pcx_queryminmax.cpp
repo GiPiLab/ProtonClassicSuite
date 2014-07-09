@@ -2,6 +2,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QSettings>
 #include "utils.h"
 
 PCx_QueryMinMax::PCx_QueryMinMax():PCx_Query()
@@ -174,5 +175,20 @@ QString PCx_QueryMinMax::getDescription() const
             .arg(formatCurrency(val1)).arg(formatCurrency(val2))
             .arg(year1).arg(year2));
     return out;
+}
+
+QString PCx_QueryMinMax::getCSS()
+{
+    QColor color=getColor();
+    QString css=QString("\n.req3{background-color:%1;padding:5px;}").arg(color.name());
+    return css;
+}
+
+QColor PCx_QueryMinMax::getColor()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("colors/reqminmax",PCx_QueryMinMax::DEFAULTCOlOR).toUInt();
+    QColor color(oldcolor);
+    return color;
 }
 

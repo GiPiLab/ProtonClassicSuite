@@ -22,8 +22,15 @@ private slots:
 
     void on_pushButtonReset_clicked();
 
+    void on_pushButtonColorReqVar_clicked();
+
+    void on_pushButtonColorReqRank_clicked();
+
+    void on_pushButtonColorReqMinMax_clicked();
+
 private:
     Ui::DialogOptions *ui;
+    QColor colorReqVar,colorReqMinMax,colorReqRank;
 };
 
 #endif // DIALOGOPTIONS_H

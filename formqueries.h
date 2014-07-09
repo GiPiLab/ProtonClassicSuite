@@ -23,6 +23,7 @@ public:
 
 public slots:
     void onListOfAuditsChanged();
+    void onColorChanged();
 
 private slots:
     void on_comboBoxListAudits_activated(int index);

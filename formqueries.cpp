@@ -10,7 +10,6 @@
 #include "utils.h"
 
 
-
 FormQueries::FormQueries(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormQueries)
@@ -19,6 +18,9 @@ FormQueries::FormQueries(QWidget *parent) :
     model=NULL;
     queriesModel=NULL;
     report=NULL;
+
+    onColorChanged();
+
     ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
     ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
     ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
@@ -90,7 +92,14 @@ FormQueries::~FormQueries()
 
 void FormQueries::onListOfAuditsChanged()
 {
-     updateListOfAudits();
+    updateListOfAudits();
+}
+
+void FormQueries::onColorChanged()
+{
+    ui->frame->setStyleSheet(QString("background-color:"+PCx_QueryVariation::getColor().name()));
+    ui->frame_2->setStyleSheet(QString("background-color:"+PCx_QueryRank::getColor().name()));
+    ui->frame_3->setStyleSheet(QString("background-color:"+PCx_QueryMinMax::getColor().name()));
 }
 
 
@@ -102,7 +111,8 @@ void FormQueries::updateListOfAudits()
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
-    //doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));
+    if(!nonEmpty)
+        doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));
 
     QPair<unsigned int, QString> p;
     foreach(p,listOfAudits)

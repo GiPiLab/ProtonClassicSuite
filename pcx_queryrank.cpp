@@ -2,6 +2,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QSettings>
 #include "utils.h"
 
 PCx_QueryRank::PCx_QueryRank():PCx_Query()
@@ -180,5 +181,20 @@ QString PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATERSMALLER grSm
         Q_UNREACHABLE();
         return QString();
     }
+}
+
+QString PCx_QueryRank::getCSS()
+{
+    QColor color=getColor();
+    QString css=QString("\n.req2{background-color:%1;padding:5px;}").arg(color.name());
+    return css;
+}
+
+QColor PCx_QueryRank::getColor()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("colors/reqrank",PCx_QueryRank::DEFAULTCOlOR).toUInt();
+    QColor color(oldcolor);
+    return color;
 }
 

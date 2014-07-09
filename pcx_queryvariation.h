@@ -9,6 +9,8 @@ class PCx_QueryVariation : public PCx_Query
 
 public:
 
+    static const unsigned int DEFAULTCOlOR=0xffaabb;
+
     enum OPERATORS
     {
         LOWERTHAN,
@@ -70,6 +72,9 @@ public:
 
     //Forbid same years for this query
     void setYears(unsigned int year1,unsigned int year2);
+
+    static QString getCSS();
+    static QColor getColor();
 
 
 private:

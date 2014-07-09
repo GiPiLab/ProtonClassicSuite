@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QtGlobal>
+#include <QSettings>
 #include "utils.h"
 
 PCx_QueryVariation::PCx_QueryVariation():PCx_Query()
@@ -410,4 +411,19 @@ void PCx_QueryVariation::setYears(unsigned int year1, unsigned int year2)
     //This query needs at least two years, this is checked in ui
     Q_ASSERT(year1!=year2);
     PCx_Query::setYears(year1,year2);
+}
+
+QString PCx_QueryVariation::getCSS()
+{
+    QColor color=getColor();
+    QString css=QString("\n.req1{background-color:%1;padding:5px;}").arg(color.name());
+    return css;
+}
+
+QColor PCx_QueryVariation::getColor()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("colors/reqvar",PCx_QueryVariation::DEFAULTCOlOR).toUInt();
+    QColor color(oldcolor);
+    return color;
 }

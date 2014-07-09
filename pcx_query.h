@@ -17,7 +17,6 @@ public:
 
     static const unsigned int ALLTYPES=UINT_MAX;
 
-
     PCx_Query();
     PCx_Query(PCx_AuditModel *model);
     PCx_Query(PCx_AuditModel *model,unsigned int typeId,PCx_AuditModel::ORED ored,PCx_AuditModel::DFRFDIRI dfrfdiri,
@@ -54,9 +53,7 @@ public:
 
     static bool createTableQueries(unsigned int auditId);
 
-
-
-
+    static QString getCSS();
 
 
 protected:

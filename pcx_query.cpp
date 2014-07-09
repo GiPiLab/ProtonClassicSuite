@@ -1,8 +1,11 @@
 #include "pcx_query.h"
+#include "pcx_queryvariation.h"
+#include "pcx_queryrank.h"
+#include "pcx_queryminmax.h"
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
-
+#include <QSettings>
 
 PCx_Query::PCx_Query():model(NULL),queryId(0)
 {
@@ -65,6 +68,12 @@ bool PCx_Query::createTableQueries(unsigned int auditId)
         return false;
     }
     return true;
+}
+
+QString PCx_Query::getCSS()
+{
+    QString css=PCx_QueryVariation::getCSS()+PCx_QueryRank::getCSS()+PCx_QueryMinMax::getCSS();
+    return css;
 }
 
 bool PCx_Query::deleteQuery(unsigned int auditId,unsigned int queryId)

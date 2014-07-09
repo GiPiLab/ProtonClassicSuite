@@ -314,7 +314,13 @@ void MainWindow::on_actionReport_triggered()
 void MainWindow::on_actionO_ptions_triggered()
 {
     DialogOptions dialogOptions(this);
-    dialogOptions.exec();
+    if(dialogOptions.exec()==QDialog::Accepted)
+    {
+        foreach(FormQueries *q, listOfFormQueries)
+        {
+            q->onColorChanged();
+        }
+    }
 }
 
 void MainWindow::on_actionQueries_triggered()

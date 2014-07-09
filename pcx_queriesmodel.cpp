@@ -4,6 +4,9 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include "pcx_query.h"
+#include "pcx_queryvariation.h"
+#include "pcx_queryrank.h"
+#include "pcx_queryminmax.h"
 
 PCx_QueriesModel::PCx_QueriesModel(QObject *parent) :
     QSqlQueryModel(parent)
@@ -27,11 +30,11 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const
         switch(queryType)
         {
         case PCx_Query::VARIATION:
-            return QVariant(QBrush(QColor(0xFF,0xAA,0xBB)));
+            return QVariant(QBrush(PCx_QueryVariation::getColor()));
         case PCx_Query::RANK:
-            return QVariant(QBrush(QColor(0xBB,0xFF,0xAA)));
+            return QVariant(QBrush(PCx_QueryRank::getColor()));
         case PCx_Query::MINMAX:
-            return QVariant(QBrush(QColor(0xBB,0xAA,0xFF)));
+            return QVariant(QBrush(PCx_QueryMinMax::getColor()));
         default:
             Q_UNREACHABLE();
             return QSqlQueryModel::data(item,role);

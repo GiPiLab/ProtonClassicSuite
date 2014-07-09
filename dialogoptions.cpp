@@ -1,6 +1,9 @@
 #include "dialogoptions.h"
 #include "ui_dialogoptions.h"
 #include "pcx_graphics.h"
+#include "pcx_queryrank.h"
+#include "pcx_queryminmax.h"
+#include "pcx_queryvariation.h"
 
 #include <QSettings>
 #include <QDebug>
@@ -59,6 +62,14 @@ DialogOptions::DialogOptions(QWidget *parent) :
     ui->spinBoxWidth->setMaximum(PCx_Graphics::MAXWIDTH);
     ui->spinBoxWidth->setValue(imageWidth);
 
+    colorReqVar=PCx_QueryVariation::getColor();
+    colorReqRank=PCx_QueryRank::getColor();
+    colorReqMinMax=PCx_QueryMinMax::getColor();
+
+    ui->pushButtonColorReqVar->setStyleSheet("background-color:"+colorReqVar.name());
+    ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());
+    ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
+
     //FIXME : PRECISION
 }
 
@@ -92,6 +103,10 @@ void DialogOptions::on_pushButtonOk_clicked()
     settings.setValue("graphics/height",ui->spinBoxHeight->value());
     settings.setValue("graphics/scale",ui->doubleSpinBoxScale->value());
 
+    settings.setValue("colors/reqvar",colorReqVar.rgba());
+    settings.setValue("colors/reqrank",colorReqRank.rgba());
+    settings.setValue("colors/reqminmax",colorReqMinMax.rgba());
+
     done(Accepted);
 }
 
@@ -109,5 +124,47 @@ void DialogOptions::on_pushButtonReset_clicked()
     ui->spinBoxHeight->setValue(PCx_Graphics::DEFAULTHEIGHT);
     ui->spinBoxWidth->setValue(PCx_Graphics::DEFAULTWIDTH);
     ui->doubleSpinBoxScale->setValue(PCx_Graphics::DEFAULTSCALE);
+    colorReqMinMax=QColor(PCx_QueryMinMax::DEFAULTCOlOR);
+    colorReqVar=QColor(PCx_QueryVariation::DEFAULTCOlOR);
+    colorReqRank=QColor(PCx_QueryRank::DEFAULTCOlOR);
+
+    ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
+    ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());
+    ui->pushButtonColorReqVar->setStyleSheet("background-color:"+colorReqVar.name());
+
     //FIXME : Precision
+}
+
+void DialogOptions::on_pushButtonColorReqVar_clicked()
+{
+    QColor oldcolor=PCx_QueryVariation::getColor();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorReqVar=color;
+        ui->pushButtonColorReqVar->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+void DialogOptions::on_pushButtonColorReqRank_clicked()
+{
+    QColor oldcolor=PCx_QueryRank::getColor();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorReqRank=color;
+        ui->pushButtonColorReqRank->setStyleSheet("background-color:"+color.name());
+    }
+
+}
+
+void DialogOptions::on_pushButtonColorReqMinMax_clicked()
+{
+    QColor oldcolor=PCx_QueryMinMax::getColor();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorReqMinMax=color;
+        ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+color.name());
+    }
 }

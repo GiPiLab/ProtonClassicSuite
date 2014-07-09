@@ -7,6 +7,9 @@ class PCx_QueryMinMax : public PCx_Query
 {
 public:
 
+    static const unsigned int DEFAULTCOlOR=0xaabbff;
+
+
     PCx_QueryMinMax();
     PCx_QueryMinMax(PCx_AuditModel *model,unsigned int queryId);
 
@@ -22,6 +25,9 @@ public:
     bool load(unsigned int queryId);
     bool canSave(const QString &name) const;
     QString getDescription() const;
+
+    static QString getCSS();
+    static QColor getColor();
 
 
 private:
