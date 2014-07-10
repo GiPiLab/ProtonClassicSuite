@@ -116,7 +116,7 @@ QString PCx_QueryVariation::getDescription() const
             .arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped())
             .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
-            .arg(formatCurrency(val)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
+            .arg(formatCurrency(val,-1,true)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;
 }
@@ -299,7 +299,7 @@ QString PCx_QueryVariation::exec() const
                 .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
                 .arg(formatCurrency(valuesForYear1.value(node)))
                 .arg(formatCurrency(valuesForYear2.value(node)))
-                .arg(formatCurrency(val))
+                .arg(formatCurrency(val,-1,true))
                 .arg(percentOrPointToString(percentOrPoints).toHtmlEscaped()));
     }
 

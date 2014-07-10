@@ -7,8 +7,20 @@
 #include <QUuid>
 #include <QStandardPaths>
 #include <QDir>
+#include <QtGlobal>
+#include <QSettings>
 
 
+//To speedup formatCurrency and formatDouble
+FORMATMODE currentFormatMode=FORMATMODENORMAL;
+unsigned int currentNumDecimals=DEFAULTNUMDECIMALS;
+
+void updateFormatModeAndDecimals()
+{
+    QSettings settings;
+    currentFormatMode=(FORMATMODE)settings.value("format/formatMode",FORMATMODENORMAL).toUInt();
+    currentNumDecimals=settings.value("format/numdecimals",DEFAULTNUMDECIMALS).toUInt();
+}
 
 void die(int retcode)
 {
@@ -17,19 +29,62 @@ void die(int retcode)
     exit(retcode);
 }
 
-
-QString formatCurrency(qint64 num)
+QString formatCurrency(qint64 num, int decimals, bool forcedUnits)
 {
     QLocale locale;
-    return locale.toString(((double)num/FIXEDPOINTCOEFF),'f',2);
+    QString out;
+
+    if(forcedUnits==false)
+    {
+        switch(currentFormatMode)
+        {
+        case FORMATMODENORMAL:
+            break;
+        case FORMATMODETHOUSANDS:
+            out="k";
+            num/=1000;
+            break;
+        case FORMATMODEMILLIONS:
+            out="M";
+            num/=1000000;
+        }
+    }
+
+    //Forced decimals mode
+    if(decimals>=0)
+        out.prepend(locale.toString(((double)num/FIXEDPOINTCOEFF),'f',decimals));
+    else
+        out.prepend(locale.toString(((double)num/FIXEDPOINTCOEFF),'f',currentNumDecimals));
+    return out;
 }
 
-
-
-QString formatDouble(double num, unsigned int decimals)
+QString formatDouble(double num, int decimals, bool forcedUnits)
 {
     QLocale locale;
-    return locale.toString(num,'f',decimals);
+    QString out;
+
+    if(forcedUnits==false)
+    {
+        switch(currentFormatMode)
+        {
+        case FORMATMODENORMAL:
+            break;
+        case FORMATMODETHOUSANDS:
+            out="k";
+            num/=1000;
+            break;
+        case FORMATMODEMILLIONS:
+            out="M";
+            num/=1000000;
+        }
+    }
+    //Forced decimals mode
+    if(decimals>=0)
+        out.prepend(locale.toString(num,'f',decimals));
+    else
+        out.prepend(locale.toString(num,'f',currentNumDecimals));
+
+    return out;
 }
 
 void initCurrentDb(void)

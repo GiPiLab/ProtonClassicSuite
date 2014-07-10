@@ -52,9 +52,9 @@ QString PCx_Tables::getT1(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
                               "<td align='right' class='t1pourcent'>%4\%</td><td align='right' class='t1valeur'>%5</td><td align='right' class='t1pourcent'>%6\%</td>"
                               "<td align='right' class='t1valeur'>%7</td><td align='right' class='t1pourcent'>%8\%</td></tr>").arg(q.value("annee").toUInt())
-                      .arg(formatCurrency(ouverts)).arg(formatCurrency(realises)).arg(formatDouble(percentRealisesOuverts))
-                      .arg(formatCurrency(engages)).arg(formatDouble(percentEngagesOuverts))
-                      .arg(formatCurrency(disponibles)).arg(formatDouble(percentDisponiblesOuverts)));
+                      .arg(formatCurrency(ouverts)).arg(formatCurrency(realises)).arg(formatDouble(percentRealisesOuverts,-1,true))
+                      .arg(formatCurrency(engages)).arg(formatDouble(percentEngagesOuverts,-1,true))
+                      .arg(formatCurrency(disponibles)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
     }
 
     output.append("</table>");
@@ -148,7 +148,7 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/diffFirstYearRootNodeRealises;
             }
             output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
 
         }
     }
@@ -246,7 +246,7 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/diffFirstYearRootNodeRealises;
             }
             output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
 
             //Here is the trick between T2 and T2bis, change the reference each year (the css changes also)
             diffFirstYearRootNodeOuverts=diffRootNodeOuverts;
@@ -313,7 +313,7 @@ QString PCx_Tables::getT3(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/firstYearRealisesNode;
             }
             output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
 
         }
     }
@@ -374,7 +374,7 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/firstYearRealisesNode;
             }
             output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts)).arg(formatDouble(percentRealises)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
 
             //Here is the only difference between T3 and T3bis (appart the styling of tables)
             firstYearOuvertsNode=ouverts;
@@ -442,7 +442,7 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         }
 
         output.append(QString("<tr><td class='t4annee'>%1</td><td align='right' class='t4pourcent'>%2\%</td><td align='right' class='t4pourcent'>"
-                              "%3\%</td></tr>").arg(annee).arg(formatDouble(percentOuvertsRoot)).arg(formatDouble(percentRealisesRoot)));
+                              "%3\%</td></tr>").arg(annee).arg(formatDouble(percentOuvertsRoot,-1,true)).arg(formatDouble(percentRealisesRoot,-1,true)));
 
     }
 
@@ -572,8 +572,8 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
             output.append(QString("<tr><td class='t5annee'>%1</td><td align='right' class='t5pourcent'>%2</td>"
                                   "<td align='right' class='t5pourcent'>%3</td><td align='right' class='t5pourcent'>%4</td>"
                                   "<td align='right' class='t5valeur'>%5</td><td align='right' class='t5valeur'>%6</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentRealises,0)).arg(formatDouble(percentNC,0))
-                          .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+                          .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true)).arg(formatDouble(percentNC,0,true))
+                          .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
         }
     }
     output.append("</table>");
@@ -653,8 +653,9 @@ QString PCx_Tables::getT6(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
             output.append(QString("<tr><td class='t6annee'>%1</td><td align='right' class='t6pourcent'>%2</td>"
                                   "<td align='right' class='t6pourcent'>%3</td><td align='right' class='t6pourcent'>%4</td>"
                                   "<td align='right' class='t6valeur'>%5</td><td align='right' class='t6valeur'>%6</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentRealises,0)).arg(formatDouble(percentNC,0))
-                          .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+                          .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true))
+                          .arg(formatDouble(percentNC,0,true)).arg(formatDouble(percentEngages,0,true))
+                          .arg(formatDouble(percentDisponibles,0,true)));
         }
     }
     output.append("</table>");
@@ -707,8 +708,8 @@ QString PCx_Tables::getT7(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
         output.append(QString("<tr><td class='t7annee'>%1</td><td align='right' class='t7pourcent'>%2</td>"
                               "<td align='right' class='t7pourcent'>%3</td><td align='right' class='t7pourcent'>%4</td>"
                               "<td align='right' class='t7pourcent'>%5</td></tr>")
-                      .arg(annee).arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentRealises,0))
-                      .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+                      .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true))
+                      .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
     }
     output.append("</table>");
     return output;
@@ -759,8 +760,8 @@ QString PCx_Tables::getT8(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
                           "<tr><td class='t8annee' align='center' style='font-weight:normal'>Non utilis&eacute;</td><td align='right' class='t8valeur'>%2\%</td></tr>"
                           "<tr><td class='t8annee' align='center'><i>dont engag&eacute;</i></td><td align='right' class='t8pourcent'><i>%3\%</i></td></tr>"
                           "<tr><td class='t8annee' align='center'><i>dont disponible</i></td><td align='right' class='t8pourcent'><i>%4\%</i></td></tr>")
-                  .arg(formatDouble(percentRealisesOuverts)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts))
-                  .arg(formatDouble(percentEngagesOuverts)).arg(formatDouble(percentDisponiblesOuverts)));
+                  .arg(formatDouble(percentRealisesOuverts,-1,true)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts,-1,true))
+                  .arg(formatDouble(percentEngagesOuverts,-1,true)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
 
     output.append("</table>");
     return output;
@@ -811,8 +812,8 @@ QString PCx_Tables::getT9(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
                           "<tr><td class='t9annee' style='font-weight:normal'>D&eacute;passement de capacit&eacute; des pr&eacute;visions</td><td align='right' class='t9valeur' valign='middle'>%2 jours</td></tr>"
                           "<tr><td class='t9annee'><i>dont engag&eacute;</i></td><td class='t9pourcent' align='right' valign='middle'><i>%3 jours</i></td></tr>"
                           "<tr><td class='t9annee'><i>dont disponible</i></td><td class='t9pourcent' align='right' valign='middle'><i>%4 jours</i></td></tr>")
-                  .arg(formatDouble(percentOuverts,0)).arg(formatDouble(percentNC,0))
-                  .arg(formatDouble(percentEngages,0)).arg(formatDouble(percentDisponibles,0)));
+                  .arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentNC,0,true))
+                  .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
     output.append("</table>");
     return output;
 }

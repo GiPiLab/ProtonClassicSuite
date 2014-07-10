@@ -52,6 +52,8 @@ int main(int argc, char *argv[])
     int retval;
     qsrand(time(NULL));
 
+
+
     QSqlDatabase::addDatabase("QSQLITE");
 
     MainWindow w;

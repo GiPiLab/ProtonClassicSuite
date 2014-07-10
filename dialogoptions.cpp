@@ -4,7 +4,7 @@
 #include "pcx_queryrank.h"
 #include "pcx_queryminmax.h"
 #include "pcx_queryvariation.h"
-
+#include "utils.h"
 #include <QSettings>
 #include <QDebug>
 
@@ -50,6 +50,9 @@ DialogOptions::DialogOptions(QWidget *parent) :
     if(scale>PCx_Graphics::MAXSCALE)
         scale=PCx_Graphics::MAXSCALE;
 
+    unsigned int numdecimals=settings.value("format/numdecimals",DEFAULTNUMDECIMALS).toUInt();
+    ui->spinBoxNumDecimals->setValue(numdecimals);
+
     ui->doubleSpinBoxScale->setMinimum(PCx_Graphics::MINSCALE);
     ui->doubleSpinBoxScale->setMaximum(PCx_Graphics::MAXSCALE);
     ui->doubleSpinBoxScale->setValue(scale);
@@ -90,7 +93,19 @@ DialogOptions::DialogOptions(QWidget *parent) :
     ui->pushButtonColorPen1->setStyleSheet("background-color:"+colorPen1.name());
     ui->pushButtonColorPen2->setStyleSheet("background-color:"+colorPen2.name());
 
-
+    FORMATMODE formatMode=(FORMATMODE)settings.value("format/formatMode",FORMATMODENORMAL).toUInt();
+    switch(formatMode)
+    {
+    case FORMATMODENORMAL:
+        ui->radioButtonUnits->setChecked(true);
+        break;
+    case FORMATMODETHOUSANDS:
+        ui->radioButtonThousands->setChecked(true);
+        break;
+    case FORMATMODEMILLIONS:
+        ui->radioButtonMillions->setChecked(true);
+        break;
+    }
 }
 
 DialogOptions::~DialogOptions()
@@ -119,9 +134,25 @@ void DialogOptions::on_pushButtonOk_clicked()
         qCritical()<<"Unknown case of option selection for image format";
     }
 
+    settings.setValue("format/numdecimals",ui->spinBoxNumDecimals->value());
+
+    if(ui->radioButtonUnits->isChecked())
+    {
+        settings.setValue("format/formatMode",FORMATMODENORMAL);
+    }
+    else if(ui->radioButtonThousands->isChecked())
+    {
+        settings.setValue("format/formatMode",FORMATMODETHOUSANDS);
+    }
+    else if(ui->radioButtonMillions->isChecked())
+    {
+        settings.setValue("format/formatMode",FORMATMODEMILLIONS);
+    }
+
     settings.setValue("graphics/width",ui->spinBoxWidth->value());
     settings.setValue("graphics/height",ui->spinBoxHeight->value());
     settings.setValue("graphics/scale",ui->doubleSpinBoxScale->value());
+
     settings.setValue("graphics/pen1",colorPen1.rgba());
     settings.setValue("graphics/pen2",colorPen2.rgba());
     settings.setValue("graphics/alpha",alpha);
@@ -133,6 +164,8 @@ void DialogOptions::on_pushButtonOk_clicked()
     settings.setValue("queries/penvar",colorReqVar.rgba());
     settings.setValue("queries/penrank",colorReqRank.rgba());
     settings.setValue("queries/penminmax",colorReqMinMax.rgba());
+
+    updateFormatModeAndDecimals();
 
     done(Accepted);
 }
@@ -163,6 +196,10 @@ void DialogOptions::on_pushButtonReset_clicked()
     colorRFBar=PCx_Graphics::DEFAULTCOLORRFBAR;
     colorDIBar=PCx_Graphics::DEFAULTCOLORDIBAR;
     colorRIBar=PCx_Graphics::DEFAULTCOLORRIBAR;
+
+    ui->spinBoxNumDecimals->setValue(DEFAULTNUMDECIMALS);
+
+    ui->radioButtonUnits->setChecked(true);
 
     ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
     ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());

@@ -167,7 +167,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
         double val1=dataPlotRoot.value(key);
         double val2=dataPlotNode.value(key);
         QCPItemText *text=new QCPItemText(plot);
-        text->setText(formatDouble(val1,1)+"\%");
+        text->setText(formatDouble(val1,-1,true)+"\%");
         int alignment=Qt::AlignHCenter;
        /* if(i==0)
             alignment=Qt::AlignRight;
@@ -185,7 +185,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
         plot->addItem(text);
 
         text=new QCPItemText(plot);
-        text->setText(formatDouble(val2,1)+"\%");
+        text->setText(formatDouble(val2,-1,true)+"\%");
 
         alignment=Qt::AlignHCenter;
         /*if(i==0)

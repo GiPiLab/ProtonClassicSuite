@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     restoreSettings();
     updateTitle();
     setMenusState();
+    updateFormatModeAndDecimals();
 }
 
 MainWindow::~MainWindow()
