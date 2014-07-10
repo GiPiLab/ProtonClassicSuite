@@ -193,7 +193,7 @@ QString PCx_QueryRank::getCSS()
 QColor PCx_QueryRank::getColor()
 {
     QSettings settings;
-    unsigned int oldcolor=settings.value("colors/reqrank",PCx_QueryRank::DEFAULTCOlOR).toUInt();
+    unsigned int oldcolor=settings.value("queries/penrank",PCx_QueryRank::DEFAULTCOlOR).toUInt();
     QColor color(oldcolor);
     return color;
 }

@@ -423,7 +423,7 @@ QString PCx_QueryVariation::getCSS()
 QColor PCx_QueryVariation::getColor()
 {
     QSettings settings;
-    unsigned int oldcolor=settings.value("colors/reqvar",PCx_QueryVariation::DEFAULTCOlOR).toUInt();
+    unsigned int oldcolor=settings.value("queries/penvar",PCx_QueryVariation::DEFAULTCOlOR).toUInt();
     QColor color(oldcolor);
     return color;
 }

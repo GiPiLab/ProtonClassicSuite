@@ -2,41 +2,21 @@
 #include "utils.h"
 #include "pcx_query.h"
 
-PCx_Report::PCx_Report(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
+PCx_Report::PCx_Report(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
     Q_ASSERT(model!=NULL);
-    this->model=model;
 }
 
 QString PCx_Report::getCSS() const
 {
-    //Original PCA stylesheet with slight incoherencies between t2, t2bis, t3 and t3bis
     QString css="\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
             "\nh1{color:#A00;}"
             "\nh2{color:navy;}"
-            "\nh3{color:green;font-size:larger;}"
-            "\ndiv.g{margin-left:auto;margin-right:auto;page-break-inside:avoid;}"
-            "\ntable{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
-            "\ntd.t1annee,td.t3annee{background-color:#b3b3b3;}"
-            "\ntd.t1pourcent{background-color:#b3b3b3;color:#FFF;}"
-            "\ntd.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee{background-color:#e6e6e6;}"
-            "\ntd.t2annee{background-color:#b3b3b3;color:green;}"
-            "\ntd.t2pourcent,td.t3pourcent{background-color:#e6e6e6;color:#000;}"
-            "\ntd.t5pourcent,td.t6pourcent{background-color:#b3b3b3;color:#000;}"
-            "\ntd.t5valeur,td.t6valeur,td.t7valeur{background-color:#b3b3b3;color:#000;font-weight:400;}"
-            "\ntd.t6annee{background-color:#e6e6e6;color:green;}"
-            "\ntd.t7pourcent{background-color:#666;color:#FFF;}"
-            "\ntd.t8pourcent{background-color:#e6e6e6;text-align:center;color:#000;}"
-            "\ntd.t8valeur{background-color:#e6e6e6;font-weight:400;text-align:center;color:#000;}"
-            "\ntd.t9pourcent{background-color:#666;text-align:center;color:#FFF;}"
-            "\ntd.t9valeur{background-color:#666;color:#FFF;font-weight:400;text-align:center;}"
-            "\ntr.t1entete,tr.t3entete,td.t9annee{background-color:#b3b3b3;text-align:center;}"
-            "\ntr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
-            "\ntr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
-            "\ntr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
-            "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
+            "\nh3{color:green;font-size:larger;}";
 
     css.append(PCx_Query::getCSS());
+    css.append(PCx_Tables::getCSS());
+    css.append(PCx_Graphics::getCSS());
     return css;
 }
 

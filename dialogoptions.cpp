@@ -66,11 +66,31 @@ DialogOptions::DialogOptions(QWidget *parent) :
     colorReqRank=PCx_QueryRank::getColor();
     colorReqMinMax=PCx_QueryMinMax::getColor();
 
+    colorPen1=PCx_Graphics::getColorPen1();
+    colorPen2=PCx_Graphics::getColorPen2();
+    alpha=PCx_Graphics::getAlpha();
+
+    ui->sliderAlpha->setValue(alpha);
+
+    colorDFBar=PCx_Graphics::getColorDFBar();
+    colorRFBar=PCx_Graphics::getColorRFBar();
+    colorDIBar=PCx_Graphics::getColorDIBar();
+    colorRIBar=PCx_Graphics::getColorRIBar();
+
+    ui->pushButtonColorDF->setStyleSheet("background-color:"+colorDFBar.name());
+    ui->pushButtonColorRF->setStyleSheet("background-color:"+colorRFBar.name());
+    ui->pushButtonColorDI->setStyleSheet("background-color:"+colorDIBar.name());
+    ui->pushButtonColorRI->setStyleSheet("background-color:"+colorRIBar.name());
+
+
     ui->pushButtonColorReqVar->setStyleSheet("background-color:"+colorReqVar.name());
     ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());
     ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
 
-    //FIXME : PRECISION
+    ui->pushButtonColorPen1->setStyleSheet("background-color:"+colorPen1.name());
+    ui->pushButtonColorPen2->setStyleSheet("background-color:"+colorPen2.name());
+
+
 }
 
 DialogOptions::~DialogOptions()
@@ -102,10 +122,17 @@ void DialogOptions::on_pushButtonOk_clicked()
     settings.setValue("graphics/width",ui->spinBoxWidth->value());
     settings.setValue("graphics/height",ui->spinBoxHeight->value());
     settings.setValue("graphics/scale",ui->doubleSpinBoxScale->value());
+    settings.setValue("graphics/pen1",colorPen1.rgba());
+    settings.setValue("graphics/pen2",colorPen2.rgba());
+    settings.setValue("graphics/alpha",alpha);
+    settings.setValue("graphics/penDFBar",colorDFBar.rgba());
+    settings.setValue("graphics/penRFBar",colorRFBar.rgba());
+    settings.setValue("graphics/penDIBar",colorDIBar.rgba());
+    settings.setValue("graphics/penRIBar",colorRIBar.rgba());
 
-    settings.setValue("colors/reqvar",colorReqVar.rgba());
-    settings.setValue("colors/reqrank",colorReqRank.rgba());
-    settings.setValue("colors/reqminmax",colorReqMinMax.rgba());
+    settings.setValue("queries/penvar",colorReqVar.rgba());
+    settings.setValue("queries/penrank",colorReqRank.rgba());
+    settings.setValue("queries/penminmax",colorReqMinMax.rgba());
 
     done(Accepted);
 }
@@ -128,11 +155,25 @@ void DialogOptions::on_pushButtonReset_clicked()
     colorReqVar=QColor(PCx_QueryVariation::DEFAULTCOlOR);
     colorReqRank=QColor(PCx_QueryRank::DEFAULTCOlOR);
 
+    colorPen1=PCx_Graphics::DEFAULTPENCOLOR1;
+    colorPen2=PCx_Graphics::DEFAULTPENCOLOR2;
+    alpha=PCx_Graphics::DEFAULTALPHA;
+
+    colorDFBar=PCx_Graphics::DEFAULTCOLORDFBAR;
+    colorRFBar=PCx_Graphics::DEFAULTCOLORRFBAR;
+    colorDIBar=PCx_Graphics::DEFAULTCOLORDIBAR;
+    colorRIBar=PCx_Graphics::DEFAULTCOLORRIBAR;
+
     ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
     ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());
     ui->pushButtonColorReqVar->setStyleSheet("background-color:"+colorReqVar.name());
-
-    //FIXME : Precision
+    ui->pushButtonColorPen1->setStyleSheet("background-color:"+colorPen1.name());
+    ui->pushButtonColorPen2->setStyleSheet("background-color:"+colorPen2.name());
+    ui->sliderAlpha->setValue(alpha);
+    ui->pushButtonColorDF->setStyleSheet("background-color:"+colorDFBar.name());
+    ui->pushButtonColorRF->setStyleSheet("background-color:"+colorRFBar.name());
+    ui->pushButtonColorDI->setStyleSheet("background-color:"+colorDIBar.name());
+    ui->pushButtonColorRI->setStyleSheet("background-color:"+colorRIBar.name());
 }
 
 void DialogOptions::on_pushButtonColorReqVar_clicked()
@@ -166,5 +207,78 @@ void DialogOptions::on_pushButtonColorReqMinMax_clicked()
     {
         colorReqMinMax=color;
         ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+void DialogOptions::on_pushButtonColorPen1_clicked()
+{
+    QColor oldcolor=PCx_Graphics::getColorPen1();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorPen1=color;
+        ui->pushButtonColorPen1->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+void DialogOptions::on_pushButtonColorPen2_clicked()
+{
+    QColor oldcolor=PCx_Graphics::getColorPen2();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorPen2=color;
+        ui->pushButtonColorPen2->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+
+void DialogOptions::on_sliderAlpha_valueChanged(int value)
+{
+    alpha=value;
+}
+
+void DialogOptions::on_pushButtonColorDF_clicked()
+{
+    QColor oldcolor=PCx_Graphics::getColorDFBar();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorDFBar=color;
+        ui->pushButtonColorDF->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+
+void DialogOptions::on_pushButtonColorRF_clicked()
+{
+    QColor oldcolor=PCx_Graphics::getColorRFBar();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorRFBar=color;
+        ui->pushButtonColorRF->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+void DialogOptions::on_pushButtonColorDI_clicked()
+{
+    QColor oldcolor=PCx_Graphics::getColorDIBar();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorDIBar=color;
+        ui->pushButtonColorDI->setStyleSheet("background-color:"+color.name());
+    }
+}
+
+void DialogOptions::on_pushButtonColorRI_clicked()
+{
+    QColor oldcolor=PCx_Graphics::getColorRIBar();
+    QColor color = QColorDialog::getColor(oldcolor, this);
+    if (color.isValid())
+    {
+        colorRIBar=color;
+        ui->pushButtonColorRI->setStyleSheet("background-color:"+color.name());
     }
 }

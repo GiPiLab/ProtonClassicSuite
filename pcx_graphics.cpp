@@ -6,10 +6,9 @@
 #include <QObject>
 
 
-PCx_Graphics::PCx_Graphics(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale)
+PCx_Graphics::PCx_Graphics(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model)
 {
     Q_ASSERT(model!=NULL);
-    this->model=model;
     setGraphicsWidth(graphicsWidth);
     setGraphicsHeight(graphicsHeight);
     setScale(scale);
@@ -244,11 +243,15 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
     }
     */
 
-    plot->graph(0)->setPen(QPen(QColor(255,0,0)));
-    plot->graph(0)->setBrush(QBrush(QColor(255,0,0,70)));
-    plot->graph(1)->setPen(QPen(QColor(0,0,255)));
-    plot->graph(1)->setBrush(QBrush(QColor(0,0,255,70)));
-
+    QColor c=getColorPen1();
+    int alpha=getAlpha();
+    plot->graph(0)->setPen(QPen(c));
+    c.setAlpha(alpha);
+    plot->graph(0)->setBrush(QBrush(c));
+    c=getColorPen2();
+    plot->graph(1)->setPen(QPen(c));
+    c.setAlpha(alpha);
+    plot->graph(1)->setBrush(QBrush(c));
 
     plot->xAxis->setAutoTicks(true);
     plot->xAxis->setAutoTickLabels(true);
@@ -289,26 +292,38 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     QPen pen;
     pen.setWidth(0);
+    QColor c=getColorDFBar();
+    int alpha=getAlpha();
 
     dfBar->setName(model->modeToCompleteString(PCx_AuditModel::DF));
-    pen.setColor(QColor(255,0,0,70));
+    pen.setColor(c);
     dfBar->setPen(pen);
-    dfBar->setBrush(QColor(255,0,0,70));
+    c.setAlpha(alpha);
+    dfBar->setBrush(c);
+
+    c=getColorRFBar();
 
     rfBar->setName(model->modeToCompleteString(PCx_AuditModel::RF));
-    pen.setColor(QColor(0,255,0,70));
+    pen.setColor(c);
     rfBar->setPen(pen);
-    rfBar->setBrush(QColor(0,255,0,70));
+    c.setAlpha(alpha);
+    rfBar->setBrush(c);
+
+    c=getColorDIBar();
 
     diBar->setName(model->modeToCompleteString(PCx_AuditModel::DI));
-    pen.setColor(QColor(0,0,255,70));
+    pen.setColor(c);
     diBar->setPen(pen);
-    diBar->setBrush(QColor(0,0,255,70));
+    c.setAlpha(alpha);
+    diBar->setBrush(c);
+
+    c=getColorRIBar();
 
     riBar->setName(model->modeToCompleteString(PCx_AuditModel::RI));
-    pen.setColor(QColor(0,255,255,70));
+    pen.setColor(c);
     riBar->setPen(pen);
-    riBar->setBrush(QColor(0,255,255,70));
+    c.setAlpha(alpha);
+    riBar->setBrush(c);
 
     rfBar->moveAbove(dfBar);
     diBar->moveAbove(rfBar);
@@ -450,6 +465,60 @@ void PCx_Graphics::setScale(double scale)
         this->scale=MINSCALE;
     if(this->scale>MAXSCALE)
         this->scale=MAXSCALE;
+}
+
+QColor PCx_Graphics::getColorPen1()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("graphics/pen1",PCx_Graphics::DEFAULTPENCOLOR1).toUInt();
+    return QColor(oldcolor);
+}
+
+QColor PCx_Graphics::getColorPen2()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("graphics/pen2",PCx_Graphics::DEFAULTPENCOLOR2).toUInt();
+    return QColor(oldcolor);
+}
+
+QColor PCx_Graphics::getColorDFBar()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("graphics/penDFBar",PCx_Graphics::DEFAULTCOLORDFBAR).toUInt();
+    return QColor(oldcolor);
+}
+
+QColor PCx_Graphics::getColorRFBar()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("graphics/penRFBar",PCx_Graphics::DEFAULTCOLORRFBAR).toUInt();
+    return QColor(oldcolor);
+}
+
+QColor PCx_Graphics::getColorDIBar()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("graphics/penDIBar",PCx_Graphics::DEFAULTCOLORDIBAR).toUInt();
+    return QColor(oldcolor);
+}
+
+QColor PCx_Graphics::getColorRIBar()
+{
+    QSettings settings;
+    unsigned int oldcolor=settings.value("graphics/penRIBar",PCx_Graphics::DEFAULTCOLORRIBAR).toUInt();
+    return QColor(oldcolor);
+}
+
+int PCx_Graphics::getAlpha()
+{
+    QSettings settings;
+    int alpha=settings.value("graphics/alpha",PCx_Graphics::DEFAULTALPHA).toInt();
+    return alpha;
+}
+
+QString PCx_Graphics::getCSS()
+{
+    return "\ndiv.g{margin-left:auto;margin-right:auto;page-break-inside:avoid;}";
 }
 
 

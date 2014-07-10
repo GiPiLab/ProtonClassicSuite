@@ -18,6 +18,16 @@ public:
     static const int DEFAULTHEIGHT=400;
     static const double DEFAULTSCALE=1.0;
 
+    static const unsigned int DEFAULTPENCOLOR1=0xff0000;
+    static const unsigned int DEFAULTPENCOLOR2=0x0000ff;
+
+    static const unsigned int DEFAULTCOLORDFBAR=0xff0000;
+    static const unsigned int DEFAULTCOLORRFBAR=0x00ff00;
+    static const unsigned int DEFAULTCOLORDIBAR=0x0000ff;
+    static const unsigned int DEFAULTCOLORRIBAR=0xffff00;
+
+    static const int DEFAULTALPHA=70;
+
     enum GRAPHICS
     {
         G1,
@@ -54,6 +64,18 @@ public:
     void setGraphicsWidth(int width);
     void setGraphicsHeight(int height);
     void setScale(double scale);
+
+    static QColor getColorPen1();
+    static QColor getColorPen2();
+
+    static QColor getColorDFBar();
+    static QColor getColorRFBar();
+    static QColor getColorDIBar();
+    static QColor getColorRIBar();
+
+    static int getAlpha();
+
+    static QString getCSS();
 
 
 private:

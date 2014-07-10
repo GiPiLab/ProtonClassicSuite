@@ -28,9 +28,24 @@ private slots:
 
     void on_pushButtonColorReqMinMax_clicked();
 
+    void on_pushButtonColorPen1_clicked();
+
+    void on_pushButtonColorPen2_clicked();
+
+    void on_sliderAlpha_valueChanged(int value);
+
+    void on_pushButtonColorDF_clicked();
+
+    void on_pushButtonColorRF_clicked();
+
+    void on_pushButtonColorDI_clicked();
+
+    void on_pushButtonColorRI_clicked();
+
 private:
     Ui::DialogOptions *ui;
-    QColor colorReqVar,colorReqMinMax,colorReqRank;
+    QColor colorReqVar,colorReqMinMax,colorReqRank,colorPen1,colorPen2,colorDFBar,colorRFBar,colorDIBar,colorRIBar;
+    int alpha;
 };
 
 #endif // DIALOGOPTIONS_H

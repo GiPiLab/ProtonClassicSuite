@@ -42,7 +42,7 @@ public:
     QString getTabRecap(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const;
     QString getTabResults(unsigned int node) const;
 
-    QString getCSS() const;
+    static QString getCSS();
 
     //T1,T2... are named as in the original PCA version
     //Content of tab "Recap"
@@ -70,6 +70,8 @@ public:
     QString getT10(unsigned int node) const;
     QString getT11(unsigned int node) const;
     QString getT12(unsigned int node) const;
+
+
 
 private:
     PCx_AuditModel *model;

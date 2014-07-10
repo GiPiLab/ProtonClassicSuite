@@ -187,7 +187,7 @@ QString PCx_QueryMinMax::getCSS()
 QColor PCx_QueryMinMax::getColor()
 {
     QSettings settings;
-    unsigned int oldcolor=settings.value("colors/reqminmax",PCx_QueryMinMax::DEFAULTCOlOR).toUInt();
+    unsigned int oldcolor=settings.value("queries/penminmax",PCx_QueryMinMax::DEFAULTCOlOR).toUInt();
     QColor color(oldcolor);
     return color;
 }
