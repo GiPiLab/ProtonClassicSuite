@@ -298,8 +298,6 @@ void FormReports::on_saveButton_clicked()
     QElapsedTimer timer;
     timer.start();
 
-    //FIXME : better cleanup and progress, count maximum value with selected graphics
-
     foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
         output.append(QString("<h2>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()));

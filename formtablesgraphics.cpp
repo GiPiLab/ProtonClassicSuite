@@ -253,17 +253,6 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 }
 
 
-//FIXME : page split problem
-/*void FormTablesGraphics::on_printButton_clicked()
-{
-    QPrinter p;
-    QPrintDialog *dialog = new QPrintDialog(&p, this);
-    dialog->setWindowTitle(tr("Imprimer"));
-    if (dialog->exec() != QDialog::Accepted)
-        return;
-    doc->print(&p);
-}*/
-
 void FormTablesGraphics::on_saveButton_clicked()
 {
     QFileDialog fileDialog;

@@ -10,7 +10,7 @@
 //Maximum acceptable number
 //Will be stored multiplied by FIXEDPOINTCOEFF into an int64
 //Must be < MAX_DBL to fit in QDoubleSpinBox
-#define MAX_NUM 4294967295
+#define MAX_NUM 4294967295u
 
 enum FORMATMODE
 {

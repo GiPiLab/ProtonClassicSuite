@@ -62,6 +62,54 @@ QList<QPair<unsigned int, QString> > PCx_TreeModel::getListOfTrees(bool finished
     return listOfTrees;
 }
 
+//Private static function
+int PCx_TreeModel::addTree(const QString &name,bool createRoot)
+{
+    QSqlQuery query;
+    query.prepare("insert into index_arbres (nom) values(:nom)");
+    query.bindValue(":nom",name);
+    query.exec();
+
+    if(query.numRowsAffected()!=1)
+    {
+        qCritical()<<query.lastError().text();
+        return -1;
+    }
+
+    QVariant lastId=query.lastInsertId();
+    if(!lastId.isValid())
+    {
+        qCritical()<<"Problème d'id";
+        return -1;
+    }
+
+    query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toUInt()));
+
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<query.lastError().text();
+        return -1;
+    }
+
+    //When used to duplicate a tree, createRoot=false then create an empty type table
+    if(!PCx_TypeModel::createTableTypes(lastId.toUInt(),createRoot))
+    {
+        return -1;
+    }
+
+    if(createRoot)
+    {
+    //Racine
+        query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toUInt()));
+        if(query.numRowsAffected()!=1)
+        {
+            qCritical()<<query.lastError().text();
+            return -1;
+        }
+    }
+    return lastId.toInt();
+}
+
 unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex)
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
@@ -163,7 +211,7 @@ bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
 }
 
 
-bool PCx_TreeModel::addNewTree(const QString &name)
+int PCx_TreeModel::addNewTree(const QString &name)
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty());
     QSqlQuery query;
@@ -177,7 +225,7 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         if(query.value(0).toInt()>0)
         {
             QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-            return false;
+            return -1;
         }
     }
     else
@@ -186,71 +234,15 @@ bool PCx_TreeModel::addNewTree(const QString &name)
         die();
     }
     QSqlDatabase::database().transaction();
-    query.prepare("insert into index_arbres (nom) values(:nom)");
-    query.bindValue(":nom",name);
-    query.exec();
+    int lastId=addTree(name,true);
 
-    if(query.numRowsAffected()!=1)
+    if(lastId==-1)
     {
-        qCritical()<<query.lastError().text();
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    QVariant lastId=query.lastInsertId();
-    if(!lastId.isValid())
-    {
-        qCritical()<<"Problème d'id";
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    qDebug()<<"Last inserted id = "<<lastId.toUInt();
-
-    query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toUInt()));
-
-    if(query.numRowsAffected()==-1)
-    {
-        qCritical()<<query.lastError().text();
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(lastId.toUInt()));
-
-    if(query.numRowsAffected()==-1)
-    {
-        qCritical()<<query.lastError().text();
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    QStringList listOfTypes=PCx_TypeModel::getListOfDefaultTypes();
-    foreach(QString oneType,listOfTypes)
-    {
-        query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(lastId.toUInt()));
-        query.bindValue(":nomtype",oneType);
-        query.exec();
-        if(query.numRowsAffected()!=1)
-        {
-            qCritical()<<query.lastError().text();
-            QSqlDatabase::database().rollback();
-            die();
-        }
-    }
-
-    //Racine
-    query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toUInt()));
-    if(query.numRowsAffected()!=1)
-    {
-        qCritical()<<query.lastError().text();
         QSqlDatabase::database().rollback();
         die();
     }
     QSqlDatabase::database().commit();
-    qDebug()<<"Tree "<<lastId.toUInt()<< " added";
-
-    return true;
+    return lastId;
 }
 
 QList<unsigned int> PCx_TreeModel::getNodesId() const
@@ -587,6 +579,55 @@ bool PCx_TreeModel::updateTree()
     this->clear();
     createChildrenItems(invisibleRootItem(),0);
     return true;
+}
+
+int PCx_TreeModel::duplicateTree(const QString &newName) const
+{
+    Q_ASSERT(!newName.isEmpty());
+    QSqlQuery q;
+    q.prepare("select count(*) from index_arbres where nom=:name");
+    q.bindValue(":name",newName);
+    q.exec();
+
+    if(q.next())
+    {
+        if(q.value(0).toInt()>0)
+        {
+            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
+            return -1;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    QSqlDatabase::database().transaction();
+    int newTreeId=addTree(newName,false);
+    if(newTreeId==-1)
+    {
+        QSqlDatabase::database().rollback();
+        die();
+    }
+
+    q.exec(QString("insert into types_%1 select * from types_%2").arg(newTreeId).arg(treeId));
+    if(q.numRowsAffected()<=0)
+    {
+        qCritical()<<q.lastError();
+        QSqlDatabase::database().rollback();
+        die();
+    }
+
+    q.exec(QString("insert into arbre_%1 select * from arbre_%2").arg(newTreeId).arg(treeId));
+    if(q.numRowsAffected()<=0)
+    {
+        qCritical()<<q.lastError();
+        QSqlDatabase::database().rollback();
+        die();
+    }
+    QSqlDatabase::database().commit();
+    return newTreeId;
 }
 
 QString PCx_TreeModel::getNodeName(unsigned int node) const

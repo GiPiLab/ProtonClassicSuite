@@ -4,6 +4,9 @@
 #include <QSqlTableModel>
 #include <QSqlQueryModel>
 
+//TODO : Refactor that class
+
+
 class PCx_TypeModel:public QObject
 {
     Q_OBJECT
@@ -25,6 +28,9 @@ public:
     QSqlQueryModel *getSqlQueryModel(){return typesQueryModel;}
 
     static QStringList getListOfDefaultTypes();
+
+    static bool createTableTypes(unsigned int treeId,bool populateWithDefaultTypes=true);
+
 
 signals:
     void typesUpdated(void);

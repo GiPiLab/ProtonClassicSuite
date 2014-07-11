@@ -44,6 +44,38 @@ QStringList PCx_TypeModel::getListOfDefaultTypes()
     return listOfTypes;
 }
 
+//Please use transactions in caller
+bool PCx_TypeModel::createTableTypes(unsigned int treeId, bool populateWithDefaultTypes)
+{
+    Q_ASSERT(treeId>0);
+    QSqlQuery query;
+
+    query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(treeId));
+
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<query.lastError().text();
+        return false;
+    }
+
+    if(populateWithDefaultTypes==true)
+    {
+        QStringList listOfTypes=getListOfDefaultTypes();
+        foreach(QString oneType,listOfTypes)
+        {
+            query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(treeId));
+            query.bindValue(":nomtype",oneType);
+            query.exec();
+            if(query.numRowsAffected()!=1)
+            {
+                qCritical()<<query.lastError();
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 /*Check if the new type does not already exists in the table
  * Assumes that only one row is modified at once
  */

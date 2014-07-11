@@ -10,6 +10,7 @@
 #include <QSqlTableModel>
 #include <QMimeData>
 
+//TODO : Refactor this class
 
 class PCx_TreeModel:public QStandardItemModel
 {
@@ -52,11 +53,12 @@ public:
 
     bool updateTree();
 
+    int duplicateTree(const QString &newName) const;
+
     QString getNodeName(unsigned int node) const;
-    static bool addNewTree(const QString &name);
+    static int addNewTree(const QString &name);
     static int deleteTree(unsigned int treeId);
     static QString idTreeToName(unsigned int treeId);
-
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 
 
@@ -67,6 +69,8 @@ private:
     bool finished;
     QString treeName;
     QString creationTime;
+
+    static int addTree(const QString &name, bool createRoot=true);
 
     bool loadFromDatabase(unsigned int treeId);
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);

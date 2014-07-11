@@ -149,6 +149,11 @@ void FormEditTree::on_deleteTypeButton_clicked()
 {
     if(model!=NULL)
     {
+        if(ui->listTypesView->model()->rowCount()==1)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Les noeuds doivent tous être typés"));
+            return;
+        }
         QModelIndex index=ui->listTypesView->currentIndex();
         qDebug()<<"Selected index = "<<index;
         if(index.row()>-1)
@@ -335,4 +340,25 @@ void FormEditTree::on_treeView_activated(const QModelIndex &index)
     //Only edit unfinished trees
     if(!model->isFinished())
         on_modifyNodeButton_clicked();
+}
+
+void FormEditTree::on_duplicateTreeButton_clicked()
+{
+    if(model!=NULL)
+    {
+        bool ok;
+        QString text;
+
+        do
+        {
+            text=QInputDialog::getText(this,tr("Dupliquer arbre"), tr("Nom de l'arbre dupliqué : "),QLineEdit::Normal,"",&ok);
+
+        }while(ok && text.isEmpty());
+
+        if(ok)
+        {
+            model->duplicateTree(text);
+            updateListOfTree();
+        }
+    }
 }

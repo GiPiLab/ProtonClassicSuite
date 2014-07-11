@@ -20,6 +20,10 @@ public:
 private slots:
     void on_printViewButton_clicked();
 
+    void on_expandButton_clicked();
+
+    void on_collapseButton_clicked();
+
 private:
     Ui::FormDisplayTree *ui;
     PCx_TreeModel *model;

@@ -42,3 +42,13 @@ void FormDisplayTree::on_printViewButton_clicked()
 
        ui->treeView->render(&painter);
 }
+
+void FormDisplayTree::on_expandButton_clicked()
+{
+    ui->treeView->expandAll();
+}
+
+void FormDisplayTree::on_collapseButton_clicked()
+{
+    ui->treeView->collapseAll();
+}

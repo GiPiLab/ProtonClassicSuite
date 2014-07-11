@@ -43,6 +43,8 @@ private slots:
 
     void on_treeView_activated(const QModelIndex &index);
 
+    void on_duplicateTreeButton_clicked();
+
 signals:
     void listOfTreeChanged();
 
