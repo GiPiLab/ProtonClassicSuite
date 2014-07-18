@@ -39,7 +39,7 @@ public:
     bool isLeaf(unsigned int nodeId) const;
 
     unsigned int getParentId(unsigned int nodeId) const;
-    QList<unsigned int> getChildren(unsigned int nodeId) const;
+    QList<unsigned int> getChildren(unsigned int nodeId=1) const;
 
     QModelIndexList getIndexesOfNodesWithThisType(unsigned int typeId) const;
 
@@ -52,6 +52,9 @@ public:
     bool finishTree();
 
     bool updateTree();
+
+    //Export tree to dot format
+    QString toDot() const;
 
     int duplicateTree(const QString &newName) const;
 

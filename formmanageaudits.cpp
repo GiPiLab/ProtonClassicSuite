@@ -154,7 +154,6 @@ void FormManageAudits::on_deleteAuditButton_clicked()
         die();
     updateListOfAudits();
     emit(listOfAuditsChanged());
-
 }
 
 

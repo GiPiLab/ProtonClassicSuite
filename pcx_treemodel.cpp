@@ -584,6 +584,30 @@ bool PCx_TreeModel::updateTree()
     return createChildrenItems(invisibleRootItem(),0);
 }
 
+QString PCx_TreeModel::toDot() const
+{
+    QList<unsigned int> nodes=getNodesId();
+
+    QString out="graph g{\nrankdir=LR;\nranksep=1.2;\n";
+
+    foreach(unsigned int node,nodes)
+    {
+        out.append(QString("%1 [label=\"%2\"];\n").arg(node).arg(getNodeName(node)));
+    }
+
+    foreach(unsigned int node,nodes)
+    {
+        unsigned int pid=getParentId(node);
+
+        if(pid!=0)
+        {
+            out.append(QString("\t%1--%2;\n").arg(pid).arg(node));
+        }
+    }
+    out.append("}\n");
+    return out;
+}
+
 int PCx_TreeModel::duplicateTree(const QString &newName) const
 {
     Q_ASSERT(!newName.isEmpty());

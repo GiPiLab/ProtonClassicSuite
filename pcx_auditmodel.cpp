@@ -485,13 +485,12 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
     if(newAuditId==0)
     {
         qCritical()<<"Unable to duplicate audit !";
-        return -1;
+        die();
     }
 
     qSort(years);
     unsigned int year1=years.first();
     unsigned int year2=years.last();
-
 
     QSqlDatabase::database().transaction();
 
@@ -520,8 +519,9 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
+            deleteAudit(newAuditId);
             qCritical()<<q.lastError();
-            return -1;
+            die();
         }
 
         q.prepare(QString("update audit_%3_%1 set realises="
@@ -534,8 +534,9 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
+            deleteAudit(newAuditId);
             qCritical()<<q.lastError();
-            return -1;
+            die();
         }
 
         q.prepare(QString("update audit_%3_%1 set engages="
@@ -548,8 +549,9 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
+            deleteAudit(newAuditId);
             qCritical()<<q.lastError();
-            return -1;
+            die();
         }
 
         q.prepare(QString("update audit_%3_%1 set disponibles="
@@ -562,6 +564,7 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
+            deleteAudit(newAuditId);
             qCritical()<<q.lastError();
             return -1;
         }
@@ -570,6 +573,7 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
     if(q.numRowsAffected()<0)
     {
         QSqlDatabase::database().rollback();
+        deleteAudit(newAuditId);
         qCritical()<<q.lastError();
         return -1;
     }

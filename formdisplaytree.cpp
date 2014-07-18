@@ -52,3 +52,33 @@ void FormDisplayTree::on_collapseButton_clicked()
 {
     ui->treeView->collapseAll();
 }
+
+void FormDisplayTree::on_exportButton_clicked()
+{
+    QString dot=model->toDot();
+
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format Graphviz"), "",tr("Fichiers Graphviz (*.gv)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("gv",Qt::CaseInsensitive)!=0)
+        fileName.append(".gv");
+    fi=QFileInfo(fileName);
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        return;
+    }
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+    stream<<dot;
+    stream.flush();
+    file.close();
+    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format Graphviz. Utilisez 'dot' ou alors <a href='http://sandbox.kidstrythisathome.com/erdos/'>ce site</a> pour le visualiser"));
+
+}

@@ -24,6 +24,8 @@ private slots:
 
     void on_collapseButton_clicked();
 
+    void on_exportButton_clicked();
+
 private:
     Ui::FormDisplayTree *ui;
     PCx_TreeModel *model;
