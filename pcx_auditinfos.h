@@ -27,6 +27,8 @@ public:
 
     bool valid;
 
+    static QStringList yearsListToStringList(QList<unsigned int> years);
+
 };
 
 #endif // PCX_AUDITINFOS_H

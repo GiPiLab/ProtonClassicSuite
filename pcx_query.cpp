@@ -64,7 +64,7 @@ bool PCx_Query::createTableQueries(unsigned int auditId)
 
     if(q.numRowsAffected()==-1)
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         return false;
     }
     return true;

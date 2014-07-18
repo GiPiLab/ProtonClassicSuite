@@ -4,6 +4,8 @@
 #include "ui_formmanageaudits.h"
 #include "pcx_auditmodel.h"
 #include <QDebug>
+#include "utils.h"
+#include "dialogduplicateaudit.h"
 
 
 FormManageAudits::FormManageAudits(QWidget *parent):
@@ -13,6 +15,9 @@ FormManageAudits::FormManageAudits(QWidget *parent):
     ui->setupUi(this);
     updateListOfTrees();
     updateListOfAudits();
+    QDate date=QDate::currentDate();
+    ui->spinBoxFrom->setMaximum(date.year());
+    ui->spinBoxTo->setMaximum(date.year()+1);
 }
 
 FormManageAudits::~FormManageAudits()
@@ -55,11 +60,12 @@ void FormManageAudits::updateListOfTrees()
     ui->comboListOfTrees->setCurrentIndex(0);
 }
 
+
 void FormManageAudits::on_addAuditButton_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qCritical()<<"No finished tree";
+        qDebug()<<"No finished tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();
@@ -144,7 +150,8 @@ void FormManageAudits::on_deleteAuditButton_clicked()
     {
         return;
     }
-    PCx_AuditModel::deleteAudit(ui->comboListOfAudits->currentData().toUInt());
+    if(PCx_AuditModel::deleteAudit(ui->comboListOfAudits->currentData().toUInt())==false)
+        die();
     updateListOfAudits();
     emit(listOfAuditsChanged());
 
@@ -180,4 +187,15 @@ void FormManageAudits::on_unFinishAuditButton_clicked()
     updateListOfAudits();
     emit(listOfAuditsChanged());
 
+}
+
+void FormManageAudits::on_cloneAuditButton_clicked()
+{
+    DialogDuplicateAudit d(ui->comboListOfAudits->currentData().toUInt(),this);
+    int res=d.exec();
+    if(res==QDialog::Accepted)
+    {
+        updateListOfAudits();
+        emit(listOfAuditsChanged());
+    }
 }

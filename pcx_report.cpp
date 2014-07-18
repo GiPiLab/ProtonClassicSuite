@@ -201,7 +201,7 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
 
         if(absoluteImagePath.isEmpty()|| relativeImagePath.isEmpty())
         {
-            qCritical()<<"Please pass an absolute and relative path to store images";
+            qWarning()<<"Please pass an absolute and relative path to store images";
             die();
         }
 

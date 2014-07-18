@@ -364,7 +364,7 @@ PCx_QueryVariation::OPERATORS PCx_QueryVariation::stringToOperator(const QString
     else if(s==">")
         return GREATERTHAN;
 
-    qCritical()<<"Invalid operator string, defaulting to EQUAL";
+    qWarning()<<"Invalid operator string, defaulting to EQUAL";
     return EQUAL;
 }
 

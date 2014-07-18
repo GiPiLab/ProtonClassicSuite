@@ -21,7 +21,7 @@ enum FORMATMODE
 
 
 
-void die(int retcode=1);
+void die(int retcode=EXIT_FAILURE);
 
 void updateFormatModeAndDecimals();
 

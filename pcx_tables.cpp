@@ -30,7 +30,7 @@ QString PCx_Tables::getT1(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -81,7 +81,7 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -106,7 +106,7 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -177,7 +177,7 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -202,7 +202,7 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -278,7 +278,7 @@ QString PCx_Tables::getT3(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -339,7 +339,7 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -403,7 +403,7 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -419,7 +419,7 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -473,7 +473,7 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -505,7 +505,7 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -603,7 +603,7 @@ QString PCx_Tables::getT6(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -685,7 +685,7 @@ QString PCx_Tables::getT7(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -733,7 +733,7 @@ QString PCx_Tables::getT8(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -786,7 +786,7 @@ QString PCx_Tables::getT9(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 

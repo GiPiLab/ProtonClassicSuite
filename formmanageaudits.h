@@ -30,6 +30,8 @@ private slots:
 
     void on_unFinishAuditButton_clicked();
 
+    void on_cloneAuditButton_clicked();
+
 signals:
     void listOfAuditsChanged();
 

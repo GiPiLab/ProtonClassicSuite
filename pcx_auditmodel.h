@@ -52,7 +52,7 @@ public:
     explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0,bool readOnly=true);
     virtual ~PCx_AuditModel();
 
-    static bool addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
+    static unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
     static bool deleteAudit(unsigned int auditId);
 
     unsigned int getAuditId() const{return auditId;}
@@ -76,6 +76,10 @@ public:
 
     bool clearAllData(DFRFDIRI mode);
 
+
+    int duplicateAudit(const QString &newName,QList<unsigned int> years,
+                                bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
+
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 
     static QString modeToTableString(DFRFDIRI mode);
@@ -85,6 +89,8 @@ public:
 
     static ORED OREDFromTableString(const QString &ored);
     static DFRFDIRI modeFromTableString(const QString &mode);
+
+    static bool auditNameExists(const QString &auditName);
 
 
 signals:

@@ -49,7 +49,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditModel::DFRFDIRI mode, 
 
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 
@@ -342,7 +342,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
     q.exec();
     if(!q.isActive())
     {
-        qCritical()<<q.lastError().text();
+        qCritical()<<q.lastError();
         die();
     }
 

@@ -114,7 +114,7 @@ void FormTablesGraphics::getSelections()
 
     else
     {
-        qCritical()<<"Unsupported case of radio button checking";
+        qWarning()<<"Unsupported case of radio button checking";
         die();
     }
 

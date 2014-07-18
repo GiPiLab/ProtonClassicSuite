@@ -20,7 +20,7 @@ DialogOptions::DialogOptions(QWidget *parent) :
     else if(css=="INLINE")
         ui->radioButtonInline->setChecked(true);
     else
-        qCritical()<<"Unsupported option for CSS !";
+        qWarning()<<"Unsupported option for CSS !";
 
     QString imageFormat=settings.value("output/imageFormat","png").toString();
     if(imageFormat=="jpg")
@@ -28,7 +28,7 @@ DialogOptions::DialogOptions(QWidget *parent) :
     else if(imageFormat=="png")
         ui->radioButtonPNG->setChecked(true);
     else
-        qCritical()<<"Unsupported option for image format !";
+        qWarning()<<"Unsupported option for image format !";
 
     int imageWidth=settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt();
     if(imageWidth<PCx_Graphics::MINWIDTH)
@@ -122,7 +122,7 @@ void DialogOptions::on_pushButtonOk_clicked()
         settings.setValue("output/style","INLINE");
     else
     {
-        qCritical()<<"Unknown case of option selection for CSS";
+        qWarning()<<"Unknown case of option selection for CSS";
     }
 
     if(ui->radioButtonJPG->isChecked())
@@ -131,7 +131,7 @@ void DialogOptions::on_pushButtonOk_clicked()
         settings.setValue("output/imageFormat","png");
     else
     {
-        qCritical()<<"Unknown case of option selection for image format";
+        qWarning()<<"Unknown case of option selection for image format";
     }
 
     settings.setValue("format/numdecimals",ui->spinBoxNumDecimals->value());

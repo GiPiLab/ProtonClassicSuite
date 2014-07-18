@@ -20,12 +20,15 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
         break;
     case QtWarningMsg:
         message.prepend("[Warning]");
+        QMessageBox::warning(0,"Erreur ennuyeuse",message);
         break;
     case QtCriticalMsg:
         message.prepend("[Critical]");
+        QMessageBox::critical(0,"Erreur critique",message);
         break;
     case QtFatalMsg:
         message.prepend("[Fatal]");
+        QMessageBox::critical(0,"Erreur fatale",message);
         std::cerr<<qPrintable(message);
         abort();
     }

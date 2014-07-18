@@ -54,7 +54,7 @@ bool PCx_TypeModel::createTableTypes(unsigned int treeId, bool populateWithDefau
 
     if(query.numRowsAffected()==-1)
     {
-        qCritical()<<query.lastError().text();
+        qCritical()<<query.lastError();
         return false;
     }
 
@@ -168,7 +168,7 @@ bool PCx_TypeModel::addType(const QString &type)
         q.exec();
         if(q.numRowsAffected()!=1)
         {
-            qCritical()<<q.lastError().text();
+            qCritical()<<q.lastError();
             die();
         }
 
@@ -240,7 +240,7 @@ bool PCx_TypeModel::deleteType(unsigned int id)
 
     if(query.numRowsAffected()!=1)
     {
-        qCritical()<<query.lastError().text();
+        qCritical()<<query.lastError();
         die();
     }
     loadFromDatabase(treeId);
