@@ -269,7 +269,7 @@ void FormTablesGraphics::on_saveButton_clicked()
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
-        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
         return;
     }
     //Will reopen after computation
@@ -335,7 +335,7 @@ void FormTablesGraphics::on_saveButton_clicked()
 
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
-        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
         QDir dir(absoluteImagePath);
         dir.removeRecursively();
         return;

@@ -28,9 +28,6 @@ QString PCx_Report::generateHTMLHeader() const
 
 }
 
-
-
-
 QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
                                               unsigned int selectedNode, PCx_AuditModel::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
                                               const QString &relativeImagePath,QProgressDialog *progress) const

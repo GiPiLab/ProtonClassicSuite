@@ -9,6 +9,10 @@
 #include <QDir>
 #include <QtGlobal>
 #include <QSettings>
+#include <cstdio>
+#include <QDebug>
+
+#include <graphviz/gvc.h>
 
 
 //To speedup formatCurrency and formatDouble
@@ -142,5 +146,65 @@ QString generateUniqueFileName(const QString &suffix)
 }
 
 
+bool dotToPdf(const QString &inputFileName, const QString &outputFileName)
+{
+    Q_ASSERT(!inputFileName.isEmpty() && !outputFileName.isEmpty());
 
+    //Pass through a QFile to avoid encoding problems in filenames
+    QFile input(inputFileName);
+    QFile output(outputFileName);
 
+    if(!input.open(QIODevice::ReadOnly))
+    {
+        qCritical()<<"Unable to open input dot file :"<<input.errorString();
+        return false;
+    }
+
+    if(!output.open(QIODevice::WriteOnly))
+    {
+        input.close();
+        qCritical()<<"Unable to open output file :"<<output.errorString();
+        return false;
+    }
+
+    GVC_t *gvc;
+    graph_t *g;
+    FILE *fileInput,*fileOutput;
+
+    fileInput=fdopen(input.handle(),"r");
+    if(fileInput==NULL)
+    {
+        input.close();
+        output.close();
+        qCritical()<<"Unable to open input dot file !";
+        return false;
+    }
+
+    fileOutput=fdopen(output.handle(),"w");
+    if(fileOutput==NULL)
+    {
+        input.close();
+        output.close();
+        fclose(fileInput);
+        qCritical()<<"Unable to open output file !";
+        return false;
+    }
+
+    gvc = gvContext();
+    g = agread(fileInput, 0);
+
+    gvLayout(gvc, g, "dot");
+    gvRender(gvc, g, "pdf", fileOutput);
+
+    gvFreeLayout(gvc, g);
+
+    agclose(g);
+
+    fclose(fileInput);
+    fclose(fileOutput);
+    input.close();
+    output.close();
+
+    gvFreeContext(gvc);
+    return true;
+}

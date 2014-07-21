@@ -1,6 +1,7 @@
 #include "formdisplaytree.h"
 #include "ui_formdisplaytree.h"
 #include <QtPrintSupport/QtPrintSupport>
+#include "utils.h"
 
 
 FormDisplayTree::FormDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
@@ -59,26 +60,41 @@ void FormDisplayTree::on_exportButton_clicked()
 
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format Graphviz"), "",tr("Fichiers Graphviz (*.gv)"));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format PDF"), "",tr("Fichiers PDF (*.pdf)"));
     if(fileName.isEmpty())
         return;
+
+    //Prepare image file name
     QFileInfo fi(fileName);
-    if(fi.suffix().compare("gv",Qt::CaseInsensitive)!=0)
-        fileName.append(".gv");
+    if(fi.suffix().compare("pdf",Qt::CaseInsensitive)!=0)
+        fileName.append(".pdf");
     fi=QFileInfo(fileName);
 
-    QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+
+    //Prepare source (dot graphviz file) filename
+    QString gvSrc=fi.absolutePath()+"/"+fi.baseName()+".gv";
+
+    //Write source
+    QFile fileGv(gvSrc);
+    if(!fileGv.open(QIODevice::WriteOnly|QIODevice::Text))
     {
-        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        qCritical()<<fileGv.errorString();
         return;
     }
 
-    QTextStream stream(&file);
+    QTextStream stream(&fileGv);
     stream.setCodec("UTF-8");
     stream<<dot;
     stream.flush();
-    file.close();
-    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format Graphviz. Utilisez 'dot' ou alors <a href='http://sandbox.kidstrythisathome.com/erdos/'>ce site</a> pour le visualiser"));
+    fileGv.close();
+
+    //Process dot graph
+    if(dotToPdf(gvSrc,fileName)==false)
+    {
+        return;
+    }
+
+    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF, sa représentation au format <a href='http://fr.wikipedia.org/wiki/DOT_(langage)'>DOT</a> dans le fichier %1")
+                             .arg(fi.baseName()+".gv"));
 
 }

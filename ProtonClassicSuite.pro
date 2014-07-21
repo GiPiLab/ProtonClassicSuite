@@ -77,3 +77,5 @@ FORMS    += mainwindow.ui \
     dialogoptions.ui \
     formqueries.ui \
     dialogduplicateaudit.ui
+
+unix|win32: LIBS += -lgvc -lcgraph
