@@ -588,7 +588,7 @@ QString PCx_TreeModel::toDot() const
 {
     QList<unsigned int> nodes=getNodesId();
 
-    QString out="graph g{\nrankdir=LR;\nranksep=1.2;\n";
+    QString out="graph g{\nrankdir=LR;\n";
 
     foreach(unsigned int node,nodes)
     {

@@ -70,7 +70,7 @@ void FormDisplayTree::on_exportButton_clicked()
     fi=QFileInfo(fileName);
 
     //Process dot graph
-    if(dotToPdf(dot.toLatin1(),fileName)==false)
+    if(dotToPdf(dot.toUtf8(),fileName)==false)
     {
         return;
     }
