@@ -64,37 +64,16 @@ void FormDisplayTree::on_exportButton_clicked()
     if(fileName.isEmpty())
         return;
 
-    //Prepare image file name
     QFileInfo fi(fileName);
     if(fi.suffix().compare("pdf",Qt::CaseInsensitive)!=0)
         fileName.append(".pdf");
     fi=QFileInfo(fileName);
 
-
-    //Prepare source (dot graphviz file) filename
-    QString gvSrc=fi.absolutePath()+"/"+fi.baseName()+".gv";
-
-    //Write source
-    QFile fileGv(gvSrc);
-    if(!fileGv.open(QIODevice::WriteOnly|QIODevice::Text))
-    {
-        qCritical()<<fileGv.errorString();
-        return;
-    }
-
-    QTextStream stream(&fileGv);
-    stream.setCodec("UTF-8");
-    stream<<dot;
-    stream.flush();
-    fileGv.close();
-
     //Process dot graph
-    if(dotToPdf(gvSrc,fileName)==false)
+    if(dotToPdf(dot.toLatin1(),fileName)==false)
     {
         return;
     }
-
-    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF, sa représentation au format <a href='http://fr.wikipedia.org/wiki/DOT_(langage)'>DOT</a> dans le fichier %1")
-                             .arg(fi.baseName()+".gv"));
+    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF"));
 
 }

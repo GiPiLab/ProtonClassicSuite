@@ -79,3 +79,11 @@ FORMS    += mainwindow.ui \
     dialogduplicateaudit.ui
 
 unix|win32: LIBS += -lgvc -lcgraph
+
+win32: INCLUDEPATH += "c:/Program Files/Graphviz/include"
+
+win32:CONFIG(release, debug|release): LIBS += -L"$$PWD/../../../../Program Files/Graphviz/lib/release/lib/" -lcgraph
+else:win32:CONFIG(debug, debug|release): LIBS += -L"$$PWD/../../../../Program Files/Graphviz/lib/release/lib/" -lcgraphd
+
+win32:INCLUDEPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
+win32:DEPENDPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"

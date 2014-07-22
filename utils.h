@@ -33,6 +33,6 @@ QString formatDouble(double num,int decimals=-1, bool forcedUnits=false);
 QString formatCurrency(qint64 num, int decimals=-1, bool forcedUnits=false);
 QString generateUniqueFileName(const QString &suffix="");
 
-bool dotToPdf(const QString &inputFileName, const QString &outputFileName);
+bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
 
 #endif // UTILS_H
