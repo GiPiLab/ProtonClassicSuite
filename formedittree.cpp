@@ -365,3 +365,29 @@ void FormEditTree::on_duplicateTreeButton_clicked()
         }
     }
 }
+
+void FormEditTree::on_randomTreeButton_clicked()
+{
+    bool ok;
+    QString text;
+    unsigned int nbNodes;
+
+    do
+    {
+        text=QInputDialog::getText(this,tr("Nouvel arbre aléatoire"), tr("Nom de l'arbre aléatoire : "),QLineEdit::Normal,"",&ok);
+
+    }while(ok && text.isEmpty());
+
+
+    nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,10000,1,&ok);
+
+    if(ok)
+    {
+        PCx_TreeModel::createRandomTree(text,nbNodes);
+        updateListOfTree();
+    }
+}
+
+
+
+

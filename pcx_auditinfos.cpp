@@ -3,18 +3,15 @@
 #include "utils.h"
 #include <QSqlQuery>
 #include <QSet>
-
-PCx_AuditInfos::PCx_AuditInfos()
-{
-    valid=false;
-}
+#include <QDebug>
+#include <QSqlError>
 
 PCx_AuditInfos::PCx_AuditInfos(unsigned int auditId)
 {
     updateInfos(auditId);
 }
 
-void PCx_AuditInfos::updateInfos(unsigned int auditId)
+bool PCx_AuditInfos::updateInfos(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
 
@@ -40,19 +37,19 @@ void PCx_AuditInfos::updateInfos(unsigned int auditId)
             yearsStringList.append(QString::number(annee));
         }
 
-
         yearsString=QString("%1 - %2").arg(years.first()).arg(years.last());
 
         finished=q.value("termine").toBool();
         creationTimeUTC=QDateTime::fromString(q.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         creationTimeUTC.setTimeSpec(Qt::UTC);
         creationTimeLocal=creationTimeUTC.toLocalTime();
-        valid=true;
+        return true;
     }
     else
     {
-        valid=false;
+        qCritical()<<q.lastError();
     }
+    return false;
 }
 
 QStringList PCx_AuditInfos::yearsListToStringList(QList<unsigned int> years)

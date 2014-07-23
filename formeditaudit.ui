@@ -73,7 +73,7 @@
            <item>
             <widget class="QTableView" name="tableViewDF">
              <property name="editTriggers">
-              <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+              <set>QAbstractItemView::AllEditTriggers</set>
              </property>
              <property name="showDropIndicator" stdset="0">
               <bool>false</bool>
@@ -188,13 +188,6 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
-         <item>
-          <widget class="QPushButton" name="auditStatsButton">
-           <property name="text">
-            <string>Statistiques de saisie</string>
-           </property>
-          </widget>
-         </item>
          <item>
           <widget class="QPushButton" name="randomDataButton">
            <property name="font">

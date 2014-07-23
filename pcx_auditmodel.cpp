@@ -8,14 +8,14 @@
 #include <QDebug>
 
 PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly) :
-    QObject(parent)
+    QObject(parent),auditId(auditId),auditInfos(auditId)
 {
     attachedTree=NULL;
     modelDF=NULL;
     modelDI=NULL;
     modelRI=NULL;
     modelRF=NULL;
-    this->auditId=auditId;
+    //this->auditId=auditId;
     if(loadFromDb(auditId,readOnly)==false)
     {
         qCritical()<<"Unable to load audit"<<auditId;
@@ -587,8 +587,6 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
     Q_ASSERT(auditId>0);
     QSqlQuery q;
     auditInfos.updateInfos(auditId);
-    if(auditInfos.valid)
-    {
         unsigned int attachedTreeId=auditInfos.attachedTreeId;
         qDebug()<<"Attached tree ID = "<<attachedTreeId;
 
@@ -665,11 +663,6 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
             connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
             connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
         }
-    }
-    else
-    {
-        return false;
-    }
     return true;
 }
 

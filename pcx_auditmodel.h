@@ -76,7 +76,6 @@ public:
 
     bool clearAllData(DFRFDIRI mode);
 
-
     int duplicateAudit(const QString &newName,QList<unsigned int> years,
                                 bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
 

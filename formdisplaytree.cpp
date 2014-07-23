@@ -58,6 +58,8 @@ void FormDisplayTree::on_exportButton_clicked()
 {
     QString dot=model->toDot();
 
+    qDebug()<<dot;
+
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format PDF"), "",tr("Fichiers PDF (*.pdf)"));

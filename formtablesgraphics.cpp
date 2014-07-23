@@ -173,8 +173,6 @@ void FormTablesGraphics::getSelections()
     }
 }
 
-
-
 void FormTablesGraphics::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;

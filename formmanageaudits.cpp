@@ -119,25 +119,22 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
     qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
     PCx_AuditInfos infos(selectedAuditId);
-    if(infos.valid==true)
+    ui->labelDate->setText(infos.creationTimeLocal.toString(Qt::SystemLocaleLongDate));
+    if(infos.finished==true)
     {
-        ui->labelDate->setText(infos.creationTimeLocal.toString(Qt::SystemLocaleLongDate));
-        if(infos.finished==true)
-        {
-            ui->labelFinished->setText(tr("oui"));
-            ui->finishAuditButton->setEnabled(false);
-            ui->unFinishAuditButton->setEnabled(true);
-        }
-        else
-        {
-            ui->labelFinished->setText(tr("non"));
-            ui->finishAuditButton->setEnabled(true);
-            ui->unFinishAuditButton->setEnabled(false);
-        }
-        ui->labelTree->setText(infos.attachedTreeName);
-        ui->labelYears->setText(infos.yearsString);
-        ui->labelName->setText(infos.name);
+        ui->labelFinished->setText(tr("oui"));
+        ui->finishAuditButton->setEnabled(false);
+        ui->unFinishAuditButton->setEnabled(true);
     }
+    else
+    {
+        ui->labelFinished->setText(tr("non"));
+        ui->finishAuditButton->setEnabled(true);
+        ui->unFinishAuditButton->setEnabled(false);
+    }
+    ui->labelTree->setText(infos.attachedTreeName);
+    ui->labelYears->setText(infos.yearsString);
+    ui->labelName->setText(infos.name);
 }
 
 void FormManageAudits::on_deleteAuditButton_clicked()

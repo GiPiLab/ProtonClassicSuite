@@ -48,9 +48,7 @@ public:
 
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
 
-    void updateNodePosition(unsigned int nodeId, unsigned int newPid);
     bool finishTree();
-
     bool updateTree();
 
     //Export tree to dot format
@@ -64,6 +62,7 @@ public:
     static QString idTreeToName(unsigned int treeId);
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 
+    static int createRandomTree(const QString &name, unsigned int nbNodes);
 
 private:
     PCx_TypeModel *types;
@@ -79,6 +78,7 @@ private:
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
     bool deleteNodeAndChildren(unsigned int nodeId);
     QStandardItem *createItem(const QString &typeName,const QString &nodeName,unsigned int typeId,unsigned int nodeId);
+    void updateNodePosition(unsigned int nodeId, unsigned int newPid);
 };
 
 #endif // PCX_TREEMODEL_H

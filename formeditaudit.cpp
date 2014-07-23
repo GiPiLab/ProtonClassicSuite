@@ -103,10 +103,10 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     auditModel->getTableModelRI()->setFilter(QString("id_node=1"));
     ui->label->setText(auditModel->getAttachedTreeModel()->index(0,0).data().toString());
 
-    ui->tableViewDF->setEnabled(false);
-    ui->tableViewRF->setEnabled(false);
-    ui->tableViewDI->setEnabled(false);
-    ui->tableViewRI->setEnabled(false);
+    ui->tableViewDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewRF->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewDI->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableViewRI->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     ui->tableViewDF->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
     ui->tableViewRF->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
@@ -125,10 +125,21 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
     auditModel->getTableModelRI()->setFilter(QString("id_node=%1").arg(selectedNode));
     bool isLeaf=auditModel->getAttachedTreeModel()->isLeaf(selectedNode);
 
-    ui->tableViewDF->setEnabled(isLeaf);
-    ui->tableViewRF->setEnabled(isLeaf);
-    ui->tableViewDI->setEnabled(isLeaf);
-    ui->tableViewRI->setEnabled(isLeaf);
+    if(isLeaf)
+    {
+        ui->tableViewDF->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        ui->tableViewRF->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        ui->tableViewDI->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        ui->tableViewRI->setEditTriggers(QAbstractItemView::AllEditTriggers);
+    }
+    else
+    {
+        ui->tableViewDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        ui->tableViewRF->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        ui->tableViewDI->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        ui->tableViewRI->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    }
+
     ui->label->setText(index.data().toString());
 }
 

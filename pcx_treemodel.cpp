@@ -6,6 +6,7 @@
 #include <QSqlQuery>
 #include <QDebug>
 #include <QSqlError>
+#include <QUuid>
 
 
 PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, QObject *parent):QStandardItemModel(parent)
@@ -607,6 +608,65 @@ QString PCx_TreeModel::toDot() const
     out.append("}\n");
     return out;
 }
+
+
+int PCx_TreeModel::createRandomTree(const QString &name,unsigned int nbNodes)
+{
+    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<100000);
+    QSqlQuery query;
+
+    query.prepare("select count(*) from index_arbres where nom=:name");
+    query.bindValue(":name",name);
+    query.exec();
+
+    if(query.next())
+    {
+        if(query.value(0).toInt()>0)
+        {
+            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
+            return -1;
+        }
+    }
+    else
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+    QSqlDatabase::database().transaction();
+    int lastId=addTree(name,true);
+
+    if(lastId==-1)
+    {
+        QSqlDatabase::database().rollback();
+        die();
+    }
+
+    unsigned int maxNumType=PCx_TypeModel::getListOfDefaultTypes().size();
+
+    for(unsigned int i=1;i<=nbNodes;i++)
+    {
+        QSqlQuery q;
+        unsigned int type=(qrand()%maxNumType)+1;
+        unsigned int pid=(qrand()%i)+1;
+        QString name=QUuid::createUuid().toString();
+        q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(lastId));
+        q.bindValue(":nom",name);
+        q.bindValue(":pid",pid);
+        q.bindValue(":type",type);
+        q.exec();
+
+        if(q.numRowsAffected()!=1)
+        {
+            qCritical()<<q.lastError();
+            QSqlDatabase::database().rollback();
+            die();
+        }
+    }
+
+    QSqlDatabase::database().commit();
+    return lastId;
+}
+
 
 int PCx_TreeModel::duplicateTree(const QString &newName) const
 {

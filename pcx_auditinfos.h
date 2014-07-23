@@ -7,9 +7,8 @@
 class PCx_AuditInfos
 {
 public:
-    PCx_AuditInfos();
     PCx_AuditInfos(unsigned int auditId);
-    void updateInfos(unsigned int auditId);
+    bool updateInfos(unsigned int auditId);
 
     QString name;
     unsigned int id;
@@ -25,10 +24,7 @@ public:
     QDateTime creationTimeUTC;
     QDateTime creationTimeLocal;
 
-    bool valid;
-
     static QStringList yearsListToStringList(QList<unsigned int> years);
-
 };
 
 #endif // PCX_AUDITINFOS_H

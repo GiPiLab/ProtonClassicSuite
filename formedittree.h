@@ -45,6 +45,8 @@ private slots:
 
     void on_duplicateTreeButton_clicked();
 
+    void on_randomTreeButton_clicked();
+
 signals:
     void listOfTreeChanged();
 
