@@ -11,21 +11,24 @@
 #include <QMimeData>
 
 //TODO : Refactor this class
+//TODO : Support lazy loading for big trees
 
 class PCx_TreeModel:public QStandardItemModel
 {
 
 public:
+
+    static const unsigned int MAXNODES=1500;
+
+
     explicit PCx_TreeModel(unsigned int treeId, bool typesReadOnly=true, QObject *parent=0);
     virtual ~PCx_TreeModel();
 
     unsigned int getTreeId() const {return treeId;}
     bool isFinished() const {return finished;}
     const QString & getName() const {return treeName;}
-    QDateTime getCreationTime() const;
+    const QString & getCreationTime() const{return creationTime;}
     PCx_TypeModel* getTypes() const {return types;}
-
-    void setName(const QString & name){treeName=name;}
 
     unsigned int addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex);
     bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, unsigned int newType);
@@ -33,15 +36,20 @@ public:
     bool deleteNode(const QModelIndex &nodeIndex);
 
     QList<unsigned int> getNodesId() const;
+    unsigned int getNumberOfNodes() const;
     QList<unsigned int> getLeavesId() const;
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;
+
     bool isLeaf(unsigned int nodeId) const;
+    unsigned int getTreeDepth() const;
 
     unsigned int getParentId(unsigned int nodeId) const;
     QList<unsigned int> getChildren(unsigned int nodeId=1) const;
 
     QModelIndexList getIndexesOfNodesWithThisType(unsigned int typeId) const;
+    QList<unsigned int> getIdsOfNodesWithThisType(unsigned int typeId) const;
+    unsigned int getNumberOfNodesWithThisType(unsigned int typeId) const;
 
     QList<unsigned int> sortNodesDFS(QList<unsigned int> &nodes, unsigned int currentNode=1) const;
     QList<unsigned int> sortNodesBFS(QList<unsigned int> &nodes) const;

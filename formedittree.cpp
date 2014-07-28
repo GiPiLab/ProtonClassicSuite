@@ -379,7 +379,7 @@ void FormEditTree::on_randomTreeButton_clicked()
     }while(ok && text.isEmpty());
 
 
-    nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,10000,1,&ok);
+    nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,PCx_TreeModel::MAXNODES,1,&ok);
 
     if(ok)
     {

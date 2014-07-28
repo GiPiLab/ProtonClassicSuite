@@ -152,7 +152,7 @@ void FormEditAudit::on_randomDataButton_clicked()
     QList<unsigned int> leaves=auditModel->getAttachedTreeModel()->getLeavesId();
     QList<unsigned int> years=auditModel->getAuditInfos().years;
 
-    PCx_AuditModel::DFRFDIRI mode;
+    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
     if(ui->tabWidget->currentWidget()==ui->tabDF)
         mode=PCx_AuditModel::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
@@ -183,7 +183,7 @@ void FormEditAudit::on_clearDataButton_clicked()
         return;
     }
 
-    PCx_AuditModel::DFRFDIRI mode;
+    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)

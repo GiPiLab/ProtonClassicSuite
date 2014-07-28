@@ -14,6 +14,10 @@ FormDisplayTree::FormDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
     QDateTime dt=QDateTime::currentDateTime();
     ui->label->setText(tr("Arbre %1 le %2 à %3").arg(model->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
     ui->treeView->expandToDepth(1);
+
+    populateTableInfos();
+    ui->tableWidget->resizeColumnsToContents();
+
 }
 
 FormDisplayTree::~FormDisplayTree()
@@ -78,4 +82,25 @@ void FormDisplayTree::on_exportButton_clicked()
     }
     QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF"));
 
+}
+
+void FormDisplayTree::populateTableInfos()
+{
+    ui->tableWidget->item(0,1)->setText(QString::number(model->getNumberOfNodes()));
+
+    QList<QPair<unsigned int,QString> > listOfTypes=model->getTypes()->getTypes();
+    QPair<unsigned int,QString> type;
+    int row=ui->tableWidget->rowCount();
+
+    foreach(type,listOfTypes)
+    {
+        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+        unsigned int nbOfThisType=model->getNumberOfNodesWithThisType(type.first);
+        QTableWidgetItem *item1=new QTableWidgetItem("Noeuds de type "+type.second);
+        QTableWidgetItem *item2=new QTableWidgetItem(QString::number(nbOfThisType));
+        item2->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
+        ui->tableWidget->setItem(row,0,item1);
+        ui->tableWidget->setItem(row,1,item2);
+        row++;
+    }
 }

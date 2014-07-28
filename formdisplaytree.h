@@ -29,6 +29,7 @@ private slots:
 private:
     Ui::FormDisplayTree *ui;
     PCx_TreeModel *model;
+    void populateTableInfos();
 };
 
 #endif // FORMDISPLAYTREE_H

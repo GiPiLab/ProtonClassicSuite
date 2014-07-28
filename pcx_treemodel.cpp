@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QSqlError>
 #include <QUuid>
-
+#include <QElapsedTimer>
 
 PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, QObject *parent):QStandardItemModel(parent)
 {
@@ -26,12 +26,6 @@ PCx_TreeModel::~PCx_TreeModel()
     types=NULL;
 }
 
-QDateTime PCx_TreeModel::getCreationTime() const
-{
-    //Assume sqlite CURRENT_TIMESTAMP format
-    QDateTime dt(QDateTime::fromString(creationTime,"yyyy-MM-dd hh:mm:ss"));
-    return dt;
-}
 
 QList<QPair<unsigned int, QString> > PCx_TreeModel::getListOfTrees(bool finishedOnly)
 {
@@ -255,6 +249,17 @@ QList<unsigned int> PCx_TreeModel::getNodesId() const
     return PCx_TreeModel::getNodesId(this->treeId);
 }
 
+unsigned int PCx_TreeModel::getNumberOfNodes() const
+{
+    QSqlQuery q(QString("select count(*) from arbre_%1").arg(treeId));
+    if(!q.next())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    return q.value(0).toUInt();
+}
+
 QList<unsigned int> PCx_TreeModel::getLeavesId() const
 {
     QList<unsigned int> leaves;
@@ -266,7 +271,7 @@ QList<unsigned int> PCx_TreeModel::getLeavesId() const
             leaves.append(node);
         }
     }
-    qDebug()<<"Leaves for tree "<<treeId<< " = "<<leaves;
+    //qDebug()<<"Leaves for tree "<<treeId<< " = "<<leaves;
     return leaves;
 }
 
@@ -320,9 +325,69 @@ bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
     return false;
 }
 
+unsigned int PCx_TreeModel::getTreeDepth() const
+{
+    unsigned int maxDepth=0;
+    QList<unsigned int> nodes=getNodesId();
+    unsigned int depth,pid,curNode;
+    foreach(unsigned int node, nodes)
+    {
+        if(node==1)
+            continue;
+        depth=0;
+
+        curNode=node;
+        do
+        {
+            pid=getParentId(curNode);
+            depth++;
+            curNode=pid;
+        }while(pid!=1);
+
+        if(depth>maxDepth)
+            maxDepth=depth;
+    }
+    return maxDepth;
+}
+
 QModelIndexList PCx_TreeModel::getIndexesOfNodesWithThisType(unsigned int typeId) const
 {
     return match(index(0,0),Qt::UserRole+2,QVariant(typeId),-1,Qt::MatchRecursive);
+}
+
+QList<unsigned int> PCx_TreeModel::getIdsOfNodesWithThisType(unsigned int typeId) const
+{
+    Q_ASSERT(typeId>0);
+    QSqlQuery q;
+    QList<unsigned int> nodes;
+    q.prepare(QString("select * from arbre_%1 where type=:typeId").arg(treeId));
+    q.bindValue(":typeId",typeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    while(q.next())
+    {
+        nodes.append(q.value("id").toUInt());
+    }
+    return nodes;
+}
+
+unsigned int PCx_TreeModel::getNumberOfNodesWithThisType(unsigned int typeId) const
+{
+    Q_ASSERT(typeId>0);
+    QSqlQuery q;
+    q.prepare(QString("select count(*) from arbre_%1 where type=:typeId").arg(treeId));
+    q.bindValue(":typeId",typeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+        return 0;
+    return q.value(0).toUInt();
 }
 
 QList<unsigned int> PCx_TreeModel::sortNodesBFS(QList<unsigned int> &nodes) const
@@ -581,8 +646,13 @@ bool PCx_TreeModel::finishTree()
 
 bool PCx_TreeModel::updateTree()
 {
+    QElapsedTimer timer;
+    timer.start();
+    bool res;
     this->clear();
-    return createChildrenItems(invisibleRootItem(),0);
+    res=createChildrenItems(invisibleRootItem(),0);
+    qDebug()<<"updateTree done in"<<timer.elapsed()<<"ms";
+    return res;
 }
 
 QString PCx_TreeModel::toDot() const
@@ -612,7 +682,7 @@ QString PCx_TreeModel::toDot() const
 
 int PCx_TreeModel::createRandomTree(const QString &name,unsigned int nbNodes)
 {
-    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<100000);
+    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<=MAXNODES);
     QSqlQuery query;
 
     query.prepare("select count(*) from index_arbres where nom=:name");
@@ -643,7 +713,7 @@ int PCx_TreeModel::createRandomTree(const QString &name,unsigned int nbNodes)
 
     unsigned int maxNumType=PCx_TypeModel::getListOfDefaultTypes().size();
 
-    for(unsigned int i=1;i<=nbNodes;i++)
+    for(unsigned int i=1;i<nbNodes;i++)
     {
         QSqlQuery q;
         unsigned int type=(qrand()%maxNumType)+1;
@@ -755,10 +825,12 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     }
     while(query.next())
     {
-        QStandardItem *newitem=createItem(types->getNomType(query.value(3).toUInt()),query.value(1).toString(),query.value(3).toUInt(),query.value(0).toUInt());
+        unsigned int typeId=query.value(3).toUInt();
+        unsigned int nodeId=query.value(0).toUInt();
+        QStandardItem *newitem=createItem(types->getNomType(typeId),query.value(1).toString(),typeId,nodeId);
 
         item->appendRow(newitem);
-        createChildrenItems(newitem,query.value(0).toUInt());
+        createChildrenItems(newitem,nodeId);
     }
     return true;
 
@@ -810,7 +882,8 @@ bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
 QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, unsigned int typeId, unsigned int nodeId)
 {
     Q_ASSERT(!nodeName.isEmpty());
-    QStandardItem *newitem=new QStandardItem(QString("%1 %2").arg(typeName).arg(nodeName));
+    //QStandardItem *newitem=new QStandardItem(typeName+" "+nodeName);
+    QStandardItem *newitem=new QStandardItem(typeName+" "+nodeName);
     newitem->setData(nodeId,Qt::UserRole+1);
     newitem->setData(typeId,Qt::UserRole+2);
 //    newitem->setIcon(QIcon::fromTheme());
