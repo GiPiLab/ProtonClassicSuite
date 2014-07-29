@@ -1,5 +1,6 @@
 #include "dialogduplicateaudit.h"
 #include "ui_dialogduplicateaudit.h"
+#include "pcx_auditinfos.h"
 #include <QMessageBox>
 
 DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *parent) :
@@ -9,12 +10,13 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     Q_ASSERT(oldAuditId>0);
     model=new PCx_AuditModel(oldAuditId,parent,true);
     ui->setupUi(this);
-    ui->labelOldName->setText(model->getAuditInfos().name);
-    ui->labelOldDate->setText(model->getAuditInfos().creationTimeLocal.toString(Qt::SystemLocaleLongDate));
-    ui->labelOldTree->setText(model->getAuditInfos().attachedTreeName);
-    ui->labelOldYears->setText(model->getAuditInfos().yearsString);
-    ui->spinBoxYear1->setValue(model->getAuditInfos().years.first());
-    ui->spinBoxYear2->setValue(model->getAuditInfos().years.last());
+    PCx_AuditInfos infos(model->getAuditId());
+    ui->labelOldName->setText(infos.name);
+    ui->labelOldDate->setText(infos.creationTimeLocal.toString(Qt::SystemLocaleLongDate));
+    ui->labelOldTree->setText(infos.attachedTreeName);
+    ui->labelOldYears->setText(infos.yearsString);
+    ui->spinBoxYear1->setValue(infos.years.first());
+    ui->spinBoxYear2->setValue(infos.years.last());
     QDate date=QDate::currentDate();
     ui->spinBoxYear1->setMaximum(date.year());
     ui->spinBoxYear2->setMaximum(date.year()+1);

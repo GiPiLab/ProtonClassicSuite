@@ -26,7 +26,6 @@ FormDisplayTree::~FormDisplayTree()
     delete ui;
 }
 
-//FIXME : better tree printing support
 void FormDisplayTree::on_printViewButton_clicked()
 {
     QPrinter printer;
@@ -56,6 +55,7 @@ void FormDisplayTree::on_expandButton_clicked()
 void FormDisplayTree::on_collapseButton_clicked()
 {
     ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
 }
 
 void FormDisplayTree::on_exportButton_clicked()
@@ -81,7 +81,6 @@ void FormDisplayTree::on_exportButton_clicked()
         return;
     }
     QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF"));
-
 }
 
 void FormDisplayTree::populateTableInfos()

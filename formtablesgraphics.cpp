@@ -473,3 +473,14 @@ void FormTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
     Q_UNUSED(checked);
     updateTextBrowser();
 }
+
+void FormTablesGraphics::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
+}
+
+void FormTablesGraphics::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
+}

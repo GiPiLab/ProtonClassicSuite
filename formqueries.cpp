@@ -8,6 +8,7 @@
 #include "pcx_queryrank.h"
 #include "pcx_queryminmax.h"
 #include "utils.h"
+#include "pcx_auditinfos.h"
 
 
 FormQueries::FormQueries(QWidget *parent) :
@@ -167,22 +168,25 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
 
     ui->comboBoxYear1->clear();
     ui->comboBoxYear2->clear();
-    ui->comboBoxYear1->addItems(model->getAuditInfos().yearsStringList);
-    ui->comboBoxYear2->addItems(model->getAuditInfos().yearsStringList);
+
+    PCx_AuditInfos infos(model->getAuditId());
+
+    ui->comboBoxYear1->addItems(infos.yearsStringList);
+    ui->comboBoxYear2->addItems(infos.yearsStringList);
     ui->comboBoxYear1->setCurrentIndex(0);
     ui->comboBoxYear2->setCurrentIndex(ui->comboBoxYear2->count()-1);
 
     ui->comboBoxYear1_2->clear();
     ui->comboBoxYear2_2->clear();
-    ui->comboBoxYear1_2->addItems(model->getAuditInfos().yearsStringList);
-    ui->comboBoxYear2_2->addItems(model->getAuditInfos().yearsStringList);
+    ui->comboBoxYear1_2->addItems(infos.yearsStringList);
+    ui->comboBoxYear2_2->addItems(infos.yearsStringList);
     ui->comboBoxYear1_2->setCurrentIndex(0);
     ui->comboBoxYear2_2->setCurrentIndex(ui->comboBoxYear2_2->count()-1);
 
     ui->comboBoxYear1_3->clear();
     ui->comboBoxYear2_3->clear();
-    ui->comboBoxYear1_3->addItems(model->getAuditInfos().yearsStringList);
-    ui->comboBoxYear2_3->addItems(model->getAuditInfos().yearsStringList);
+    ui->comboBoxYear1_3->addItems(infos.yearsStringList);
+    ui->comboBoxYear2_3->addItems(infos.yearsStringList);
     ui->comboBoxYear1_3->setCurrentIndex(0);
     ui->comboBoxYear2_3->setCurrentIndex(ui->comboBoxYear2_3->count()-1);
     doc->clear();

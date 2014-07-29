@@ -113,6 +113,12 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
 
+    if(getNumberOfNodes()>=MAXNODES)
+    {
+        QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Nombre maximum de noeuds atteint !"));
+        return 0;
+    }
+
     QSqlQuery q;
     q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
     q.bindValue(":nom",name);
@@ -124,7 +130,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
         if(q.value(0).toInt()>0)
         {
             QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
-            return -1;
+            return 0;
         }
     }
     else

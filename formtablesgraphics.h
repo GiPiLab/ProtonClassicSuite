@@ -47,6 +47,10 @@ private slots:
     void on_checkBoxRealiseCumul_toggled(bool checked);
     void on_checkBoxDisponibleCumul_toggled(bool checked);
 
+    void on_pushButtonCollapseAll_clicked();
+
+    void on_pushButtonExpandAll_clicked();
+
 private:
     Ui::FormTablesGraphics *ui;
     void updateListOfAudits();

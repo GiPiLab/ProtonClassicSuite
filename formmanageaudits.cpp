@@ -3,6 +3,7 @@
 #include "formmanageaudits.h"
 #include "ui_formmanageaudits.h"
 #include "pcx_auditmodel.h"
+#include "pcx_auditinfos.h"
 #include <QDebug>
 #include "utils.h"
 #include "dialogduplicateaudit.h"

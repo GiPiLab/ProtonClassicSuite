@@ -55,7 +55,6 @@ void FormEditTree::updateListOfTree()
     ui->deleteTreeButton->setEnabled(nonEmpty);
     ui->duplicateTreeButton->setEnabled(nonEmpty);
     ui->viewTreeButton->setEnabled(nonEmpty);
-    ui->statsTreeButton->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;
     foreach(p,lot)
     {
@@ -388,6 +387,13 @@ void FormEditTree::on_randomTreeButton_clicked()
     }
 }
 
+void FormEditTree::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
+}
 
-
-
+void FormEditTree::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
+}

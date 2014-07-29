@@ -3,6 +3,7 @@
 
 #include <QStringList>
 #include <QDateTime>
+#include "pcx_auditmodel.h"
 
 class PCx_AuditInfos
 {
@@ -11,7 +12,6 @@ public:
     bool updateInfos(unsigned int auditId);
 
     QString name;
-    unsigned int id;
     QString attachedTreeName;
     unsigned int attachedTreeId;
 
@@ -24,7 +24,13 @@ public:
     QDateTime creationTimeUTC;
     QDateTime creationTimeLocal;
 
+   // QString getNodesStatistics(PCx_AuditModel::DFRFDIRI mode);
+
     static QStringList yearsListToStringList(QList<unsigned int> years);
+
+
+private:
+    unsigned int auditId;
 };
 
 #endif // PCX_AUDITINFOS_H

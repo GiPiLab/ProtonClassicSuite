@@ -18,7 +18,7 @@ bool PCx_AuditInfos::updateInfos(unsigned int auditId)
     QSqlQuery q(QString("select * from index_audits where id='%1'").arg(auditId));
     if(q.next())
     {
-        id=auditId;
+        auditId=auditId;
         name=q.value("nom").toString();
         attachedTreeId=q.value("id_arbre").toUInt();
         attachedTreeName=PCx_TreeModel::idTreeToName(attachedTreeId);

@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QtGlobal>
-
+#include "pcx_auditinfos.h"
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
     QWidget(parent),
@@ -149,8 +149,11 @@ void FormEditAudit::on_randomDataButton_clicked()
     {
         return;
     }
+
+    PCx_AuditInfos auditInfos(auditModel->getAuditId());
+
     QList<unsigned int> leaves=auditModel->getAttachedTreeModel()->getLeavesId();
-    QList<unsigned int> years=auditModel->getAuditInfos().years;
+    QList<unsigned int> years=auditInfos.years;
 
     PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
     if(ui->tabWidget->currentWidget()==ui->tabDF)
@@ -196,4 +199,15 @@ void FormEditAudit::on_clearDataButton_clicked()
         mode=PCx_AuditModel::RI;
 
     auditModel->clearAllData(mode);
+}
+
+void FormEditAudit::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
+}
+
+void FormEditAudit::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
 }

@@ -1,4 +1,5 @@
 #include "pcx_auditmodel.h"
+#include "pcx_auditinfos.h"
 #include "pcx_query.h"
 #include "utils.h"
 #include <QMessageBox>
@@ -6,9 +7,11 @@
 #include <QSqlError>
 #include <QSet>
 #include <QDebug>
+#include <QProgressDialog>
+#include <QCoreApplication>
 
 PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly) :
-    QObject(parent),auditId(auditId),auditInfos(auditId)
+    QObject(parent),auditId(auditId)
 {
     attachedTree=NULL;
     modelDF=NULL;
@@ -281,13 +284,11 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
 
 bool PCx_AuditModel::finishAudit()
 {
-    auditInfos.finished=true;
     return PCx_AuditModel::finishAudit(auditId);
 }
 
 bool PCx_AuditModel::unFinishAudit()
 {
-    auditInfos.finished=false;
     return PCx_AuditModel::unFinishAudit(auditId);
 }
 
@@ -328,11 +329,13 @@ QSqlTableModel *PCx_AuditModel::getTableModel(DFRFDIRI mode) const
 bool PCx_AuditModel::setLeafValues(unsigned int leafId, PCx_AuditModel::DFRFDIRI mode, unsigned int year, QHash<ORED,double> vals)
 {
     Q_ASSERT(!vals.isEmpty());
+
     if(vals.contains(DISPONIBLES))
     {
         qWarning()<<"Will not overwrite the computed column DISPONIBLE";
         return false;
     }
+    PCx_AuditInfos auditInfos(auditId);
     if(auditInfos.finished)
     {
         qWarning()<<"Will not modify a finished audit";
@@ -432,11 +435,6 @@ bool PCx_AuditModel::setLeafValues(unsigned int leafId, PCx_AuditModel::DFRFDIRI
 
 qint64 PCx_AuditModel::getNodeValue(unsigned int nodeId, PCx_AuditModel::DFRFDIRI mode, PCx_AuditModel::ORED ored, unsigned int year) const
 {
-    if(year<auditInfos.years.first() || year>auditInfos.years.last())
-    {
-        qWarning()<<"Invalid year specified !";
-        return -MAX_NUM;
-    }
     QSqlQuery q;
     q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored)).arg(modeToTableString(mode)).arg(auditId));
     q.bindValue(":year",year);
@@ -480,22 +478,6 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         return -1;
     }
 
-    //A transaction is used in addNewAudit
-    unsigned int newAuditId=PCx_AuditModel::addNewAudit(newName,years,attachedTree->getTreeId());
-    if(newAuditId==0)
-    {
-        qCritical()<<"Unable to duplicate audit !";
-        die();
-    }
-
-    qSort(years);
-    unsigned int year1=years.first();
-    unsigned int year2=years.last();
-
-    QSqlDatabase::database().transaction();
-
-    QSqlQuery q;
-
     QStringList modes;
 
     if(copyDF)
@@ -506,6 +488,42 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         modes.append(modeToTableString(DI));
     if(copyRI)
         modes.append(modeToTableString(RI));
+
+
+    QProgressDialog progress(tr("Données en cours de recopie..."),tr("Annuler"),0,modes.size()*4+1);
+    progress.setMinimumDuration(1000);
+    progress.setCancelButton(0);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    int progval=0;
+    progress.setValue(progval);
+
+
+
+
+    //A transaction is used in addNewAudit
+    unsigned int newAuditId=PCx_AuditModel::addNewAudit(newName,years,attachedTree->getTreeId());
+    if(newAuditId==0)
+    {
+        qCritical()<<"Unable to duplicate audit !";
+        die();
+    }
+
+    QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+
+
+
+    qSort(years);
+    unsigned int year1=years.first();
+    unsigned int year2=years.last();
+
+    QSqlDatabase::database().transaction();
+
+    QSqlQuery q;
+
+
+    progress.setValue(++progval);
 
     foreach(QString lemode,modes)
     {
@@ -524,6 +542,11 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             die();
         }
 
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+
+
+        progress.setValue(++progval);
+
         q.prepare(QString("update audit_%3_%1 set realises="
                           "(select realises from audit_%3_%2 where audit_%3_%2.id_node=audit_%3_%1.id_node "
                           "and audit_%3_%2.annee=audit_%3_%1.annee and audit_%3_%2.annee>=:year1 "
@@ -538,6 +561,8 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             qCritical()<<q.lastError();
             die();
         }
+
+        progress.setValue(++progval);
 
         q.prepare(QString("update audit_%3_%1 set engages="
                           "(select engages from audit_%3_%2 where audit_%3_%2.id_node=audit_%3_%1.id_node "
@@ -554,6 +579,8 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             die();
         }
 
+        progress.setValue(++progval);
+
         q.prepare(QString("update audit_%3_%1 set disponibles="
                           "(select disponibles from audit_%3_%2 where audit_%3_%2.id_node=audit_%3_%1.id_node "
                           "and audit_%3_%2.annee=audit_%3_%1.annee and audit_%3_%2.annee>=:year1 "
@@ -568,7 +595,11 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             qCritical()<<q.lastError();
             return -1;
         }
+
+        progress.setValue(++progval);
     }
+
+    progress.setValue(progress.maximum());
     q.exec(QString("insert into audit_queries_%1 select * from audit_queries_%2").arg(newAuditId).arg(auditId));
     if(q.numRowsAffected()<0)
     {
@@ -585,84 +616,83 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
 bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
 {
     Q_ASSERT(auditId>0);
-    QSqlQuery q;
-    auditInfos.updateInfos(auditId);
-        unsigned int attachedTreeId=auditInfos.attachedTreeId;
-        qDebug()<<"Attached tree ID = "<<attachedTreeId;
+    PCx_AuditInfos auditInfos(auditId);
 
-        if(attachedTree!=NULL)
+    unsigned int attachedTreeId=auditInfos.attachedTreeId;
+
+    if(attachedTree!=NULL)
+    {
+        delete attachedTree;
+    }
+    attachedTree=new PCx_TreeModel(attachedTreeId);
+
+    if(readOnly==false)
+    {
+        if(modelDF!=NULL)
         {
-            delete attachedTree;
+            modelDF->clear();
+            delete modelDF;
         }
-        attachedTree=new PCx_TreeModel(attachedTreeId);
-
-        if(readOnly==false)
+        if(modelRF!=NULL)
         {
-            if(modelDF!=NULL)
-            {
-                modelDF->clear();
-                delete modelDF;
-            }
-            if(modelRF!=NULL)
-            {
-                modelRF->clear();
-                delete modelRF;
-            }
-            if(modelDI!=NULL)
-            {
-                modelDI->clear();
-                delete modelDI;
-            }
-            if(modelRI!=NULL)
-            {
-                modelRI->clear();
-                delete modelRI;
-            }
-            modelDF=new QSqlTableModel();
-            modelDF->setTable(QString("audit_DF_%1").arg(auditId));
-            modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-            modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-            modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-            modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-            modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
-            modelDF->select();
-
-            modelDI=new QSqlTableModel();
-            modelDI->setTable(QString("audit_DI_%1").arg(auditId));
-            modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-            modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-            modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-            modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-            modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
-            modelDI->select();
-
-            modelRI=new QSqlTableModel();
-            modelRI->setTable(QString("audit_RI_%1").arg(auditId));
-            modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-            modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-            modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-            modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-            modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
-            modelRI->select();
-
-            modelRF=new QSqlTableModel();
-            modelRF->setTable(QString("audit_RF_%1").arg(auditId));
-            modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-            modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-            modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-            modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-            modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-            modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
-            modelRF->select();
-
-            connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-            connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-            connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-            connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+            modelRF->clear();
+            delete modelRF;
         }
+        if(modelDI!=NULL)
+        {
+            modelDI->clear();
+            delete modelDI;
+        }
+        if(modelRI!=NULL)
+        {
+            modelRI->clear();
+            delete modelRI;
+        }
+        modelDF=new QSqlTableModel();
+        modelDF->setTable(QString("audit_DF_%1").arg(auditId));
+        modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+        modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+        modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+        modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
+        modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
+        modelDF->select();
+
+        modelDI=new QSqlTableModel();
+        modelDI->setTable(QString("audit_DI_%1").arg(auditId));
+        modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+        modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+        modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+        modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
+        modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
+        modelDI->select();
+
+        modelRI=new QSqlTableModel();
+        modelRI->setTable(QString("audit_RI_%1").arg(auditId));
+        modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+        modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+        modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+        modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
+        modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
+        modelRI->select();
+
+        modelRF=new QSqlTableModel();
+        modelRF->setTable(QString("audit_RF_%1").arg(auditId));
+        modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
+        modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
+        modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
+        modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
+        modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
+        modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
+        modelRF->select();
+
+        connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+        connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+    }
     return true;
 }
 

@@ -29,6 +29,10 @@ private slots:
 
     void on_clearDataButton_clicked();
 
+    void on_pushButtonCollapseAll_clicked();
+
+    void on_pushButtonExpandAll_clicked();
+
 private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();

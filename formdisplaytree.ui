@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
+    <width>484</width>
     <height>410</height>
    </rect>
   </property>
@@ -33,7 +33,7 @@
    <item row="2" column="0">
     <widget class="QPushButton" name="printViewButton">
      <property name="text">
-      <string>Imprimer la vue</string>
+      <string>Imprimer ce qui s'affiche</string>
      </property>
     </widget>
    </item>
@@ -64,7 +64,7 @@
    <item row="2" column="1">
     <widget class="QPushButton" name="exportButton">
      <property name="text">
-      <string>Exporter</string>
+      <string>Exporter en PDF</string>
      </property>
     </widget>
    </item>

@@ -10,8 +10,7 @@
 #include <QSqlTableModel>
 #include <QMimeData>
 
-//TODO : Refactor this class
-//TODO : Support lazy loading for big trees
+//TODO for V2 : Support lazy loading for big trees
 
 class PCx_TreeModel:public QStandardItemModel
 {
@@ -19,7 +18,6 @@ class PCx_TreeModel:public QStandardItemModel
 public:
 
     static const unsigned int MAXNODES=1500;
-
 
     explicit PCx_TreeModel(unsigned int treeId, bool typesReadOnly=true, QObject *parent=0);
     virtual ~PCx_TreeModel();
@@ -31,7 +29,7 @@ public:
     PCx_TypeModel* getTypes() const {return types;}
 
     unsigned int addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex);
-    bool updateNode(const QModelIndex &nodeIndex ,const QString &newName, unsigned int newType);
+    bool updateNode(const QModelIndex &nodeIndex, const QString &newName, unsigned int newType);
 
     bool deleteNode(const QModelIndex &nodeIndex);
 

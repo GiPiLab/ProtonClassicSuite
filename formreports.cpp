@@ -441,6 +441,7 @@ void FormReports::on_pushButtonExpandAll_clicked()
 void FormReports::on_pushButtonCollapseAll_clicked()
 {
     ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
 }
 
 void FormReports::on_pushButtonSelectAll_clicked()

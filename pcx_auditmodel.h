@@ -1,7 +1,6 @@
 #ifndef PCX_AUDITMODEL_H
 #define PCX_AUDITMODEL_H
 
-#include "pcx_auditinfos.h"
 #include "pcx_treemodel.h"
 
 
@@ -56,7 +55,6 @@ public:
     static bool deleteAudit(unsigned int auditId);
 
     unsigned int getAuditId() const{return auditId;}
-    const PCx_AuditInfos &getAuditInfos() const{return auditInfos;}
 
     bool finishAudit();
     bool unFinishAudit();
@@ -98,8 +96,6 @@ public slots:
 
 private:
     unsigned int auditId;
-
-    PCx_AuditInfos auditInfos;
     PCx_TreeModel *attachedTree;
 
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;

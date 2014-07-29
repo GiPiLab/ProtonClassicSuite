@@ -4,9 +4,6 @@
 #include <QSqlTableModel>
 #include <QSqlQueryModel>
 
-//TODO : Refactor that class
-
-
 class PCx_TypeModel:public QObject
 {
     Q_OBJECT
