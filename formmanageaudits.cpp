@@ -7,7 +7,9 @@
 #include <QDebug>
 #include "utils.h"
 #include "dialogduplicateaudit.h"
-
+#include "formdisplaytree.h"
+#include <QMdiSubWindow>
+#include <QMdiArea>
 
 FormManageAudits::FormManageAudits(QWidget *parent):
     QWidget(parent),
@@ -133,7 +135,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
         ui->finishAuditButton->setEnabled(true);
         ui->unFinishAuditButton->setEnabled(false);
     }
-    ui->labelTree->setText(infos.attachedTreeName);
+    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(infos.attachedTreeName).arg(PCx_TreeModel::getNumberOfNodes(infos.attachedTreeId)));
     ui->labelYears->setText(infos.yearsString);
     ui->labelName->setText(infos.name);
 }
@@ -195,4 +197,29 @@ void FormManageAudits::on_cloneAuditButton_clicked()
         updateListOfAudits();
         emit(listOfAuditsChanged());
     }
+}
+
+void FormManageAudits::on_pushButtonDisplayTree_clicked()
+{
+    if(ui->comboListOfTrees->count()==0)
+    {
+        qDebug()<<"No finished tree";
+        return;
+    }
+    int selectedIndex=ui->comboListOfTrees->currentIndex();
+
+    if(selectedIndex==-1)
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez l'arbre sur lequel sera adossé l'audit"));
+        return;
+    }
+
+    unsigned int selectedTree=ui->comboListOfTrees->currentData().toUInt();
+
+    FormDisplayTree *ddt=new FormDisplayTree(selectedTree,this);
+    ddt->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    QMdiArea *mdiArea=mdiSubWin->mdiArea();
+    mdiArea->addSubWindow(ddt);
+    ddt->show();
 }

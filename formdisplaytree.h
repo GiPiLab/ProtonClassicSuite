@@ -14,7 +14,7 @@ class FormDisplayTree : public QWidget
     Q_OBJECT
 
 public:
-    explicit FormDisplayTree(PCx_TreeModel *treeModel, QWidget *parent = 0);
+    explicit FormDisplayTree(unsigned int treeId, QWidget *parent = 0);
     ~FormDisplayTree();
 
 private slots:

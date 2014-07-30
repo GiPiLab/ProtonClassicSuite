@@ -8,13 +8,12 @@
 #include <QSqlField>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QMdiSubWindow>
 
-FormEditTree::FormEditTree(QWidget *parent,QMdiArea *mdiArea) : QWidget(parent), ui(new Ui::FormEditTree)
+FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEditTree)
 {
     ui->setupUi(this);
     model=NULL;
-    this->mdiArea=mdiArea;
-
     updateListOfTree();
 }
 
@@ -300,10 +299,11 @@ void FormEditTree::on_finishTreeButton_clicked()
 
 void FormEditTree::on_viewTreeButton_clicked()
 {
-    FormDisplayTree *ddt=new FormDisplayTree(model,this);
+    FormDisplayTree *ddt=new FormDisplayTree(model->getTreeId(),this);
     ddt->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    QMdiArea *mdiArea=mdiSubWin->mdiArea();
     mdiArea->addSubWindow(ddt);
-    //displayTrees.append(ddt);
     ddt->show();
 }
 

@@ -35,6 +35,7 @@ public:
 
     QList<unsigned int> getNodesId() const;
     unsigned int getNumberOfNodes() const;
+    static unsigned int getNumberOfNodes(unsigned int treeId);
     QList<unsigned int> getLeavesId() const;
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;

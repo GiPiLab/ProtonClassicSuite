@@ -78,7 +78,7 @@ void MainWindow::on_actionManageTree_triggered()
     //Only one instance allowed
     if(formEditTreeWin==NULL)
     {
-        formEditTreeWin=new FormEditTree(this,ui->mdiArea);
+        formEditTreeWin=new FormEditTree(this);
         formEditTreeWin->setAttribute(Qt::WA_DeleteOnClose);
 
         ui->mdiArea->addSubWindow(formEditTreeWin);

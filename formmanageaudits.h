@@ -32,6 +32,8 @@ private slots:
 
     void on_cloneAuditButton_clicked();
 
+    void on_pushButtonDisplayTree_clicked();
+
 signals:
     void listOfAuditsChanged();
 

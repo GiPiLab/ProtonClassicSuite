@@ -14,7 +14,7 @@ class FormEditTree : public QWidget
     Q_OBJECT
 
 public:
-    explicit FormEditTree(QWidget *parent = 0, QMdiArea *mdiArea = 0);
+    explicit FormEditTree(QWidget *parent = 0);
     ~FormEditTree();
 
 private slots:
@@ -57,7 +57,6 @@ signals:
 private:
     Ui::FormEditTree *ui;
     PCx_TreeModel *model;
-    QMdiArea *mdiArea;
 
     void updateListOfTree();
     //Disable editing

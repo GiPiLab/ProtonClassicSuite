@@ -77,6 +77,8 @@ public:
     int duplicateAudit(const QString &newName,QList<unsigned int> years,
                                 bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
 
+    static int duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI);
+
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 
     static QString modeToTableString(DFRFDIRI mode);

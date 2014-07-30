@@ -471,6 +471,11 @@ bool PCx_AuditModel::clearAllData(PCx_AuditModel::DFRFDIRI mode)
 
 int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI) const
 {
+    return PCx_AuditModel::duplicateAudit(auditId,newName,years,copyDF,copyRF,copyDI,copyRI);
+}
+
+int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI)
+{
     Q_ASSERT(!newName.isEmpty());
     if(auditNameExists(newName))
     {
@@ -490,29 +495,24 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
         modes.append(modeToTableString(RI));
 
 
-    QProgressDialog progress(tr("Données en cours de recopie..."),tr("Annuler"),0,modes.size()*4+1);
-    progress.setMinimumDuration(1000);
+    QProgressDialog progress(tr("Données en cours de recopie..."),tr("Annuler"),0,modes.size()*4+2);
+    progress.setMinimumDuration(600);
     progress.setCancelButton(0);
 
     progress.setWindowModality(Qt::ApplicationModal);
 
     int progval=0;
-    progress.setValue(progval);
 
-
-
+    progress.setValue(0);
 
     //A transaction is used in addNewAudit
-    unsigned int newAuditId=PCx_AuditModel::addNewAudit(newName,years,attachedTree->getTreeId());
+    PCx_AuditInfos infos(auditId);
+    unsigned int newAuditId=PCx_AuditModel::addNewAudit(newName,years,infos.attachedTreeId);
     if(newAuditId==0)
     {
         qCritical()<<"Unable to duplicate audit !";
         die();
     }
-
-    QCoreApplication::processEvents(QEventLoop::AllEvents,100);
-
-
 
     qSort(years);
     unsigned int year1=years.first();
@@ -521,7 +521,6 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
     QSqlDatabase::database().transaction();
 
     QSqlQuery q;
-
 
     progress.setValue(++progval);
 
@@ -542,9 +541,6 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             die();
         }
 
-        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
-
-
         progress.setValue(++progval);
 
         q.prepare(QString("update audit_%3_%1 set realises="
@@ -562,6 +558,8 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             die();
         }
 
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+
         progress.setValue(++progval);
 
         q.prepare(QString("update audit_%3_%1 set engages="
@@ -578,6 +576,7 @@ int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> y
             qCritical()<<q.lastError();
             die();
         }
+
 
         progress.setValue(++progval);
 

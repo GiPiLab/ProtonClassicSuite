@@ -257,6 +257,11 @@ QList<unsigned int> PCx_TreeModel::getNodesId() const
 
 unsigned int PCx_TreeModel::getNumberOfNodes() const
 {
+    return PCx_TreeModel::getNumberOfNodes(treeId);
+}
+
+unsigned int PCx_TreeModel::getNumberOfNodes(unsigned int treeId)
+{
     QSqlQuery q(QString("select count(*) from arbre_%1").arg(treeId));
     if(!q.next())
     {

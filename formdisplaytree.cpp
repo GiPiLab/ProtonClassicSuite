@@ -4,12 +4,12 @@
 #include "utils.h"
 
 
-FormDisplayTree::FormDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
+FormDisplayTree::FormDisplayTree(unsigned int treeId, QWidget *parent):
     QWidget(parent),
     ui(new Ui::FormDisplayTree)
 {
     ui->setupUi(this);
-    model=new PCx_TreeModel(treeModel->getTreeId());
+    model=new PCx_TreeModel(treeId);
     ui->treeView->setModel(model);
     QDateTime dt=QDateTime::currentDateTime();
     ui->label->setText(tr("Arbre %1 le %2 à %3").arg(model->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
@@ -17,7 +17,6 @@ FormDisplayTree::FormDisplayTree(PCx_TreeModel * treeModel,QWidget *parent) :
 
     populateTableInfos();
     ui->tableWidget->resizeColumnsToContents();
-
 }
 
 FormDisplayTree::~FormDisplayTree()

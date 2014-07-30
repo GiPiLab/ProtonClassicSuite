@@ -5,15 +5,13 @@
 
 DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::DialogDuplicateAudit)
+    ui(new Ui::DialogDuplicateAudit),oldAuditId(oldAuditId)
 {
-    Q_ASSERT(oldAuditId>0);
-    model=new PCx_AuditModel(oldAuditId,parent,true);
     ui->setupUi(this);
-    PCx_AuditInfos infos(model->getAuditId());
+    PCx_AuditInfos infos(oldAuditId);
     ui->labelOldName->setText(infos.name);
     ui->labelOldDate->setText(infos.creationTimeLocal.toString(Qt::SystemLocaleLongDate));
-    ui->labelOldTree->setText(infos.attachedTreeName);
+    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.attachedTreeName).arg(PCx_TreeModel::getNumberOfNodes(infos.attachedTreeId)));
     ui->labelOldYears->setText(infos.yearsString);
     ui->spinBoxYear1->setValue(infos.years.first());
     ui->spinBoxYear2->setValue(infos.years.last());
@@ -24,7 +22,6 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
 
 DialogDuplicateAudit::~DialogDuplicateAudit()
 {
-    delete model;
     delete ui;
 }
 
@@ -37,7 +34,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
         return;
     }
 
-    if(model->auditNameExists(newName))
+    if(PCx_AuditModel::auditNameExists(newName))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom"));
         return;
@@ -57,7 +54,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
     for(unsigned int i=year1;i<=year2;i++)
         years.append(i);
 
-    unsigned int res=model->duplicateAudit(newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
+    int res=PCx_AuditModel::duplicateAudit(oldAuditId,newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
                           ui->checkBoxDI->isChecked(),ui->checkBoxRI->isChecked());
 
     if(res>0)
