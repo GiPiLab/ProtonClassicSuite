@@ -34,6 +34,8 @@ private slots:
 
     void on_pushButtonDisplayTree_clicked();
 
+    void on_statisticsAuditButton_clicked();
+
 signals:
     void listOfAuditsChanged();
 

@@ -257,7 +257,7 @@ void FormQueries::on_pushButtonExecReqVariation_clicked()
 
     PCx_QueryVariation qv(model,typeId,ored,dfrfdiri,incdec,pop,oper,val,year1,year2);
 
-    currentHtmlDoc=report->generateHTMLHeader();
+    currentHtmlDoc=report->generateHTMLHeader(model->getAuditId());
     currentHtmlDoc.append(qv.exec());
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);
@@ -338,7 +338,7 @@ void FormQueries::on_pushButtonDelete_clicked()
 
 QString FormQueries::execQueries(QModelIndexList items)
 {
-    QString output=report->generateHTMLHeader();
+    QString output=report->generateHTMLHeader(model->getAuditId());
 
     foreach(QModelIndex idx,items)
     {
@@ -445,7 +445,7 @@ void FormQueries::on_pushButtonExecReqRank_clicked()
 
     PCx_QueryRank qr(model,typeId,ored,dfrfdiri,grSm,number,year1,year2);
 
-    currentHtmlDoc=report->generateHTMLHeader();
+    currentHtmlDoc=report->generateHTMLHeader(model->getAuditId());
     currentHtmlDoc.append(qr.exec());
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);
@@ -506,7 +506,7 @@ void FormQueries::on_pushButtonExecReq3_clicked()
 
     PCx_QueryMinMax qmm(model,typeId,ored,dfrfdiri,val1,val2,year1,year2);
 
-    currentHtmlDoc=report->generateHTMLHeader();
+    currentHtmlDoc=report->generateHTMLHeader(model->getAuditId());
     currentHtmlDoc.append(qmm.exec());
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);

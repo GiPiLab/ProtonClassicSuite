@@ -39,7 +39,8 @@ SOURCES += main.cpp\
     pcx_query.cpp \
     pcx_queryrank.cpp \
     pcx_queryminmax.cpp \
-    dialogduplicateaudit.cpp
+    dialogduplicateaudit.cpp \
+    formauditinfos.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -65,7 +66,8 @@ HEADERS  += mainwindow.h \
     pcx_query.h \
     pcx_queryrank.h \
     pcx_queryminmax.h \
-    dialogduplicateaudit.h
+    dialogduplicateaudit.h \
+    formauditinfos.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -76,7 +78,8 @@ FORMS    += mainwindow.ui \
     formreports.ui \
     dialogoptions.ui \
     formqueries.ui \
-    dialogduplicateaudit.ui
+    dialogduplicateaudit.ui \
+    formauditinfos.ui
 
 
 QMAKE_CXXFLAGS_DEBUG += -Og

@@ -33,6 +33,8 @@ private slots:
 
     void on_pushButtonExpandAll_clicked();
 
+    void on_statsButton_clicked();
+
 private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();

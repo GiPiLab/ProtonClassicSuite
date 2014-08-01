@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "dialogduplicateaudit.h"
 #include "formdisplaytree.h"
+#include "formauditinfos.h"
 #include <QMdiSubWindow>
 #include <QMdiArea>
 
@@ -222,4 +223,14 @@ void FormManageAudits::on_pushButtonDisplayTree_clicked()
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     mdiArea->addSubWindow(ddt);
     ddt->show();
+}
+
+void FormManageAudits::on_statisticsAuditButton_clicked()
+{
+    FormAuditInfos *infos=new FormAuditInfos(ui->comboListOfAudits->currentData().toUInt(),this);
+    infos->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    QMdiArea *mdiArea=mdiSubWin->mdiArea();
+    mdiArea->addSubWindow(infos);
+    infos->show();
 }

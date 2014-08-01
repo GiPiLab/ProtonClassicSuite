@@ -8,7 +8,7 @@ PCx_Report::PCx_Report(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth
     Q_ASSERT(model!=NULL);
 }
 
-QString PCx_Report::getCSS() const
+QString PCx_Report::getCSS()
 {
     QString css="\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
             "\nh1{color:#A00;}"
@@ -22,9 +22,9 @@ QString PCx_Report::getCSS() const
 }
 
 
-QString PCx_Report::generateHTMLHeader() const
+QString PCx_Report::generateHTMLHeader(unsigned int auditId)
 {
-    PCx_AuditInfos infos(model->getAuditId());
+    PCx_AuditInfos infos(auditId);
     return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>\n"
                    "<h3>Audit %1</h3>\n").arg(infos.name.toHtmlEscaped()).arg(getCSS());
 

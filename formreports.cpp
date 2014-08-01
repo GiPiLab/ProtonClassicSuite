@@ -220,7 +220,7 @@ void FormReports::on_saveButton_clicked()
     qDebug()<<"Mode-dependant selected tables = "<<selectedTables;
     qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
-    QString output=report->generateHTMLHeader();
+    QString output=report->generateHTMLHeader(model->getAuditId());
     QList<PCx_AuditModel::DFRFDIRI> listModes;
     if(ui->checkBoxDF->isChecked())
         listModes.append(PCx_AuditModel::DF);

@@ -4,6 +4,7 @@
 #include <QScrollBar>
 #include <QPrintDialog>
 #include <QFileDialog>
+
 //#include "QCustomPlot/qcpdocumentobject.h"
 
 FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
@@ -87,7 +88,7 @@ void FormTablesGraphics::updateTextBrowser()
     //Always scale 1.0 when displaying
     report->getGraphics().setScale(1.0);
 
-    QString output=report->generateHTMLHeader();
+    QString output=report->generateHTMLHeader(model->getAuditId());
     output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,selectedNode,selectedMode,doc));
     output.append("</body></html>");
     doc->setHtml(output);
@@ -314,7 +315,7 @@ void FormTablesGraphics::on_saveButton_clicked()
     report->getGraphics().setScale(settings.value("graphics/scale",PCx_Graphics::DEFAULTSCALE).toDouble());
 
     //Generate report in non-embedded mode, saving images
-    QString output=report->generateHTMLHeader();
+    QString output=report->generateHTMLHeader(model->getAuditId());
     output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,node,selectedMode,NULL,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 

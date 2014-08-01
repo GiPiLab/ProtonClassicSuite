@@ -9,7 +9,7 @@ class PCx_AuditInfos
 {
 public:
     PCx_AuditInfos(unsigned int auditId);
-    bool updateInfos(unsigned int auditId);
+
 
     QString name;
     QString attachedTreeName;
@@ -20,14 +20,17 @@ public:
     QStringList yearsStringList;
 
     bool finished;
+    QString finishedString;
 
     QDateTime creationTimeUTC;
     QDateTime creationTimeLocal;
 
-   // QString getNodesStatistics(PCx_AuditModel::DFRFDIRI mode);
+    QString getHTMLAuditStatistics() const;
+    QList<unsigned int> getNodesWithNonNullValues(PCx_AuditModel::DFRFDIRI mode, unsigned int year) const;
+    QList<unsigned int> getNodesWithAllNullValues(PCx_AuditModel::DFRFDIRI mode, unsigned int year) const;
+    QList<unsigned int> getNodesWithAllZeroValues(PCx_AuditModel::DFRFDIRI mode, unsigned int year) const;
 
     static QStringList yearsListToStringList(QList<unsigned int> years);
-
 
 private:
     unsigned int auditId;

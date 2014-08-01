@@ -164,7 +164,7 @@ unsigned int PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int
     //Populate tables with years for each node of the attached tree
 
     QList<unsigned int> nodes=PCx_TreeModel::getNodesId(attachedTreeId);
-    qDebug()<<"Nodes ids = "<<nodes;
+    //qDebug()<<"Nodes ids = "<<nodes;
 
     foreach(unsigned int node,nodes)
     {
@@ -275,6 +275,15 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
         qCritical()<<q.lastError();
         die();
     }
+
+    q.exec(QString("drop table audit_queries_%1").arg(auditId));
+    if(q.numRowsAffected()==-1)
+    {
+        QSqlDatabase::database().rollback();
+        qCritical()<<q.lastError();
+        die();
+    }
+
     QSqlDatabase::database().commit();
     qDebug()<<"Audit "<<auditId<<" deleted";
     return true;

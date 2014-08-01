@@ -3,6 +3,9 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QtGlobal>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include "formauditinfos.h"
 #include "pcx_auditinfos.h"
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
@@ -210,4 +213,14 @@ void FormEditAudit::on_pushButtonCollapseAll_clicked()
 void FormEditAudit::on_pushButtonExpandAll_clicked()
 {
     ui->treeView->expandAll();
+}
+
+void FormEditAudit::on_statsButton_clicked()
+{
+    FormAuditInfos *infos=new FormAuditInfos(auditModel->getAuditId(),this);
+    infos->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    QMdiArea *mdiArea=mdiSubWin->mdiArea();
+    mdiArea->addSubWindow(infos);
+    infos->show();
 }
