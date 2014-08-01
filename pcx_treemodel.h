@@ -19,7 +19,7 @@ public:
 
     static const unsigned int MAXNODES=1500;
 
-    explicit PCx_TreeModel(unsigned int treeId, bool typesReadOnly=true, QObject *parent=0);
+    explicit PCx_TreeModel(unsigned int treeId, bool typesReadOnly=true, bool noLoadModel=false, QObject *parent=0);
     virtual ~PCx_TreeModel();
 
     unsigned int getTreeId() const {return treeId;}
@@ -86,6 +86,7 @@ private:
     bool deleteNodeAndChildren(unsigned int nodeId);
     QStandardItem *createItem(const QString &typeName,const QString &nodeName,unsigned int typeId,unsigned int nodeId);
     void updateNodePosition(unsigned int nodeId, unsigned int newPid);
+    bool noLoadModel;
 };
 
 #endif // PCX_TREEMODEL_H

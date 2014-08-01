@@ -48,7 +48,7 @@ public:
     };
 
 
-    explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0,bool readOnly=true);
+    explicit PCx_AuditModel(unsigned int auditId,QObject *parent = 0,bool readOnly=true,bool loadTreeModel=true);
     virtual ~PCx_AuditModel();
 
     static unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
@@ -104,6 +104,7 @@ private:
     bool loadFromDb(unsigned int auditId, bool readOnly=true);
     bool propagateToAncestors(const QModelIndex &node);
     bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
+    bool loadTreeModel;
 
 private slots:
     void onModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

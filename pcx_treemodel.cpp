@@ -9,9 +9,10 @@
 #include <QUuid>
 #include <QElapsedTimer>
 
-PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, QObject *parent):QStandardItemModel(parent)
+PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, bool noLoadModel, QObject *parent):QStandardItemModel(parent),noLoadModel(noLoadModel)
 {
     types=new PCx_TypeModel(treeId,typesReadOnly);
+
     if(loadFromDatabase(treeId)==false)
     {
         qCritical()<<"Unable to load tree"<<treeId;
@@ -657,6 +658,8 @@ bool PCx_TreeModel::finishTree()
 
 bool PCx_TreeModel::updateTree()
 {
+    if(noLoadModel==true)
+        return true;
     QElapsedTimer timer;
     timer.start();
     bool res;

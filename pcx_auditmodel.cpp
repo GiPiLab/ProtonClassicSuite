@@ -10,15 +10,14 @@
 #include <QProgressDialog>
 #include <QCoreApplication>
 
-PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly) :
-    QObject(parent),auditId(auditId)
+PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly, bool loadTreeModel) :
+    QObject(parent),auditId(auditId),loadTreeModel(loadTreeModel)
 {
     attachedTree=NULL;
     modelDF=NULL;
     modelDI=NULL;
     modelRI=NULL;
     modelRF=NULL;
-    //this->auditId=auditId;
     if(loadFromDb(auditId,readOnly)==false)
     {
         qCritical()<<"Unable to load audit"<<auditId;
@@ -632,7 +631,7 @@ bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
     {
         delete attachedTree;
     }
-    attachedTree=new PCx_TreeModel(attachedTreeId);
+    attachedTree=new PCx_TreeModel(attachedTreeId,true,!loadTreeModel);
 
     if(readOnly==false)
     {

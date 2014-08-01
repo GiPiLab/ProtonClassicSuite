@@ -140,7 +140,7 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     if(queriesModel!=NULL)
         delete queriesModel;
 
-    model=new PCx_AuditModel(selectedAuditId,this);
+    model=new PCx_AuditModel(selectedAuditId,this,true,false);
     report=new PCx_Report(model);
     queriesModel=new PCx_QueriesModel(selectedAuditId,this);
 
