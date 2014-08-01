@@ -75,29 +75,72 @@ QString PCx_AuditInfos::getHTMLAuditStatistics() const
     out.append("\n<br><table cellpadding='5' border='1' align='center'>\n"
                        "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>");
 
+    PCx_TreeModel treeModel(attachedTreeId);
 
+
+    QList<QList<unsigned int> * > listOfListOfNodes;
+    QList<unsigned int> nodesDF,nodesRF,nodesDI,nodesRI;
+    listOfListOfNodes.append(&nodesDF);
+    listOfListOfNodes.append(&nodesRF);
+    listOfListOfNodes.append(&nodesDI);
+    listOfListOfNodes.append(&nodesRI);
 
     foreach(unsigned int year,years)
     {
+        nodesDF=getNodesWithNonNullValues(PCx_AuditModel::DF,year);
+        nodesRF=getNodesWithNonNullValues(PCx_AuditModel::RF,year);
+        nodesDI=getNodesWithNonNullValues(PCx_AuditModel::DI,year);
+        nodesRI=getNodesWithNonNullValues(PCx_AuditModel::RI,year);
         out.append(QString("\n<tr><th colspan='5'>%1</th></tr>\n"
                            "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>%2</td><td align='right'>%3</td><td  align='right'>%4</td><td  align='right'>%5</td></tr>")
                    .arg(year)
-                   .arg(getNodesWithNonNullValues(PCx_AuditModel::DF,year).size())
-                   .arg(getNodesWithNonNullValues(PCx_AuditModel::RF,year).size())
-                   .arg(getNodesWithNonNullValues(PCx_AuditModel::DI,year).size())
-                   .arg(getNodesWithNonNullValues(PCx_AuditModel::RI,year).size()));
+                   .arg(nodesDF.size())
+                   .arg(nodesRF.size())
+                   .arg(nodesDI.size())
+                   .arg(nodesRI.size()));
+
+        nodesDF=getNodesWithAllZeroValues(PCx_AuditModel::DF,year);
+        nodesRF=getNodesWithAllZeroValues(PCx_AuditModel::RF,year);
+        nodesDI=getNodesWithAllZeroValues(PCx_AuditModel::DI,year);
+        nodesRI=getNodesWithAllZeroValues(PCx_AuditModel::RI,year);
 
         out.append(QString("<tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4</td></tr>")
-                   .arg(getNodesWithAllZeroValues(PCx_AuditModel::DF,year).size())
-                   .arg(getNodesWithAllZeroValues(PCx_AuditModel::RF,year).size())
-                   .arg(getNodesWithAllZeroValues(PCx_AuditModel::DI,year).size())
-                   .arg(getNodesWithAllZeroValues(PCx_AuditModel::RI,year).size()));
+                   .arg(nodesDF.size())
+                   .arg(nodesRF.size())
+                   .arg(nodesDI.size())
+                   .arg(nodesRI.size()));
+
+        if(!nodesDF.isEmpty()||!nodesRF.isEmpty()||!nodesDI.isEmpty()||!nodesRI.isEmpty())
+        {
+            out.append("<tr><td></td><td>");
+
+            foreach(QList<unsigned int> *listOfNodes, listOfListOfNodes)
+            {
+                if(!listOfNodes->isEmpty())
+                {
+                    out.append("<ul>");
+
+                    foreach(unsigned int node,*listOfNodes)
+                    {
+                        out.append(QString("<li>%1</li>").arg(treeModel.getNodeName(node).toHtmlEscaped()));
+                    }
+                    out.append("</ul></td>");
+                }
+            }
+            out.append("</tr>");
+        }
+
+        nodesDF=getNodesWithAllNullValues(PCx_AuditModel::DF,year);
+        nodesRF=getNodesWithAllNullValues(PCx_AuditModel::RF,year);
+        nodesDI=getNodesWithAllNullValues(PCx_AuditModel::DI,year);
+        nodesRI=getNodesWithAllNullValues(PCx_AuditModel::RI,year);
 
         out.append(QString("<tr><td>Noeuds non remplis</td><td align='right'>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4</td></tr>")
-                   .arg(getNodesWithAllNullValues(PCx_AuditModel::DF,year).size())
-                   .arg(getNodesWithAllNullValues(PCx_AuditModel::RF,year).size())
-                   .arg(getNodesWithAllNullValues(PCx_AuditModel::DI,year).size())
-                   .arg(getNodesWithAllNullValues(PCx_AuditModel::RI,year).size()));
+                   .arg(nodesDF.size())
+                   .arg(nodesRF.size())
+                   .arg(nodesDI.size())
+                   .arg(nodesRI.size()));
+
     }
 
     out.append("</table>\n");
