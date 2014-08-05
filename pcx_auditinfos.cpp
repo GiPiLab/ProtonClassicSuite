@@ -112,10 +112,11 @@ QString PCx_AuditInfos::getHTMLAuditStatistics() const
 
         if(!nodesDF.isEmpty()||!nodesRF.isEmpty()||!nodesDI.isEmpty()||!nodesRI.isEmpty())
         {
-            out.append("<tr><td></td><td>");
+            out.append("<tr><td></td>");
 
             foreach(QList<unsigned int> *listOfNodes, listOfListOfNodes)
             {
+                out.append("<td>");
                 if(!listOfNodes->isEmpty())
                 {
                     out.append("<ul>");
@@ -124,8 +125,9 @@ QString PCx_AuditInfos::getHTMLAuditStatistics() const
                     {
                         out.append(QString("<li>%1</li>").arg(treeModel.getNodeName(node).toHtmlEscaped()));
                     }
-                    out.append("</ul></td>");
+                    out.append("</ul>");
                 }
+                out.append("</td>");
             }
             out.append("</tr>");
         }

@@ -8,7 +8,8 @@
 class PCx_AuditInfos
 {
 public:
-    PCx_AuditInfos(unsigned int auditId);
+
+    explicit PCx_AuditInfos(unsigned int auditId);
 
 
     QString name;
