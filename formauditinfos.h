@@ -16,6 +16,9 @@ public:
     explicit FormAuditInfos(unsigned int auditId,QWidget *parent = 0);
     ~FormAuditInfos();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     QSize sizeHint() const;
 
