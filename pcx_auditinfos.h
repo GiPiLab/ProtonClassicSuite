@@ -11,7 +11,6 @@ public:
 
     explicit PCx_AuditInfos(unsigned int auditId);
 
-
     QString name;
     QString attachedTreeName;
     unsigned int attachedTreeId;

@@ -55,13 +55,17 @@ public:
     static bool deleteAudit(unsigned int auditId);
 
     unsigned int getAuditId() const{return auditId;}
+    QString getAuditName() const{return auditName;}
 
     bool finishAudit();
     bool unFinishAudit();
+    bool isFinished() const{return finished;}
+
     static bool finishAudit(unsigned int id);
     static bool unFinishAudit(unsigned int id);
 
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
+    unsigned int getAttachedTreeId() const{return attachedTreeId;}
     QSqlTableModel *getTableModel(const QString &mode) const;
     QSqlTableModel *getTableModel(DFRFDIRI mode) const;
     QSqlTableModel *getTableModelDF() const {return modelDF;}
@@ -98,7 +102,11 @@ public slots:
 
 private:
     unsigned int auditId;
+    QString auditName;
+    unsigned int attachedTreeId;
     PCx_TreeModel *attachedTree;
+    QList<unsigned int> years;
+    bool finished;
 
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
     bool loadFromDb(unsigned int auditId, bool readOnly=true);

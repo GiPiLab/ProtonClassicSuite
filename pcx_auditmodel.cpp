@@ -18,6 +18,9 @@ PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readO
     modelDI=NULL;
     modelRI=NULL;
     modelRF=NULL;
+
+
+
     if(loadFromDb(auditId,readOnly)==false)
     {
         qCritical()<<"Unable to load audit"<<auditId;
@@ -292,11 +295,13 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
 
 bool PCx_AuditModel::finishAudit()
 {
+    finished=true;
     return PCx_AuditModel::finishAudit(auditId);
 }
 
 bool PCx_AuditModel::unFinishAudit()
 {
+    finished=false;
     return PCx_AuditModel::unFinishAudit(auditId);
 }
 
@@ -343,13 +348,12 @@ bool PCx_AuditModel::setLeafValues(unsigned int leafId, PCx_AuditModel::DFRFDIRI
         qWarning()<<"Will not overwrite the computed column DISPONIBLE";
         return false;
     }
-    PCx_AuditInfos auditInfos(auditId);
-    if(auditInfos.finished)
+    if(finished)
     {
         qWarning()<<"Will not modify a finished audit";
         return false;
     }
-    if(year<auditInfos.years.first() || year>auditInfos.years.last())
+    if(year<years.first() || year>years.last())
     {
         qWarning()<<"Invalid years !";
         return false;
@@ -623,9 +627,13 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
 bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
 {
     Q_ASSERT(auditId>0);
-    PCx_AuditInfos auditInfos(auditId);
 
-    unsigned int attachedTreeId=auditInfos.attachedTreeId;
+    PCx_AuditInfos infos(auditId);
+    finished=infos.finished;
+    auditName=infos.name;
+    attachedTreeId=infos.attachedTreeId;
+    years=infos.years;
+
 
     if(attachedTree!=NULL)
     {
