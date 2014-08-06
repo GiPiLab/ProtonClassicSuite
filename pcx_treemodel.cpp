@@ -91,6 +91,8 @@ int PCx_TreeModel::addTree(const QString &name,bool createRoot)
         return -1;
     }
 
+    query.exec(QString("create index idx_arbre_%1_pid on arbre_%1(pid)").arg(lastId.toUInt()));
+
     //When used to duplicate a tree, createRoot=false then create an empty type table
     if(!PCx_TypeModel::createTableTypes(lastId.toUInt(),createRoot))
     {

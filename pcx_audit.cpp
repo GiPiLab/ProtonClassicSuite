@@ -141,6 +141,8 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         die();
     }
 
+    q.exec(QString("create index idx_idnode_audit_DF_%1 on audit_DF_%1(id_node)").arg(uLastId));
+
     q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
@@ -150,6 +152,8 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         die();
     }
 
+    q.exec(QString("create index idx_idnode_audit_RF_%1 on audit_RF_%1(id_node)").arg(uLastId));
+
     q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
     if(q.numRowsAffected()==-1)
@@ -158,6 +162,7 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         qCritical()<<q.lastError();
         die();
     }
+    q.exec(QString("create index idx_idnode_audit_DI_%1 on audit_DI_%1(id_node)").arg(uLastId));
 
     q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
 
@@ -167,6 +172,7 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         qCritical()<<q.lastError();
         die();
     }
+    q.exec(QString("create index idx_idnode_audit_RI_%1 on audit_RI_%1(id_node)").arg(uLastId));
 
     bool res=PCx_Query::createTableQueries(uLastId);
 
@@ -527,7 +533,6 @@ int PCx_Audit::duplicateAudit(unsigned int auditId, const QString &newName, QLis
 
     progress.setValue(++progval);
 
-    QCoreApplication::processEvents(QEventLoop::AllEvents,100);
 
     foreach(QString lemode,modes)
     {
@@ -545,8 +550,6 @@ int PCx_Audit::duplicateAudit(unsigned int auditId, const QString &newName, QLis
             qCritical()<<q.lastError();
             die();
         }
-        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
-
 
         progress.setValue(++progval);
 
@@ -564,8 +567,6 @@ int PCx_Audit::duplicateAudit(unsigned int auditId, const QString &newName, QLis
             qCritical()<<q.lastError();
             die();
         }
-
-        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
 
         progress.setValue(++progval);
 
@@ -585,7 +586,6 @@ int PCx_Audit::duplicateAudit(unsigned int auditId, const QString &newName, QLis
         }
 
 
-        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
         progress.setValue(++progval);
 
         q.prepare(QString("update audit_%3_%1 set disponibles="
@@ -604,8 +604,6 @@ int PCx_Audit::duplicateAudit(unsigned int auditId, const QString &newName, QLis
         }
 
         progress.setValue(++progval);
-        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
-
     }
 
     progress.setValue(progress.maximum());

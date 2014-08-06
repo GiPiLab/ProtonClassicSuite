@@ -166,6 +166,8 @@ void FormEditAudit::on_randomDataButton_clicked()
         mode=PCx_Audit::RI;
 
     QHash<PCx_Audit::ORED,double> data;
+
+    QSqlDatabase::database().transaction();
     foreach(unsigned int leaf,leaves)
     {
         foreach(unsigned int year,years)
@@ -177,6 +179,7 @@ void FormEditAudit::on_randomDataButton_clicked()
             auditModel->setLeafValues(leaf,mode,year,data);
         }
     }
+    QSqlDatabase::database().commit();
 }
 
 void FormEditAudit::on_clearDataButton_clicked()
