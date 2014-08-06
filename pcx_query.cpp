@@ -6,17 +6,16 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSettings>
-#include "pcx_auditinfos.h"
 
 PCx_Query::PCx_Query():model(NULL),queryId(0)
 {
 }
 
-PCx_Query::PCx_Query(PCx_AuditModel *model):model(model),queryId(0)
+PCx_Query::PCx_Query(PCx_Audit *model):model(model),queryId(0)
 {
 }
 
-PCx_Query::PCx_Query(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
+PCx_Query::PCx_Query(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
                          unsigned int year1, unsigned int year2, const QString &name):model(model),typeId(typeId),ored(ored),dfrfdiri(dfrfdiri),
                         name(name),queryId(0)
 {
@@ -33,9 +32,8 @@ void PCx_Query::setYears(unsigned int year1, unsigned int year2)
         year1=year2;
         year2=yeartmp;
     }
-    PCx_AuditInfos infos(model->getAuditId());
-    unsigned int firstYear=infos.years.first();
-    unsigned int lastYear=infos.years.last();
+    unsigned int firstYear=model->getYears().first();
+    unsigned int lastYear=model->getYears().last();
     if(year1<firstYear)
     {
         year1=firstYear;

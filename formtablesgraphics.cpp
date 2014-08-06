@@ -47,7 +47,7 @@ void FormTablesGraphics::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
@@ -99,19 +99,19 @@ void FormTablesGraphics::updateTextBrowser()
 void FormTablesGraphics::getSelections()
 {
     if(ui->radioButtonDF->isChecked())
-        selectedMode=PCx_AuditModel::DF;
+        selectedMode=PCx_Audit::DF;
 
     else if(ui->radioButtonRF->isChecked())
-        selectedMode=PCx_AuditModel::RF;
+        selectedMode=PCx_Audit::RF;
 
     else if(ui->radioButtonDI->isChecked())
-        selectedMode=PCx_AuditModel::DI;
+        selectedMode=PCx_Audit::DI;
 
     else if(ui->radioButtonRI->isChecked())
-        selectedMode=PCx_AuditModel::RI;
+        selectedMode=PCx_Audit::RI;
 
     else if(ui->radioButtonGlobal->isChecked())
-        selectedMode=PCx_AuditModel::GLOBAL;
+        selectedMode=PCx_Audit::GLOBAL;
 
     else
     {
@@ -122,7 +122,7 @@ void FormTablesGraphics::getSelections()
     selectedGraphics.clear();
     selectedTabs.clear();
 
-    if(selectedMode!=PCx_AuditModel::GLOBAL)
+    if(selectedMode!=PCx_Audit::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
             selectedTabs.append(PCx_Tables::TABRECAP);
@@ -186,7 +186,7 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
         delete model;
         delete report;
     }
-    model=new PCx_AuditModel(selectedAuditId,this);
+    model=new PCx_Audit(selectedAuditId,this);
     report=new PCx_Report(model);
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
@@ -210,7 +210,7 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
-        selectedMode=PCx_AuditModel::GLOBAL;
+        selectedMode=PCx_Audit::GLOBAL;
         updateTextBrowser();
 
         ui->checkBoxPoidsRelatif->setEnabled(false);

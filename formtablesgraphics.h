@@ -2,7 +2,7 @@
 #define FORMTABLESGRAPHICS_H
 
 #include <QWidget>
-#include "pcx_auditmodel.h"
+#include "pcx_audit.h"
 #include "pcx_report.h"
 
 namespace Ui {
@@ -58,12 +58,12 @@ private:
     void getSelections();
 
     QTextDocument *doc;
-    PCx_AuditModel *model;
+    PCx_Audit *model;
     PCx_Report *report;
 
     QList<PCx_Tables::TABS> selectedTabs;
     QList<PCx_Graphics::GRAPHICS> selectedGraphics;
-    PCx_AuditModel::DFRFDIRI selectedMode;
+    PCx_Audit::DFRFDIRI selectedMode;
 
     bool ready;
 };

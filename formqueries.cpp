@@ -8,7 +8,6 @@
 #include "pcx_queryrank.h"
 #include "pcx_queryminmax.h"
 #include "utils.h"
-#include "pcx_auditinfos.h"
 
 
 FormQueries::FormQueries(QWidget *parent) :
@@ -22,15 +21,15 @@ FormQueries::FormQueries(QWidget *parent) :
 
     onColorChanged();
 
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
-    ui->comboBoxORED->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)+"s",PCx_AuditModel::DISPONIBLES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::OUVERTS)+"s",PCx_Audit::OUVERTS);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::REALISES)+"s",PCx_Audit::REALISES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ENGAGES)+"s",PCx_Audit::ENGAGES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::DISPONIBLES)+"s",PCx_Audit::DISPONIBLES);
 
-    ui->comboBoxDFRFDIRI->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DF).toLower(),PCx_AuditModel::DF);
-    ui->comboBoxDFRFDIRI->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RF).toLower(),PCx_AuditModel::RF);
-    ui->comboBoxDFRFDIRI->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DI).toLower(),PCx_AuditModel::DI);
-    ui->comboBoxDFRFDIRI->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RI).toLower(),PCx_AuditModel::RI);
+    ui->comboBoxDFRFDIRI->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::DF).toLower(),PCx_Audit::DF);
+    ui->comboBoxDFRFDIRI->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::RF).toLower(),PCx_Audit::RF);
+    ui->comboBoxDFRFDIRI->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::DI).toLower(),PCx_Audit::DI);
+    ui->comboBoxDFRFDIRI->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::RI).toLower(),PCx_Audit::RI);
 
     ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::INCREASE),PCx_QueryVariation::INCREASE);
     ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::DECREASE),PCx_QueryVariation::DECREASE);
@@ -46,28 +45,28 @@ FormQueries::FormQueries(QWidget *parent) :
     ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::GREATEROREQUAL),PCx_QueryVariation::GREATEROREQUAL);
     ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::GREATERTHAN),PCx_QueryVariation::GREATERTHAN);
 
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
-    ui->comboBoxORED_2->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)+"s",PCx_AuditModel::DISPONIBLES);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::OUVERTS)+"s",PCx_Audit::OUVERTS);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::REALISES)+"s",PCx_Audit::REALISES);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ENGAGES)+"s",PCx_Audit::ENGAGES);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::DISPONIBLES)+"s",PCx_Audit::DISPONIBLES);
 
-    ui->comboBoxDFRFDIRI_2->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DF).toLower(),PCx_AuditModel::DF);
-    ui->comboBoxDFRFDIRI_2->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RF).toLower(),PCx_AuditModel::RF);
-    ui->comboBoxDFRFDIRI_2->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DI).toLower(),PCx_AuditModel::DI);
-    ui->comboBoxDFRFDIRI_2->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RI).toLower(),PCx_AuditModel::RI);
+    ui->comboBoxDFRFDIRI_2->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::DF).toLower(),PCx_Audit::DF);
+    ui->comboBoxDFRFDIRI_2->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::RF).toLower(),PCx_Audit::RF);
+    ui->comboBoxDFRFDIRI_2->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::DI).toLower(),PCx_Audit::DI);
+    ui->comboBoxDFRFDIRI_2->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::RI).toLower(),PCx_Audit::RI);
 
     ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATER),PCx_QueryRank::GREATER);
     ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::SMALLER),PCx_QueryRank::SMALLER);
 
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::OUVERTS)+"s",PCx_AuditModel::OUVERTS);
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::REALISES)+"s",PCx_AuditModel::REALISES);
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::ENGAGES)+"s",PCx_AuditModel::ENGAGES);
-    ui->comboBoxORED_3->addItem(PCx_AuditModel::OREDtoCompleteString(PCx_AuditModel::DISPONIBLES)+"s",PCx_AuditModel::DISPONIBLES);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::OUVERTS)+"s",PCx_Audit::OUVERTS);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::REALISES)+"s",PCx_Audit::REALISES);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ENGAGES)+"s",PCx_Audit::ENGAGES);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::DISPONIBLES)+"s",PCx_Audit::DISPONIBLES);
 
-    ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DF).toLower(),PCx_AuditModel::DF);
-    ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RF).toLower(),PCx_AuditModel::RF);
-    ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::DI).toLower(),PCx_AuditModel::DI);
-    ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditModel::modeToCompleteString(PCx_AuditModel::RI).toLower(),PCx_AuditModel::RI);
+    ui->comboBoxDFRFDIRI_3->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::DF).toLower(),PCx_Audit::DF);
+    ui->comboBoxDFRFDIRI_3->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::RF).toLower(),PCx_Audit::RF);
+    ui->comboBoxDFRFDIRI_3->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::DI).toLower(),PCx_Audit::DI);
+    ui->comboBoxDFRFDIRI_3->addItem(PCx_Audit::modeToCompleteString(PCx_Audit::RI).toLower(),PCx_Audit::RI);
 
     ui->doubleSpinBox->setMaximum(10*MAX_NUM);
     ui->doubleSpinBox_2->setMaximum(10*MAX_NUM);
@@ -108,7 +107,7 @@ void FormQueries::updateListOfAudits()
 {
     ui->comboBoxListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
@@ -140,7 +139,7 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     if(queriesModel!=NULL)
         delete queriesModel;
 
-    model=new PCx_AuditModel(selectedAuditId,this,true,false);
+    model=new PCx_Audit(selectedAuditId);
     report=new PCx_Report(model);
     queriesModel=new PCx_QueriesModel(selectedAuditId,this);
 
@@ -169,36 +168,35 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     ui->comboBoxYear1->clear();
     ui->comboBoxYear2->clear();
 
-    PCx_AuditInfos infos(model->getAuditId());
-
-    ui->comboBoxYear1->addItems(infos.yearsStringList);
-    ui->comboBoxYear2->addItems(infos.yearsStringList);
+    QStringList yearsStringList=model->getYearsStringList();
+    ui->comboBoxYear1->addItems(yearsStringList);
+    ui->comboBoxYear2->addItems(yearsStringList);
     ui->comboBoxYear1->setCurrentIndex(0);
     ui->comboBoxYear2->setCurrentIndex(ui->comboBoxYear2->count()-1);
 
     ui->comboBoxYear1_2->clear();
     ui->comboBoxYear2_2->clear();
-    ui->comboBoxYear1_2->addItems(infos.yearsStringList);
-    ui->comboBoxYear2_2->addItems(infos.yearsStringList);
+    ui->comboBoxYear1_2->addItems(yearsStringList);
+    ui->comboBoxYear2_2->addItems(yearsStringList);
     ui->comboBoxYear1_2->setCurrentIndex(0);
     ui->comboBoxYear2_2->setCurrentIndex(ui->comboBoxYear2_2->count()-1);
 
     ui->comboBoxYear1_3->clear();
     ui->comboBoxYear2_3->clear();
-    ui->comboBoxYear1_3->addItems(infos.yearsStringList);
-    ui->comboBoxYear2_3->addItems(infos.yearsStringList);
+    ui->comboBoxYear1_3->addItems(yearsStringList);
+    ui->comboBoxYear2_3->addItems(yearsStringList);
     ui->comboBoxYear1_3->setCurrentIndex(0);
     ui->comboBoxYear2_3->setCurrentIndex(ui->comboBoxYear2_3->count()-1);
     doc->clear();
 }
 
 
-bool FormQueries::getParamsReqRank(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
+bool FormQueries::getParamsReqRank(unsigned int &typeId, PCx_Audit::ORED &ored, PCx_Audit::DFRFDIRI &dfrfdiri,
                                    unsigned int &number, PCx_QueryRank::GREATERSMALLER &grSm, unsigned int &year1, unsigned int &year2)
 {
     typeId=ui->comboBoxTypes_2->currentData().toUInt();
-    ored=(PCx_AuditModel::ORED)ui->comboBoxORED_2->currentData().toUInt();
-    dfrfdiri=(PCx_AuditModel::DFRFDIRI)ui->comboBoxDFRFDIRI_2->currentData().toUInt();
+    ored=(PCx_Audit::ORED)ui->comboBoxORED_2->currentData().toUInt();
+    dfrfdiri=(PCx_Audit::DFRFDIRI)ui->comboBoxDFRFDIRI_2->currentData().toUInt();
     grSm=(PCx_QueryRank::GREATERSMALLER)ui->comboBoxBiggerSmaller->currentData().toUInt();
     number=ui->spinBoxNumRank->value();
     year1=ui->comboBoxYear1_2->currentText().toUInt();
@@ -206,11 +204,11 @@ bool FormQueries::getParamsReqRank(unsigned int &typeId, PCx_AuditModel::ORED &o
     return true;
 }
 
-bool FormQueries::getParamsReqMinMax(unsigned int &typeId, PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri, qint64 &val1, qint64 &val2, unsigned int &year1, unsigned int &year2)
+bool FormQueries::getParamsReqMinMax(unsigned int &typeId, PCx_Audit::ORED &ored, PCx_Audit::DFRFDIRI &dfrfdiri, qint64 &val1, qint64 &val2, unsigned int &year1, unsigned int &year2)
 {
     typeId=ui->comboBoxTypes_3->currentData().toUInt();
-    ored=(PCx_AuditModel::ORED)ui->comboBoxORED_3->currentData().toUInt();
-    dfrfdiri=(PCx_AuditModel::DFRFDIRI)ui->comboBoxDFRFDIRI_3->currentData().toUInt();
+    ored=(PCx_Audit::ORED)ui->comboBoxORED_3->currentData().toUInt();
+    dfrfdiri=(PCx_Audit::DFRFDIRI)ui->comboBoxDFRFDIRI_3->currentData().toUInt();
     val1=(qint64)ui->doubleSpinBox_2->value()*FIXEDPOINTCOEFF;
     val2=(qint64)ui->doubleSpinBox_3->value()*FIXEDPOINTCOEFF;
     year1=ui->comboBoxYear1_3->currentText().toUInt();
@@ -218,13 +216,13 @@ bool FormQueries::getParamsReqMinMax(unsigned int &typeId, PCx_AuditModel::ORED 
     return true;
 }
 
-bool FormQueries::getParamsReqVariation(unsigned int &typeId,PCx_AuditModel::ORED &ored, PCx_AuditModel::DFRFDIRI &dfrfdiri,
+bool FormQueries::getParamsReqVariation(unsigned int &typeId,PCx_Audit::ORED &ored, PCx_Audit::DFRFDIRI &dfrfdiri,
                    PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
                    PCx_QueryVariation::OPERATORS &oper,qint64 &val, unsigned int &year1, unsigned int &year2)
 {
     typeId=ui->comboBoxTypes->currentData().toUInt();
-    ored=(PCx_AuditModel::ORED)ui->comboBoxORED->currentData().toUInt();
-    dfrfdiri=(PCx_AuditModel::DFRFDIRI)ui->comboBoxDFRFDIRI->currentData().toUInt();
+    ored=(PCx_Audit::ORED)ui->comboBoxORED->currentData().toUInt();
+    dfrfdiri=(PCx_Audit::DFRFDIRI)ui->comboBoxDFRFDIRI->currentData().toUInt();
     increase=(PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toUInt();
     percent=(PCx_QueryVariation::PERCENTORPOINTS)ui->comboBoxPercentEuro->currentData().toUInt();
     oper=(PCx_QueryVariation::OPERATORS)ui->comboBoxOperator->currentData().toUInt();
@@ -243,8 +241,8 @@ bool FormQueries::getParamsReqVariation(unsigned int &typeId,PCx_AuditModel::ORE
 void FormQueries::on_pushButtonExecReqVariation_clicked()
 {
     unsigned int typeId;
-    PCx_AuditModel::ORED ored;
-    PCx_AuditModel::DFRFDIRI dfrfdiri;
+    PCx_Audit::ORED ored;
+    PCx_Audit::DFRFDIRI dfrfdiri;
     PCx_QueryVariation::PERCENTORPOINTS pop;
     PCx_QueryVariation::INCREASEDECREASE incdec;
     PCx_QueryVariation::OPERATORS oper;
@@ -291,8 +289,8 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
     if(ok)
     {
         unsigned int typeId;
-        PCx_AuditModel::ORED ored;
-        PCx_AuditModel::DFRFDIRI dfrfdiri;
+        PCx_Audit::ORED ored;
+        PCx_Audit::DFRFDIRI dfrfdiri;
         PCx_QueryVariation::PERCENTORPOINTS pop;
         PCx_QueryVariation::INCREASEDECREASE incdec;
         PCx_QueryVariation::OPERATORS oper;
@@ -434,8 +432,8 @@ void FormQueries::on_pushButtonSave_clicked()
 void FormQueries::on_pushButtonExecReqRank_clicked()
 {
     unsigned int typeId,number,year1,year2;
-    PCx_AuditModel::ORED ored;
-    PCx_AuditModel::DFRFDIRI dfrfdiri;
+    PCx_Audit::ORED ored;
+    PCx_Audit::DFRFDIRI dfrfdiri;
     PCx_QueryRank::GREATERSMALLER grSm;
 
     if(getParamsReqRank(typeId,ored,dfrfdiri,number,grSm,year1,year2)==false)
@@ -465,8 +463,8 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
     if(ok)
     {
         unsigned int typeId,number,year1,year2;
-        PCx_AuditModel::ORED ored;
-        PCx_AuditModel::DFRFDIRI dfrfdiri;
+        PCx_Audit::ORED ored;
+        PCx_Audit::DFRFDIRI dfrfdiri;
         PCx_QueryRank::GREATERSMALLER grSm;
 
         if(getParamsReqRank(typeId,ored,dfrfdiri,number,grSm,year1,year2)==false)
@@ -494,8 +492,8 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
 void FormQueries::on_pushButtonExecReq3_clicked()
 {
     unsigned int typeId,year1,year2;
-    PCx_AuditModel::ORED ored;
-    PCx_AuditModel::DFRFDIRI dfrfdiri;
+    PCx_Audit::ORED ored;
+    PCx_Audit::DFRFDIRI dfrfdiri;
     qint64 val1,val2;
 
 
@@ -527,8 +525,8 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
     {
         unsigned int typeId,year1,year2;
         qint64 val1,val2;
-        PCx_AuditModel::ORED ored;
-        PCx_AuditModel::DFRFDIRI dfrfdiri;
+        PCx_Audit::ORED ored;
+        PCx_Audit::DFRFDIRI dfrfdiri;
 
         if(getParamsReqMinMax(typeId,ored,dfrfdiri,val1,val2,year1,year2)==false)
         {

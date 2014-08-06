@@ -1,6 +1,5 @@
 #include "dialogduplicateaudit.h"
 #include "ui_dialogduplicateaudit.h"
-#include "pcx_auditinfos.h"
 #include <QMessageBox>
 
 DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *parent) :
@@ -8,13 +7,13 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     ui(new Ui::DialogDuplicateAudit),oldAuditId(oldAuditId)
 {
     ui->setupUi(this);
-    PCx_AuditInfos infos(oldAuditId);
-    ui->labelOldName->setText(infos.name);
-    ui->labelOldDate->setText(infos.creationTimeLocal.toString(Qt::SystemLocaleLongDate));
-    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.attachedTreeName).arg(PCx_TreeModel::getNumberOfNodes(infos.attachedTreeId)));
-    ui->labelOldYears->setText(infos.yearsString);
-    ui->spinBoxYear1->setValue(infos.years.first());
-    ui->spinBoxYear2->setValue(infos.years.last());
+    PCx_Audit infos(oldAuditId,false);
+    ui->labelOldName->setText(infos.getAuditName());
+    ui->labelOldDate->setText(infos.getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
+    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.getAttachedTreeName()).arg(PCx_TreeModel::getNumberOfNodes(infos.getAttachedTreeId())));
+    ui->labelOldYears->setText(infos.getYearsString());
+    ui->spinBoxYear1->setValue(infos.getYears().first());
+    ui->spinBoxYear2->setValue(infos.getYears().last());
     QDate date=QDate::currentDate();
     ui->spinBoxYear1->setMaximum(date.year());
     ui->spinBoxYear2->setMaximum(date.year()+1);
@@ -34,7 +33,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
         return;
     }
 
-    if(PCx_AuditModel::auditNameExists(newName))
+    if(PCx_Audit::auditNameExists(newName))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom"));
         return;
@@ -54,7 +53,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
     for(unsigned int i=year1;i<=year2;i++)
         years.append(i);
 
-    int res=PCx_AuditModel::duplicateAudit(oldAuditId,newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
+    int res=PCx_Audit::duplicateAudit(oldAuditId,newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
                           ui->checkBoxDI->isChecked(),ui->checkBoxRI->isChecked());
 
     if(res>0)

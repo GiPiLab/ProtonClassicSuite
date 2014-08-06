@@ -1,9 +1,8 @@
 #include "pcx_report.h"
 #include "utils.h"
 #include "pcx_query.h"
-#include "pcx_auditinfos.h"
 
-PCx_Report::PCx_Report(PCx_AuditModel *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
+PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
     Q_ASSERT(model!=NULL);
 }
@@ -24,14 +23,13 @@ QString PCx_Report::getCSS()
 
 QString PCx_Report::generateHTMLHeader(unsigned int auditId)
 {
-    PCx_AuditInfos infos(auditId);
     return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>\n"
-                   "<h3>Audit %1</h3>\n").arg(infos.name.toHtmlEscaped()).arg(getCSS());
+                   "<h3>Audit %1</h3>\n").arg(PCx_Audit::getAuditName(auditId).toHtmlEscaped()).arg(getCSS());
 
 }
 
 QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
-                                              unsigned int selectedNode, PCx_AuditModel::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
+                                              unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
                                               const QString &relativeImagePath,QProgressDialog *progress) const
 {
     Q_ASSERT(selectedNode>0);

@@ -1,7 +1,7 @@
 #ifndef FORMREPORTS_H
 #define FORMREPORTS_H
 
-#include "pcx_auditmodel.h"
+#include "pcx_audit.h"
 #include "pcx_report.h"
 #include "QCustomPlot/qcustomplot.h"
 #include <QWidget>
@@ -54,7 +54,7 @@ private slots:
 private:
     Ui::FormReports *ui;
     void updateListOfAudits();
-    PCx_AuditModel *model;
+    PCx_Audit *model;
     PCx_Report *report;
     void populateLists();
     QCustomPlot *plot;

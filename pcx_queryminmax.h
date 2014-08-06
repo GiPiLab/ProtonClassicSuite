@@ -11,9 +11,9 @@ public:
 
 
     PCx_QueryMinMax();
-    PCx_QueryMinMax(PCx_AuditModel *model,unsigned int queryId);
+    PCx_QueryMinMax(PCx_Audit *model,unsigned int queryId);
 
-    PCx_QueryMinMax(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
+    PCx_QueryMinMax(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
                        qint64 val1, qint64 val2, unsigned int year1,unsigned int year2, const QString &name="");
 
     QPair<qint64,qint64> getVals()const{return QPair<qint64,qint64>(val1,val2);}

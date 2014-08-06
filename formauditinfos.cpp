@@ -7,7 +7,7 @@ FormAuditInfos::FormAuditInfos(unsigned int auditId,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormAuditInfos),auditId(auditId)
 {
-    infos=new PCx_AuditInfos(auditId);
+    infos=new PCx_Audit(auditId);
     ui->setupUi(this);
     QString out=PCx_Report::generateHTMLHeader(auditId);
 

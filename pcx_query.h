@@ -2,7 +2,7 @@
 #define PCX_QUERY_H
 
 #include <climits>
-#include "pcx_auditmodel.h"
+#include "pcx_audit.h"
 
 class PCx_Query
 {
@@ -18,24 +18,24 @@ public:
     static const unsigned int ALLTYPES=UINT_MAX;
 
     PCx_Query();
-    PCx_Query(PCx_AuditModel *model);
-    PCx_Query(PCx_AuditModel *model,unsigned int typeId,PCx_AuditModel::ORED ored,PCx_AuditModel::DFRFDIRI dfrfdiri,
+    PCx_Query(PCx_Audit *model);
+    PCx_Query(PCx_Audit *model,unsigned int typeId,PCx_Audit::ORED ored,PCx_Audit::DFRFDIRI dfrfdiri,
                                       unsigned int year1, unsigned int year2,const QString &name="");
 
     QPair<unsigned int,unsigned int> getYears() const {return QPair<unsigned int, unsigned int>(year1,year2);}
     virtual void setYears(unsigned int year1, unsigned int year2);
 
-    void setORED(PCx_AuditModel::ORED ored){this->ored=ored;}
-    PCx_AuditModel::ORED getORED() const{return ored;}
+    void setORED(PCx_Audit::ORED ored){this->ored=ored;}
+    PCx_Audit::ORED getORED() const{return ored;}
 
-    void setDFRFDIRI(PCx_AuditModel::DFRFDIRI dfrfdiri){this->dfrfdiri=dfrfdiri;}
-    PCx_AuditModel::DFRFDIRI getDFRFDIRI() const{return dfrfdiri;}
+    void setDFRFDIRI(PCx_Audit::DFRFDIRI dfrfdiri){this->dfrfdiri=dfrfdiri;}
+    PCx_Audit::DFRFDIRI getDFRFDIRI() const{return dfrfdiri;}
 
     unsigned int getTypeId() const{return typeId;}
     void setTypeId(unsigned int typeId){this->typeId=typeId;}
 
-    void setModel(PCx_AuditModel *model){this->model=model;}
-    const PCx_AuditModel *getModel() const{return model;}
+    void setModel(PCx_Audit *model){this->model=model;}
+    const PCx_Audit *getModel() const{return model;}
 
     const QString &getName() const{return name;}
     void setName(const QString &name){this->name=name;}
@@ -57,11 +57,11 @@ public:
 
 
 protected:
-    PCx_AuditModel *model;
+    PCx_Audit *model;
     //If typeId==ALLTYPES, do not filter nodes
     unsigned int typeId;
-    PCx_AuditModel::ORED ored;
-    PCx_AuditModel::DFRFDIRI dfrfdiri;
+    PCx_Audit::ORED ored;
+    PCx_Audit::DFRFDIRI dfrfdiri;
     unsigned int year1,year2;
     QString name;
     unsigned int queryId;

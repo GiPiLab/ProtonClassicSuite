@@ -2,7 +2,7 @@
 #define FORMAUDITINFOS_H
 
 #include <QWidget>
-#include "pcx_auditinfos.h"
+#include "pcx_audit.h"
 
 namespace Ui {
 class FormAuditInfos;
@@ -24,7 +24,7 @@ private:
 
     Ui::FormAuditInfos *ui;
     unsigned int auditId;
-    PCx_AuditInfos *infos;
+    PCx_Audit *infos;
 };
 
 #endif // FORMAUDITINFOS_H

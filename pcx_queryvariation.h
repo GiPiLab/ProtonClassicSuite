@@ -1,7 +1,7 @@
 #ifndef PCX_QUERYVARIATION_H
 #define PCX_QUERYVARIATION_H
 
-#include "pcx_auditmodel.h"
+#include "pcx_audit.h"
 #include "pcx_query.h"
 
 class PCx_QueryVariation : public PCx_Query
@@ -36,9 +36,9 @@ public:
 
     PCx_QueryVariation();
 
-    PCx_QueryVariation(PCx_AuditModel *model,unsigned int queryId);
+    PCx_QueryVariation(PCx_Audit *model,unsigned int queryId);
 
-    PCx_QueryVariation(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri,
+    PCx_QueryVariation(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
                        INCREASEDECREASE incDec, PERCENTORPOINTS percentOrPoints, OPERATORS op, qint64 val, unsigned int year1,
                        unsigned int year2, const QString &name="");
 

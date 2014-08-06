@@ -1,7 +1,7 @@
 #ifndef FORMEDITAUDIT_H
 #define FORMEDITAUDIT_H
 
-#include "pcx_auditmodel.h"
+#include "pcx_editableauditmodel.h"
 #include "auditdatadelegate.h"
 
 namespace Ui {
@@ -38,7 +38,7 @@ private slots:
 private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();
-    PCx_AuditModel *auditModel;
+    PCx_EditableAuditModel *auditModel;
     //Perhaps only would be sufficient ?
     auditDataDelegate *delegateDF,*delegateRF,*delegateDI,*delegateRI;
 };

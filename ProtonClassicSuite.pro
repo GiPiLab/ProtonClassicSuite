@@ -18,8 +18,6 @@ SOURCES += main.cpp\
 	mainwindow.cpp \
     pcx_treemodel.cpp \
     pcx_typemodel.cpp \
-    pcx_auditmodel.cpp \
-    pcx_auditinfos.cpp \
     auditdatadelegate.cpp \
     utils.cpp \
     QCustomPlot/qcustomplot.cpp \
@@ -40,13 +38,13 @@ SOURCES += main.cpp\
     pcx_queryrank.cpp \
     pcx_queryminmax.cpp \
     dialogduplicateaudit.cpp \
-    formauditinfos.cpp
+    formauditinfos.cpp \
+    pcx_editableauditmodel.cpp \
+    pcx_audit.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
     pcx_typemodel.h \
-    pcx_auditmodel.h \
-    pcx_auditinfos.h \
     auditdatadelegate.h \
     utils.h \
     QCustomPlot/qcustomplot.h \
@@ -67,7 +65,9 @@ HEADERS  += mainwindow.h \
     pcx_queryrank.h \
     pcx_queryminmax.h \
     dialogduplicateaudit.h \
-    formauditinfos.h
+    formauditinfos.h \
+    pcx_editableauditmodel.h \
+    pcx_audit.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \

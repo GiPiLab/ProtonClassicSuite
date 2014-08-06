@@ -4,13 +4,13 @@
 #include <QSqlError>
 #include <QDebug>
 
-PCx_Tables::PCx_Tables(PCx_AuditModel *model):model(model)
+PCx_Tables::PCx_Tables(PCx_Audit *model):model(model)
 {
     Q_ASSERT(model!=NULL);
 }
 
 
-QString PCx_Tables::getT1(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT1(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -61,7 +61,7 @@ QString PCx_Tables::getT1(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT2(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -156,7 +156,7 @@ QString PCx_Tables::getT2(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT2bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
     QString tableName=QString("audit_%1_%2").arg(model->modeToTableString(mode)).arg(model->getAuditId());
@@ -257,7 +257,7 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
     return output;
 }
 
-QString PCx_Tables::getT3(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT3(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -321,7 +321,7 @@ QString PCx_Tables::getT3(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT3bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT3bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
     QString tableName=QString("audit_%1_%2").arg(model->modeToTableString(mode)).arg(model->getAuditId());
@@ -386,7 +386,7 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_AuditModel::DFRFDIRI mode) c
     return output;
 }
 
-QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT4(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -451,7 +451,7 @@ QString PCx_Tables::getT4(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
 }
 
 
-QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT5(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -580,7 +580,7 @@ QString PCx_Tables::getT5(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT6(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT6(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -662,7 +662,7 @@ QString PCx_Tables::getT6(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT7(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT7(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -715,7 +715,7 @@ QString PCx_Tables::getT7(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT8(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT8(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -767,7 +767,7 @@ QString PCx_Tables::getT8(unsigned int node, PCx_AuditModel::DFRFDIRI mode) cons
     return output;
 }
 
-QString PCx_Tables::getT9(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getT9(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
 
@@ -1026,7 +1026,7 @@ QString PCx_Tables::getT12(unsigned int node) const
     return output;
 }
 
-QString PCx_Tables::getTabRecap(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getTabRecap(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT1(node,mode)+"<br>\n"+getT4(node,mode)+"<br>\n"+getT8(node,mode)+"<br>\n";
     return out;
@@ -1061,28 +1061,28 @@ QString PCx_Tables::getCSS()
     "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
 }
 
-QString PCx_Tables::getTabEvolution(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getTabEvolution(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT2bis(node,mode)+"<br>\n"+getT3bis(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getTabEvolutionCumul(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getTabEvolutionCumul(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT2(node,mode)+"<br>\n"+getT3(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getTabBase100(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getTabBase100(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT5(node,mode)+"<br>\n"+getT6(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getTabJoursAct(unsigned int node, PCx_AuditModel::DFRFDIRI mode) const
+QString PCx_Tables::getTabJoursAct(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT7(node,mode)+"<br>\n"+getT9(node,mode)+"<br>\n";
     return out;

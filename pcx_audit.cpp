@@ -1,5 +1,4 @@
-#include "pcx_auditmodel.h"
-#include "pcx_auditinfos.h"
+#include "pcx_audit.h"
 #include "pcx_query.h"
 #include "utils.h"
 #include <QMessageBox>
@@ -10,50 +9,64 @@
 #include <QProgressDialog>
 #include <QCoreApplication>
 
-PCx_AuditModel::PCx_AuditModel(unsigned int auditId, QObject *parent, bool readOnly, bool loadTreeModel) :
-    QObject(parent),auditId(auditId),loadTreeModel(loadTreeModel)
+PCx_Audit::PCx_Audit(unsigned int auditId, bool loadTreeModel) :
+    auditId(auditId),loadTreeModel(loadTreeModel)
 {
     attachedTree=NULL;
-    modelDF=NULL;
-    modelDI=NULL;
-    modelRI=NULL;
-    modelRF=NULL;
 
-
-
-    if(loadFromDb(auditId,readOnly)==false)
+    Q_ASSERT(auditId>0);
+    this->auditId=auditId;
+    QSqlQuery q(QString("select * from index_audits where id='%1'").arg(auditId));
+    if(q.next())
     {
-        qCritical()<<"Unable to load audit"<<auditId;
+        auditName=q.value("nom").toString();
+        attachedTreeId=q.value("id_arbre").toUInt();
+        attachedTreeName=PCx_TreeModel::idTreeToName(attachedTreeId);
+        yearsString=q.value("annees").toString();
+        QStringList yearsSplitted=yearsString.split(',');
+
+        QSet<unsigned int> yearsTemp;
+        foreach (QString uneAnnee, yearsSplitted) {
+            yearsTemp.insert(uneAnnee.toUInt());
+        }
+        years=yearsTemp.toList();
+        qSort(years);
+
+        foreach(unsigned int annee,years)
+        {
+            yearsStringList.append(QString::number(annee));
+        }
+
+        yearsString=QString("%1 - %2").arg(years.first()).arg(years.last());
+
+        finished=q.value("termine").toBool();
+        if(finished==true)
+        {
+            finishedString=QObject::tr("oui");
+        }
+        else
+        {
+            finishedString=QObject::tr("non");
+        }
+        creationTimeUTC=QDateTime::fromString(q.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
+        creationTimeUTC.setTimeSpec(Qt::UTC);
+        creationTimeLocal=creationTimeUTC.toLocalTime();
+    }
+    else
+    {
+        qCritical()<<"Non existant audit !";
         die();
     }
+    if(loadTreeModel)
+        attachedTree=new PCx_TreeModel(attachedTreeId);
 }
 
-PCx_AuditModel::~PCx_AuditModel()
+PCx_Audit::~PCx_Audit()
 {
-    if(modelDF!=NULL)
-    {
-        modelDF->clear();
-        delete modelDF;
-    }
-    if(modelRF!=NULL)
-    {
-        modelRF->clear();
-        delete modelRF;
-    }
-    if(modelDI!=NULL)
-    {
-        modelDI->clear();
-        delete modelDI;
-    }
-    if(modelRI!=NULL)
-    {
-        modelRI->clear();
-        delete modelRI;
-    }
     delete attachedTree;
 }
 
-unsigned int PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId)
+unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId)
 {
     Q_ASSERT(!years.isEmpty() && !name.isEmpty() && attachedTreeId>0);
 
@@ -222,7 +235,7 @@ unsigned int PCx_AuditModel::addNewAudit(const QString &name, QList<unsigned int
     return uLastId;
 }
 
-bool PCx_AuditModel::deleteAudit(unsigned int auditId)
+bool PCx_Audit::deleteAudit(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
     QSqlQuery q(QString("select count(*) from index_audits where id='%1'").arg(auditId));
@@ -291,55 +304,43 @@ bool PCx_AuditModel::deleteAudit(unsigned int auditId)
     return true;
 }
 
+QString PCx_Audit::getAuditName(unsigned int auditId)
+{
+    QSqlQuery q(QString("select * from index_audits where id=%1").arg(auditId));
+    if(!q.next())
+    {
+        qCritical()<<"Invalid audit ID !";
+        return QString();
+    }
+    return q.value("nom").toString();
+}
+
+unsigned int PCx_Audit::getAttachedTreeId(unsigned int auditId)
+{
+    QSqlQuery q(QString("select * from index_audits where id=%1").arg(auditId));
+    if(!q.next())
+    {
+        qCritical()<<"Invalid audit ID !";
+        return 0;
+    }
+    return q.value("id_arbre").toUInt();
+}
 
 
-bool PCx_AuditModel::finishAudit()
+bool PCx_Audit::finishAudit()
 {
     finished=true;
-    return PCx_AuditModel::finishAudit(auditId);
+    return PCx_Audit::finishAudit(auditId);
 }
 
-bool PCx_AuditModel::unFinishAudit()
+bool PCx_Audit::unFinishAudit()
 {
     finished=false;
-    return PCx_AuditModel::unFinishAudit(auditId);
+    return PCx_Audit::unFinishAudit(auditId);
 }
 
-QSqlTableModel *PCx_AuditModel::getTableModel(const QString &mode) const
-{
-    if(0==mode.compare("DF",Qt::CaseInsensitive))
-    {
-        return modelDF;
-    }
-    if(0==mode.compare("RF",Qt::CaseInsensitive))
-    {
-        return modelRF;
-    }
-    if(0==mode.compare("DI",Qt::CaseInsensitive))
-    {
-        return modelDI;
-    }
-    if(0==mode.compare("RI",Qt::CaseInsensitive))
-    {
-        return modelRI;
-    }
-    return NULL;
-}
 
-QSqlTableModel *PCx_AuditModel::getTableModel(DFRFDIRI mode) const
-{
-    switch(mode)
-    {
-    case DF:return modelDF;
-    case RF:return modelRF;
-    case DI:return modelDI;
-    case RI:return modelRI;
-    case GLOBAL:return NULL;
-    }
-    return NULL;
-}
-
-bool PCx_AuditModel::setLeafValues(unsigned int leafId, PCx_AuditModel::DFRFDIRI mode, unsigned int year, QHash<ORED,double> vals)
+bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, unsigned int year, QHash<ORED,double> vals)
 {
     Q_ASSERT(!vals.isEmpty());
 
@@ -437,15 +438,10 @@ bool PCx_AuditModel::setLeafValues(unsigned int leafId, PCx_AuditModel::DFRFDIRI
         qCritical()<<"ERROR DURING PROPAGATING VALUES TO ROOTS, CANCELLING";
         die();
     }
-
-    QSqlTableModel *tblModel=getTableModel(mode);
-    if(tblModel!=NULL)
-        tblModel->select();
-
     return true;
 }
 
-qint64 PCx_AuditModel::getNodeValue(unsigned int nodeId, PCx_AuditModel::DFRFDIRI mode, PCx_AuditModel::ORED ored, unsigned int year) const
+qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year) const
 {
     QSqlQuery q;
     q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored)).arg(modeToTableString(mode)).arg(auditId));
@@ -465,7 +461,7 @@ qint64 PCx_AuditModel::getNodeValue(unsigned int nodeId, PCx_AuditModel::DFRFDIR
     return q.value(OREDtoTableString(ored)).toLongLong();
 }
 
-bool PCx_AuditModel::clearAllData(PCx_AuditModel::DFRFDIRI mode)
+bool PCx_Audit::clearAllData(PCx_Audit::DFRFDIRI mode)
 {
     QSqlQuery q(QString("update audit_%1_%2 set ouverts=NULL,realises=NULL,engages=NULL,disponibles=NULL").arg(modeToTableString(mode)).arg(auditId));
     q.exec();
@@ -474,19 +470,15 @@ bool PCx_AuditModel::clearAllData(PCx_AuditModel::DFRFDIRI mode)
         qCritical()<<q.lastError();
         die();
     }
-    QSqlTableModel *tblModel=getTableModel(mode);
-    if(tblModel!=NULL)
-        tblModel->select();
-
     return true;
 }
 
-int PCx_AuditModel::duplicateAudit(const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI) const
+int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI) const
 {
-    return PCx_AuditModel::duplicateAudit(auditId,newName,years,copyDF,copyRF,copyDI,copyRI);
+    return PCx_Audit::duplicateAudit(auditId,newName,years,copyDF,copyRF,copyDI,copyRI);
 }
 
-int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI)
+int PCx_Audit::duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI)
 {
     Q_ASSERT(!newName.isEmpty());
     if(auditNameExists(newName))
@@ -507,7 +499,7 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
         modes.append(modeToTableString(RI));
 
 
-    QProgressDialog progress(tr("Données en cours de recopie..."),tr("Annuler"),0,modes.size()*4+2);
+    QProgressDialog progress(QObject::tr("Données en cours de recopie..."),QObject::tr("Annuler"),0,modes.size()*4+2);
     progress.setMinimumDuration(600);
     progress.setCancelButton(0);
 
@@ -518,8 +510,7 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
     progress.setValue(0);
 
     //A transaction is used in addNewAudit
-    PCx_AuditInfos infos(auditId);
-    unsigned int newAuditId=PCx_AuditModel::addNewAudit(newName,years,infos.attachedTreeId);
+    unsigned int newAuditId=PCx_Audit::addNewAudit(newName,years,PCx_Audit::getAttachedTreeId(auditId));
     if(newAuditId==0)
     {
         qCritical()<<"Unable to duplicate audit !";
@@ -535,6 +526,8 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
     QSqlQuery q;
 
     progress.setValue(++progval);
+
+    QCoreApplication::processEvents(QEventLoop::AllEvents,100);
 
     foreach(QString lemode,modes)
     {
@@ -552,6 +545,8 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
             qCritical()<<q.lastError();
             die();
         }
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+
 
         progress.setValue(++progval);
 
@@ -590,6 +585,7 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
         }
 
 
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
         progress.setValue(++progval);
 
         q.prepare(QString("update audit_%3_%1 set disponibles="
@@ -608,6 +604,8 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
         }
 
         progress.setValue(++progval);
+        QCoreApplication::processEvents(QEventLoop::AllEvents,100);
+
     }
 
     progress.setValue(progress.maximum());
@@ -624,118 +622,7 @@ int PCx_AuditModel::duplicateAudit(unsigned int auditId, const QString &newName,
     return newAuditId;
 }
 
-bool PCx_AuditModel::loadFromDb(unsigned int auditId,bool readOnly)
-{
-    Q_ASSERT(auditId>0);
-
-    PCx_AuditInfos infos(auditId);
-    finished=infos.finished;
-    auditName=infos.name;
-    attachedTreeId=infos.attachedTreeId;
-    years=infos.years;
-
-
-    if(attachedTree!=NULL)
-    {
-        delete attachedTree;
-    }
-    attachedTree=new PCx_TreeModel(attachedTreeId,true,!loadTreeModel);
-
-    if(readOnly==false)
-    {
-        if(modelDF!=NULL)
-        {
-            modelDF->clear();
-            delete modelDF;
-        }
-        if(modelRF!=NULL)
-        {
-            modelRF->clear();
-            delete modelRF;
-        }
-        if(modelDI!=NULL)
-        {
-            modelDI->clear();
-            delete modelDI;
-        }
-        if(modelRI!=NULL)
-        {
-            modelRI->clear();
-            delete modelRI;
-        }
-        modelDF=new QSqlTableModel();
-        modelDF->setTable(QString("audit_DF_%1").arg(auditId));
-        modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-        modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-        modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-        modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-        modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelDF->select();
-
-        modelDI=new QSqlTableModel();
-        modelDI->setTable(QString("audit_DI_%1").arg(auditId));
-        modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-        modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-        modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-        modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-        modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelDI->select();
-
-        modelRI=new QSqlTableModel();
-        modelRI->setTable(QString("audit_RI_%1").arg(auditId));
-        modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-        modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-        modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-        modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-        modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelRI->select();
-
-        modelRF=new QSqlTableModel();
-        modelRF->setTable(QString("audit_RF_%1").arg(auditId));
-        modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-        modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(OUVERTS));
-        modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(REALISES));
-        modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(ENGAGES));
-        modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(DISPONIBLES));
-        modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
-        modelRF->select();
-
-        connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-        connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-        connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-        connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-    }
-    return true;
-}
-
-bool PCx_AuditModel::propagateToAncestors(const QModelIndex &node)
-{
-    QSqlTableModel *model=(QSqlTableModel *)node.model();
-    int row=node.row();
-    unsigned int nodeId=model->index(row,COL_IDNODE).data().toUInt();
-    unsigned int annee=model->index(row,COL_ANNEE).data().toUInt();
-    QString tableName=model->tableName();
-    qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
-
-    QSqlDatabase::database().transaction();
-    if(updateParent(tableName,annee,nodeId))
-    {
-        QSqlDatabase::database().commit();
-        return true;
-    }
-    else
-    {
-        QSqlDatabase::database().rollback();
-        qWarning()<<"ERROR DURING PROPAGATING VALUES TO ROOTS, CANCELLING";
-        return false;
-    }
-
-}
-
-bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
+bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
 {
     unsigned int parent=attachedTree->getParentId(nodeId);
     //qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
@@ -830,7 +717,7 @@ bool PCx_AuditModel::updateParent(const QString &tableName, unsigned int annee, 
     return true;
 }
 
-QString PCx_AuditModel::modeToTableString(DFRFDIRI mode)
+QString PCx_Audit::modeToTableString(DFRFDIRI mode)
 {
     switch(mode)
     {
@@ -850,18 +737,18 @@ QString PCx_AuditModel::modeToTableString(DFRFDIRI mode)
 
 
 
-QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode)
+QString PCx_Audit::modeToCompleteString(DFRFDIRI mode)
 {
     switch(mode)
     {
     case DF:
-        return tr("Dépenses de fonctionnement");
+        return QObject::tr("Dépenses de fonctionnement");
     case RF:
-        return tr("Recettes de fonctionnement");
+        return QObject::tr("Recettes de fonctionnement");
     case DI:
-        return tr("Dépenses d'investissement");
+        return QObject::tr("Dépenses d'investissement");
     case RI:
-        return tr("Recettes d'investissement");
+        return QObject::tr("Recettes d'investissement");
     default:
         qWarning()<<"Invalid mode specified !";
     }
@@ -869,7 +756,7 @@ QString PCx_AuditModel::modeToCompleteString(DFRFDIRI mode)
 }
 
 
-QString PCx_AuditModel::OREDtoTableString(ORED ored)
+QString PCx_Audit::OREDtoTableString(ORED ored)
 {
     switch(ored)
     {
@@ -887,7 +774,7 @@ QString PCx_AuditModel::OREDtoTableString(ORED ored)
     return QString();
 }
 
-PCx_AuditModel::ORED PCx_AuditModel::OREDFromTableString(const QString &ored)
+PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &ored)
 {
     if(ored==OREDtoTableString(OUVERTS))
         return OUVERTS;
@@ -902,7 +789,7 @@ PCx_AuditModel::ORED PCx_AuditModel::OREDFromTableString(const QString &ored)
     return OUVERTS;
 }
 
-PCx_AuditModel::DFRFDIRI PCx_AuditModel::modeFromTableString(const QString &mode)
+PCx_Audit::DFRFDIRI PCx_Audit::modeFromTableString(const QString &mode)
 {
     if(mode==modeToTableString(DF))
         return DF;
@@ -917,7 +804,7 @@ PCx_AuditModel::DFRFDIRI PCx_AuditModel::modeFromTableString(const QString &mode
     return DF;
 }
 
-bool PCx_AuditModel::auditNameExists(const QString &auditName)
+bool PCx_Audit::auditNameExists(const QString &auditName)
 {
     QSqlQuery q;
     q.prepare("select count(*) from index_audits where nom=:name");
@@ -934,61 +821,28 @@ bool PCx_AuditModel::auditNameExists(const QString &auditName)
     return false;
 }
 
-QString PCx_AuditModel::OREDtoCompleteString(ORED ored)
+QString PCx_Audit::OREDtoCompleteString(ORED ored)
 {
     switch(ored)
     {
     case OUVERTS:
-        return tr("prévu");
+        return QObject::tr("prévu");
     case REALISES:
-        return tr("réalisé");
+        return QObject::tr("réalisé");
     case ENGAGES:
-        return tr("engagé");
+        return QObject::tr("engagé");
     case DISPONIBLES:
-        return tr("disponible");
+        return QObject::tr("disponible");
     default:
         qWarning()<<"Invalid ORED specified !";
     }
     return QString();
 }
 
-//Warning, be called twice (see isDirty)
-void PCx_AuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
-{
-    Q_UNUSED(bottomRight);
-    QSqlTableModel *model=(QSqlTableModel *)topLeft.model();
-
-    qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
-    qDebug()<<"Model dirty : "<<model->isDirty();
-    int row=topLeft.row();
-
-    QVariant vOuverts=model->index(row,COL_OUVERTS).data();
-    QVariant vRealises=model->index(row,COL_REALISES).data();
-    QVariant vEngages=model->index(row,COL_ENGAGES).data();
-
-    qDebug()<<"VOUVERTS = "<<vOuverts;
-
-    qint64 ouverts=vOuverts.toLongLong();
-    qint64 realises=vRealises.toLongLong();
-    qint64 engages=vEngages.toLongLong();
-
-    if(!vRealises.isNull() && !vOuverts.isNull() && !vEngages.isNull())
-    {
-        QVariant disponibles=ouverts-(realises+engages);
-        QModelIndex indexDispo=model->index(row,COL_DISPONIBLES);
-        model->setData(indexDispo,disponibles);
-    }
-
-    //Only propagate after the database has been updated (called for refreshing the view, see https://bugreports.qt-project.org/browse/QTBUG-30672
-    if(!model->isDirty())
-    {
-        propagateToAncestors(topLeft);
-    }
-
-}
 
 
-QList<QPair<unsigned int, QString> > PCx_AuditModel::getListOfAudits(ListAuditsMode mode)
+
+QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode mode)
 {
     QList<QPair<unsigned int,QString> > listOfAudits;
     QDateTime dt;
@@ -1025,7 +879,7 @@ QList<QPair<unsigned int, QString> > PCx_AuditModel::getListOfAudits(ListAuditsM
     return listOfAudits;
 }
 
-bool PCx_AuditModel::finishAudit(unsigned int id)
+bool PCx_Audit::finishAudit(unsigned int id)
 {
     Q_ASSERT(id>0);
     QSqlQuery q;
@@ -1057,7 +911,7 @@ bool PCx_AuditModel::finishAudit(unsigned int id)
     return true;
 }
 
-bool PCx_AuditModel::unFinishAudit(unsigned int id)
+bool PCx_Audit::unFinishAudit(unsigned int id)
 {
     Q_ASSERT(id>0);
     QSqlQuery q;
@@ -1089,3 +943,199 @@ bool PCx_AuditModel::unFinishAudit(unsigned int id)
     return true;
 }
 
+QString PCx_Audit::getHTMLAuditStatistics() const
+{
+    QString out=QString("\n<table cellpadding='5' border='1' align='center'>\n"
+                       "<tr><td>Arbre associé</td><td align='right'>%1 (%2 noeuds)</td></tr>"
+                       "<tr><td>Années d'application</td><td align='right'>%3</td></tr>"
+                       "<tr><td>Date de création</td><td align='right'>%4</td></tr>"
+                       "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
+                       "</table>\n")
+               .arg(attachedTreeName.toHtmlEscaped())
+               .arg(PCx_TreeModel::getNumberOfNodes(attachedTreeId))
+               .arg(yearsString)
+               .arg(creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped())
+               .arg(finishedString);
+
+
+    out.append("\n<br><table cellpadding='5' border='1' align='center'>\n"
+                       "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>");
+
+    PCx_TreeModel treeModel(attachedTreeId,true,true);
+
+
+    QList<QList<unsigned int> * > listOfListOfNodes;
+    QList<unsigned int> nodesDF,nodesRF,nodesDI,nodesRI;
+    listOfListOfNodes.append(&nodesDF);
+    listOfListOfNodes.append(&nodesRF);
+    listOfListOfNodes.append(&nodesDI);
+    listOfListOfNodes.append(&nodesRI);
+
+    foreach(unsigned int year,years)
+    {
+        nodesDF=getNodesWithNonNullValues(PCx_Audit::DF,year);
+        nodesRF=getNodesWithNonNullValues(PCx_Audit::RF,year);
+        nodesDI=getNodesWithNonNullValues(PCx_Audit::DI,year);
+        nodesRI=getNodesWithNonNullValues(PCx_Audit::RI,year);
+        out.append(QString("\n<tr><th colspan='5'>%1</th></tr>\n"
+                           "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>%2</td><td align='right'>%3</td><td  align='right'>%4</td><td  align='right'>%5</td></tr>")
+                   .arg(year)
+                   .arg(nodesDF.size())
+                   .arg(nodesRF.size())
+                   .arg(nodesDI.size())
+                   .arg(nodesRI.size()));
+
+        nodesDF=getNodesWithAllZeroValues(PCx_Audit::DF,year);
+        nodesRF=getNodesWithAllZeroValues(PCx_Audit::RF,year);
+        nodesDI=getNodesWithAllZeroValues(PCx_Audit::DI,year);
+        nodesRI=getNodesWithAllZeroValues(PCx_Audit::RI,year);
+
+        out.append(QString("<tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4</td></tr>")
+                   .arg(nodesDF.size())
+                   .arg(nodesRF.size())
+                   .arg(nodesDI.size())
+                   .arg(nodesRI.size()));
+
+        if(!nodesDF.isEmpty()||!nodesRF.isEmpty()||!nodesDI.isEmpty()||!nodesRI.isEmpty())
+        {
+            out.append("<tr><td></td>");
+
+            foreach(QList<unsigned int> *listOfNodes, listOfListOfNodes)
+            {
+                out.append("<td>");
+                if(!listOfNodes->isEmpty())
+                {
+                    out.append("<ul>");
+
+                    foreach(unsigned int node,*listOfNodes)
+                    {
+                        out.append(QString("<li>%1</li>").arg(treeModel.getNodeName(node).toHtmlEscaped()));
+                    }
+                    out.append("</ul>");
+                }
+                out.append("</td>");
+            }
+            out.append("</tr>");
+        }
+
+        nodesDF=getNodesWithAllNullValues(PCx_Audit::DF,year);
+        nodesRF=getNodesWithAllNullValues(PCx_Audit::RF,year);
+        nodesDI=getNodesWithAllNullValues(PCx_Audit::DI,year);
+        nodesRI=getNodesWithAllNullValues(PCx_Audit::RI,year);
+
+        out.append(QString("<tr><td>Noeuds non remplis</td><td align='right'>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4</td></tr>")
+                   .arg(nodesDF.size())
+                   .arg(nodesRF.size())
+                   .arg(nodesDI.size())
+                   .arg(nodesRI.size()));
+
+    }
+
+    out.append("</table>\n");
+
+    return out;
+
+}
+
+QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(PCx_Audit::DFRFDIRI mode,unsigned int year) const
+{
+    QString tableMode=PCx_Audit::modeToTableString(mode);
+    Q_ASSERT(year>=years.first()&& year<=years.last());
+    QList<unsigned int> nodes;
+    QStringList oredStrings;
+    oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::REALISES)
+              <<PCx_Audit::OREDtoTableString(PCx_Audit::ENGAGES);
+    QSqlQuery q;
+    q.prepare(QString("select * from audit_%1_%2 where (%3 is null and %4 is null and %5 is null) and annee=:year").arg(tableMode).arg(auditId)
+              .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
+
+    q.bindValue(":year",year);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    while(q.next())
+    {
+        nodes.append(q.value("id_node").toUInt());
+    }
+    return nodes;
+}
+
+
+QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(PCx_Audit::DFRFDIRI mode,unsigned int year) const
+{
+    QString tableMode=PCx_Audit::modeToTableString(mode);
+    Q_ASSERT(year>=years.first()&& year<=years.last());
+    QList<unsigned int> nodes;
+    QStringList oredStrings;
+    oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::REALISES)
+                 <<PCx_Audit::OREDtoTableString(PCx_Audit::ENGAGES);
+    QSqlQuery q;
+    q.prepare(QString("select * from audit_%1_%2 where (%3 not null or %4 not null or %5 not null) and annee=:year").arg(tableMode).arg(auditId)
+                .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
+
+    q.bindValue(":year",year);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    while(q.next())
+    {
+        nodes.append(q.value("id_node").toUInt());
+    }
+    return nodes;
+}
+
+QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const
+{
+    QString tableMode=PCx_Audit::modeToTableString(mode);
+    Q_ASSERT(year>=years.first()&& year<=years.last());
+    QList<unsigned int> nodes;
+    QStringList oredStrings;
+    oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::REALISES)
+                 <<PCx_Audit::OREDtoTableString(PCx_Audit::ENGAGES);
+    QSqlQuery q;
+    QString sq=QString("select * from audit_%1_%2 where (%3 = 0 and %4 = 0 and %5 = 0) and annee=:year").arg(tableMode).arg(auditId)
+                .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2));
+
+    q.prepare(sq);
+    q.bindValue(":year",year);
+
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    while(q.next())
+    {
+        nodes.append(q.value("id_node").toUInt());
+    }
+    return nodes;
+}
+
+
+
+QStringList PCx_Audit::yearsListToStringList(QList<unsigned int> years)
+{
+    //De-duplicate and sort
+    QSet<unsigned int> yearsTemp;
+    QList<unsigned int> years2;
+    yearsTemp=years.toSet();
+    years2=yearsTemp.toList();
+    qSort(years2);
+
+    QStringList yearsStringList;
+
+    foreach(unsigned int annee,years2)
+    {
+        yearsStringList.append(QString::number(annee));
+    }
+    return yearsStringList;
+}

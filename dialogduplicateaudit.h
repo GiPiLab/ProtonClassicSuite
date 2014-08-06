@@ -2,7 +2,7 @@
 #define DIALOGDUPLICATEAUDIT_H
 
 #include <QDialog>
-#include "pcx_auditmodel.h"
+#include "pcx_audit.h"
 
 namespace Ui {
 class DialogDuplicateAudit;

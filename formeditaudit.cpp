@@ -6,7 +6,6 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include "formauditinfos.h"
-#include "pcx_auditinfos.h"
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
     QWidget(parent),
@@ -56,7 +55,7 @@ void FormEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditModel::getListOfAudits(PCx_AuditModel::UnFinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::UnFinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     ui->splitter->setEnabled(nonEmpty);
 
@@ -81,7 +80,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
     //Read-write audit model
-    auditModel=new PCx_AuditModel(selectedAuditId,0,false);
+    auditModel=new PCx_EditableAuditModel(selectedAuditId,0);
     ui->treeView->setModel(auditModel->getAttachedTreeModel());
     delete m;
     ui->treeView->expandToDepth(1);
@@ -111,10 +110,10 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewDI->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableViewRI->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(PCx_AuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
 }
 
 void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
@@ -153,30 +152,28 @@ void FormEditAudit::on_randomDataButton_clicked()
         return;
     }
 
-    PCx_AuditInfos auditInfos(auditModel->getAuditId());
-
     QList<unsigned int> leaves=auditModel->getAttachedTreeModel()->getLeavesId();
-    QList<unsigned int> years=auditInfos.years;
+    QList<unsigned int> years=auditModel->getYears();
 
-    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
+    PCx_Audit::DFRFDIRI mode=PCx_Audit::DF;
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_AuditModel::DF;
+        mode=PCx_Audit::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_AuditModel::RF;
+        mode=PCx_Audit::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_AuditModel::DI;
+        mode=PCx_Audit::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_AuditModel::RI;
+        mode=PCx_Audit::RI;
 
-    QHash<PCx_AuditModel::ORED,double> data;
+    QHash<PCx_Audit::ORED,double> data;
     foreach(unsigned int leaf,leaves)
     {
         foreach(unsigned int year,years)
         {
             data.clear();
-            data.insert(PCx_AuditModel::OUVERTS,(double)(qrand()%100000));
-            data.insert(PCx_AuditModel::REALISES,(double)(qrand()%100000));
-            data.insert(PCx_AuditModel::ENGAGES,(double)(qrand()%100000));
+            data.insert(PCx_Audit::OUVERTS,(double)(qrand()%100000));
+            data.insert(PCx_Audit::REALISES,(double)(qrand()%100000));
+            data.insert(PCx_Audit::ENGAGES,(double)(qrand()%100000));
             auditModel->setLeafValues(leaf,mode,year,data);
         }
     }
@@ -189,17 +186,17 @@ void FormEditAudit::on_clearDataButton_clicked()
         return;
     }
 
-    PCx_AuditModel::DFRFDIRI mode=PCx_AuditModel::DF;
+    PCx_Audit::DFRFDIRI mode=PCx_Audit::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_AuditModel::DF;
+        mode=PCx_Audit::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_AuditModel::RF;
+        mode=PCx_Audit::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_AuditModel::DI;
+        mode=PCx_Audit::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_AuditModel::RI;
+        mode=PCx_Audit::RI;
 
     auditModel->clearAllData(mode);
 }

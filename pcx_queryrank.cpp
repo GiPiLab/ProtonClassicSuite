@@ -9,12 +9,12 @@ PCx_QueryRank::PCx_QueryRank():PCx_Query()
 {
 }
 
-PCx_QueryRank::PCx_QueryRank(PCx_AuditModel *model, unsigned int queryId):PCx_Query(model)
+PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
 }
 
-PCx_QueryRank::PCx_QueryRank(PCx_AuditModel *model, unsigned int typeId, PCx_AuditModel::ORED ored, PCx_AuditModel::DFRFDIRI dfrfdiri, PCx_QueryRank::GREATERSMALLER greaterOrSmaller,
+PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri, PCx_QueryRank::GREATERSMALLER greaterOrSmaller,
                              unsigned int number, unsigned int year1, unsigned int year2, const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),grSm(greaterOrSmaller),number(number)
 {
 }
@@ -87,7 +87,7 @@ QString PCx_QueryRank::exec() const
     QString output=QString("<h4>Requ&ecirc;te %1</h4>").arg(name.toHtmlEscaped());
     output.append("<p><i>"+getDescription()+"</i></p>");
     output.append(QString("<table class='req2' cellpadding='5' align='center' style='margin-left:auto;margin-right:auto;'>"
-                           "<tr><th>&nbsp;</th><th>année</th><th>%1</th></tr>").arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped()));
+                           "<tr><th>&nbsp;</th><th>année</th><th>%1</th></tr>").arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped()));
 
     while(q.next())
     {
@@ -121,8 +121,8 @@ bool PCx_QueryRank::load(unsigned int queryId)
         }
         name=q.value("name").toString();
         typeId=q.value("target_type").toUInt();
-        ored=(PCx_AuditModel::ORED)q.value("ored").toUInt();
-        dfrfdiri=(PCx_AuditModel::DFRFDIRI)q.value("dfrfdiri").toUInt();
+        ored=(PCx_Audit::ORED)q.value("ored").toUInt();
+        dfrfdiri=(PCx_Audit::DFRFDIRI)q.value("dfrfdiri").toUInt();
         setYears(q.value("year1").toUInt(),q.value("year2").toUInt());
         grSm=(GREATERSMALLER)q.value("increase_decrease").toUInt();
         number=q.value("val1").toUInt();
@@ -158,8 +158,8 @@ QString PCx_QueryRank::getDescription() const
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->getNomType(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les crédits %1s des %2 sont parmi les [%3] %4 entre %5 et %6")
-            .arg(PCx_AuditModel::OREDtoCompleteString(ored).toHtmlEscaped())
-            .arg(PCx_AuditModel::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
+            .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
+            .arg(PCx_Audit::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(number).arg(greaterSmallerToString(grSm).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;
