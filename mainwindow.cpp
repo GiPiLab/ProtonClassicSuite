@@ -124,13 +124,13 @@ void MainWindow::onFormReportsWindowsDestroyed()
 
 void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
 {
-    listOfFormTablesGraphics.removeAt(listOfFormTablesGraphics.indexOf((FormTablesGraphics *)obj));
+    listOfFormTablesGraphics.removeAt(listOfFormTablesGraphics.indexOf(qobject_cast<FormTablesGraphics *>(obj)));
     qDebug()<<"FormTables window closed, remaining :"<<listOfFormTablesGraphics;
 }
 
 void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
 {
-    listOfFormQueries.removeAt(listOfFormQueries.indexOf((FormQueries *)obj));
+    listOfFormQueries.removeAt(listOfFormQueries.indexOf(qobject_cast<FormQueries *>(obj)));
     qDebug()<<"FormQueries window closed, remaining :"<<listOfFormQueries;
 }
 

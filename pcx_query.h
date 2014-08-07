@@ -17,7 +17,6 @@ public:
 
     static const unsigned int ALLTYPES=UINT_MAX;
 
-    PCx_Query();
     PCx_Query(PCx_Audit *model);
     PCx_Query(PCx_Audit *model,unsigned int typeId,PCx_Audit::ORED ored,PCx_Audit::DFRFDIRI dfrfdiri,
                                       unsigned int year1, unsigned int year2,const QString &name="");

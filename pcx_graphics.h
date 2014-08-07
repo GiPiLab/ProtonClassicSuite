@@ -89,6 +89,9 @@ private:
 
     QCustomPlot *plot;
 
+    PCx_Graphics(const PCx_Graphics &c);
+    PCx_Graphics &operator=(const PCx_Graphics &);
+
 };
 
 #endif // PCX_GRAPHICS_H

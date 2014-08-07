@@ -16,7 +16,6 @@ public:
         GREATER
     };
 
-    PCx_QueryRank();
     PCx_QueryRank(PCx_Audit *model,unsigned int queryId);
 
     PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,

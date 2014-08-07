@@ -6,10 +6,6 @@
 #include <QSettings>
 #include "utils.h"
 
-PCx_QueryVariation::PCx_QueryVariation():PCx_Query()
-{
-}
-
 PCx_QueryVariation::PCx_QueryVariation(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);

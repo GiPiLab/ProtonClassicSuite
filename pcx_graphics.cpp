@@ -89,12 +89,12 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_Audit::DFRFDIRI mode, PCx_A
     double minYRange=DBL_MAX-1,maxYRange=DBL_MIN+1;
     foreach(unsigned int key,dataRoot.keys())
     {
-        double percentRoot=0.0,percentNode=0.0;
         qint64 diffRootNode2=0,diffRootNode=0,diffNode=0;
 
         //Skip the first year
         if(key>firstYear)
         {
+            double percentRoot=0.0,percentNode=0.0;
             diffRootNode2=dataRoot.value(key)-dataNode.value(key);
 
             diffRootNode=diffRootNode2-diffRootNode1;

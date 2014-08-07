@@ -92,12 +92,6 @@ public:
 
     static QStringList yearsListToStringList(QList<unsigned int> years);
 
-
-
-
-
-
-
 signals:
 
 public slots:
@@ -125,6 +119,11 @@ protected:
     QDateTime creationTimeLocal;
 
     bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
+
+
+private:
+    PCx_Audit(const PCx_Audit &c);
+    PCx_Audit &operator=(const PCx_Audit &);
 };
 
 

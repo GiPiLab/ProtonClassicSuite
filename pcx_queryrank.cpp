@@ -5,10 +5,6 @@
 #include <QSettings>
 #include "utils.h"
 
-PCx_QueryRank::PCx_QueryRank():PCx_Query()
-{
-}
-
 PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);

@@ -9,8 +9,6 @@ public:
 
     static const unsigned int DEFAULTCOlOR=0xaabbff;
 
-
-    PCx_QueryMinMax();
     PCx_QueryMinMax(PCx_Audit *model,unsigned int queryId);
 
     PCx_QueryMinMax(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,

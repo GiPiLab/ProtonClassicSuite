@@ -123,7 +123,7 @@ QString PCx_Tables::getT2(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         unsigned int annee=q.value("annee").toUInt();
         qint64 ouverts=q.value("ouverts").toLongLong();
         qint64 realises=q.value("realises").toLongLong();
-        double percentOuverts=0.0,percentRealises=0.0;
+
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -135,6 +135,7 @@ QString PCx_Tables::getT2(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         }
         else
         {
+            double percentOuverts=0.0,percentRealises=0.0;
             diffRootNodeOuverts=ouvertsRoot[annee]-ouverts;
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
@@ -219,7 +220,6 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         unsigned int annee=q.value("annee").toUInt();
         qint64 ouverts=q.value("ouverts").toLongLong();
         qint64 realises=q.value("realises").toLongLong();
-        double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -233,6 +233,7 @@ QString PCx_Tables::getT2bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         else
         {
             //ouverts_2
+            double percentOuverts=0.0,percentRealises=0.0;
             diffRootNodeOuverts=ouvertsRoot[annee]-ouverts;
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffCurrentYearFirstYearOuverts=diffRootNodeOuverts-diffFirstYearRootNodeOuverts;
@@ -292,7 +293,6 @@ QString PCx_Tables::getT3(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         unsigned int annee=q.value("annee").toUInt();
         qint64 ouverts=q.value("ouverts").toLongLong();
         qint64 realises=q.value("realises").toLongLong();
-        double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -302,6 +302,7 @@ QString PCx_Tables::getT3(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         }
         else
         {
+            double percentOuverts=0.0,percentRealises=0.0;
             diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
             diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
             if(firstYearOuvertsNode!=0)
@@ -353,7 +354,6 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         unsigned int annee=q.value("annee").toUInt();
         qint64 ouverts=q.value("ouverts").toLongLong();
         qint64 realises=q.value("realises").toLongLong();
-        double percentOuverts=0.0,percentRealises=0.0;
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -363,6 +363,7 @@ QString PCx_Tables::getT3bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         }
         else
         {
+            double percentOuverts=0.0,percentRealises=0.0;
             diffCurrentYearFirstYearOuverts=ouverts-firstYearOuvertsNode;
             diffCurrentYearFirstYearRealises=realises-firstYearRealisesNode;
             if(firstYearOuvertsNode!=0)
@@ -524,7 +525,6 @@ QString PCx_Tables::getT5(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         qint64 realises=q.value("realises").toLongLong();
         qint64 engages=q.value("engages").toLongLong();
         qint64 disponibles=q.value("disponibles").toLongLong();
-        double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -547,6 +547,7 @@ QString PCx_Tables::getT5(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         else
         {
             //ouverts_2
+            double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
             diffRootNodeOuverts=ouvertsRoot[annee]-ouverts;
             diffRootNodeRealises=realisesRoot[annee]-realises;
             diffRootNodeEngages=engagesRoot[annee]-engages;
@@ -618,7 +619,6 @@ QString PCx_Tables::getT6(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         qint64 engages=q.value("engages").toLongLong();
         qint64 disponibles=q.value("disponibles").toLongLong();
         qint64 nc=engages+disponibles;
-        double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -634,6 +634,7 @@ QString PCx_Tables::getT6(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         }
         else
         {
+            double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0,percentNC=0.0;
             if(ouverts*firstYearOuvertsNode!=0)
                 percentOuverts=100.0/firstYearOuvertsNode*ouverts;
 

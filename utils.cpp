@@ -169,12 +169,20 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
 
     if(length==0)
     {
+        gvFreeRenderData(outputData);
+        gvFreeLayout(gvc, g);
+        agclose(g);
+        gvFreeContext(gvc);
         qCritical()<<"Error while rendering graph !";
         return false;
     }
 
     if(!output.open(QIODevice::WriteOnly))
     {
+        gvFreeRenderData(outputData);
+        gvFreeLayout(gvc, g);
+        agclose(g);
+        gvFreeContext(gvc);
         qCritical()<<"Unable to open output file :"<<output.errorString();
         return false;
     }

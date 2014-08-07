@@ -7,10 +7,6 @@
 #include <QSqlError>
 #include <QSettings>
 
-PCx_Query::PCx_Query():model(NULL),queryId(0)
-{
-}
-
 PCx_Query::PCx_Query(PCx_Audit *model):model(model),queryId(0)
 {
 }
@@ -24,10 +20,9 @@ PCx_Query::PCx_Query(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored
 
 void PCx_Query::setYears(unsigned int year1, unsigned int year2)
 {
-    unsigned int yeartmp;
-
     if(year1>year2)
     {
+        unsigned int yeartmp;
         yeartmp=year1;
         year1=year2;
         year2=yeartmp;

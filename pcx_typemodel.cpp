@@ -82,12 +82,11 @@ bool PCx_TypeModel::createTableTypes(unsigned int treeId, bool populateWithDefau
 bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
 {
     Q_UNUSED(bottomRight);
-    bool oldState;
     QString newType=topLeft.data().toString();
     if(validateType(newType)==false)
     {
         //In order to prevent reentrant "datachanged" signal with revertAll
-        oldState=typesTableModel->blockSignals(true);
+        bool oldState=typesTableModel->blockSignals(true);
         typesTableModel->revertAll();
         typesTableModel->blockSignals(oldState);
         return false;

@@ -84,6 +84,10 @@ FormQueries::~FormQueries()
     {
         delete model;
     }
+    if(report!=NULL)
+    {
+        delete report;
+    }
     if(queriesModel!=NULL)
         delete queriesModel;
     delete doc;

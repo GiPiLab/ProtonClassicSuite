@@ -5,10 +5,6 @@
 #include <QSettings>
 #include "utils.h"
 
-PCx_QueryMinMax::PCx_QueryMinMax():PCx_Query()
-{
-}
-
 PCx_QueryMinMax::PCx_QueryMinMax(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
