@@ -84,7 +84,6 @@ FORMS    += mainwindow.ui \
 
 QMAKE_CXXFLAGS_DEBUG += -Og
 
-
 unix|win32: LIBS += -lgvc -lcgraph
 
 win32: INCLUDEPATH += "c:/Program Files/Graphviz/include"
