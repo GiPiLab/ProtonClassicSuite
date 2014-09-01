@@ -103,7 +103,7 @@ void FormManageAudits::on_addAuditButton_clicked()
 
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvel audit"), tr("Nom de l'audit à ajouter : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this,tr("Nouvel audit"), tr("Nom de l'audit à ajouter : "),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 

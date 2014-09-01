@@ -33,9 +33,9 @@ void FormEditTree::on_addTypeButton_clicked()
 
         do
         {
-            text=QInputDialog::getText(this,tr("Nouveau type"), tr("Nom du type à ajouter : "),QLineEdit::Normal,"",&ok);
+            text=QInputDialog::getText(this,tr("Nouveau type"), tr("Nom du type à ajouter : "),QLineEdit::Normal,"",&ok).simplified();
 
-        }while(ok && text.simplified().isEmpty());
+        }while(ok && text.isEmpty());
 
         if(ok)
         {
@@ -131,7 +131,7 @@ void FormEditTree::on_newTreeButton_clicked()
 
     do
     {
-        text=QInputDialog::getText(this->parentWidget(),tr("Nouvel arbre"), tr("Nom du nouvel arbre : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this->parentWidget(),tr("Nouvel arbre"), tr("Nom du nouvel arbre : "),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 
@@ -187,9 +187,9 @@ void FormEditTree::on_addNodeButton_clicked()
 
         do
         {
-            text=QInputDialog::getText(this,tr("Nouveau noeud"), tr("Donnez un nom au nouveau noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok);
+            text=QInputDialog::getText(this,tr("Nouveau noeud"), tr("Donnez un nom au nouveau noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok).simplified();
 
-        }while(ok && text.simplified().isEmpty());
+        }while(ok && text.isEmpty());
 
         if(ok)
         {
@@ -236,9 +236,9 @@ void FormEditTree::on_modifyNodeButton_clicked()
 
         do
         {
-            text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok);
+            text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok).simplified();
 
-        }while(ok && text.simplified().isEmpty());
+        }while(ok && text.isEmpty());
 
         if(ok)
         {
@@ -353,7 +353,7 @@ void FormEditTree::on_duplicateTreeButton_clicked()
 
         do
         {
-            text=QInputDialog::getText(this,tr("Dupliquer arbre"), tr("Nom de l'arbre dupliqué : "),QLineEdit::Normal,"",&ok);
+            text=QInputDialog::getText(this,tr("Dupliquer arbre"), tr("Nom de l'arbre dupliqué : "),QLineEdit::Normal,"",&ok).simplified();
 
         }while(ok && text.isEmpty());
 
@@ -373,10 +373,12 @@ void FormEditTree::on_randomTreeButton_clicked()
 
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvel arbre aléatoire"), tr("Nom de l'arbre aléatoire : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this,tr("Nouvel arbre aléatoire"), tr("Nom de l'arbre aléatoire : "),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 
+    if(!ok)
+        return;
 
     nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,PCx_TreeModel::MAXNODES,1,&ok);
 

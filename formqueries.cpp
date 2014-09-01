@@ -286,7 +286,7 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
 
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 
@@ -460,7 +460,7 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
 
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 
@@ -521,7 +521,7 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
 
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok);
+        text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 

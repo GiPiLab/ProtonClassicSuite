@@ -26,7 +26,7 @@ DialogDuplicateAudit::~DialogDuplicateAudit()
 
 void DialogDuplicateAudit::on_pushButton_clicked()
 {
-    QString newName=ui->lineEditNewName->text();
+    QString newName=ui->lineEditNewName->text().simplified();
     if(newName.isEmpty())
     {
         QMessageBox::information(this,tr("Attention"),tr("Donnez un nom au nouvel audit"));
