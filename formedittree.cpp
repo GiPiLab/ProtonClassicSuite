@@ -35,7 +35,7 @@ void FormEditTree::on_addTypeButton_clicked()
         {
             text=QInputDialog::getText(this,tr("Nouveau type"), tr("Nom du type à ajouter : "),QLineEdit::Normal,"",&ok);
 
-        }while(ok && text.isEmpty());
+        }while(ok && text.simplified().isEmpty());
 
         if(ok)
         {
@@ -189,7 +189,7 @@ void FormEditTree::on_addNodeButton_clicked()
         {
             text=QInputDialog::getText(this,tr("Nouveau noeud"), tr("Donnez un nom au nouveau noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok);
 
-        }while(ok && text.isEmpty());
+        }while(ok && text.simplified().isEmpty());
 
         if(ok)
         {
@@ -238,7 +238,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
         {
             text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok);
 
-        }while(ok && text.isEmpty());
+        }while(ok && text.simplified().isEmpty());
 
         if(ok)
         {

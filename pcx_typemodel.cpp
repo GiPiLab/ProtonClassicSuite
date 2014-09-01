@@ -82,6 +82,7 @@ bool PCx_TypeModel::createTableTypes(unsigned int treeId, bool populateWithDefau
 bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
 {
     Q_UNUSED(bottomRight);
+
     QString newType=topLeft.data().toString();
     if(validateType(newType)==false)
     {
@@ -94,6 +95,8 @@ bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QM
 
     else
     {
+        //NOTE : simplify string
+        typesTableModel->setData(topLeft,newType.simplified());
         typesTableModel->submitAll();
         loadFromDatabase(treeId);
         emit typesUpdated();
@@ -104,14 +107,15 @@ bool PCx_TypeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QM
 bool PCx_TypeModel::validateType(const QString &newType)
 {
     qDebug()<<"Type to validate = "<<newType;
-    if(newType.isEmpty() || newType.contains(QRegExp("^( )+$")))
+    QString sNewType=newType.simplified();
+    if(sNewType.isEmpty())
     {
         QMessageBox::warning(NULL,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
         return false;
     }
-    else if(nomTypes.contains(newType,Qt::CaseInsensitive))
+    else if(nomTypes.contains(sNewType,Qt::CaseInsensitive))
     {
-        QMessageBox::warning(NULL,tr("Attention"),tr("Le type <b>%1</b> existe déjà !").arg(newType));
+        QMessageBox::warning(NULL,tr("Attention"),tr("Le type <b>%1</b> existe déjà !").arg(sNewType));
         return false;
     }
     return true;
@@ -156,14 +160,17 @@ bool PCx_TypeModel::addType(const QString &type)
     //Read-only mode
     if(typesTableModel==NULL)return false;
 
-    if(validateType(type)==false)
+    //NOTE : simplify string
+    QString sType=type.simplified();
+
+    if(validateType(sType)==false)
         return false;
 
     else
     {
         QSqlQuery q;
         q.prepare(QString("insert into types_%1 (nom) values(:nom)").arg(treeId));
-        q.bindValue(":nom",type);
+        q.bindValue(":nom",sType);
         q.exec();
         if(q.numRowsAffected()!=1)
         {

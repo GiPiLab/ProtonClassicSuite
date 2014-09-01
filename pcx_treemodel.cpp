@@ -122,9 +122,17 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
         return 0;
     }
 
+    //NOTE : simplify string to remove newline or multiple spaces
+    QString sName=name.simplified();
+    if(sName.isEmpty())
+    {
+        QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Le noeud doit avoir un nom non vide"));
+        return 0;
+    }
+
     QSqlQuery q;
     q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
-    q.bindValue(":nom",name);
+    q.bindValue(":nom",sName);
     q.bindValue(":type",type);
     q.exec();
 
@@ -143,7 +151,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     }
 
     q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(treeId));
-    q.bindValue(":nom",name);
+    q.bindValue(":nom",sName);
     q.bindValue(":pid",pid);
     q.bindValue(":type",type);
     q.exec();
@@ -158,7 +166,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     if(pidNodeIndex.isValid())
     {
         QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(types->getNomType(type),name,type,q.lastInsertId().toUInt());
+        QStandardItem *newitem=createItem(types->getNomType(type),sName,type,q.lastInsertId().toUInt());
         pidItem->appendRow(newitem);
     }
     return q.lastInsertId().toUInt();
@@ -172,8 +180,16 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
 
     QSqlQuery q;
 
+    //NOTE : simplify string to remove newline or multiple spaces
+    QString sName=newName.simplified();
+    if(sName.isEmpty())
+    {
+        QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Le noeud doit avoir un nom non vide"));
+        return false;
+    }
+
     q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
-    q.bindValue(":nom",newName);
+    q.bindValue(":nom",sName);
     q.bindValue(":type",newType);
     q.exec();
 
@@ -192,7 +208,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     }
 
     q.prepare(QString("update arbre_%1 set nom=:nom, type=:type where id=:id").arg(treeId));
-    q.bindValue(":nom",newName);
+    q.bindValue(":nom",sName);
     q.bindValue(":type",newType);
     q.bindValue(":id",nodeId);
     q.exec();
@@ -204,7 +220,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     }
 
     QStandardItem *item=this->itemFromIndex(nodeIndex);
-    item->setText(QString("%1 %2").arg(types->getNomType(newType)).arg(newName));
+    item->setText(QString("%1 %2").arg(types->getNomType(newType)).arg(sName));
     item->setData(newType,Qt::UserRole+2);
 
     return true;
