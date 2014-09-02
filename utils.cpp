@@ -158,9 +158,24 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     graph_t *g;
 
     gvc = gvContext();
+
     g = agmemread(dotData);
 
-    gvLayout(gvc, g, "dot");
+    if(g==NULL)
+    {
+        gvFreeContext(gvc);
+        qCritical()<<"Error while reading DOT data !";
+        return false;
+    }
+
+    if(gvLayout(gvc, g, "dot")!=0)
+    {
+        gvFreeLayout(gvc, g);
+        agclose(g);
+        gvFreeContext(gvc);
+        qCritical()<<"Error during graph layout !";
+        return false;
+    }
 
     char *outputData;
     unsigned int length=0;

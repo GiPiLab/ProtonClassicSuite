@@ -102,3 +102,36 @@ void FormDisplayTree::populateTableInfos()
         row++;
     }
 }
+
+void FormDisplayTree::on_exportCSVButton_clicked()
+{
+    QString csv=model->toCSV();
+
+    //qDebug()<<dot;
+
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format CSV"), "",tr("Fichiers CSV (*.csv)"));
+    if(fileName.isEmpty())
+        return;
+
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("csv",Qt::CaseInsensitive)!=0)
+        fileName.append(".csv");
+    fi=QFileInfo(fileName);
+
+    QFile output(fileName);
+
+    if(!output.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        qCritical()<<"Unable to open output file :"<<output.errorString();
+        return;
+    }
+    QTextStream outputStream(&output);
+    outputStream.setCodec("UTF-8");
+
+    outputStream<<csv;
+    output.close();
+
+    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format CSV"));
+}

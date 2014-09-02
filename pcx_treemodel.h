@@ -33,10 +33,10 @@ public:
 
     bool deleteNode(const QModelIndex &nodeIndex);
 
-    QList<unsigned int> getNodesId() const;
     unsigned int getNumberOfNodes() const;
     static unsigned int getNumberOfNodes(unsigned int treeId);
     QList<unsigned int> getLeavesId() const;
+    QList<unsigned int> getNodesId() const;
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;
 
@@ -60,16 +60,19 @@ public:
 
     //Export tree to dot format
     QString toDot() const;
+    QString toCSV() const;
 
     int duplicateTree(const QString &newName) const;
 
     QString getNodeName(unsigned int node) const;
+    QPair<QString, QString> getTypeNameAndNodeName(unsigned int node) const;
     static int addNewTree(const QString &name);
     static int deleteTree(unsigned int treeId);
     static QString idTreeToName(unsigned int treeId);
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 
     static int createRandomTree(const QString &name, unsigned int nbNodes);
+
 
 private:
     PCx_TypeModel *types;

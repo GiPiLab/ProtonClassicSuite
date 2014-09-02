@@ -26,6 +26,8 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void on_exportCSVButton_clicked();
+
 private:
     Ui::FormDisplayTree *ui;
     PCx_TreeModel *model;

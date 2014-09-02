@@ -679,7 +679,8 @@ QString PCx_TreeModel::toDot() const
 
     foreach(unsigned int node,nodes)
     {
-        out.append(QString("%1 [label=\"%2\"];\n").arg(node).arg(getNodeName(node)));
+        //Escape double quotes for dot format
+        out.append(QString("%1 [label=\"%2\"];\n").arg(node).arg(getNodeName(node).replace('"',QString("\\\""))));
     }
 
     foreach(unsigned int node,nodes)
@@ -692,6 +693,36 @@ QString PCx_TreeModel::toDot() const
         }
     }
     out.append("}\n");
+    return out;
+}
+
+QString PCx_TreeModel::toCSV() const
+{
+    QList<unsigned int> nodes=getNodesId();
+
+    QString out="Type noeud;Nom noeud;Type parent;Nom parent\n";
+
+    QPair<QString,QString>typeNameAndNodeName,pidTypeNameAndPidNodeName;
+
+    foreach(unsigned int node,nodes)
+    {
+        unsigned int pid=getParentId(node);
+        typeNameAndNodeName=getTypeNameAndNodeName(node);
+
+        if(pid>1)
+        {
+            pidTypeNameAndPidNodeName=getTypeNameAndNodeName(pid);
+
+            out.append(QString("%1;%2;%3;%4\n").arg(typeNameAndNodeName.first).arg(typeNameAndNodeName.second)
+                       .arg(pidTypeNameAndPidNodeName.first).arg(pidTypeNameAndPidNodeName.second));
+        }
+        else if(pid==1)
+        {
+            out.append(QString("%1;%2;;\n").arg(typeNameAndNodeName.first).arg(typeNameAndNodeName.second));
+        }
+    }
+
+    out.append("\n");
     return out;
 }
 
@@ -802,6 +833,41 @@ int PCx_TreeModel::duplicateTree(const QString &newName) const
     QSqlDatabase::database().commit();
     return newTreeId;
 }
+
+QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) const
+{
+    Q_ASSERT(node>0);
+    QSqlQuery q;
+    q.prepare(QString("select * from arbre_%1 where id=:id").arg(treeId));
+    q.bindValue(":id",node);
+    q.exec();
+
+    QPair<QString,QString> typeNameAndNodeName;
+
+    if(q.next())
+    {
+        if(node>1)
+        {
+            QString typeName=types->getNomType(q.value("type").toUInt());
+            typeNameAndNodeName.first=typeName;
+            typeNameAndNodeName.second=q.value("nom").toString();
+        }
+        //Root does not has type
+        else
+        {
+            typeNameAndNodeName.first=QString();
+            typeNameAndNodeName.second=q.value("nom").toString();
+        }
+        return typeNameAndNodeName;
+    }
+    else
+    {
+        qWarning()<<"Inexistant node"<<node;
+    }
+    return QPair<QString,QString>();
+
+}
+
 
 QString PCx_TreeModel::getNodeName(unsigned int node) const
 {
