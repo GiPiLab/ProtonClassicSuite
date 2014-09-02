@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QMdiSubWindow>
+#include <QStandardPaths>
+#include <QFileDialog>
 
 FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEditTree)
 {
@@ -398,4 +400,35 @@ void FormEditTree::on_pushButtonCollapseAll_clicked()
 {
     ui->treeView->collapseAll();
     ui->treeView->expandToDepth(0);
+}
+
+
+
+void FormEditTree::on_importTreeButton_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir un arbre"), "",tr("Arbres au format tabulaire TSV (*.tsv)"));
+
+    if(fileName.isEmpty())
+        return;
+
+    bool ok;
+    QString text;
+
+    do
+    {
+        text=QInputDialog::getText(this,tr("Importer arbre"), tr("Donnez un nom à cet arbre : "),QLineEdit::Normal,"",&ok).simplified();
+    }while(ok && text.isEmpty());
+
+    if(!ok)
+        return;
+
+    if(PCx_TreeModel::treeNameExists(text))
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
+        return;
+    }
+
+    PCx_TreeModel::importTreeFromTSV(fileName,text);
 }

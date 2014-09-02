@@ -51,6 +51,9 @@ private slots:
 
     void on_pushButtonCollapseAll_clicked();
 
+
+    void on_importTreeButton_clicked();
+
 signals:
     void listOfTreeChanged();
 

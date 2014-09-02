@@ -8,6 +8,7 @@
 #include <QSqlError>
 #include <QUuid>
 #include <QElapsedTimer>
+#include <QFileInfo>
 
 PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, bool noLoadModel, QObject *parent):QStandardItemModel(parent),noLoadModel(noLoadModel)
 {
@@ -540,6 +541,69 @@ int PCx_TreeModel::deleteTree(unsigned int treeId)
     return 1;
 }
 
+int PCx_TreeModel::importTreeFromTSV(const QString &fileName, const QString &treeName)
+{
+    Q_ASSERT(!fileName.isEmpty() && !treeName.isEmpty());
+    QFileInfo fi(fileName);
+    if(!fi.isReadable()||!fi.isFile())
+    {
+        QMessageBox::critical(0,tr("Erreur"),tr("Fichier invalide ou non lisible"));
+        return -1;
+    }
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(0,tr("Erreur"),tr("Erreur d'ouverture du fichier : %1").arg(file.errorString()));
+        return -1;
+    }
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+
+    QString line;
+
+    line=stream.readLine();
+    if(line.isEmpty())
+    {
+        QMessageBox::critical(0,tr("Erreur"),tr("Format de fichier invalide"));
+        file.close();
+        return -1;
+    }
+
+    line=stream.readLine();
+
+    do
+    {
+        qDebug()<<line;
+        line=stream.readLine();
+
+    }while(!line.isEmpty());
+    file.close();
+
+
+    return 0;
+}
+
+bool PCx_TreeModel::treeNameExists(const QString &name)
+{
+    Q_ASSERT(!name.isEmpty());
+    QSqlQuery query;
+
+    query.prepare("select count(*) from index_arbres where nom=:name");
+    query.bindValue(":name",name);
+    query.exec();
+
+    if(query.next())
+    {
+        if(query.value(0).toInt()>0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 QString PCx_TreeModel::idTreeToName(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
@@ -696,11 +760,11 @@ QString PCx_TreeModel::toDot() const
     return out;
 }
 
-QString PCx_TreeModel::toCSV() const
+QString PCx_TreeModel::toTSV() const
 {
     QList<unsigned int> nodes=getNodesId();
 
-    QString out="Type noeud;Nom noeud;Type parent;Nom parent\n";
+    QString out="Type noeud\tNom noeud\tType parent\tNom parent\n";
 
     QPair<QString,QString>typeNameAndNodeName,pidTypeNameAndPidNodeName;
 
@@ -713,12 +777,12 @@ QString PCx_TreeModel::toCSV() const
         {
             pidTypeNameAndPidNodeName=getTypeNameAndNodeName(pid);
 
-            out.append(QString("%1;%2;%3;%4\n").arg(typeNameAndNodeName.first).arg(typeNameAndNodeName.second)
-                       .arg(pidTypeNameAndPidNodeName.first).arg(pidTypeNameAndPidNodeName.second));
+            out.append(QString("%1\t%2\t%3\t%4\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' '))
+                       .arg(pidTypeNameAndPidNodeName.first.replace('\t',' ')).arg(pidTypeNameAndPidNodeName.second.replace('\t',' ')));
         }
         else if(pid==1)
         {
-            out.append(QString("%1;%2;;\n").arg(typeNameAndNodeName.first).arg(typeNameAndNodeName.second));
+            out.append(QString("%1\t%2\t\t\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' ')));
         }
     }
 

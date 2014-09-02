@@ -25,7 +25,7 @@ FormDisplayTree::~FormDisplayTree()
     delete ui;
 }
 
-void FormDisplayTree::on_printViewButton_clicked()
+/*void FormDisplayTree::on_printViewButton_clicked()
 {
     QPrinter printer;
 
@@ -44,7 +44,7 @@ void FormDisplayTree::on_printViewButton_clicked()
        painter.translate(-width()/2, -height()/2);
 
        ui->treeView->render(&painter);
-}
+}*/
 
 void FormDisplayTree::on_expandButton_clicked()
 {
@@ -103,21 +103,21 @@ void FormDisplayTree::populateTableInfos()
     }
 }
 
-void FormDisplayTree::on_exportCSVButton_clicked()
+void FormDisplayTree::on_exportTSVButton_clicked()
 {
-    QString csv=model->toCSV();
+    QString csv=model->toTSV();
 
     //qDebug()<<dot;
 
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format CSV"), "",tr("Fichiers CSV (*.csv)"));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format tabulaire"), "",tr("Fichiers TSV (*.tsv)"));
     if(fileName.isEmpty())
         return;
 
     QFileInfo fi(fileName);
-    if(fi.suffix().compare("csv",Qt::CaseInsensitive)!=0)
-        fileName.append(".csv");
+    if(fi.suffix().compare("tsv",Qt::CaseInsensitive)!=0)
+        fileName.append(".tsv");
     fi=QFileInfo(fileName);
 
     QFile output(fileName);
@@ -133,5 +133,5 @@ void FormDisplayTree::on_exportCSVButton_clicked()
     outputStream<<csv;
     output.close();
 
-    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format CSV"));
+    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format TSV"));
 }

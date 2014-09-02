@@ -60,14 +60,20 @@ public:
 
     //Export tree to dot format
     QString toDot() const;
-    QString toCSV() const;
+    QString toTSV() const;
 
     int duplicateTree(const QString &newName) const;
 
     QString getNodeName(unsigned int node) const;
     QPair<QString, QString> getTypeNameAndNodeName(unsigned int node) const;
+
     static int addNewTree(const QString &name);
     static int deleteTree(unsigned int treeId);
+    static int importTreeFromTSV(const QString &fileName,const QString &treeName);
+
+    static bool treeNameExists(const QString &name);
+
+
     static QString idTreeToName(unsigned int treeId);
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 

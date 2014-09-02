@@ -18,7 +18,7 @@ public:
     ~FormDisplayTree();
 
 private slots:
-    void on_printViewButton_clicked();
+    //void on_printViewButton_clicked();
 
     void on_expandButton_clicked();
 
@@ -26,7 +26,7 @@ private slots:
 
     void on_exportButton_clicked();
 
-    void on_exportCSVButton_clicked();
+    void on_exportTSVButton_clicked();
 
 private:
     Ui::FormDisplayTree *ui;
