@@ -37,7 +37,7 @@ int duplicateTree(unsigned int treeId, const QString &newName)
 
     QSqlDatabase::database().transaction();
     int newTreeId=addTree(newName,false,false);
-    if(newTreeId==-1)
+    if(newTreeId<=0)
     {
         QSqlDatabase::database().rollback();
         die();
@@ -89,7 +89,7 @@ int createRandomTree(const QString &name,unsigned int nbNodes)
     QSqlDatabase::database().transaction();
     int lastId=addTree(name);
 
-    if(lastId==-1)
+    if(lastId<=0)
     {
         QSqlDatabase::database().rollback();
         die();
@@ -122,6 +122,13 @@ int createRandomTree(const QString &name,unsigned int nbNodes)
 }
 
 
+/**
+ * @brief addTree add a tree. This function must be enclosed in a sql transaction
+ * @param name : the tree name
+ * @param createRoot : create the root ?
+ * @param addTypes : add default types ?
+ * @return the ID of the new tree
+ */
 int addTree(const QString &name, bool createRoot, bool addTypes)
 {
     QSqlQuery query;
@@ -132,8 +139,6 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
             return -1;
     }
 
-    QSqlDatabase::database().transaction();
-
     query.prepare("insert into index_arbres (nom) values(:nom)");
     query.bindValue(":nom",name);
     query.exec();
@@ -141,7 +146,6 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
     if(query.numRowsAffected()!=1)
     {
         qCritical()<<query.lastError();
-        QSqlDatabase::database().rollback();
         return -1;
     }
 
@@ -149,7 +153,6 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
     if(!lastId.isValid())
     {
         qCritical()<<"Invalid last inserted Id";
-        QSqlDatabase::database().rollback();
         return -1;
     }
 
@@ -158,7 +161,6 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError();
-        QSqlDatabase::database().rollback();
         return -1;
     }
 
@@ -167,7 +169,6 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
     //When used to duplicate a tree, createRoot=false then create an empty type table
     if(!PCx_TypeModel::createTableTypes(lastId.toUInt(),addTypes))
     {
-        QSqlDatabase::database().rollback();
         return -1;
     }
 
@@ -177,12 +178,10 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
         query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toUInt()));
         if(query.numRowsAffected()!=1)
         {
-            QSqlDatabase::database().rollback();
             qCritical()<<query.lastError();
             return -1;
         }
     }
-    QSqlDatabase::database().commit();
     return lastId.toInt();
 }
 
@@ -370,7 +369,7 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
     int i=2;
 
     QSet<QString> foundTypes;
-    QHash<QPair<QString,QString>,QPair<QString,QString> > nodeToPid;
+    QMap<QPair<QString,QString>,QPair<QString,QString> > nodeToPid;
     QList<QPair<QString,QString> > firstLevelNodes;
     QSet<QPair<QString,QString> > firstLevelNodesSet;
     bool duplicateFound=false;
@@ -455,7 +454,7 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
             firstLevelNodes.append(node1);
         }
         i++;
-        if(i>(int)PCx_TreeModel::MAXNODES)
+        if(i>(int)PCx_TreeModel::MAXNODES+1)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre."));
             file.close();
@@ -495,7 +494,9 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
     QHash<QString,unsigned int> typesToIdTypes;
 
     i=1;
-    foreach(const QString &oneType, foundTypes)
+    QStringList foundTypesList=foundTypes.toList();
+    foundTypesList.sort();
+    foreach(const QString &oneType, foundTypesList)
     {
         typesToIdTypes.insert(oneType,i);
         i++;
@@ -517,11 +518,11 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
 
 
     QPair<QString,QString> aNode;
-    QHash<QPair<QString,QString>, unsigned int> nodeToIdNode,firstLevelNodeToIdNode;
+    QMap<QPair<QString,QString>, unsigned int> nodeToIdNode;
     unsigned int k=2;
     foreach(aNode,firstLevelNodesSet)
     {
-        firstLevelNodeToIdNode.insert(aNode,k);
+        nodeToIdNode.insert(aNode,k);
         k++;
     }
 
@@ -541,7 +542,7 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
 
     PCx_TreeModel treeModel(treeId,false,true);
 
-    foreach(QString oneType,foundTypes)
+    foreach(const QString & oneType,foundTypesList)
     {
         unsigned int oneTypeId=treeModel.getTypes()->addType(oneType);
         if(oneTypeId==0)
@@ -552,7 +553,7 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
         }
     }
 
-    foreach(aNode,firstLevelNodeToIdNode.keys())
+    foreach(aNode,firstLevelNodesSet)
     {
         if(treeModel.addNode(1,typesToIdTypes.value(aNode.first),aNode.second,QModelIndex())==0)
         {
@@ -560,27 +561,16 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
             return -1;
         }
     }
-
-    qDebug()<<"First level nodes : "<<firstLevelNodes;
-    qDebug()<<"Nodes without first level nodes :"<<nodeToPid;
-    qDebug()<<"Nodes to ID :"<<nodeToIdNode;
-    qDebug()<<"First level nodes to ID :"<<firstLevelNodeToIdNode;
-    qDebug()<<"Types to ID"<<typesToIdTypes;
-    foreach(aNode,nodeToIdNode.keys())
+    foreach(aNode,nodeToPid.keys())
     {
         QPair<QString, QString> aPid;
         aPid=nodeToPid.value(aNode);
-        qDebug()<<nodeToIdNode.value(aPid);
         if(treeModel.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second,QModelIndex())==0)
         {
             QSqlDatabase::database().rollback();
             return -1;
         }
     }
-
-
-    //FIXME : BUG AND ROLLBACK
-
 
     QSqlDatabase::database().commit();
     return treeId;

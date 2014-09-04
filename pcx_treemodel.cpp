@@ -30,7 +30,10 @@ PCx_TreeModel::~PCx_TreeModel()
 
 unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex)
 {
-    Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
+    Q_ASSERT(!name.isNull());
+    Q_ASSERT(!name.isEmpty());
+    Q_ASSERT(pid>0);
+    Q_ASSERT(type>0);
 
     if(getNumberOfNodes()>=MAXNODES)
     {
@@ -82,7 +85,10 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
 
 bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, unsigned int newType)
 {
-    Q_ASSERT(nodeIndex.isValid() && !newName.isNull()&& !newName.isEmpty() && newType>0);
+    Q_ASSERT(nodeIndex.isValid());
+    Q_ASSERT(!newName.isNull());
+    Q_ASSERT(!newName.isEmpty());
+    Q_ASSERT(newType>0);
     unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
     qDebug()<<"Node to be updated = "<<nodeId;
 

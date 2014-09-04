@@ -140,7 +140,13 @@ void FormEditTree::on_newTreeButton_clicked()
 
     if(ok)
     {
-        PCx_TreeManage::addTree(text);
+        QSqlDatabase::database().transaction();
+        if(PCx_TreeManage::addTree(text)<=0)
+        {
+            QSqlDatabase::database().rollback();
+            return;
+        }
+        QSqlDatabase::database().commit();
         updateListOfTree();
         emit(listOfTreeChanged());
     }
