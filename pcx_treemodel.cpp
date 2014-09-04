@@ -639,8 +639,6 @@ QString PCx_TreeModel::toTSV() const
             out.append(QString("%1\t%2\t\t\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' ')));
         }
     }
-
-    out.append("\n");
     return out;
 }
 

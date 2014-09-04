@@ -431,5 +431,9 @@ void FormEditTree::on_importTreeButton_clicked()
         return;
     }
 
-    PCx_TreeManage::importTreeFromTSV(fileName,text);
+    if(PCx_TreeManage::importTreeFromTSV(fileName,text)>0)
+    {
+        updateListOfTree();
+        emit(listOfTreeChanged());
+    }
 }

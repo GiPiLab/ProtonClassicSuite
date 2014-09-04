@@ -325,6 +325,16 @@ int deleteTree(unsigned int treeId)
     return 1;
 }
 
+
+/**
+ * @brief importTreeFromTSV : import a tree from a TSV.
+ * @param fileName
+ * @param treeName
+ * @return the identifier of the newly created tree, or -1 in case of error
+ *
+ * Check from duplicates, orphan nodes, graph structure (multiple ancestors) and empty root
+ *
+ */
 int importTreeFromTSV(const QString &fileName, const QString &treeName)
 {
     Q_ASSERT(!fileName.isEmpty() && !treeName.isEmpty());
@@ -359,11 +369,11 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
 
     int i=2;
 
-    QSet<QString> foundTypes,foundTypesAndNamesLeft,foundTypesAndNamesRight;
-
-    QHash<QString,QString> typeAndNodeToPidTypeAndNode;
-    QSet<QString> firstLevelTypesAndNodes;
-
+    QSet<QString> foundTypes;
+    QHash<QPair<QString,QString>,QPair<QString,QString> > nodeToPid;
+    QList<QPair<QString,QString> > firstLevelNodes;
+    QSet<QPair<QString,QString> > firstLevelNodesSet;
+    bool duplicateFound=false;
 
     do
     {
@@ -375,52 +385,150 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
             return -1;
         }
 
-        QString type1=items.at(0).simplified();
-        QString name1=items.at(1).simplified();
+        QPair<QString,QString> node1;
 
-        if(type1.isEmpty())
+        node1.first=items.at(0).simplified();
+        node1.second=items.at(1).simplified();
+
+        if(node1.first.isEmpty())
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type manquant ligne %1 colonne 1 !").arg(i));
             file.close();
             return -1;
         }
 
-        if(name1.isEmpty())
+        if(node1.second.isEmpty())
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Nom manquant ligne %1 colonne 2 !").arg(i));
             file.close();
             return -1;
         }
 
-        foundTypes.insert(type1);
-        foundTypesAndNamesLeft.insert(type1+"\t"+name1);
+        foundTypes.insert(node1.first);
 
         if(items.size()==4)
         {
-            QString type2=items.at(2).simplified();
-            QString name2=items.at(3).simplified();
-            if(!type2.isEmpty() && !name2.isEmpty())
+            QPair<QString,QString> pidNode;
+            pidNode.first=items.at(2).simplified();
+            pidNode.second=items.at(3).simplified();
+            if(!pidNode.first.isEmpty() && !pidNode.second.isEmpty())
             {
-                foundTypesAndNamesRight.insert(type2+"\t"+name2);
-                foundTypes.insert(type2);
+                if(nodeToPid.contains(node1))
+                {
+                    if(nodeToPid.value(node1)!=pidNode)
+                    {
+                        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 ne peut pas avoir plusieurs pères !")
+                                              .arg(QString(node1.first+" "+node1.second)));
+                        file.close();
+                        return -1;
+                    }
+                    else
+                    {
+                        duplicateFound=true;
+                    }
+                }
+                else
+                {
+                    nodeToPid.insert(node1,pidNode);
+                }
+                foundTypes.insert(pidNode.first);
+            }
+            else
+            {
+                if(pidNode.first.isEmpty())
+                {
+                    QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type manquant ligne %1 colonne 3 !").arg(i));
+                    file.close();
+                    return -1;
+                }
+
+                if(pidNode.second.isEmpty())
+                {
+                    QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Nom manquant ligne %1 colonne 4 !").arg(i));
+                    file.close();
+                    return -1;
+                }
             }
         }
         else
         {
-            firstLevelTypesAndNodes.insert(type1+"\t"+name1);
+            firstLevelNodes.append(node1);
         }
         i++;
+        if(i>(int)PCx_TreeModel::MAXNODES)
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre."));
+            file.close();
+            return -1;
+        }
         line=stream.readLine();
 
     }while(!line.isEmpty());
     file.close();
 
-    Q_ASSERT(foundTypes.size()>0 && foundTypesAndNamesLeft.size()>0);
+    firstLevelNodesSet=firstLevelNodes.toSet();
 
-    if(firstLevelTypesAndNodes.size()==0)
+    if(firstLevelNodesSet.size()<firstLevelNodes.size()||duplicateFound)
+    {
+        QMessageBox::information(0,QObject::tr("Information"),QObject::tr("Il y a des doublons dans le fichier, ils ne seront pas pris en compte."));
+    }
+
+
+    if(firstLevelNodesSet.size()==0)
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Aucun noeud n'est accroché à la racine. Laissez les colonnes 3 et 4 vides pour les spécifier."));
         return -1;
+    }
+
+
+    QPair<QString,QString> firstLevelNode;
+    foreach(firstLevelNode,firstLevelNodesSet)
+    {
+        if(nodeToPid.contains(firstLevelNode))
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 ne peut pas avoir plusieurs pères !")
+                                  .arg(QString(firstLevelNode.first+" "+firstLevelNode.second)));
+            return -1;
+        }
+    }
+
+    QHash<QString,unsigned int> typesToIdTypes;
+
+    i=1;
+    foreach(const QString &oneType, foundTypes)
+    {
+        typesToIdTypes.insert(oneType,i);
+        i++;
+    }
+
+    //Check for orphan ancestors
+    QPair<QString, QString> ancestor;
+
+    foreach(ancestor,nodeToPid.values())
+    {
+        if(!nodeToPid.contains(ancestor) && !firstLevelNodesSet.contains(ancestor))
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 est orphelin !")
+                                  .arg(QString(ancestor.first+" "+ancestor.second)));
+            return -1;
+        }
+    }
+
+
+
+    QPair<QString,QString> aNode;
+    QHash<QPair<QString,QString>, unsigned int> nodeToIdNode,firstLevelNodeToIdNode;
+    unsigned int k=2;
+    foreach(aNode,firstLevelNodesSet)
+    {
+        firstLevelNodeToIdNode.insert(aNode,k);
+        k++;
+    }
+
+    foreach(aNode,nodeToPid.keys())
+    {
+        nodeToIdNode.insert(aNode,k);
+        k++;
     }
 
     QSqlDatabase::database().transaction();
@@ -431,9 +539,7 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
         return -1;
     }
 
-    QHash<QString,unsigned int> typesToIdTypes;
-
-    PCx_TreeModel treeModel(treeId,false);
+    PCx_TreeModel treeModel(treeId,false,true);
 
     foreach(QString oneType,foundTypes)
     {
@@ -444,16 +550,39 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
             QSqlDatabase::database().rollback();
             return -1;
         }
-        typesToIdTypes.insert(oneType,oneTypeId);
     }
 
-    qDebug()<<foundTypes;
-    qDebug()<<foundTypesAndNamesLeft<<foundTypesAndNamesRight;
-    qDebug()<<firstLevelTypesAndNodes;
-    qDebug()<<typesToIdTypes;
+    foreach(aNode,firstLevelNodeToIdNode.keys())
+    {
+        if(treeModel.addNode(1,typesToIdTypes.value(aNode.first),aNode.second,QModelIndex())==0)
+        {
+            QSqlDatabase::database().rollback();
+            return -1;
+        }
+    }
 
-    QSqlDatabase::database().rollback();
-    return 0;
+    qDebug()<<"First level nodes : "<<firstLevelNodes;
+    qDebug()<<"Nodes without first level nodes :"<<nodeToPid;
+    qDebug()<<"Nodes to ID :"<<nodeToIdNode;
+    qDebug()<<"First level nodes to ID :"<<firstLevelNodeToIdNode;
+    qDebug()<<"Types to ID"<<typesToIdTypes;
+    foreach(aNode,nodeToIdNode.keys())
+    {
+        QPair<QString, QString> aPid;
+        aPid=nodeToPid.value(aNode);
+        qDebug()<<nodeToIdNode.value(aPid);
+        if(treeModel.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second,QModelIndex())==0)
+        {
+            QSqlDatabase::database().rollback();
+            return -1;
+        }
+    }
+
+
+    //FIXME : BUG AND ROLLBACK
+
+
+    QSqlDatabase::database().commit();
+    return treeId;
 }
 }
-
