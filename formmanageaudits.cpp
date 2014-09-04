@@ -3,6 +3,7 @@
 #include "formmanageaudits.h"
 #include "ui_formmanageaudits.h"
 #include "pcx_audit.h"
+#include "pcx_treemanage.h"
 #include <QDebug>
 #include "utils.h"
 #include "dialogduplicateaudit.h"
@@ -53,7 +54,7 @@ void FormManageAudits::updateListOfTrees()
 {
     ui->comboListOfTrees->clear();
 
-    QList<QPair<unsigned int,QString> > lot=PCx_TreeModel::getListOfTrees(true);
+    QList<QPair<unsigned int,QString> > lot=PCx_TreeManage::getListOfTrees(true);
     setEnabled(!lot.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,lot)

@@ -16,7 +16,7 @@ public:
     QList<QPair<unsigned int,QString> > getTypes() const;
 
 
-    bool addType(const QString &type);
+    unsigned int addType(const QString &typeName);
     bool deleteType(const QString &type);
     bool deleteType(unsigned int id);
 

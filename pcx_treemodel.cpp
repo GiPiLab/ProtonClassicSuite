@@ -28,91 +28,6 @@ PCx_TreeModel::~PCx_TreeModel()
     types=NULL;
 }
 
-
-QList<QPair<unsigned int, QString> > PCx_TreeModel::getListOfTrees(bool finishedOnly)
-{
-    QList<QPair<unsigned int,QString> > listOfTrees;
-    QDateTime dt;
-
-    QSqlQuery query("select * from index_arbres order by datetime(le_timestamp)");
-    while(query.next())
-    {
-        QString item;
-
-        dt=QDateTime::fromString(query.value(3).toString(),"yyyy-MM-dd hh:mm:ss");
-        dt.setTimeSpec(Qt::UTC);
-        QDateTime dtLocal=dt.toLocalTime();
-
-        if(query.value(2).toBool()==true)
-        {
-            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-            QPair<unsigned int, QString> p;
-            p.first=query.value(0).toUInt();
-            p.second=item;
-            listOfTrees.append(p);
-        }
-        else if(finishedOnly==false)
-        {
-             item=QString("%1 - %2").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-             QPair<unsigned int, QString> p;
-             p.first=query.value(0).toUInt();
-             p.second=item;
-             listOfTrees.append(p);
-        }
-    }
-    return listOfTrees;
-}
-
-//Private static function
-int PCx_TreeModel::addTree(const QString &name,bool createRoot)
-{
-    QSqlQuery query;
-    query.prepare("insert into index_arbres (nom) values(:nom)");
-    query.bindValue(":nom",name);
-    query.exec();
-
-    if(query.numRowsAffected()!=1)
-    {
-        qCritical()<<query.lastError();
-        return -1;
-    }
-
-    QVariant lastId=query.lastInsertId();
-    if(!lastId.isValid())
-    {
-        qCritical()<<"Invalid last inserted Id";
-        return -1;
-    }
-
-    query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(lastId.toUInt()));
-
-    if(query.numRowsAffected()==-1)
-    {
-        qCritical()<<query.lastError();
-        return -1;
-    }
-
-    query.exec(QString("create index idx_arbre_%1_pid on arbre_%1(pid)").arg(lastId.toUInt()));
-
-    //When used to duplicate a tree, createRoot=false then create an empty type table
-    if(!PCx_TypeModel::createTableTypes(lastId.toUInt(),createRoot))
-    {
-        return -1;
-    }
-
-    if(createRoot)
-    {
-    //Racine
-        query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(lastId.toUInt()));
-        if(query.numRowsAffected()!=1)
-        {
-            qCritical()<<query.lastError();
-            return -1;
-        }
-    }
-    return lastId.toInt();
-}
-
 unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex)
 {
     Q_ASSERT(!name.isNull() && !name.isEmpty() && pid>0 && type>0);
@@ -220,39 +135,7 @@ bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
 }
 
 
-int PCx_TreeModel::addNewTree(const QString &name)
-{
-    Q_ASSERT(!name.isNull() && !name.isEmpty());
-    QSqlQuery query;
 
-    query.prepare("select count(*) from index_arbres where nom=:name");
-    query.bindValue(":name",name);
-    query.exec();
-
-    if(query.next())
-    {
-        if(query.value(0).toInt()>0)
-        {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-            return -1;
-        }
-    }
-    else
-    {
-        qCritical()<<query.lastError();
-        die();
-    }
-    QSqlDatabase::database().transaction();
-    int lastId=addTree(name,true);
-
-    if(lastId==-1)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
-    QSqlDatabase::database().commit();
-    return lastId;
-}
 
 QList<unsigned int> PCx_TreeModel::getNodesId() const
 {
@@ -472,176 +355,9 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
     return listOfChildren;
 }
 
-//Returns 0 if the tree is linked to an audit, -1 for a non-existant tree (should not happens) and 1 on success
-int PCx_TreeModel::deleteTree(unsigned int treeId)
-{
-    Q_ASSERT(treeId>0);
-
-    QSqlQuery query;
-
-    query.exec(QString("select count(*) from index_arbres where id='%1'").arg(treeId));
-    if(query.next())
-    {
-        if(query.value(0).toInt()==0)
-        {
-            qWarning()<<"Trying to delete an inexistant tree !";
-            return -1;
-        }
-    }
-    else
-    {
-        qCritical()<<query.lastError();
-        die();
-    }
-
-    query.exec(QString("select count(*) from index_audits where id_arbre='%1'").arg(treeId));
-    if(query.next())
-    {
-        if(query.value(0).toInt()>0)
-        {
-           return 0;
-        }
-    }
-    else
-    {
-        qCritical()<<query.lastError();
-        die();
-    }
 
 
-    QSqlDatabase::database().transaction();
-    query.exec(QString("delete from index_arbres where id='%1'").arg(treeId));
-    if(query.numRowsAffected()!=1)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<query.lastError();
-        die();
-    }
 
-
-    query.exec(QString("drop table arbre_%1").arg(treeId));
-    if(query.numRowsAffected()==-1)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<query.lastError();
-        die();
-    }
-
-    query.exec(QString("drop table types_%1").arg(treeId));
-    if(query.numRowsAffected()==-1)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<query.lastError();
-        die();
-    }
-
-    QSqlDatabase::database().commit();
-
-    qDebug()<<"Tree "<<treeId<<" deleted.";
-    return 1;
-}
-
-int PCx_TreeModel::importTreeFromTSV(const QString &fileName, const QString &treeName)
-{
-    Q_ASSERT(!fileName.isEmpty() && !treeName.isEmpty());
-    QFileInfo fi(fileName);
-    if(!fi.isReadable()||!fi.isFile())
-    {
-        QMessageBox::critical(0,tr("Erreur"),tr("Fichier invalide ou non lisible"));
-        return -1;
-    }
-
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
-    {
-        QMessageBox::critical(0,tr("Erreur"),tr("Erreur d'ouverture du fichier : %1").arg(file.errorString()));
-        return -1;
-    }
-
-    QTextStream stream(&file);
-    stream.setCodec("UTF-8");
-
-    QString line;
-
-    line=stream.readLine();
-    if(line.isEmpty())
-    {
-        QMessageBox::critical(0,tr("Erreur"),tr("Format de fichier invalide"));
-        file.close();
-        return -1;
-    }
-
-    line=stream.readLine();
-
-    do
-    {
-        qDebug()<<line;
-        line=stream.readLine();
-
-    }while(!line.isEmpty());
-    file.close();
-
-
-    return 0;
-}
-
-bool PCx_TreeModel::treeNameExists(const QString &name)
-{
-    Q_ASSERT(!name.isEmpty());
-    QSqlQuery query;
-
-    query.prepare("select count(*) from index_arbres where nom=:name");
-    query.bindValue(":name",name);
-    query.exec();
-
-    if(query.next())
-    {
-        if(query.value(0).toInt()>0)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-QString PCx_TreeModel::idTreeToName(unsigned int treeId)
-{
-    Q_ASSERT(treeId>0);
-    QSqlQuery q(QString("select * from index_arbres where id='%1'").arg(treeId));
-    if(q.next())
-    {
-        return q.value("nom").toString();
-    }
-    else
-    {
-        qWarning()<<"Inexistant tree !";
-        return NULL;
-    }
-}
-
-bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
-{
-    Q_ASSERT(treeId>0);
-
-    QSqlQuery query;
-
-    query.prepare("SELECT id,nom,termine,le_timestamp from index_arbres where id=:id");
-    query.bindValue(":id",treeId);
-    query.exec();
-    if(query.next())
-    {
-        this->treeName=query.value(1).toString();
-        this->treeId=treeId;
-        this->finished=query.value(2).toBool();
-        this->creationTime=query.value(3).toString();
-    }
-    else
-    {
-        qWarning()<<"Missing Tree";
-        return false;
-    }
-    return updateTree();
-}
 
 /*
  * Drag and drop : uses QStandardItemModel to compute the logic with items
@@ -733,169 +449,6 @@ bool PCx_TreeModel::updateTree()
     res=createChildrenItems(invisibleRootItem(),0);
     qDebug()<<"updateTree done in"<<timer.elapsed()<<"ms";
     return res;
-}
-
-QString PCx_TreeModel::toDot() const
-{
-    QList<unsigned int> nodes=getNodesId();
-
-    QString out="graph g{\nrankdir=LR;\n";
-
-    foreach(unsigned int node,nodes)
-    {
-        //Escape double quotes for dot format
-        out.append(QString("%1 [label=\"%2\"];\n").arg(node).arg(getNodeName(node).replace('"',QString("\\\""))));
-    }
-
-    foreach(unsigned int node,nodes)
-    {
-        unsigned int pid=getParentId(node);
-
-        if(pid!=0)
-        {
-            out.append(QString("\t%1--%2;\n").arg(pid).arg(node));
-        }
-    }
-    out.append("}\n");
-    return out;
-}
-
-QString PCx_TreeModel::toTSV() const
-{
-    QList<unsigned int> nodes=getNodesId();
-
-    QString out="Type noeud\tNom noeud\tType parent\tNom parent\n";
-
-    QPair<QString,QString>typeNameAndNodeName,pidTypeNameAndPidNodeName;
-
-    foreach(unsigned int node,nodes)
-    {
-        unsigned int pid=getParentId(node);
-        typeNameAndNodeName=getTypeNameAndNodeName(node);
-
-        if(pid>1)
-        {
-            pidTypeNameAndPidNodeName=getTypeNameAndNodeName(pid);
-
-            out.append(QString("%1\t%2\t%3\t%4\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' '))
-                       .arg(pidTypeNameAndPidNodeName.first.replace('\t',' ')).arg(pidTypeNameAndPidNodeName.second.replace('\t',' ')));
-        }
-        else if(pid==1)
-        {
-            out.append(QString("%1\t%2\t\t\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' ')));
-        }
-    }
-
-    out.append("\n");
-    return out;
-}
-
-
-int PCx_TreeModel::createRandomTree(const QString &name,unsigned int nbNodes)
-{
-    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<=MAXNODES);
-    QSqlQuery query;
-
-    query.prepare("select count(*) from index_arbres where nom=:name");
-    query.bindValue(":name",name);
-    query.exec();
-
-    if(query.next())
-    {
-        if(query.value(0).toInt()>0)
-        {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-            return -1;
-        }
-    }
-    else
-    {
-        qCritical()<<query.lastError();
-        die();
-    }
-    QSqlDatabase::database().transaction();
-    int lastId=addTree(name,true);
-
-    if(lastId==-1)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    unsigned int maxNumType=PCx_TypeModel::getListOfDefaultTypes().size();
-
-    for(unsigned int i=1;i<nbNodes;i++)
-    {
-        QSqlQuery q;
-        unsigned int type=(qrand()%maxNumType)+1;
-        unsigned int pid=(qrand()%i)+1;
-        QString name=QUuid::createUuid().toString();
-        q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(lastId));
-        q.bindValue(":nom",name);
-        q.bindValue(":pid",pid);
-        q.bindValue(":type",type);
-        q.exec();
-
-        if(q.numRowsAffected()!=1)
-        {
-            qCritical()<<q.lastError();
-            QSqlDatabase::database().rollback();
-            die();
-        }
-    }
-
-    QSqlDatabase::database().commit();
-    return lastId;
-}
-
-
-int PCx_TreeModel::duplicateTree(const QString &newName) const
-{
-    Q_ASSERT(!newName.isEmpty());
-    QSqlQuery q;
-    q.prepare("select count(*) from index_arbres where nom=:name");
-    q.bindValue(":name",newName);
-    q.exec();
-
-    if(q.next())
-    {
-        if(q.value(0).toInt()>0)
-        {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-            return -1;
-        }
-    }
-    else
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    QSqlDatabase::database().transaction();
-    int newTreeId=addTree(newName,false);
-    if(newTreeId==-1)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    q.exec(QString("insert into types_%1 select * from types_%2").arg(newTreeId).arg(treeId));
-    if(q.numRowsAffected()<=0)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    q.exec(QString("insert into arbre_%1 select * from arbre_%2").arg(newTreeId).arg(treeId));
-    if(q.numRowsAffected()<=0)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<q.lastError();
-        die();
-    }
-    QSqlDatabase::database().commit();
-    return newTreeId;
 }
 
 QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) const
@@ -1036,3 +589,81 @@ QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString 
     return newitem;
 }
 
+QString PCx_TreeModel::toDot() const
+{
+    QList<unsigned int> nodes=getNodesId();
+
+    QString out="graph g{\nrankdir=LR;\n";
+
+    foreach(unsigned int node,nodes)
+    {
+        //Escape double quotes for dot format
+        out.append(QString("%1 [label=\"%2\"];\n").arg(node).arg(getNodeName(node).replace('"',QString("\\\""))));
+    }
+
+    foreach(unsigned int node,nodes)
+    {
+        unsigned int pid=getParentId(node);
+
+        if(pid!=0)
+        {
+            out.append(QString("\t%1--%2;\n").arg(pid).arg(node));
+        }
+    }
+    out.append("}\n");
+    return out;
+}
+
+QString PCx_TreeModel::toTSV() const
+{
+    QList<unsigned int> nodes=getNodesId();
+
+    QString out="Type noeud\tNom noeud\tType parent\tNom parent\n";
+
+    QPair<QString,QString>typeNameAndNodeName,pidTypeNameAndPidNodeName;
+
+    foreach(unsigned int node,nodes)
+    {
+        unsigned int pid=getParentId(node);
+        typeNameAndNodeName=getTypeNameAndNodeName(node);
+
+        if(pid>1)
+        {
+            pidTypeNameAndPidNodeName=getTypeNameAndNodeName(pid);
+
+            out.append(QString("%1\t%2\t%3\t%4\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' '))
+                       .arg(pidTypeNameAndPidNodeName.first.replace('\t',' ')).arg(pidTypeNameAndPidNodeName.second.replace('\t',' ')));
+        }
+        else if(pid==1)
+        {
+            out.append(QString("%1\t%2\t\t\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' ')));
+        }
+    }
+
+    out.append("\n");
+    return out;
+}
+
+bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
+{
+    Q_ASSERT(treeId>0);
+
+    QSqlQuery query;
+
+    query.prepare("SELECT id,nom,termine,le_timestamp from index_arbres where id=:id");
+    query.bindValue(":id",treeId);
+    query.exec();
+    if(query.next())
+    {
+        this->treeName=query.value(1).toString();
+        this->treeId=treeId;
+        this->finished=query.value(2).toBool();
+        this->creationTime=query.value(3).toString();
+    }
+    else
+    {
+        qWarning()<<"Missing Tree";
+        return false;
+    }
+    return updateTree();
+}

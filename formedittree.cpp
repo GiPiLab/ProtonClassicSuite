@@ -3,6 +3,7 @@
 #include "ui_formedittree.h"
 #include "utils.h"
 #include "pcx_treemodel.h"
+#include "pcx_treemanage.h"
 #include <QDebug>
 #include <QSqlRecord>
 #include <QSqlField>
@@ -50,7 +51,7 @@ void FormEditTree::updateListOfTree()
 {
     ui->comboBox->clear();
 
-    QList<QPair<unsigned int,QString> > lot=PCx_TreeModel::getListOfTrees();
+    QList<QPair<unsigned int,QString> > lot=PCx_TreeManage::getListOfTrees();
     bool nonEmpty=!lot.isEmpty();
     setReadOnly(!nonEmpty);
     ui->deleteTreeButton->setEnabled(nonEmpty);
@@ -97,7 +98,7 @@ void FormEditTree::on_deleteTreeButton_clicked()
         unsigned int treeId=model->getTreeId();
         //qDebug()<<"Deleting tree "<<treeId;
 
-        int result=PCx_TreeModel::deleteTree(treeId);
+        int result=PCx_TreeManage::deleteTree(treeId);
 
         if(result==1)
         {
@@ -139,7 +140,7 @@ void FormEditTree::on_newTreeButton_clicked()
 
     if(ok)
     {
-        PCx_TreeModel::addNewTree(text);
+        PCx_TreeManage::addTree(text);
         updateListOfTree();
         emit(listOfTreeChanged());
     }
@@ -361,7 +362,7 @@ void FormEditTree::on_duplicateTreeButton_clicked()
 
         if(ok)
         {
-            model->duplicateTree(text);
+            PCx_TreeManage::duplicateTree(model->getTreeId(),text);
             updateListOfTree();
         }
     }
@@ -386,7 +387,7 @@ void FormEditTree::on_randomTreeButton_clicked()
 
     if(ok)
     {
-        PCx_TreeModel::createRandomTree(text,nbNodes);
+        PCx_TreeManage::createRandomTree(text,nbNodes);
         updateListOfTree();
     }
 }
@@ -424,11 +425,11 @@ void FormEditTree::on_importTreeButton_clicked()
     if(!ok)
         return;
 
-    if(PCx_TreeModel::treeNameExists(text))
+    if(PCx_TreeManage::treeNameExists(text))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
         return;
     }
 
-    PCx_TreeModel::importTreeFromTSV(fileName,text);
+    PCx_TreeManage::importTreeFromTSV(fileName,text);
 }

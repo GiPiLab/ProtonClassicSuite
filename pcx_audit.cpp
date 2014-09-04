@@ -1,5 +1,6 @@
 #include "pcx_audit.h"
 #include "pcx_query.h"
+#include "pcx_treemanage.h"
 #include "utils.h"
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -21,7 +22,7 @@ PCx_Audit::PCx_Audit(unsigned int auditId, bool loadTreeModel) :
     {
         auditName=q.value("nom").toString();
         attachedTreeId=q.value("id_arbre").toUInt();
-        attachedTreeName=PCx_TreeModel::idTreeToName(attachedTreeId);
+        attachedTreeName=PCx_TreeManage::idTreeToName(attachedTreeId);
         yearsString=q.value("annees").toString();
         QStringList yearsSplitted=yearsString.split(',');
 

@@ -143,7 +143,7 @@
        <item row="2" column="0" colspan="3">
         <widget class="QPushButton" name="viewTreeButton">
          <property name="text">
-          <string>Statistiques, impression et exportation</string>
+          <string>Instantané d'arbre</string>
          </property>
         </widget>
        </item>

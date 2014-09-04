@@ -112,7 +112,7 @@ bool PCx_TypeModel::validateType(const QString &newType)
         QMessageBox::warning(NULL,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
         return false;
     }
-    else if(nomTypes.contains(newType,Qt::CaseInsensitive))
+    else if(nomTypes.contains(newType))
     {
         QMessageBox::warning(NULL,tr("Attention"),tr("Le type <b>%1</b> existe déjà !").arg(newType));
         return false;
@@ -154,19 +154,20 @@ QList<QPair<unsigned int, QString> > PCx_TypeModel::getTypes() const
     return types;
 }
 
-bool PCx_TypeModel::addType(const QString &type)
+unsigned int PCx_TypeModel::addType(const QString &typeName)
 {
+    unsigned int typeId=0;
     //Read-only mode
-    if(typesTableModel==NULL)return false;
+    if(typesTableModel==NULL)return 0;
 
-    if(validateType(type)==false)
-        return false;
+    if(validateType(typeName)==false)
+        return 0;
 
     else
     {
         QSqlQuery q;
         q.prepare(QString("insert into types_%1 (nom) values(:nom)").arg(treeId));
-        q.bindValue(":nom",type);
+        q.bindValue(":nom",typeName);
         q.exec();
         if(q.numRowsAffected()!=1)
         {
@@ -174,10 +175,14 @@ bool PCx_TypeModel::addType(const QString &type)
             die();
         }
 
-        loadFromDatabase(treeId);
+        typeId=q.lastInsertId().toUInt();
+        Q_ASSERT(typeId>0);
+
+        idTypesToNom.insert(typeId,typeName);
+        nomTypes.append(typeName);
         typesTableModel->select();
     }
-    return true;
+    return typeId;
 }
 
 bool PCx_TypeModel::deleteType(const QString &type)

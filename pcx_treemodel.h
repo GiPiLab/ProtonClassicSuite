@@ -46,6 +46,9 @@ public:
     unsigned int getParentId(unsigned int nodeId) const;
     QList<unsigned int> getChildren(unsigned int nodeId=1) const;
 
+    QString getNodeName(unsigned int node) const;
+    QPair<QString, QString> getTypeNameAndNodeName(unsigned int node) const;
+
     QModelIndexList getIndexesOfNodesWithThisType(unsigned int typeId) const;
     QList<unsigned int> getIdsOfNodesWithThisType(unsigned int typeId) const;
     unsigned int getNumberOfNodesWithThisType(unsigned int typeId) const;
@@ -58,27 +61,8 @@ public:
     bool finishTree();
     bool updateTree();
 
-    //Export tree to dot format
     QString toDot() const;
     QString toTSV() const;
-
-    int duplicateTree(const QString &newName) const;
-
-    QString getNodeName(unsigned int node) const;
-    QPair<QString, QString> getTypeNameAndNodeName(unsigned int node) const;
-
-    static int addNewTree(const QString &name);
-    static int deleteTree(unsigned int treeId);
-    static int importTreeFromTSV(const QString &fileName,const QString &treeName);
-
-    static bool treeNameExists(const QString &name);
-
-
-    static QString idTreeToName(unsigned int treeId);
-    static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
-
-    static int createRandomTree(const QString &name, unsigned int nbNodes);
-
 
 private:
     PCx_TypeModel *types;
@@ -88,7 +72,6 @@ private:
     QString treeName;
     QString creationTime;
 
-    static int addTree(const QString &name, bool createRoot=true);
 
     bool loadFromDatabase(unsigned int treeId);
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
