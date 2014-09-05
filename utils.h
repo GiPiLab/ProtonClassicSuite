@@ -34,5 +34,6 @@ QString formatCurrency(qint64 num, int decimals=-1, bool forcedUnits=false);
 QString generateUniqueFileName(const QString &suffix="");
 
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
+QStringList yearsListToStringList(QList<unsigned int> years);
 
 #endif // UTILS_H

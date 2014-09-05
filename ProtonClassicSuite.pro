@@ -41,7 +41,8 @@ SOURCES += main.cpp\
     formauditinfos.cpp \
     pcx_editableauditmodel.cpp \
     pcx_audit.cpp \
-    pcx_treemanage.cpp
+    pcx_treemanage.cpp \
+    pcx_auditmanage.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -69,7 +70,8 @@ HEADERS  += mainwindow.h \
     formauditinfos.h \
     pcx_editableauditmodel.h \
     pcx_audit.h \
-    pcx_treemanage.h
+    pcx_treemanage.h \
+    pcx_auditmanage.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \

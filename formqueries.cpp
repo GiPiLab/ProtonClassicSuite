@@ -8,6 +8,7 @@
 #include "pcx_queryrank.h"
 #include "pcx_queryminmax.h"
 #include "utils.h"
+#include "pcx_auditmanage.h"
 
 
 FormQueries::FormQueries(QWidget *parent) :
@@ -111,7 +112,7 @@ void FormQueries::updateListOfAudits()
 {
     ui->comboBoxListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditManage::getListOfAudits(PCx_AuditManage::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);

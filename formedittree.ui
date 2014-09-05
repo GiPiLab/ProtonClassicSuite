@@ -159,7 +159,7 @@
        </rect>
       </property>
       <attribute name="label">
-       <string>Noeuds</string>
+       <string>Noeuds et types</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">

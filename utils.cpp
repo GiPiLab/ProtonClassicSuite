@@ -211,3 +211,23 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     gvFreeContext(gvc);
     return true;
 }
+
+
+QStringList yearsListToStringList(QList<unsigned int> years)
+{
+    //De-duplicate and sort
+    QSet<unsigned int> yearsTemp;
+    QList<unsigned int> years2;
+    yearsTemp=years.toSet();
+    years2=yearsTemp.toList();
+    qSort(years2);
+
+    QStringList yearsStringList;
+
+    foreach(unsigned int annee,years2)
+    {
+        yearsStringList.append(QString::number(annee));
+    }
+    return yearsStringList;
+}
+

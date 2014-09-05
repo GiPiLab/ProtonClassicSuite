@@ -19,12 +19,7 @@ public:
         GLOBAL
     };
 
-    enum ListAuditsMode
-    {
-        FinishedAuditsOnly,
-        UnFinishedAuditsOnly,
-        AllAudits
-    };
+
 
     enum ORED
     {
@@ -37,8 +32,7 @@ public:
     explicit PCx_Audit(unsigned int auditId,bool loadTreeModel=true);
     virtual ~PCx_Audit();
 
-    static unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
-    static bool deleteAudit(unsigned int auditId);
+
 
     //Getters
     unsigned int getAuditId() const{return auditId;}
@@ -47,7 +41,7 @@ public:
     QString getAttachedTreeName() const{return attachedTreeName;}
     PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     unsigned int getAttachedTreeId() const{return attachedTreeId;}
-    static unsigned int getAttachedTreeId(unsigned int auditId);
+
     bool isFinished() const{return finished;}
     QString isFinishedString() const{return finishedString;}
     QList<unsigned int> getYears() const{return years;}
@@ -58,8 +52,7 @@ public:
 
     bool finishAudit();
     bool unFinishAudit();
-    static bool finishAudit(unsigned int id);
-    static bool unFinishAudit(unsigned int id);
+
 
 
     virtual bool setLeafValues(unsigned int leafId, DFRFDIRI mode, unsigned int year, QHash<ORED, double> vals);
@@ -70,9 +63,6 @@ public:
     int duplicateAudit(const QString &newName,QList<unsigned int> years,
                                 bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
 
-    static int duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI);
-
-    static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 
     static QString modeToTableString(DFRFDIRI mode);
     static QString modeToCompleteString(DFRFDIRI mode);
@@ -82,15 +72,10 @@ public:
     static ORED OREDFromTableString(const QString &ored);
     static DFRFDIRI modeFromTableString(const QString &mode);
 
-    static bool auditNameExists(const QString &auditName);
-
-
     QString getHTMLAuditStatistics() const;
     QList<unsigned int> getNodesWithNonNullValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const;
     QList<unsigned int> getNodesWithAllNullValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const;
     QList<unsigned int> getNodesWithAllZeroValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const;
-
-    static QStringList yearsListToStringList(QList<unsigned int> years);
 
 signals:
 
