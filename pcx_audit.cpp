@@ -81,7 +81,6 @@ QString PCx_Audit::getAuditName(unsigned int auditId)
 }
 
 
-
 bool PCx_Audit::finishAudit()
 {
     finished=true;
@@ -95,11 +94,11 @@ bool PCx_Audit::unFinishAudit()
 }
 
 
-bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, unsigned int year, QHash<ORED,double> vals)
+bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED,double> vals)
 {
     Q_ASSERT(!vals.isEmpty());
 
-    if(vals.contains(DISPONIBLES))
+    if(vals.contains(PCx_AuditManage::DISPONIBLES))
     {
         qWarning()<<"Will not overwrite the computed column DISPONIBLE";
         return false;
@@ -122,23 +121,23 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, uns
 
     QString reqString;
 
-    if(vals.contains(OUVERTS))
+    if(vals.contains(PCx_AuditManage::OUVERTS))
     {
         if(!reqString.isEmpty())
             reqString.append(",");
-        reqString.append(OREDtoTableString(OUVERTS)+"=:vouverts");
+        reqString.append(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)+"=:vouverts");
     }
-    if(vals.contains(REALISES))
+    if(vals.contains(PCx_AuditManage::REALISES))
     {
         if(!reqString.isEmpty())
             reqString.append(",");
-        reqString.append(OREDtoTableString(REALISES)+"=:vrealises");
+        reqString.append(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)+"=:vrealises");
     }
-    if(vals.contains(ENGAGES))
+    if(vals.contains(PCx_AuditManage::ENGAGES))
     {
         if(!reqString.isEmpty())
             reqString.append(",");
-        reqString.append(OREDtoTableString(ENGAGES)+"=:vengages");
+        reqString.append(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES)+"=:vengages");
     }
 
     QSqlDatabase::database().transaction();
@@ -151,14 +150,14 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, uns
     q.prepare(QString("update %1 set %2 where id_node=:id_node and annee=:year")
               .arg(tableName).arg(reqString));
 
-    if(vals.contains(OUVERTS))
-        q.bindValue(":vouverts",(qint64)vals.value(OUVERTS)*FIXEDPOINTCOEFF);
+    if(vals.contains(PCx_AuditManage::OUVERTS))
+        q.bindValue(":vouverts",(qint64)vals.value(PCx_AuditManage::OUVERTS)*FIXEDPOINTCOEFF);
 
-    if(vals.contains(REALISES))
-        q.bindValue(":vrealises",(qint64)vals.value(REALISES)*FIXEDPOINTCOEFF);
+    if(vals.contains(PCx_AuditManage::REALISES))
+        q.bindValue(":vrealises",(qint64)vals.value(PCx_AuditManage::REALISES)*FIXEDPOINTCOEFF);
 
-    if(vals.contains(ENGAGES))
-        q.bindValue(":vengages",(qint64)vals.value(ENGAGES)*FIXEDPOINTCOEFF);
+    if(vals.contains(PCx_AuditManage::ENGAGES))
+        q.bindValue(":vengages",(qint64)vals.value(PCx_AuditManage::ENGAGES)*FIXEDPOINTCOEFF);
 
     q.bindValue(":id_node",leafId);
     q.bindValue(":year",year);
@@ -196,7 +195,7 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, uns
     return true;
 }
 
-qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year) const
+qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED ored, unsigned int year) const
 {
     QSqlQuery q;
     q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored)).arg(modeToTableString(mode)).arg(auditId));
@@ -216,7 +215,7 @@ qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PC
     return q.value(OREDtoTableString(ored)).toLongLong();
 }
 
-bool PCx_Audit::clearAllData(PCx_Audit::DFRFDIRI mode)
+bool PCx_Audit::clearAllData(PCx_AuditManage::DFRFDIRI mode)
 {
     QSqlQuery q(QString("update audit_%1_%2 set ouverts=NULL,realises=NULL,engages=NULL,disponibles=NULL").arg(modeToTableString(mode)).arg(auditId));
     q.exec();
@@ -330,112 +329,6 @@ bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     return true;
 }
 
-QString PCx_Audit::modeToTableString(DFRFDIRI mode)
-{
-    switch(mode)
-    {
-    case DF:
-        return "DF";
-    case RF:
-        return "RF";
-    case DI:
-        return "DI";
-    case RI:
-        return "RI";
-    default:
-        qWarning()<<"Invalid mode specified !";
-    }
-    return QString();
-}
-
-
-
-QString PCx_Audit::modeToCompleteString(DFRFDIRI mode)
-{
-    switch(mode)
-    {
-    case DF:
-        return QObject::tr("Dépenses de fonctionnement");
-    case RF:
-        return QObject::tr("Recettes de fonctionnement");
-    case DI:
-        return QObject::tr("Dépenses d'investissement");
-    case RI:
-        return QObject::tr("Recettes d'investissement");
-    default:
-        qWarning()<<"Invalid mode specified !";
-    }
-    return QString();
-}
-
-
-QString PCx_Audit::OREDtoTableString(ORED ored)
-{
-    switch(ored)
-    {
-    case OUVERTS:
-        return "ouverts";
-    case REALISES:
-        return "realises";
-    case ENGAGES:
-        return "engages";
-    case DISPONIBLES:
-        return "disponibles";
-    default:
-        qWarning()<<"Invalid ORED specified !";
-    }
-    return QString();
-}
-
-PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &ored)
-{
-    if(ored==OREDtoTableString(OUVERTS))
-        return OUVERTS;
-    if(ored==OREDtoTableString(REALISES))
-        return REALISES;
-    if(ored==OREDtoTableString(ENGAGES))
-        return ENGAGES;
-    if(ored==OREDtoTableString(DISPONIBLES))
-        return DISPONIBLES;
-
-    qWarning()<<"Invalid ORED string specified, defaulting to ouverts";
-    return OUVERTS;
-}
-
-PCx_Audit::DFRFDIRI PCx_Audit::modeFromTableString(const QString &mode)
-{
-    if(mode==modeToTableString(DF))
-        return DF;
-    if(mode==modeToTableString(RF))
-        return RF;
-    if(mode==modeToTableString(DI))
-        return DI;
-    if(mode==modeToTableString(RI))
-        return RI;
-
-    qWarning()<<"Invalid DFRFDIRI string specified, defaulting to DF";
-    return DF;
-}
-
-
-
-QString PCx_Audit::OREDtoCompleteString(ORED ored)
-{
-    switch(ored)
-    {
-    case OUVERTS:
-        return QObject::tr("prévu");
-    case REALISES:
-        return QObject::tr("réalisé");
-    case ENGAGES:
-        return QObject::tr("engagé");
-    case DISPONIBLES:
-        return QObject::tr("disponible");
-    default:
-        qWarning()<<"Invalid ORED specified !";
-    }
-    return QString();
-}
 
 
 
@@ -473,10 +366,10 @@ QString PCx_Audit::getHTMLAuditStatistics() const
 
     foreach(unsigned int year,years)
     {
-        nodesDF=getNodesWithNonNullValues(PCx_Audit::DF,year);
-        nodesRF=getNodesWithNonNullValues(PCx_Audit::RF,year);
-        nodesDI=getNodesWithNonNullValues(PCx_Audit::DI,year);
-        nodesRI=getNodesWithNonNullValues(PCx_Audit::RI,year);
+        nodesDF=getNodesWithNonNullValues(PCx_AuditManage::DF,year);
+        nodesRF=getNodesWithNonNullValues(PCx_AuditManage::RF,year);
+        nodesDI=getNodesWithNonNullValues(PCx_AuditManage::DI,year);
+        nodesRI=getNodesWithNonNullValues(PCx_AuditManage::RI,year);
         out.append(QString("\n<tr><th colspan='5'>%1</th></tr>\n"
                            "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>%2</td><td align='right'>%3</td><td  align='right'>%4</td><td  align='right'>%5</td></tr>")
                    .arg(year)
@@ -485,10 +378,10 @@ QString PCx_Audit::getHTMLAuditStatistics() const
                    .arg(nodesDI.size())
                    .arg(nodesRI.size()));
 
-        nodesDF=getNodesWithAllZeroValues(PCx_Audit::DF,year);
-        nodesRF=getNodesWithAllZeroValues(PCx_Audit::RF,year);
-        nodesDI=getNodesWithAllZeroValues(PCx_Audit::DI,year);
-        nodesRI=getNodesWithAllZeroValues(PCx_Audit::RI,year);
+        nodesDF=getNodesWithAllZeroValues(PCx_AuditManage::DF,year);
+        nodesRF=getNodesWithAllZeroValues(PCx_AuditManage::RF,year);
+        nodesDI=getNodesWithAllZeroValues(PCx_AuditManage::DI,year);
+        nodesRI=getNodesWithAllZeroValues(PCx_AuditManage::RI,year);
 
         out.append(QString("<tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4</td></tr>")
                    .arg(nodesDF.size())
@@ -518,10 +411,10 @@ QString PCx_Audit::getHTMLAuditStatistics() const
             out.append("</tr>");
         }
 
-        nodesDF=getNodesWithAllNullValues(PCx_Audit::DF,year);
-        nodesRF=getNodesWithAllNullValues(PCx_Audit::RF,year);
-        nodesDI=getNodesWithAllNullValues(PCx_Audit::DI,year);
-        nodesRI=getNodesWithAllNullValues(PCx_Audit::RI,year);
+        nodesDF=getNodesWithAllNullValues(PCx_AuditManage::DF,year);
+        nodesRF=getNodesWithAllNullValues(PCx_AuditManage::RF,year);
+        nodesDI=getNodesWithAllNullValues(PCx_AuditManage::DI,year);
+        nodesRI=getNodesWithAllNullValues(PCx_AuditManage::RI,year);
 
         out.append(QString("<tr><td>Noeuds non remplis</td><td align='right'>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4</td></tr>")
                    .arg(nodesDF.size())
@@ -537,14 +430,15 @@ QString PCx_Audit::getHTMLAuditStatistics() const
 
 }
 
-QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(PCx_Audit::DFRFDIRI mode,unsigned int year) const
+QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(PCx_AuditManage::DFRFDIRI mode,unsigned int year) const
 {
-    QString tableMode=PCx_Audit::modeToTableString(mode);
+    QString tableMode=PCx_AuditManage::modeToTableString(mode);
     Q_ASSERT(year>=years.first()&& year<=years.last());
     QList<unsigned int> nodes;
     QStringList oredStrings;
-    oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::REALISES)
-              <<PCx_Audit::OREDtoTableString(PCx_Audit::ENGAGES);
+    oredStrings<<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)
+              <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)
+              <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
     QSqlQuery q;
     q.prepare(QString("select * from audit_%1_%2 where (%3 is null and %4 is null and %5 is null) and annee=:year").arg(tableMode).arg(auditId)
               .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
@@ -565,14 +459,15 @@ QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(PCx_Audit::DFRFDIRI mod
 }
 
 
-QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(PCx_Audit::DFRFDIRI mode,unsigned int year) const
+QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(PCx_AuditManage::DFRFDIRI mode,unsigned int year) const
 {
-    QString tableMode=PCx_Audit::modeToTableString(mode);
+    QString tableMode=PCx_AuditManage::modeToTableString(mode);
     Q_ASSERT(year>=years.first()&& year<=years.last());
     QList<unsigned int> nodes;
     QStringList oredStrings;
-    oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::REALISES)
-                 <<PCx_Audit::OREDtoTableString(PCx_Audit::ENGAGES);
+    oredStrings<<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)
+              <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)
+                 <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
     QSqlQuery q;
     q.prepare(QString("select * from audit_%1_%2 where (%3 not null or %4 not null or %5 not null) and annee=:year").arg(tableMode).arg(auditId)
                 .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
@@ -592,14 +487,14 @@ QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(PCx_Audit::DFRFDIRI mod
     return nodes;
 }
 
-QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const
+QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(PCx_AuditManage::DFRFDIRI mode, unsigned int year) const
 {
-    QString tableMode=PCx_Audit::modeToTableString(mode);
+    QString tableMode=PCx_AuditManage::modeToTableString(mode);
     Q_ASSERT(year>=years.first()&& year<=years.last());
     QList<unsigned int> nodes;
     QStringList oredStrings;
-    oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::REALISES)
-                 <<PCx_Audit::OREDtoTableString(PCx_Audit::ENGAGES);
+    oredStrings<<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)<<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)
+                 <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
     QSqlQuery q;
     QString sq=QString("select * from audit_%1_%2 where (%3 = 0 and %4 = 0 and %5 = 0) and annee=:year").arg(tableMode).arg(auditId)
                 .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2));

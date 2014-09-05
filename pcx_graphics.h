@@ -44,15 +44,15 @@ public:
     PCx_Graphics(PCx_Audit *model, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     virtual ~PCx_Graphics();
 
-    QString getG1(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::OUVERTS,false);}
-    QString getG3(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::REALISES,false);}
-    QString getG5(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ENGAGES,false);}
-    QString getG7(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::DISPONIBLES,false);}
+    QString getG1(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::OUVERTS,false);}
+    QString getG3(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::REALISES,false);}
+    QString getG5(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::ENGAGES,false);}
+    QString getG7(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::DISPONIBLES,false);}
 
-    QString getG2(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::OUVERTS,true);}
-    QString getG4(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::REALISES,true);}
-    QString getG6(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ENGAGES,true);}
-    QString getG8(unsigned int node,PCx_Audit::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::DISPONIBLES,true);}
+    QString getG2(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::OUVERTS,true);}
+    QString getG4(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::REALISES,true);}
+    QString getG6(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::ENGAGES,true);}
+    QString getG8(unsigned int node,PCx_AuditManage::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_AuditManage::DISPONIBLES,true);}
 
     QString getG9(unsigned int node) const;
 
@@ -82,7 +82,7 @@ private:
     PCx_Audit *model;
 
     //Returns the title of the graphic in html
-    QString getG1G8(unsigned int node, PCx_Audit::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const;
+    QString getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED modeORED, bool cumule) const;
     bool ownPlot;
     int graphicsWidth,graphicsHeight;
     double scale;

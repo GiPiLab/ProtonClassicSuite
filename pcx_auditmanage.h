@@ -7,6 +7,25 @@
 
 namespace PCx_AuditManage{
 
+enum DFRFDIRI
+{
+    DF,
+    RF,
+    DI,
+    RI,
+    GLOBAL
+};
+
+
+
+enum ORED
+{
+    OUVERTS,
+    REALISES,
+    ENGAGES,
+    DISPONIBLES
+};
+
 
 enum ListAuditsMode
 {
@@ -23,6 +42,14 @@ bool auditNameExists(const QString &auditName);
 QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 bool finishAudit(unsigned int auditId);
 bool unFinishAudit(unsigned int auditId);
+
+QString modeToTableString(DFRFDIRI mode);
+QString modeToCompleteString(DFRFDIRI mode);
+QString OREDtoCompleteString(ORED ored);
+QString OREDtoTableString(ORED ored);
+
+ORED OREDFromTableString(const QString &ored);
+DFRFDIRI modeFromTableString(const QString &mode);
 
 
 }

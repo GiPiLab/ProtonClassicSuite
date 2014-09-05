@@ -222,15 +222,15 @@ void FormReports::on_saveButton_clicked()
     qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
     QString output=report->generateHTMLHeader(model->getAuditId());
-    QList<PCx_Audit::DFRFDIRI> listModes;
+    QList<PCx_AuditManage::DFRFDIRI> listModes;
     if(ui->checkBoxDF->isChecked())
-        listModes.append(PCx_Audit::DF);
+        listModes.append(PCx_AuditManage::DF);
     if(ui->checkBoxRF->isChecked())
-        listModes.append(PCx_Audit::RF);
+        listModes.append(PCx_AuditManage::RF);
     if(ui->checkBoxDI->isChecked())
-        listModes.append(PCx_Audit::DI);
+        listModes.append(PCx_AuditManage::DI);
     if(ui->checkBoxRI->isChecked())
-        listModes.append(PCx_Audit::RI);
+        listModes.append(PCx_AuditManage::RI);
 
     if(listModes.isEmpty() && (!selectedGraphics.isEmpty() || !selectedTables.isEmpty()))
     {
@@ -306,9 +306,9 @@ void FormReports::on_saveButton_clicked()
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_Audit::DF,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_AuditManage::DF,NULL,absoluteImagePath,relativeImagePath,NULL));
         }
-        foreach(PCx_Audit::DFRFDIRI mode,listModes)
+        foreach(PCx_AuditManage::DFRFDIRI mode,listModes)
         {
             output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),selectedTables,selectedGraphics,selectedNode,mode,NULL,absoluteImagePath,relativeImagePath,NULL));
             if(progress.wasCanceled())

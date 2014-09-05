@@ -269,13 +269,13 @@ int duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned 
     QStringList modes;
 
     if(copyDF)
-        modes.append(PCx_Audit::modeToTableString(PCx_Audit::DF));
+        modes.append(modeToTableString(DF));
     if(copyRF)
-        modes.append(PCx_Audit::modeToTableString(PCx_Audit::RF));
+        modes.append(modeToTableString(RF));
     if(copyDI)
-        modes.append(PCx_Audit::modeToTableString(PCx_Audit::DI));
+        modes.append(modeToTableString(DI));
     if(copyRI)
-        modes.append(PCx_Audit::modeToTableString(PCx_Audit::RI));
+        modes.append(modeToTableString(RI));
 
 
     QProgressDialog progress(QObject::tr("Données en cours de recopie..."),QObject::tr("Annuler"),0,modes.size()*4+2);
@@ -520,6 +520,113 @@ bool unFinishAudit(unsigned int auditId)
         die();
     }
     return true;
+}
+
+QString modeToTableString(DFRFDIRI mode)
+{
+    switch(mode)
+    {
+    case DF:
+        return "DF";
+    case RF:
+        return "RF";
+    case DI:
+        return "DI";
+    case RI:
+        return "RI";
+    default:
+        qWarning()<<"Invalid mode specified !";
+    }
+    return QString();
+}
+
+
+
+QString modeToCompleteString(DFRFDIRI mode)
+{
+    switch(mode)
+    {
+    case DF:
+        return QObject::tr("Dépenses de fonctionnement");
+    case RF:
+        return QObject::tr("Recettes de fonctionnement");
+    case DI:
+        return QObject::tr("Dépenses d'investissement");
+    case RI:
+        return QObject::tr("Recettes d'investissement");
+    default:
+        qWarning()<<"Invalid mode specified !";
+    }
+    return QString();
+}
+
+
+QString OREDtoTableString(ORED ored)
+{
+    switch(ored)
+    {
+    case OUVERTS:
+        return "ouverts";
+    case REALISES:
+        return "realises";
+    case ENGAGES:
+        return "engages";
+    case DISPONIBLES:
+        return "disponibles";
+    default:
+        qWarning()<<"Invalid ORED specified !";
+    }
+    return QString();
+}
+
+ORED OREDFromTableString(const QString &ored)
+{
+    if(ored==OREDtoTableString(OUVERTS))
+        return OUVERTS;
+    if(ored==OREDtoTableString(REALISES))
+        return REALISES;
+    if(ored==OREDtoTableString(ENGAGES))
+        return ENGAGES;
+    if(ored==OREDtoTableString(DISPONIBLES))
+        return DISPONIBLES;
+
+    qWarning()<<"Invalid ORED string specified, defaulting to ouverts";
+    return OUVERTS;
+}
+
+DFRFDIRI modeFromTableString(const QString &mode)
+{
+    if(mode==modeToTableString(DF))
+        return DF;
+    if(mode==modeToTableString(RF))
+        return RF;
+    if(mode==modeToTableString(DI))
+        return DI;
+    if(mode==modeToTableString(RI))
+        return RI;
+
+    qWarning()<<"Invalid DFRFDIRI string specified, defaulting to DF";
+    return DF;
+}
+
+
+
+QString OREDtoCompleteString(ORED ored)
+{
+    switch(ored)
+    {
+    case OUVERTS:
+        return QObject::tr("prévu");
+    case REALISES:
+        return QObject::tr("réalisé");
+    case ENGAGES:
+        return QObject::tr("engagé");
+    case DISPONIBLES:
+        return QObject::tr("disponible");
+    default:
+        qWarning()<<"Invalid ORED specified !";
+    }
+    return QString();
 }
 
 

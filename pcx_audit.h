@@ -2,6 +2,7 @@
 #define PCX_AUDIT_H
 
 #include "pcx_treemodel.h"
+#include "pcx_auditmanage.h"
 #include <QDateTime>
 
 
@@ -10,24 +11,6 @@ class PCx_Audit
 
 public:
 
-    enum DFRFDIRI
-    {
-        DF,
-        RF,
-        DI,
-        RI,
-        GLOBAL
-    };
-
-
-
-    enum ORED
-    {
-        OUVERTS,
-        REALISES,
-        ENGAGES,
-        DISPONIBLES
-    };
 
     explicit PCx_Audit(unsigned int auditId,bool loadTreeModel=true);
     virtual ~PCx_Audit();
@@ -53,29 +36,19 @@ public:
     bool finishAudit();
     bool unFinishAudit();
 
+    virtual bool setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals);
+    qint64 getNodeValue(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED ored, unsigned int year) const;
 
-
-    virtual bool setLeafValues(unsigned int leafId, DFRFDIRI mode, unsigned int year, QHash<ORED, double> vals);
-    qint64 getNodeValue(unsigned int nodeId, DFRFDIRI mode, ORED ored, unsigned int year) const;
-
-    virtual bool clearAllData(DFRFDIRI mode);
+    virtual bool clearAllData(PCx_AuditManage::DFRFDIRI mode);
 
     int duplicateAudit(const QString &newName,QList<unsigned int> years,
                                 bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
 
 
-    static QString modeToTableString(DFRFDIRI mode);
-    static QString modeToCompleteString(DFRFDIRI mode);
-    static QString OREDtoCompleteString(ORED ored);
-    static QString OREDtoTableString(ORED ored);
-
-    static ORED OREDFromTableString(const QString &ored);
-    static DFRFDIRI modeFromTableString(const QString &mode);
-
     QString getHTMLAuditStatistics() const;
-    QList<unsigned int> getNodesWithNonNullValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const;
-    QList<unsigned int> getNodesWithAllNullValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const;
-    QList<unsigned int> getNodesWithAllZeroValues(PCx_Audit::DFRFDIRI mode, unsigned int year) const;
+    QList<unsigned int> getNodesWithNonNullValues(PCx_AuditManage::DFRFDIRI mode, unsigned int year) const;
+    QList<unsigned int> getNodesWithAllNullValues(PCx_AuditManage::DFRFDIRI mode, unsigned int year) const;
+    QList<unsigned int> getNodesWithAllZeroValues(PCx_AuditManage::DFRFDIRI mode, unsigned int year) const;
 
 signals:
 

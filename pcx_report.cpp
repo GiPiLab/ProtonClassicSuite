@@ -29,7 +29,7 @@ QString PCx_Report::generateHTMLHeader(unsigned int auditId)
 }
 
 QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
-                                              unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
+                                              unsigned int selectedNode, PCx_AuditManage::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
                                               const QString &relativeImagePath,QProgressDialog *progress) const
 {
     Q_ASSERT(selectedNode>0);

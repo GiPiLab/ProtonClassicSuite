@@ -25,14 +25,14 @@ public:
     virtual ~PCx_EditableAuditModel();
 
     QSqlTableModel *getTableModel(const QString &mode) const;
-    QSqlTableModel *getTableModel(DFRFDIRI mode) const;
+    QSqlTableModel *getTableModel(PCx_AuditManage::DFRFDIRI mode) const;
     QSqlTableModel *getTableModelDF() const {return modelDF;}
     QSqlTableModel *getTableModelDI() const {return modelDI;}
     QSqlTableModel *getTableModelRF() const {return modelRF;}
     QSqlTableModel *getTableModelRI() const {return modelRI;}
 
-    bool setLeafValues(unsigned int leafId, DFRFDIRI mode, unsigned int year, QHash<ORED, double> vals);
-    bool clearAllData(DFRFDIRI mode);
+    bool setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals);
+    bool clearAllData(PCx_AuditManage::DFRFDIRI mode);
 
 
 signals:

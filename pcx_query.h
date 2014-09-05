@@ -18,17 +18,17 @@ public:
     static const unsigned int ALLTYPES=UINT_MAX;
 
     PCx_Query(PCx_Audit *model);
-    PCx_Query(PCx_Audit *model,unsigned int typeId,PCx_Audit::ORED ored,PCx_Audit::DFRFDIRI dfrfdiri,
+    PCx_Query(PCx_Audit *model,unsigned int typeId,PCx_AuditManage::ORED ored,PCx_AuditManage::DFRFDIRI dfrfdiri,
                                       unsigned int year1, unsigned int year2,const QString &name="");
 
     QPair<unsigned int,unsigned int> getYears() const {return QPair<unsigned int, unsigned int>(year1,year2);}
     virtual void setYears(unsigned int year1, unsigned int year2);
 
-    void setORED(PCx_Audit::ORED ored){this->ored=ored;}
-    PCx_Audit::ORED getORED() const{return ored;}
+    void setORED(PCx_AuditManage::ORED ored){this->ored=ored;}
+    PCx_AuditManage::ORED getORED() const{return ored;}
 
-    void setDFRFDIRI(PCx_Audit::DFRFDIRI dfrfdiri){this->dfrfdiri=dfrfdiri;}
-    PCx_Audit::DFRFDIRI getDFRFDIRI() const{return dfrfdiri;}
+    void setDFRFDIRI(PCx_AuditManage::DFRFDIRI dfrfdiri){this->dfrfdiri=dfrfdiri;}
+    PCx_AuditManage::DFRFDIRI getDFRFDIRI() const{return dfrfdiri;}
 
     unsigned int getTypeId() const{return typeId;}
     void setTypeId(unsigned int typeId){this->typeId=typeId;}
@@ -59,8 +59,8 @@ protected:
     PCx_Audit *model;
     //If typeId==ALLTYPES, do not filter nodes
     unsigned int typeId;
-    PCx_Audit::ORED ored;
-    PCx_Audit::DFRFDIRI dfrfdiri;
+    PCx_AuditManage::ORED ored;
+    PCx_AuditManage::DFRFDIRI dfrfdiri;
     unsigned int year1,year2;
     QString name;
     unsigned int queryId;
