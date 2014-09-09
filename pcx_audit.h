@@ -50,6 +50,12 @@ public:
     QList<unsigned int> getNodesWithAllNullValues(PCx_AuditManage::DFRFDIRI mode, unsigned int year) const;
     QList<unsigned int> getNodesWithAllZeroValues(PCx_AuditManage::DFRFDIRI mode, unsigned int year) const;
 
+
+    int readDataFromTSV(const QString &fileName, PCx_AuditManage::DFRFDIRI mode);
+
+
+
+
 signals:
 
 public slots:

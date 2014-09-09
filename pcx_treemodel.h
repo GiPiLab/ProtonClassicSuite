@@ -61,6 +61,11 @@ public:
     bool finishTree();
     bool updateTree();
 
+
+    int getNodeIdFromText(const QString &nodeName) const;
+
+
+
     QString toDot() const;
     QString toTSV() const;
 

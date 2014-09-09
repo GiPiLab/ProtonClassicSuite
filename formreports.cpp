@@ -123,7 +123,7 @@ void FormReports::on_comboListAudits_activated(int index)
 
     ui->comboListTypes->clear();
 
-    QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTreeModel()->getTypes()->getTypes();
+    QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTreeModel()->getTypes()->getAllTypes();
     Q_ASSERT(!listOfTypes.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,listOfTypes)

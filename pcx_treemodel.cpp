@@ -77,7 +77,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     if(pidNodeIndex.isValid())
     {
         QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(types->getNomType(type),name,type,q.lastInsertId().toUInt());
+        QStandardItem *newitem=createItem(types->idTypeToName(type),name,type,q.lastInsertId().toUInt());
         pidItem->appendRow(newitem);
     }
     return q.lastInsertId().toUInt();
@@ -126,7 +126,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     }
 
     QStandardItem *item=this->itemFromIndex(nodeIndex);
-    item->setText(QString("%1 %2").arg(types->getNomType(newType)).arg(newName));
+    item->setText(QString("%1 %2").arg(types->idTypeToName(newType)).arg(newName));
     item->setData(newType,Qt::UserRole+2);
 
     return true;
@@ -457,6 +457,11 @@ bool PCx_TreeModel::updateTree()
     return res;
 }
 
+int PCx_TreeModel::getNodeIdFromText(const QString &nodeName) const
+{
+    //TODO : find node id from its name
+}
+
 QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) const
 {
     Q_ASSERT(node>0);
@@ -471,7 +476,7 @@ QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) 
     {
         if(node>1)
         {
-            QString typeName=types->getNomType(q.value("type").toUInt());
+            QString typeName=types->idTypeToName(q.value("type").toUInt());
             typeNameAndNodeName.first=typeName;
             typeNameAndNodeName.second=q.value("nom").toString();
         }
@@ -504,7 +509,7 @@ QString PCx_TreeModel::getNodeName(unsigned int node) const
     {
         if(node>1)
         {
-            QString typeName=types->getNomType(q.value("type").toUInt());
+            QString typeName=types->idTypeToName(q.value("type").toUInt());
             return QString("%1 %2").arg(typeName).arg(q.value("nom").toString());
         }
         //Root does not has type
@@ -532,7 +537,7 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     {
         unsigned int typeId=query.value(3).toUInt();
         unsigned int nodeId=query.value(0).toUInt();
-        QStandardItem *newitem=createItem(types->getNomType(typeId),query.value(1).toString(),typeId,nodeId);
+        QStandardItem *newitem=createItem(types->idTypeToName(typeId),query.value(1).toString(),typeId,nodeId);
 
         item->appendRow(newitem);
         createChildrenItems(newitem,nodeId);

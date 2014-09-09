@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QProgressDialog>
 #include <QCoreApplication>
+#include <QFileInfo>
 
 PCx_Audit::PCx_Audit(unsigned int auditId, bool loadTreeModel) :
     auditId(auditId),loadTreeModel(loadTreeModel)
@@ -513,6 +514,43 @@ QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(PCx_AuditManage::DFRFDI
         nodes.append(q.value("id_node").toUInt());
     }
     return nodes;
+}
+
+int PCx_Audit::readDataFromTSV(const QString &fileName, PCx_AuditManage::DFRFDIRI mode)
+{
+    Q_ASSERT(!fileName.isEmpty());
+    QFileInfo fi(fileName);
+    if(!fi.isReadable()||!fi.isFile())
+    {
+        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier invalide ou non lisible"));
+        return -1;
+    }
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur d'ouverture du fichier : %1").arg(file.errorString()));
+        return -1;
+    }
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+
+    QString line;
+
+    line=stream.readLine();
+    if(line.isEmpty())
+    {
+        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide"));
+        file.close();
+        return -1;
+    }
+
+    line=stream.readLine();
+
+    int i=2;
+
+    return 1;
 }
 
 

@@ -112,7 +112,7 @@ bool PCx_TypeModel::validateType(const QString &newType)
         QMessageBox::warning(NULL,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
         return false;
     }
-    else if(nomTypes.contains(newType))
+    else if(listOfTypeNames.contains(newType))
     {
         QMessageBox::warning(NULL,tr("Attention"),tr("Le type <b>%1</b> existe déjà !").arg(newType));
         return false;
@@ -134,7 +134,16 @@ PCx_TypeModel::~PCx_TypeModel()
     }
 }
 
-QList<QPair<unsigned int, QString> > PCx_TypeModel::getTypes() const
+int PCx_TypeModel::nameToIdType(const QString &typeName) const
+{
+    Q_ASSERT(!typeName.isNull() && !typeName.isEmpty());
+    QString typeNameSpl=typeName.simplified();
+    if(listOfTypeNames.contains(typeNameSpl))
+        return idToName.key(typeNameSpl);
+    else return -1;
+}
+
+QList<QPair<unsigned int, QString> > PCx_TypeModel::getAllTypes() const
 {
     QList<QPair<unsigned int,QString> > types;
     QSqlQuery query(QString("select * from types_%1").arg(treeId));
@@ -178,8 +187,8 @@ unsigned int PCx_TypeModel::addType(const QString &typeName)
         typeId=q.lastInsertId().toUInt();
         Q_ASSERT(typeId>0);
 
-        idTypesToNom.insert(typeId,typeName);
-        nomTypes.append(typeName);
+        idToName.insert(typeId,typeName);
+        listOfTypeNames.append(typeName);
         typesTableModel->select();
     }
     return typeId;
@@ -258,8 +267,8 @@ bool PCx_TypeModel::deleteType(unsigned int id)
 bool PCx_TypeModel::loadFromDatabase(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
-    idTypesToNom.clear();
-    nomTypes.clear();
+    idToName.clear();
+    listOfTypeNames.clear();
     QSqlQuery query(QString("select * from types_%1").arg(treeId));
     if(!query.isActive())
     {
@@ -269,8 +278,8 @@ bool PCx_TypeModel::loadFromDatabase(unsigned int treeId)
 
     while(query.next())
     {
-        idTypesToNom.insert(query.value(0).toUInt(),query.value(1).toString());
-        nomTypes.append(query.value(1).toString());
+        idToName.insert(query.value(0).toUInt(),query.value(1).toString());
+        listOfTypeNames.append(query.value(1).toString());
     }
     return true;
 }

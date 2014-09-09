@@ -86,7 +86,7 @@ void FormDisplayTree::populateTableInfos()
 {
     ui->tableWidget->item(0,1)->setText(QString::number(model->getNumberOfNodes()));
 
-    QList<QPair<unsigned int,QString> > listOfTypes=model->getTypes()->getTypes();
+    QList<QPair<unsigned int,QString> > listOfTypes=model->getTypes()->getAllTypes();
     QPair<unsigned int,QString> type;
     int row=ui->tableWidget->rowCount();
 

@@ -11,9 +11,11 @@ public:
     explicit PCx_TypeModel(unsigned int treeId, bool readOnly=true, QObject *parent=0);
     ~PCx_TypeModel();
 
-    QString getNomType(unsigned int id) const{return idTypesToNom[id];}
-    const QStringList &getNomTypes() const {return nomTypes;}
-    QList<QPair<unsigned int,QString> > getTypes() const;
+    QString idTypeToName(unsigned int id) const{return idToName[id];}
+    int nameToIdType(const QString &typeName) const;
+    const QStringList &getTypeNames() const {return listOfTypeNames;}
+
+    QList<QPair<unsigned int,QString> > getAllTypes() const;
 
 
     unsigned int addType(const QString &typeName);
@@ -43,9 +45,9 @@ private:
     bool loadSqlTableModel();
     bool loadSqlQueryModel();
 
-    QHash<unsigned int,QString> idTypesToNom;
+    QHash<unsigned int,QString> idToName;
     unsigned int treeId;
-    QStringList nomTypes;
+    QStringList listOfTypeNames;
     QSqlTableModel *typesTableModel;
     QSqlQueryModel *typesQueryModel;
 };
