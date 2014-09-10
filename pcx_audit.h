@@ -38,6 +38,8 @@ public:
 
     virtual bool setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals);
     qint64 getNodeValue(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED ored, unsigned int year) const;
+    QHash<PCx_AuditManage::ORED,qint64> getNodeValues(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mode, unsigned int year) const;
+
 
     virtual bool clearAllData(PCx_AuditManage::DFRFDIRI mode);
 
@@ -52,6 +54,8 @@ public:
 
 
     int readDataFromTSV(const QString &fileName, PCx_AuditManage::DFRFDIRI mode);
+
+    bool exportLeavesDataXLSX(PCx_AuditManage::DFRFDIRI mode, const QString &fileName) const;
 
 
 

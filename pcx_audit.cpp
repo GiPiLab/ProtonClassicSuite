@@ -1,4 +1,5 @@
 #include "pcx_audit.h"
+#include "xlsxdocument.h"
 #include "pcx_auditmanage.h"
 #include "pcx_query.h"
 #include "pcx_treemanage.h"
@@ -214,6 +215,64 @@ qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mo
         return -MAX_NUM;
     }
     return q.value(OREDtoTableString(ored)).toLongLong();
+}
+
+QHash<PCx_AuditManage::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mode, unsigned int year) const
+{
+    QSqlQuery q;
+    q.prepare(QString("select * from audit_%2_%3 where annee=:year and id_node=:node").arg(modeToTableString(mode)).arg(auditId));
+    q.bindValue(":year",year);
+    q.bindValue(":node",nodeId);
+    q.exec();
+    if(!q.next())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    QHash<PCx_AuditManage::ORED,qint64> output;
+    if(q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)).isNull())
+    {
+        qDebug()<<"NULL value";
+        output.insert(PCx_AuditManage::OUVERTS,-MAX_NUM);
+    }
+    else
+    {
+        output.insert(PCx_AuditManage::OUVERTS,q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)).toLongLong());
+    }
+
+    if(q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)).isNull())
+    {
+        qDebug()<<"NULL value";
+        output.insert(PCx_AuditManage::REALISES,-MAX_NUM);
+    }
+    else
+    {
+        output.insert(PCx_AuditManage::REALISES,q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)).toLongLong());
+    }
+
+    if(q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES)).isNull())
+    {
+        qDebug()<<"NULL value";
+        output.insert(PCx_AuditManage::ENGAGES,-MAX_NUM);
+    }
+    else
+    {
+        output.insert(PCx_AuditManage::ENGAGES,q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES)).toLongLong());
+    }
+
+    if(q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::DISPONIBLES)).isNull())
+    {
+        qDebug()<<"NULL value";
+        output.insert(PCx_AuditManage::DISPONIBLES,-MAX_NUM);
+    }
+    else
+    {
+        output.insert(PCx_AuditManage::DISPONIBLES,q.value(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::DISPONIBLES)).toLongLong());
+    }
+
+
+    return output;
 }
 
 bool PCx_Audit::clearAllData(PCx_AuditManage::DFRFDIRI mode)
@@ -547,11 +606,70 @@ int PCx_Audit::readDataFromTSV(const QString &fileName, PCx_AuditManage::DFRFDIR
     }
 
     line=stream.readLine();
-
+//TODO READ TSV
     int i=2;
 
     return 1;
 }
 
+bool PCx_Audit::exportLeavesDataXLSX(PCx_AuditManage::DFRFDIRI mode, const QString & fileName) const
+{
+    QXlsx::Document xlsx;
+    QList<unsigned int> leavesId=attachedTree->getLeavesId();
+    xlsx.write(1,1,"Type noeud");
+    xlsx.write(1,2,"Nom noeud");
+    xlsx.write(1,3,"Année");
+    xlsx.write(1,4,PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::OUVERTS));
+    xlsx.write(1,5,PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::REALISES));
+    xlsx.write(1,6,PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::ENGAGES));
 
+    QString strOuverts=PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS);
+    QString strRealises=PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES);
+    QString strEngages=PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
+
+    QSqlQuery q;
+    int row=2;
+    foreach(unsigned int leafId,leavesId)
+    {
+        QPair<QString,QString> typeAndNodeName=attachedTree->getTypeNameAndNodeName(leafId);
+            q.prepare(QString("select * from audit_%1_%2 where id_node=:idnode order by annee").
+                      arg(PCx_AuditManage::modeToTableString(mode)).arg(auditId));
+
+            q.bindValue(":idnode",leafId);
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            while(q.next())
+            {
+                QVariant valOuverts=q.value(strOuverts);
+                QVariant valRealises=q.value(strRealises);
+                QVariant valEngages=q.value(strEngages);
+
+                xlsx.write(row,1,typeAndNodeName.first);
+                xlsx.write(row,2,typeAndNodeName.second);
+                xlsx.write(row,3,q.value("annee").toUInt());
+
+                if(!valOuverts.isNull())
+                {
+                    //QString vOuverts=formatDouble((double)valOuverts.toLongLong()/FIXEDPOINTCOEFF,2,true);
+                    xlsx.write(row,4,(double)valOuverts.toLongLong()/FIXEDPOINTCOEFF);
+                }
+
+                if(!valRealises.isNull())
+                {
+                    xlsx.write(row,5,(double)valRealises.toLongLong()/FIXEDPOINTCOEFF);
+                }
+
+                if(!valEngages.isNull())
+                {
+                    xlsx.write(row,6,(double)valEngages.toLongLong()/FIXEDPOINTCOEFF);
+                }
+                row++;
+            }
+    }
+
+    return xlsx.saveAs(fileName);
+}
 

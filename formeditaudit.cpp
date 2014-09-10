@@ -5,6 +5,9 @@
 #include <QtGlobal>
 #include <QMdiArea>
 #include <QMdiSubWindow>
+#include <QFile>
+#include <QFileDialog>
+#include <QStandardPaths>
 #include "formauditinfos.h"
 #include "pcx_auditmanage.h"
 
@@ -224,4 +227,43 @@ void FormEditAudit::on_statsButton_clicked()
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     mdiArea->addSubWindow(infos);
     infos->show();
+}
+
+void FormEditAudit::on_pushButtonExportLeaves_clicked()
+{
+    PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;
+
+
+    if(ui->tabWidget->currentWidget()==ui->tabDF)
+        mode=PCx_AuditManage::DF;
+    else if(ui->tabWidget->currentWidget()==ui->tabRF)
+        mode=PCx_AuditManage::RF;
+    else if(ui->tabWidget->currentWidget()==ui->tabDI)
+        mode=PCx_AuditManage::DI;
+    else if(ui->tabWidget->currentWidget()==ui->tabRI)
+        mode=PCx_AuditManage::RI;
+
+
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+        fileName.append(".xlsx");
+    fi=QFileInfo(fileName);
+
+    bool res=auditModel->exportLeavesDataXLSX(mode,fileName);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("Feuilles enregistrées. Vous pouvez modifier le fichier dans un tableur puis l'importer pour charger les données de l'arbre."));
+    }
+    else
+    {
+        QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+    }
+
 }

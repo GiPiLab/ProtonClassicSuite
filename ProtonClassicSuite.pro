@@ -13,6 +13,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = ProtonClassicSuite
 TEMPLATE = app
 
+include(QtXlsx/xlsx/qtxlsx.pri)
 
 SOURCES += main.cpp\
 	mainwindow.cpp \
