@@ -26,7 +26,7 @@ private slots:
 
     void on_exportButton_clicked();
 
-    void on_exportTSVButton_clicked();
+    void on_exportXLSXButton_clicked();
 
 private:
     Ui::FormDisplayTree *ui;

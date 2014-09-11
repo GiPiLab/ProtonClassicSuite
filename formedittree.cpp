@@ -415,7 +415,7 @@ void FormEditTree::on_importTreeButton_clicked()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir un arbre"), "",tr("Arbres au format tabulaire TSV (*.tsv)"));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir un arbre"), "",tr("Arbres au format XLSX (*.xlsx)"));
 
     if(fileName.isEmpty())
         return;
@@ -437,7 +437,7 @@ void FormEditTree::on_importTreeButton_clicked()
         return;
     }
 
-    if(PCx_TreeManage::importTreeFromTSV(fileName,text)>0)
+    if(PCx_TreeManage::importTreeFromXLSX(fileName,text)>0)
     {
         updateListOfTree();
         emit(listOfTreeChanged());

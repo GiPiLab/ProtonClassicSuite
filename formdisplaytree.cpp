@@ -103,35 +103,28 @@ void FormDisplayTree::populateTableInfos()
     }
 }
 
-void FormDisplayTree::on_exportTSVButton_clicked()
+void FormDisplayTree::on_exportXLSXButton_clicked()
 {
-    QString csv=model->toTSV();
-
-    //qDebug()<<dot;
-
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format tabulaire"), "",tr("Fichiers TSV (*.tsv)"));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format XLSX"), "",tr("Fichiers XLSX (*.xlsx)"));
     if(fileName.isEmpty())
         return;
 
     QFileInfo fi(fileName);
-    if(fi.suffix().compare("tsv",Qt::CaseInsensitive)!=0)
-        fileName.append(".tsv");
+    if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+        fileName.append(".xlsx");
     fi=QFileInfo(fileName);
 
-    QFile output(fileName);
 
-    if(!output.open(QIODevice::WriteOnly|QIODevice::Text))
+    bool res=model->toXLSX(fileName);
+
+    if(res==true)
     {
-        qCritical()<<"Unable to open output file :"<<output.errorString();
-        return;
+        QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format XLSX"));
     }
-    QTextStream outputStream(&output);
-    outputStream.setCodec("UTF-8");
-
-    outputStream<<csv;
-    output.close();
-
-    QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format TSV"));
+    else
+    {
+        QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement impossible"));
+    }
 }

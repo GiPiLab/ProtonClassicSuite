@@ -46,6 +46,7 @@
 #include <QPointF>
 #include <QBuffer>
 #include <QDir>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE_XLSX
 
@@ -380,10 +381,21 @@ Document::Document(const QString &name, QObject *parent) :
     QObject(parent), d_ptr(new DocumentPrivate(this))
 {
     d_ptr->packageName = name;
-    if (QFile::exists(name)) {
+    //NOTE : Patch QtXLSX to add a bit of sanity check
+    QFileInfo fi(name);
+    if (fi.exists() && fi.isFile() && fi.isReadable()) {
         QFile xlsx(name);
         if (xlsx.open(QFile::ReadOnly))
-            d_ptr->loadPackage(&xlsx);
+        {
+            if(d_ptr->loadPackage(&xlsx)==false)
+            {
+                qCritical()<<tr("Error reading XLSX file");
+            }
+        }
+        else
+        {
+            qCritical()<<tr("Unable to open file: ")<<xlsx.errorString();
+        }
     }
     d_ptr->init();
 }
@@ -397,7 +409,13 @@ Document::Document(QIODevice *device, QObject *parent) :
     QObject(parent), d_ptr(new DocumentPrivate(this))
 {
     if (device && device->isReadable())
-        d_ptr->loadPackage(device);
+        //NOTE : Patch QtXLSX to add a bit of sanity check
+    {
+        if(d_ptr->loadPackage(device)==false)
+        {
+            qCritical()<<tr("Unable to read XLSX content!");
+        }
+    }
     d_ptr->init();
 }
 

@@ -1,6 +1,7 @@
 #include "pcx_treemodel.h"
 #include "utils.h"
 #include "pcx_typemodel.h"
+#include "xlsxdocument.h"
 #include <QMessageBox>
 #include <QDateTime>
 #include <QSqlQuery>
@@ -625,32 +626,46 @@ QString PCx_TreeModel::toDot() const
     return out;
 }
 
-QString PCx_TreeModel::toTSV() const
+bool PCx_TreeModel::toXLSX(const QString &fileName) const
 {
+    Q_ASSERT(!fileName.isEmpty());
     QList<unsigned int> nodes=getNodesId();
 
-    QString out="Type noeud\tNom noeud\tType parent\tNom parent\n";
+    QXlsx::Document xlsx;
+
+    xlsx.write(1,1,"Type noeud");
+    xlsx.write(1,2,"Nom noeud");
+    xlsx.write(1,3,"Type père");
+    xlsx.write(1,4,"Nom père");
 
     QPair<QString,QString>typeNameAndNodeName,pidTypeNameAndPidNodeName;
 
+    int row=2;
     foreach(unsigned int node,nodes)
     {
         unsigned int pid=getParentId(node);
         typeNameAndNodeName=getTypeNameAndNodeName(node);
 
+
+
         if(pid>1)
         {
+            xlsx.write(row,1,typeNameAndNodeName.first);
+            xlsx.write(row,2,typeNameAndNodeName.second);
             pidTypeNameAndPidNodeName=getTypeNameAndNodeName(pid);
-
-            out.append(QString("%1\t%2\t%3\t%4\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' '))
-                       .arg(pidTypeNameAndPidNodeName.first.replace('\t',' ')).arg(pidTypeNameAndPidNodeName.second.replace('\t',' ')));
+            xlsx.write(row,3,pidTypeNameAndPidNodeName.first);
+            xlsx.write(row,4,pidTypeNameAndPidNodeName.second);
+            row++;
         }
         else if(pid==1)
         {
-            out.append(QString("%1\t%2\t\t\n").arg(typeNameAndNodeName.first.replace('\t',' ')).arg(typeNameAndNodeName.second.replace('\t',' ')));
+            xlsx.write(row,1,typeNameAndNodeName.first);
+            xlsx.write(row,2,typeNameAndNodeName.second);
+            row++;
         }
+
     }
-    return out;
+    return xlsx.saveAs(fileName);
 }
 
 bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)

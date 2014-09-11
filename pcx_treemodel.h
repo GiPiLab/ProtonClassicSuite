@@ -67,7 +67,7 @@ public:
 
 
     QString toDot() const;
-    QString toTSV() const;
+    bool toXLSX(const QString &fileName) const;
 
 private:
     PCx_TypeModel *types;

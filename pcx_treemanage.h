@@ -6,7 +6,7 @@
 
 namespace PCx_TreeManage{
 
-    int importTreeFromTSV(const QString &fileName,const QString &treeName);
+    int importTreeFromXLSX(const QString &fileName,const QString &treeName);
     int createRandomTree(const QString &name, unsigned int nbNodes);
     int duplicateTree(unsigned int treeId,const QString &newName);
     int addTree(const QString &name, bool createRoot=true, bool addTypes=true);

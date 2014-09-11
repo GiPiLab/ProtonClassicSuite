@@ -8,7 +8,7 @@
 #include <QSqlError>
 #include <QFileInfo>
 #include <QUuid>
-
+#include "xlsxdocument.h"
 
 
 namespace PCx_TreeManage{
@@ -326,7 +326,7 @@ int deleteTree(unsigned int treeId)
 
 
 /**
- * @brief importTreeFromTSV : import a tree from a TSV.
+ * @brief importTreeFromXLSX : import a tree from a XLSX.
  * @param fileName
  * @param treeName
  * @return the identifier of the newly created tree, or -1 in case of error
@@ -334,7 +334,7 @@ int deleteTree(unsigned int treeId)
  * Check from duplicates, orphan nodes, graph structure (multiple ancestors) and empty root
  *
  */
-int importTreeFromTSV(const QString &fileName, const QString &treeName)
+int importTreeFromXLSX(const QString &fileName, const QString &treeName)
 {
     Q_ASSERT(!fileName.isEmpty() && !treeName.isEmpty());
     QFileInfo fi(fileName);
@@ -344,27 +344,17 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
         return -1;
     }
 
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
-    {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur d'ouverture du fichier : %1").arg(file.errorString()));
-        return -1;
-    }
+    QXlsx::Document xlsx(fileName);
 
-    QTextStream stream(&file);
-    stream.setCodec("UTF-8");
-
-    QString line;
-
-    line=stream.readLine();
-    if(line.isEmpty())
+    if(!xlsx.read(1,1).isValid()||
+            !xlsx.read(1,2).isValid()||
+            !xlsx.read(1,3).isValid()||
+            !xlsx.read(1,4).isValid())
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide"));
-        file.close();
         return -1;
     }
 
-    line=stream.readLine();
 
     int i=2;
 
@@ -374,42 +364,52 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
     QSet<QPair<QString,QString> > firstLevelNodesSet;
     bool duplicateFound=false;
 
+    int rowCount=xlsx.dimension().rowCount();
+
     do
     {
-        QStringList items=line.split("\t",QString::SkipEmptyParts);
-        if(items.size()!=4 && items.size()!=2)
+        QVariant i1,i2,i3,i4;
+        i1=xlsx.read(i,1);
+        i2=xlsx.read(i,2);
+        i3=xlsx.read(i,3);
+        i4=xlsx.read(i,4);
+
+        if(!(i1.isValid() && i2.isValid()))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. Le fichier doit être sur deux ou quatre colonnes").arg(i));
-            file.close();
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. Le fichier doit contenir des données sur au moins les deux premières colonnes").arg(i));
+            return -1;
+        }
+
+        if((!i3.isValid() && i4.isValid()) || (i3.isValid() && !i4.isValid()))
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. Si les colonnes 3 et 4 sont renseignées, elles doivent l'être simultanément").arg(i));
             return -1;
         }
 
         QPair<QString,QString> node1;
 
-        node1.first=items.at(0).simplified();
-        node1.second=items.at(1).simplified();
+        node1.first=i1.toString().simplified();
+        node1.second=i2.toString().simplified();
 
         if(node1.first.isEmpty())
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type manquant ligne %1 colonne 1 !").arg(i));
-            file.close();
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type du noeud manquant ou invalide ligne %1 colonne 1 !").arg(i));
             return -1;
         }
 
         if(node1.second.isEmpty())
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Nom manquant ligne %1 colonne 2 !").arg(i));
-            file.close();
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Nom du noeud manquant ou invalide ligne %1 colonne 2 !").arg(i));
             return -1;
         }
 
         foundTypes.insert(node1.first);
 
-        if(items.size()==4)
+        if(i3.isValid()&&i4.isValid())
         {
             QPair<QString,QString> pidNode;
-            pidNode.first=items.at(2).simplified();
-            pidNode.second=items.at(3).simplified();
+            pidNode.first=i3.toString().simplified();
+            pidNode.second=i4.toString().simplified();
             if(!pidNode.first.isEmpty() && !pidNode.second.isEmpty())
             {
                 if(nodeToPid.contains(node1))
@@ -418,7 +418,6 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
                     {
                         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 ne peut pas avoir plusieurs pères !")
                                               .arg(QString(node1.first+" "+node1.second)));
-                        file.close();
                         return -1;
                     }
                     else
@@ -436,15 +435,13 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
             {
                 if(pidNode.first.isEmpty())
                 {
-                    QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type manquant ligne %1 colonne 3 !").arg(i));
-                    file.close();
+                    QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type du noeud père manquant ligne %1 colonne 3 !").arg(i));
                     return -1;
                 }
 
                 if(pidNode.second.isEmpty())
                 {
-                    QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Nom manquant ligne %1 colonne 4 !").arg(i));
-                    file.close();
+                    QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Nom du noeud père manquant ligne %1 colonne 4 !").arg(i));
                     return -1;
                 }
             }
@@ -456,14 +453,11 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
         i++;
         if(i>(int)PCx_TreeModel::MAXNODES+1)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre."));
-            file.close();
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre (%1) !").arg(PCx_TreeModel::MAXNODES));
             return -1;
-        }
-        line=stream.readLine();
+        }        
 
-    }while(!line.isEmpty());
-    file.close();
+    }while(i<=rowCount);
 
     firstLevelNodesSet=firstLevelNodes.toSet();
 
@@ -574,5 +568,5 @@ int importTreeFromTSV(const QString &fileName, const QString &treeName)
 
     QSqlDatabase::database().commit();
     return treeId;
-}
+   }
 }
