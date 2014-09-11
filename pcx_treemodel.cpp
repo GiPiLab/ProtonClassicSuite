@@ -458,10 +458,28 @@ bool PCx_TreeModel::updateTree()
     return res;
 }
 
-int PCx_TreeModel::getNodeIdFromText(const QString &nodeName) const
+int PCx_TreeModel::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName) const
 {
-    //TODO : find node id from its name
+    int typeId=types->nameToIdType(typeAndNodeName.first);
+    if(typeId==-1)
+        return -1;
+    QSqlQuery q;
+    QString nodeNameSpl=typeAndNodeName.second.simplified();
+    q.prepare(QString("select * from arbre_%1 where nom=:nameId and type=:typeId").arg(treeId));
+    q.bindValue(":nameId",nodeNameSpl);
+    q.bindValue(":typeId",typeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+    {
+        return -1;
+    }
+    return q.value("id").toInt();
 }
+
 
 QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) const
 {

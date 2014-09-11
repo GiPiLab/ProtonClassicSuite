@@ -31,7 +31,9 @@ public:
     QSqlTableModel *getTableModelRF() const {return modelRF;}
     QSqlTableModel *getTableModelRI() const {return modelRI;}
 
-    bool setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals);
+    //Fast mode does not update the table model
+    bool setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals, bool fastMode=false);
+
     bool clearAllData(PCx_AuditManage::DFRFDIRI mode);
 
 

@@ -121,6 +121,10 @@ bool loadDb(const QString &databaseName)
         qFatal(db.lastError().text().toLocal8Bit());
         exit(-1);
     }
+
+    //QSqlQuery("PRAGMA journal_mode=OFF");
+    QSqlQuery("PRAGMA synchronous=OFF");
+
     return true;
 }
 

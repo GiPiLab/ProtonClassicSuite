@@ -267,3 +267,32 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
     }
 
 }
+
+void FormEditAudit::on_pushButtonImportLeaves_clicked()
+{
+    PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;
+
+
+    if(ui->tabWidget->currentWidget()==ui->tabDF)
+        mode=PCx_AuditManage::DF;
+    else if(ui->tabWidget->currentWidget()==ui->tabRF)
+        mode=PCx_AuditManage::RF;
+    else if(ui->tabWidget->currentWidget()==ui->tabDI)
+        mode=PCx_AuditManage::DI;
+    else if(ui->tabWidget->currentWidget()==ui->tabRI)
+        mode=PCx_AuditManage::RI;
+
+
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    int res=auditModel->importDataFromXLSX(fileName,mode);
+
+    if(res>0)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(PCx_AuditManage::modeToCompleteString(mode)));
+    }
+}

@@ -62,7 +62,7 @@ public:
     bool updateTree();
 
 
-    int getNodeIdFromText(const QString &nodeName) const;
+    int getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName ) const;
 
 
 

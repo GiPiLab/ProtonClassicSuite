@@ -171,13 +171,14 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(PCx_AuditManage::DFRFDIRI 
     return NULL;
 }
 
-bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals)
+bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals, bool fastMode)
 {
-    if(PCx_Audit::setLeafValues(leafId,mode,year,vals)==false)
+    if(PCx_Audit::setLeafValues(leafId,mode,year,vals,fastMode)==false)
         return false;
     QSqlTableModel *tblModel=getTableModel(mode);
     if(tblModel!=NULL)
         tblModel->select();
+
     return true;
 }
 
