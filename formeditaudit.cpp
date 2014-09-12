@@ -8,6 +8,8 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QElapsedTimer>
+#include <QProgressDialog>
 #include "formauditinfos.h"
 #include "pcx_auditmanage.h"
 
@@ -156,6 +158,8 @@ void FormEditAudit::on_randomDataButton_clicked()
         return;
     }
 
+    QElapsedTimer timer;
+    timer.start();
     QList<unsigned int> leaves=auditModel->getAttachedTreeModel()->getLeavesId();
     QList<unsigned int> years=auditModel->getYears();
 
@@ -171,19 +175,50 @@ void FormEditAudit::on_randomDataButton_clicked()
 
     QHash<PCx_AuditManage::ORED,double> data;
 
+    int maxVal=leaves.size();
+
+    QProgressDialog progress(QObject::tr("Génération des données aléatoires..."),QObject::tr("Annuler"),0,maxVal);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    progress.setMinimumDuration(300);
+    progress.setValue(0);
+
     QSqlDatabase::database().transaction();
+    int nbNode=0;
+
     foreach(unsigned int leaf,leaves)
     {
         foreach(unsigned int year,years)
         {
             data.clear();
-            data.insert(PCx_AuditManage::OUVERTS,(double)(qrand()%100000));
-            data.insert(PCx_AuditManage::REALISES,(double)(qrand()%100000));
-            data.insert(PCx_AuditManage::ENGAGES,(double)(qrand()%100000));
-            auditModel->setLeafValues(leaf,mode,year,data);
+            data.insert(PCx_AuditManage::OUVERTS,(double)((qrand()%100000)/100.0));
+            data.insert(PCx_AuditManage::REALISES,(double)((qrand()%100000)/100.0));
+            data.insert(PCx_AuditManage::ENGAGES,(double)((qrand()%100000)/100.0));
+            if(auditModel->setLeafValues(leaf,mode,year,data,true)==false)
+            {
+                QSqlDatabase::database().rollback();
+                return;
+            }
+        }
+        nbNode++;
+        if(!progress.wasCanceled())
+        {
+            progress.setValue(nbNode);
+        }
+        else
+        {
+            QSqlDatabase::database().rollback();
+            return;
         }
     }
     QSqlDatabase::database().commit();
+
+    QSqlTableModel *tblModel=auditModel->getTableModel(mode);
+    if(tblModel!=NULL)
+        tblModel->select();
+
+    qDebug()<<"Done in "<<timer.elapsed()<<"ms";
 }
 
 void FormEditAudit::on_clearDataButton_clicked()
@@ -290,6 +325,9 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
         return;
 
     int res=auditModel->importDataFromXLSX(fileName,mode);
+    QSqlTableModel *tblModel=auditModel->getTableModel(mode);
+    if(tblModel!=NULL)
+        tblModel->select();
 
     if(res>0)
     {

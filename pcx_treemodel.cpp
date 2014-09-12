@@ -265,16 +265,16 @@ QList<unsigned int> PCx_TreeModel::getIdsOfNodesWithThisType(unsigned int typeId
     Q_ASSERT(typeId>0);
     QSqlQuery q;
     QList<unsigned int> nodes;
-    q.prepare(QString("select * from arbre_%1 where type=:typeId").arg(treeId));
+    q.prepare(QString("select id from arbre_%1 where type=:typeId").arg(treeId));
     q.bindValue(":typeId",typeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
-        die();
+        return QList<unsigned int>();
     }
     while(q.next())
     {
-        nodes.append(q.value("id").toUInt());
+        nodes.append(q.value(0).toUInt());
     }
     return nodes;
 }
@@ -330,7 +330,6 @@ QList<unsigned int> PCx_TreeModel::sortNodesDFS(QList<unsigned int> &nodes,unsig
 
 unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
 {
-    Q_ASSERT(nodeId > 0);
     QSqlQuery q;
     q.prepare(QString("select pid from arbre_%1 where id=:nodeid").arg(treeId));
     q.bindValue(":nodeid",nodeId);
@@ -342,7 +341,6 @@ unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
     else
     {
         qCritical()<<q.lastError();
-        die();
     }
     return 0;
 }
@@ -351,13 +349,13 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
 {
     QList<unsigned int> listOfChildren;
     QSqlQuery q;
-    q.prepare(QString("select * from arbre_%1 where pid=:nodeid order by nom").arg(treeId));
+    q.prepare(QString("select id from arbre_%1 where pid=:nodeid order by nom").arg(treeId));
     q.bindValue(":nodeid",nodeId);
     q.exec();
 
     while(q.next())
     {
-        listOfChildren.append(q.value("id").toUInt());
+        listOfChildren.append(q.value(0).toUInt());
     }
     return listOfChildren;
 }
@@ -465,19 +463,19 @@ int PCx_TreeModel::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &t
         return -1;
     QSqlQuery q;
     QString nodeNameSpl=typeAndNodeName.second.simplified();
-    q.prepare(QString("select * from arbre_%1 where nom=:nameId and type=:typeId").arg(treeId));
+    q.prepare(QString("select id from arbre_%1 where nom=:nameId and type=:typeId").arg(treeId));
     q.bindValue(":nameId",nodeNameSpl);
     q.bindValue(":typeId",typeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
-        die();
+        return -1;
     }
     if(!q.next())
     {
         return -1;
     }
-    return q.value("id").toInt();
+    return q.value(0).toInt();
 }
 
 
@@ -485,7 +483,7 @@ QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) 
 {
     Q_ASSERT(node>0);
     QSqlQuery q;
-    q.prepare(QString("select * from arbre_%1 where id=:id").arg(treeId));
+    q.prepare(QString("select type,nom from arbre_%1 where id=:id").arg(treeId));
     q.bindValue(":id",node);
     q.exec();
 
@@ -520,7 +518,7 @@ QString PCx_TreeModel::getNodeName(unsigned int node) const
 {
     Q_ASSERT(node>0);
     QSqlQuery q;
-    q.prepare(QString("select * from arbre_%1 where id=:id").arg(treeId));
+    q.prepare(QString("select type,nom from arbre_%1 where id=:id").arg(treeId));
     q.bindValue(":id",node);
     q.exec();
 
@@ -570,7 +568,7 @@ bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
     Q_ASSERT(nodeId>0);
     QList<unsigned int> listOfChildrens;
     QSqlQuery q;
-    q.prepare(QString("select * from arbre_%1 where pid=:pid").arg(treeId));
+    q.prepare(QString("select id from arbre_%1 where pid=:pid").arg(treeId));
     q.bindValue(":pid",nodeId);
     q.exec();
 

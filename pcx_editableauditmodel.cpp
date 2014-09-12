@@ -175,10 +175,14 @@ bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_AuditManage:
 {
     if(PCx_Audit::setLeafValues(leafId,mode,year,vals,fastMode)==false)
         return false;
-    QSqlTableModel *tblModel=getTableModel(mode);
-    if(tblModel!=NULL)
-        tblModel->select();
 
+    //If we are in fast mode, do not refresh the table model after each iteration
+    if(!fastMode)
+    {
+        QSqlTableModel *tblModel=getTableModel(mode);
+        if(tblModel!=NULL)
+            tblModel->select();
+    }
     return true;
 }
 

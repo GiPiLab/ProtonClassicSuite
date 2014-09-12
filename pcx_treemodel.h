@@ -76,8 +76,6 @@ private:
     bool finished;
     QString treeName;
     QString creationTime;
-
-
     bool loadFromDatabase(unsigned int treeId);
     bool createChildrenItems(QStandardItem *item, unsigned int nodeId);
     bool deleteNodeAndChildren(unsigned int nodeId);

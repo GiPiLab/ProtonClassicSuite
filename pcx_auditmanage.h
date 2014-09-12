@@ -43,6 +43,7 @@ QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 bool finishAudit(unsigned int auditId);
 bool unFinishAudit(unsigned int auditId);
 
+
 QString modeToTableString(DFRFDIRI mode);
 QString modeToCompleteString(DFRFDIRI mode);
 QString OREDtoCompleteString(ORED ored);

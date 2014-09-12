@@ -122,8 +122,13 @@ bool loadDb(const QString &databaseName)
         exit(-1);
     }
 
-    //QSqlQuery("PRAGMA journal_mode=OFF");
+    /*QSqlQuery("PRAGMA journal_mode=OFF");
+    QSqlQuery("PRAGMA locking_mode = EXCLUSIVE");
     QSqlQuery("PRAGMA synchronous=OFF");
+    QSqlQuery("PRAGMA page_size = 4096");
+    QSqlQuery("PRAGMA cache_size = 16384");
+    QSqlQuery("PRAGMA temp_store = MEMORY");*/
+
 
     return true;
 }

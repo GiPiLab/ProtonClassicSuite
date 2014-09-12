@@ -273,7 +273,7 @@ bool PCx_TypeModel::loadFromDatabase(unsigned int treeId)
     if(!query.isActive())
     {
         qCritical()<<query.lastError();
-        die();
+        return false;
     }
 
     while(query.next())

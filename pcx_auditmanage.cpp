@@ -449,13 +449,13 @@ QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode)
 
 unsigned int getAttachedTreeId(unsigned int auditId)
 {
-    QSqlQuery q(QString("select * from index_audits where id=%1").arg(auditId));
+    QSqlQuery q(QString("select id_arbre from index_audits where id=%1").arg(auditId));
     if(!q.next())
     {
         qCritical()<<"Invalid audit ID !";
         return 0;
     }
-    return q.value("id_arbre").toUInt();
+    return q.value(0).toUInt();
 }
 
 bool finishAudit(unsigned int auditId)

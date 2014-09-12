@@ -74,7 +74,7 @@ PCx_Audit::~PCx_Audit()
 
 QString PCx_Audit::getAuditName(unsigned int auditId)
 {
-    QSqlQuery q(QString("select * from index_audits where id=%1").arg(auditId));
+    QSqlQuery q(QString("select nom from index_audits where id=%1").arg(auditId));
     if(!q.next())
     {
         qCritical()<<"Invalid audit ID !";
@@ -131,25 +131,23 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
     {
         if(!reqString.isEmpty())
             reqString.append(",");
-        reqString.append(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)+"=:vouverts");
+        reqString.append("ouverts=:vouverts");
     }
     if(vals.contains(PCx_AuditManage::REALISES))
     {
         if(!reqString.isEmpty())
             reqString.append(",");
-        reqString.append(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)+"=:vrealises");
+        reqString.append("realises=:vrealises");
     }
     if(vals.contains(PCx_AuditManage::ENGAGES))
     {
         if(!reqString.isEmpty())
             reqString.append(",");
-        reqString.append(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES)+"=:vengages");
+        reqString.append("engages=:vengages");
     }
 
-    QSqlDatabase::database().transaction();
-
     QSqlQuery q;
-    QString tableName=QString("audit_%1_%2").arg(modeToTableString(mode)).arg(auditId);
+    QString tableName=QString("audit_%1_%2").arg(PCx_AuditManage::modeToTableString(mode)).arg(auditId);
 
     //qDebug()<<"Request String ="<<reqString;
 
@@ -157,13 +155,13 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
               .arg(tableName).arg(reqString));
 
     if(vals.contains(PCx_AuditManage::OUVERTS))
-        q.bindValue(":vouverts",(qint64)vals.value(PCx_AuditManage::OUVERTS)*FIXEDPOINTCOEFF);
+        q.bindValue(":vouverts",(qint64)(vals.value(PCx_AuditManage::OUVERTS)*FIXEDPOINTCOEFF));
 
     if(vals.contains(PCx_AuditManage::REALISES))
-        q.bindValue(":vrealises",(qint64)vals.value(PCx_AuditManage::REALISES)*FIXEDPOINTCOEFF);
+        q.bindValue(":vrealises",(qint64)(vals.value(PCx_AuditManage::REALISES)*FIXEDPOINTCOEFF));
 
     if(vals.contains(PCx_AuditManage::ENGAGES))
-        q.bindValue(":vengages",(qint64)vals.value(PCx_AuditManage::ENGAGES)*FIXEDPOINTCOEFF);
+        q.bindValue(":vengages",(qint64)(vals.value(PCx_AuditManage::ENGAGES)*FIXEDPOINTCOEFF));
 
     q.bindValue(":id_node",leafId);
     q.bindValue(":year",year);
@@ -171,9 +169,8 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
 
     if(q.numRowsAffected()!=1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<"Error while setting value"<<q.lastError();
-        die();
+        return false;
     }
 
     q.prepare(QString("update %1 set disponibles=ouverts-(realises+engages) where id_node=:id_node and annee=:year").arg(tableName));
@@ -183,22 +180,11 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
 
     if(q.numRowsAffected()!=1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<"Error while setting disponibles values"<<q.lastError();
-        die();
+        return false;
     }
 
-    if(updateParent(tableName,year,leafId))
-    {
-        QSqlDatabase::database().commit();
-    }
-    else
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<"ERROR DURING PROPAGATING VALUES TO ROOTS, CANCELLING";
-        die();
-    }
-    return true;
+    return(updateParent(tableName,year,leafId));
 }
 
 qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED ored, unsigned int year) const
@@ -300,22 +286,47 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
 
 bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
 {
-    unsigned int parent=attachedTree->getParentId(nodeId);
-    //qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
-    QList<unsigned int> listOfChildren=attachedTree->getChildren(parent);
-    //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
-    QSqlQuery q;
-    QStringList l;
-    foreach (unsigned int childId, listOfChildren)
+    static QHash<unsigned int,unsigned int> idToPid;
+    static QHash<unsigned int,QList<unsigned int> >idToChildren;
+    static QHash<unsigned int,QString> idToChildrenString;
+    QString childrenString;
+    unsigned int parent;
+    parent=idToPid.value(nodeId);
+    if(parent==0)
     {
-        l.append(QString::number(childId));
+        parent=attachedTree->getParentId(nodeId);
+        idToPid.insert(nodeId,parent);
     }
 
-    q.exec(QString("select * from %1 where id_node in(%2) and annee=%3").arg(tableName).arg(l.join(',')).arg(annee));
-    if(!q.isActive())
+    //qDebug()<<"Parent of "<<nodeId<<" = "<<parent;
+    QList<unsigned int> listOfChildren;
+    if(idToChildren.contains(parent))
+    {
+        listOfChildren=idToChildren.value(parent);
+        childrenString=idToChildrenString.value(parent);
+    }
+    else
+    {
+        listOfChildren=attachedTree->getChildren(parent);
+        idToChildren.insert(parent,listOfChildren);
+        QStringList l;
+        foreach (unsigned int childId, listOfChildren)
+        {
+            l.append(QString::number(childId));
+        }
+        childrenString=l.join(',');
+        idToChildrenString.insert(parent,childrenString);
+    }
+
+    //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
+    QSqlQuery q;
+
+    q.prepare(QString("select ouverts,realises,engages,disponibles from %1 where id_node in(%2) and annee=:annee").arg(tableName).arg(childrenString));
+    q.bindValue(":annee",annee);
+    if(!q.exec())
     {
         qCritical()<<q.lastError();
-        die();
+        return false;
     }
 
     qint64 sumOuverts=0;
@@ -329,29 +340,29 @@ bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     bool nullRealises=true;
     bool nullDisponibles=true;
 
-
     while(q.next())
     {
         //qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
-        if(!q.value("ouverts").isNull())
+        //Uses index to speedup
+        if(!q.value(0).isNull())
         {
-            sumOuverts+=q.value("ouverts").toLongLong();
+            sumOuverts+=q.value(0).toLongLong();
             nullOuverts=false;
         }
 
-        if(!q.value("realises").isNull())
+        if(!q.value(1).isNull())
         {
-            sumRealises+=q.value("realises").toLongLong();
+            sumRealises+=q.value(1).toLongLong();
             nullRealises=false;
         }
-        if(!q.value("engages").isNull())
+        if(!q.value(2).isNull())
         {
-            sumEngages+=q.value("engages").toLongLong();
+            sumEngages+=q.value(2).toLongLong();
             nullEngages=false;
         }
-        if(!q.value("disponibles").isNull())
+        if(!q.value(3).isNull())
         {
-            sumDisponibles+=q.value("disponibles").toLongLong();
+            sumDisponibles+=q.value(3).toLongLong();
             nullDisponibles=false;
         }
     }
@@ -392,12 +403,6 @@ bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     }
     return true;
 }
-
-
-
-
-
-
 
 
 QString PCx_Audit::getHTMLAuditStatistics() const
@@ -504,7 +509,7 @@ QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(PCx_AuditManage::DFRFDI
               <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)
               <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
     QSqlQuery q;
-    q.prepare(QString("select * from audit_%1_%2 where (%3 is null and %4 is null and %5 is null) and annee=:year").arg(tableMode).arg(auditId)
+    q.prepare(QString("select id_node from audit_%1_%2 where (%3 is null and %4 is null and %5 is null) and annee=:year").arg(tableMode).arg(auditId)
               .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
 
     q.bindValue(":year",year);
@@ -533,7 +538,7 @@ QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(PCx_AuditManage::DFRFDI
               <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)
                  <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
     QSqlQuery q;
-    q.prepare(QString("select * from audit_%1_%2 where (%3 not null or %4 not null or %5 not null) and annee=:year").arg(tableMode).arg(auditId)
+    q.prepare(QString("select id_node from audit_%1_%2 where (%3 not null or %4 not null or %5 not null) and annee=:year").arg(tableMode).arg(auditId)
                 .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
 
     q.bindValue(":year",year);
@@ -560,7 +565,7 @@ QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(PCx_AuditManage::DFRFDI
     oredStrings<<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS)<<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES)
                  <<PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
     QSqlQuery q;
-    QString sq=QString("select * from audit_%1_%2 where (%3 = 0 and %4 = 0 and %5 = 0) and annee=:year").arg(tableMode).arg(auditId)
+    QString sq=QString("select id_node from audit_%1_%2 where (%3 = 0 and %4 = 0 and %5 = 0) and annee=:year").arg(tableMode).arg(auditId)
                 .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2));
 
     q.prepare(sq);
@@ -584,6 +589,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
     Q_ASSERT(!fileName.isEmpty());
     QElapsedTimer timer;
     timer.start();
+
     QFileInfo fi(fileName);
     if(!fi.isReadable()||!fi.isFile())
     {
@@ -602,12 +608,22 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
     }
 
     int rowCount=xlsx.dimension().rowCount();
+
+
     int row=2;
     if(rowCount<2)
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier vide. Vous pouvez exporter un fichier pré-rempli à l'aide du bouton exporter dans la fenêtre de saisie des données."));
         return -1;
     }
+
+
+    QProgressDialog progress(QObject::tr("Vérification en cours..."),QObject::tr("Annuler"),2,rowCount);
+    progress.setMinimumDuration(300);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    progress.setValue(2);
 
     do
     {
@@ -658,9 +674,33 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
             return -1;
         }
         row++;
+
+        if(!progress.wasCanceled())
+        {
+            progress.setValue(row);
+        }
+        else
+        {
+            return -1;
+        }
+
+
     }while(row<=rowCount);
 
     row=2;
+
+    QSqlDatabase::database().transaction();
+
+
+    QProgressDialog progress2(QObject::tr("Chargement des données en cours..."),QObject::tr("Annuler"),2,rowCount);
+
+    progress2.setMinimumDuration(300);
+
+    progress2.setWindowModality(Qt::ApplicationModal);
+
+    progress2.setValue(2);
+
+
 
     do
     {
@@ -699,16 +739,26 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
             if(!res)
             {
                 QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de mise à jour de la ligne %1").arg(row));
+                QSqlDatabase::database().rollback();
                 return -1;
             }
         }
 
         row++;
+        if(!progress2.wasCanceled())
+        {
+            progress2.setValue(row);
+        }
+        else
+        {
+            QSqlDatabase::database().rollback();
+            return -1;
+        }
+
 }while(row<=rowCount);
 
 
-
-
+    QSqlDatabase::database().commit();
     qDebug()<<"Import done in "<<timer.elapsed()<<" ms";
     return 1;
 
@@ -724,10 +774,6 @@ bool PCx_Audit::exportLeavesDataXLSX(PCx_AuditManage::DFRFDIRI mode, const QStri
     xlsx.write(1,4,PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::OUVERTS));
     xlsx.write(1,5,PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::REALISES));
     xlsx.write(1,6,PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::ENGAGES));
-
-    QString strOuverts=PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS);
-    QString strRealises=PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES);
-    QString strEngages=PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES);
 
     QSqlQuery q;
     int row=2;
@@ -745,9 +791,9 @@ bool PCx_Audit::exportLeavesDataXLSX(PCx_AuditManage::DFRFDIRI mode, const QStri
             }
             while(q.next())
             {
-                QVariant valOuverts=q.value(strOuverts);
-                QVariant valRealises=q.value(strRealises);
-                QVariant valEngages=q.value(strEngages);
+                QVariant valOuverts=q.value("ouverts");
+                QVariant valRealises=q.value("realises");
+                QVariant valEngages=q.value("engages");
 
                 xlsx.write(row,1,typeAndNodeName.first);
                 xlsx.write(row,2,typeAndNodeName.second);

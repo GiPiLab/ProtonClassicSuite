@@ -243,10 +243,10 @@ bool treeNameExists(const QString &name)
 QString idTreeToName(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
-    QSqlQuery q(QString("select * from index_arbres where id='%1'").arg(treeId));
+    QSqlQuery q(QString("select nom from index_arbres where id='%1'").arg(treeId));
     if(q.next())
     {
-        return q.value("nom").toString();
+        return q.value(0).toString();
     }
     else
     {
