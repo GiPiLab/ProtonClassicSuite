@@ -32,10 +32,11 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         QString formattedNum=formatCurrency(data);
         painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
     }
-    else if(index.column()==PCx_EditableAuditModel::COL_ANNEE)
+    else if(index.column()==PCx_EditableAuditModel::COL_ANNEE || index.column()==PCx_EditableAuditModel::COL_ID)
     {
         painter->drawText(rect,index.data().toString(),QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
     }
+
     painter->restore();
 }
 

@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
     qDebug()<<"***ProtonClassicSuite starting***";
 
     int retval;
-    qsrand(time(NULL));
 
 
 

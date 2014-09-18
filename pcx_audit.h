@@ -93,6 +93,10 @@ protected:
 private:
     PCx_Audit(const PCx_Audit &c);
     PCx_Audit &operator=(const PCx_Audit &);
+
+    QHash<unsigned int,unsigned int> idToPid;
+    QHash<unsigned int,QList<unsigned int> >idToChildren;
+    QHash<unsigned int,QString> idToChildrenString;
 };
 
 

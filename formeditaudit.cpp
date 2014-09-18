@@ -1,6 +1,7 @@
 #include "formeditaudit.h"
 #include "ui_formeditaudit.h"
 #include <QDebug>
+#include "utils.h"
 #include <QMessageBox>
 #include <QtGlobal>
 #include <QMdiArea>
@@ -92,16 +93,16 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     ui->treeView->expandToDepth(1);
 
     ui->tableViewDF->setModel(auditModel->getTableModelDF());
-    ui->tableViewDF->hideColumn(0);
+   // ui->tableViewDF->hideColumn(0);
     ui->tableViewDF->hideColumn(1);
     ui->tableViewRF->setModel(auditModel->getTableModelRF());
-    ui->tableViewRF->hideColumn(0);
+   // ui->tableViewRF->hideColumn(0);
     ui->tableViewRF->hideColumn(1);
     ui->tableViewDI->setModel(auditModel->getTableModelDI());
-    ui->tableViewDI->hideColumn(0);
+   // ui->tableViewDI->hideColumn(0);
     ui->tableViewDI->hideColumn(1);
     ui->tableViewRI->setModel(auditModel->getTableModelRI());
-    ui->tableViewRI->hideColumn(0);
+   // ui->tableViewRI->hideColumn(0);
     ui->tableViewRI->hideColumn(1);
 
     //Roots
@@ -173,6 +174,7 @@ void FormEditAudit::on_randomDataButton_clicked()
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
         mode=PCx_AuditManage::RI;
 
+
     QHash<PCx_AuditManage::ORED,double> data;
 
     int maxVal=leaves.size();
@@ -185,16 +187,22 @@ void FormEditAudit::on_randomDataButton_clicked()
     progress.setValue(0);
 
     QSqlDatabase::database().transaction();
+
+    auditModel->clearAllData(mode);
+
     int nbNode=0;
+    qsrand(0);
+
 
     foreach(unsigned int leaf,leaves)
     {
         foreach(unsigned int year,years)
         {
             data.clear();
-            data.insert(PCx_AuditManage::OUVERTS,(double)((qrand()%100000)/100.0));
-            data.insert(PCx_AuditManage::REALISES,(double)((qrand()%100000)/100.0));
-            data.insert(PCx_AuditManage::ENGAGES,(double)((qrand()%100000)/100.0));
+            data.insert(PCx_AuditManage::OUVERTS,(double)((qrand()%MAX_NUM)+(1.0/(qrand()%10))));
+            data.insert(PCx_AuditManage::REALISES,(double)((qrand()%MAX_NUM)+(1.0/(qrand()%10))));
+            data.insert(PCx_AuditManage::ENGAGES,(double)((qrand()%MAX_NUM)+(1.0/(qrand()%10))));
+
             if(auditModel->setLeafValues(leaf,mode,year,data,true)==false)
             {
                 QSqlDatabase::database().rollback();

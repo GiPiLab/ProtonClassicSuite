@@ -272,7 +272,7 @@ bool PCx_Audit::clearAllData(PCx_AuditManage::DFRFDIRI mode)
     if(q.numRowsAffected()<0)
     {
         qCritical()<<q.lastError();
-        die();
+        return false;
     }
     return true;
 }
@@ -286,9 +286,6 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
 
 bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
 {
-    static QHash<unsigned int,unsigned int> idToPid;
-    static QHash<unsigned int,QList<unsigned int> >idToChildren;
-    static QHash<unsigned int,QString> idToChildrenString;
     QString childrenString;
     unsigned int parent;
     parent=idToPid.value(nodeId);
@@ -657,6 +654,12 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
             return -1;
         }
 
+        if(ouverts.toDouble()>=MAX_NUM||realises.toDouble()>=MAX_NUM||engages.toDouble()>=MAX_NUM)
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
+            return -1;
+        }
+
 
         int nodeId;
         nodeId=attachedTree->getNodeIdFromTypeAndNodeName(typeAndNode);
@@ -690,6 +693,9 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
     row=2;
 
     QSqlDatabase::database().transaction();
+
+    this->clearAllData(mode);
+
 
 
     QProgressDialog progress2(QObject::tr("Chargement des données en cours..."),QObject::tr("Annuler"),2,rowCount);
