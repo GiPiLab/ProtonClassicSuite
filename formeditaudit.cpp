@@ -93,16 +93,16 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     ui->treeView->expandToDepth(1);
 
     ui->tableViewDF->setModel(auditModel->getTableModelDF());
-   // ui->tableViewDF->hideColumn(0);
+    ui->tableViewDF->hideColumn(0);
     ui->tableViewDF->hideColumn(1);
     ui->tableViewRF->setModel(auditModel->getTableModelRF());
-   // ui->tableViewRF->hideColumn(0);
+    ui->tableViewRF->hideColumn(0);
     ui->tableViewRF->hideColumn(1);
     ui->tableViewDI->setModel(auditModel->getTableModelDI());
-   // ui->tableViewDI->hideColumn(0);
+    ui->tableViewDI->hideColumn(0);
     ui->tableViewDI->hideColumn(1);
     ui->tableViewRI->setModel(auditModel->getTableModelRI());
-   // ui->tableViewRI->hideColumn(0);
+    ui->tableViewRI->hideColumn(0);
     ui->tableViewRI->hideColumn(1);
 
     //Roots
@@ -191,7 +191,9 @@ void FormEditAudit::on_randomDataButton_clicked()
     auditModel->clearAllData(mode);
 
     int nbNode=0;
-    qsrand(0);
+    qsrand(time(NULL));
+
+    double randval;
 
 
     foreach(unsigned int leaf,leaves)
@@ -199,9 +201,12 @@ void FormEditAudit::on_randomDataButton_clicked()
         foreach(unsigned int year,years)
         {
             data.clear();
-            data.insert(PCx_AuditManage::OUVERTS,(double)((qrand()%MAX_NUM)+(1.0/(qrand()%10))));
-            data.insert(PCx_AuditManage::REALISES,(double)((qrand()%MAX_NUM)+(1.0/(qrand()%10))));
-            data.insert(PCx_AuditManage::ENGAGES,(double)((qrand()%MAX_NUM)+(1.0/(qrand()%10))));
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
+            data.insert(PCx_AuditManage::OUVERTS,randval);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
+            data.insert(PCx_AuditManage::REALISES,randval);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
+            data.insert(PCx_AuditManage::ENGAGES,randval);
 
             if(auditModel->setLeafValues(leaf,mode,year,data,true)==false)
             {

@@ -125,6 +125,13 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
         }
     }
 
+
+    if(leafId==96 && year==2005)
+    {
+        qDebug()<<"ID96 : "<<formatDouble(vals.value(PCx_AuditManage::OUVERTS));
+    }
+
+
     QString reqString;
 
     if(vals.contains(PCx_AuditManage::OUVERTS))
@@ -155,13 +162,19 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
               .arg(tableName).arg(reqString));
 
     if(vals.contains(PCx_AuditManage::OUVERTS))
-        q.bindValue(":vouverts",(qint64)(vals.value(PCx_AuditManage::OUVERTS)*FIXEDPOINTCOEFF));
+    {
+        q.bindValue(":vouverts",doubleToFixedPoint(vals.value(PCx_AuditManage::OUVERTS)));
+    }
 
     if(vals.contains(PCx_AuditManage::REALISES))
-        q.bindValue(":vrealises",(qint64)(vals.value(PCx_AuditManage::REALISES)*FIXEDPOINTCOEFF));
+    {
+        q.bindValue(":vrealises",doubleToFixedPoint(vals.value(PCx_AuditManage::REALISES)));
+    }
 
     if(vals.contains(PCx_AuditManage::ENGAGES))
-        q.bindValue(":vengages",(qint64)(vals.value(PCx_AuditManage::ENGAGES)*FIXEDPOINTCOEFF));
+    {
+        q.bindValue(":vengages",doubleToFixedPoint(vals.value(PCx_AuditManage::ENGAGES)));
+    }
 
     q.bindValue(":id_node",leafId);
     q.bindValue(":year",year);
@@ -184,6 +197,7 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mod
         return false;
     }
 
+    //return true;
     return(updateParent(tableName,year,leafId));
 }
 
@@ -616,7 +630,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
 
 
     QProgressDialog progress(QObject::tr("Vérification en cours..."),QObject::tr("Annuler"),2,rowCount);
-    progress.setMinimumDuration(300);
+    progress.setMinimumDuration(200);
 
     progress.setWindowModality(Qt::ApplicationModal);
 
@@ -653,10 +667,26 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("L'année ligne %1 n'est pas valable pour cet audit !").arg(row));
             return -1;
         }
+        double dblOuv=ouverts.toDouble();
+        double dblReal=realises.toDouble();
+        double dblEng=engages.toDouble();
 
-        if(ouverts.toDouble()>=MAX_NUM||realises.toDouble()>=MAX_NUM||engages.toDouble()>=MAX_NUM)
+
+        if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
+            return -1;
+        }
+
+        if(!qIsFinite(dblOuv)||!qIsFinite(dblReal)||!qIsFinite(dblEng))
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur infinie ligne %1 non autorisée !").arg(row));
+            return -1;
+        }
+
+        if(dblOuv<0.0 || dblReal<0.0 || dblEng<0.0)
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur négative ligne %1 non autorisée !").arg(row));
             return -1;
         }
 
@@ -697,16 +727,15 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
     this->clearAllData(mode);
 
 
+    QCoreApplication::processEvents(QEventLoop::AllEvents);
 
     QProgressDialog progress2(QObject::tr("Chargement des données en cours..."),QObject::tr("Annuler"),2,rowCount);
 
-    progress2.setMinimumDuration(300);
+    progress2.setMinimumDuration(200);
 
     progress2.setWindowModality(Qt::ApplicationModal);
 
     progress2.setValue(2);
-
-
 
     do
     {
@@ -728,15 +757,18 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
         QHash<PCx_AuditManage::ORED,double> vals;
         if(ouverts.isValid())
         {
-            vals.insert(PCx_AuditManage::OUVERTS,ouverts.toDouble());
+            double valDbl=ouverts.toDouble();
+            vals.insert(PCx_AuditManage::OUVERTS,valDbl);
         }
         if(realises.isValid())
         {
-            vals.insert(PCx_AuditManage::REALISES,realises.toDouble());
+            double valDbl=realises.toDouble();
+            vals.insert(PCx_AuditManage::REALISES,valDbl);
         }
         if(engages.isValid())
         {
-            vals.insert(PCx_AuditManage::ENGAGES,engages.toDouble());
+            double valDbl=engages.toDouble();
+            vals.insert(PCx_AuditManage::ENGAGES,valDbl);
         }
         if(vals.size()>0)
         {
@@ -749,6 +781,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_AuditManage::DFRF
                 return -1;
             }
         }
+        vals.clear();
 
         row++;
         if(!progress2.wasCanceled())
@@ -808,17 +841,17 @@ bool PCx_Audit::exportLeavesDataXLSX(PCx_AuditManage::DFRFDIRI mode, const QStri
                 if(!valOuverts.isNull())
                 {
                     //QString vOuverts=formatDouble((double)valOuverts.toLongLong()/FIXEDPOINTCOEFF,2,true);
-                    xlsx.write(row,4,(double)valOuverts.toLongLong()/FIXEDPOINTCOEFF);
+                    xlsx.write(row,4,fixedPointToDouble(valOuverts.toLongLong()));
                 }
 
                 if(!valRealises.isNull())
                 {
-                    xlsx.write(row,5,(double)valRealises.toLongLong()/FIXEDPOINTCOEFF);
+                    xlsx.write(row,5,fixedPointToDouble(valRealises.toLongLong()));
                 }
 
                 if(!valEngages.isNull())
                 {
-                    xlsx.write(row,6,(double)valEngages.toLongLong()/FIXEDPOINTCOEFF);
+                    xlsx.write(row,6,fixedPointToDouble(valEngages.toLongLong()));
                 }
                 row++;
             }

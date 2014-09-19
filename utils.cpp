@@ -19,6 +19,12 @@
 FORMATMODE currentFormatMode=FORMATMODENORMAL;
 unsigned int currentNumDecimals=DEFAULTNUMDECIMALS;
 
+unsigned int getCurrentNumDecimals()
+{
+    return currentNumDecimals;
+}
+
+
 void updateFormatModeAndDecimals()
 {
     QSettings settings;
@@ -56,9 +62,9 @@ QString formatCurrency(qint64 num, int decimals, bool forcedUnits)
 
     //Forced decimals mode
     if(decimals>=0)
-        out.prepend(locale.toString(((double)num/FIXEDPOINTCOEFF),'f',decimals));
+        out.prepend(locale.toString(fixedPointToDouble(num),'f',decimals));
     else
-        out.prepend(locale.toString(((double)num/FIXEDPOINTCOEFF),'f',currentNumDecimals));
+        out.prepend(locale.toString(fixedPointToDouble(num),'f',currentNumDecimals));
     return out;
 }
 
@@ -240,3 +246,14 @@ QStringList yearsListToStringList(QList<unsigned int> years)
     return yearsStringList;
 }
 
+
+
+qint64 doubleToFixedPoint(double num)
+{
+    return (qint64)((num+FIXEDPOINTCORRECTION)*FIXEDPOINTCOEFF);
+}
+
+double fixedPointToDouble(qint64 num)
+{
+    return (double)((double)num/(double)FIXEDPOINTCOEFF);
+}

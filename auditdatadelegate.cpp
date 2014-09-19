@@ -44,7 +44,7 @@ void auditDataDelegate::setEditorData(QWidget *editor,const QModelIndex &index) 
 {
     QDoubleSpinBox *edit=(QDoubleSpinBox *)editor;
     //Convert fixed point arithmetics to double for displaying
-    edit->setValue(index.data().toLongLong()/(double)FIXEDPOINTCOEFF);
+    edit->setValue(fixedPointToDouble(index.data().toLongLong()));
 }
 
 
@@ -53,7 +53,7 @@ void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
     QDoubleSpinBox *edit=(QDoubleSpinBox *)editor;
     double value=edit->value();
     if(value>MAX_NUM)value=MAX_NUM;
-    edit->setValue(value*FIXEDPOINTCOEFF);
+    edit->setValue(doubleToFixedPoint(value));
     QStyledItemDelegate::setModelData(edit,model,index);
 }
 
@@ -66,6 +66,8 @@ QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionView
         return 0;
     }
     QDoubleSpinBox *spin=new QDoubleSpinBox(parent);
+    spin->setDecimals(3);
+
     spin->setButtonSymbols(QAbstractSpinBox::NoButtons);
     spin->setCorrectionMode(QAbstractSpinBox::CorrectToNearestValue);
 

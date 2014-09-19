@@ -45,7 +45,6 @@
     <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
     <addaction name="actionEditAudit"/>
-    <addaction name="actionQuickAudit"/>
    </widget>
    <widget class="QMenu" name="menuExploitation">
     <property name="title">
@@ -85,11 +84,6 @@
   <action name="actionTablesGraphics">
    <property name="text">
     <string>E&amp;xplorateur d'audits</string>
-   </property>
-  </action>
-  <action name="actionQuickAudit">
-   <property name="text">
-    <string>Audit rapide</string>
    </property>
   </action>
   <action name="actionReport">

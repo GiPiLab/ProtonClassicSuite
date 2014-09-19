@@ -262,8 +262,6 @@ void MainWindow::on_actionNewDb_triggered()
     setMenusState();
 }
 
-
-
 void MainWindow::on_actionOpenDb_triggered()
 {
     QFileDialog fileDialog;

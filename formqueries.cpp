@@ -214,8 +214,8 @@ bool FormQueries::getParamsReqMinMax(unsigned int &typeId, PCx_AuditManage::ORED
     typeId=ui->comboBoxTypes_3->currentData().toUInt();
     ored=(PCx_AuditManage::ORED)ui->comboBoxORED_3->currentData().toUInt();
     dfrfdiri=(PCx_AuditManage::DFRFDIRI)ui->comboBoxDFRFDIRI_3->currentData().toUInt();
-    val1=(qint64)ui->doubleSpinBox_2->value()*FIXEDPOINTCOEFF;
-    val2=(qint64)ui->doubleSpinBox_3->value()*FIXEDPOINTCOEFF;
+    val1=doubleToFixedPoint(ui->doubleSpinBox_2->value());
+    val2=doubleToFixedPoint(ui->doubleSpinBox_3->value());
     year1=ui->comboBoxYear1_3->currentText().toUInt();
     year2=ui->comboBoxYear2_3->currentText().toUInt();
     return true;
@@ -231,7 +231,7 @@ bool FormQueries::getParamsReqVariation(unsigned int &typeId,PCx_AuditManage::OR
     increase=(PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toUInt();
     percent=(PCx_QueryVariation::PERCENTORPOINTS)ui->comboBoxPercentEuro->currentData().toUInt();
     oper=(PCx_QueryVariation::OPERATORS)ui->comboBoxOperator->currentData().toUInt();
-    val=ui->doubleSpinBox->value()*FIXEDPOINTCOEFF;
+    val=doubleToFixedPoint(ui->doubleSpinBox->value());
     year1=ui->comboBoxYear1->currentText().toUInt();
     year2=ui->comboBoxYear2->currentText().toUInt();
     if(year1==year2)
