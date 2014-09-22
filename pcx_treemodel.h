@@ -37,6 +37,7 @@ public:
     static unsigned int getNumberOfNodes(unsigned int treeId);
     QList<unsigned int> getLeavesId() const;
     QList<unsigned int> getNodesId() const;
+    QStringList getListOfCompleteNodeNames() const;
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;
 
@@ -48,6 +49,7 @@ public:
 
     QString getNodeName(unsigned int node) const;
     QPair<QString, QString> getTypeNameAndNodeName(unsigned int node) const;
+
 
     QModelIndexList getIndexesOfNodesWithThisType(unsigned int typeId) const;
     QList<unsigned int> getIdsOfNodesWithThisType(unsigned int typeId) const;

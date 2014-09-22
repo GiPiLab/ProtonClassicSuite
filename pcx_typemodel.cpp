@@ -18,6 +18,7 @@ PCx_TypeModel::PCx_TypeModel(unsigned int treeId, bool readOnly, QObject *parent
         loadSqlQueryModel();
 }
 
+
 bool PCx_TypeModel::loadSqlTableModel()
 {
     Q_ASSERT(treeId>0);

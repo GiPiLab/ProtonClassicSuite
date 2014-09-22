@@ -45,4 +45,5 @@ QString generateUniqueFileName(const QString &suffix="");
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
 QStringList yearsListToStringList(QList<unsigned int> years);
 
+
 #endif // UTILS_H

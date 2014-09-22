@@ -133,6 +133,13 @@
      </property>
     </widget>
    </item>
+   <item row="4" column="0" colspan="4">
+    <widget class="QTableView" name="similarityTableView">
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

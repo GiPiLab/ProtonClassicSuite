@@ -257,3 +257,8 @@ double fixedPointToDouble(qint64 num)
 {
     return (double)((double)num/(double)FIXEDPOINTCOEFF);
 }
+
+
+
+
+

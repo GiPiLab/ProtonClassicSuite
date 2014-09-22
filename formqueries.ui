@@ -107,6 +107,9 @@
         <property name="minimum">
          <number>1</number>
         </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
         <property name="value">
          <number>5</number>
         </property>
@@ -291,18 +294,6 @@
         <property name="suffix">
          <string>€</string>
         </property>
-        <property name="minimum">
-         <double>-400000000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>400000000.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>10000.000000000000000</double>
-        </property>
        </widget>
       </item>
       <item row="6" column="1">
@@ -321,15 +312,6 @@
         </property>
         <property name="suffix">
          <string>€</string>
-        </property>
-        <property name="minimum">
-         <double>-400000000.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>400000000.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>10.000000000000000</double>
         </property>
        </widget>
       </item>

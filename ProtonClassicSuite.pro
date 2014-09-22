@@ -43,7 +43,9 @@ SOURCES += main.cpp\
     pcx_editableauditmodel.cpp \
     pcx_audit.cpp \
     pcx_treemanage.cpp \
-    pcx_auditmanage.cpp
+    pcx_auditmanage.cpp \
+    pcx_stringdistancetablemodel.cpp \
+    pcx_stringdistance.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -72,7 +74,9 @@ HEADERS  += mainwindow.h \
     pcx_editableauditmodel.h \
     pcx_audit.h \
     pcx_treemanage.h \
-    pcx_auditmanage.h
+    pcx_auditmanage.h \
+    pcx_stringdistancetablemodel.h \
+    pcx_stringdistance.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \

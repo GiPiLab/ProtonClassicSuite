@@ -149,6 +149,22 @@ QList<unsigned int> PCx_TreeModel::getNodesId() const
     return PCx_TreeModel::getNodesId(this->treeId);
 }
 
+QStringList PCx_TreeModel::getListOfCompleteNodeNames() const
+{
+    QStringList nodeNames;
+    QSqlQuery q;
+    if(!q.exec(QString("select nom,type from arbre_%1 where id>1").arg(treeId)))
+    {
+        qCritical()<<q.lastError();
+        return QStringList();
+    }
+    while(q.next())
+    {
+        nodeNames.append(QString("%1 %2").arg(types->idTypeToName(q.value("type").toUInt())).arg(q.value("nom").toString()));
+    }
+    return nodeNames;
+}
+
 unsigned int PCx_TreeModel::getNumberOfNodes() const
 {
     return PCx_TreeModel::getNumberOfNodes(treeId);
@@ -359,10 +375,6 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
     }
     return listOfChildren;
 }
-
-
-
-
 
 /*
  * Drag and drop : uses QStandardItemModel to compute the logic with items

@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "pcx_treemodel.h"
+#include "pcx_stringdistancetablemodel.h"
 
 namespace Ui {
 class FormDisplayTree;
@@ -32,6 +33,7 @@ private:
     Ui::FormDisplayTree *ui;
     PCx_TreeModel *model;
     void populateTableInfos();
+    PCx_StringDistanceTableModel *distanceModel;
 };
 
 #endif // FORMDISPLAYTREE_H

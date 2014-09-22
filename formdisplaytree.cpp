@@ -2,6 +2,7 @@
 #include "ui_formdisplaytree.h"
 #include <QtPrintSupport/QtPrintSupport>
 #include "utils.h"
+#include "pcx_stringdistancetablemodel.h"
 
 
 FormDisplayTree::FormDisplayTree(unsigned int treeId, QWidget *parent):
@@ -17,11 +18,23 @@ FormDisplayTree::FormDisplayTree(unsigned int treeId, QWidget *parent):
 
     populateTableInfos();
     ui->tableWidget->resizeColumnsToContents();
+
+
+    QStringList nodeNames=model->getListOfCompleteNodeNames();
+
+    //qDebug()<<nodeNames;
+    distanceModel=new PCx_StringDistanceTableModel(nodeNames);
+    ui->similarityTableView->setModel(distanceModel);
+
+
+
+
 }
 
 FormDisplayTree::~FormDisplayTree()
 {
     delete model;
+    delete distanceModel;
     delete ui;
 }
 

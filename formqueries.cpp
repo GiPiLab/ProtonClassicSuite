@@ -2,6 +2,7 @@
 #include "ui_formqueries.h"
 #include <QDebug>
 #include <QSqlQuery>
+#include <stdint.h>
 #include <QSqlRecord>
 #include "pcx_query.h"
 #include "pcx_queryvariation.h"
@@ -69,9 +70,11 @@ FormQueries::FormQueries(QWidget *parent) :
     ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditManage::modeToCompleteString(PCx_AuditManage::DI).toLower(),PCx_AuditManage::DI);
     ui->comboBoxDFRFDIRI_3->addItem(PCx_AuditManage::modeToCompleteString(PCx_AuditManage::RI).toLower(),PCx_AuditManage::RI);
 
-    ui->doubleSpinBox->setMaximum(10*MAX_NUM);
-    ui->doubleSpinBox_2->setMaximum(10*MAX_NUM);
-    ui->doubleSpinBox_3->setMaximum(10*MAX_NUM);
+    ui->doubleSpinBox->setMaximum(INT64_MAX/FIXEDPOINTCOEFF);
+    ui->doubleSpinBox_2->setRange(-INT64_MAX/FIXEDPOINTCOEFF,INT64_MAX/FIXEDPOINTCOEFF);
+    ui->doubleSpinBox_3->setRange(-INT64_MAX/FIXEDPOINTCOEFF,INT64_MAX/FIXEDPOINTCOEFF);
+
+
 
     doc=new QTextDocument();
     ui->textEdit->setDocument(doc);
@@ -272,7 +275,7 @@ void FormQueries::on_comboBoxAugDim_activated(int index)
     Q_UNUSED(index);
     if((PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toInt()==PCx_QueryVariation::VARIATION)
     {
-        ui->doubleSpinBox->setMinimum(-MAX_NUM);
+        ui->doubleSpinBox->setMinimum(-INT64_MAX/FIXEDPOINTCOEFF);
     }
     else
     {
