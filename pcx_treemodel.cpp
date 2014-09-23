@@ -165,6 +165,22 @@ QStringList PCx_TreeModel::getListOfCompleteNodeNames() const
     return nodeNames;
 }
 
+QStringList PCx_TreeModel::getListOfNodeNames() const
+{
+    QStringList nodeNames;
+    QSqlQuery q;
+    if(!q.exec(QString("select distinct nom from arbre_%1 where id>1").arg(treeId)))
+    {
+        qCritical()<<q.lastError();
+        return QStringList();
+    }
+    while(q.next())
+    {
+        nodeNames.append(q.value("nom").toString());
+    }
+    return nodeNames;
+}
+
 unsigned int PCx_TreeModel::getNumberOfNodes() const
 {
     return PCx_TreeModel::getNumberOfNodes(treeId);
@@ -223,6 +239,35 @@ QList<unsigned int> PCx_TreeModel::getNonLeavesId() const
     }
     qDebug()<<"Non-leaves for tree "<<treeId<< " = "<<nonleaves;
     return nonleaves;
+}
+
+QSet<unsigned int> PCx_TreeModel::getNodesWithSharedName() const
+{
+    QSqlQuery q(QString("select * from arbre_%1").arg(treeId));
+    QSet<unsigned int> nodes;
+    QHash<QString,QPair<unsigned int,unsigned int> > nameToTypeAndId;
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        return QSet<unsigned int>();
+    }
+    while(q.next())
+    {
+        QString name=q.value("nom").toString().toLower();
+        if(nameToTypeAndId.contains(name))
+        {
+            nodes.insert(q.value("id").toUInt());
+            nodes.insert(nameToTypeAndId.value(name).second);
+        }
+        else
+        {
+            QPair<unsigned int,unsigned int>typeAndId;
+            typeAndId.first=q.value("type").toUInt();
+            typeAndId.second=q.value("id").toUInt();
+            nameToTypeAndId.insert(name,typeAndId);
+        }
+    }
+    return nodes;
 }
 
 bool PCx_TreeModel::isLeaf(unsigned int nodeId) const

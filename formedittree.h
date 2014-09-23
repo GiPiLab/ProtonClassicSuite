@@ -54,6 +54,8 @@ private slots:
 
     void on_importTreeButton_clicked();
 
+    void on_consistencyButton_clicked();
+
 signals:
     void listOfTreeChanged();
 

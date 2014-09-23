@@ -44,8 +44,9 @@ SOURCES += main.cpp\
     pcx_audit.cpp \
     pcx_treemanage.cpp \
     pcx_auditmanage.cpp \
-    pcx_stringdistancetablemodel.cpp \
-    pcx_stringdistance.cpp
+    pcx_stringdistance.cpp \
+    formtreeconsistency.cpp \
+    pcx_nodesimilaritytablemodel.cpp
 
 HEADERS  += mainwindow.h \
     pcx_treemodel.h \
@@ -75,8 +76,9 @@ HEADERS  += mainwindow.h \
     pcx_audit.h \
     pcx_treemanage.h \
     pcx_auditmanage.h \
-    pcx_stringdistancetablemodel.h \
-    pcx_stringdistance.h
+    pcx_stringdistance.h \
+    formtreeconsistency.h \
+    pcx_nodesimilaritytablemodel.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -88,7 +90,8 @@ FORMS    += mainwindow.ui \
     dialogoptions.ui \
     formqueries.ui \
     dialogduplicateaudit.ui \
-    formauditinfos.ui
+    formauditinfos.ui \
+    formtreeconsistency.ui
 
 
 QMAKE_CXXFLAGS_DEBUG += -Og

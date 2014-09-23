@@ -2,8 +2,11 @@
 #include "ui_formdisplaytree.h"
 #include <QtPrintSupport/QtPrintSupport>
 #include "utils.h"
-#include "pcx_stringdistancetablemodel.h"
-
+#include <QDateTime>
+#include <QDebug>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QMessageBox>
 
 FormDisplayTree::FormDisplayTree(unsigned int treeId, QWidget *parent):
     QWidget(parent),
@@ -15,30 +18,15 @@ FormDisplayTree::FormDisplayTree(unsigned int treeId, QWidget *parent):
     QDateTime dt=QDateTime::currentDateTime();
     ui->label->setText(tr("Arbre %1 le %2 à %3").arg(model->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
     ui->treeView->expandToDepth(1);
-
-    populateTableInfos();
-    ui->tableWidget->resizeColumnsToContents();
-
-
-    QStringList nodeNames=model->getListOfCompleteNodeNames();
-
-    //qDebug()<<nodeNames;
-    distanceModel=new PCx_StringDistanceTableModel(nodeNames);
-    ui->similarityTableView->setModel(distanceModel);
-
-
-
-
 }
 
 FormDisplayTree::~FormDisplayTree()
 {
     delete model;
-    delete distanceModel;
     delete ui;
 }
 
-/*void FormDisplayTree::on_printViewButton_clicked()
+void FormDisplayTree::on_printViewButton_clicked()
 {
     QPrinter printer;
 
@@ -57,7 +45,7 @@ FormDisplayTree::~FormDisplayTree()
        painter.translate(-width()/2, -height()/2);
 
        ui->treeView->render(&painter);
-}*/
+}
 
 void FormDisplayTree::on_expandButton_clicked()
 {
@@ -95,26 +83,7 @@ void FormDisplayTree::on_exportButton_clicked()
     QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF"));
 }
 
-void FormDisplayTree::populateTableInfos()
-{
-    ui->tableWidget->item(0,1)->setText(QString::number(model->getNumberOfNodes()));
 
-    QList<QPair<unsigned int,QString> > listOfTypes=model->getTypes()->getAllTypes();
-    QPair<unsigned int,QString> type;
-    int row=ui->tableWidget->rowCount();
-
-    foreach(type,listOfTypes)
-    {
-        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
-        unsigned int nbOfThisType=model->getNumberOfNodesWithThisType(type.first);
-        QTableWidgetItem *item1=new QTableWidgetItem("Noeuds de type "+type.second);
-        QTableWidgetItem *item2=new QTableWidgetItem(QString::number(nbOfThisType));
-        item2->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);
-        ui->tableWidget->setItem(row,0,item1);
-        ui->tableWidget->setItem(row,1,item2);
-        row++;
-    }
-}
 
 void FormDisplayTree::on_exportXLSXButton_clicked()
 {

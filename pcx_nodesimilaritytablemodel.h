@@ -1,23 +1,20 @@
-#ifndef PCX_STRINGDISTANCETABLEMODEL_H
-#define PCX_STRINGDISTANCETABLEMODEL_H
+#ifndef PCX_NODESIMILARITYTABLEMODEL_H
+#define PCX_NODESIMILARITYTABLEMODEL_H
 
 #include <QAbstractTableModel>
 #include "pcx_stringdistance.h"
 
-class PCx_StringDistanceTableModel : public QAbstractTableModel
+class PCx_NodeSimilarityTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit PCx_StringDistanceTableModel(QObject *parent=0);
-    explicit PCx_StringDistanceTableModel(const QStringList strings, QObject *parent = 0);
+    explicit PCx_NodeSimilarityTableModel(const QStringList strings, PCx_StringDistance::SIMILARITYMETRIC metric,QObject *parent = 0);
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
     int columnCount(const QModelIndex &parent=QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
     bool computeDistances(void);
-
-
-    unsigned int levenshtein(const QString &sa, const QString &ta);
 
 
 signals:
@@ -28,7 +25,8 @@ public slots:
 private:
     QStringList listOfStrings;
     QList<PCx_StringDistance> distances;
+    PCx_StringDistance::SIMILARITYMETRIC similarityMetric;
 
 };
 
-#endif // PCX_STRINGDISTANCETABLEMODEL_H
+#endif

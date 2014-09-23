@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "pcx_treemodel.h"
 #include "pcx_treemanage.h"
+#include "formtreeconsistency.h"
 #include <QDebug>
 #include <QSqlRecord>
 #include <QSqlField>
@@ -442,4 +443,14 @@ void FormEditTree::on_importTreeButton_clicked()
         updateListOfTree();
         emit(listOfTreeChanged());
     }
+}
+
+void FormEditTree::on_consistencyButton_clicked()
+{
+    FormTreeConsistency *form=new FormTreeConsistency(model->getTreeId(),this);
+    form->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    QMdiArea *mdiArea=mdiSubWin->mdiArea();
+    mdiArea->addSubWindow(form);
+    form->show();
 }

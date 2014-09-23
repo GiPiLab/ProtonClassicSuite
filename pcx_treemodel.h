@@ -37,9 +37,13 @@ public:
     static unsigned int getNumberOfNodes(unsigned int treeId);
     QList<unsigned int> getLeavesId() const;
     QList<unsigned int> getNodesId() const;
+    //Node names with their types
     QStringList getListOfCompleteNodeNames() const;
+    //Only node names
+    QStringList getListOfNodeNames() const;
     static QList<unsigned int> getNodesId(unsigned int treeId);
     QList<unsigned int> getNonLeavesId() const;
+    QSet<unsigned int> getNodesWithSharedName() const;
 
     bool isLeaf(unsigned int nodeId) const;
     unsigned int getTreeDepth() const;

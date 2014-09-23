@@ -6,23 +6,30 @@
 class PCx_StringDistance
 {
 public:
-    PCx_StringDistance(const QString &str, const QString &str2);
+
+    enum SIMILARITYMETRIC
+    {
+        NORMALIZEDLEVENSHTEIN,
+        NORMALIZEDLEVENSHTEINCI,
+        JAROWINKLER,
+        JAROWINKLERCI
+    };
+
+    PCx_StringDistance(const QString &str, const QString &str2, SIMILARITYMETRIC similarityMode=JAROWINKLERCI);
 
     const QString &getStr1() const {return str1;}
     const QString &getStr2() const {return str2;}
+    double getNormalizedSimilarity() const{return normalizedSimilarity;}
 
-    int getDistance() const{return distance;}
 
 
 private:
-    unsigned int levenshtein(const QString &sa, const QString &ta);
+    double normalizedLevenshteinDistance(const QString &sa, const QString &ta, bool caseInsensitive=false);
     unsigned int minimum(unsigned int a, unsigned int b, unsigned int c);
+    double jaroWinklerDistance(const QString &str1, const QString &str2, bool caseInsensitive=false);
 
     QString str1,str2;
-    int distance;
-
-
-
+    double normalizedSimilarity;
 
 };
 

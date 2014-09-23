@@ -1,33 +1,30 @@
-#include "pcx_stringdistancetablemodel.h"
+#include "pcx_nodesimilaritytablemodel.h"
 #include "utils.h"
 #include <QDebug>
 #include <QElapsedTimer>
 #include <QProgressDialog>
 
-PCx_StringDistanceTableModel::PCx_StringDistanceTableModel(QObject *parent):QAbstractTableModel(parent)
-{
-}
 
-PCx_StringDistanceTableModel::PCx_StringDistanceTableModel(const QStringList strings, QObject *parent) :
-    QAbstractTableModel(parent),listOfStrings(strings)
+PCx_NodeSimilarityTableModel::PCx_NodeSimilarityTableModel(const QStringList strings, PCx_StringDistance::SIMILARITYMETRIC metric, QObject *parent) :
+    QAbstractTableModel(parent),listOfStrings(strings),similarityMetric(metric)
 {
     computeDistances();
 }
 
-int PCx_StringDistanceTableModel::rowCount(const QModelIndex &parent) const
+int PCx_NodeSimilarityTableModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return listOfStrings.length();
+    return distances.size();
 
 }
 
-int PCx_StringDistanceTableModel::columnCount(const QModelIndex &parent) const
+int PCx_NodeSimilarityTableModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 3;
 }
 
-QVariant PCx_StringDistanceTableModel::data(const QModelIndex &index, int role) const
+QVariant PCx_NodeSimilarityTableModel::data(const QModelIndex &index, int role) const
 {
     if(role==Qt::DisplayRole)
     {
@@ -35,10 +32,10 @@ QVariant PCx_StringDistanceTableModel::data(const QModelIndex &index, int role) 
         {
         case 0:
             return distances.at(index.row()).getStr1();
-            break;
+
         case 1:
-            return distances.at(index.row()).getDistance();
-            break;
+            return distances.at(index.row()).getNormalizedSimilarity();
+
         case 2:
             return distances.at(index.row()).getStr2();
         }
@@ -48,7 +45,25 @@ QVariant PCx_StringDistanceTableModel::data(const QModelIndex &index, int role) 
 
 }
 
-bool PCx_StringDistanceTableModel::computeDistances()
+QVariant PCx_NodeSimilarityTableModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    Q_UNUSED(orientation);
+    if(role==Qt::DisplayRole)
+    {
+        switch(section)
+        {
+        case 0:
+            return tr("Noeud 1");
+        case 1:
+            return tr("Similarité");
+        case 2:
+            return tr("Noeud 2");
+        }
+    }
+    return QVariant();
+}
+
+bool PCx_NodeSimilarityTableModel::computeDistances()
 {
     QHash<QString,bool> notCompute;
     QElapsedTimer timer;
@@ -60,6 +75,7 @@ bool PCx_StringDistanceTableModel::computeDistances()
     progress.setWindowModality(Qt::ApplicationModal);
 
     progress.setMinimumDuration(300);
+    progress.setValue(0);
 
     timer.start();
     int nbVals=0;
@@ -76,7 +92,11 @@ bool PCx_StringDistanceTableModel::computeDistances()
             }
             else
             {
-                distances.append(PCx_StringDistance(str1,str2));
+                PCx_StringDistance dist(str1,str2,similarityMetric);
+                if(dist.getNormalizedSimilarity()>0.0)
+                {
+                    distances.append(dist);
+                }
                 notCompute.insert(str2+str1,true);
             }
         }
