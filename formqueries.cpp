@@ -2,7 +2,7 @@
 #include "ui_formqueries.h"
 #include <QDebug>
 #include <QSqlQuery>
-#include <stdint.h>
+#include <cstdint>
 #include <QSqlRecord>
 #include "pcx_query.h"
 #include "pcx_queryvariation.h"
