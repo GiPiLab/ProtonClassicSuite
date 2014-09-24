@@ -16,6 +16,7 @@ public:
                                       unsigned int selectedNode, PCx_AuditManage::DFRFDIRI mode,QTextDocument *document=NULL, const QString &absoluteImagePath="",
                                       const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
 
+    QString generateHTMLTOC(QList<unsigned int> nodes) const;
 
     static QString generateHTMLHeader(unsigned int auditId);
 

@@ -256,3 +256,15 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
     return output;
 }
 
+QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const
+{
+    QString output="<ul>\n";
+    PCx_TreeModel *treeModel=model->getAttachedTreeModel();
+    foreach(unsigned int node,nodes)
+    {
+        output.append(QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(treeModel->getNodeName(node).toHtmlEscaped()));
+    }
+    output.append("</ul>\n");
+    return output;
+}
+

@@ -151,7 +151,7 @@ void FormReports::on_saveButton_clicked()
         selectedNodes.append(idx.data(Qt::UserRole+1).toUInt());
     }
 
-    qDebug()<<"Selected nodes : "<<selectedNodes;
+    //qDebug()<<"Selected nodes : "<<selectedNodes;
     QList<unsigned int>sortedSelectedNodes;
     if(ui->radioButtonBFS->isChecked())
         sortedSelectedNodes=model->getAttachedTreeModel()->sortNodesBFS(selectedNodes);
@@ -162,7 +162,7 @@ void FormReports::on_saveButton_clicked()
         QMessageBox::warning(this,tr("Attention"),tr("Choisissez l'ordre d'affichage des noeuds sélectionnés dans le rapport !"));
         return;
     }
-    qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
+    //qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
 
 
     QList<QListWidgetItem *>selectedItemsTables=ui->listTables->selectedItems();
@@ -173,13 +173,13 @@ void FormReports::on_saveButton_clicked()
 
     foreach(QListWidgetItem *item, selectedItemsTables)
     {
-        qDebug()<<"Selecting table "<<item->data(Qt::UserRole+1).toUInt();
+      //  qDebug()<<"Selecting table "<<item->data(Qt::UserRole+1).toUInt();
         selectedTables.append((PCx_Tables::TABLES)item->data(Qt::UserRole+1).toUInt());
     }
 
     foreach(QListWidgetItem *item, selectedItemsGraphics)
     {
-        qDebug()<<"Selecting graphic "<<item->data(Qt::UserRole+1).toUInt();
+      //  qDebug()<<"Selecting graphic "<<item->data(Qt::UserRole+1).toUInt();
         selectedGraphics.append((PCx_Graphics::GRAPHICS)item->data(Qt::UserRole+1).toUInt());
     }
 
@@ -299,9 +299,11 @@ void FormReports::on_saveButton_clicked()
     QElapsedTimer timer;
     timer.start();
 
+    output.append(report->generateHTMLTOC(sortedSelectedNodes));
+
     foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
-        output.append(QString("<h2>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()));
+        output.append(QString("<h2 id='node%2'>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
 
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
