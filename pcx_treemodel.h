@@ -17,7 +17,7 @@ class PCx_TreeModel:public QStandardItemModel
 
 public:
 
-    static const unsigned int MAXNODES=1500;
+    static const unsigned int MAXNODES=1700;
 
     explicit PCx_TreeModel(unsigned int treeId, bool typesReadOnly=true, bool noLoadModel=false, QObject *parent=0);
     virtual ~PCx_TreeModel();

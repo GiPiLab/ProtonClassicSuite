@@ -14,7 +14,6 @@ public:
     QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-    bool computeDistances(void);
 
 
 signals:
@@ -26,6 +25,8 @@ private:
     QStringList listOfStrings;
     QList<PCx_StringDistance> distances;
     PCx_StringDistance::SIMILARITYMETRIC similarityMetric;
+    bool computeDistances(void);
+
 
 };
 

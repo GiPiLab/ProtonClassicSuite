@@ -446,9 +446,16 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
     QByteArray encodedData=data->data("application/x-qstandarditemmodeldatalist");
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+    while(!stream.atEnd())
+    {
     int arow,acol;
     QMap<int, QVariant> roleDataMap;
     stream >> arow>>acol>>roleDataMap;
+    if(roleDataMap.isEmpty())
+    {
+        continue;
+    }
 
     dragId=roleDataMap[Qt::UserRole+1].toUInt();
     qDebug()<<"DRAG ID = "<<dragId;
@@ -457,8 +464,8 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         qDebug()<<"DONT DRAG THE ROOT";
         return false;
     }
-
     updateNodePosition(dragId,dropId);
+    }
 
     return QStandardItemModel::dropMimeData(data,action,row,column,parent);
 }
