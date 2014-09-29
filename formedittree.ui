@@ -48,7 +48,7 @@
       <enum>Qt::MoveAction</enum>
      </property>
      <property name="selectionMode">
-      <enum>QAbstractItemView::ExtendedSelection</enum>
+      <enum>QAbstractItemView::SingleSelection</enum>
      </property>
      <attribute name="headerVisible">
       <bool>false</bool>
@@ -164,7 +164,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>774</width>
+        <width>344</width>
         <height>68</height>
        </rect>
       </property>
