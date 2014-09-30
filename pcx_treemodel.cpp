@@ -430,7 +430,6 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
  * - let QStandardItemModel::dropMimeData do the job with items
  */
 
-//TODO : Multiple selection D&D
 bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
 
@@ -440,41 +439,20 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         return false;
     }
 
-    unsigned int dragId,dropId;
+    unsigned int dropId;
 
     dropId=parent.data(Qt::UserRole+1).toUInt();
+    qDebug()<<"DROPID="<<dropId;
 
-    qDebug()<<"DROP ID = "<<dropId;
+    QStandardItemModel tmpModel;
+    tmpModel.dropMimeData(data,Qt::CopyAction,0,0,QModelIndex());
 
-    QByteArray encodedData=data->data("application/x-qstandarditemmodeldatalist");
-    QDataStream stream(&encodedData, QIODevice::ReadOnly);
-
-    //while(!stream.atEnd())
-    //{
-    int arow,acol;
-    QMap<int, QVariant> roleDataMap;
-    stream >> arow>>acol>>roleDataMap;
-
-    //qDebug()<<arow<<acol;
-    /*if(roleDataMap.isEmpty())
+    for(int i=0;i<tmpModel.rowCount();i++)
     {
-        break;
-    }*/
-
-    QVariant vDragId=roleDataMap[Qt::UserRole+1];
-    /*if(!vDragId.isValid())
-    {
-        break;
-    }*/
-    dragId=vDragId.toUInt();
-    qDebug()<<"DRAG ID = "<<dragId;
-    if(dragId==1)
-    {
-        qDebug()<<"DONT DRAG THE ROOT";
-        return false;
+        unsigned int dragId=tmpModel.item(i)->data(Qt::UserRole+1).toUInt();
+        if(dragId!=1)
+            updateNodePosition(dragId,dropId);
     }
-    updateNodePosition(dragId,dropId);
-    //}
 
     return QStandardItemModel::dropMimeData(data,action,row,column,parent);
 }
