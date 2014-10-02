@@ -41,7 +41,7 @@ FormTreeConsistency::~FormTreeConsistency()
 
 QSize FormTreeConsistency::sizeHint() const
 {
-    return QSize(500,400);
+    return QSize(600,500);
 }
 
 void FormTreeConsistency::populateListOfNodesWithSameNameButDifferentTypes()

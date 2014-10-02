@@ -481,3 +481,8 @@ void FormReports::on_pushButtonUnSelectAllNodes_clicked()
 {
     ui->treeView->clearSelection();
 }
+
+QSize FormReports::sizeHint() const
+{
+    return QSize(900,600);
+}

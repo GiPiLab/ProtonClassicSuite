@@ -76,6 +76,11 @@ void FormEditAudit::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
+QSize FormEditAudit::sizeHint() const
+{
+    return QSize(900,400);
+}
+
 void FormEditAudit::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
@@ -308,7 +313,7 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
 
     if(res==true)
     {
-        QMessageBox::information(this,tr("Succès"),tr("Feuilles enregistrées. Vous pouvez modifier le fichier dans un tableur puis l'importer pour charger les données de l'arbre."));
+        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(PCx_AuditManage::modeToCompleteString(mode)));
     }
     else
     {

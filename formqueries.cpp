@@ -2,7 +2,6 @@
 #include "ui_formqueries.h"
 #include <QDebug>
 #include <QSqlQuery>
-#include <cstdint>
 #include <QSqlRecord>
 #include "pcx_query.h"
 #include "pcx_queryvariation.h"
@@ -401,7 +400,7 @@ void FormQueries::on_pushButtonSave_clicked()
     if(doc->isEmpty())return;
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le rapport en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le résultat de la requête en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
     if(fileName.isEmpty())
         return;
     QFileInfo fi(fileName);

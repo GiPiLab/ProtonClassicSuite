@@ -15,7 +15,6 @@ int PCx_NodeSimilarityTableModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return distances.size();
-
 }
 
 int PCx_NodeSimilarityTableModel::columnCount(const QModelIndex &parent) const
@@ -93,7 +92,7 @@ bool PCx_NodeSimilarityTableModel::computeDistances()
             else
             {
                 PCx_StringDistance dist(str1,str2,similarityMetric);
-                if(dist.getNormalizedSimilarity()>0.0)
+                if(dist.getNormalizedSimilarity()>threshold)
                 {
                     distances.append(dist);
                 }

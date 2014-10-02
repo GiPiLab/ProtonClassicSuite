@@ -63,6 +63,7 @@ private:
     Ui::FormEditTree *ui;
     PCx_TreeModel *model;
 
+    QSize sizeHint() const;
     void updateListOfTree();
     //Disable editing
     void setReadOnly(bool state);

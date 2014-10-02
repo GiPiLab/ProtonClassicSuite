@@ -43,6 +43,7 @@ private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();
     PCx_EditableAuditModel *auditModel;
+    QSize sizeHint()const;
     //Perhaps only would be sufficient ?
     auditDataDelegate *delegateDF,*delegateRF,*delegateDI,*delegateRI;
 };

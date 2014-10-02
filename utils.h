@@ -2,13 +2,27 @@
 #define UTILS_H
 
 #include <QString>
-#include <QFile>
+
+#define VERSION __DATE__
 
 //Currencies are stored as fixed point, multiplied with this coeff
 #define FIXEDPOINTCOEFF 1000
 //In order to avoid rounding errors with large numbers
 #define FIXEDPOINTCORRECTION 0.0005
 #define DEFAULTNUMDECIMALS 2
+
+
+#ifndef INT64_MAX
+# if __WORDSIZE == 64
+#  define __INT64_C(c)	c ## L
+# else
+#  define __INT64_C(c)	c ## LL
+# endif
+#define INT64_MAX		(__INT64_C(9223372036854775807))
+#endif
+
+
+
 
 //Maximum acceptable number
 //Will be stored multiplied by FIXEDPOINTCOEFF into an int64

@@ -339,3 +339,8 @@ void MainWindow::on_actionQueries_triggered()
     }
 
 }
+
+void MainWindow::on_actionA_propos_triggered()
+{
+    QMessageBox::information(this,tr("A propos"),tr("ProtonClassicSuite dev (%1)\n©2006-%2 Laboratoire de Recherche pour le Développement Local (http://gipilab.org)").arg(VERSION).arg(QDate::currentDate().year()));
+}

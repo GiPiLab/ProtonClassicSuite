@@ -29,9 +29,9 @@
      <height>19</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuBases">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>&amp;Bases de données</string>
+     <string>&amp;Fichier</string>
     </property>
     <addaction name="actionNewDb"/>
     <addaction name="actionOpenDb"/>
@@ -54,9 +54,17 @@
     <addaction name="actionReport"/>
     <addaction name="actionQueries"/>
    </widget>
-   <addaction name="menuBases"/>
+   <widget class="QMenu" name="menuA_propos">
+    <property name="title">
+     <string>A&amp;ide</string>
+    </property>
+    <addaction name="actionAide"/>
+    <addaction name="actionA_propos"/>
+   </widget>
+   <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
    <addaction name="menuExploitation"/>
+   <addaction name="menuA_propos"/>
   </widget>
   <action name="actionManageTree">
    <property name="text">
@@ -98,17 +106,27 @@
   </action>
   <action name="actionNewDb">
    <property name="text">
-    <string>&amp;Nouvelle base</string>
+    <string>&amp;Nouvelle base de données</string>
    </property>
   </action>
   <action name="actionOpenDb">
    <property name="text">
-    <string>&amp;Ouvrir base</string>
+    <string>&amp;Ouvrir base de données</string>
    </property>
   </action>
   <action name="actionO_ptions">
    <property name="text">
     <string>O&amp;ptions</string>
+   </property>
+  </action>
+  <action name="actionA_propos">
+   <property name="text">
+    <string>A propos...</string>
+   </property>
+  </action>
+  <action name="actionAide">
+   <property name="text">
+    <string>Manuel</string>
    </property>
   </action>
  </widget>

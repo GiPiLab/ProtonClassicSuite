@@ -454,3 +454,8 @@ void FormEditTree::on_consistencyButton_clicked()
     mdiArea->addSubWindow(form);
     form->show();
 }
+
+QSize FormEditTree::sizeHint() const
+{
+    return QSize(600,450);
+}

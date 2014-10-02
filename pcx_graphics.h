@@ -8,25 +8,25 @@ class PCx_Graphics
 {
 public:
 
-    static constexpr int MAXWIDTH=1024;
-    static constexpr int MAXHEIGHT=1024;
-    static constexpr int MINWIDTH=350;
-    static constexpr int MINHEIGHT=350;
+    static const int MAXWIDTH=1024;
+    static const int MAXHEIGHT=1024;
+    static const int MINWIDTH=350;
+    static const int MINHEIGHT=350;
     static constexpr double MINSCALE=1.0;
     static constexpr double MAXSCALE=3.0;
-    static constexpr int DEFAULTWIDTH=650;
-    static constexpr int DEFAULTHEIGHT=400;
+    static const int DEFAULTWIDTH=650;
+    static const int DEFAULTHEIGHT=400;
     static constexpr double DEFAULTSCALE=1.0;
 
-    static constexpr unsigned int DEFAULTPENCOLOR1=0xff0000;
-    static constexpr unsigned int DEFAULTPENCOLOR2=0x0000ff;
+    static const unsigned int DEFAULTPENCOLOR1=0xff0000;
+    static const unsigned int DEFAULTPENCOLOR2=0x0000ff;
 
-    static constexpr unsigned int DEFAULTCOLORDFBAR=0xff0000;
-    static constexpr unsigned int DEFAULTCOLORRFBAR=0x00ff00;
-    static constexpr unsigned int DEFAULTCOLORDIBAR=0x0000ff;
-    static constexpr unsigned int DEFAULTCOLORRIBAR=0xffff00;
+    static const unsigned int DEFAULTCOLORDFBAR=0xff0000;
+    static const unsigned int DEFAULTCOLORRFBAR=0x00ff00;
+    static const unsigned int DEFAULTCOLORDIBAR=0x0000ff;
+    static const unsigned int DEFAULTCOLORRIBAR=0xffff00;
 
-    static constexpr int DEFAULTALPHA=70;
+    static const int DEFAULTALPHA=70;
 
     enum GRAPHICS
     {

@@ -430,6 +430,8 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
  * - let QStandardItemModel::dropMimeData do the job with items
  */
 
+
+//TODO : DRAG&DROP BETWEEN TREES
 bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
 

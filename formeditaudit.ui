@@ -228,6 +228,9 @@
          </item>
          <item row="0" column="1">
           <widget class="QPushButton" name="pushButtonImportLeaves">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit &lt;span style=&quot; font-weight:600;&quot;&gt;pour le mode (&lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;dépenses ou recettes de fonctionnement ou d'investissement&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;) actif&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;Le fichier doit être au format XLSX et contenir les données des feuilles pour l'arbre et le mode concernés. Vous pouvez générer un squelette pré-rempli de ce fichier à l'aide du bouton &amp;quot;Exporter données&amp;quot; puis le compléter à l'aide d'un tableur.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Importer données</string>
            </property>
@@ -235,6 +238,9 @@
          </item>
          <item row="0" column="2">
           <widget class="QPushButton" name="pushButtonExportLeaves">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données actuelles &lt;span style=&quot; font-weight:600;&quot;&gt;du mode sélectionné (&lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;dépenses ou recettes de fonctionnement ou d'investissement&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;)&lt;/span&gt; dans un fichier tableur.&lt;/p&gt;&lt;p&gt;Seules les données des feuilles de l'arbre sont exportées, les noeuds de plus haut niveau dans l'arbre étant calculés automatiquement. Le fichier obtenu peut être modifié ou complété à l'aide d'un tableur.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Exporter données</string>
            </property>

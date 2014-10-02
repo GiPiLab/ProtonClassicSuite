@@ -53,6 +53,7 @@ private slots:
 
 private:
     Ui::FormReports *ui;
+    QSize sizeHint()const;
     void updateListOfAudits();
     PCx_Audit *model;
     PCx_Report *report;
