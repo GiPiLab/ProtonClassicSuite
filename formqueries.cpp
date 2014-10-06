@@ -620,7 +620,7 @@ void FormQueries::on_pushButtonSaveXLSX_clicked()
 
 
     QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    if(!file.open(QIODevice::WriteOnly))
     {
         QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
         return;
