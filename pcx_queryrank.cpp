@@ -42,7 +42,7 @@ bool PCx_QueryRank::save(const QString &name) const
     return true;
 }
 
-QString PCx_QueryRank::exec() const
+QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
 {
     Q_ASSERT(year1>0 && year2>0 && year1<=year2 && year1<3000 && year2>1900);
     QSqlQuery q;
@@ -85,12 +85,49 @@ QString PCx_QueryRank::exec() const
     output.append(QString("<table class='req2' cellpadding='5' align='center' style='margin-left:auto;margin-right:auto;'>"
                            "<tr><th>&nbsp;</th><th>année</th><th>%1</th></tr>").arg(PCx_AuditManage::OREDtoCompleteString(ored).toHtmlEscaped()));
 
+    if(xlsDoc!=nullptr)
+    {
+        QString sheetName="ReqRank_"+name;
+        if(xlsDoc->sheetNames().contains(sheetName))
+        {
+            qDebug()<<"Duplicate sheet name !";
+            sheetName="ReqRank_"+name+"_"+generateUniqueFileName();
+
+        }
+        xlsDoc->addSheet(sheetName);
+        xlsDoc->selectSheet(sheetName);
+        xlsDoc->write(1,2,QString("Requête %1").arg(name));
+        xlsDoc->write(2,2,getDescription());
+        xlsDoc->write(4,2,"Type");
+        xlsDoc->write(4,3,"Noeud");
+        xlsDoc->write(4,4,"Année");
+        xlsDoc->write(4,5,PCx_AuditManage::OREDtoCompleteString(ored));
+    }
+
+    int currentRow=5;
     while(q.next())
     {
+        unsigned int node,year;
+        qint64 val;
+        node=q.value("id_node").toUInt();
+        year=q.value("annee").toUInt();
+        val=q.value(oredString).toLongLong();
+
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td></tr>")
-                .arg(model->getAttachedTreeModel()->getNodeName(q.value("id_node").toUInt()).toHtmlEscaped())
-                .arg(q.value("annee").toUInt())
-                .arg(formatCurrency(q.value(oredString).toLongLong())));
+                .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
+                .arg(year)
+                .arg(formatCurrency(val)));
+
+        if(xlsDoc!=nullptr)
+        {
+            QPair<QString,QString> typeAndNode=model->getAttachedTreeModel()->getTypeNameAndNodeName(node);
+            xlsDoc->write(currentRow,2,typeAndNode.first);
+            xlsDoc->write(currentRow,3,typeAndNode.second);
+            xlsDoc->write(currentRow,4,year);
+            xlsDoc->write(currentRow,5,fixedPointToDouble(val));
+        }
+        currentRow++;
+
     }
     output.append("</table>");
     return output;

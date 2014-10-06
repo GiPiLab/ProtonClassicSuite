@@ -26,7 +26,7 @@ PCx_TreeModel::~PCx_TreeModel()
 {
     this->clear();
     delete types;
-    types=NULL;
+    types=nullptr;
 }
 
 unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex)
@@ -38,7 +38,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
 
     if(getNumberOfNodes()>=MAXNODES)
     {
-        QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Nombre maximum de noeuds atteint !"));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Nombre maximum de noeuds atteint !"));
         return 0;
     }
 
@@ -52,7 +52,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     {
         if(q.value(0).toInt()>0)
         {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
             return 0;
         }
     }
@@ -104,7 +104,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     {
         if(q.value(0).toInt()>0)
         {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
             return false;
         }
     }

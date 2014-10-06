@@ -13,8 +13,8 @@ public:
     static QString getCSS();
 
     QString generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
-                                      unsigned int selectedNode, PCx_AuditManage::DFRFDIRI mode,QTextDocument *document=NULL, const QString &absoluteImagePath="",
-                                      const QString &relativeImagePath="",QProgressDialog *progress=NULL) const;
+                                      unsigned int selectedNode, PCx_AuditManage::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
+                                      const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
     QString generateHTMLTOC(QList<unsigned int> nodes) const;
 

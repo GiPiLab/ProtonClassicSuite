@@ -25,7 +25,7 @@ int duplicateTree(unsigned int treeId, const QString &newName)
     {
         if(q.value(0).toInt()>0)
         {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
             return -1;
         }
     }
@@ -77,7 +77,7 @@ int createRandomTree(const QString &name,unsigned int nbNodes)
     {
         if(query.value(0).toInt()>0)
         {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
             return -1;
         }
     }
@@ -135,7 +135,7 @@ int addTree(const QString &name, bool createRoot, bool addTypes)
 
     if(treeNameExists(name))
     {
-            QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
             return -1;
     }
 
@@ -251,7 +251,7 @@ QString idTreeToName(unsigned int treeId)
     else
     {
         qWarning()<<"Inexistant tree !";
-        return NULL;
+        return nullptr;
     }
 }
 

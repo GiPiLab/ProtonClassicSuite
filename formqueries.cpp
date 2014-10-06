@@ -16,9 +16,9 @@ FormQueries::FormQueries(QWidget *parent) :
     ui(new Ui::FormQueries)
 {
     ui->setupUi(this);
-    model=NULL;
-    queriesModel=NULL;
-    report=NULL;
+    model=nullptr;
+    queriesModel=nullptr;
+    report=nullptr;
 
     onColorChanged();
 
@@ -73,9 +73,8 @@ FormQueries::FormQueries(QWidget *parent) :
     ui->doubleSpinBox_2->setRange(-INT64_MAX/FIXEDPOINTCOEFF,INT64_MAX/FIXEDPOINTCOEFF);
     ui->doubleSpinBox_3->setRange(-INT64_MAX/FIXEDPOINTCOEFF,INT64_MAX/FIXEDPOINTCOEFF);
 
-
-
     doc=new QTextDocument();
+    xlsDoc=nullptr;
     ui->textEdit->setDocument(doc);
     updateListOfAudits();
 }
@@ -83,17 +82,19 @@ FormQueries::FormQueries(QWidget *parent) :
 
 FormQueries::~FormQueries()
 {
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         delete model;
     }
-    if(report!=NULL)
+    if(report!=nullptr)
     {
         delete report;
     }
-    if(queriesModel!=NULL)
+    if(queriesModel!=nullptr)
         delete queriesModel;
     delete doc;
+    if(xlsDoc!=nullptr)
+        delete xlsDoc;
     delete ui;
 }
 
@@ -137,13 +138,13 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     Q_ASSERT(selectedAuditId>0);
     qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-    if(model!=NULL)
+    if(model!=nullptr)
         delete model;
 
-    if(report!=NULL)
+    if(report!=nullptr)
         delete report;
 
-    if(queriesModel!=NULL)
+    if(queriesModel!=nullptr)
         delete queriesModel;
 
     model=new PCx_Audit(selectedAuditId);
@@ -263,7 +264,13 @@ void FormQueries::on_pushButtonExecReqVariation_clicked()
     PCx_QueryVariation qv(model,typeId,ored,dfrfdiri,incdec,pop,oper,val,year1,year2);
 
     currentHtmlDoc=report->generateHTMLHeader(model->getAuditId());
-    currentHtmlDoc.append(qv.exec());
+    if(xlsDoc!=nullptr)
+    {
+        delete xlsDoc;
+        xlsDoc=nullptr;
+    }
+    xlsDoc=new QXlsx::Document();
+    currentHtmlDoc.append(qv.exec(xlsDoc));
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);
 }
@@ -341,10 +348,17 @@ void FormQueries::on_pushButtonDelete_clicked()
     queriesModel->update();
 }
 
-QString FormQueries::execQueries(QModelIndexList items)
+QString FormQueries::execQueries(QModelIndexList items, QXlsx::Document *xlsDocument)
 {
+    QProgressDialog progress(tr("Calculs en cours..."),tr("Annuler"),0,items.count(),this);
+    progress.setMinimumDuration(200);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    progress.setValue(0);
     QString output=report->generateHTMLHeader(model->getAuditId());
 
+    int count=0;
     foreach(QModelIndex idx,items)
     {
         unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
@@ -355,23 +369,32 @@ QString FormQueries::execQueries(QModelIndexList items)
         case PCx_Query::VARIATION:
         {
             PCx_QueryVariation pqv(model,selectedQueryId);
-            output.append(pqv.exec());
+            output.append(pqv.exec(xlsDocument));
             break;
         }
 
         case PCx_Query::RANK:
         {
             PCx_QueryRank pqr(model,selectedQueryId);
-            output.append(pqr.exec());
+            output.append(pqr.exec(xlsDocument));
             break;
         }
 
         case PCx_Query::MINMAX:
         {
             PCx_QueryMinMax pqmm(model,selectedQueryId);
-            output.append(pqmm.exec());
+            output.append(pqmm.exec(xlsDocument));
             break;
         }
+        }
+        count++;
+        if(!progress.wasCanceled())
+        {
+            progress.setValue(count);
+        }
+        else
+        {
+            return QString();
         }
     }
     output.append("</body></html>");
@@ -383,9 +406,22 @@ void FormQueries::on_pushButtonExecFromList_clicked()
 {
     QModelIndexList selection=ui->listView->selectionModel()->selectedIndexes();
     if(selection.isEmpty())return;
-
     doc->clear();
-    currentHtmlDoc=execQueries(selection);
+    if(xlsDoc!=nullptr)
+    {
+        delete xlsDoc;
+        xlsDoc=nullptr;
+    }
+    xlsDoc=new QXlsx::Document();
+    currentHtmlDoc=execQueries(selection,xlsDoc);
+
+    //Aborded in progress dialog
+    if(currentHtmlDoc.isEmpty())
+    {
+        delete xlsDoc;
+        xlsDoc=nullptr;
+        return;
+    }
     doc->setHtml(currentHtmlDoc);
 }
 
@@ -451,7 +487,13 @@ void FormQueries::on_pushButtonExecReqRank_clicked()
     PCx_QueryRank qr(model,typeId,ored,dfrfdiri,grSm,number,year1,year2);
 
     currentHtmlDoc=report->generateHTMLHeader(model->getAuditId());
-    currentHtmlDoc.append(qr.exec());
+    if(xlsDoc!=nullptr)
+    {
+        delete xlsDoc;
+        xlsDoc=nullptr;
+    }
+    xlsDoc=new QXlsx::Document();
+    currentHtmlDoc.append(qr.exec(xlsDoc));
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);
 }
@@ -512,7 +554,13 @@ void FormQueries::on_pushButtonExecReq3_clicked()
     PCx_QueryMinMax qmm(model,typeId,ored,dfrfdiri,val1,val2,year1,year2);
 
     currentHtmlDoc=report->generateHTMLHeader(model->getAuditId());
-    currentHtmlDoc.append(qmm.exec());
+    if(xlsDoc!=nullptr)
+    {
+        delete xlsDoc;
+        xlsDoc=nullptr;
+    }
+    xlsDoc=new QXlsx::Document();
+    currentHtmlDoc.append(qmm.exec(xlsDoc));
     currentHtmlDoc.append("</body></html>");
     doc->setHtml(currentHtmlDoc);
 }
@@ -555,4 +603,30 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
         }
         queriesModel->update();
     }
+}
+
+void FormQueries::on_pushButtonSaveXLSX_clicked()
+{
+    if(doc->isEmpty()||xlsDoc==nullptr)return;
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le résultat de la requête en XLSX"), "",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+        fileName.append(".xlsx");
+    fi=QFileInfo(fileName);
+
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible"));
+        return;
+    }
+
+    xlsDoc->saveAs(&file);
+
+    file.close();
 }

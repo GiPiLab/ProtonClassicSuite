@@ -9,7 +9,7 @@ FormReports::FormReports(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
-    model=NULL;
+    model=nullptr;
     plot=new QCustomPlot();
     populateLists();
     updateListOfAudits();
@@ -18,7 +18,7 @@ FormReports::FormReports(QWidget *parent) :
 FormReports::~FormReports()
 {
     delete ui;
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         delete model;
         delete report;
@@ -107,7 +107,7 @@ void FormReports::on_comboListAudits_activated(int index)
     Q_ASSERT(selectedAuditId>0);
     qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         delete model;
         delete report;
@@ -308,11 +308,11 @@ void FormReports::on_saveButton_clicked()
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_AuditManage::DF,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_AuditManage::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
         }
         foreach(PCx_AuditManage::DFRFDIRI mode,listModes)
         {
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),selectedTables,selectedGraphics,selectedNode,mode,NULL,absoluteImagePath,relativeImagePath,NULL));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
             output.append("<br><br><br>");

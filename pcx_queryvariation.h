@@ -49,7 +49,7 @@ public:
 
     QString getDescription() const;
 
-    QString exec() const;
+    QString exec(QXlsx::Document *xlsDoc=nullptr) const;
 
     void setOperator(OPERATORS op){this->op=op;}
     OPERATORS getOperator() const{return op;}

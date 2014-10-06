@@ -34,7 +34,7 @@ unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigne
 
     if(auditNameExists(name))
     {
-        QMessageBox::warning(NULL,QObject::tr("Attention"),QObject::tr("Il existe déjà un audit portant ce nom !"));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un audit portant ce nom !"));
         return 0;
     }
 

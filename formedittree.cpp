@@ -17,20 +17,20 @@
 FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEditTree)
 {
     ui->setupUi(this);
-    model=NULL;
+    model=nullptr;
     updateListOfTree();
 }
 
 FormEditTree::~FormEditTree()
 {
-    if(model!=NULL)delete model;
+    if(model!=nullptr)delete model;
     delete ui;
 }
 
 
 void FormEditTree::on_addTypeButton_clicked()
 {
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         bool ok;
         QString text;
@@ -89,7 +89,7 @@ void FormEditTree::setReadOnly(bool state)
 
 void FormEditTree::on_deleteTreeButton_clicked()
 {
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         if(QMessageBox::question(this,tr("Attention"),tr("Vous allez supprimer cet arbre. Cette action ne peut pas être annulée. En êtes-vous sûr ?"))==QMessageBox::No)
         {
@@ -103,11 +103,11 @@ void FormEditTree::on_deleteTreeButton_clicked()
 
         if(result==1)
         {
-            ui->listTypesView->setModel(NULL);
+            ui->listTypesView->setModel(nullptr);
             model->getTypes()->getTableModel()->clear();
             model->clear();
             delete model;
-            model=NULL;
+            model=nullptr;
 
             updateListOfTree();
 
@@ -155,7 +155,7 @@ void FormEditTree::on_newTreeButton_clicked()
 
 void FormEditTree::on_deleteTypeButton_clicked()
 {
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         if(ui->listTypesView->model()->rowCount()==1)
         {
@@ -173,7 +173,7 @@ void FormEditTree::on_deleteTypeButton_clicked()
 
 void FormEditTree::on_addNodeButton_clicked()
 {
-    if(model==NULL)return;
+    if(model==nullptr)return;
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
 
     if(!selection.isEmpty())
@@ -216,7 +216,7 @@ void FormEditTree::on_addNodeButton_clicked()
 
 void FormEditTree::on_modifyNodeButton_clicked()
 {
-    if(model==NULL)return;
+    if(model==nullptr)return;
 
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
 
@@ -264,7 +264,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
 
 void FormEditTree::on_deleteNodeButton_clicked()
 {
-    if(model==NULL)return;
+    if(model==nullptr)return;
 
 
     QModelIndexList selection=ui->treeView->selectionModel()->selectedIndexes();
@@ -292,7 +292,7 @@ void FormEditTree::on_deleteNodeButton_clicked()
 
 void FormEditTree::on_finishTreeButton_clicked()
 {
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment terminer cet arbre ? Une fois terminé, vous ne pourrez plus le modifier."))==QMessageBox::No)
         {
@@ -320,10 +320,10 @@ void FormEditTree::on_viewTreeButton_clicked()
 void FormEditTree::on_comboBox_activated(int index)
 {
     if(index==-1)return;
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         QItemSelectionModel *m=ui->listTypesView->selectionModel();
-        ui->listTypesView->setModel(NULL);
+        ui->listTypesView->setModel(nullptr);
         delete m;
         delete model;
     }
@@ -337,7 +337,7 @@ void FormEditTree::on_comboBox_activated(int index)
     ui->treeView->expandToDepth(1);
 
     m=ui->listTypesView->selectionModel();
-    Q_ASSERT(model->getTypes()->getTableModel()!=NULL);
+    Q_ASSERT(model->getTypes()->getTableModel()!=nullptr);
     ui->listTypesView->setModel(model->getTypes()->getTableModel());
     ui->listTypesView->setModelColumn(1);
     delete m;
@@ -356,7 +356,7 @@ void FormEditTree::on_treeView_activated(const QModelIndex &index)
 
 void FormEditTree::on_duplicateTreeButton_clicked()
 {
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         bool ok;
         QString text;

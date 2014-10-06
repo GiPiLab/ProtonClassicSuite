@@ -9,8 +9,8 @@ PCx_TypeModel::PCx_TypeModel(unsigned int treeId, bool readOnly, QObject *parent
 {
     this->treeId=treeId;
     loadFromDatabase(treeId);
-    typesTableModel=NULL;
-    typesQueryModel=NULL;
+    typesTableModel=nullptr;
+    typesQueryModel=nullptr;
 
     if(readOnly==false)
         loadSqlTableModel();
@@ -110,12 +110,12 @@ bool PCx_TypeModel::validateType(const QString &newType)
     qDebug()<<"Type to validate = "<<newType;
     if(newType.isEmpty())
     {
-        QMessageBox::warning(NULL,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
+        QMessageBox::warning(nullptr,tr("Attention"),tr("Vous ne pouvez pas utiliser un type vide !"));
         return false;
     }
     else if(listOfTypeNames.contains(newType))
     {
-        QMessageBox::warning(NULL,tr("Attention"),tr("Le type <b>%1</b> existe déjà !").arg(newType));
+        QMessageBox::warning(nullptr,tr("Attention"),tr("Le type <b>%1</b> existe déjà !").arg(newType));
         return false;
     }
     return true;
@@ -123,12 +123,12 @@ bool PCx_TypeModel::validateType(const QString &newType)
 
 PCx_TypeModel::~PCx_TypeModel()
 {
-    if(typesTableModel!=NULL)
+    if(typesTableModel!=nullptr)
     {
         typesTableModel->clear();
         delete typesTableModel;
     }
-    if(typesQueryModel!=NULL)
+    if(typesQueryModel!=nullptr)
     {
         typesQueryModel->clear();
         delete typesQueryModel;
@@ -168,7 +168,7 @@ unsigned int PCx_TypeModel::addType(const QString &typeName)
 {
     unsigned int typeId=0;
     //Read-only mode
-    if(typesTableModel==NULL)return 0;
+    if(typesTableModel==nullptr)return 0;
 
     if(validateType(typeName)==false)
         return 0;
@@ -198,7 +198,7 @@ unsigned int PCx_TypeModel::addType(const QString &typeName)
 bool PCx_TypeModel::deleteType(const QString &type)
 {
     if(type.isNull() || type.isEmpty())return false;
-    if(typesTableModel==NULL)return false;
+    if(typesTableModel==nullptr)return false;
 
     QSqlQuery query;
     unsigned int typeId=0;
@@ -226,7 +226,7 @@ bool PCx_TypeModel::deleteType(const QString &type)
 bool PCx_TypeModel::deleteType(unsigned int id)
 {
     Q_ASSERT(id>0);
-    if(typesTableModel==NULL)return false;
+    if(typesTableModel==nullptr)return false;
     QSqlQuery query;
 
     query.prepare(QString("select count(*) from arbre_%1 where type=:type").arg(treeId));
@@ -244,7 +244,7 @@ bool PCx_TypeModel::deleteType(unsigned int id)
         qDebug()<<"Number of nodes of type "<<id<<" = "<<query.value(0).toInt();
         if(query.value(0).toInt()>0)
         {
-            QMessageBox::warning(NULL,tr("Attention"),tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord."));
+            QMessageBox::warning(nullptr,tr("Attention"),tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord."));
             return false;
         }
 

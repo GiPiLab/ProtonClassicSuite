@@ -8,10 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setCentralWidget(ui->mdiArea);
-    formEditTreeWin=NULL;
-    formManageAudits=NULL;
-    formEditAudit=NULL;
-    formReports=NULL;
+    formEditTreeWin=nullptr;
+    formManageAudits=nullptr;
+    formEditAudit=nullptr;
+    formReports=nullptr;
 
     restoreSettings();
     updateTitle();
@@ -76,14 +76,14 @@ void MainWindow::setMenusState()
 void MainWindow::on_actionManageTree_triggered()
 {
     //Only one instance allowed
-    if(formEditTreeWin==NULL)
+    if(formEditTreeWin==nullptr)
     {
         formEditTreeWin=new FormEditTree(this);
         formEditTreeWin->setAttribute(Qt::WA_DeleteOnClose);
 
         ui->mdiArea->addSubWindow(formEditTreeWin);
         formEditTreeWin->show();
-        if(formManageAudits!=NULL)
+        if(formManageAudits!=nullptr)
         {
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
         }
@@ -99,25 +99,25 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::onFormEditTreeWindowsDestroyed()
 {
-    formEditTreeWin=NULL;
+    formEditTreeWin=nullptr;
     qDebug()<<"FormEditTree window closed";
 }
 
 void MainWindow::onFormManageAuditsWindowsDestroyed()
 {
-    formManageAudits=NULL;
+    formManageAudits=nullptr;
     qDebug()<<"FormManageAudits window closed";
 }
 
 void MainWindow::onFormEditAuditWindowsDestroyed()
 {
-    formEditAudit=NULL;
+    formEditAudit=nullptr;
     qDebug()<<"FormEditAudit window closed";
 }
 
 void MainWindow::onFormReportsWindowsDestroyed()
 {
-    formReports=NULL;
+    formReports=nullptr;
     qDebug()<<"FormReports window closed";
 }
 
@@ -136,7 +136,7 @@ void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
 
 void MainWindow::on_actionManageAudits_triggered()
 {
-    if(formManageAudits==NULL)
+    if(formManageAudits==nullptr)
     {
         formManageAudits=new FormManageAudits(this);
         formManageAudits->setAttribute(Qt::WA_DeleteOnClose);
@@ -145,17 +145,17 @@ void MainWindow::on_actionManageAudits_triggered()
         formManageAudits->show();
         connect(formManageAudits,SIGNAL(destroyed()),this,SLOT(onFormManageAuditsWindowsDestroyed()));
 
-        if(formEditTreeWin!=NULL)
+        if(formEditTreeWin!=nullptr)
         {
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
         }
 
-        if(formEditAudit!=NULL)
+        if(formEditAudit!=nullptr)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
         }
 
-        if(formReports!=NULL)
+        if(formReports!=nullptr)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
         }
@@ -174,7 +174,7 @@ void MainWindow::on_actionManageAudits_triggered()
 
 void MainWindow::on_actionEditAudit_triggered()
 {
-    if(formEditAudit==NULL)
+    if(formEditAudit==nullptr)
     {
         formEditAudit=new FormEditAudit(this);
         formEditAudit->setAttribute(Qt::WA_DeleteOnClose);
@@ -182,7 +182,7 @@ void MainWindow::on_actionEditAudit_triggered()
         formEditAudit->show();
         connect(formEditAudit,SIGNAL(destroyed()),this,SLOT(onFormEditAuditWindowsDestroyed()));
 
-        if(formManageAudits!=NULL)
+        if(formManageAudits!=nullptr)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
         }
@@ -200,7 +200,7 @@ void MainWindow::on_actionTablesGraphics_triggered()
 
     connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormTablesWindowsDestroyed(QObject *)));
 
-    if(formManageAudits!=NULL)
+    if(formManageAudits!=nullptr)
     {
         connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
     }
@@ -295,7 +295,7 @@ void MainWindow::on_actionOpenDb_triggered()
 
 void MainWindow::on_actionReport_triggered()
 {
-    if(formReports==NULL)
+    if(formReports==nullptr)
     {
         formReports=new FormReports(this);
         formReports->setAttribute(Qt::WA_DeleteOnClose);
@@ -303,7 +303,7 @@ void MainWindow::on_actionReport_triggered()
         formReports->show();
         connect(formReports,SIGNAL(destroyed()),this,SLOT(onFormReportsWindowsDestroyed()));
 
-        if(formManageAudits!=NULL)
+        if(formManageAudits!=nullptr)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
         }
@@ -333,7 +333,7 @@ void MainWindow::on_actionQueries_triggered()
 
     connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormQueriesWindowsDestroyed(QObject *)));
 
-    if(formManageAudits!=NULL)
+    if(formManageAudits!=nullptr)
     {
         connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
     }

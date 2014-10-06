@@ -162,8 +162,22 @@
     <widget class="QComboBox" name="comboBoxListAudits"/>
    </item>
    <item row="2" column="0" colspan="5">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
-     <item>
+    <layout class="QGridLayout" name="gridLayout_5">
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButtonSave">
+       <property name="text">
+        <string>Enregistrer HTML</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="pushButtonSaveXLSX">
+       <property name="text">
+        <string>Enregistrer XLSX</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
       <widget class="QTextEdit" name="textEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -176,13 +190,6 @@
        </property>
        <property name="readOnly">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonSave">
-       <property name="text">
-        <string>Enregistrer</string>
        </property>
       </widget>
      </item>

@@ -4,10 +4,10 @@
 PCx_EditableAuditModel::PCx_EditableAuditModel(unsigned int auditId,QObject *parent) :
     QObject(parent),PCx_Audit(auditId)
 {
-    modelDF=NULL;
-    modelDI=NULL;
-    modelRI=NULL;
-    modelRF=NULL;
+    modelDF=nullptr;
+    modelDI=nullptr;
+    modelRI=nullptr;
+    modelRF=nullptr;
     modelDF=new QSqlTableModel();
     modelDF->setTable(QString("audit_DF_%1").arg(auditId));
     modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
@@ -56,22 +56,22 @@ PCx_EditableAuditModel::PCx_EditableAuditModel(unsigned int auditId,QObject *par
 
 PCx_EditableAuditModel::~PCx_EditableAuditModel()
 {
-    if(modelDF!=NULL)
+    if(modelDF!=nullptr)
     {
         modelDF->clear();
         delete modelDF;
     }
-    if(modelRF!=NULL)
+    if(modelRF!=nullptr)
     {
         modelRF->clear();
         delete modelRF;
     }
-    if(modelDI!=NULL)
+    if(modelDI!=nullptr)
     {
         modelDI->clear();
         delete modelDI;
     }
-    if(modelRI!=NULL)
+    if(modelRI!=nullptr)
     {
         modelRI->clear();
         delete modelRI;
@@ -155,7 +155,7 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(const QString &mode) const
     {
         return modelRI;
     }
-    return NULL;
+    return nullptr;
 }
 
 QSqlTableModel *PCx_EditableAuditModel::getTableModel(PCx_AuditManage::DFRFDIRI mode) const
@@ -166,9 +166,9 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(PCx_AuditManage::DFRFDIRI 
     case PCx_AuditManage::RF:return modelRF;
     case PCx_AuditManage::DI:return modelDI;
     case PCx_AuditManage::RI:return modelRI;
-    case PCx_AuditManage::GLOBAL:return NULL;
+    case PCx_AuditManage::GLOBAL:return nullptr;
     }
-    return NULL;
+    return nullptr;
 }
 
 bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED, double> vals, bool fastMode)
@@ -180,7 +180,7 @@ bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_AuditManage:
     if(!fastMode)
     {
         QSqlTableModel *tblModel=getTableModel(mode);
-        if(tblModel!=NULL)
+        if(tblModel!=nullptr)
             tblModel->select();
     }
     return true;
@@ -190,7 +190,7 @@ bool PCx_EditableAuditModel::clearAllData(PCx_AuditManage::DFRFDIRI mode)
 {
     PCx_Audit::clearAllData(mode);
     QSqlTableModel *tblModel=getTableModel(mode);
-    if(tblModel!=NULL)
+    if(tblModel!=nullptr)
         tblModel->select();
 
     return true;

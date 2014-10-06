@@ -12,7 +12,7 @@ FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormTablesGraphics)
 {
-    model=NULL;
+    model=nullptr;
     ready=false;
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
@@ -31,7 +31,7 @@ FormTablesGraphics::~FormTablesGraphics()
     delete ui;
     delete doc;
     //delete interface;
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         delete model;
         delete report;
@@ -182,7 +182,7 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
     Q_ASSERT(selectedAuditId>0);
     qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-    if(model!=NULL)
+    if(model!=nullptr)
     {
         delete model;
         delete report;
@@ -317,7 +317,7 @@ void FormTablesGraphics::on_saveButton_clicked()
 
     //Generate report in non-embedded mode, saving images
     QString output=report->generateHTMLHeader(model->getAuditId());
-    output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,node,selectedMode,NULL,absoluteImagePath,relativeImagePath,&progress));
+    output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,node,selectedMode,nullptr,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
 

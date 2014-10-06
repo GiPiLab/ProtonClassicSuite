@@ -4,6 +4,7 @@
 #include <QSqlError>
 #include <QtGlobal>
 #include <QSettings>
+#include <QElapsedTimer>
 #include "utils.h"
 
 PCx_QueryVariation::PCx_QueryVariation(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
@@ -117,9 +118,11 @@ QString PCx_QueryVariation::getDescription() const
     return out;
 }
 
-QString PCx_QueryVariation::exec() const
+QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 {
     Q_ASSERT(year1>0 && year2>0 && year1<year2 && year1<3000 && year2>1900);
+    QElapsedTimer timer;
+    timer.start();
     QMap<unsigned int,qint64> valuesForYear1,valuesForYear2;
     QMap<unsigned int,qint64> variations,matchingNodes;
     QList<unsigned int>nodesOfThisType,problemNodes;
@@ -129,7 +132,7 @@ QString PCx_QueryVariation::exec() const
 
     if(typeId!=ALLTYPES)
     {
-        q.prepare(QString("select * from arbre_%1 where type=:type").arg(model->getAttachedTreeModel()->getTreeId()));
+        q.prepare(QString("select id from arbre_%1 where type=:type").arg(model->getAttachedTreeModel()->getTreeId()));
         q.bindValue(":type",typeId);
         q.exec();
 
@@ -276,10 +279,31 @@ QString PCx_QueryVariation::exec() const
     QString output=QString("<h4>Requ&ecirc;te %1</h4>").arg(name.toHtmlEscaped());
     output.append("<p><i>"+getDescription()+"</i></p>");
 
+    if(xlsDoc!=nullptr)
+    {
+        QString sheetName="ReqVar_"+name;
+        if(xlsDoc->sheetNames().contains(sheetName))
+        {
+            qDebug()<<"Duplicate sheet name !";
+            sheetName="ReqVar_"+name+"_"+generateUniqueFileName();
+
+        }
+        xlsDoc->addSheet(sheetName);
+        xlsDoc->selectSheet(sheetName);
+        xlsDoc->write(1,2,QString("Requête %1").arg(name));
+        xlsDoc->write(2,2,getDescription());
+        xlsDoc->write(4,2,"Type");
+        xlsDoc->write(4,3,"Noeud");
+        xlsDoc->write(4,4,year1);
+        xlsDoc->write(4,5,year2);
+        xlsDoc->write(4,6,QString("%1 (en %2)").arg(incDecToString(incDec)).arg(percentOrPointToString(percentOrPoints)));
+    }
+
     output.append(QString("<table class='req1' align='center' cellpadding='5' style='margin-left:auto;margin-right:auto'>"
                   "<tr><th>&nbsp;</th><th>%1</th><th>%2</th><th>%3</th>").arg(year1).arg(year2).arg(incDecToString(incDec).toHtmlEscaped()));
 
     QMapIterator<unsigned int,qint64> matchIter(matchingNodes);
+    int currentRow=5;
     while(matchIter.hasNext())
     {
         matchIter.next();
@@ -297,11 +321,27 @@ QString PCx_QueryVariation::exec() const
                 .arg(formatCurrency(valuesForYear2.value(node)))
                 .arg(formatCurrency(val,-1,true))
                 .arg(percentOrPointToString(percentOrPoints).toHtmlEscaped()));
+        if(xlsDoc!=nullptr)
+        {
+            QPair<QString,QString> typeAndNodeName=model->getAttachedTreeModel()->getTypeNameAndNodeName(node);
+            xlsDoc->write(currentRow,2,typeAndNodeName.first);
+            xlsDoc->write(currentRow,3,typeAndNodeName.second);
+            xlsDoc->write(currentRow,4,fixedPointToDouble(valuesForYear1.value(node)));
+            xlsDoc->write(currentRow,5,fixedPointToDouble(valuesForYear2.value(node)));
+            xlsDoc->write(currentRow,6,fixedPointToDouble(val));
+        }
+        currentRow++;
     }
 
     if(!problemNodes.isEmpty())
     {
         output.append(QString("<tr><td colspan='4'><i>Non encore pourvus en %1</i></td></tr>").arg(year1));
+        if(xlsDoc!=nullptr)
+        {
+            currentRow+=2;
+            xlsDoc->write(currentRow,2,QString("Non encore pourvus en %1").arg(year1));
+            currentRow++;
+        }
     }
     foreach(unsigned int probNode,problemNodes)
     {
@@ -309,10 +349,19 @@ QString PCx_QueryVariation::exec() const
                 .arg(model->getAttachedTreeModel()->getNodeName(probNode).toHtmlEscaped())
                 .arg(formatCurrency(valuesForYear1.value(probNode)))
                 .arg(formatCurrency(valuesForYear2.value(probNode))));
+        if(xlsDoc!=nullptr)
+        {
+            QPair<QString,QString> typeAndNodeName=model->getAttachedTreeModel()->getTypeNameAndNodeName(probNode);
+            xlsDoc->write(currentRow,2,typeAndNodeName.first);
+            xlsDoc->write(currentRow,3,typeAndNodeName.second);
+            xlsDoc->write(currentRow,4,fixedPointToDouble(valuesForYear1.value(probNode)));
+            xlsDoc->write(currentRow,5,fixedPointToDouble(valuesForYear2.value(probNode)));
+        }
+        currentRow++;
     }
 
-
     output.append("</table>");
+    qDebug()<<"ReqVar computed in"<<timer.elapsed()<<"ms";
     return output;
 }
 

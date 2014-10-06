@@ -29,7 +29,7 @@ public:
     void setGreaterOrSmaller(GREATERSMALLER grsm){grSm=grsm;}
 
     bool save(const QString &name) const;
-    QString exec() const;
+    QString exec(QXlsx::Document *xlsDoc=nullptr) const;
     bool load(unsigned int queryId);
     bool canSave(const QString &name) const;
     QString getDescription() const;

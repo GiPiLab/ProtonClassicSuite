@@ -4,7 +4,7 @@
 
 PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
-    Q_ASSERT(model!=NULL);
+    Q_ASSERT(model!=nullptr);
 }
 
 QString PCx_Report::getCSS()
@@ -123,7 +123,7 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
 
 
     //Inline graphics mode
-    if(document!=NULL)
+    if(document!=nullptr)
     {
         foreach(PCx_Graphics::GRAPHICS graph,listOfGraphics)
         {
@@ -191,7 +191,7 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
         QString suffix="."+imageFormat;
 
         int progressValue=0;
-        if(progress!=NULL)
+        if(progress!=nullptr)
         {
             progressValue=progress->value();
         }
@@ -249,7 +249,7 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
             }
             output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
-            if(progress!=NULL)
+            if(progress!=nullptr)
                 progress->setValue(++progressValue);
         }
     }

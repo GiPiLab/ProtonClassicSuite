@@ -19,7 +19,7 @@ public:
     void setVals(QPair<qint64,qint64> vals);
 
     bool save(const QString &name) const;
-    QString exec() const;
+    QString exec(QXlsx::Document *xlsDoc=nullptr) const;
     bool load(unsigned int queryId);
     bool canSave(const QString &name) const;
     QString getDescription() const;

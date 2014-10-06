@@ -26,7 +26,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) :
     ui->tableViewDI->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableViewRI->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-    auditModel=NULL;
+    auditModel=nullptr;
 
     delegateDF=new auditDataDelegate(ui->tableViewDF);
     delegateRF=new auditDataDelegate(ui->tableViewRF);
@@ -44,7 +44,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) :
 FormEditAudit::~FormEditAudit()
 {
     delete ui;
-    if(auditModel!=NULL)
+    if(auditModel!=nullptr)
     {
         delete auditModel;
     }
@@ -86,7 +86,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
     qDebug()<<"Selected audit ID = "<<selectedAuditId;
-    if(auditModel!=NULL)
+    if(auditModel!=nullptr)
     {
         delete auditModel;
     }
@@ -234,7 +234,7 @@ void FormEditAudit::on_randomDataButton_clicked()
     QSqlDatabase::database().commit();
 
     QSqlTableModel *tblModel=auditModel->getTableModel(mode);
-    if(tblModel!=NULL)
+    if(tblModel!=nullptr)
         tblModel->select();
 
     qDebug()<<"Done in "<<timer.elapsed()<<"ms";
@@ -345,7 +345,7 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
 
     int res=auditModel->importDataFromXLSX(fileName,mode);
     QSqlTableModel *tblModel=auditModel->getTableModel(mode);
-    if(tblModel!=NULL)
+    if(tblModel!=nullptr)
         tblModel->select();
 
     if(res>0)

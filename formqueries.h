@@ -6,6 +6,7 @@
 #include "pcx_queryvariation.h"
 #include "pcx_queriesmodel.h"
 #include "pcx_queryrank.h"
+#include "xlsxdocument.h"
 #include <QWidget>
 #include <QTextDocument>
 
@@ -50,6 +51,8 @@ private slots:
 
     void on_pushButtonSaveReq3_clicked();
 
+    void on_pushButtonSaveXLSX_clicked();
+
 private:
     Ui::FormQueries *ui;
     void updateListOfAudits();
@@ -59,10 +62,12 @@ private:
     QTextDocument *doc;
     QString currentHtmlDoc;
 
+    QXlsx::Document *xlsDoc;
+
     bool getParamsReqVariation(unsigned int &typeId, PCx_AuditManage::ORED &ored, PCx_AuditManage::DFRFDIRI &dfrfdiri,
                        PCx_QueryVariation::INCREASEDECREASE &increase, PCx_QueryVariation::PERCENTORPOINTS &percent,
                        PCx_QueryVariation::OPERATORS &oper, qint64 &val, unsigned int &year1, unsigned int &year2);
-    QString execQueries(QModelIndexList items);
+    QString execQueries(QModelIndexList items,QXlsx::Document *xlsDocument=nullptr);
     bool getParamsReqRank(unsigned int &typeId, PCx_AuditManage::ORED &ored, PCx_AuditManage::DFRFDIRI &dfrfdiri, unsigned int &number, PCx_QueryRank::GREATERSMALLER &grSm, unsigned int &year1, unsigned int &year2);
     bool getParamsReqMinMax(unsigned int &typeId, PCx_AuditManage::ORED &ored, PCx_AuditManage::DFRFDIRI &dfrfdiri, qint64 &val1, qint64 &val2, unsigned int &year1, unsigned int &year2);
 };

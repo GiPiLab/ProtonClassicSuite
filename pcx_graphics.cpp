@@ -8,7 +8,7 @@
 
 PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model)
 {
-    Q_ASSERT(model!=NULL);
+    Q_ASSERT(model!=nullptr);
     setGraphicsWidth(graphicsWidth);
     setGraphicsHeight(graphicsHeight);
     setScale(scale);
@@ -34,7 +34,7 @@ PCx_Graphics::~PCx_Graphics()
 
 QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED modeORED, bool cumule) const
 {
-    Q_ASSERT(node>0 && plot!=NULL);
+    Q_ASSERT(node>0 && plot!=nullptr);
     QString tableName=PCx_AuditManage::modeToTableString(mode);
     QString oredName=PCx_AuditManage::OREDtoTableString(modeORED);
 
@@ -274,7 +274,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode,
 
 QString PCx_Graphics::getG9(unsigned int node) const
 {
-    Q_ASSERT(node>0 && plot!=NULL);
+    Q_ASSERT(node>0 && plot!=nullptr);
     QString plotTitle;
 
     plot->clearItems();

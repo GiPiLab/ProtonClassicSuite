@@ -2,6 +2,7 @@
 #define PCX_QUERY_H
 
 #include <climits>
+#include "xlsxdocument.h"
 #include "pcx_audit.h"
 
 class PCx_Query
@@ -47,7 +48,7 @@ public:
     static bool deleteQuery(unsigned int auditId,unsigned int queryId);
 
     virtual QString getDescription() const =0;
-    virtual QString exec() const =0;
+    virtual QString exec(QXlsx::Document *xlsxDocument=nullptr) const =0;
 
 
     static bool createTableQueries(unsigned int auditId);

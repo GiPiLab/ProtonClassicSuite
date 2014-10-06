@@ -54,7 +54,7 @@ qint64 doubleToFixedPoint(double num);
 double fixedPointToDouble(qint64 num);
 
 
-QString generateUniqueFileName(const QString &suffix="");
+QString generateUniqueFileName(const QString &suffix=0);
 
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
 QStringList yearsListToStringList(QList<unsigned int> years);

@@ -17,7 +17,7 @@
 PCx_Audit::PCx_Audit(unsigned int auditId, bool loadTreeModel) :
     auditId(auditId),loadTreeModel(loadTreeModel)
 {
-    attachedTree=NULL;
+    attachedTree=nullptr;
 
     Q_ASSERT(auditId>0);
     this->auditId=auditId;
