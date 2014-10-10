@@ -68,6 +68,9 @@ public:
     bool updateTree();
 
 
+    bool nodeExists(const QString &name, unsigned int typeId, unsigned int pid=0) const;
+
+
     int getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName ) const;
 
 

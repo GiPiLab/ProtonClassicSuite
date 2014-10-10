@@ -412,6 +412,7 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
             pidNode.second=i4.toString().simplified();
             if(!pidNode.first.isEmpty() && !pidNode.second.isEmpty())
             {
+                //NOTE : Check for duplicate nodes in tree
                 if(nodeToPid.contains(node1))
                 {
                     if(nodeToPid.value(node1)!=pidNode)

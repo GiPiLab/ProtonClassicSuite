@@ -43,23 +43,12 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     }
 
     QSqlQuery q;
-    q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
-    q.bindValue(":nom",name);
-    q.bindValue(":type",type);
-    q.exec();
 
-    if(q.next())
+    //NOTE : Check for duplicate nodes in tree
+    if(nodeExists(name,type,0))
     {
-        if(q.value(0).toInt()>0)
-        {
-            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
-            return 0;
-        }
-    }
-    else
-    {
-        qCritical()<<q.lastError();
-        die();
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom dans l'arbre' !"));
+        return 0;
     }
 
     q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(treeId));
@@ -451,6 +440,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
     for(int i=0;i<tmpModel.rowCount();i++)
     {
+        //TODO : check for duplicates nodes under the same pid
         unsigned int dragId=tmpModel.item(i)->data(Qt::UserRole+1).toUInt();
         if(dragId!=1)
             updateNodePosition(dragId,dropId);
@@ -507,6 +497,50 @@ bool PCx_TreeModel::updateTree()
     res=createChildrenItems(invisibleRootItem(),0);
     qDebug()<<"updateTree done in"<<timer.elapsed()<<"ms";
     return res;
+}
+
+/**
+ * @brief PCx_TreeModel::nodeExists check if a node with given name and type already exists
+ *
+ * If PID is not 0, check if this node belongs to the same PID, in order to only disallow duplicates under the same pid
+ * @param name : the name of the node
+ * @param typeId : the type of the node
+ * @param pid : the pid of the node, if 0 check under the whole tree for duplicates
+ * @return true if the node exists, false otherwise, die in case of DB error
+ */
+bool PCx_TreeModel::nodeExists(const QString &name, unsigned int typeId, unsigned int pid) const
+{
+    QSqlQuery q;
+
+    if(pid>0)
+    {
+        q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type and pid=:pid").arg(treeId));
+        q.bindValue(":nom",name);
+        q.bindValue(":type",typeId);
+        q.bindValue(":pid",pid);
+        q.exec();
+    }
+    else
+    {
+        q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
+        q.bindValue(":nom",name);
+        q.bindValue(":type",typeId);
+        q.exec();
+    }
+
+    if(q.next())
+    {
+        if(q.value(0).toInt()>0)
+        {
+            return true;
+        }
+    }
+    else
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    return false;
 }
 
 int PCx_TreeModel::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName) const
