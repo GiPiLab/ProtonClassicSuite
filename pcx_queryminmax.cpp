@@ -67,7 +67,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
                           "and type=:typeId and %1 not null and %1>=:val1 and %1<=:val2 and annee>=:year1 and "
                           "annee<=:year2")
                   .arg(oredString).arg(PCx_AuditManage::modeToTableString(dfrfdiri)).arg(model->getAuditId())
-                  .arg(model->getAttachedTreeModel()->getTreeId()));
+                  .arg(model->getAttachedTree()->getTreeId()));
         q.bindValue(":typeId",typeId);
     }
     else
@@ -128,13 +128,13 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
         val=q.value(oredString).toLongLong();
 
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td></tr>")
-                .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
+                .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                 .arg(year)
                 .arg(formatCurrency(val)));
 
         if(xlsDoc!=nullptr)
         {
-            QPair<QString,QString> typeAndNode=model->getAttachedTreeModel()->getTypeNameAndNodeName(node);
+            QPair<QString,QString> typeAndNode=model->getAttachedTree()->getTypeNameAndNodeName(node);
             xlsDoc->write(currentRow,2,typeAndNode.first);
             xlsDoc->write(currentRow,3,typeAndNode.second);
             xlsDoc->write(currentRow,4,year);
@@ -201,7 +201,7 @@ QString PCx_QueryMinMax::getDescription() const
     if(typeId==PCx_Query::ALLTYPES)
         out=QObject::tr("Tous les noeuds");
     else
-        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->idTypeToName(typeId).toHtmlEscaped());
+        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->getTypes()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les crédits %1s des %2 sont compris entre %3€ et %4€ entre %5 et %6")
             .arg(PCx_AuditManage::OREDtoCompleteString(ored).toHtmlEscaped())

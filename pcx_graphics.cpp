@@ -146,7 +146,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode,
     plot->graph(1)->setData(dataPlotRootX,dataPlotRootY);
 
     //Legend
-    QString nodeName=model->getAttachedTreeModel()->getNodeName(node);
+    QString nodeName=model->getAttachedTree()->getNodeName(node);
     plot->graph(0)->setName(nodeName);
     plot->graph(1)->setName(QString("Total - %1").arg(nodeName));
 
@@ -210,17 +210,17 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode,
     if(cumule==false)
     {
         if(modeORED!=PCx_AuditManage::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
     }
 
     else
     {
         if(modeORED!=PCx_AuditManage::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
     }
 
     /*
@@ -435,7 +435,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
     plot->xAxis->setRange(0,tickCounter);
     plot->yAxis->setRange(0,150);
 
-    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped());
+    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped());
     return plotTitle;
 
 }

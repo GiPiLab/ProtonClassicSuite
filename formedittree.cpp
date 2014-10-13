@@ -2,7 +2,7 @@
 #include "formedittree.h"
 #include "ui_formedittree.h"
 #include "utils.h"
-#include "pcx_treemodel.h"
+#include "pcx_tree.h"
 #include "pcx_treemanage.h"
 #include "formtreeconsistency.h"
 #include <QDebug>
@@ -390,7 +390,7 @@ void FormEditTree::on_randomTreeButton_clicked()
     if(!ok)
         return;
 
-    nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,PCx_TreeModel::MAXNODES,1,&ok);
+    nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,PCx_Tree::MAXNODES,1,&ok);
 
     if(ok)
     {

@@ -187,14 +187,14 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
         delete model;
         delete report;
     }
-    model=new PCx_Audit(selectedAuditId,this);
+    model=new PCx_AuditWithTreeModel(selectedAuditId);
     report=new PCx_Report(model);
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
-    ui->treeView->setModel(model->getAttachedTreeModel());
+    ui->treeView->setModel(model->getAttachedTree());
     delete m;
     ui->treeView->expandToDepth(1);
-    QModelIndex rootIndex=model->getAttachedTreeModel()->index(0,0);
+    QModelIndex rootIndex=model->getAttachedTree()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
     updateTextBrowser();
 }

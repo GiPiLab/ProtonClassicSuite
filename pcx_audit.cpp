@@ -14,8 +14,8 @@
 #include <QFileInfo>
 #include <QElapsedTimer>
 
-PCx_Audit::PCx_Audit(unsigned int auditId, bool loadTreeModel) :
-    auditId(auditId),loadTreeModel(loadTreeModel)
+PCx_Audit::PCx_Audit(unsigned int auditId) :
+    auditId(auditId)
 {
     attachedTree=nullptr;
 
@@ -59,30 +59,16 @@ PCx_Audit::PCx_Audit(unsigned int auditId, bool loadTreeModel) :
     }
     else
     {
-        qCritical()<<"Non existant audit !";
+        qCritical()<<QObject::tr("Bad audit !");
         die();
     }
-    if(loadTreeModel)
-        attachedTree=new PCx_TreeModel(attachedTreeId);
+    attachedTree=new PCx_Tree(attachedTreeId);
 }
 
 PCx_Audit::~PCx_Audit()
 {
     delete attachedTree;
 }
-
-
-QString PCx_Audit::getAuditName(unsigned int auditId)
-{
-    QSqlQuery q(QString("select nom from index_audits where id=%1").arg(auditId));
-    if(!q.next())
-    {
-        qCritical()<<"Invalid audit ID !";
-        return QString();
-    }
-    return q.value("nom").toString();
-}
-
 
 bool PCx_Audit::finishAudit()
 {
@@ -95,7 +81,6 @@ bool PCx_Audit::unFinishAudit()
     finished=false;
     return PCx_AuditManage::unFinishAudit(auditId);
 }
-
 
 bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_AuditManage::DFRFDIRI mode, unsigned int year, QHash<PCx_AuditManage::ORED,double> vals, bool fastMode)
 {
@@ -425,7 +410,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
                        "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
                        "</table>\n")
                .arg(attachedTreeName.toHtmlEscaped())
-               .arg(PCx_TreeModel::getNumberOfNodes(attachedTreeId))
+               .arg(PCx_Tree::getNumberOfNodes(attachedTreeId))
                .arg(yearsString)
                .arg(creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped())
                .arg(finishedString);
@@ -434,7 +419,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
     out.append("\n<br><table cellpadding='5' border='1' align='center'>\n"
                        "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>");
 
-    PCx_TreeModel treeModel(attachedTreeId,true,true);
+    PCx_Tree tree(attachedTreeId,true);
 
 
     QList<QList<unsigned int> * > listOfListOfNodes;
@@ -482,7 +467,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
 
                     foreach(unsigned int node,*listOfNodes)
                     {
-                        out.append(QString("<li>%1</li>").arg(treeModel.getNodeName(node).toHtmlEscaped()));
+                        out.append(QString("<li>%1</li>").arg(tree.getNodeName(node).toHtmlEscaped()));
                     }
                     out.append("</ul>");
                 }

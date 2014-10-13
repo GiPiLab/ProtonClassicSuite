@@ -123,7 +123,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
     if(index==-1 || ui->comboListOfAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
     qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
-    PCx_Audit audit(selectedAuditId,false);
+    PCx_Audit audit(selectedAuditId);
     ui->labelDate->setText(audit.getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
     if(audit.isFinished()==true)
     {
@@ -137,7 +137,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
         ui->finishAuditButton->setEnabled(true);
         ui->unFinishAuditButton->setEnabled(false);
     }
-    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(audit.getAttachedTreeName()).arg(PCx_TreeModel::getNumberOfNodes(audit.getAttachedTreeId())));
+    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(audit.getAttachedTreeName()).arg(PCx_Tree::getNumberOfNodes(audit.getAttachedTreeId())));
     ui->labelYears->setText(audit.getYearsString());
     ui->labelName->setText(audit.getAuditName());
 }

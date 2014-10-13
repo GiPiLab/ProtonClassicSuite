@@ -11,15 +11,15 @@ FormTreeConsistency::FormTreeConsistency(unsigned int treeId,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    treeModel=new PCx_TreeModel(treeId,true,true,this);
+    tree=new PCx_Tree(treeId,true);
     QDateTime dt=QDateTime::currentDateTime();
-    ui->label->setText(tr("Arbre %1 le %2 à %3").arg(treeModel->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
+    ui->label->setText(tr("Arbre %1 le %2 à %3").arg(tree->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
 
     populateTableInfos();
     populateListOfNodesWithSameNameButDifferentTypes();
     ui->tableWidget->resizeColumnsToContents();
 
-    QStringList completeNodeNames=treeModel->getListOfCompleteNodeNames();
+    QStringList completeNodeNames=tree->getListOfCompleteNodeNames();
 
     PCx_NodeSimilarityTableModel *distanceModelWithTypes;
     QSortFilterProxyModel *distanceSortModelWithTypes;
@@ -36,7 +36,7 @@ FormTreeConsistency::FormTreeConsistency(unsigned int treeId,QWidget *parent) :
 FormTreeConsistency::~FormTreeConsistency()
 {
     delete ui;
-    delete treeModel;
+    delete tree;
 }
 
 QSize FormTreeConsistency::sizeHint() const
@@ -46,27 +46,27 @@ QSize FormTreeConsistency::sizeHint() const
 
 void FormTreeConsistency::populateListOfNodesWithSameNameButDifferentTypes()
 {
-    QSet<unsigned int> nodes=treeModel->getNodesWithSharedName();
+    QSet<unsigned int> nodes=tree->getNodesWithSharedName();
     QString nodeName;
     foreach(unsigned int node,nodes)
     {
-        nodeName=treeModel->getNodeName(node);
+        nodeName=tree->getNodeName(node);
         ui->similarityNodeNotTypeListWidget->addItem(nodeName);
     }
 }
 
 void FormTreeConsistency::populateTableInfos()
 {
-    ui->tableWidget->item(0,1)->setText(QString::number(treeModel->getNumberOfNodes()));
+    ui->tableWidget->item(0,1)->setText(QString::number(tree->getNumberOfNodes()));
 
-    QList<QPair<unsigned int,QString> > listOfTypes=treeModel->getTypes()->getAllTypes();
+    QList<QPair<unsigned int,QString> > listOfTypes=tree->getTypes()->getAllTypes();
     QPair<unsigned int,QString> type;
     int row=ui->tableWidget->rowCount();
 
     foreach(type,listOfTypes)
     {
         ui->tableWidget->insertRow(ui->tableWidget->rowCount());
-        unsigned int nbOfThisType=treeModel->getNumberOfNodesWithThisType(type.first);
+        unsigned int nbOfThisType=tree->getNumberOfNodesWithThisType(type.first);
         QTableWidgetItem *item1=new QTableWidgetItem("Noeuds de type "+type.second);
         QTableWidgetItem *item2=new QTableWidgetItem(QString::number(nbOfThisType));
         item2->setTextAlignment(Qt::AlignRight|Qt::AlignVCenter);

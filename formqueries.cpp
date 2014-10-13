@@ -156,7 +156,7 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     ui->comboBoxTypes->clear();
     ui->comboBoxTypes_2->clear();
     ui->comboBoxTypes_3->clear();
-    QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTreeModel()->getTypes()->getAllTypes();
+    QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTree()->getTypes()->getAllTypes();
     Q_ASSERT(!listOfTypes.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,listOfTypes)

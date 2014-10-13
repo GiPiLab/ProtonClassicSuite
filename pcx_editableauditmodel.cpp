@@ -2,7 +2,7 @@
 #include <QDebug>
 
 PCx_EditableAuditModel::PCx_EditableAuditModel(unsigned int auditId,QObject *parent) :
-    QObject(parent),PCx_Audit(auditId)
+    QObject(parent),PCx_AuditWithTreeModel(auditId)
 {
     modelDF=nullptr;
     modelDI=nullptr;

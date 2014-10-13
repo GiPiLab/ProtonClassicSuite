@@ -1,5 +1,5 @@
 #include "pcx_treemanage.h"
-#include "pcx_treemodel.h"
+#include "pcx_tree.h"
 #include "utils.h"
 #include <QMessageBox>
 #include <QDateTime>
@@ -66,7 +66,7 @@ int duplicateTree(unsigned int treeId, const QString &newName)
 
 int createRandomTree(const QString &name,unsigned int nbNodes)
 {
-    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<=PCx_TreeModel::MAXNODES);
+    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<=PCx_Tree::MAXNODES);
     QSqlQuery query;
 
     query.prepare("select count(*) from index_arbres where nom=:name");
@@ -457,9 +457,9 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
             firstLevelNodes.append(node1);
         }
         i++;
-        if(i>(int)PCx_TreeModel::MAXNODES+1)
+        if(i>(int)PCx_Tree::MAXNODES+1)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre (%1) !").arg(PCx_TreeModel::MAXNODES));
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre (%1) !").arg(PCx_Tree::MAXNODES));
             return -1;
         }        
 
@@ -540,11 +540,11 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
         return -1;
     }
 
-    PCx_TreeModel treeModel(treeId,false,true);
+    PCx_Tree tree(treeId,false);
 
     foreach(const QString & oneType,foundTypesList)
     {
-        unsigned int oneTypeId=treeModel.getTypes()->addType(oneType);
+        unsigned int oneTypeId=tree.getTypes()->addType(oneType);
         if(oneTypeId==0)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType));
@@ -555,7 +555,7 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
 
     foreach(aNode,firstLevelNodesSet)
     {
-        if(treeModel.addNode(1,typesToIdTypes.value(aNode.first),aNode.second)==0)
+        if(tree.addNode(1,typesToIdTypes.value(aNode.first),aNode.second)==0)
         {
             QSqlDatabase::database().rollback();
             return -1;
@@ -565,7 +565,7 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
     {
         QPair<QString, QString> aPid;
         aPid=nodeToPid.value(aNode);
-        if(treeModel.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second)==0)
+        if(tree.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second)==0)
         {
             QSqlDatabase::database().rollback();
             return -1;

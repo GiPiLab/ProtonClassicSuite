@@ -1,4 +1,4 @@
-#include "pcx_treemodel.h"
+#include "pcx_tree.h"
 #include "utils.h"
 #include "pcx_typemodel.h"
 #include "xlsxdocument.h"
@@ -11,17 +11,8 @@
 #include <QElapsedTimer>
 #include <QFileInfo>
 
-/**
- * @brief PCx_TreeModel::PCx_TreeModel represent both an existing tree in the database and a model for the views in UI
- *
- * This class provides methods to deal with trees in the database and a QStandardItemModel suitable for a TreeView.
- * The model relies on QStandardItems obtained from the database
- * @param treeId the identifier of the tree in the database
- * @param typesReadOnly
- * @param noLoadModel
- * @param parent
- */
-PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, bool noLoadModel, QObject *parent):QStandardItemModel(parent),noLoadModel(noLoadModel)
+
+PCx_Tree::PCx_Tree(unsigned int treeId, bool typesReadOnly)
 {
     types=new PCx_TypeModel(treeId,typesReadOnly);
 
@@ -32,24 +23,14 @@ PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, bool noLoa
     }
 }
 
-PCx_TreeModel::~PCx_TreeModel()
+PCx_Tree::~PCx_Tree()
 {
-    this->clear();
     delete types;
     types=nullptr;
 }
 
-/**
- * @brief PCx_TreeModel::addNode insert a node in the tree
- *
- * Add a node in the tree. Check for the maximum number of nodes and if a node with the same name and type exists
- * @param pid the ID of the parent node (PID)
- * @param typeId the ID of the type for the node to insert
- * @param name the name of the node to insert
- * @param pidNodeIndex the index of the parent node, as selected in the view (if not specified, only insert the node in the DB)
- * @return the ID of the inserted node, or 0 in case of failure
- */
-unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int typeId, const QString &name, const QModelIndex &pidNodeIndex)
+
+unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QString &name)
 {
     Q_ASSERT(!name.isNull());
     Q_ASSERT(!name.isEmpty());
@@ -80,34 +61,18 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int typeId, const
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        die();
+        return 0;
     }
 
-    //Also add an item to the model
-    if(pidNodeIndex.isValid())
-    {
-        QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(types->idTypeToName(typeId),name,typeId,q.lastInsertId().toUInt());
-        pidItem->appendRow(newitem);
-    }
     return q.lastInsertId().toUInt();
 }
 
-/**
- * @brief PCx_TreeModel::updateNode change a node name and/or type
- * @param nodeIndex the node to update as selected in the TreeView
- * @param newName the new node name
- * @param newType the id of the new type
- * @return true on success, false when a node with the same name exists (a warning box is displayed), die on DB error
- */
-bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, unsigned int newType)
+
+bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned int newType)
 {
-    Q_ASSERT(nodeIndex.isValid());
     Q_ASSERT(!newName.isNull());
     Q_ASSERT(!newName.isEmpty());
     Q_ASSERT(newType>0);
-    unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
-    qDebug()<<"Node to be updated = "<<nodeId;
 
     QSqlQuery q;
 
@@ -126,45 +91,21 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        die();
+        return false;
     }
-
-    QStandardItem *item=this->itemFromIndex(nodeIndex);
-    item->setText(QString("%1 %2").arg(types->idTypeToName(newType)).arg(newName));
-    item->setData(newType,Qt::UserRole+2);
 
     return true;
 }
 
-/**
- * @brief PCx_TreeModel::deleteNode remove a node and all its children
- *
- * This method deletes a node selected from a TreeView and all its children
- * @param nodeIndex the node to delete
- * @return true on success, false (or die) on failure (missing node or DB error)
- */
-bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
+
+
+QList<unsigned int> PCx_Tree::getNodesId() const
 {
-    unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
-    Q_ASSERT(nodeId>0);
-    this->removeRow(nodeIndex.row(),nodeIndex.parent());
-    return deleteNodeAndChildren(nodeId);
+    return PCx_Tree::getNodesId(this->treeId);
 }
 
-/**
- * @brief PCx_TreeModel::getNodesId gets ID of all nodes
- * @return The list of all nodes ID
- */
-QList<unsigned int> PCx_TreeModel::getNodesId() const
-{
-    return PCx_TreeModel::getNodesId(this->treeId);
-}
 
-/**
- * @brief PCx_TreeModel::getListOfCompleteNodeNames get all full node names (typeName + " "+nodeName)
- * @return The string list of full node names
- */
-QStringList PCx_TreeModel::getListOfCompleteNodeNames() const
+QStringList PCx_Tree::getListOfCompleteNodeNames() const
 {
     QStringList nodeNames;
     QSqlQuery q;
@@ -180,14 +121,8 @@ QStringList PCx_TreeModel::getListOfCompleteNodeNames() const
     return nodeNames;
 }
 
-/**
- * @brief PCx_TreeModel::getListOfNodeNames Get the list of simple node names (without the name of the type)
- *
- * For example, if a tree contains three nodes "T1 N1", "T1 N2" and "T2 N3"
- * getListOfNodeNames will return ("N1","N2","N3)
- * @return The QStringList of simple node names
- */
-QStringList PCx_TreeModel::getListOfNodeNames() const
+
+QStringList PCx_Tree::getListOfNodeNames() const
 {
     QStringList nodeNames;
     QSqlQuery q;
@@ -203,12 +138,12 @@ QStringList PCx_TreeModel::getListOfNodeNames() const
     return nodeNames;
 }
 
-unsigned int PCx_TreeModel::getNumberOfNodes() const
+unsigned int PCx_Tree::getNumberOfNodes() const
 {
-    return PCx_TreeModel::getNumberOfNodes(treeId);
+    return PCx_Tree::getNumberOfNodes(treeId);
 }
 
-unsigned int PCx_TreeModel::getNumberOfNodes(unsigned int treeId)
+unsigned int PCx_Tree::getNumberOfNodes(unsigned int treeId)
 {
     QSqlQuery q(QString("select count(*) from arbre_%1").arg(treeId));
     if(!q.next())
@@ -219,7 +154,7 @@ unsigned int PCx_TreeModel::getNumberOfNodes(unsigned int treeId)
     return q.value(0).toUInt();
 }
 
-QList<unsigned int> PCx_TreeModel::getLeavesId() const
+QList<unsigned int> PCx_Tree::getLeavesId() const
 {
     QList<unsigned int> leaves;
     QList<unsigned int> nodes;
@@ -234,7 +169,7 @@ QList<unsigned int> PCx_TreeModel::getLeavesId() const
     return leaves;
 }
 
-QList<unsigned int> PCx_TreeModel::getNodesId(unsigned int treeId)
+QList<unsigned int> PCx_Tree::getNodesId(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
     QSqlQuery q;
@@ -248,7 +183,7 @@ QList<unsigned int> PCx_TreeModel::getNodesId(unsigned int treeId)
 
 }
 
-QList<unsigned int> PCx_TreeModel::getNonLeavesId() const
+QList<unsigned int> PCx_Tree::getNonLeavesId() const
 {
     QList<unsigned int> nonleaves;
     QList<unsigned int> nodes;
@@ -263,7 +198,7 @@ QList<unsigned int> PCx_TreeModel::getNonLeavesId() const
     return nonleaves;
 }
 
-QSet<unsigned int> PCx_TreeModel::getNodesWithSharedName() const
+QSet<unsigned int> PCx_Tree::getNodesWithSharedName() const
 {
     QSqlQuery q(QString("select * from arbre_%1").arg(treeId));
     QSet<unsigned int> nodes;
@@ -292,7 +227,7 @@ QSet<unsigned int> PCx_TreeModel::getNodesWithSharedName() const
     return nodes;
 }
 
-bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
+bool PCx_Tree::isLeaf(unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
     QSqlQuery q;
@@ -313,7 +248,7 @@ bool PCx_TreeModel::isLeaf(unsigned int nodeId) const
     return false;
 }
 
-unsigned int PCx_TreeModel::getTreeDepth() const
+unsigned int PCx_Tree::getTreeDepth() const
 {
     unsigned int maxDepth=0;
     QList<unsigned int> nodes=getNodesId();
@@ -338,12 +273,9 @@ unsigned int PCx_TreeModel::getTreeDepth() const
     return maxDepth;
 }
 
-QModelIndexList PCx_TreeModel::getIndexesOfNodesWithThisType(unsigned int typeId) const
-{
-    return match(index(0,0),Qt::UserRole+2,QVariant(typeId),-1,Qt::MatchRecursive);
-}
 
-QList<unsigned int> PCx_TreeModel::getIdsOfNodesWithThisType(unsigned int typeId) const
+
+QList<unsigned int> PCx_Tree::getIdsOfNodesWithThisType(unsigned int typeId) const
 {
     Q_ASSERT(typeId>0);
     QSqlQuery q;
@@ -362,7 +294,7 @@ QList<unsigned int> PCx_TreeModel::getIdsOfNodesWithThisType(unsigned int typeId
     return nodes;
 }
 
-unsigned int PCx_TreeModel::getNumberOfNodesWithThisType(unsigned int typeId) const
+unsigned int PCx_Tree::getNumberOfNodesWithThisType(unsigned int typeId) const
 {
     Q_ASSERT(typeId>0);
     QSqlQuery q;
@@ -378,7 +310,7 @@ unsigned int PCx_TreeModel::getNumberOfNodesWithThisType(unsigned int typeId) co
     return q.value(0).toUInt();
 }
 
-QList<unsigned int> PCx_TreeModel::sortNodesBFS(QList<unsigned int> &nodes) const
+QList<unsigned int> PCx_Tree::sortNodesBFS(QList<unsigned int> &nodes) const
 {
     QList<unsigned int>sortedNodes;
 
@@ -396,7 +328,7 @@ QList<unsigned int> PCx_TreeModel::sortNodesBFS(QList<unsigned int> &nodes) cons
 }
 
 
-QList<unsigned int> PCx_TreeModel::sortNodesDFS(QList<unsigned int> &nodes,unsigned int currentNode) const
+QList<unsigned int> PCx_Tree::sortNodesDFS(QList<unsigned int> &nodes,unsigned int currentNode) const
 {
     QList<unsigned int> sortedNodes;
 
@@ -411,7 +343,7 @@ QList<unsigned int> PCx_TreeModel::sortNodesDFS(QList<unsigned int> &nodes,unsig
     return sortedNodes;
 }
 
-unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
+unsigned int PCx_Tree::getParentId(unsigned int nodeId) const
 {
     QSqlQuery q;
     q.prepare(QString("select pid from arbre_%1 where id=:nodeid").arg(treeId));
@@ -428,7 +360,7 @@ unsigned int PCx_TreeModel::getParentId(unsigned int nodeId) const
     return 0;
 }
 
-QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
+QList<unsigned int> PCx_Tree::getChildren(unsigned int nodeId) const
 {
     QList<unsigned int> listOfChildren;
     QSqlQuery q;
@@ -443,46 +375,9 @@ QList<unsigned int> PCx_TreeModel::getChildren(unsigned int nodeId) const
     return listOfChildren;
 }
 
-/*
- * Drag and drop : uses QStandardItemModel to compute the logic with items
- *
- * - Check validity (no dd outside of the tree)
- * - get DB IDs of elements
- * - update DB
- * - let QStandardItemModel::dropMimeData do the job with items
- */
 
 
-//TODO : DRAG&DROP BETWEEN TREES
-bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
-{
-
-    if(!parent.isValid())
-    {
-        qDebug()<<"Dropping outside of the root";
-        return false;
-    }
-
-    unsigned int dropId;
-
-    dropId=parent.data(Qt::UserRole+1).toUInt();
-    qDebug()<<"DROPID="<<dropId;
-
-    QStandardItemModel tmpModel;
-    tmpModel.dropMimeData(data,Qt::CopyAction,0,0,QModelIndex());
-
-    for(int i=0;i<tmpModel.rowCount();i++)
-    {
-        //TODO : check for duplicates nodes under the same pid
-        unsigned int dragId=tmpModel.item(i)->data(Qt::UserRole+1).toUInt();
-        if(dragId!=1)
-            updateNodePosition(dragId,dropId);
-    }
-
-    return QStandardItemModel::dropMimeData(data,action,row,column,parent);
-}
-
-void PCx_TreeModel::updateNodePosition(unsigned int nodeId, unsigned int newPid)
+void PCx_Tree::updateNodePid(unsigned int nodeId, unsigned int newPid)
 {
     Q_ASSERT(nodeId>1 && newPid > 0);
     QSqlQuery q;
@@ -499,7 +394,7 @@ void PCx_TreeModel::updateNodePosition(unsigned int nodeId, unsigned int newPid)
     }
 }
 
-bool PCx_TreeModel::finishTree()
+bool PCx_Tree::finishTree()
 {
     Q_ASSERT(treeId>0);
     if(this->finished==false)
@@ -519,29 +414,10 @@ bool PCx_TreeModel::finishTree()
 }
 
 
-bool PCx_TreeModel::updateTree()
-{
-    if(noLoadModel==true)
-        return true;
-    QElapsedTimer timer;
-    timer.start();
-    bool res;
-    this->clear();
-    res=createChildrenItems(invisibleRootItem(),0);
-    qDebug()<<"updateTree done in"<<timer.elapsed()<<"ms";
-    return res;
-}
 
-/**
- * @brief PCx_TreeModel::nodeExists check if a node with given name and type already exists
- *
- * If PID is not 0, check if this node belongs to the same PID, in order to only disallow duplicates under the same pid
- * @param name : the name of the node
- * @param typeId : the type of the node
- * @param pid : the pid of the node, if 0 check under the whole tree for duplicates
- * @return true if the node exists, false otherwise, die in case of DB error
- */
-bool PCx_TreeModel::nodeExists(const QString &name, unsigned int typeId, unsigned int pid) const
+
+
+bool PCx_Tree::nodeExists(const QString &name, unsigned int typeId, unsigned int pid) const
 {
     QSqlQuery q;
 
@@ -576,7 +452,7 @@ bool PCx_TreeModel::nodeExists(const QString &name, unsigned int typeId, unsigne
     return false;
 }
 
-int PCx_TreeModel::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName) const
+int PCx_Tree::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName) const
 {
     int typeId=types->nameToIdType(typeAndNodeName.first);
     if(typeId==-1)
@@ -599,7 +475,7 @@ int PCx_TreeModel::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &t
 }
 
 
-QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) const
+QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
 {
     Q_ASSERT(node>0);
     QSqlQuery q;
@@ -634,7 +510,7 @@ QPair<QString,QString> PCx_TreeModel::getTypeNameAndNodeName(unsigned int node) 
 }
 
 
-QString PCx_TreeModel::getNodeName(unsigned int node) const
+QString PCx_Tree::getNodeName(unsigned int node) const
 {
     Q_ASSERT(node>0);
     QSqlQuery q;
@@ -662,28 +538,8 @@ QString PCx_TreeModel::getNodeName(unsigned int node) const
     return QString();
 }
 
-bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
-{
-    QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
-    if(!query.isActive())
-    {
-        qCritical()<<query.lastError();
-        return false;
-    }
-    while(query.next())
-    {
-        unsigned int typeId=query.value(3).toUInt();
-        unsigned int nodeId=query.value(0).toUInt();
-        QStandardItem *newitem=createItem(types->idTypeToName(typeId),query.value(1).toString(),typeId,nodeId);
 
-        item->appendRow(newitem);
-        createChildrenItems(newitem,nodeId);
-    }
-    return true;
-
-}
-
-bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
+bool PCx_Tree::deleteNode(unsigned int nodeId)
 {
     Q_ASSERT(nodeId>0);
     QList<unsigned int> listOfChildrens;
@@ -719,25 +575,16 @@ bool PCx_TreeModel::deleteNodeAndChildren(unsigned int nodeId)
     {
         foreach(unsigned int child,listOfChildrens)
         {
-            deleteNodeAndChildren(child);
+            deleteNode(child);
         }
-        deleteNodeAndChildren(nodeId);
+        deleteNode(nodeId);
     }
     return true;
 }
 
-QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, unsigned int typeId, unsigned int nodeId)
-{
-    Q_ASSERT(!nodeName.isEmpty());
-    //QStandardItem *newitem=new QStandardItem(typeName+" "+nodeName);
-    QStandardItem *newitem=new QStandardItem(typeName+" "+nodeName);
-    newitem->setData(nodeId,Qt::UserRole+1);
-    newitem->setData(typeId,Qt::UserRole+2);
-//    newitem->setIcon(QIcon::fromTheme());
-    return newitem;
-}
 
-QString PCx_TreeModel::toDot() const
+
+QString PCx_Tree::toDot() const
 {
     QList<unsigned int> nodes=getNodesId();
 
@@ -762,7 +609,7 @@ QString PCx_TreeModel::toDot() const
     return out;
 }
 
-bool PCx_TreeModel::toXLSX(const QString &fileName) const
+bool PCx_Tree::toXLSX(const QString &fileName) const
 {
     Q_ASSERT(!fileName.isEmpty());
     QList<unsigned int> nodes=getNodesId();
@@ -781,8 +628,6 @@ bool PCx_TreeModel::toXLSX(const QString &fileName) const
     {
         unsigned int pid=getParentId(node);
         typeNameAndNodeName=getTypeNameAndNodeName(node);
-
-
 
         if(pid>1)
         {
@@ -804,26 +649,30 @@ bool PCx_TreeModel::toXLSX(const QString &fileName) const
     return xlsx.saveAs(fileName);
 }
 
-bool PCx_TreeModel::loadFromDatabase(unsigned int treeId)
+bool PCx_Tree::loadFromDatabase(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
 
     QSqlQuery query;
 
-    query.prepare("SELECT id,nom,termine,le_timestamp from index_arbres where id=:id");
+    query.prepare("SELECT nom,termine,le_timestamp from index_arbres where id=:id");
     query.bindValue(":id",treeId);
-    query.exec();
+    if(!query.exec())
+    {
+        qCritical()<<query.lastError();
+        return false;
+    }
     if(query.next())
     {
-        this->treeName=query.value(1).toString();
+        this->treeName=query.value("nom").toString();
         this->treeId=treeId;
-        this->finished=query.value(2).toBool();
-        this->creationTime=query.value(3).toString();
+        this->finished=query.value("termine").toBool();
+        this->creationTime=query.value("le_timestamp").toString();
     }
     else
     {
         qWarning()<<"Missing Tree";
         return false;
     }
-    return updateTree();
+    return true;
 }

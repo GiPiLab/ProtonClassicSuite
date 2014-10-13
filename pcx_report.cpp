@@ -24,7 +24,7 @@ QString PCx_Report::getCSS()
 QString PCx_Report::generateHTMLHeader(unsigned int auditId)
 {
     return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>\n"
-                   "<h3>Audit %1</h3>\n").arg(PCx_Audit::getAuditName(auditId).toHtmlEscaped()).arg(getCSS());
+                   "<h3>Audit %1</h3>\n").arg(PCx_AuditManage::getAuditName(auditId).toHtmlEscaped()).arg(getCSS());
 
 }
 
@@ -259,10 +259,10 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const
 {
     QString output="<ul>\n";
-    PCx_TreeModel *treeModel=model->getAttachedTreeModel();
+    PCx_Tree *tree=model->getAttachedTree();
     foreach(unsigned int node,nodes)
     {
-        output.append(QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(treeModel->getNodeName(node).toHtmlEscaped()));
+        output.append(QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(tree->getNodeName(node).toHtmlEscaped()));
     }
     output.append("</ul>\n");
     return output;

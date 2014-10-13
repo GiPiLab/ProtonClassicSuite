@@ -1,6 +1,6 @@
 #include "formreports.h"
 #include "ui_formreports.h"
-#include "pcx_audit.h"
+#include "pcx_auditwithtreemodel.h"
 #include "pcx_auditmanage.h"
 
 FormReports::FormReports(QWidget *parent) :
@@ -112,18 +112,18 @@ void FormReports::on_comboListAudits_activated(int index)
         delete model;
         delete report;
     }
-    model=new PCx_Audit(selectedAuditId,this);
+    model=new PCx_AuditWithTreeModel(selectedAuditId);
     report=new PCx_Report(model);
     QItemSelectionModel *m=ui->treeView->selectionModel();
-    ui->treeView->setModel(model->getAttachedTreeModel());
+    ui->treeView->setModel(model->getAttachedTree());
     delete m;
     ui->treeView->expandToDepth(1);
-    QModelIndex rootIndex=model->getAttachedTreeModel()->index(0,0);
+    QModelIndex rootIndex=model->getAttachedTree()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
 
     ui->comboListTypes->clear();
 
-    QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTreeModel()->getTypes()->getAllTypes();
+    QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTree()->getTypes()->getAllTypes();
     Q_ASSERT(!listOfTypes.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,listOfTypes)
@@ -154,9 +154,9 @@ void FormReports::on_saveButton_clicked()
     //qDebug()<<"Selected nodes : "<<selectedNodes;
     QList<unsigned int>sortedSelectedNodes;
     if(ui->radioButtonBFS->isChecked())
-        sortedSelectedNodes=model->getAttachedTreeModel()->sortNodesBFS(selectedNodes);
+        sortedSelectedNodes=model->getAttachedTree()->sortNodesBFS(selectedNodes);
     else if(ui->radioButtonDFS->isChecked())
-        sortedSelectedNodes=model->getAttachedTreeModel()->sortNodesDFS(selectedNodes);
+        sortedSelectedNodes=model->getAttachedTree()->sortNodesDFS(selectedNodes);
     else
     {
         QMessageBox::warning(this,tr("Attention"),tr("Choisissez l'ordre d'affichage des noeuds sélectionnés dans le rapport !"));
@@ -303,7 +303,7 @@ void FormReports::on_saveButton_clicked()
 
     foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
-        output.append(QString("<h2 id='node%2'>%1</h2>").arg(model->getAttachedTreeModel()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
+        output.append(QString("<h2 id='node%2'>%1</h2>").arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
 
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
@@ -461,7 +461,7 @@ void FormReports::on_pushButtonSelectNone_clicked()
 
 void FormReports::on_pushButtonSelectType_clicked()
 {
-    PCx_TreeModel *treeModel=model->getAttachedTreeModel();
+    PCx_TreeModel *treeModel=model->getAttachedTree();
     unsigned int selectedType=ui->comboListTypes->currentData().toUInt();
     QModelIndexList indexOfTypes=treeModel->getIndexesOfNodesWithThisType(selectedType);
 

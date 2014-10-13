@@ -2,7 +2,7 @@
 #define FORMTREECONSISTENCY_H
 
 #include <QWidget>
-#include "pcx_treemodel.h"
+#include "pcx_tree.h"
 
 
 namespace Ui {
@@ -23,7 +23,7 @@ private:
 
     Ui::FormTreeConsistency *ui;    
     void populateTableInfos();
-    PCx_TreeModel *treeModel;
+    PCx_Tree *tree;
     void populateListOfNodesWithSameNameButDifferentTypes();
 };
 

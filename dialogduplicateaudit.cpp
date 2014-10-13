@@ -8,10 +8,10 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     ui(new Ui::DialogDuplicateAudit),oldAuditId(oldAuditId)
 {
     ui->setupUi(this);
-    PCx_Audit infos(oldAuditId,false);
+    PCx_Audit infos(oldAuditId);
     ui->labelOldName->setText(infos.getAuditName());
     ui->labelOldDate->setText(infos.getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
-    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.getAttachedTreeName()).arg(PCx_TreeModel::getNumberOfNodes(infos.getAttachedTreeId())));
+    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.getAttachedTreeName()).arg(PCx_Tree::getNumberOfNodes(infos.getAttachedTreeId())));
     ui->labelOldYears->setText(infos.getYearsString());
     ui->spinBoxYear1->setValue(infos.getYears().first());
     ui->spinBoxYear2->setValue(infos.getYears().last());

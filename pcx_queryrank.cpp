@@ -58,7 +58,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 as b where a.id_node=b.id "
                           "and type=:typeId and %1 not null and annee>=:year1 and annee<=:year2 order by %1 %5 limit %6")
                   .arg(oredString).arg(PCx_AuditManage::modeToTableString(dfrfdiri)).arg(model->getAuditId())
-                  .arg(model->getAttachedTreeModel()->getTreeId()).arg(order).arg(number));
+                  .arg(model->getAttachedTree()->getTreeId()).arg(order).arg(number));
         q.bindValue(":typeId",typeId);
     }
     else
@@ -114,13 +114,13 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
         val=q.value(oredString).toLongLong();
 
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td></tr>")
-                .arg(model->getAttachedTreeModel()->getNodeName(node).toHtmlEscaped())
+                .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                 .arg(year)
                 .arg(formatCurrency(val)));
 
         if(xlsDoc!=nullptr)
         {
-            QPair<QString,QString> typeAndNode=model->getAttachedTreeModel()->getTypeNameAndNodeName(node);
+            QPair<QString,QString> typeAndNode=model->getAttachedTree()->getTypeNameAndNodeName(node);
             xlsDoc->write(currentRow,2,typeAndNode.first);
             xlsDoc->write(currentRow,3,typeAndNode.second);
             xlsDoc->write(currentRow,4,year);
@@ -188,7 +188,7 @@ QString PCx_QueryRank::getDescription() const
     if(typeId==PCx_Query::ALLTYPES)
         out=QObject::tr("Tous les noeuds");
     else
-        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTreeModel()->getTypes()->idTypeToName(typeId).toHtmlEscaped());
+        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->getTypes()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les crédits %1s des %2 sont parmi les [%3] %4 entre %5 et %6")
             .arg(PCx_AuditManage::OREDtoCompleteString(ored).toHtmlEscaped())

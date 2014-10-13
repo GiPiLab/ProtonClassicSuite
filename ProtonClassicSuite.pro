@@ -17,7 +17,6 @@ include(QtXlsx/xlsx/qtxlsx.pri)
 
 SOURCES += main.cpp\
 	mainwindow.cpp \
-    pcx_treemodel.cpp \
     pcx_typemodel.cpp \
     auditdatadelegate.cpp \
     utils.cpp \
@@ -46,10 +45,12 @@ SOURCES += main.cpp\
     pcx_auditmanage.cpp \
     pcx_stringdistance.cpp \
     formtreeconsistency.cpp \
-    pcx_nodesimilaritytablemodel.cpp
+    pcx_nodesimilaritytablemodel.cpp \
+    pcx_tree.cpp \
+    pcx_treemodel.cpp \
+    pcx_auditwithtreemodel.cpp
 
 HEADERS  += mainwindow.h \
-    pcx_treemodel.h \
     pcx_typemodel.h \
     auditdatadelegate.h \
     utils.h \
@@ -78,7 +79,10 @@ HEADERS  += mainwindow.h \
     pcx_auditmanage.h \
     pcx_stringdistance.h \
     formtreeconsistency.h \
-    pcx_nodesimilaritytablemodel.h
+    pcx_nodesimilaritytablemodel.h \
+    pcx_tree.h \
+    pcx_treemodel.h \
+    pcx_auditwithtreemodel.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \

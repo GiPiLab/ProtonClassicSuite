@@ -1,10 +1,10 @@
 #ifndef PCX_EDITABLEAUDITMODEL_H
 #define PCX_EDITABLEAUDITMODEL_H
 
-#include "pcx_audit.h"
+#include "pcx_auditwithtreemodel.h"
 #include <QObject>
 
-class PCx_EditableAuditModel : public QObject, public PCx_Audit
+class PCx_EditableAuditModel : public QObject, public PCx_AuditWithTreeModel
 {
     Q_OBJECT
 public:

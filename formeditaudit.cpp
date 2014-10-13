@@ -94,7 +94,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     QItemSelectionModel *m=ui->treeView->selectionModel();
     //Read-write audit model
     auditModel=new PCx_EditableAuditModel(selectedAuditId,0);
-    ui->treeView->setModel(auditModel->getAttachedTreeModel());
+    ui->treeView->setModel(auditModel->getAttachedTree());
     delete m;
     ui->treeView->expandToDepth(1);
 
@@ -116,7 +116,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     auditModel->getTableModelRF()->setFilter(QString("id_node=1"));
     auditModel->getTableModelDI()->setFilter(QString("id_node=1"));
     auditModel->getTableModelRI()->setFilter(QString("id_node=1"));
-    ui->label->setText(auditModel->getAttachedTreeModel()->index(0,0).data().toString());
+    ui->label->setText(auditModel->getAttachedTree()->index(0,0).data().toString());
 
     ui->tableViewDF->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableViewRF->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -138,7 +138,7 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
     auditModel->getTableModelRF()->setFilter(QString("id_node=%1").arg(selectedNode));
     auditModel->getTableModelDI()->setFilter(QString("id_node=%1").arg(selectedNode));
     auditModel->getTableModelRI()->setFilter(QString("id_node=%1").arg(selectedNode));
-    bool isLeaf=auditModel->getAttachedTreeModel()->isLeaf(selectedNode);
+    bool isLeaf=auditModel->getAttachedTree()->isLeaf(selectedNode);
 
     if(isLeaf)
     {
@@ -167,7 +167,7 @@ void FormEditAudit::on_randomDataButton_clicked()
 
     QElapsedTimer timer;
     timer.start();
-    QList<unsigned int> leaves=auditModel->getAttachedTreeModel()->getLeavesId();
+    QList<unsigned int> leaves=auditModel->getAttachedTree()->getLeavesId();
     QList<unsigned int> years=auditModel->getYears();
 
     PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;

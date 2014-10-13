@@ -131,7 +131,7 @@ unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigne
 
     //Populate tables with years for each node of the attached tree
 
-    QList<unsigned int> nodes=PCx_TreeModel::getNodesId(attachedTreeId);
+    QList<unsigned int> nodes=PCx_Tree::getNodesId(attachedTreeId);
     //qDebug()<<"Nodes ids = "<<nodes;
 
     foreach(unsigned int node,nodes)
@@ -627,6 +627,17 @@ QString OREDtoCompleteString(ORED ored)
         qWarning()<<"Invalid ORED specified !";
     }
     return QString();
+}
+
+QString getAuditName(unsigned int auditId)
+{
+    QSqlQuery q(QString("select nom from index_audits where id=%1").arg(auditId));
+    if(!q.next())
+    {
+        qCritical()<<"Invalid audit ID !";
+        return QString();
+    }
+    return q.value("nom").toString();
 }
 
 

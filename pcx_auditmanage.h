@@ -38,6 +38,7 @@ unsigned int getAttachedTreeId(unsigned int auditId);
 unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
 bool deleteAudit(unsigned int auditId);
 int duplicateAudit(unsigned int auditId, const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI);
+QString getAuditName(unsigned int auditId);
 bool auditNameExists(const QString &auditName);
 QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
 bool finishAudit(unsigned int auditId);

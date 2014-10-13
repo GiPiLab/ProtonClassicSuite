@@ -1,7 +1,7 @@
 #ifndef PCX_AUDIT_H
 #define PCX_AUDIT_H
 
-#include "pcx_treemodel.h"
+#include "pcx_tree.h"
 #include "pcx_auditmanage.h"
 #include <QDateTime>
 
@@ -11,18 +11,13 @@ class PCx_Audit
 
 public:
 
-
-    explicit PCx_Audit(unsigned int auditId,bool loadTreeModel=true);
+    explicit PCx_Audit(unsigned int auditId);
     virtual ~PCx_Audit();
 
-
-
-    //Getters
     unsigned int getAuditId() const{return auditId;}
+    PCx_Tree *getAttachedTree() const{return attachedTree;}
     QString getAuditName() const{return auditName;}
-    static QString getAuditName(unsigned int auditId);
     QString getAttachedTreeName() const{return attachedTreeName;}
-    PCx_TreeModel *getAttachedTreeModel() const{return attachedTree;}
     unsigned int getAttachedTreeId() const{return attachedTreeId;}
 
     bool isFinished() const{return finished;}
@@ -71,9 +66,6 @@ protected:
     unsigned int auditId;
     QString auditName;
     unsigned int attachedTreeId;
-    PCx_TreeModel *attachedTree;
-
-    bool loadTreeModel;
 
     QString attachedTreeName;
 
@@ -90,7 +82,8 @@ protected:
     bool updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
 
-private:
+protected:
+    PCx_Tree *attachedTree;
     PCx_Audit(const PCx_Audit &c);
     PCx_Audit &operator=(const PCx_Audit &);
 

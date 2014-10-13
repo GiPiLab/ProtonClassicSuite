@@ -1,7 +1,7 @@
 #ifndef FORMREPORTS_H
 #define FORMREPORTS_H
 
-#include "pcx_audit.h"
+#include "pcx_auditwithtreemodel.h"
 #include "pcx_report.h"
 #include "QCustomPlot/qcustomplot.h"
 #include <QWidget>
@@ -55,7 +55,7 @@ private:
     Ui::FormReports *ui;
     QSize sizeHint()const;
     void updateListOfAudits();
-    PCx_Audit *model;
+    PCx_AuditWithTreeModel *model;
     PCx_Report *report;
     void populateLists();
     QCustomPlot *plot;
