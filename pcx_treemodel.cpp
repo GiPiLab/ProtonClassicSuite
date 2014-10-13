@@ -11,6 +11,16 @@
 #include <QElapsedTimer>
 #include <QFileInfo>
 
+/**
+ * @brief PCx_TreeModel::PCx_TreeModel represent both an existing tree in the database and a model for the views in UI
+ *
+ * This class provides methods to deal with trees in the database and a QStandardItemModel suitable for a TreeView.
+ * The model relies on QStandardItems obtained from the database
+ * @param treeId the identifier of the tree in the database
+ * @param typesReadOnly
+ * @param noLoadModel
+ * @param parent
+ */
 PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool typesReadOnly, bool noLoadModel, QObject *parent):QStandardItemModel(parent),noLoadModel(noLoadModel)
 {
     types=new PCx_TypeModel(treeId,typesReadOnly);
@@ -29,12 +39,22 @@ PCx_TreeModel::~PCx_TreeModel()
     types=nullptr;
 }
 
-unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const QString &name, const QModelIndex &pidNodeIndex)
+/**
+ * @brief PCx_TreeModel::addNode insert a node in the tree
+ *
+ * Add a node in the tree. Check for the maximum number of nodes and if a node with the same name and type exists
+ * @param pid the ID of the parent node (PID)
+ * @param typeId the ID of the type for the node to insert
+ * @param name the name of the node to insert
+ * @param pidNodeIndex the index of the parent node, as selected in the view (if not specified, only insert the node in the DB)
+ * @return the ID of the inserted node, or 0 in case of failure
+ */
+unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int typeId, const QString &name, const QModelIndex &pidNodeIndex)
 {
     Q_ASSERT(!name.isNull());
     Q_ASSERT(!name.isEmpty());
     Q_ASSERT(pid>0);
-    Q_ASSERT(type>0);
+    Q_ASSERT(typeId>0);
 
     if(getNumberOfNodes()>=MAXNODES)
     {
@@ -45,7 +65,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     QSqlQuery q;
 
     //NOTE : Check for duplicate nodes in tree
-    if(nodeExists(name,type,0))
+    if(nodeExists(name,typeId,0))
     {
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom dans l'arbre' !"));
         return 0;
@@ -54,7 +74,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(treeId));
     q.bindValue(":nom",name);
     q.bindValue(":pid",pid);
-    q.bindValue(":type",type);
+    q.bindValue(":type",typeId);
     q.exec();
 
     if(q.numRowsAffected()!=1)
@@ -67,12 +87,19 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int type, const Q
     if(pidNodeIndex.isValid())
     {
         QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(types->idTypeToName(type),name,type,q.lastInsertId().toUInt());
+        QStandardItem *newitem=createItem(types->idTypeToName(typeId),name,typeId,q.lastInsertId().toUInt());
         pidItem->appendRow(newitem);
     }
     return q.lastInsertId().toUInt();
 }
 
+/**
+ * @brief PCx_TreeModel::updateNode change a node name and/or type
+ * @param nodeIndex the node to update as selected in the TreeView
+ * @param newName the new node name
+ * @param newType the id of the new type
+ * @return true on success, false when a node with the same name exists (a warning box is displayed), die on DB error
+ */
 bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newName, unsigned int newType)
 {
     Q_ASSERT(nodeIndex.isValid());
@@ -84,23 +111,10 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
 
     QSqlQuery q;
 
-    q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
-    q.bindValue(":nom",newName);
-    q.bindValue(":type",newType);
-    q.exec();
-
-    if(q.next())
+    if(nodeExists(newName,newType,0))
     {
-        if(q.value(0).toInt()>0)
-        {
-            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
-            return false;
-        }
-    }
-    else
-    {
-        qCritical()<<q.lastError();
-        die();
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+        return false;
     }
 
     q.prepare(QString("update arbre_%1 set nom=:nom, type=:type where id=:id").arg(treeId));
@@ -122,6 +136,13 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     return true;
 }
 
+/**
+ * @brief PCx_TreeModel::deleteNode remove a node and all its children
+ *
+ * This method deletes a node selected from a TreeView and all its children
+ * @param nodeIndex the node to delete
+ * @return true on success, false (or die) on failure (missing node or DB error)
+ */
 bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
 {
     unsigned int nodeId=nodeIndex.data(Qt::UserRole+1).toUInt();
@@ -130,14 +151,19 @@ bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
     return deleteNodeAndChildren(nodeId);
 }
 
-
-
-
+/**
+ * @brief PCx_TreeModel::getNodesId gets ID of all nodes
+ * @return The list of all nodes ID
+ */
 QList<unsigned int> PCx_TreeModel::getNodesId() const
 {
     return PCx_TreeModel::getNodesId(this->treeId);
 }
 
+/**
+ * @brief PCx_TreeModel::getListOfCompleteNodeNames get all full node names (typeName + " "+nodeName)
+ * @return The string list of full node names
+ */
 QStringList PCx_TreeModel::getListOfCompleteNodeNames() const
 {
     QStringList nodeNames;
@@ -154,6 +180,13 @@ QStringList PCx_TreeModel::getListOfCompleteNodeNames() const
     return nodeNames;
 }
 
+/**
+ * @brief PCx_TreeModel::getListOfNodeNames Get the list of simple node names (without the name of the type)
+ *
+ * For example, if a tree contains three nodes "T1 N1", "T1 N2" and "T2 N3"
+ * getListOfNodeNames will return ("N1","N2","N3)
+ * @return The QStringList of simple node names
+ */
 QStringList PCx_TreeModel::getListOfNodeNames() const
 {
     QStringList nodeNames;

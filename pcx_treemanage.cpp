@@ -326,13 +326,18 @@ int deleteTree(unsigned int treeId)
 
 
 /**
- * @brief importTreeFromXLSX : import a tree from a XLSX.
- * @param fileName
- * @param treeName
+ * @brief importTreeFromXLSX import a tree from an XLSX file
+ * The file must contain node description in four column :
+ * COL1 is the name of the type, COL2 is the name of the node
+ * COL3 is the name of the type for the parent of the node
+ * COL4 is the name of the parent of the node.
+ * If both COL3 and COL4 are empty, the node described in COL1 and COL2 is a first level node
+ *
+ * Check for duplicates, orphan nodes, multiple ancestors and empty root and print a warning. Stop after the first warning
+ *
+ * @param fileName the name of the file to import
+ * @param treeName the name of the newly imported tree
  * @return the identifier of the newly created tree, or -1 in case of error
- *
- * Check from duplicates, orphan nodes, graph structure (multiple ancestors) and empty root
- *
  */
 int importTreeFromXLSX(const QString &fileName, const QString &treeName)
 {
@@ -550,7 +555,7 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
 
     foreach(aNode,firstLevelNodesSet)
     {
-        if(treeModel.addNode(1,typesToIdTypes.value(aNode.first),aNode.second,QModelIndex())==0)
+        if(treeModel.addNode(1,typesToIdTypes.value(aNode.first),aNode.second)==0)
         {
             QSqlDatabase::database().rollback();
             return -1;
@@ -560,7 +565,7 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
     {
         QPair<QString, QString> aPid;
         aPid=nodeToPid.value(aNode);
-        if(treeModel.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second,QModelIndex())==0)
+        if(treeModel.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second)==0)
         {
             QSqlDatabase::database().rollback();
             return -1;
