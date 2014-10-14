@@ -1,4 +1,5 @@
 #include "pcx_tree.h"
+#include "pcx_treemanage.h"
 #include "utils.h"
 #include "pcx_typemodel.h"
 #include "xlsxdocument.h"
@@ -46,7 +47,7 @@ unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QStr
     QSqlQuery q;
 
     //NOTE : Check for duplicate nodes in tree
-    if(nodeExists(name,typeId,0))
+    if(nodeExists(name,typeId))
     {
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom dans l'arbre' !"));
         return 0;
@@ -76,9 +77,15 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
 
     QSqlQuery q;
 
-    if(nodeExists(newName,newType,0))
+    if(nodeExists(newName,newType))
     {
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+        return false;
+    }
+
+    if(!types->isTypeIdValid(newType))
+    {
+        qCritical()<<"Invalid type !";
         return false;
     }
 
@@ -101,7 +108,7 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
 
 QList<unsigned int> PCx_Tree::getNodesId() const
 {
-    return PCx_Tree::getNodesId(this->treeId);
+    return PCx_TreeManage::getNodesId(this->treeId);
 }
 
 
@@ -140,19 +147,9 @@ QStringList PCx_Tree::getListOfNodeNames() const
 
 unsigned int PCx_Tree::getNumberOfNodes() const
 {
-    return PCx_Tree::getNumberOfNodes(treeId);
+    return PCx_TreeManage::getNumberOfNodes(treeId);
 }
 
-unsigned int PCx_Tree::getNumberOfNodes(unsigned int treeId)
-{
-    QSqlQuery q(QString("select count(*) from arbre_%1").arg(treeId));
-    if(!q.next())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    return q.value(0).toUInt();
-}
 
 QList<unsigned int> PCx_Tree::getLeavesId() const
 {
@@ -169,19 +166,6 @@ QList<unsigned int> PCx_Tree::getLeavesId() const
     return leaves;
 }
 
-QList<unsigned int> PCx_Tree::getNodesId(unsigned int treeId)
-{
-    Q_ASSERT(treeId>0);
-    QSqlQuery q;
-    QList<unsigned int> nodeIds;
-    q.exec(QString("select id from arbre_%1").arg(treeId));
-    while(q.next())
-    {
-        nodeIds.append(q.value(0).toUInt());
-    }
-    return nodeIds;
-
-}
 
 QList<unsigned int> PCx_Tree::getNonLeavesId() const
 {
@@ -417,25 +401,14 @@ bool PCx_Tree::finishTree()
 
 
 
-bool PCx_Tree::nodeExists(const QString &name, unsigned int typeId, unsigned int pid) const
+bool PCx_Tree::nodeExists(const QString &name, unsigned int typeId) const
 {
     QSqlQuery q;
 
-    if(pid>0)
-    {
-        q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type and pid=:pid").arg(treeId));
-        q.bindValue(":nom",name);
-        q.bindValue(":type",typeId);
-        q.bindValue(":pid",pid);
-        q.exec();
-    }
-    else
-    {
-        q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
-        q.bindValue(":nom",name);
-        q.bindValue(":type",typeId);
-        q.exec();
-    }
+    q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
+    q.bindValue(":nom",name);
+    q.bindValue(":type",typeId);
+    q.exec();
 
     if(q.next())
     {
@@ -503,7 +476,7 @@ QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
     }
     else
     {
-        qWarning()<<"Inexistant node"<<node;
+        qCritical()<<"Inexistant node"<<node;
     }
     return QPair<QString,QString>();
 
@@ -533,7 +506,7 @@ QString PCx_Tree::getNodeName(unsigned int node) const
     }
     else
     {
-        qWarning()<<"Inexistant node"<<node;
+        qCritical()<<"Inexistant node"<<node;
     }
     return QString();
 }

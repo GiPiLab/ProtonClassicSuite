@@ -1,6 +1,7 @@
 #include "dialogduplicateaudit.h"
 #include "ui_dialogduplicateaudit.h"
 #include "pcx_auditmanage.h"
+#include "pcx_treemanage.h"
 #include <QMessageBox>
 
 DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *parent) :
@@ -11,7 +12,7 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     PCx_Audit infos(oldAuditId);
     ui->labelOldName->setText(infos.getAuditName());
     ui->labelOldDate->setText(infos.getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
-    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.getAttachedTreeName()).arg(PCx_Tree::getNumberOfNodes(infos.getAttachedTreeId())));
+    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(infos.getAttachedTreeName()).arg(PCx_TreeManage::getNumberOfNodes(infos.getAttachedTreeId())));
     ui->labelOldYears->setText(infos.getYearsString());
     ui->spinBoxYear1->setValue(infos.getYears().first());
     ui->spinBoxYear2->setValue(infos.getYears().last());

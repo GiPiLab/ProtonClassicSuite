@@ -410,7 +410,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
                        "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
                        "</table>\n")
                .arg(attachedTreeName.toHtmlEscaped())
-               .arg(PCx_Tree::getNumberOfNodes(attachedTreeId))
+               .arg(PCx_TreeManage::getNumberOfNodes(attachedTreeId))
                .arg(yearsString)
                .arg(creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped())
                .arg(finishedString);

@@ -12,6 +12,7 @@ public:
     ~PCx_TypeModel();
 
     QString idTypeToName(unsigned int id) const{return idToName[id];}
+    bool isTypeIdValid(unsigned int id) const{return idToName.contains(id);}
     int nameToIdType(const QString &typeName) const;
     const QStringList &getTypeNames() const {return listOfTypeNames;}
 

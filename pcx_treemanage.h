@@ -14,6 +14,9 @@ namespace PCx_TreeManage{
     QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
     bool treeNameExists(const QString &name);
     QString idTreeToName(unsigned int treeId);
+    unsigned int getNumberOfNodes(unsigned int treeId);
+    QList<unsigned int> getNodesId(unsigned int treeId);
+
 }
 
 
