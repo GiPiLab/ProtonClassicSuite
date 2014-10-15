@@ -17,7 +17,6 @@ include(QtXlsx/xlsx/qtxlsx.pri)
 
 SOURCES += main.cpp\
 	mainwindow.cpp \
-    pcx_typemodel.cpp \
     auditdatadelegate.cpp \
     utils.cpp \
     QCustomPlot/qcustomplot.cpp \
@@ -51,7 +50,6 @@ SOURCES += main.cpp\
     pcx_auditwithtreemodel.cpp
 
 HEADERS  += mainwindow.h \
-    pcx_typemodel.h \
     auditdatadelegate.h \
     utils.h \
     QCustomPlot/qcustomplot.h \

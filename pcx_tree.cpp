@@ -1,7 +1,6 @@
 #include "pcx_tree.h"
 #include "pcx_treemanage.h"
 #include "utils.h"
-#include "pcx_typemodel.h"
 #include "xlsxdocument.h"
 #include <QMessageBox>
 #include <QDateTime>
@@ -13,11 +12,9 @@
 #include <QFileInfo>
 
 
-PCx_Tree::PCx_Tree(unsigned int treeId, bool typesReadOnly)
+PCx_Tree::PCx_Tree(unsigned int treeId):treeId(treeId)
 {
-    types=new PCx_TypeModel(treeId,typesReadOnly);
-
-    if(loadFromDatabase(treeId)==false)
+    if(loadFromDatabase()==false)
     {
         qCritical()<<"Unable to load tree"<<treeId;
         die();
@@ -26,8 +23,6 @@ PCx_Tree::PCx_Tree(unsigned int treeId, bool typesReadOnly)
 
 PCx_Tree::~PCx_Tree()
 {
-    delete types;
-    types=nullptr;
 }
 
 
@@ -83,7 +78,7 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
         return false;
     }
 
-    if(!types->isTypeIdValid(newType))
+    if(!isTypeIdValid(newType))
     {
         qCritical()<<"Invalid type !";
         return false;
@@ -123,7 +118,7 @@ QStringList PCx_Tree::getListOfCompleteNodeNames() const
     }
     while(q.next())
     {
-        nodeNames.append(QString("%1 %2").arg(types->idTypeToName(q.value("type").toUInt())).arg(q.value("nom").toString()));
+        nodeNames.append(QString("%1 %2").arg(idTypeToName(q.value("type").toUInt())).arg(q.value("nom").toString()));
     }
     return nodeNames;
 }
@@ -427,7 +422,7 @@ bool PCx_Tree::nodeExists(const QString &name, unsigned int typeId) const
 
 int PCx_Tree::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName) const
 {
-    int typeId=types->nameToIdType(typeAndNodeName.first);
+    int typeId=nameToIdType(typeAndNodeName.first);
     if(typeId==-1)
         return -1;
     QSqlQuery q;
@@ -462,7 +457,7 @@ QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
     {
         if(node>1)
         {
-            QString typeName=types->idTypeToName(q.value("type").toUInt());
+            QString typeName=idTypeToName(q.value("type").toUInt());
             typeNameAndNodeName.first=typeName;
             typeNameAndNodeName.second=q.value("nom").toString();
         }
@@ -495,7 +490,7 @@ QString PCx_Tree::getNodeName(unsigned int node) const
     {
         if(node>1)
         {
-            QString typeName=types->idTypeToName(q.value("type").toUInt());
+            QString typeName=idTypeToName(q.value("type").toUInt());
             return QString("%1 %2").arg(typeName).arg(q.value("nom").toString());
         }
         //Root does not has type
@@ -622,7 +617,28 @@ bool PCx_Tree::toXLSX(const QString &fileName) const
     return xlsx.saveAs(fileName);
 }
 
-bool PCx_Tree::loadFromDatabase(unsigned int treeId)
+bool PCx_Tree::loadTypesFromDatabase()
+{
+    //Load types
+    idToName.clear();
+    listOfTypeNames.clear();
+    QSqlQuery query;
+    query.exec(QString("select * from types_%1").arg(treeId));
+    if(!query.isActive())
+    {
+        qCritical()<<query.lastError();
+        return false;
+    }
+
+    while(query.next())
+    {
+        idToName.insert(query.value(0).toUInt(),query.value(1).toString());
+        listOfTypeNames.append(query.value(1).toString());
+    }
+    return true;
+}
+
+bool PCx_Tree::loadFromDatabase()
 {
     Q_ASSERT(treeId>0);
 
@@ -647,5 +663,126 @@ bool PCx_Tree::loadFromDatabase(unsigned int treeId)
         qWarning()<<"Missing Tree";
         return false;
     }
+
+    if(!loadTypesFromDatabase())
+    {
+        return false;
+    }
+
     return true;
 }
+
+bool PCx_Tree::validateType(const QString &newType)
+{
+    qDebug()<<"Type to validate = "<<newType;
+    if(newType.isEmpty())
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Vous ne pouvez pas utiliser un type vide !"));
+        return false;
+    }
+    else if(listOfTypeNames.contains(newType))
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Le type <b>%1</b> existe déjà !").arg(newType));
+        return false;
+    }
+    return true;
+}
+
+int PCx_Tree::nameToIdType(const QString &typeName) const
+{
+    Q_ASSERT(!typeName.isNull() && !typeName.isEmpty());
+    QString typeNameSpl=typeName.simplified();
+    if(listOfTypeNames.contains(typeNameSpl))
+        return idToName.key(typeNameSpl);
+    else return -1;
+}
+
+QList<QPair<unsigned int, QString> > PCx_Tree::getAllTypes() const
+{
+    QList<QPair<unsigned int,QString> > types;
+    QSqlQuery query(QString("select * from types_%1").arg(treeId));
+    if(!query.isActive())
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    while(query.next())
+    {
+        QPair<unsigned int,QString> p;
+        p.first=query.value(0).toUInt();
+        p.second=query.value(1).toString();
+        types.append(p);
+    }
+    return types;
+}
+
+unsigned int PCx_Tree::addType(const QString &typeName)
+{
+    unsigned int typeId=0;
+
+    if(validateType(typeName)==false)
+        return 0;
+
+    else
+    {
+        QSqlQuery q;
+        q.prepare(QString("insert into types_%1 (nom) values(:nom)").arg(treeId));
+        q.bindValue(":nom",typeName);
+        q.exec();
+        if(q.numRowsAffected()!=1)
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
+
+        typeId=q.lastInsertId().toUInt();
+        Q_ASSERT(typeId>0);
+
+        idToName.insert(typeId,typeName);
+        listOfTypeNames.append(typeName);
+    }
+    return typeId;
+}
+
+bool PCx_Tree::deleteType(unsigned int typeId)
+{
+    Q_ASSERT(typeId>0);
+
+    QSqlQuery query;
+
+    query.prepare(QString("select count(*) from arbre_%1 where type=:type").arg(treeId));
+    query.bindValue(":type",typeId);
+    query.exec();
+
+    if(!query.isActive())
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    if(query.next())
+    {
+        qDebug()<<"Number of nodes of type "<<typeId<<" = "<<query.value(0).toInt();
+        if(query.value(0).toInt()>0)
+        {
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord."));
+            return false;
+        }
+
+    }
+    else return false;
+
+    query.prepare(QString("delete from types_%1 where id=:id").arg(treeId));
+    query.bindValue(":id",typeId);
+    query.exec();
+
+    if(query.numRowsAffected()!=1)
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+    loadTypesFromDatabase();
+    return true;
+}
+

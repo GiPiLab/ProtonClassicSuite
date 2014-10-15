@@ -107,7 +107,7 @@ QString PCx_QueryVariation::getDescription() const
     if(typeId==PCx_Query::ALLTYPES)
         out=QObject::tr("Tous les noeuds");
     else
-        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->getTypes()->idTypeToName(typeId).toHtmlEscaped());
+        out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
             .arg(PCx_AuditManage::OREDtoCompleteString(ored).toHtmlEscaped())

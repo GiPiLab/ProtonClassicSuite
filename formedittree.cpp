@@ -43,7 +43,7 @@ void FormEditTree::on_addTypeButton_clicked()
 
         if(ok)
         {
-            model->getTypes()->addType(text);
+            model->addType(text);
         }
     }
 }
@@ -104,7 +104,7 @@ void FormEditTree::on_deleteTreeButton_clicked()
         if(result==1)
         {
             ui->listTypesView->setModel(nullptr);
-            model->getTypes()->getTableModel()->clear();
+            model->getTypesTableModel()->clear();
             model->clear();
             delete model;
             model=nullptr;
@@ -166,7 +166,7 @@ void FormEditTree::on_deleteTypeButton_clicked()
         //qDebug()<<"Selected index = "<<index;
         if(index.row()>-1)
         {
-            model->getTypes()->deleteType(model->getTypes()->getTableModel()->record(index.row()).field("id").value().toInt());
+            model->deleteType(model->getTypesTableModel()->record(index.row()).field("id").value().toInt());
         }
     }
 }
@@ -188,7 +188,7 @@ void FormEditTree::on_addNodeButton_clicked()
             return;
         }
 
-        unsigned int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toUInt();
+        unsigned int selectedTypeId=model->getTypesTableModel()->record(indexType.row()).field("id").value().toUInt();
 
         //qDebug()<<"Selected type ID : "<<selectedTypeId;
 
@@ -239,7 +239,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
             return;
         }
 
-        unsigned int selectedTypeId=model->getTypes()->getTableModel()->record(indexType.row()).field("id").value().toUInt();
+        unsigned int selectedTypeId=model->getTypesTableModel()->record(indexType.row()).field("id").value().toUInt();
 
         bool ok;
         QString text;
@@ -329,7 +329,7 @@ void FormEditTree::on_comboBox_activated(int index)
     }
 
     //Read-write types
-    model=new PCx_TreeModel(ui->comboBox->currentData().toUInt(),false);
+    model=new PCx_TreeModel(ui->comboBox->currentData().toUInt());
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(model);
@@ -338,11 +338,11 @@ void FormEditTree::on_comboBox_activated(int index)
 
     m=ui->listTypesView->selectionModel();
     Q_ASSERT(model->getTypes()->getTableModel()!=nullptr);
-    ui->listTypesView->setModel(model->getTypes()->getTableModel());
+    ui->listTypesView->setModel(model->getTypesTableModel());
     ui->listTypesView->setModelColumn(1);
     delete m;
 
-    connect(model->getTypes(),SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
+    connect(model,SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
     setReadOnly(model->isFinished());
 }
 

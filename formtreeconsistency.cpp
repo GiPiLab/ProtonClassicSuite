@@ -11,7 +11,7 @@ FormTreeConsistency::FormTreeConsistency(unsigned int treeId,QWidget *parent) :
 {
     ui->setupUi(this);
 
-    tree=new PCx_Tree(treeId,true);
+    tree=new PCx_Tree(treeId);
     QDateTime dt=QDateTime::currentDateTime();
     ui->label->setText(tr("Arbre %1 le %2 à %3").arg(tree->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
 
@@ -59,7 +59,7 @@ void FormTreeConsistency::populateTableInfos()
 {
     ui->tableWidget->item(0,1)->setText(QString::number(tree->getNumberOfNodes()));
 
-    QList<QPair<unsigned int,QString> > listOfTypes=tree->getTypes()->getAllTypes();
+    QList<QPair<unsigned int,QString> > listOfTypes=tree->getAllTypes();
     QPair<unsigned int,QString> type;
     int row=ui->tableWidget->rowCount();
 

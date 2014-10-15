@@ -1,10 +1,10 @@
 #ifndef PCX_TREE_H
 #define PCX_TREE_H
 
-#include "pcx_typemodel.h"
 
-#include <QList>
-#include <QString>
+#include <QStringList>
+#include <QPair>
+#include <QHash>
 
 
 /**
@@ -12,7 +12,7 @@
  *
  * This class provides methods to deal with a tree stored in the database.
  * The table is ARBRE_[treeId]. Each node in a tree has a name and a
- * type identifier. The type identifier has a name which is obtained through PCx_TypeModel methods
+ * type identifier.
  */
 class PCx_Tree
 {
@@ -28,9 +28,9 @@ public:
     /**
      * @brief PCx_Tree is a Tree
      * @param treeId the identifier of the tree in the database
-     * @param typesReadOnly if true PCx_TypeModel is constructed read-only
      */
-    explicit PCx_Tree(unsigned int treeId, bool typesReadOnly=true);
+    explicit PCx_Tree(unsigned int treeId);
+
     virtual ~PCx_Tree();
 
 
@@ -58,15 +58,6 @@ public:
      */
     const QString & getCreationTime() const{return creationTime;}
 
-    /**
-     * @brief getTypes returns the type model
-     *
-     * Returns the type model associated with the tree. Each node of the tree as a type ID
-     * which refers to this type model.
-     *
-     * @return the PCx_TypeModel associated with the tree
-     */
-    PCx_TypeModel* getTypes() const {return types;}
 
     /**
      * @brief PCx_Tree::addNode inserts a node in the tree
@@ -268,23 +259,44 @@ public:
      */
     bool toXLSX(const QString &fileName) const;
 
+
+
+
+
+
+
+    const QStringList &getTypeNames() const {return listOfTypeNames;}
+    QString idTypeToName(unsigned int id) const{return idToName[id];}
+    bool isTypeIdValid(unsigned int id) const{return idToName.contains(id);}
+    QList<QPair<unsigned int,QString> > getAllTypes() const;
+
+    int nameToIdType(const QString &typeName) const;
+    virtual unsigned int addType(const QString &typeName);
+    virtual bool deleteType(unsigned int typeId);
+
+
+
+
+
 protected:
-    /**
-     * @brief types a pointer to the types attached with this tree, used to bind type identifier to their names
-     */
-    PCx_TypeModel *types;
 
     unsigned int treeId;
     bool finished;
     QString treeName;
     QString creationTime;
 
+    QStringList listOfTypeNames;
+    QHash<unsigned int,QString> idToName;
+
+
+    bool validateType(const QString &newType);
+
+
     /**
      * @brief loadFromDatabase initializes the tree from the database
-     * @param treeId the tree identifier
      * @return true on success, false if the tree does not exists
      */
-    bool loadFromDatabase(unsigned int treeId);
+    bool loadFromDatabase();
 
     /**
      * @brief updateNodePid change the parent identifier of a node. Used for D&D
@@ -292,6 +304,7 @@ protected:
      * @param newPid the new parent identifier
      */
     void updateNodePid(unsigned int nodeId, unsigned int newPid);
+    bool loadTypesFromDatabase();
 };
 
 #endif // PCX_TREE_H

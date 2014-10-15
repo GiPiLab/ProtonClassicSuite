@@ -6,15 +6,19 @@
 #include <QSqlError>
 
 
-PCx_TreeModel::PCx_TreeModel(unsigned int treeId, bool readOnlyTypes, QObject *parent) :
-    QStandardItemModel(parent),PCx_Tree(treeId,readOnlyTypes)
+PCx_TreeModel::PCx_TreeModel(unsigned int treeId, QObject *parent) :
+    QStandardItemModel(parent),PCx_Tree(treeId)
 {
     updateTree();
+    typesTableModel=new QSqlTableModel();
+    loadTypesTableModel();
 }
 
 PCx_TreeModel::~PCx_TreeModel()
 {
     clear();
+    typesTableModel->clear();
+    delete typesTableModel;
 }
 
 unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int typeId, const QString &name, const QModelIndex &pidNodeIndex)
@@ -24,7 +28,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int pid, unsigned int typeId, const
     if(pidNodeIndex.isValid() && newId>0)
     {
         QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(types->idTypeToName(typeId),name,typeId,newId);
+        QStandardItem *newitem=createItem(idTypeToName(typeId),name,typeId,newId);
         pidItem->appendRow(newitem);
     }
     return newId;
@@ -93,7 +97,7 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     {
         unsigned int typeId=query.value(3).toUInt();
         unsigned int nodeId=query.value(0).toUInt();
-        QStandardItem *newitem=createItem(types->idTypeToName(typeId),query.value(1).toString(),typeId,nodeId);
+        QStandardItem *newitem=createItem(idTypeToName(typeId),query.value(1).toString(),typeId,nodeId);
 
         item->appendRow(newitem);
         createChildrenItems(newitem,nodeId);
@@ -126,7 +130,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
         return false;
 
     QStandardItem *item=this->itemFromIndex(nodeIndex);
-    item->setText(QString("%1 %2").arg(types->idTypeToName(newType)).arg(newName));
+    item->setText(QString("%1 %2").arg(idTypeToName(newType)).arg(newName));
     item->setData(newType,Qt::UserRole+2);
 
     return true;
@@ -143,4 +147,55 @@ bool PCx_TreeModel::deleteNode(const QModelIndex &nodeIndex)
 QModelIndexList PCx_TreeModel::getIndexesOfNodesWithThisType(unsigned int typeId) const
 {
     return match(index(0,0),Qt::UserRole+2,QVariant(typeId),-1,Qt::MatchRecursive);
+}
+
+unsigned int PCx_TreeModel::addType(const QString &typeName)
+{
+    unsigned int typeId=PCx_Tree::addType(typeName);
+    typesTableModel->select();
+    return typeId;
+}
+
+bool PCx_TreeModel::deleteType(unsigned int typeId)
+{
+    bool res=PCx_Tree::deleteType(typeId);
+    typesTableModel->select();
+    return res;
+}
+
+bool PCx_TreeModel::loadTypesTableModel()
+{
+    typesTableModel->setTable(QString("types_%1").arg(treeId));
+    typesTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    typesTableModel->select();
+    connect(typesTableModel,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onTypesModelDataChanged(const QModelIndex &, const QModelIndex &)));
+    return true;
+}
+
+/*Check if the new type does not already exists in the table
+ * Assumes that only one row is modified at once
+ */
+bool PCx_TreeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
+{
+    Q_UNUSED(bottomRight);
+
+    QString newType=topLeft.data().toString();
+    if(validateType(newType)==false)
+    {
+        //In order to prevent reentrant "datachanged" signal with revertAll
+        bool oldState=typesTableModel->blockSignals(true);
+        typesTableModel->revertAll();
+        typesTableModel->blockSignals(oldState);
+        return false;
+    }
+
+    else
+    {
+        //NOTE : simplify string
+        typesTableModel->setData(topLeft,newType.simplified());
+        typesTableModel->submitAll();
+        loadTypesFromDatabase();
+        emit typesUpdated();
+        return true;
+    }
 }

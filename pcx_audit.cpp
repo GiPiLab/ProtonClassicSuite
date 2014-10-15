@@ -419,7 +419,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
     out.append("\n<br><table cellpadding='5' border='1' align='center'>\n"
                        "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>");
 
-    PCx_Tree tree(attachedTreeId,true);
+    PCx_Tree tree(attachedTreeId);
 
 
     QList<QList<unsigned int> * > listOfListOfNodes;
