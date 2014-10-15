@@ -11,8 +11,16 @@
  * @brief The PCx_Tree class represents an existing tree in the database
  *
  * This class provides methods to deal with a tree stored in the database.
- * The table is ARBRE_[treeId]. Each node in a tree has a name and a
- * type identifier.
+ * The table is "arbre_[treeId]".
+ *
+ * Each tree has a name, a creation time and is finished or not. A finished tree
+ * cannot be modified in the user interface. Only a finished tree is allowed to build an audit.
+ *
+ * Each node in a tree has a name, an unsigned identifier, a parent identifier and a type identifier.
+ * The type identifier is a mapping between an unsigned int and a string stored in table "types_[treeId]".
+ * Duplicates are not allowed (same name and same type identifier)
+ *
+ *
  */
 class PCx_Tree
 {
@@ -31,8 +39,7 @@ public:
      */
     explicit PCx_Tree(unsigned int treeId);
 
-    virtual ~PCx_Tree();
-
+    virtual ~PCx_Tree(){}
 
     /**
      * @brief getTreeId gets the identifier of the tree in the database
@@ -236,7 +243,6 @@ public:
     int getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAndNodeName ) const;
 
 
-
     /**
      * @brief toDot draws a tree in DOT format suitable for GraphViz
      * @return the tree in DOT format
@@ -261,17 +267,51 @@ public:
 
 
 
-
-
-
-
+    /**
+     * @brief getTypeNames returns the list of all types in this tree
+     * @return all type names that can be used in this tree.
+     */
     const QStringList &getTypeNames() const {return listOfTypeNames;}
-    QString idTypeToName(unsigned int id) const{return idToName[id];}
-    bool isTypeIdValid(unsigned int id) const{return idToName.contains(id);}
+
+    /**
+     * @brief idTypeToName gets the type name that corresponds to this identifier
+     * @param id the type identifier
+     * @return the type name, or an empty QString if the type identifier does not exists in the DB
+     */
+    QString idTypeToName(unsigned int id) const{if(!isTypeIdValid(id))return QString();else return idTypesToNames[id];}
+
+    /**
+     * @brief isTypeIdValid checks if the type identifier exists in the database
+     * @param id the type identifier
+     * @return true if the type identifier exists, false otherwise
+     */
+    bool isTypeIdValid(unsigned int id) const{return idTypesToNames.contains(id);}
+
+    /**
+     * @brief getAllTypes gets a list of all the types name and identifier
+     * @return a list of QPair<typeId,typeName>
+     */
     QList<QPair<unsigned int,QString> > getAllTypes() const;
 
+    /**
+     * @brief nameToIdType gets the type identifier for the specified type name
+     * @param typeName the type to find, will be simplified with QString::simplified()
+     * @return the type identifier, -1 if it cannot be found
+     */
     int nameToIdType(const QString &typeName) const;
+
+    /**
+     * @brief addType adds a new type in the database
+     * @param typeName the type to add
+     * @return the new type identifier, 0 on error (duplicate or empty type), with a warning displayed
+     */
     virtual unsigned int addType(const QString &typeName);
+
+    /**
+     * @brief deleteType removes a type from the database
+     * @param typeId the type identifier to remove
+     * @return true on success, false if the type does not exists, or if it is used by nodes in the tree
+     */
     virtual bool deleteType(unsigned int typeId);
 
 
@@ -280,23 +320,40 @@ public:
 
 protected:
 
+    /**
+     * @brief treeId the tree identifier in the database, the table is "arbre_treeId"
+     */
     unsigned int treeId;
+
+    /**
+     * @brief finished is the tree finished ? A finished tree must be read-only in the UI
+     */
     bool finished;
+
+    /**
+     * @brief treeName the name of the tree
+     */
     QString treeName;
+
+    /**
+     * @brief creationTime the SQL timestamp of the creation time of the tree
+     */
     QString creationTime;
 
-    QStringList listOfTypeNames;
-    QHash<unsigned int,QString> idToName;
-
-
-    bool validateType(const QString &newType);
 
 
     /**
-     * @brief loadFromDatabase initializes the tree from the database
+     * @brief validateType checks if a type with this name can be added in the database
+     * @param newType the type name to check
+     * @return true if the type name can be added, false if it already exists or is blank. A warning is displayed in the UI.
+     */
+    bool validateType(const QString &newType);
+
+    /**
+     * @brief initTreeFromDb initializes the tree from the database
      * @return true on success, false if the tree does not exists
      */
-    bool loadFromDatabase();
+    bool initTreeFromDb();
 
     /**
      * @brief updateNodePid change the parent identifier of a node. Used for D&D
@@ -304,7 +361,23 @@ protected:
      * @param newPid the new parent identifier
      */
     void updateNodePid(unsigned int nodeId, unsigned int newPid);
-    bool loadTypesFromDatabase();
+
+
+    /**
+     * @brief listOfTypeNames the list of all type names that can be used in this tree
+     */
+    QStringList listOfTypeNames;
+
+    /**
+     * @brief idTypeToName a mapping between type identifier and type name
+     */
+    QHash<unsigned int,QString> idTypesToNames;
+
+    /**
+     * @brief initTypesFromDb initializes idTypeToName of listOfTypeNames from the database
+     * @return true on success, false on DB error
+     */
+    bool initTypesFromDb();
 };
 
 #endif // PCX_TREE_H

@@ -14,17 +14,12 @@
 
 PCx_Tree::PCx_Tree(unsigned int treeId):treeId(treeId)
 {
-    if(loadFromDatabase()==false)
+    if(initTreeFromDb()==false)
     {
         qCritical()<<"Unable to load tree"<<treeId;
         die();
     }
 }
-
-PCx_Tree::~PCx_Tree()
-{
-}
-
 
 unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QString &name)
 {
@@ -617,10 +612,10 @@ bool PCx_Tree::toXLSX(const QString &fileName) const
     return xlsx.saveAs(fileName);
 }
 
-bool PCx_Tree::loadTypesFromDatabase()
+bool PCx_Tree::initTypesFromDb()
 {
     //Load types
-    idToName.clear();
+    idTypesToNames.clear();
     listOfTypeNames.clear();
     QSqlQuery query;
     query.exec(QString("select * from types_%1").arg(treeId));
@@ -632,13 +627,13 @@ bool PCx_Tree::loadTypesFromDatabase()
 
     while(query.next())
     {
-        idToName.insert(query.value(0).toUInt(),query.value(1).toString());
+        idTypesToNames.insert(query.value(0).toUInt(),query.value(1).toString());
         listOfTypeNames.append(query.value(1).toString());
     }
     return true;
 }
 
-bool PCx_Tree::loadFromDatabase()
+bool PCx_Tree::initTreeFromDb()
 {
     Q_ASSERT(treeId>0);
 
@@ -664,7 +659,7 @@ bool PCx_Tree::loadFromDatabase()
         return false;
     }
 
-    if(!loadTypesFromDatabase())
+    if(!initTypesFromDb())
     {
         return false;
     }
@@ -693,7 +688,7 @@ int PCx_Tree::nameToIdType(const QString &typeName) const
     Q_ASSERT(!typeName.isNull() && !typeName.isEmpty());
     QString typeNameSpl=typeName.simplified();
     if(listOfTypeNames.contains(typeNameSpl))
-        return idToName.key(typeNameSpl);
+        return idTypesToNames.key(typeNameSpl);
     else return -1;
 }
 
@@ -739,7 +734,7 @@ unsigned int PCx_Tree::addType(const QString &typeName)
         typeId=q.lastInsertId().toUInt();
         Q_ASSERT(typeId>0);
 
-        idToName.insert(typeId,typeName);
+        idTypesToNames.insert(typeId,typeName);
         listOfTypeNames.append(typeName);
     }
     return typeId;
@@ -782,7 +777,7 @@ bool PCx_Tree::deleteType(unsigned int typeId)
         qCritical()<<query.lastError();
         die();
     }
-    loadTypesFromDatabase();
+    initTypesFromDb();
     return true;
 }
 
