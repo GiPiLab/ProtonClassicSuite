@@ -137,7 +137,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
         ui->finishAuditButton->setEnabled(true);
         ui->unFinishAuditButton->setEnabled(false);
     }
-    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(audit.getAttachedTreeName()).arg(PCx_TreeManage::getNumberOfNodes(audit.getAttachedTreeId())));
+    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(audit.getAttachedTreeName()).arg(audit.getAttachedTree()->getNumberOfNodes()));
     ui->labelYears->setText(audit.getYearsString());
     ui->labelName->setText(audit.getAuditName());
 }

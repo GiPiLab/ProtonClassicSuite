@@ -17,16 +17,15 @@
 PCx_Audit::PCx_Audit(unsigned int auditId) :
     auditId(auditId)
 {
-    attachedTree=nullptr;
-
     Q_ASSERT(auditId>0);
+
     this->auditId=auditId;
     QSqlQuery q(QString("select * from index_audits where id='%1'").arg(auditId));
     if(q.next())
     {
         auditName=q.value("nom").toString();
         attachedTreeId=q.value("id_arbre").toUInt();
-        attachedTreeName=PCx_TreeManage::idTreeToName(attachedTreeId);
+
         yearsString=q.value("annees").toString();
         QStringList yearsSplitted=yearsString.split(',');
 
@@ -63,6 +62,8 @@ PCx_Audit::PCx_Audit(unsigned int auditId) :
         die();
     }
     attachedTree=new PCx_Tree(attachedTreeId);
+    attachedTreeName=attachedTree->getName();
+
 }
 
 PCx_Audit::~PCx_Audit()
@@ -410,7 +411,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
                        "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
                        "</table>\n")
                .arg(attachedTreeName.toHtmlEscaped())
-               .arg(PCx_TreeManage::getNumberOfNodes(attachedTreeId))
+               .arg(attachedTree->getNumberOfNodes())
                .arg(yearsString)
                .arg(creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped())
                .arg(finishedString);

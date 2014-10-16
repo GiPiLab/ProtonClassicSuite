@@ -269,22 +269,6 @@ bool treeNameExists(const QString &name)
     return false;
 }
 
-QString idTreeToName(unsigned int treeId)
-{
-    Q_ASSERT(treeId>0);
-    QSqlQuery q(QString("select nom from index_arbres where id='%1'").arg(treeId));
-    if(q.next())
-    {
-        return q.value(0).toString();
-    }
-    else
-    {
-        qWarning()<<"Inexistant tree !";
-        return nullptr;
-    }
-}
-
-//Returns 0 if the tree is linked to an audit, -1 for a non-existant tree (should not happens) and 1 on success
 int deleteTree(unsigned int treeId)
 {
     Q_ASSERT(treeId>0);
@@ -354,20 +338,7 @@ int deleteTree(unsigned int treeId)
 }
 
 
-/**
- * @brief importTreeFromXLSX import a tree from an XLSX file
- * The file must contain node description in four column :
- * COL1 is the name of the type, COL2 is the name of the node
- * COL3 is the name of the type for the parent of the node
- * COL4 is the name of the parent of the node.
- * If both COL3 and COL4 are empty, the node described in COL1 and COL2 is a first level node
- *
- * Check for duplicates, orphan nodes, multiple ancestors and empty root and print a warning. Stop after the first warning
- *
- * @param fileName the name of the file to import
- * @param treeName the name of the newly imported tree
- * @return the identifier of the newly created tree, or -1 in case of error
- */
+
 int importTreeFromXLSX(const QString &fileName, const QString &treeName)
 {
     Q_ASSERT(!fileName.isEmpty() && !treeName.isEmpty());
@@ -604,32 +575,5 @@ int importTreeFromXLSX(const QString &fileName, const QString &treeName)
     QSqlDatabase::database().commit();
     return treeId;
    }
-
-unsigned int getNumberOfNodes(unsigned int treeId)
-{
-    QSqlQuery q(QString("select count(*) from arbre_%1").arg(treeId));
-    if(!q.next())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    return q.value(0).toUInt();
-}
-
-QList<unsigned int> getNodesId(unsigned int treeId)
-{
-    Q_ASSERT(treeId>0);
-    QSqlQuery q;
-    QList<unsigned int> nodeIds;
-    q.exec(QString("select id from arbre_%1").arg(treeId));
-    while(q.next())
-    {
-        nodeIds.append(q.value(0).toUInt());
-    }
-    return nodeIds;
-}
-
-
-
 }
 

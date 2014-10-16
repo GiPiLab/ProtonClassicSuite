@@ -131,7 +131,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
 
 void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
 {
-    unsigned int selectedNode=index.data(Qt::UserRole+1).toUInt();
+    unsigned int selectedNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
     Q_ASSERT(selectedNode>0);
 
     auditModel->getTableModelDF()->setFilter(QString("id_node=%1").arg(selectedNode));

@@ -74,7 +74,7 @@ void FormTablesGraphics::updateTextBrowser()
         return;
     }
 
-    unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
+    unsigned int selectedNode=ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
     getSelections();
     QScrollBar *sb=ui->textEdit->verticalScrollBar();
@@ -298,7 +298,7 @@ void FormTablesGraphics::on_saveButton_clicked()
         }
     }
 
-    unsigned int node=ui->treeView->selectionModel()->currentIndex().data(Qt::UserRole+1).toUInt();
+    unsigned int node=ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
     getSelections();
 
     int maximumProgressValue=selectedGraphics.count();

@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QPair>
 #include <QHash>
+#include <QDebug>
 
 
 /**
@@ -265,8 +266,6 @@ public:
      */
     bool toXLSX(const QString &fileName) const;
 
-
-
     /**
      * @brief getTypeNames returns the list of all types in this tree
      * @return all type names that can be used in this tree.
@@ -278,7 +277,7 @@ public:
      * @param id the type identifier
      * @return the type name, or an empty QString if the type identifier does not exists in the DB
      */
-    QString idTypeToName(unsigned int id) const{if(!isTypeIdValid(id))return QString();else return idTypesToNames[id];}
+    QString idTypeToName(unsigned int id) const{if(!isTypeIdValid(id)){qDebug()<<"Missing type";return QString();}else return idTypesToNames[id];}
 
     /**
      * @brief isTypeIdValid checks if the type identifier exists in the database
@@ -314,10 +313,6 @@ public:
      */
     virtual bool deleteType(unsigned int typeId);
 
-
-
-
-
 protected:
 
     /**
@@ -339,8 +334,6 @@ protected:
      * @brief creationTime the SQL timestamp of the creation time of the tree
      */
     QString creationTime;
-
-
 
     /**
      * @brief validateType checks if a type with this name can be added in the database

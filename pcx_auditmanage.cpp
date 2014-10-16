@@ -132,7 +132,8 @@ unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigne
 
     //Populate tables with years for each node of the attached tree
 
-    QList<unsigned int> nodes=PCx_TreeManage::getNodesId(attachedTreeId);
+    PCx_Tree tree(attachedTreeId);
+    QList<unsigned int> nodes=tree.getNodesId();
     //qDebug()<<"Nodes ids = "<<nodes;
 
     foreach(unsigned int node,nodes)

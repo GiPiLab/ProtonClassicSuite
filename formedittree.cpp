@@ -178,9 +178,6 @@ void FormEditTree::on_addNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
-        unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
-        //qDebug()<<"Selected node ID : "<<selectedId;
-
         QModelIndex indexType=ui->listTypesView->currentIndex();
         if(indexType.row()<0)
         {
@@ -203,7 +200,7 @@ void FormEditTree::on_addNodeButton_clicked()
 
         if(ok)
         {
-            model->addNode(selectedId,selectedTypeId,text,selection[0]);
+            model->addNode(selectedTypeId,text,selection[0]);
         }
 
     }
@@ -222,7 +219,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
-        unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
+        unsigned int selectedId=selection[0].data(PCx_TreeModel::NodeIdUserRole).toUInt();
         //qDebug()<<"Selected Node ID : "<<selectedId;
 
         //No modification for the root
@@ -272,7 +269,7 @@ void FormEditTree::on_deleteNodeButton_clicked()
     if(!selection.isEmpty())
     {
         //Assume only single selection
-        unsigned int selectedId=selection[0].data(Qt::UserRole+1).toUInt();
+        unsigned int selectedId=selection[0].data(PCx_TreeModel::NodeIdUserRole).toUInt();
         //qDebug()<<"Selected Node ID : "<<selectedId;
 
         //No modification for the root

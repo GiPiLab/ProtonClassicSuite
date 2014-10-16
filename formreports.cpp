@@ -30,52 +30,52 @@ void FormReports::populateLists()
 {
     QListWidgetItem *item;
     item=new QListWidgetItem(tr("Récapitulatif"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T1);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T1);
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T2);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T2);
     item=new QListWidgetItem(tr("Évolution du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T2BIS);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T2BIS);
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T3);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T3);
     item=new QListWidgetItem(tr("Évolution du compte administratif de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T3BIS);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T3BIS);
     item=new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T4);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T4);
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T5);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T5);
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T6);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T6);
     item=new QListWidgetItem(tr("Transcription en \"jours/activité\" de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T7);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T7);
     item=new QListWidgetItem(tr("Moyennes budgétaires de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T8);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T8);
     item=new QListWidgetItem(tr("Equivalences moyennes en \"jours activité\" de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T9);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T9);
     item=new QListWidgetItem(tr("Résultats de fonctionnement de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T10);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T10);
     item=new QListWidgetItem(tr("Résultats d'investissement de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T11);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T11);
     item=new QListWidgetItem(tr("Résultats budgétaire de [...]"),ui->listTables);
-    item->setData(Qt::UserRole+1,PCx_Tables::T12);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T12);
 
     item=new QListWidgetItem(tr("Évolution comparée du prévu de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G1);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G1);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du prévu de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G2);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G2);
     item=new QListWidgetItem(tr("Évolution comparée du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G3);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G3);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G4);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G4);
     item=new QListWidgetItem(tr("Évolution comparée de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G5);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G5);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G6);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G6);
     item=new QListWidgetItem(tr("Évolution comparée du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G7);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G7);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G8);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
-    item->setData(Qt::UserRole+1,PCx_Graphics::G9);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G9);
 }
 
 void FormReports::onListOfAuditsChanged()
@@ -148,7 +148,7 @@ void FormReports::on_saveButton_clicked()
     QList<unsigned int> selectedNodes;
     foreach(const QModelIndex &idx,selIndexes)
     {
-        selectedNodes.append(idx.data(Qt::UserRole+1).toUInt());
+        selectedNodes.append(idx.data(PCx_TreeModel::NodeIdUserRole).toUInt());
     }
 
     //qDebug()<<"Selected nodes : "<<selectedNodes;
@@ -173,14 +173,14 @@ void FormReports::on_saveButton_clicked()
 
     foreach(QListWidgetItem *item, selectedItemsTables)
     {
-      //  qDebug()<<"Selecting table "<<item->data(Qt::UserRole+1).toUInt();
-        selectedTables.append((PCx_Tables::TABLES)item->data(Qt::UserRole+1).toUInt());
+      //  qDebug()<<"Selecting table "<<item->data(PCx_TreeModel::NodeIdUserRole).toUInt();
+        selectedTables.append((PCx_Tables::TABLES)item->data(PCx_TreeModel::NodeIdUserRole).toUInt());
     }
 
     foreach(QListWidgetItem *item, selectedItemsGraphics)
     {
-      //  qDebug()<<"Selecting graphic "<<item->data(Qt::UserRole+1).toUInt();
-        selectedGraphics.append((PCx_Graphics::GRAPHICS)item->data(Qt::UserRole+1).toUInt());
+      //  qDebug()<<"Selecting graphic "<<item->data(PCx_TreeModel::NodeIdUserRole).toUInt();
+        selectedGraphics.append((PCx_Graphics::GRAPHICS)item->data(PCx_TreeModel::NodeIdUserRole).toUInt());
     }
 
     if(selectedTables.isEmpty() && selectedGraphics.isEmpty())

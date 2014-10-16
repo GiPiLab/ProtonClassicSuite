@@ -94,14 +94,6 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
     return true;
 }
 
-
-
-QList<unsigned int> PCx_Tree::getNodesId() const
-{
-    return PCx_TreeManage::getNodesId(this->treeId);
-}
-
-
 QStringList PCx_Tree::getListOfCompleteNodeNames() const
 {
     QStringList nodeNames;
@@ -134,12 +126,6 @@ QStringList PCx_Tree::getListOfNodeNames() const
     }
     return nodeNames;
 }
-
-unsigned int PCx_Tree::getNumberOfNodes() const
-{
-    return PCx_TreeManage::getNumberOfNodes(treeId);
-}
-
 
 QList<unsigned int> PCx_Tree::getLeavesId() const
 {
@@ -614,7 +600,6 @@ bool PCx_Tree::toXLSX(const QString &fileName) const
 
 bool PCx_Tree::initTypesFromDb()
 {
-    //Load types
     idTypesToNames.clear();
     listOfTypeNames.clear();
     QSqlQuery query;
@@ -627,8 +612,9 @@ bool PCx_Tree::initTypesFromDb()
 
     while(query.next())
     {
-        idTypesToNames.insert(query.value(0).toUInt(),query.value(1).toString());
-        listOfTypeNames.append(query.value(1).toString());
+        QString typeName=query.value(1).toString();
+        idTypesToNames.insert(query.value(0).toUInt(),typeName);
+        listOfTypeNames.append(typeName);
     }
     return true;
 }
@@ -779,5 +765,29 @@ bool PCx_Tree::deleteType(unsigned int typeId)
     }
     initTypesFromDb();
     return true;
+}
+
+unsigned int PCx_Tree::getNumberOfNodes() const
+{
+    QSqlQuery q(QString("select count(*) from arbre_%1").arg(treeId));
+    if(!q.next())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    return q.value(0).toUInt();
+}
+
+QList<unsigned int> PCx_Tree::getNodesId() const
+{
+    Q_ASSERT(treeId>0);
+    QSqlQuery q;
+    QList<unsigned int> nodeIds;
+    q.exec(QString("select id from arbre_%1").arg(treeId));
+    while(q.next())
+    {
+        nodeIds.append(q.value(0).toUInt());
+    }
+    return nodeIds;
 }
 
