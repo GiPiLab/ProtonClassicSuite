@@ -313,6 +313,15 @@ public:
      */
     virtual bool deleteType(unsigned int typeId);
 
+
+    /**
+     * @brief duplicateTree duplicates a tree
+     * @param newName the name of the new tree
+     * @return the identifier of the new tree, -1 on error or if the tree name exists
+     */
+    int duplicateTree(const QString &newName);
+
+
 protected:
 
     /**

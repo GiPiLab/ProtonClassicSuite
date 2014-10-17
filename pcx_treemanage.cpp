@@ -21,54 +21,6 @@ QStringList getListOfDefaultTypes()
     return listOfTypes;
 }
 
-int duplicateTree(unsigned int treeId, const QString &newName)
-{
-    Q_ASSERT(!newName.isEmpty());
-    QSqlQuery q;
-    q.prepare("select count(*) from index_arbres where nom=:name");
-    q.bindValue(":name",newName);
-    q.exec();
-
-    if(q.next())
-    {
-        if(q.value(0).toInt()>0)
-        {
-            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-            return -1;
-        }
-    }
-    else
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    QSqlDatabase::database().transaction();
-    int newTreeId=addTree(newName,false,false);
-    if(newTreeId<=0)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
-
-    q.exec(QString("insert into types_%1 select * from types_%2").arg(newTreeId).arg(treeId));
-    if(q.numRowsAffected()<=0)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    q.exec(QString("insert into arbre_%1 select * from arbre_%2").arg(newTreeId).arg(treeId));
-    if(q.numRowsAffected()<=0)
-    {
-        QSqlDatabase::database().rollback();
-        qCritical()<<q.lastError();
-        die();
-    }
-    QSqlDatabase::database().commit();
-    return newTreeId;
-}
 
 
 

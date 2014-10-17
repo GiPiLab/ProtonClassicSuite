@@ -9,7 +9,8 @@ FormAuditInfos::FormAuditInfos(unsigned int auditId,QWidget *parent) :
 {
     infos=new PCx_Audit(auditId);
     ui->setupUi(this);
-    QString out=PCx_Report::generateHTMLHeader(auditId);
+    QString out=infos->generateHTMLHeader();
+    out.append(infos->generateHTMLAuditTitle());
 
     out.append(infos->getHTMLAuditStatistics());
     out.append("</body></html>");
@@ -49,7 +50,8 @@ void FormAuditInfos::on_pushButton_clicked()
 
     QSettings settings;
 
-    QString output=PCx_Report::generateHTMLHeader(auditId);
+    QString output=infos->generateHTMLHeader();
+    output.append(infos->generateHTMLAuditTitle());
     output.append(infos->getHTMLAuditStatistics());
     output.append("</body></html>");
 

@@ -170,18 +170,18 @@ void FormEditAudit::on_randomDataButton_clicked()
     QList<unsigned int> leaves=auditModel->getAttachedTree()->getLeavesId();
     QList<unsigned int> years=auditModel->getYears();
 
-    PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;
+    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_AuditManage::DF;
+        mode=PCx_Audit::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_AuditManage::RF;
+        mode=PCx_Audit::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_AuditManage::DI;
+        mode=PCx_Audit::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_AuditManage::RI;
+        mode=PCx_Audit::DFRFDIRI::RI;
 
 
-    QHash<PCx_AuditManage::ORED,double> data;
+    QHash<PCx_Audit::ORED,double> data;
 
     int maxVal=leaves.size();
 
@@ -208,11 +208,11 @@ void FormEditAudit::on_randomDataButton_clicked()
         {
             data.clear();
             randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
-            data.insert(PCx_AuditManage::OUVERTS,randval);
+            data.insert(PCx_Audit::ORED::OUVERTS,randval);
             randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
-            data.insert(PCx_AuditManage::REALISES,randval);
+            data.insert(PCx_Audit::ORED::REALISES,randval);
             randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
-            data.insert(PCx_AuditManage::ENGAGES,randval);
+            data.insert(PCx_Audit::ORED::ENGAGES,randval);
 
             if(auditModel->setLeafValues(leaf,mode,year,data,true)==false)
             {
@@ -247,17 +247,17 @@ void FormEditAudit::on_clearDataButton_clicked()
         return;
     }
 
-    PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;
+    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_AuditManage::DF;
+        mode=PCx_Audit::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_AuditManage::RF;
+        mode=PCx_Audit::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_AuditManage::DI;
+        mode=PCx_Audit::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_AuditManage::RI;
+        mode=PCx_Audit::DFRFDIRI::RI;
 
     auditModel->clearAllData(mode);
 }
@@ -285,17 +285,17 @@ void FormEditAudit::on_statsButton_clicked()
 
 void FormEditAudit::on_pushButtonExportLeaves_clicked()
 {
-    PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;
+    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_AuditManage::DF;
+        mode=PCx_Audit::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_AuditManage::RF;
+        mode=PCx_Audit::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_AuditManage::DI;
+        mode=PCx_Audit::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_AuditManage::RI;
+        mode=PCx_Audit::DFRFDIRI::RI;
 
 
     QFileDialog fileDialog;
@@ -313,7 +313,7 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
 
     if(res==true)
     {
-        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(PCx_AuditManage::modeToCompleteString(mode)));
+        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(PCx_Audit::modeToCompleteString(mode)));
     }
     else
     {
@@ -324,17 +324,17 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
 
 void FormEditAudit::on_pushButtonImportLeaves_clicked()
 {
-    PCx_AuditManage::DFRFDIRI mode=PCx_AuditManage::DF;
+    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_AuditManage::DF;
+        mode=PCx_Audit::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_AuditManage::RF;
+        mode=PCx_Audit::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_AuditManage::DI;
+        mode=PCx_Audit::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_AuditManage::RI;
+        mode=PCx_Audit::DFRFDIRI::RI;
 
 
     QFileDialog fileDialog;
@@ -350,6 +350,6 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
 
     if(res>0)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(PCx_AuditManage::modeToCompleteString(mode)));
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(PCx_Audit::modeToCompleteString(mode)));
     }
 }

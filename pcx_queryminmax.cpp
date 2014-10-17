@@ -10,7 +10,7 @@ PCx_QueryMinMax::PCx_QueryMinMax(PCx_Audit *model, unsigned int queryId):PCx_Que
     load(queryId);
 }
 
-PCx_QueryMinMax::PCx_QueryMinMax(PCx_Audit *model, unsigned int typeId, PCx_AuditManage::ORED ored, PCx_AuditManage::DFRFDIRI dfrfdiri, qint64 val1,
+PCx_QueryMinMax::PCx_QueryMinMax(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri, qint64 val1,
                              qint64 val2, unsigned int year1, unsigned int year2, const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name)
 {
     setVals(QPair<qint64,qint64>(val1,val2));
@@ -59,14 +59,14 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
 {
     QSqlQuery q;
 
-    QString oredString=PCx_AuditManage::OREDtoTableString(ored);
+    QString oredString=PCx_Audit::OREDtoTableString(ored);
 
     if(typeId!=ALLTYPES)
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 as b where a.id_node=b.id "
                           "and type=:typeId and %1 not null and %1>=:val1 and %1<=:val2 and annee>=:year1 and "
                           "annee<=:year2")
-                  .arg(oredString).arg(PCx_AuditManage::modeToTableString(dfrfdiri)).arg(model->getAuditId())
+                  .arg(oredString).arg(PCx_Audit::modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(model->getAttachedTree()->getTreeId()));
         q.bindValue(":typeId",typeId);
     }
@@ -74,7 +74,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where annee>=:year1 "
                           "and annee<=:year2 and %1 not null and %1>=:val1 and %1<=:val2")
-                  .arg(oredString).arg(PCx_AuditManage::modeToTableString(dfrfdiri)).arg(model->getAuditId()));
+                  .arg(oredString).arg(PCx_Audit::modeToTableString(dfrfdiri)).arg(model->getAuditId()));
 
     }
 
@@ -108,7 +108,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
         xlsDoc->write(4,2,"Type");
         xlsDoc->write(4,3,"Noeud");
         xlsDoc->write(4,4,"Année");
-        xlsDoc->write(4,5,PCx_AuditManage::OREDtoCompleteString(ored));
+        xlsDoc->write(4,5,PCx_Audit::OREDtoCompleteString(ored));
     }
 
 
@@ -116,7 +116,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
 
     output.append("<p><i>"+getDescription()+"</i></p>");
     output.append(QString("<table class='req3' cellpadding='5' align='center' style='margin-left:auto;margin-right:auto;'>"
-                           "<tr><th>&nbsp;</th><th>année</th><th>%1</th></tr>").arg(PCx_AuditManage::OREDtoCompleteString(ored).toHtmlEscaped()));
+                           "<tr><th>&nbsp;</th><th>année</th><th>%1</th></tr>").arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped()));
 
     int currentRow=5;
     while(q.next())
@@ -168,8 +168,8 @@ bool PCx_QueryMinMax::load(unsigned int queryId)
         }
         name=q.value("name").toString();
         typeId=q.value("target_type").toUInt();
-        ored=(PCx_AuditManage::ORED)q.value("ored").toUInt();
-        dfrfdiri=(PCx_AuditManage::DFRFDIRI)q.value("dfrfdiri").toUInt();
+        ored=(PCx_Audit::ORED)q.value("ored").toUInt();
+        dfrfdiri=(PCx_Audit::DFRFDIRI)q.value("dfrfdiri").toUInt();
         setYears(q.value("year1").toUInt(),q.value("year2").toUInt());
         setVals(QPair<qint64,qint64>(q.value("val1").toLongLong(),q.value("val2").toLongLong()));
     }
@@ -204,8 +204,8 @@ QString PCx_QueryMinMax::getDescription() const
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les crédits %1s des %2 sont compris entre %3€ et %4€ entre %5 et %6")
-            .arg(PCx_AuditManage::OREDtoCompleteString(ored).toHtmlEscaped())
-            .arg(PCx_AuditManage::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
+            .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
+            .arg(PCx_Audit::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(formatCurrency(val1)).arg(formatCurrency(val2))
             .arg(year1).arg(year2));
     return out;

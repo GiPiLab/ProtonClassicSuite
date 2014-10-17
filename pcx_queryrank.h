@@ -18,7 +18,7 @@ public:
 
     PCx_QueryRank(PCx_Audit *model,unsigned int queryId);
 
-    PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_AuditManage::ORED ored, PCx_AuditManage::DFRFDIRI dfrfdiri,
+    PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
                        GREATERSMALLER greaterOrSmaller, unsigned int number, unsigned int year1,unsigned int year2, const QString &name="");
 
 

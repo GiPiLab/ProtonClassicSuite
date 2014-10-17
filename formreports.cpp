@@ -221,16 +221,17 @@ void FormReports::on_saveButton_clicked()
     qDebug()<<"Mode-dependant selected tables = "<<selectedTables;
     qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
-    QString output=report->generateHTMLHeader(model->getAuditId());
-    QList<PCx_AuditManage::DFRFDIRI> listModes;
+    QString output=model->generateHTMLHeader();
+    output.append(model->generateHTMLAuditTitle());
+    QList<PCx_Audit::DFRFDIRI> listModes;
     if(ui->checkBoxDF->isChecked())
-        listModes.append(PCx_AuditManage::DF);
+        listModes.append(PCx_Audit::DFRFDIRI::DF);
     if(ui->checkBoxRF->isChecked())
-        listModes.append(PCx_AuditManage::RF);
+        listModes.append(PCx_Audit::DFRFDIRI::RF);
     if(ui->checkBoxDI->isChecked())
-        listModes.append(PCx_AuditManage::DI);
+        listModes.append(PCx_Audit::DFRFDIRI::DI);
     if(ui->checkBoxRI->isChecked())
-        listModes.append(PCx_AuditManage::RI);
+        listModes.append(PCx_Audit::DFRFDIRI::RI);
 
     if(listModes.isEmpty() && (!selectedGraphics.isEmpty() || !selectedTables.isEmpty()))
     {
@@ -308,9 +309,9 @@ void FormReports::on_saveButton_clicked()
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_AuditManage::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_Audit::DFRFDIRI::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
         }
-        foreach(PCx_AuditManage::DFRFDIRI mode,listModes)
+        foreach(PCx_Audit::DFRFDIRI mode,listModes)
         {
             output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())

@@ -366,7 +366,7 @@ void FormEditTree::on_duplicateTreeButton_clicked()
 
         if(ok)
         {
-            PCx_TreeManage::duplicateTree(model->getTreeId(),text);
+            model->duplicateTree(text);
             updateListOfTree();
         }
     }

@@ -10,15 +10,14 @@ class PCx_Report
 public:
     PCx_Report(PCx_Audit *model,QCustomPlot *plot=0,int graphicsWidth=650,int graphicsHeight=400,double scale=1.0);
 
-    static QString getCSS();
 
     QString generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
-                                      unsigned int selectedNode, PCx_AuditManage::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
+                                      unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
                                       const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
     QString generateHTMLTOC(QList<unsigned int> nodes) const;
 
-    static QString generateHTMLHeader(unsigned int auditId);
+
 
     const PCx_Tables &getTables() const{return tables;}
     PCx_Graphics &getGraphics() {return graphics;}

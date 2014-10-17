@@ -24,6 +24,7 @@ private slots:
 private:
     Ui::DialogDuplicateAudit *ui;
     unsigned int oldAuditId;
+    PCx_Audit *oldAudit;
 };
 
 #endif // DIALOGDUPLICATEAUDIT_H

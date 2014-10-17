@@ -9,13 +9,13 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     ui(new Ui::DialogDuplicateAudit),oldAuditId(oldAuditId)
 {
     ui->setupUi(this);
-    PCx_Audit oldAudit(oldAuditId);
-    ui->labelOldName->setText(oldAudit.getAuditName());
-    ui->labelOldDate->setText(oldAudit.getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
-    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(oldAudit.getAttachedTreeName()).arg(oldAudit.getAttachedTree()->getNumberOfNodes()));
-    ui->labelOldYears->setText(oldAudit.getYearsString());
-    ui->spinBoxYear1->setValue(oldAudit.getYears().first());
-    ui->spinBoxYear2->setValue(oldAudit.getYears().last());
+    oldAudit=new PCx_Audit(oldAuditId);
+    ui->labelOldName->setText(oldAudit->getAuditName());
+    ui->labelOldDate->setText(oldAudit->getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
+    ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(oldAudit->getAttachedTreeName()).arg(oldAudit->getAttachedTree()->getNumberOfNodes()));
+    ui->labelOldYears->setText(oldAudit->getYearsString());
+    ui->spinBoxYear1->setValue(oldAudit->getYears().first());
+    ui->spinBoxYear2->setValue(oldAudit->getYears().last());
     QDate date=QDate::currentDate();
     ui->spinBoxYear1->setMaximum(date.year());
     ui->spinBoxYear2->setMaximum(date.year()+1);
@@ -23,6 +23,7 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
 
 DialogDuplicateAudit::~DialogDuplicateAudit()
 {
+    delete oldAudit;
     delete ui;
 }
 
@@ -60,7 +61,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
         return;
     }
 
-    int res=PCx_AuditManage::duplicateAudit(oldAuditId,newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
+    int res=oldAudit->duplicateAudit(newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
                           ui->checkBoxDI->isChecked(),ui->checkBoxRI->isChecked());
 
     if(res>0)

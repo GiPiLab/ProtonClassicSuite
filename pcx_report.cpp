@@ -7,29 +7,11 @@ PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int 
     Q_ASSERT(model!=nullptr);
 }
 
-QString PCx_Report::getCSS()
-{
-    QString css="\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
-            "\nh1{color:#A00;}"
-            "\nh2{color:navy;}"
-            "\nh3{color:green;font-size:larger;}";
-
-    css.append(PCx_Query::getCSS());
-    css.append(PCx_Tables::getCSS());
-    css.append(PCx_Graphics::getCSS());
-    return css;
-}
 
 
-QString PCx_Report::generateHTMLHeader(unsigned int auditId)
-{
-    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>\n"
-                   "<h3>Audit %1</h3>\n").arg(PCx_AuditManage::getAuditName(auditId).toHtmlEscaped()).arg(getCSS());
-
-}
 
 QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
-                                              unsigned int selectedNode, PCx_AuditManage::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
+                                              unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
                                               const QString &relativeImagePath,QProgressDialog *progress) const
 {
     Q_ASSERT(selectedNode>0);

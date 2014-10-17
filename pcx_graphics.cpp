@@ -32,11 +32,11 @@ PCx_Graphics::~PCx_Graphics()
 }
 
 
-QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode, PCx_AuditManage::ORED modeORED, bool cumule) const
+QString PCx_Graphics::getG1G8(unsigned int node, PCx_Audit::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
-    QString tableName=PCx_AuditManage::modeToTableString(mode);
-    QString oredName=PCx_AuditManage::OREDtoTableString(modeORED);
+    QString tableName=PCx_Audit::modeToTableString(mode);
+    QString oredName=PCx_Audit::OREDtoTableString(modeORED);
 
     QSqlQuery q;
 
@@ -209,18 +209,18 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_AuditManage::DFRFDIRI mode,
     QString plotTitle;
     if(cumule==false)
     {
-        if(modeORED!=PCx_AuditManage::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+        if(modeORED!=PCx_Audit::ORED::ENGAGES)
+            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
     }
 
     else
     {
-        if(modeORED!=PCx_AuditManage::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+        if(modeORED!=PCx_Audit::ORED::ENGAGES)
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_AuditManage::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_AuditManage::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
     }
 
     /*
@@ -295,7 +295,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
     QColor c=getColorDFBar();
     int alpha=getAlpha();
 
-    dfBar->setName(PCx_AuditManage::modeToCompleteString(PCx_AuditManage::DF));
+    dfBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::DF));
     pen.setColor(c);
     dfBar->setPen(pen);
     c.setAlpha(alpha);
@@ -303,7 +303,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     c=getColorRFBar();
 
-    rfBar->setName(PCx_AuditManage::modeToCompleteString(PCx_AuditManage::RF));
+    rfBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::RF));
     pen.setColor(c);
     rfBar->setPen(pen);
     c.setAlpha(alpha);
@@ -311,7 +311,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     c=getColorDIBar();
 
-    diBar->setName(PCx_AuditManage::modeToCompleteString(PCx_AuditManage::DI));
+    diBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::DI));
     pen.setColor(c);
     diBar->setPen(pen);
     c.setAlpha(alpha);
@@ -319,7 +319,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     c=getColorRIBar();
 
-    riBar->setName(PCx_AuditManage::modeToCompleteString(PCx_AuditManage::RI));
+    riBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::RI));
     pen.setColor(c);
     riBar->setPen(pen);
     c.setAlpha(alpha);
@@ -347,10 +347,10 @@ QString PCx_Graphics::getG9(unsigned int node) const
     }
 
     QList<QPair<QString,QString> > listModesAndLabels;
-    listModesAndLabels.append(QPair<QString,QString>(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::OUVERTS),PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::OUVERTS)));
-    listModesAndLabels.append(QPair<QString,QString>(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::REALISES),PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::REALISES)));
-    listModesAndLabels.append(QPair<QString,QString>(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::ENGAGES),PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::ENGAGES)));
-    listModesAndLabels.append(QPair<QString,QString>(PCx_AuditManage::OREDtoTableString(PCx_AuditManage::DISPONIBLES),PCx_AuditManage::OREDtoCompleteString(PCx_AuditManage::DISPONIBLES)));
+    listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS)));
+    listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)));
+    listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES)));
+    listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES)));
 
     QVector<double> ticks;
     QVector<QString> labels;

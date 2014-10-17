@@ -12,6 +12,7 @@ class FormEditAudit : public QWidget
 {
     Q_OBJECT
 
+
 public:
     explicit FormEditAudit(QWidget *parent = 0);
     ~FormEditAudit();

@@ -17,6 +17,7 @@ FormManageAudits::FormManageAudits(QWidget *parent):
     QWidget(parent),
     ui(new Ui::FormManageAudits)
 {
+    selectedAudit=nullptr;
     ui->setupUi(this);
     updateListOfTrees();
     updateListOfAudits();
@@ -122,10 +123,19 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
 {
     if(index==-1 || ui->comboListOfAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
+
+    if(selectedAudit!=nullptr)
+    {
+        delete selectedAudit;
+        selectedAudit=nullptr;
+    }
+
+    selectedAudit=new PCx_Audit(selectedAuditId);
+
     qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
-    PCx_Audit audit(selectedAuditId);
-    ui->labelDate->setText(audit.getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
-    if(audit.isFinished()==true)
+
+    ui->labelDate->setText(selectedAudit->getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
+    if(selectedAudit->isFinished()==true)
     {
         ui->labelFinished->setText(tr("oui"));
         ui->finishAuditButton->setEnabled(false);
@@ -137,9 +147,9 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
         ui->finishAuditButton->setEnabled(true);
         ui->unFinishAuditButton->setEnabled(false);
     }
-    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(audit.getAttachedTreeName()).arg(audit.getAttachedTree()->getNumberOfNodes()));
-    ui->labelYears->setText(audit.getYearsString());
-    ui->labelName->setText(audit.getAuditName());
+    ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(selectedAudit->getAttachedTreeName()).arg(selectedAudit->getAttachedTree()->getNumberOfNodes()));
+    ui->labelYears->setText(selectedAudit->getYearsString());
+    ui->labelName->setText(selectedAudit->getAuditName());
 }
 
 void FormManageAudits::on_deleteAuditButton_clicked()
@@ -154,6 +164,11 @@ void FormManageAudits::on_deleteAuditButton_clicked()
     }
     if(PCx_AuditManage::deleteAudit(ui->comboListOfAudits->currentData().toUInt())==false)
         die();
+    if(selectedAudit!=nullptr)
+    {
+        delete selectedAudit;
+        selectedAudit=nullptr;
+    }
     updateListOfAudits();
     emit(listOfAuditsChanged());
 }
@@ -169,7 +184,14 @@ void FormManageAudits::on_finishAuditButton_clicked()
     {
         return;
     }
-    PCx_AuditManage::finishAudit(ui->comboListOfAudits->currentData().toUInt());
+    if(selectedAudit!=nullptr)
+    {
+        selectedAudit->finishAudit();
+    }
+    else
+    {
+        qDebug()<<"Invalid audit selected !";
+    }
     updateListOfAudits();
     emit(listOfAuditsChanged());
 }
@@ -184,7 +206,15 @@ void FormManageAudits::on_unFinishAuditButton_clicked()
     {
         return;
     }
-    PCx_AuditManage::unFinishAudit(ui->comboListOfAudits->currentData().toUInt());
+    if(selectedAudit!=nullptr)
+    {
+        selectedAudit->unFinishAudit();
+    }
+    else
+    {
+        qDebug()<<"Invalid audit selected !";
+    }
+
     updateListOfAudits();
     emit(listOfAuditsChanged());
 

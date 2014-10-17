@@ -2,6 +2,7 @@
 #define FORMMANAGEAUDITS_H
 
 #include<QWidget>
+#include "pcx_audit.h"
 
 namespace Ui {
 class FormManageAudits;
@@ -43,6 +44,7 @@ private:
     Ui::FormManageAudits *ui;
     void updateListOfTrees();
     void updateListOfAudits();
+    PCx_Audit *selectedAudit;
 };
 
 #endif // FORMMANAGEAUDITS_H

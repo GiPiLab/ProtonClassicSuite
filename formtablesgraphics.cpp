@@ -89,7 +89,8 @@ void FormTablesGraphics::updateTextBrowser()
     //Always scale 1.0 when displaying
     report->getGraphics().setScale(1.0);
 
-    QString output=report->generateHTMLHeader(model->getAuditId());
+    QString output=model->generateHTMLHeader();
+    output.append(model->generateHTMLAuditTitle());
     output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,selectedNode,selectedMode,doc));
     output.append("</body></html>");
     doc->setHtml(output);
@@ -100,19 +101,19 @@ void FormTablesGraphics::updateTextBrowser()
 void FormTablesGraphics::getSelections()
 {
     if(ui->radioButtonDF->isChecked())
-        selectedMode=PCx_AuditManage::DF;
+        selectedMode=PCx_Audit::DFRFDIRI::DF;
 
     else if(ui->radioButtonRF->isChecked())
-        selectedMode=PCx_AuditManage::RF;
+        selectedMode=PCx_Audit::DFRFDIRI::RF;
 
     else if(ui->radioButtonDI->isChecked())
-        selectedMode=PCx_AuditManage::DI;
+        selectedMode=PCx_Audit::DFRFDIRI::DI;
 
     else if(ui->radioButtonRI->isChecked())
-        selectedMode=PCx_AuditManage::RI;
+        selectedMode=PCx_Audit::DFRFDIRI::RI;
 
     else if(ui->radioButtonGlobal->isChecked())
-        selectedMode=PCx_AuditManage::GLOBAL;
+        selectedMode=PCx_Audit::DFRFDIRI::GLOBAL;
 
     else
     {
@@ -123,7 +124,7 @@ void FormTablesGraphics::getSelections()
     selectedGraphics.clear();
     selectedTabs.clear();
 
-    if(selectedMode!=PCx_AuditManage::GLOBAL)
+    if(selectedMode!=PCx_Audit::DFRFDIRI::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
             selectedTabs.append(PCx_Tables::TABRECAP);
@@ -211,7 +212,7 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
-        selectedMode=PCx_AuditManage::GLOBAL;
+        selectedMode=PCx_Audit::DFRFDIRI::GLOBAL;
         updateTextBrowser();
 
         ui->checkBoxPoidsRelatif->setEnabled(false);
@@ -316,7 +317,8 @@ void FormTablesGraphics::on_saveButton_clicked()
     report->getGraphics().setScale(settings.value("graphics/scale",PCx_Graphics::DEFAULTSCALE).toDouble());
 
     //Generate report in non-embedded mode, saving images
-    QString output=report->generateHTMLHeader(model->getAuditId());
+    QString output=model->generateHTMLHeader();
+    output.append(model->generateHTMLAuditTitle());
     output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,node,selectedMode,nullptr,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
