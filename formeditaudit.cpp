@@ -13,7 +13,6 @@
 #include <QElapsedTimer>
 #include <QProgressDialog>
 #include "formauditinfos.h"
-#include "pcx_auditmanage.h"
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
     QWidget(parent),
@@ -63,7 +62,7 @@ void FormEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditManage::getListOfAudits(PCx_AuditManage::UnFinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::UnFinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     ui->splitter->setEnabled(nonEmpty);
 

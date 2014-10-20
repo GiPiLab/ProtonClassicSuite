@@ -2,7 +2,6 @@
 #define PCX_AUDIT_H
 
 #include "pcx_tree.h"
-#include "pcx_auditmanage.h"
 #include <QDateTime>
 
 
@@ -30,6 +29,14 @@ public:
         DISPONIBLES
     };
 
+    enum ListAuditsMode
+    {
+        FinishedAuditsOnly,
+        UnFinishedAuditsOnly,
+        AllAudits
+    };
+
+
 
 
     explicit PCx_Audit(unsigned int auditId);
@@ -40,6 +47,7 @@ public:
     QString getAuditName() const{return auditName;}
     QString getAttachedTreeName() const{return attachedTreeName;}
     unsigned int getAttachedTreeId() const{return attachedTreeId;}
+    static unsigned int getAttachedTreeId(unsigned int auditId);
 
     bool isFinished() const{return finished;}
     QString isFinishedString() const{return finishedString;}
@@ -84,6 +92,14 @@ public:
     static QString OREDtoCompleteString(ORED ored);
     static QString OREDtoTableString(ORED ored);
     static ORED OREDFromTableString(const QString &ored);
+
+    static unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
+    static bool deleteAudit(unsigned int auditId);
+    static bool auditNameExists(const QString &auditName);
+    static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
+
+
+
 
 signals:
 

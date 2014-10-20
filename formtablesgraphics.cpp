@@ -1,5 +1,4 @@
 #include "formtablesgraphics.h"
-#include "pcx_auditmanage.h"
 #include "ui_formtablesgraphics.h"
 #include "utils.h"
 #include <QScrollBar>
@@ -48,7 +47,7 @@ void FormTablesGraphics::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditManage::getListOfAudits(PCx_AuditManage::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);

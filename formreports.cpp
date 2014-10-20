@@ -1,7 +1,7 @@
 #include "formreports.h"
 #include "ui_formreports.h"
 #include "pcx_auditwithtreemodel.h"
-#include "pcx_auditmanage.h"
+
 
 FormReports::FormReports(QWidget *parent) :
     QWidget(parent),
@@ -88,7 +88,7 @@ void FormReports::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_AuditManage::getListOfAudits(PCx_AuditManage::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;

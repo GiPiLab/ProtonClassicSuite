@@ -1,7 +1,5 @@
 #include "dialogduplicateaudit.h"
 #include "ui_dialogduplicateaudit.h"
-#include "pcx_auditmanage.h"
-#include "pcx_treemanage.h"
 #include <QMessageBox>
 
 DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *parent) :
@@ -36,7 +34,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
         return;
     }
 
-    if(PCx_AuditManage::auditNameExists(newName))
+    if(PCx_Audit::auditNameExists(newName))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom"));
         return;

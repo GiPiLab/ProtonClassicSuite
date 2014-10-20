@@ -3,8 +3,6 @@
 #include "formmanageaudits.h"
 #include "ui_formmanageaudits.h"
 #include "pcx_audit.h"
-#include "pcx_treemanage.h"
-#include "pcx_auditmanage.h"
 #include <QDebug>
 #include "utils.h"
 #include "dialogduplicateaudit.h"
@@ -36,7 +34,7 @@ void FormManageAudits::updateListOfAudits()
 {
     ui->comboListOfAudits->clear();
 
-    QList<QPair<unsigned int,QString> > listOfAudits=PCx_AuditManage::getListOfAudits(PCx_AuditManage::AllAudits);
+    QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::AllAudits);
     ui->groupBoxAudits->setEnabled(!listOfAudits.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfAudits)
@@ -56,7 +54,7 @@ void FormManageAudits::updateListOfTrees()
 {
     ui->comboListOfTrees->clear();
 
-    QList<QPair<unsigned int,QString> > lot=PCx_TreeManage::getListOfTrees(true);
+    QList<QPair<unsigned int,QString> > lot=PCx_Tree::getListOfTrees(true);
     setEnabled(!lot.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,lot)
@@ -113,7 +111,7 @@ void FormManageAudits::on_addAuditButton_clicked()
     if(ok)
     {
         qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
-        PCx_AuditManage::addNewAudit(text,years,selectedTree);
+        PCx_Audit::addNewAudit(text,years,selectedTree);
         updateListOfAudits();
         emit(listOfAuditsChanged());
     }
@@ -162,7 +160,7 @@ void FormManageAudits::on_deleteAuditButton_clicked()
     {
         return;
     }
-    if(PCx_AuditManage::deleteAudit(ui->comboListOfAudits->currentData().toUInt())==false)
+    if(PCx_Audit::deleteAudit(ui->comboListOfAudits->currentData().toUInt())==false)
         die();
     if(selectedAudit!=nullptr)
     {
