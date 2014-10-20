@@ -177,6 +177,11 @@ void FormEditTree::on_addNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
+        if(selection.count()>1)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Pas de sélection multiple pour ajouter un noeud !"));
+            return;
+        }
         QModelIndex indexType=ui->listTypesView->currentIndex();
         if(indexType.row()<0)
         {
@@ -218,6 +223,11 @@ void FormEditTree::on_modifyNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
+        if(selection.count()>1)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Pas de sélection multiple !"));
+            return;
+        }
         unsigned int selectedId=selection[0].data(PCx_TreeModel::NodeIdUserRole).toUInt();
         //qDebug()<<"Selected Node ID : "<<selectedId;
 
@@ -267,6 +277,11 @@ void FormEditTree::on_deleteNodeButton_clicked()
 
     if(!selection.isEmpty())
     {
+        if(selection.count()>1)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Pas de sélection multiple !"));
+            return;
+        }
         //Assume only single selection
         unsigned int selectedId=selection[0].data(PCx_TreeModel::NodeIdUserRole).toUInt();
         //qDebug()<<"Selected Node ID : "<<selectedId;
