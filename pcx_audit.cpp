@@ -57,7 +57,7 @@ PCx_Audit::PCx_Audit(unsigned int auditId) :
     }
     else
     {
-        qCritical()<<QObject::tr("Bad audit !");
+        qCritical()<<"Invalid audit ID !";
         die();
     }
     attachedTree=new PCx_Tree(attachedTreeId);
@@ -225,11 +225,15 @@ qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PC
     q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored)).arg(modeToTableString(mode)).arg(auditId));
     q.bindValue(":year",year);
     q.bindValue(":node",nodeId);
-    q.exec();
-    if(!q.next())
+    if(!q.exec())
     {
         qCritical()<<q.lastError();
         die();
+    }
+    if(!q.next())
+    {
+        qCritical()<<"No value for node"<<nodeId;
+        return -MAX_NUM;
     }
     if(q.value(OREDtoTableString(ored)).isNull())
     {

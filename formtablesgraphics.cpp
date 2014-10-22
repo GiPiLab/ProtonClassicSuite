@@ -99,6 +99,8 @@ void FormTablesGraphics::updateTextBrowser()
 
 void FormTablesGraphics::getSelections()
 {
+    selectedMode=PCx_Audit::DFRFDIRI::GLOBAL;
+
     if(ui->radioButtonDF->isChecked())
         selectedMode=PCx_Audit::DFRFDIRI::DF;
 
@@ -116,8 +118,7 @@ void FormTablesGraphics::getSelections()
 
     else
     {
-        qWarning()<<"Unsupported case of radio button checking";
-        die();
+        qCritical()<<"Unsupported case of radio button checking";
     }
 
     selectedGraphics.clear();

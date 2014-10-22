@@ -256,7 +256,7 @@ void MainWindow::on_actionNewDb_triggered()
 
     ui->mdiArea->closeAllSubWindows();
     loadDb(fileName);
-    initCurrentDb();
+    initializeNewDb();
     recentDb=fileName;
     updateTitle();
     setMenusState();

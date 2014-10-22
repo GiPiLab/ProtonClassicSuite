@@ -17,22 +17,24 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     switch (type) {
     case QtDebugMsg:
         message.prepend("[Debug]");
+        std::cerr<<qPrintable(message);
         break;
     case QtWarningMsg:
         message.prepend("[Warning]");
-        QMessageBox::warning(0,"Erreur ennuyeuse",message);
+        QMessageBox::warning(0,"Attention",message);
+        std::cerr<<qPrintable(message);
         break;
     case QtCriticalMsg:
         message.prepend("[Critical]");
         QMessageBox::critical(0,"Erreur critique",message);
+        std::cerr<<qPrintable(message);
         break;
     case QtFatalMsg:
         message.prepend("[Fatal]");
         QMessageBox::critical(0,"Erreur fatale",message);
         std::cerr<<qPrintable(message);
-        abort();
+        die();
     }
-    std::cerr<<qPrintable(message);
 }
 
 int main(int argc, char *argv[])
@@ -53,8 +55,6 @@ int main(int argc, char *argv[])
     qDebug()<<"***ProtonClassicSuite starting***";
 
     int retval;
-
-
 
     QSqlDatabase::addDatabase("QSQLITE");
 

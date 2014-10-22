@@ -97,7 +97,7 @@ QString formatDouble(double num, int decimals, bool forcedUnits)
     return out;
 }
 
-void initCurrentDb(void)
+void initializeNewDb(void)
 {
     QSqlQuery query;
 
@@ -139,25 +139,12 @@ bool loadDb(const QString &databaseName)
     return true;
 }
 
-
-QString newDb()
-{
-    QString tmpDbName=QUuid::createUuid().toString();
-    tmpDbName.chop(1);
-    tmpDbName=tmpDbName.remove(0,1);
-    tmpDbName.append(".pcxdb");
-
-    tmpDbName.prepend(QDir::separator());
-    tmpDbName.prepend(QStandardPaths::writableLocation(QStandardPaths::TempLocation));
-    return tmpDbName;
-}
-
 QString generateUniqueFileName(const QString &suffix)
 {
-    QString imageName=QUuid::createUuid().toString();
-    imageName.chop(1);
-    imageName=imageName.remove(0,1).append(suffix);
-    return imageName;
+    QString uniqueName=QUuid::createUuid().toString();
+    uniqueName.chop(1);
+    uniqueName=uniqueName.remove(0,1).append(suffix);
+    return uniqueName;
 }
 
 
@@ -227,24 +214,6 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     return true;
 }
 
-
-QStringList yearsListToStringList(QList<unsigned int> years)
-{
-    //De-duplicate and sort
-    QSet<unsigned int> yearsTemp;
-    QList<unsigned int> years2;
-    yearsTemp=years.toSet();
-    years2=yearsTemp.toList();
-    qSort(years2);
-
-    QStringList yearsStringList;
-
-    foreach(unsigned int annee,years2)
-    {
-        yearsStringList.append(QString::number(annee));
-    }
-    return yearsStringList;
-}
 
 
 

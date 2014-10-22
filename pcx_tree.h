@@ -317,7 +317,7 @@ public:
     /**
      * @brief duplicateTree duplicates a tree
      * @param newName the name of the new tree
-     * @return the identifier of the new tree, -1 on error or if the tree name exists
+     * @return the identifier of the new tree, -1 if the tree name exists
      */
     int duplicateTree(const QString &newName);
 
@@ -349,16 +349,14 @@ public:
     /**
      * @brief addTree creates a new tree
      * @param name the name of the tree
-     * @param createRoot indicates if the new tree will contains a root, "false" to duplicate a tree
-     * @param addTypes indicates if the new tree will contains a list of default types, "false" to duplicate a tree
-     * @return the identifier of the new tree, -1 on error or if the tree name exists
+     * @return the identifier of the new tree, -1 if the tree name exists
      */
-    static int addTree(const QString &name, bool createRoot=true, bool addTypes=true);
+    static int addTree(const QString &name);
 
     /**
      * @brief deleteTree removes a tree from database
      * @param treeId the tree identifier
-     * @return 1 on success, 0 if an audit is attached to this tree, -1 on error or if the tree does not exists
+     * @return 1 on success, 0 if an audit is attached to this tree, -1 if the tree does not exists
      */
     static int deleteTree(unsigned int treeId);
 
@@ -414,12 +412,6 @@ protected:
     bool validateType(const QString &newType);
 
     /**
-     * @brief initTreeFromDb initializes the tree from the database
-     * @return true on success, false if the tree does not exists
-     */
-    bool initTreeFromDb();
-
-    /**
      * @brief updateNodePid change the parent identifier of a node. Used for D&D
      * @param nodeId the node to change
      * @param newPid the new parent identifier
@@ -438,10 +430,21 @@ protected:
     QHash<unsigned int,QString> idTypesToNames;
 
     /**
-     * @brief initTypesFromDb initializes idTypeToName of listOfTypeNames from the database
-     * @return true on success, false on DB error
+     * @brief loadTypesFromDb initializes idTypeToName of listOfTypeNames from the database
      */
-    bool initTypesFromDb();
+    void loadTypesFromDb();
+
+    /**
+     * @brief _internalAddTree creates a new without associated types
+     *
+     * Protected method to creates a tree without sql transaction. Used in addTree and duplicateTree
+     * @param name the name of the tree
+     * @param createRoot if true creates a root node in the tree
+     * @return the identifier of the new tree, -1 on database error
+     */
+    static int _internalAddTree(const QString &name,bool createRoot=true);
+
+
 };
 
 #endif // PCX_TREE_H

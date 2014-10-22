@@ -178,7 +178,7 @@ bool PCx_TreeModel::onTypesModelDataChanged(const QModelIndex &topLeft, const QM
         //NOTE : simplify string
         typesTableModel->setData(topLeft,newType.simplified());
         typesTableModel->submitAll();
-        initTypesFromDb();
+        loadTypesFromDb();
         emit typesUpdated();
         return true;
     }

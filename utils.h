@@ -44,20 +44,17 @@ unsigned int getCurrentNumDecimals();
 
 void updateFormatModeAndDecimals();
 
-QString newDb();
 bool loadDb(const QString &databaseName);
-void initCurrentDb(void);
+void initializeNewDb(void);
 QString formatDouble(double num,int decimals=-1, bool forcedUnits=false);
 QString formatCurrency(qint64 num, int decimals=-1, bool forcedUnits=false);
 
 qint64 doubleToFixedPoint(double num);
 double fixedPointToDouble(qint64 num);
 
-
 QString generateUniqueFileName(const QString &suffix=0);
 
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
-QStringList yearsListToStringList(QList<unsigned int> years);
 
 
 #endif // UTILS_H
