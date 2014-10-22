@@ -74,7 +74,7 @@ public:
      * @param pid the ID of the parent node (PID)
      * @param typeId the ID of the type for the node to insert
      * @param name the name of the node to insert
-     * @return the ID of the inserted node, or 0 in case of failure
+     * @return the ID of the inserted node, or 0 if the node exists
      */
     unsigned int addNode(unsigned int pid, unsigned int type, const QString &name);
 
@@ -277,7 +277,7 @@ public:
      * @param id the type identifier
      * @return the type name, or an empty QString if the type identifier does not exists in the DB
      */
-    QString idTypeToName(unsigned int id) const{if(!isTypeIdValid(id)){qDebug()<<"Missing type";return QString();}else return idTypesToNames[id];}
+    QString idTypeToName(unsigned int id) const{return idTypesToNames[id];}
 
     /**
      * @brief isTypeIdValid checks if the type identifier exists in the database
@@ -440,7 +440,7 @@ protected:
      * Protected method to creates a tree without sql transaction. Used in addTree and duplicateTree
      * @param name the name of the tree
      * @param createRoot if true creates a root node in the tree
-     * @return the identifier of the new tree, -1 on database error
+     * @return the identifier of the new tree, call die on database error
      */
     static int _internalAddTree(const QString &name,bool createRoot=true);
 

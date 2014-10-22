@@ -67,16 +67,15 @@ unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QStr
     q.bindValue(":type",typeId);
     if(!q.exec())
     {
-        //Do not die here, this method may be called inside a transaction
         qCritical()<<q.lastError();
-        return 0;
+        die();
+
     }
 
     if(q.numRowsAffected()!=1)
     {
-        //Do not die here, this method may be called inside a transaction
         qCritical()<<q.lastError();
-        return 0;
+        die();
     }
 
     return q.lastInsertId().toUInt();
@@ -682,13 +681,13 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
     if(!query.exec())
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     if(query.numRowsAffected()!=1)
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     QVariant lastId=query.lastInsertId();
@@ -696,38 +695,38 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
     if(!lastId.isValid())
     {
         qCritical()<<"Invalid last inserted Id";
-        return -1;
+        die();
     }
     int treeId=lastId.toInt();
 
     if(!query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(treeId)))
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     if(!query.exec(QString("create index idx_arbre_%1_pid on arbre_%1(pid)").arg(treeId)))
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     if(!query.exec(QString("create table types_%1(id integer primary key autoincrement, nom text unique not null)").arg(treeId)))
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError();
-        return -1;
+        die();
     }
 
     if(createRoot)
@@ -735,12 +734,12 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
         if(!query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(treeId)))
         {
             qCritical()<<query.lastError();
-            return -1;
+            die();
         }
         if(query.numRowsAffected()!=1)
         {
             qCritical()<<query.lastError();
-            return -1;
+            die();
         }
     }
     return lastId.toInt();
@@ -918,22 +917,16 @@ int PCx_Tree::duplicateTree(const QString &newName)
 
     QSqlDatabase::database().transaction();
     int newTreeId=_internalAddTree(newName,false);
-    if(newTreeId==-1)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
+    Q_ASSERT(newTreeId>0);
 
     if(!q.exec(QString("insert into types_%1 select * from types_%2").arg(newTreeId).arg(treeId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
 
     if(q.numRowsAffected()<=0)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
@@ -941,7 +934,6 @@ int PCx_Tree::duplicateTree(const QString &newName)
     q.exec(QString("insert into arbre_%1 select * from arbre_%2").arg(newTreeId).arg(treeId));
     if(q.numRowsAffected()<=0)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
@@ -1030,12 +1022,8 @@ int PCx_Tree::addTree(const QString &name)
     }
 
     QSqlDatabase::database().transaction();
-    int treeId;
-    if((treeId=_internalAddTree(name,true))==-1)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
+    int treeId=_internalAddTree(name,true);
+    Q_ASSERT(treeId>0);
 
     QStringList listOfTypes=getListOfDefaultTypes();
     foreach(QString oneType,listOfTypes)
@@ -1044,13 +1032,11 @@ int PCx_Tree::addTree(const QString &name)
         query.bindValue(":nomtype",oneType);
         if(!query.exec())
         {
-            QSqlDatabase::database().rollback();
             qCritical()<<query.lastError();
             die();
         }
         if(query.numRowsAffected()!=1)
         {
-            QSqlDatabase::database().rollback();
             qCritical()<<query.lastError();
             die();
         }
@@ -1162,13 +1148,11 @@ int PCx_Tree::deleteTree(unsigned int treeId)
     QSqlDatabase::database().transaction();
     if(!query.exec(QString("delete from index_arbres where id='%1'").arg(treeId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<query.lastError();
         die();
     }
     if(query.numRowsAffected()!=1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<query.lastError();
         die();
     }
@@ -1176,27 +1160,23 @@ int PCx_Tree::deleteTree(unsigned int treeId)
 
     if(!query.exec(QString("drop table arbre_%1").arg(treeId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<query.lastError();
         die();
     }
 
     if(query.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<query.lastError();
         die();
     }
 
     if(!query.exec(QString("drop table types_%1").arg(treeId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<query.lastError();
         die();
     }
     if(query.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<query.lastError();
         die();
     }
@@ -1411,11 +1391,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
     QSqlDatabase::database().transaction();
 
     int treeId=_internalAddTree(treeName,true);
-    if(treeId==-1)
-    {
-        QSqlDatabase::database().rollback();
-        die();
-    }
+    Q_ASSERT(treeId>0);
 
     PCx_Tree tree(treeId);
 
@@ -1424,7 +1400,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         unsigned int oneTypeId=tree.addType(oneType);
         if(oneTypeId==0)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType));
+            QMessageBox::warning(0,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType));
             QSqlDatabase::database().rollback();
             return -1;
         }
@@ -1432,21 +1408,13 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
     foreach(aNode,firstLevelNodesSet)
     {
-        if(tree.addNode(1,typesToIdTypes.value(aNode.first),aNode.second)==0)
-        {
-            QSqlDatabase::database().rollback();
-            return -1;
-        }
+        tree.addNode(1,typesToIdTypes.value(aNode.first),aNode.second);
     }
     foreach(aNode,nodeToPid.keys())
     {
         QPair<QString, QString> aPid;
         aPid=nodeToPid.value(aNode);
-        if(tree.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second)==0)
-        {
-            QSqlDatabase::database().rollback();
-            return -1;
-        }
+        tree.addNode(nodeToIdNode.value(aPid),typesToIdTypes.value(aNode.first),aNode.second);
     }
 
     QSqlDatabase::database().commit();

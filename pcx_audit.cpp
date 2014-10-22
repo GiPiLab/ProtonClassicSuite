@@ -19,7 +19,13 @@ PCx_Audit::PCx_Audit(unsigned int auditId) :
     Q_ASSERT(auditId>0);
 
     this->auditId=auditId;
-    QSqlQuery q(QString("select * from index_audits where id='%1'").arg(auditId));
+    QSqlQuery q;
+    if(!q.exec(QString("select * from index_audits where id='%1'").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
     if(q.next())
     {
         auditName=q.value("nom").toString();
@@ -72,10 +78,15 @@ PCx_Audit::~PCx_Audit()
 
 unsigned int PCx_Audit::getAttachedTreeId(unsigned int auditId)
 {
-        QSqlQuery q(QString("select id_arbre from index_audits where id=%1").arg(auditId));
+        QSqlQuery q;
+        if(!q.exec(QString("select id_arbre from index_audits where id=%1").arg(auditId)))
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
         if(!q.next())
         {
-            qCritical()<<"Invalid audit ID !";
+            qWarning()<<"Invalid audit ID !";
             return 0;
         }
         return q.value(0).toUInt();
@@ -89,12 +100,16 @@ bool PCx_Audit::finishAudit()
     QSqlQuery q;
     q.prepare("update index_audits set termine=1 where id=:id");
     q.bindValue(":id",auditId);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        return false;
+        die();
     }
     return true;
 }
@@ -105,12 +120,16 @@ bool PCx_Audit::unFinishAudit()
     QSqlQuery q;
     q.prepare("update index_audits set termine=0 where id=:id");
     q.bindValue(":id",auditId);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        return false;
+        die();
     }
     return true;
 }
@@ -142,13 +161,6 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, uns
             return false;
         }
     }
-
-
-    if(leafId==96 && year==2005)
-    {
-        qDebug()<<"ID96 : "<<formatDouble(vals.value(PCx_Audit::ORED::OUVERTS));
-    }
-
 
     QString reqString;
 
@@ -196,26 +208,33 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, uns
 
     q.bindValue(":id_node",leafId);
     q.bindValue(":year",year);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     if(q.numRowsAffected()!=1)
     {
-        qCritical()<<"Error while setting value"<<q.lastError();
-        return false;
+        qCritical()<<q.lastError();
+        die();
     }
 
     q.prepare(QString("update %1 set disponibles=ouverts-(realises+engages) where id_node=:id_node and annee=:year").arg(tableName));
     q.bindValue(":id_node",leafId);
     q.bindValue(":year",year);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     if(q.numRowsAffected()!=1)
     {
-        qCritical()<<"Error while setting disponibles values"<<q.lastError();
-        return false;
+        qCritical()<<q.lastError();
+        die();
     }
 
-    //return true;
     return(updateParent(tableName,year,leafId));
 }
 
@@ -232,12 +251,11 @@ qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PC
     }
     if(!q.next())
     {
-        qCritical()<<"No value for node"<<nodeId;
+        qWarning()<<"No value for node"<<nodeId;
         return -MAX_NUM;
     }
     if(q.value(OREDtoTableString(ored)).isNull())
     {
-        qDebug()<<"NULL value";
         return -MAX_NUM;
     }
     return q.value(OREDtoTableString(ored)).toLongLong();
@@ -246,20 +264,24 @@ qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PC
 QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, unsigned int year) const
 {
     QSqlQuery q;
+    QHash<PCx_Audit::ORED,qint64> output;
     q.prepare(QString("select * from audit_%2_%3 where annee=:year and id_node=:node").arg(modeToTableString(mode)).arg(auditId));
     q.bindValue(":year",year);
     q.bindValue(":node",nodeId);
-    q.exec();
-    if(!q.next())
+    if(!q.exec())
     {
         qCritical()<<q.lastError();
         die();
     }
+    if(!q.next())
+    {
+        qWarning()<<"Missing node values for audit"<<auditId<<", node"<<nodeId<<"and"<<modeToCompleteString(mode);
+        return output;
+    }
 
-    QHash<PCx_Audit::ORED,qint64> output;
+
     if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS)).isNull())
     {
-        qDebug()<<"NULL value";
         output.insert(PCx_Audit::ORED::OUVERTS,-MAX_NUM);
     }
     else
@@ -269,7 +291,6 @@ QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx
 
     if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES)).isNull())
     {
-        qDebug()<<"NULL value";
         output.insert(PCx_Audit::ORED::REALISES,-MAX_NUM);
     }
     else
@@ -279,7 +300,6 @@ QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx
 
     if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES)).isNull())
     {
-        qDebug()<<"NULL value";
         output.insert(PCx_Audit::ORED::ENGAGES,-MAX_NUM);
     }
     else
@@ -289,7 +309,6 @@ QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx
 
     if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES)).isNull())
     {
-        qDebug()<<"NULL value";
         output.insert(PCx_Audit::ORED::DISPONIBLES,-MAX_NUM);
     }
     else
@@ -297,18 +316,21 @@ QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx
         output.insert(PCx_Audit::ORED::DISPONIBLES,q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES)).toLongLong());
     }
 
-
     return output;
 }
 
 bool PCx_Audit::clearAllData(PCx_Audit::DFRFDIRI mode)
 {
     QSqlQuery q(QString("update audit_%1_%2 set ouverts=NULL,realises=NULL,engages=NULL,disponibles=NULL").arg(modeToTableString(mode)).arg(auditId));
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(q.numRowsAffected()<0)
     {
         qCritical()<<q.lastError();
-        return false;
+        die();
     }
     return true;
 }
@@ -318,7 +340,7 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
     Q_ASSERT(!newName.isEmpty());
     if(PCx_Audit::auditNameExists(newName))
     {
-        qWarning()<<"Audit name exists !";
+        qWarning()<<"Audit name already exists !";
         return -1;
     }
 
@@ -344,13 +366,9 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
 
     progress.setValue(0);
 
-    //A transaction is used in addNewAudit
     unsigned int newAuditId=PCx_Audit::addNewAudit(newName,years,attachedTreeId);
-    if(newAuditId==0)
-    {
-        qCritical()<<"Unable to duplicate audit !";
-        die();
-    }
+
+    Q_ASSERT(newAuditId>0);
 
     qSort(years);
     unsigned int year1=years.first();
@@ -371,7 +389,13 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
                           "and audit_%3_%2.annee<=:year2)").arg(newAuditId).arg(auditId).arg(lemode));
         q.bindValue(":year1",year1);
         q.bindValue(":year2",year2);
-        q.exec();
+        if(!q.exec())
+        {
+            QSqlDatabase::database().rollback();
+            PCx_Audit::deleteAudit(newAuditId);
+            qCritical()<<q.lastError();
+            die();
+        }
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
@@ -388,7 +412,14 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
                           "and audit_%3_%2.annee<=:year2)").arg(newAuditId).arg(auditId).arg(lemode));
         q.bindValue(":year1",year1);
         q.bindValue(":year2",year2);
-        q.exec();
+        if(!q.exec())
+        {
+            QSqlDatabase::database().rollback();
+            PCx_Audit::deleteAudit(newAuditId);
+            qCritical()<<q.lastError();
+            die();
+
+        }
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
@@ -405,7 +436,13 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
                           "and audit_%3_%2.annee<=:year2)").arg(newAuditId).arg(auditId).arg(lemode));
         q.bindValue(":year1",year1);
         q.bindValue(":year2",year2);
-        q.exec();
+        if(!q.exec())
+        {
+            QSqlDatabase::database().rollback();
+            PCx_Audit::deleteAudit(newAuditId);
+            qCritical()<<q.lastError();
+            die();
+        }
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
@@ -423,13 +460,19 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
                           "and audit_%3_%2.annee<=:year2)").arg(newAuditId).arg(auditId).arg(lemode));
         q.bindValue(":year1",year1);
         q.bindValue(":year2",year2);
-        q.exec();
+        if(!q.exec())
+        {
+            QSqlDatabase::database().rollback();
+            PCx_Audit::deleteAudit(newAuditId);
+            qCritical()<<q.lastError();
+            die();
+        }
         if(q.numRowsAffected()<0)
         {
             QSqlDatabase::database().rollback();
             PCx_Audit::deleteAudit(newAuditId);
             qCritical()<<q.lastError();
-            return -1;
+            die();
         }
 
         progress.setValue(++progval);
@@ -442,7 +485,7 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
         QSqlDatabase::database().rollback();
         PCx_Audit::deleteAudit(newAuditId);
         qCritical()<<q.lastError();
-        return -1;
+        die();
     }
 
     QSqlDatabase::database().commit();
@@ -491,7 +534,7 @@ bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     if(!q.exec())
     {
         qCritical()<<q.lastError();
-        return false;
+        die();
     }
 
     qint64 sumOuverts=0;
@@ -555,11 +598,15 @@ bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
 
     q.bindValue(":annee",annee);
     q.bindValue(":id_node",parent);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(q.numRowsAffected()<=0)
     {
         qCritical()<<q.lastError();
-        return false;
+        die();
     }
 
     if(parent>1)
@@ -678,13 +725,12 @@ QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(PCx_Audit::DFRFDIRI mod
               .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
 
     q.bindValue(":year",year);
-    q.exec();
-
-    if(!q.isActive())
+    if(!q.exec())
     {
         qCritical()<<q.lastError();
         die();
     }
+
     while(q.next())
     {
         nodes.append(q.value("id_node").toUInt());
@@ -707,13 +753,12 @@ QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(PCx_Audit::DFRFDIRI mod
                 .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
 
     q.bindValue(":year",year);
-    q.exec();
-
-    if(!q.isActive())
+    if(!q.exec())
     {
         qCritical()<<q.lastError();
         die();
     }
+
     while(q.next())
     {
         nodes.append(q.value("id_node").toUInt());
@@ -881,7 +926,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
     this->clearAllData(mode);
 
 
-    QCoreApplication::processEvents(QEventLoop::AllEvents);
+   // QCoreApplication::processEvents(QEventLoop::AllEvents);
 
     QProgressDialog progress2(QObject::tr("Chargement des données en cours..."),QObject::tr("Annuler"),2,rowCount);
 
@@ -926,14 +971,8 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         }
         if(vals.size()>0)
         {
-            bool res;
-            res=setLeafValues(nodeId,mode,year.toUInt(),vals,true);
-            if(!res)
-            {
-                QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de mise à jour de la ligne %1").arg(row));
-                QSqlDatabase::database().rollback();
-                return -1;
-            }
+            //setLeafValues in fast mode only die on db error
+            setLeafValues(nodeId,mode,year.toUInt(),vals,true);
         }
         vals.clear();
 
@@ -1173,19 +1212,18 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
 
     QSqlQuery q;
 
-    q.exec(QString("select count(*) from index_arbres where id='%1'").arg(attachedTreeId));
+    if(!q.exec(QString("select count(*) from index_arbres where id='%1'").arg(attachedTreeId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(q.next())
     {
         if(q.value(0).toInt()==0)
         {
-            qCritical()<<"Inexistant tree !";
+            qCritical()<<"Trying to create an audit on a non-existant tree !";
             die();
         }
-    }
-    else
-    {
-        qCritical()<<q.lastError();
-        die();
     }
 
     QSqlDatabase::database().transaction();
@@ -1193,11 +1231,14 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
     q.bindValue(":nom",name);
     q.bindValue(":id_arbre",attachedTreeId);
     q.bindValue(":annees",yearsString);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     if(q.numRowsAffected()!=1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
@@ -1205,60 +1246,86 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
     QVariant lastId=q.lastInsertId();
     if(!lastId.isValid())
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
     unsigned int uLastId=lastId.toUInt();
 
     //Data are integer for fixed points arithmetics, stored with 3 decimals
-    q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
-
-    if(q.numRowsAffected()==-1)
+    if(!q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
 
-    q.exec(QString("create index idx_idnode_audit_DF_%1 on audit_DF_%1(id_node)").arg(uLastId));
-
-    q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
-
     if(q.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
 
-    q.exec(QString("create index idx_idnode_audit_RF_%1 on audit_RF_%1(id_node)").arg(uLastId));
-
-    q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
-
-    if(q.numRowsAffected()==-1)
+    if(!q.exec(QString("create index idx_idnode_audit_DF_%1 on audit_DF_%1(id_node)").arg(uLastId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
-    q.exec(QString("create index idx_idnode_audit_DI_%1 on audit_DI_%1(id_node)").arg(uLastId));
 
-    q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId));
-
-    if(q.numRowsAffected()==-1)
+    if(!q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
-    q.exec(QString("create index idx_idnode_audit_RI_%1 on audit_RI_%1(id_node)").arg(uLastId));
+
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    if(!q.exec(QString("create index idx_idnode_audit_RF_%1 on audit_RF_%1(id_node)").arg(uLastId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    if(!q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.exec(QString("create index idx_idnode_audit_DI_%1 on audit_DI_%1(id_node)").arg(uLastId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    if(!q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.exec(QString("create index idx_idnode_audit_RI_%1 on audit_RI_%1(id_node)").arg(uLastId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     bool res=PCx_Query::createTableQueries(uLastId);
 
     if(res==false)
     {
-        QSqlDatabase::database().rollback();
         die();
     }
 
@@ -1275,10 +1342,13 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
             q.prepare(QString("insert into audit_DF_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
             q.bindValue(":idnode",node);
             q.bindValue(":annee",annee);
-            q.exec();
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
             if(q.numRowsAffected()==-1)
             {
-                QSqlDatabase::database().rollback();
                 qCritical()<<q.lastError();
                 die();
             }
@@ -1286,10 +1356,13 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
             q.prepare(QString("insert into audit_RF_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
             q.bindValue(":idnode",node);
             q.bindValue(":annee",annee);
-            q.exec();
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
             if(q.numRowsAffected()==-1)
             {
-                QSqlDatabase::database().rollback();
                 qCritical()<<q.lastError();
                 die();
             }
@@ -1297,10 +1370,13 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
             q.prepare(QString("insert into audit_DI_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
             q.bindValue(":idnode",node);
             q.bindValue(":annee",annee);
-            q.exec();
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
             if(q.numRowsAffected()==-1)
             {
-                QSqlDatabase::database().rollback();
                 qCritical()<<q.lastError();
                 die();
             }
@@ -1308,10 +1384,13 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
             q.prepare(QString("insert into audit_RI_%1(id_node,annee) values (:idnode,:annee)").arg(uLastId));
             q.bindValue(":idnode",node);
             q.bindValue(":annee",annee);
-            q.exec();
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
             if(q.numRowsAffected()==-1)
             {
-                QSqlDatabase::database().rollback();
                 qCritical()<<q.lastError();
                 die();
             }
@@ -1326,68 +1405,84 @@ bool PCx_Audit::deleteAudit(unsigned int auditId)
 {
     Q_ASSERT(auditId>0);
     QSqlQuery q(QString("select count(*) from index_audits where id='%1'").arg(auditId));
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(q.next())
     {
         if(q.value(0).toInt()==0)
         {
-            qCritical()<<"Attempting to delete an inexistant audit !";
+            qWarning()<<"Attempting to delete an inexistant audit !";
             return false;
         }
     }
-    else
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
 
     QSqlDatabase::database().transaction();
-    q.exec(QString("delete from index_audits where id='%1'").arg(auditId));
-    if(q.numRowsAffected()==-1)
+    if(!q.exec(QString("delete from index_audits where id='%1'").arg(auditId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
-    q.exec(QString("drop table audit_DF_%1").arg(auditId));
     if(q.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
-    q.exec(QString("drop table audit_RF_%1").arg(auditId));
-    if(q.numRowsAffected()==-1)
+    if(!q.exec(QString("drop table audit_DF_%1").arg(auditId)))
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
-    q.exec(QString("drop table audit_DI_%1").arg(auditId));
     if(q.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
-    q.exec(QString("drop table audit_RI_%1").arg(auditId));
+    if(!q.exec(QString("drop table audit_RF_%1").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(q.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.exec(QString("drop table audit_DI_%1").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.numRowsAffected()==-1)
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.exec(QString("drop table audit_RI_%1").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.numRowsAffected()==-1)
+    {
         qCritical()<<q.lastError();
         die();
     }
 
-    q.exec(QString("drop table audit_queries_%1").arg(auditId));
+    if(!q.exec(QString("drop table audit_queries_%1").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(q.numRowsAffected()==-1)
     {
-        QSqlDatabase::database().rollback();
         qCritical()<<q.lastError();
         die();
     }
 
     QSqlDatabase::database().commit();
-    qDebug()<<"Audit "<<auditId<<" deleted";
     return true;
 }
 
@@ -1397,7 +1492,11 @@ bool PCx_Audit::auditNameExists(const QString &auditName)
     QSqlQuery q;
     q.prepare("select count(*) from index_audits where nom=:name");
     q.bindValue(":name",auditName);
-    q.exec();
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
     if(!q.next())
     {
         qCritical()<<q.lastError();
@@ -1414,7 +1513,12 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode m
     QList<QPair<unsigned int,QString> > listOfAudits;
     QDateTime dt;
 
-    QSqlQuery query("select * from index_audits order by datetime(le_timestamp)");
+    QSqlQuery query;
+    if(!query.exec("select * from index_audits order by datetime(le_timestamp)"))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
 
     while(query.next())
     {
