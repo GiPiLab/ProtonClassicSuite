@@ -13,6 +13,8 @@ public:
 
 private:
     PCx_TreeModel *attachedTree;
+    PCx_AuditWithTreeModel(const PCx_AuditWithTreeModel &c);
+    PCx_AuditWithTreeModel &operator=(const PCx_AuditWithTreeModel &);
 };
 
 #endif // PCX_AUDITWITHTREEMODEL_H

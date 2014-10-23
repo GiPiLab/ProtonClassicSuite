@@ -110,10 +110,13 @@ void FormManageAudits::on_addAuditButton_clicked()
 
     if(ok)
     {
-        qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
-        PCx_Audit::addNewAudit(text,years,selectedTree);
-        updateListOfAudits();
-        emit(listOfAuditsChanged());
+        //qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
+        if(PCx_Audit::addNewAudit(text,years,selectedTree)>0)
+        {
+            updateListOfAudits();
+            emit(listOfAuditsChanged());
+            QMessageBox::information(this,tr("Information"),tr("Nouvel audit ajouté, ouvrez la fenêtre 'saisie des données' pour le compléter"));
+        }
     }
 }
 

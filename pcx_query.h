@@ -51,7 +51,7 @@ public:
     virtual QString exec(QXlsx::Document *xlsxDocument=nullptr) const =0;
 
 
-    static bool createTableQueries(unsigned int auditId);
+    static void createTableQueries(unsigned int auditId);
 
     static QString getCSS();
 
@@ -65,6 +65,10 @@ protected:
     unsigned int year1,year2;
     QString name;
     unsigned int queryId;
+
+private:
+    PCx_Query(const PCx_Query &c);
+    PCx_Query &operator=(const PCx_Query &);
 
 };
 

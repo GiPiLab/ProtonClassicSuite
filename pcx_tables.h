@@ -75,6 +75,10 @@ public:
 
 private:
     PCx_Audit *model;
+    PCx_Tables(const PCx_Tables &c);
+    PCx_Tables &operator=(const PCx_Tables &);
+
+
 };
 
 #endif // PCX_TABLES_H

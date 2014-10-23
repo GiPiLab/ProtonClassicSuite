@@ -200,7 +200,6 @@ void FormEditAudit::on_randomDataButton_clicked()
 
     double randval;
 
-
     foreach(unsigned int leaf,leaves)
     {
         foreach(unsigned int year,years)
@@ -213,11 +212,8 @@ void FormEditAudit::on_randomDataButton_clicked()
             randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
             data.insert(PCx_Audit::ORED::ENGAGES,randval);
 
-            if(auditModel->setLeafValues(leaf,mode,year,data,true)==false)
-            {
-                QSqlDatabase::database().rollback();
-                return;
-            }
+            //the transaction will be rollback in setLeafValues=>die
+            auditModel->setLeafValues(leaf,mode,year,data,true);
         }
         nbNode++;
         if(!progress.wasCanceled())
@@ -342,12 +338,12 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
     if(fileName.isEmpty())
         return;
 
-    int res=auditModel->importDataFromXLSX(fileName,mode);
+    bool res=auditModel->importDataFromXLSX(fileName,mode);
     QSqlTableModel *tblModel=auditModel->getTableModel(mode);
     if(tblModel!=nullptr)
         tblModel->select();
 
-    if(res>0)
+    if(res==true)
     {
         QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(PCx_Audit::modeToCompleteString(mode)));
     }

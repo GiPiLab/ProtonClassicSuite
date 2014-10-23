@@ -94,7 +94,7 @@ unsigned int PCx_Audit::getAttachedTreeId(unsigned int auditId)
 
 
 
-bool PCx_Audit::finishAudit()
+void PCx_Audit::finishAudit()
 {
     finished=true;
     QSqlQuery q;
@@ -111,10 +111,9 @@ bool PCx_Audit::finishAudit()
         qCritical()<<q.lastError();
         die();
     }
-    return true;
 }
 
-bool PCx_Audit::unFinishAudit()
+void PCx_Audit::unFinishAudit()
 {
     finished=false;
     QSqlQuery q;
@@ -131,20 +130,12 @@ bool PCx_Audit::unFinishAudit()
         qCritical()<<q.lastError();
         die();
     }
-    return true;
 }
 
 bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED,double> vals, bool fastMode)
 {
-    Q_ASSERT(!vals.isEmpty());
-
     if(!fastMode)
     {
-        if(vals.contains(PCx_Audit::ORED::DISPONIBLES))
-        {
-            qWarning()<<"Will not overwrite the computed column DISPONIBLE";
-            return false;
-        }
         if(finished)
         {
             qWarning()<<"Will not modify a finished audit";
@@ -235,7 +226,8 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, uns
         die();
     }
 
-    return(updateParent(tableName,year,leafId));
+    updateParent(tableName,year,leafId);
+    return true;
 }
 
 qint64 PCx_Audit::getNodeValue(unsigned int nodeId, PCx_Audit::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year) const
@@ -319,7 +311,7 @@ QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, PCx
     return output;
 }
 
-bool PCx_Audit::clearAllData(PCx_Audit::DFRFDIRI mode)
+void PCx_Audit::clearAllData(PCx_Audit::DFRFDIRI mode)
 {
     QSqlQuery q(QString("update audit_%1_%2 set ouverts=NULL,realises=NULL,engages=NULL,disponibles=NULL").arg(modeToTableString(mode)).arg(auditId));
     if(!q.exec())
@@ -332,7 +324,6 @@ bool PCx_Audit::clearAllData(PCx_Audit::DFRFDIRI mode)
         qCritical()<<q.lastError();
         die();
     }
-    return true;
 }
 
 int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI) const
@@ -495,7 +486,7 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
 
 
 
-bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
+void PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
 {
     QString childrenString;
     unsigned int parent;
@@ -613,7 +604,6 @@ bool PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     {
         updateParent(tableName,annee,parent);
     }
-    return true;
 }
 
 
@@ -794,7 +784,7 @@ QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(PCx_Audit::DFRFDIRI mod
     return nodes;
 }
 
-int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI mode)
+bool PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI mode)
 {
     Q_ASSERT(!fileName.isEmpty());
     QElapsedTimer timer;
@@ -804,7 +794,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
     if(!fi.isReadable()||!fi.isFile())
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier invalide ou non lisible"));
-        return -1;
+        return false;
     }
 
     QXlsx::Document xlsx(fileName);
@@ -814,7 +804,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
          xlsx.read(1,5).isValid() && xlsx.read(1,6).isValid()))
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier pré-rempli à l'aide du bouton exporter dans la fenêtre de saisie des données."));
-        return -1;
+        return false;
     }
 
     int rowCount=xlsx.dimension().rowCount();
@@ -824,7 +814,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
     if(rowCount<2)
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier vide. Vous pouvez exporter un fichier pré-rempli à l'aide du bouton exporter dans la fenêtre de saisie des données."));
-        return -1;
+        return false;
     }
 
 
@@ -848,7 +838,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         if(!(nodeType.isValid() && nodeName.isValid() && year.isValid()))
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez le type et le nom du noeud ainsi que l'année d'application").arg(row));
-            return -1;
+            return false;
         }
 
         QPair<QString,QString> typeAndNode;
@@ -857,14 +847,14 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         if(typeAndNode.first.isEmpty() || typeAndNode.second.isEmpty())
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud ne peuvent pas être vides (ni composés d'espaces)").arg(row));
-            return -1;
+            return false;
 
         }
 
         if(!years.contains(year.toUInt()))
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("L'année ligne %1 n'est pas valable pour cet audit !").arg(row));
-            return -1;
+            return false;
         }
         double dblOuv=ouverts.toDouble();
         double dblReal=realises.toDouble();
@@ -874,28 +864,27 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
-            return -1;
+            return false;
         }
 
         if(!qIsFinite(dblOuv)||!qIsFinite(dblReal)||!qIsFinite(dblEng))
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur infinie ligne %1 non autorisée !").arg(row));
-            return -1;
+            return false;
         }
 
         if(dblOuv<0.0 || dblReal<0.0 || dblEng<0.0)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur négative ligne %1 non autorisée !").arg(row));
-            return -1;
+            return false;
         }
-
 
         int nodeId;
         nodeId=attachedTree->getNodeIdFromTypeAndNodeName(typeAndNode);
         if(nodeId<=0)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Noeud introuvable ligne %1").arg(row));
-            return -1;
+            return false;
         }
 
         bool leaf=attachedTree->isLeaf(nodeId);
@@ -903,7 +892,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         if(!leaf)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud ligne %1 n'est pas une feuille ! Remplissez les données pour les feuilles seulement, en utilisant un fichier modèle obtenu à l'aide du bouton d'exportation").arg(row));
-            return -1;
+            return false;
         }
         row++;
 
@@ -913,7 +902,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         }
         else
         {
-            return -1;
+            return false;
         }
 
 
@@ -926,7 +915,7 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
     this->clearAllData(mode);
 
 
-   // QCoreApplication::processEvents(QEventLoop::AllEvents);
+    // QCoreApplication::processEvents(QEventLoop::AllEvents);
 
     QProgressDialog progress2(QObject::tr("Chargement des données en cours..."),QObject::tr("Annuler"),2,rowCount);
 
@@ -984,15 +973,14 @@ int PCx_Audit::importDataFromXLSX(const QString &fileName, PCx_Audit::DFRFDIRI m
         else
         {
             QSqlDatabase::database().rollback();
-            return -1;
+            return false;
         }
 
-}while(row<=rowCount);
-
+    }while(row<=rowCount);
 
     QSqlDatabase::database().commit();
     qDebug()<<"Import done in "<<timer.elapsed()<<" ms";
-    return 1;
+    return true;
 
 }
 
@@ -1132,8 +1120,6 @@ PCx_Audit::DFRFDIRI PCx_Audit::modeFromTableString(const QString &mode)
 
 
 
-
-
 QString PCx_Audit::OREDtoCompleteString(ORED ored)
 {
     switch(ored)
@@ -1203,6 +1189,15 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
     yearsString.chop(1);
 
     //qDebug()<<"years string = "<<yearsString;
+
+
+    QList<unsigned int> treeIds=PCx_Tree::getListOfTreesId(true);
+    if(!treeIds.contains(attachedTreeId))
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Impossible de construire un audit sur un arbre non existant ou non terminé"));
+        return 0;
+    }
+
 
     if(auditNameExists(name))
     {
@@ -1322,12 +1317,7 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         die();
     }
 
-    bool res=PCx_Query::createTableQueries(uLastId);
-
-    if(res==false)
-    {
-        die();
-    }
+    PCx_Query::createTableQueries(uLastId);
 
     //Populate tables with years for each node of the attached tree
 

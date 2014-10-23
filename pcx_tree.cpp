@@ -1045,6 +1045,31 @@ int PCx_Tree::addTree(const QString &name)
     return treeId;
 }
 
+QList<unsigned int> PCx_Tree::getListOfTreesId(bool finishedOnly)
+{
+    QList<unsigned int> listOfTrees;
+
+    QSqlQuery query;
+
+    if(!query.exec("select * from index_arbres order by datetime(le_timestamp)"))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    while(query.next())
+    {
+        if(query.value("termine").toBool()==true)
+        {
+            listOfTrees.append(query.value("id").toUInt());
+        }
+        else if(finishedOnly==false)
+        {
+             listOfTrees.append(query.value("id").toUInt());
+        }
+    }
+    return listOfTrees;
+}
 
 QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
 {
@@ -1067,7 +1092,7 @@ QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
         dt.setTimeSpec(Qt::UTC);
         QDateTime dtLocal=dt.toLocalTime();
 
-        if(query.value(2).toBool()==true)
+        if(query.value("termine").toBool()==true)
         {
             item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
             QPair<unsigned int, QString> p;

@@ -1,3 +1,4 @@
+#include "utils.h"
 #include "pcx_query.h"
 #include "pcx_queryvariation.h"
 #include "pcx_queryrank.h"
@@ -47,21 +48,24 @@ bool PCx_Query::remove(unsigned int queryId)
     return deleteQuery(model->getAuditId(),queryId);
 }
 
-bool PCx_Query::createTableQueries(unsigned int auditId)
+void PCx_Query::createTableQueries(unsigned int auditId)
 {
     QSqlQuery q;
-    q.exec(QString("create table audit_queries_%1(id integer primary key autoincrement, name text not null, "
+    if(!q.exec(QString("create table audit_queries_%1(id integer primary key autoincrement, name text not null, "
                    "query_mode integer not null, target_type integer check (target_type>=0) not null, "
                    "ored integer not null, dfrfdiri integer not null, oper integer, "
                    "percent_or_point integer, increase_decrease integer,val1 integer not null default '0', val2 integer,"
-                   "year1 integer not null, year2 integer not null)").arg(auditId));
+                   "year1 integer not null, year2 integer not null)").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
     if(q.numRowsAffected()==-1)
     {
         qCritical()<<q.lastError();
-        return false;
+        die();
     }
-    return true;
 }
 
 QString PCx_Query::getCSS()

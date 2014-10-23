@@ -85,15 +85,15 @@ void PCx_EditableAuditModel::onModelDataChanged(const QModelIndex &topLeft, cons
     Q_UNUSED(bottomRight);
     QSqlTableModel *model=(QSqlTableModel *)topLeft.model();
 
-    qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
-    qDebug()<<"Model dirty : "<<model->isDirty();
+    //qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
+    //qDebug()<<"Model dirty : "<<model->isDirty();
     int row=topLeft.row();
 
     QVariant vOuverts=model->index(row,COL_OUVERTS).data();
     QVariant vRealises=model->index(row,COL_REALISES).data();
     QVariant vEngages=model->index(row,COL_ENGAGES).data();
 
-    qDebug()<<"VOUVERTS = "<<vOuverts;
+    //qDebug()<<"VOUVERTS = "<<vOuverts;
 
     qint64 ouverts=vOuverts.toLongLong();
     qint64 realises=vRealises.toLongLong();
@@ -114,27 +114,19 @@ void PCx_EditableAuditModel::onModelDataChanged(const QModelIndex &topLeft, cons
 
 }
 
-bool PCx_EditableAuditModel::propagateToAncestors(const QModelIndex &node)
+void PCx_EditableAuditModel::propagateToAncestors(const QModelIndex &node)
 {
     QSqlTableModel *model=(QSqlTableModel *)node.model();
     int row=node.row();
     unsigned int nodeId=model->index(row,COL_IDNODE).data().toUInt();
     unsigned int annee=model->index(row,COL_ANNEE).data().toUInt();
     QString tableName=model->tableName();
-    qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
+    //qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
 
     QSqlDatabase::database().transaction();
-    if(updateParent(tableName,annee,nodeId))
-    {
-        QSqlDatabase::database().commit();
-        return true;
-    }
-    else
-    {
-        QSqlDatabase::database().rollback();
-        qWarning()<<"ERROR DURING PROPAGATING VALUES TO ROOTS, CANCELLING";
-        return false;
-    }
+    updateParent(tableName,annee,nodeId);
+    //rollback in case of failure is done in updateParent=>die
+    QSqlDatabase::database().commit();
 }
 
 QSqlTableModel *PCx_EditableAuditModel::getTableModel(const QString &mode) const
@@ -186,13 +178,11 @@ bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_Audit::DFRFD
     return true;
 }
 
-bool PCx_EditableAuditModel::clearAllData(PCx_Audit::DFRFDIRI mode)
+void PCx_EditableAuditModel::clearAllData(PCx_Audit::DFRFDIRI mode)
 {
     PCx_Audit::clearAllData(mode);
     QSqlTableModel *tblModel=getTableModel(mode);
     if(tblModel!=nullptr)
         tblModel->select();
-
-    return true;
 }
 

@@ -29,6 +29,8 @@ public:
 
 
 private:
+    PCx_QueryMinMax(const PCx_QueryMinMax &c);
+    PCx_QueryMinMax &operator=(const PCx_QueryMinMax &);
 
     qint64 val1,val2;
 

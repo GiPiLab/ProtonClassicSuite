@@ -29,6 +29,10 @@ private:
     bool computeDistances(void);
     static constexpr double threshold=0.9;
 
+    PCx_NodeSimilarityTableModel(const PCx_NodeSimilarityTableModel &c);
+    PCx_NodeSimilarityTableModel &operator=(const PCx_NodeSimilarityTableModel &);
+
+
 
 };
 

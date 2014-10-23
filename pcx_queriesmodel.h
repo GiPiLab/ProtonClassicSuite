@@ -25,6 +25,8 @@ public slots:
 
 private:
     unsigned int auditId;
+    PCx_QueriesModel(const PCx_QueriesModel &c);
+    PCx_QueriesModel &operator=(const PCx_QueriesModel &);
 
 };
 

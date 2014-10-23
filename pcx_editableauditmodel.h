@@ -34,7 +34,7 @@ public:
     //Fast mode does not update the table model
     bool setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode=false);
 
-    bool clearAllData(PCx_Audit::DFRFDIRI mode);
+    void clearAllData(PCx_Audit::DFRFDIRI mode);
 
 
 signals:
@@ -44,7 +44,10 @@ public slots:
 
 private:
     QSqlTableModel *modelDF,*modelRF,*modelDI,*modelRI;
-    bool propagateToAncestors(const QModelIndex &node);
+    void propagateToAncestors(const QModelIndex &node);
+
+    PCx_EditableAuditModel(const PCx_EditableAuditModel &c);
+    PCx_EditableAuditModel &operator=(const PCx_EditableAuditModel &);
 
 
 private slots:

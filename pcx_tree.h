@@ -367,6 +367,15 @@ public:
      */
     static QList<QPair<unsigned int,QString> > getListOfTrees(bool finishedOnly=false);
 
+
+    /**
+     * @brief getListOfTreesId gets a list of tree identifiers
+     * @param finishedOnly indicates if the list should contains only finished trees
+     * @return a list of tree identifiers
+     */
+    static QList<unsigned int> getListOfTreesId(bool finishedOnly=false);
+
+
     /**
      * @brief treeNameExists checks if the tree name exists
      * @param name the name of the tree
@@ -380,6 +389,9 @@ public:
      * @return a QStringList with default types
      */
     static QStringList getListOfDefaultTypes();
+
+
+
 
 
 protected:
@@ -443,6 +455,9 @@ protected:
      * @return the identifier of the new tree, call die on database error
      */
     static int _internalAddTree(const QString &name,bool createRoot=true);
+
+    PCx_Tree(const PCx_Tree &c);
+    PCx_Tree &operator=(const PCx_Tree &);
 
 
 };

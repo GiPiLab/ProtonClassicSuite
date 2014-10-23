@@ -28,6 +28,9 @@ private:
     PCx_Tables tables;
     PCx_Graphics graphics;
 
+    PCx_Report(const PCx_Report &c);
+    PCx_Report &operator=(const PCx_Report &);
+
 };
 
 #endif // PCX_REPORT_H
