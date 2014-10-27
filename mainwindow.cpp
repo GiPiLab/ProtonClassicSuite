@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+using namespace NUMBERSFORMAT;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QObject>
 
+using namespace NUMBERSFORMAT;
 
 PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model)
 {

@@ -72,7 +72,7 @@ public:
      *
      * Add a node in the tree. Check for the maximum number of nodes and if a node with the same name and type exists
      * @param pid the ID of the parent node (PID)
-     * @param typeId the ID of the type for the node to insert
+     * @param type the ID of the type for the node to insert
      * @param name the name of the node to insert
      * @return the ID of the inserted node, or 0 if the node exists
      */

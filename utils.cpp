@@ -14,88 +14,12 @@
 
 #include <graphviz/gvc.h>
 
-
-//To speedup formatCurrency and formatDouble
-FORMATMODE currentFormatMode=FORMATMODENORMAL;
-unsigned int currentNumDecimals=DEFAULTNUMDECIMALS;
-
-unsigned int getCurrentNumDecimals()
-{
-    return currentNumDecimals;
-}
-
-
-void updateFormatModeAndDecimals()
-{
-    QSettings settings;
-    currentFormatMode=(FORMATMODE)settings.value("format/formatMode",FORMATMODENORMAL).toUInt();
-    currentNumDecimals=settings.value("format/numdecimals",DEFAULTNUMDECIMALS).toUInt();
-}
-
 void die(int retcode)
 {
     QSqlDatabase::database().rollback();
     QSqlDatabase::database().close();
     QApplication::instance()->exit(retcode);
     exit(retcode);
-}
-
-QString formatCurrency(qint64 num, int decimals, bool forcedUnits)
-{
-    QLocale locale;
-    QString out;
-
-    if(forcedUnits==false)
-    {
-        switch(currentFormatMode)
-        {
-        case FORMATMODENORMAL:
-            break;
-        case FORMATMODETHOUSANDS:
-            out="k";
-            num/=1000;
-            break;
-        case FORMATMODEMILLIONS:
-            out="M";
-            num/=1000000;
-        }
-    }
-
-    //Forced decimals mode
-    if(decimals>=0)
-        out.prepend(locale.toString(fixedPointToDouble(num),'f',decimals));
-    else
-        out.prepend(locale.toString(fixedPointToDouble(num),'f',currentNumDecimals));
-    return out;
-}
-
-QString formatDouble(double num, int decimals, bool forcedUnits)
-{
-    QLocale locale;
-    QString out;
-
-    if(forcedUnits==false)
-    {
-        switch(currentFormatMode)
-        {
-        case FORMATMODENORMAL:
-            break;
-        case FORMATMODETHOUSANDS:
-            out="k";
-            num/=1000;
-            break;
-        case FORMATMODEMILLIONS:
-            out="M";
-            num/=1000000;
-        }
-    }
-    //Forced decimals mode
-    if(decimals>=0)
-        out.prepend(locale.toString(num,'f',decimals));
-    else
-        out.prepend(locale.toString(num,'f',currentNumDecimals));
-
-    return out;
 }
 
 void initializeNewDb(void)
@@ -215,19 +139,95 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     return true;
 }
 
+namespace NUMBERSFORMAT
+{
+FORMATMODE currentFormatMode=FORMATMODENORMAL;
+unsigned int currentNumDecimals=DEFAULTNUMDECIMALS;
+
+unsigned int getCurrentNumDecimals()
+{
+    return currentNumDecimals;
+}
+
+
+void updateFormatModeAndDecimals()
+{
+    QSettings settings;
+    currentFormatMode=(FORMATMODE)settings.value("format/formatMode",FORMATMODENORMAL).toUInt();
+    currentNumDecimals=settings.value("format/numdecimals",DEFAULTNUMDECIMALS).toUInt();
+}
+
+
+QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits)
+{
+    QLocale locale;
+    QString out;
+
+    if(forcedUnits==false)
+    {
+        switch(currentFormatMode)
+        {
+        case FORMATMODENORMAL:
+            break;
+        case FORMATMODETHOUSANDS:
+            out="k";
+            num/=1000;
+            break;
+        case FORMATMODEMILLIONS:
+            out="M";
+            num/=1000000;
+        }
+    }
+
+    //Forced decimals mode
+    if(decimals>=0)
+        out.prepend(locale.toString(fixedPointToDouble(num),'f',decimals));
+    else
+        out.prepend(locale.toString(fixedPointToDouble(num),'f',currentNumDecimals));
+    return out;
+}
+
+QString formatDouble(double num, int decimals, bool forcedUnits)
+{
+    QLocale locale;
+    QString out;
+
+    if(forcedUnits==false)
+    {
+        switch(currentFormatMode)
+        {
+        case FORMATMODENORMAL:
+            break;
+        case FORMATMODETHOUSANDS:
+            out="k";
+            num/=1000;
+            break;
+        case FORMATMODEMILLIONS:
+            out="M";
+            num/=1000000;
+        }
+    }
+    //Forced decimals mode
+    if(decimals>=0)
+        out.prepend(locale.toString(num,'f',decimals));
+    else
+        out.prepend(locale.toString(num,'f',currentNumDecimals));
+
+    return out;
+}
 
 
 
 qint64 doubleToFixedPoint(double num)
 {
-    return (qint64)((num+FIXEDPOINTCORRECTION)*FIXEDPOINTCOEFF);
+    return (qint64)((num+0.0005)*FIXEDPOINTCOEFF);
 }
 
 double fixedPointToDouble(qint64 num)
 {
     return (double)((double)num/(double)FIXEDPOINTCOEFF);
 }
-
+}
 
 
 

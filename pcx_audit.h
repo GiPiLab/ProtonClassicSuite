@@ -21,37 +21,28 @@ public:
     /**
      * @brief The DFRFDIRI enum describes available spendings and receipts modes
      *
-     * DF is dépenses de fonctionnement (spendings)
-     * RF is recettes de fonctionnement (receipts)
-     * DI is dépenses d'investissement (spendings)
-     * RI is recettes d'investissement (receipts)
-     * GLOBAL is a meta-mode not stored in database
-     *
+     * Each mode corresponds to a table in the database. Each of them contains data about nodes and years,
+     * and columns are described by the ORED enum.
      */
     enum DFRFDIRI
     {
-        DF,
-        RF,
-        DI,
-        RI,
-        GLOBAL
+        DF, ///<dépenses de fonctionnement (spendings)
+        RF, ///<recettes de fonctionnement (receipts)
+        DI, ///<dépenses d'investissement (spendings)
+        RI, ///<recettes d'investissement (receipts)
+        GLOBAL ///<a meta-mode not stored in database
     };
 
 
     /**
      * @brief The ORED enum describes the available data columns in each table of an audit
-     *
-     * OUVERTS is the amount of available money at the beginning of the year
-     * REALISES is the amount of used money
-     * ENGAGES is the amount of committed money
-     * DISPONIBLES is OUVERTS-(REALISES+ENGAGES)
      */
     enum ORED
     {
-        OUVERTS,
-        REALISES,
-        ENGAGES,
-        DISPONIBLES
+        OUVERTS, ///<the amount of available money at the beginning of the year
+        REALISES, ///<the amount of used money
+        ENGAGES, ///<the amount of committed money
+        DISPONIBLES ///<OUVERTS-(REALISES+ENGAGES)
     };
 
     /**
@@ -81,7 +72,7 @@ public:
      * @brief getAttachedTree gets the attached tree
      * @return a pointer to the tree associated with this audit
      */
-    PCx_Tree *getAttachedTree() const{return attachedTree;}
+    virtual PCx_Tree *getAttachedTree() const{return attachedTree;}
 
     /**
      * @brief getAuditName gets the name of the audit

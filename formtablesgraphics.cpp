@@ -127,19 +127,19 @@ void FormTablesGraphics::getSelections()
     if(selectedMode!=PCx_Audit::DFRFDIRI::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
-            selectedTabs.append(PCx_Tables::TABRECAP);
+            selectedTabs.append(PCx_Tables::OVERVIEW);
 
         if(ui->checkBoxEvolution->isChecked())
-            selectedTabs.append(PCx_Tables::TABEVOLUTION);
+            selectedTabs.append(PCx_Tables::EVOLUTION);
 
         if(ui->checkBoxEvolutionCumul->isChecked())
-            selectedTabs.append(PCx_Tables::TABEVOLUTIONCUMUL);
+            selectedTabs.append(PCx_Tables::EVOLUTIONCUMUL);
 
         if(ui->checkBoxBase100->isChecked())
-            selectedTabs.append(PCx_Tables::TABBASE100);
+            selectedTabs.append(PCx_Tables::BASE100);
 
         if(ui->checkBoxJoursAct->isChecked())
-            selectedTabs.append(PCx_Tables::TABJOURSACT);
+            selectedTabs.append(PCx_Tables::DAYOFWORK);
 
         if(ui->checkBoxPrevu->isChecked())
             selectedGraphics.append(PCx_Graphics::G1);
@@ -169,7 +169,7 @@ void FormTablesGraphics::getSelections()
     else
     {
         if(ui->checkBoxResults->isChecked())
-            selectedTabs.append(PCx_Tables::TABRESULTS);
+            selectedTabs.append(PCx_Tables::RESULTS);
 
         if(ui->checkBoxRecapGraph->isChecked())
             selectedGraphics.append(PCx_Graphics::G9);

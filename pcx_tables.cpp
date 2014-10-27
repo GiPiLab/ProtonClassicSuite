@@ -4,6 +4,10 @@
 #include <QSqlError>
 #include <QDebug>
 
+using namespace NUMBERSFORMAT;
+
+
+
 PCx_Tables::PCx_Tables(PCx_Audit *model):model(model)
 {
     Q_ASSERT(model!=nullptr);
@@ -52,9 +56,9 @@ QString PCx_Tables::getT1(unsigned int node, PCx_Audit::DFRFDIRI mode) const
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
                               "<td align='right' class='t1pourcent'>%4\%</td><td align='right' class='t1valeur'>%5</td><td align='right' class='t1pourcent'>%6\%</td>"
                               "<td align='right' class='t1valeur'>%7</td><td align='right' class='t1pourcent'>%8\%</td></tr>").arg(q.value("annee").toUInt())
-                      .arg(formatCurrency(ouverts)).arg(formatCurrency(realises)).arg(formatDouble(percentRealisesOuverts,-1,true))
-                      .arg(formatCurrency(engages)).arg(formatDouble(percentEngagesOuverts,-1,true))
-                      .arg(formatCurrency(disponibles)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
+                      .arg(formatFixedPoint(ouverts)).arg(formatFixedPoint(realises)).arg(formatDouble(percentRealisesOuverts,-1,true))
+                      .arg(formatFixedPoint(engages)).arg(formatDouble(percentEngagesOuverts,-1,true))
+                      .arg(formatFixedPoint(disponibles)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
     }
 
     output.append("</table>");
@@ -863,7 +867,7 @@ QString PCx_Tables::getT10(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_ouverts)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
         if(diff_realises==0)
             output.append("<span style='color:black'>");
@@ -872,7 +876,7 @@ QString PCx_Tables::getT10(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_realises)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
         if(diff_engages==0)
             output.append("<span style='color:black'>");
@@ -881,7 +885,7 @@ QString PCx_Tables::getT10(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td></tr>").arg(formatCurrency(diff_engages)));
+        output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
     }
 
     output.append("</table>");
@@ -930,7 +934,7 @@ QString PCx_Tables::getT11(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_ouverts)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
         if(diff_realises==0)
             output.append("<span style='color:black'>");
@@ -939,7 +943,7 @@ QString PCx_Tables::getT11(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_realises)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
         if(diff_engages==0)
             output.append("<span style='color:black'>");
@@ -948,7 +952,7 @@ QString PCx_Tables::getT11(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td></tr>").arg(formatCurrency(diff_engages)));
+        output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
     }
 
     output.append("</table>");
@@ -1002,7 +1006,7 @@ QString PCx_Tables::getT12(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_ouverts)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
         if(diff_realises==0)
             output.append("<span style='color:black'>");
@@ -1011,7 +1015,7 @@ QString PCx_Tables::getT12(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatCurrency(diff_realises)));
+        output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
         if(diff_engages==0)
             output.append("<span style='color:black'>");
@@ -1020,20 +1024,20 @@ QString PCx_Tables::getT12(unsigned int node) const
         else
             output.append("<span style='color:#7c0000'>");
 
-        output.append(QString("%1</span></td></tr>").arg(formatCurrency(diff_engages)));
+        output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
     }
 
     output.append("</table>");
     return output;
 }
 
-QString PCx_Tables::getTabRecap(unsigned int node, PCx_Audit::DFRFDIRI mode) const
+QString PCx_Tables::getPresetOverview(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT1(node,mode)+"<br>\n"+getT4(node,mode)+"<br>\n"+getT8(node,mode)+"<br>\n";
     return out;
 }
 
-QString PCx_Tables::getTabResults(unsigned int node) const
+QString PCx_Tables::getPresetResults(unsigned int node) const
 {
     QString out=getT10(node)+"<br>\n"+getT11(node)+"<br>\n"+getT12(node)+"<br>\n";
     return out;
@@ -1062,28 +1066,28 @@ QString PCx_Tables::getCSS()
     "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
 }
 
-QString PCx_Tables::getTabEvolution(unsigned int node, PCx_Audit::DFRFDIRI mode) const
+QString PCx_Tables::getPresetEvolution(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT2bis(node,mode)+"<br>\n"+getT3bis(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getTabEvolutionCumul(unsigned int node, PCx_Audit::DFRFDIRI mode) const
+QString PCx_Tables::getPresetEvolutionCumul(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT2(node,mode)+"<br>\n"+getT3(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getTabBase100(unsigned int node, PCx_Audit::DFRFDIRI mode) const
+QString PCx_Tables::getPresetBase100(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT5(node,mode)+"<br>\n"+getT6(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getTabJoursAct(unsigned int node, PCx_Audit::DFRFDIRI mode) const
+QString PCx_Tables::getPresetDayOfWork(unsigned int node, PCx_Audit::DFRFDIRI mode) const
 {
     QString out=getT7(node,mode)+"<br>\n"+getT9(node,mode)+"<br>\n";
     return out;

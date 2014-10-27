@@ -62,7 +62,7 @@ QVariant PCx_NodeSimilarityTableModel::headerData(int section, Qt::Orientation o
     return QVariant();
 }
 
-bool PCx_NodeSimilarityTableModel::computeDistances()
+void PCx_NodeSimilarityTableModel::computeDistances()
 {
     QHash<QString,bool> notCompute;
     QElapsedTimer timer;
@@ -102,8 +102,6 @@ bool PCx_NodeSimilarityTableModel::computeDistances()
         progress.setValue(++nbVals);
     }
     qDebug()<<distances.size()<<" distances computed in"<<timer.elapsed()<<"ms";
-
-    return true;
 }
 
 

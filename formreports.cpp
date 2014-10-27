@@ -309,11 +309,11 @@ void FormReports::on_saveButton_clicked()
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_Audit::DFRFDIRI::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::PRESETS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,PCx_Audit::DFRFDIRI::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
         }
         foreach(PCx_Audit::DFRFDIRI mode,listModes)
         {
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::TABS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::PRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
             output.append("<br><br><br>");

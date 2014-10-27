@@ -5,6 +5,9 @@
 #include <QSettings>
 #include "utils.h"
 
+using namespace NUMBERSFORMAT;
+
+
 PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
@@ -116,7 +119,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td></tr>")
                 .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                 .arg(year)
-                .arg(formatCurrency(val)));
+                .arg(formatFixedPoint(val)));
 
         if(xlsDoc!=nullptr)
         {

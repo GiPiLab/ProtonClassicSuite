@@ -13,6 +13,8 @@
 #include <QFileInfo>
 #include <QElapsedTimer>
 
+using namespace NUMBERSFORMAT;
+
 PCx_Audit::PCx_Audit(unsigned int auditId) :
     auditId(auditId)
 {

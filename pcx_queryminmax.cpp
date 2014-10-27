@@ -5,6 +5,9 @@
 #include <QSettings>
 #include "utils.h"
 
+
+using namespace NUMBERSFORMAT;
+
 PCx_QueryMinMax::PCx_QueryMinMax(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
@@ -130,7 +133,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td></tr>")
                 .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                 .arg(year)
-                .arg(formatCurrency(val)));
+                .arg(formatFixedPoint(val)));
 
         if(xlsDoc!=nullptr)
         {
@@ -206,7 +209,7 @@ QString PCx_QueryMinMax::getDescription() const
     out.append(QObject::tr(" dont les crédits %1s des %2 sont compris entre %3€ et %4€ entre %5 et %6")
             .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
             .arg(PCx_Audit::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
-            .arg(formatCurrency(val1)).arg(formatCurrency(val2))
+            .arg(formatFixedPoint(val1)).arg(formatFixedPoint(val2))
             .arg(year1).arg(year2));
     return out;
 }

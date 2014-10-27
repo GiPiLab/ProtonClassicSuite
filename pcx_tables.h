@@ -7,13 +7,13 @@ class PCx_Tables
 {
 public:
 
-    enum TABS{
-        TABRESULTS,
-        TABRECAP,
-        TABEVOLUTION,
-        TABEVOLUTIONCUMUL,
-        TABBASE100,
-        TABJOURSACT
+    enum PRESETS{
+        RESULTS,
+        OVERVIEW,
+        EVOLUTION,
+        EVOLUTIONCUMUL,
+        BASE100,
+        DAYOFWORK
     };
 
     enum TABLES{
@@ -35,38 +35,37 @@ public:
 
     PCx_Tables(PCx_Audit *model);
 
-    QString getTabJoursAct(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getTabBase100(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getTabEvolutionCumul(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getTabEvolution(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getTabRecap(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getTabResults(unsigned int node) const;
+    QString getPresetDayOfWork(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getPresetBase100(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getPresetEvolutionCumul(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getPresetEvolution(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getPresetOverview(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getPresetResults(unsigned int node) const;
 
     static QString getCSS();
 
-    //T1,T2... are named as in the original PCA version
-    //Content of tab "Recap"
+    //Content of preset "OVERVIEW"
     QString getT1(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
     QString getT4(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
     QString getT8(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
 
-    //Content of tab "Evolution"
+    //Content of preset "EVOLUTION"
     QString getT2bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
     QString getT3bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
 
-    //Content of tab "EvolutionCumul"
+    //Content of preset "EVOLUTIONCUMUL"
     QString getT2(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
     QString getT3(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
 
-    //Content of tab "Base100"
+    //Content of preset "BASE100"
     QString getT5(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
     QString getT6(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
 
-    //Content of tab "Jours act."
+    //Content of preset "DAYOFWORK"
     QString getT7(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
     QString getT9(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
 
-    //Content of "Resultats" mode (without tabs)
+    //Content of preset "RESULTS"
     QString getT10(unsigned int node) const;
     QString getT11(unsigned int node) const;
     QString getT12(unsigned int node) const;

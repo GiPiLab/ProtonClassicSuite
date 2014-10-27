@@ -6,6 +6,9 @@
 #include <QDoubleSpinBox>
 #include <QDebug>
 
+using namespace NUMBERSFORMAT;
+
+
 auditDataDelegate::auditDataDelegate(QObject *parent) :
     QStyledItemDelegate(parent)
 {
@@ -29,7 +32,7 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         {
             painter->setPen(QColor(255,0,0));
         }
-        QString formattedNum=formatCurrency(data);
+        QString formattedNum=formatFixedPoint(data);
         painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
     }
     else if(index.column()==PCx_EditableAuditModel::COL_ANNEE || index.column()==PCx_EditableAuditModel::COL_ID)

@@ -10,6 +10,8 @@
 #include "utils.h"
 
 
+using namespace NUMBERSFORMAT;
+
 FormQueries::FormQueries(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormQueries)

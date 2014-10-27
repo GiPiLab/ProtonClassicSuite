@@ -10,7 +10,7 @@ PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int 
 
 
 
-QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
+QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
                                               unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
                                               const QString &relativeImagePath,QProgressDialog *progress) const
 {
@@ -21,27 +21,27 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs
     //Either group of tables, or individual tables
     if(!listOfTabs.isEmpty())
     {
-        foreach(PCx_Tables::TABS tab,listOfTabs)
+        foreach(PCx_Tables::PRESETS tab,listOfTabs)
         {
             switch(tab)
             {
-            case PCx_Tables::TABRECAP:
-                output.append(tables.getTabRecap(selectedNode,mode));
+            case PCx_Tables::OVERVIEW:
+                output.append(tables.getPresetOverview(selectedNode,mode));
                 break;
-            case PCx_Tables::TABEVOLUTION:
-                output.append(tables.getTabEvolution(selectedNode,mode));
+            case PCx_Tables::EVOLUTION:
+                output.append(tables.getPresetEvolution(selectedNode,mode));
                 break;
-            case PCx_Tables::TABEVOLUTIONCUMUL:
-                output.append(tables.getTabEvolutionCumul(selectedNode,mode));
+            case PCx_Tables::EVOLUTIONCUMUL:
+                output.append(tables.getPresetEvolutionCumul(selectedNode,mode));
                 break;
-            case PCx_Tables::TABBASE100:
-                output.append(tables.getTabBase100(selectedNode,mode));
+            case PCx_Tables::BASE100:
+                output.append(tables.getPresetBase100(selectedNode,mode));
                 break;
-            case PCx_Tables::TABJOURSACT:
-                output.append(tables.getTabJoursAct(selectedNode,mode));
+            case PCx_Tables::DAYOFWORK:
+                output.append(tables.getPresetDayOfWork(selectedNode,mode));
                 break;
-            case PCx_Tables::TABRESULTS:
-                output.append(tables.getTabResults(selectedNode));
+            case PCx_Tables::RESULTS:
+                output.append(tables.getPresetResults(selectedNode));
                 break;
             }
         }

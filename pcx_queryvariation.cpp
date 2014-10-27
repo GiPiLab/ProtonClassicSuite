@@ -7,6 +7,9 @@
 #include <QElapsedTimer>
 #include "utils.h"
 
+
+using namespace NUMBERSFORMAT;
+
 PCx_QueryVariation::PCx_QueryVariation(PCx_Audit *model, unsigned int queryId):PCx_Query(model)
 {
     load(queryId);
@@ -113,7 +116,7 @@ QString PCx_QueryVariation::getDescription() const
             .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
             .arg(PCx_Audit::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
-            .arg(formatCurrency(val,-1,true)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
+            .arg(formatFixedPoint(val,-1,true)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;
 }
@@ -317,9 +320,9 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
         if(incDec!=VARIATION)val=qAbs(val);
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4 %5</td></tr>")
                 .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-                .arg(formatCurrency(valuesForYear1.value(node)))
-                .arg(formatCurrency(valuesForYear2.value(node)))
-                .arg(formatCurrency(val,-1,true))
+                .arg(formatFixedPoint(valuesForYear1.value(node)))
+                .arg(formatFixedPoint(valuesForYear2.value(node)))
+                .arg(formatFixedPoint(val,-1,true))
                 .arg(percentOrPointToString(percentOrPoints).toHtmlEscaped()));
         if(xlsDoc!=nullptr)
         {
@@ -347,8 +350,8 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
     {
         output.append(QString("<tr><td><i>%1</i></td><td><i>%2</i></td><td><i>%3</i></td><td align='right'><i>NA</i></td></tr>")
                 .arg(model->getAttachedTree()->getNodeName(probNode).toHtmlEscaped())
-                .arg(formatCurrency(valuesForYear1.value(probNode)))
-                .arg(formatCurrency(valuesForYear2.value(probNode))));
+                .arg(formatFixedPoint(valuesForYear1.value(probNode)))
+                .arg(formatFixedPoint(valuesForYear2.value(probNode))));
         if(xlsDoc!=nullptr)
         {
             QPair<QString,QString> typeAndNodeName=model->getAttachedTree()->getTypeNameAndNodeName(probNode);

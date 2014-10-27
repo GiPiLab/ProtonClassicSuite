@@ -8,6 +8,10 @@
 #include <QSettings>
 #include <QDebug>
 
+
+using namespace NUMBERSFORMAT;
+
+
 DialogOptions::DialogOptions(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::DialogOptions)

@@ -1,6 +1,6 @@
 #include "pcx_stringdistance.h"
 
-PCx_StringDistance::PCx_StringDistance(const QString &str1, const QString &str2, SIMILARITYMETRIC similarityMode):str1(str1),str2(str2)
+PCx_StringDistance::PCx_StringDistance(const QString &str1, const QString &str2, SIMILARITYMETRIC similarityMode):str1(str1),str2(str2),metric(similarityMode)
 {
     switch(similarityMode)
     {

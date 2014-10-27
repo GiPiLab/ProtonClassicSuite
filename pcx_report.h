@@ -11,7 +11,7 @@ public:
     PCx_Report(PCx_Audit *model,QCustomPlot *plot=0,int graphicsWidth=650,int graphicsHeight=400,double scale=1.0);
 
 
-    QString generateHTMLReportForNode(QList<PCx_Tables::TABS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
+    QString generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
                                       unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
                                       const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
