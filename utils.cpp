@@ -29,15 +29,15 @@ void initializeNewDb(void)
     query.exec("create table if not exists index_arbres(id integer primary key autoincrement, nom text unique not null, termine integer not null default 0, le_timestamp text default current_timestamp)");
     if(query.numRowsAffected()==-1)
     {
-        qFatal(query.lastError().text().toLocal8Bit());
-        exit(-1);
+        qCritical()<<query.lastError();
+        die();
     }
 
     query.exec("create table if not exists index_audits(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, annees text not null, termine integer not null default 0, le_timestamp text default current_timestamp)");
     if(query.numRowsAffected()==-1)
     {
-        qFatal(query.lastError().text().toLocal8Bit());
-        exit(-1);
+        qCritical()<<query.lastError();
+        die();
     }
 }
 
@@ -49,8 +49,8 @@ bool loadDb(const QString &databaseName)
 
     if(!db.open())
     {
-        qFatal(db.lastError().text().toLocal8Bit());
-        exit(-1);
+        qCritical()<<db.lastError();
+        die();
     }
 
     /*QSqlQuery("PRAGMA journal_mode=OFF");

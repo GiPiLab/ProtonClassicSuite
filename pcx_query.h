@@ -5,13 +5,19 @@
 #include "xlsxdocument.h"
 #include "pcx_audit.h"
 
+/**
+ * @brief The PCx_Query class is the base class for predefined queries
+ */
 class PCx_Query
 {
 public:
 
+    /**
+     * @brief The QUERIESTYPES enum represents available queries
+     */
     enum QUERIESTYPES
     {
-        VARIATION,
+        VARIATION, ///< the query "give me nodes that increase or decrease
         MINMAX,
         RANK
     };
