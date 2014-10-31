@@ -63,11 +63,7 @@ void FormEditTree::updateListOfTree()
         ui->comboBox->insertItem(0,p.second,p.first);
     }
 
-    if(ui->comboBox->count()==0)
-    {
-        on_newTreeButton_clicked();
-    }
-    else
+    if(ui->comboBox->count()>0)
     {
         ui->comboBox->setCurrentIndex(0);
         on_comboBox_activated(0);

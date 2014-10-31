@@ -62,12 +62,10 @@ void MainWindow::setMenusState()
 {
     if(QSqlDatabase::database().databaseName().isEmpty())
     {
-        ui->menuExploitation->setEnabled(false);
         ui->menuDataInput->setEnabled(false);
     }
     else
     {
-        ui->menuExploitation->setEnabled(true);
         ui->menuDataInput->setEnabled(true);
     }
 }

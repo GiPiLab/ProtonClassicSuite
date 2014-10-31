@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>276</height>
+    <width>510</width>
+    <height>277</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,6 +22,10 @@
      <property name="text">
       <string>Exporter XLSX</string>
      </property>
+     <property name="icon">
+      <iconset resource="Icons.qrc">
+       <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+     </property>
     </widget>
    </item>
    <item row="2" column="0">
@@ -31,6 +35,10 @@
      </property>
      <property name="text">
       <string>Exporter PDF</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Icons.qrc">
+       <normaloff>:/icons/icons/pdf_exports.png</normaloff>:/icons/icons/pdf_exports.png</iconset>
      </property>
     </widget>
    </item>
@@ -83,6 +91,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

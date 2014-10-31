@@ -40,19 +40,17 @@
    </widget>
    <widget class="QMenu" name="menuDataInput">
     <property name="title">
-     <string>&amp;Arbres et audits</string>
+     <string>A&amp;udits</string>
     </property>
+    <addaction name="separator"/>
     <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
-    <addaction name="actionEditAudit"/>
-   </widget>
-   <widget class="QMenu" name="menuExploitation">
-    <property name="title">
-     <string>&amp;Exploitations des résultats</string>
-    </property>
+    <addaction name="separator"/>
     <addaction name="actionTablesGraphics"/>
     <addaction name="actionReport"/>
     <addaction name="actionQueries"/>
+    <addaction name="separator"/>
+    <addaction name="actionElaboration_budg_taire_PCB"/>
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">
@@ -61,14 +59,46 @@
     <addaction name="actionAide"/>
     <addaction name="actionA_propos"/>
    </widget>
+   <widget class="QMenu" name="menuReporting">
+    <property name="title">
+     <string>Reporting</string>
+    </property>
+    <addaction name="actionManageTree"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
-   <addaction name="menuExploitation"/>
+   <addaction name="menuReporting"/>
    <addaction name="menuA_propos"/>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNewDb"/>
+   <addaction name="actionOpenDb"/>
+   <addaction name="actionO_ptions"/>
+   <addaction name="separator"/>
+   <addaction name="actionManageTree"/>
+   <addaction name="actionManageAudits"/>
+   <addaction name="actionEditAudit"/>
+   <addaction name="separator"/>
+   <addaction name="actionTablesGraphics"/>
+   <addaction name="actionReport"/>
+   <addaction name="actionQueries"/>
+  </widget>
   <action name="actionManageTree">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
+   </property>
    <property name="text">
-    <string>Gestion des &amp;arbres</string>
+    <string>&amp;Arbres</string>
    </property>
    <property name="toolTip">
     <string>Gestion des arbres</string>
@@ -80,41 +110,73 @@
    </property>
   </action>
   <action name="actionManageAudits">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/manage_sources.png</normaloff>:/icons/icons/manage_sources.png</iconset>
+   </property>
    <property name="text">
     <string>Gestion des a&amp;udits</string>
    </property>
   </action>
   <action name="actionEditAudit">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/table_edit.png</normaloff>:/icons/icons/table_edit.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Saisie des données</string>
    </property>
   </action>
   <action name="actionTablesGraphics">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/exploreAudit.png</normaloff>:/icons/icons/exploreAudit.png</iconset>
+   </property>
    <property name="text">
     <string>E&amp;xplorateur d'audits</string>
    </property>
   </action>
   <action name="actionReport">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/report.png</normaloff>:/icons/icons/report.png</iconset>
+   </property>
    <property name="text">
     <string>Générateur de &amp;rapports</string>
    </property>
   </action>
   <action name="actionQueries">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/queries.png</normaloff>:/icons/icons/queries.png</iconset>
+   </property>
    <property name="text">
     <string>Requêtes &amp;personnalisées</string>
    </property>
   </action>
   <action name="actionNewDb">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/database_add.png</normaloff>:/icons/icons/database_add.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Nouvelle base de données</string>
    </property>
   </action>
   <action name="actionOpenDb">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/database_go.png</normaloff>:/icons/icons/database_go.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Ouvrir base de données</string>
    </property>
   </action>
   <action name="actionO_ptions">
+   <property name="icon">
+    <iconset resource="Icons.qrc">
+     <normaloff>:/icons/icons/setting_tools.png</normaloff>:/icons/icons/setting_tools.png</iconset>
+   </property>
    <property name="text">
     <string>O&amp;ptions</string>
    </property>
@@ -129,8 +191,15 @@
     <string>Manuel</string>
    </property>
   </action>
+  <action name="actionElaboration_budg_taire_PCB">
+   <property name="text">
+    <string>Elaboration budgétaire (PCB)</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

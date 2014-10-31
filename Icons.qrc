@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/exploreAudit.png</file>
+        <file>icons/queries.png</file>
+        <file>icons/report.png</file>
+        <file>icons/table_edit.png</file>
+        <file>icons/tree.png</file>
+        <file>icons/database_add.png</file>
+        <file>icons/database_go.png</file>
+        <file>icons/manage_sources.png</file>
+        <file>icons/excel_exports.png</file>
+        <file>icons/excel_imports.png</file>
+        <file>icons/setting_tools.png</file>
+        <file>icons/pdf_exports.png</file>
+    </qresource>
+</RCC>

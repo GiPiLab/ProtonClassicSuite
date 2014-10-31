@@ -88,8 +88,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>774</width>
-        <height>96</height>
+        <width>760</width>
+        <height>98</height>
        </rect>
       </property>
       <attribute name="label">
@@ -114,6 +114,10 @@
         <widget class="QPushButton" name="importTreeButton">
          <property name="text">
           <string>&amp;Importer arbre</string>
+         </property>
+         <property name="icon">
+          <iconset resource="Icons.qrc">
+           <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
          </property>
         </widget>
        </item>
@@ -237,6 +241,8 @@
   <tabstop>treeView</tabstop>
   <tabstop>listTypesView</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

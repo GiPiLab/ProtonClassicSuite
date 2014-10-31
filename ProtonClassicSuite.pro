@@ -103,3 +103,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L"$$PWD/../../../../Program Fi
 
 win32:INCLUDEPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
 win32:DEPENDPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
+
+RESOURCES += \
+    Icons.qrc
+
