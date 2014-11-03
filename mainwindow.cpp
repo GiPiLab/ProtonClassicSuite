@@ -63,13 +63,27 @@ void MainWindow::setMenusState()
     if(QSqlDatabase::database().databaseName().isEmpty())
     {
         ui->menuDataInput->setEnabled(false);
+        ui->menuReporting->setEnabled(false);
+        ui->actionEditAudit->setEnabled(false);
+        ui->actionManageAudits->setEnabled(false);
+        ui->actionManageTree->setEnabled(false);
+        ui->actionQueries->setEnabled(false);
+        ui->actionReport->setEnabled(false);
+        ui->actionTablesGraphics->setEnabled(false);
     }
     else
     {
         ui->menuDataInput->setEnabled(true);
+        ui->menuReporting->setEnabled(true);
+
+        ui->actionEditAudit->setEnabled(true);
+        ui->actionManageAudits->setEnabled(true);
+        ui->actionManageTree->setEnabled(true);
+        ui->actionQueries->setEnabled(true);
+        ui->actionReport->setEnabled(true);
+        ui->actionTablesGraphics->setEnabled(true);
     }
 }
-
 
 
 void MainWindow::on_actionManageTree_triggered()
