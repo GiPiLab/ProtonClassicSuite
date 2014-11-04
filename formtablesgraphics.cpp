@@ -99,22 +99,22 @@ void FormTablesGraphics::updateTextBrowser()
 
 void FormTablesGraphics::getSelections()
 {
-    selectedMode=PCx_Audit::DFRFDIRI::GLOBAL;
+    selectedMode=MODES::DFRFDIRI::GLOBAL;
 
     if(ui->radioButtonDF->isChecked())
-        selectedMode=PCx_Audit::DFRFDIRI::DF;
+        selectedMode=MODES::DFRFDIRI::DF;
 
     else if(ui->radioButtonRF->isChecked())
-        selectedMode=PCx_Audit::DFRFDIRI::RF;
+        selectedMode=MODES::DFRFDIRI::RF;
 
     else if(ui->radioButtonDI->isChecked())
-        selectedMode=PCx_Audit::DFRFDIRI::DI;
+        selectedMode=MODES::DFRFDIRI::DI;
 
     else if(ui->radioButtonRI->isChecked())
-        selectedMode=PCx_Audit::DFRFDIRI::RI;
+        selectedMode=MODES::DFRFDIRI::RI;
 
     else if(ui->radioButtonGlobal->isChecked())
-        selectedMode=PCx_Audit::DFRFDIRI::GLOBAL;
+        selectedMode=MODES::DFRFDIRI::GLOBAL;
 
     else
     {
@@ -124,7 +124,7 @@ void FormTablesGraphics::getSelections()
     selectedGraphics.clear();
     selectedTabs.clear();
 
-    if(selectedMode!=PCx_Audit::DFRFDIRI::GLOBAL)
+    if(selectedMode!=MODES::DFRFDIRI::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
             selectedTabs.append(PCx_Tables::OVERVIEW);
@@ -212,7 +212,7 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
-        selectedMode=PCx_Audit::DFRFDIRI::GLOBAL;
+        selectedMode=MODES::DFRFDIRI::GLOBAL;
         updateTextBrowser();
 
         ui->checkBoxPoidsRelatif->setEnabled(false);

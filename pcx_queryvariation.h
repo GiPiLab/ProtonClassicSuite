@@ -36,7 +36,7 @@ public:
 
     PCx_QueryVariation(PCx_Audit *model,unsigned int queryId);
 
-    PCx_QueryVariation(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
+    PCx_QueryVariation(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, MODES::DFRFDIRI dfrfdiri,
                        INCREASEDECREASE incDec, PERCENTORPOINTS percentOrPoints, OPERATORS op, qint64 val, unsigned int year1,
                        unsigned int year2, const QString &name="");
 

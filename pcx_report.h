@@ -12,7 +12,7 @@ public:
 
 
     QString generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
-                                      unsigned int selectedNode, PCx_Audit::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
+                                      unsigned int selectedNode, MODES::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
                                       const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
     QString generateHTMLTOC(QList<unsigned int> nodes) const;

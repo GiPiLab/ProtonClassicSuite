@@ -15,7 +15,7 @@ PCx_QueryVariation::PCx_QueryVariation(PCx_Audit *model, unsigned int queryId):P
     load(queryId);
 }
 
-PCx_QueryVariation::PCx_QueryVariation(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
+PCx_QueryVariation::PCx_QueryVariation(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, MODES::DFRFDIRI dfrfdiri,
                                        INCREASEDECREASE increase, PERCENTORPOINTS percent, OPERATORS op, qint64 val, unsigned int year1, unsigned int year2,
                                        const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),
                                         incDec(increase),percentOrPoints(percent),op(op),val(val)
@@ -45,7 +45,7 @@ bool PCx_QueryVariation::load(unsigned int queryId)
         name=q.value("name").toString();
         typeId=q.value("target_type").toUInt();
         ored=(PCx_Audit::ORED)q.value("ored").toUInt();
-        dfrfdiri=(PCx_Audit::DFRFDIRI)q.value("dfrfdiri").toUInt();
+        dfrfdiri=(MODES::DFRFDIRI)q.value("dfrfdiri").toUInt();
         op=(OPERATORS)q.value("oper").toUInt();
         val=q.value("val1").toLongLong();
 
@@ -114,7 +114,7 @@ QString PCx_QueryVariation::getDescription() const
 
     out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
             .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
-            .arg(PCx_Audit::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
+            .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
             .arg(formatFixedPoint(val,-1,true)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
             .arg(year1).arg(year2));
@@ -151,7 +151,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 
 
     q.prepare(QString("select id_node,annee,%3 from audit_%1_%2 where annee=:year1 or annee=:year2")
-              .arg(PCx_Audit::modeToTableString(dfrfdiri)).arg(model->getAuditId()).arg(oredString));
+              .arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId()).arg(oredString));
     q.bindValue(":year1",year1);
     q.bindValue(":year2",year2);
     q.exec();

@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formManageAudits=nullptr;
     formEditAudit=nullptr;
     formReports=nullptr;
+    formManageReportings=nullptr;
 
     restoreSettings();
     updateTitle();
@@ -100,6 +101,10 @@ void MainWindow::on_actionManageTree_triggered()
         {
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
         }
+        if(formManageReportings!=nullptr)
+        {
+            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
+        }
         connect(formEditTreeWin,SIGNAL(destroyed()),this,SLOT(onFormEditTreeWindowsDestroyed()));
     }
 }
@@ -120,6 +125,11 @@ void MainWindow::onFormManageAuditsWindowsDestroyed()
 {
     formManageAudits=nullptr;
     qDebug()<<"FormManageAudits window closed";
+}
+
+void MainWindow::onFormManageReportingsWindowsDestroyed()
+{
+    formManageReportings=nullptr;
 }
 
 void MainWindow::onFormEditAuditWindowsDestroyed()
@@ -356,4 +366,25 @@ void MainWindow::on_actionQueries_triggered()
 void MainWindow::on_actionA_propos_triggered()
 {
     QMessageBox::information(this,tr("A propos"),tr("ProtonClassicSuite dev (%1)\n©2006-%2 Laboratoire de Recherche pour le Développement Local (http://gipilab.org)").arg(VERSION).arg(QDate::currentDate().year()));
+}
+
+void MainWindow::on_actionGestion_des_reportings_triggered()
+{
+    if(formManageReportings==nullptr)
+    {
+        formManageReportings=new FormManageReportings(this);
+        formManageReportings->setAttribute(Qt::WA_DeleteOnClose);
+
+        ui->mdiArea->addSubWindow(formManageReportings);
+        formManageReportings->show();
+        connect(formManageReportings,SIGNAL(destroyed()),this,SLOT(onFormManageReportingsWindowsDestroyed()));
+
+        if(formEditTreeWin!=nullptr)
+        {
+            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
+        }
+
+        //FIXME : connect !
+
+    }
 }

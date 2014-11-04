@@ -12,7 +12,7 @@ PCx_Query::PCx_Query(PCx_Audit *model):model(model),queryId(0)
 {
 }
 
-PCx_Query::PCx_Query(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri,
+PCx_Query::PCx_Query(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, MODES::DFRFDIRI dfrfdiri,
                          unsigned int year1, unsigned int year2, const QString &name):model(model),typeId(typeId),ored(ored),dfrfdiri(dfrfdiri),
                         name(name),queryId(0)
 {

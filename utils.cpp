@@ -39,6 +39,12 @@ void initializeNewDb(void)
         qCritical()<<query.lastError();
         die();
     }
+    query.exec("create table if not exists index_reportings(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, le_timestamp text default current_timestamp)");
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
 }
 
 bool loadDb(const QString &databaseName)
@@ -138,6 +144,72 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     gvFreeContext(gvc);
     return true;
 }
+
+
+namespace MODES
+{
+
+QString modeToCompleteString(DFRFDIRI mode)
+{
+    switch(mode)
+    {
+    case DFRFDIRI::DF:
+        return QObject::tr("Dépenses de fonctionnement");
+    case DFRFDIRI::RF:
+        return QObject::tr("Recettes de fonctionnement");
+    case DFRFDIRI::DI:
+        return QObject::tr("Dépenses d'investissement");
+    case DFRFDIRI::RI:
+        return QObject::tr("Recettes d'investissement");
+    default:
+        qWarning()<<"Invalid mode specified !";
+    }
+    return QString();
+}
+
+
+QString modeToTableString(DFRFDIRI mode)
+{
+    switch(mode)
+    {
+    case DFRFDIRI::DF:
+        return "DF";
+    case DFRFDIRI::RF:
+        return "RF";
+    case DFRFDIRI::DI:
+        return "DI";
+    case DFRFDIRI::RI:
+        return "RI";
+    default:
+        qWarning()<<"Invalid mode specified !";
+    }
+    return QString();
+}
+
+
+DFRFDIRI modeFromTableString(const QString &mode)
+{
+    if(mode==modeToTableString(DFRFDIRI::DF))
+        return DFRFDIRI::DF;
+    if(mode==modeToTableString(DFRFDIRI::RF))
+        return DFRFDIRI::RF;
+    if(mode==modeToTableString(DFRFDIRI::DI))
+        return DFRFDIRI::DI;
+    if(mode==modeToTableString(DFRFDIRI::RI))
+        return DFRFDIRI::RI;
+
+    qWarning()<<"Invalid DFRFDIRI string specified, defaulting to DF";
+    return DFRFDIRI::DF;
+}
+
+
+
+}
+
+
+
+
+
 
 namespace NUMBERSFORMAT
 {

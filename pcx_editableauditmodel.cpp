@@ -150,20 +150,20 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(const QString &mode) const
     return nullptr;
 }
 
-QSqlTableModel *PCx_EditableAuditModel::getTableModel(PCx_Audit::DFRFDIRI mode) const
+QSqlTableModel *PCx_EditableAuditModel::getTableModel(MODES::DFRFDIRI mode) const
 {
     switch(mode)
     {
-    case PCx_Audit::DFRFDIRI::DF:return modelDF;
-    case PCx_Audit::DFRFDIRI::RF:return modelRF;
-    case PCx_Audit::DFRFDIRI::DI:return modelDI;
-    case PCx_Audit::DFRFDIRI::RI:return modelRI;
-    case PCx_Audit::DFRFDIRI::GLOBAL:return nullptr;
+    case MODES::DFRFDIRI::DF:return modelDF;
+    case MODES::DFRFDIRI::RF:return modelRF;
+    case MODES::DFRFDIRI::DI:return modelDI;
+    case MODES::DFRFDIRI::RI:return modelRI;
+    case MODES::DFRFDIRI::GLOBAL:return nullptr;
     }
     return nullptr;
 }
 
-bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode)
+bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode)
 {
     if(PCx_Audit::setLeafValues(leafId,mode,year,vals,fastMode)==false)
         return false;
@@ -178,7 +178,7 @@ bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, PCx_Audit::DFRFD
     return true;
 }
 
-void PCx_EditableAuditModel::clearAllData(PCx_Audit::DFRFDIRI mode)
+void PCx_EditableAuditModel::clearAllData(MODES::DFRFDIRI mode)
 {
     PCx_Audit::clearAllData(mode);
     QSqlTableModel *tblModel=getTableModel(mode);

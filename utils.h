@@ -61,6 +61,51 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
  * Each double is multiplied by FIXEDPOINTCOEFF before beeing stored.
  *
  */
+
+namespace MODES
+{
+/**
+ * @brief The DFRFDIRI enum describes available spendings and receipts modes
+ *
+ * Each mode corresponds to a table in the database. Each of them contains data about nodes and years,
+ * and columns are described by the ORED enum.
+ */
+enum DFRFDIRI
+{
+    DF, ///<dépenses de fonctionnement (spendings)
+    RF, ///<recettes de fonctionnement (receipts)
+    DI, ///<dépenses d'investissement (spendings)
+    RI, ///<recettes d'investissement (receipts)
+    GLOBAL ///<a meta-mode not stored in database
+};
+
+
+/**
+ * @brief modeToCompleteString converts a mode to its textual representation
+ * @param mode the mode to convert
+ * @return the text representation of the mode
+ */
+QString modeToCompleteString(DFRFDIRI mode);
+
+/**
+ * @brief modeFromTableString converts a table name for a mode to a DFRFDIRI value
+ * @param mode the table name of the mode (for example, "DF")
+ * @return the mode, or DFRFDIRI::DF if not found
+ */
+DFRFDIRI modeFromTableString(const QString &mode);
+
+/**
+ * @brief modeToTableString converts a mode to its database table name
+ * @param mode the mode to convert
+ * @return the suffix of the table for the specified mode
+ */
+QString modeToTableString(DFRFDIRI mode);
+
+}
+
+
+
+
 namespace NUMBERSFORMAT
 {
 /**

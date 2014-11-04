@@ -13,7 +13,7 @@ PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int queryId):PCx_Query(m
     load(queryId);
 }
 
-PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, PCx_Audit::DFRFDIRI dfrfdiri, PCx_QueryRank::GREATERSMALLER greaterOrSmaller,
+PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, MODES::DFRFDIRI dfrfdiri, PCx_QueryRank::GREATERSMALLER greaterOrSmaller,
                              unsigned int number, unsigned int year1, unsigned int year2, const QString &name):PCx_Query(model,typeId,ored,dfrfdiri,year1,year2,name),grSm(greaterOrSmaller),number(number)
 {
 }
@@ -60,7 +60,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 as b where a.id_node=b.id "
                           "and type=:typeId and %1 not null and annee>=:year1 and annee<=:year2 order by %1 %5 limit %6")
-                  .arg(oredString).arg(PCx_Audit::modeToTableString(dfrfdiri)).arg(model->getAuditId())
+                  .arg(oredString).arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(model->getAttachedTree()->getTreeId()).arg(order).arg(number));
         q.bindValue(":typeId",typeId);
     }
@@ -68,7 +68,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where annee>=:year1 "
                           "and annee<=:year2 and %1 not null order by %1 %4 limit %5")
-                  .arg(oredString).arg(PCx_Audit::modeToTableString(dfrfdiri)).arg(model->getAuditId())
+                  .arg(oredString).arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(order).arg(number));
     }
 
@@ -158,7 +158,7 @@ bool PCx_QueryRank::load(unsigned int queryId)
         name=q.value("name").toString();
         typeId=q.value("target_type").toUInt();
         ored=(PCx_Audit::ORED)q.value("ored").toUInt();
-        dfrfdiri=(PCx_Audit::DFRFDIRI)q.value("dfrfdiri").toUInt();
+        dfrfdiri=(MODES::DFRFDIRI)q.value("dfrfdiri").toUInt();
         setYears(q.value("year1").toUInt(),q.value("year2").toUInt());
         grSm=(GREATERSMALLER)q.value("increase_decrease").toUInt();
         number=q.value("val1").toUInt();
@@ -195,7 +195,7 @@ QString PCx_QueryRank::getDescription() const
 
     out.append(QObject::tr(" dont les crédits %1s des %2 sont parmi les [%3] %4 entre %5 et %6")
             .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
-            .arg(PCx_Audit::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
+            .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(number).arg(greaterSmallerToString(grSm).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;

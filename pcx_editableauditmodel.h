@@ -48,7 +48,7 @@ public:
      * @param mode the DFRFDIRI mode
      * @return the table model, or nullptr if mode==DFRFDIRI::GLOBAL
      */
-    QSqlTableModel *getTableModel(PCx_Audit::DFRFDIRI mode) const;
+    QSqlTableModel *getTableModel(MODES::DFRFDIRI mode) const;
 
     /**
      * @brief getTableModelDF gets the QSqlTableModel for DF table
@@ -83,7 +83,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    bool setLeafValues(unsigned int leafId, PCx_Audit::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode=false);
+    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode=false);
 
 
 
@@ -91,7 +91,7 @@ public:
      * @brief clearAllData erases all audit data for a specific mode, and refresh QSqlTableModel
      * @param mode the mode to clear
      */
-    void clearAllData(PCx_Audit::DFRFDIRI mode);
+    void clearAllData(MODES::DFRFDIRI mode);
 
 
 signals:

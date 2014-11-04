@@ -5,6 +5,7 @@
 #include <QMdiSubWindow>
 #include <QList>
 
+#include "formmanagereportings.h"
 #include "formmanageaudits.h"
 #include "formedittree.h"
 #include "formeditaudit.h"
@@ -38,6 +39,8 @@ private slots:
 
     void onFormManageAuditsWindowsDestroyed();
 
+    void onFormManageReportingsWindowsDestroyed();
+
     void onFormEditAuditWindowsDestroyed();
 
     void onFormTablesWindowsDestroyed(QObject *);
@@ -64,6 +67,8 @@ private slots:
 
     void on_actionA_propos_triggered();
 
+    void on_actionGestion_des_reportings_triggered();
+
 private:
 
     Ui::MainWindow *ui;
@@ -73,6 +78,8 @@ private:
     FormManageAudits *formManageAudits;
     FormEditAudit *formEditAudit;
     FormReports *formReports;
+    FormManageReportings *formManageReportings;
+
 
     //Multiple "tables" dialogs are allowed
     QList<FormTablesGraphics *>listOfFormTablesGraphics;

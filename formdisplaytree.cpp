@@ -60,6 +60,12 @@ void FormDisplayTree::on_collapseButton_clicked()
 
 void FormDisplayTree::on_exportButton_clicked()
 {
+    QList<unsigned int> listOfTrees=PCx_Tree::getListOfTreesId();
+    if(!listOfTrees.contains(model->getTreeId()))
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Cet arbre a été supprimé !"));
+        return;
+    }
     QString dot=model->toDot();
 
     qDebug()<<dot;
@@ -87,6 +93,12 @@ void FormDisplayTree::on_exportButton_clicked()
 
 void FormDisplayTree::on_exportXLSXButton_clicked()
 {
+    QList<unsigned int> listOfTrees=PCx_Tree::getListOfTreesId();
+    if(!listOfTrees.contains(model->getTreeId()))
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Cet arbre a été supprimé !"));
+        return;
+    }
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format XLSX"), "",tr("Fichiers XLSX (*.xlsx)"));

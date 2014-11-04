@@ -64,6 +64,7 @@
      <string>Reporting</string>
     </property>
     <addaction name="actionManageTree"/>
+    <addaction name="actionGestion_des_reportings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
@@ -194,6 +195,11 @@
   <action name="actionElaboration_budg_taire_PCB">
    <property name="text">
     <string>Elaboration budgétaire (PCB)</string>
+   </property>
+  </action>
+  <action name="actionGestion_des_reportings">
+   <property name="text">
+    <string>&amp;Gestion des reportings</string>
    </property>
   </action>
  </widget>

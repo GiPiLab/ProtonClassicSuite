@@ -169,15 +169,15 @@ void FormEditAudit::on_randomDataButton_clicked()
     QList<unsigned int> leaves=auditModel->getAttachedTree()->getLeavesId();
     QList<unsigned int> years=auditModel->getYears();
 
-    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_Audit::DFRFDIRI::DF;
+        mode=MODES::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_Audit::DFRFDIRI::RF;
+        mode=MODES::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_Audit::DFRFDIRI::DI;
+        mode=MODES::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_Audit::DFRFDIRI::RI;
+        mode=MODES::DFRFDIRI::RI;
 
 
     QHash<PCx_Audit::ORED,double> data;
@@ -242,17 +242,17 @@ void FormEditAudit::on_clearDataButton_clicked()
         return;
     }
 
-    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_Audit::DFRFDIRI::DF;
+        mode=MODES::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_Audit::DFRFDIRI::RF;
+        mode=MODES::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_Audit::DFRFDIRI::DI;
+        mode=MODES::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_Audit::DFRFDIRI::RI;
+        mode=MODES::DFRFDIRI::RI;
 
     auditModel->clearAllData(mode);
 }
@@ -280,17 +280,17 @@ void FormEditAudit::on_statsButton_clicked()
 
 void FormEditAudit::on_pushButtonExportLeaves_clicked()
 {
-    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_Audit::DFRFDIRI::DF;
+        mode=MODES::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_Audit::DFRFDIRI::RF;
+        mode=MODES::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_Audit::DFRFDIRI::DI;
+        mode=MODES::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_Audit::DFRFDIRI::RI;
+        mode=MODES::DFRFDIRI::RI;
 
 
     QFileDialog fileDialog;
@@ -308,7 +308,7 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
 
     if(res==true)
     {
-        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(PCx_Audit::modeToCompleteString(mode)));
+        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(MODES::modeToCompleteString(mode)));
     }
     else
     {
@@ -319,17 +319,17 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
 
 void FormEditAudit::on_pushButtonImportLeaves_clicked()
 {
-    PCx_Audit::DFRFDIRI mode=PCx_Audit::DFRFDIRI::DF;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
 
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=PCx_Audit::DFRFDIRI::DF;
+        mode=MODES::DFRFDIRI::DF;
     else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=PCx_Audit::DFRFDIRI::RF;
+        mode=MODES::DFRFDIRI::RF;
     else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=PCx_Audit::DFRFDIRI::DI;
+        mode=MODES::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=PCx_Audit::DFRFDIRI::RI;
+        mode=MODES::DFRFDIRI::RI;
 
 
     QFileDialog fileDialog;
@@ -345,6 +345,6 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
 
     if(res==true)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(PCx_Audit::modeToCompleteString(mode)));
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(mode)));
     }
 }

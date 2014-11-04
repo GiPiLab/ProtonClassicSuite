@@ -33,10 +33,10 @@ PCx_Graphics::~PCx_Graphics()
 }
 
 
-QString PCx_Graphics::getG1G8(unsigned int node, PCx_Audit::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
+QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
-    QString tableName=PCx_Audit::modeToTableString(mode);
+    QString tableName=MODES::modeToTableString(mode);
     QString oredName=PCx_Audit::OREDtoTableString(modeORED);
 
     QSqlQuery q;
@@ -211,17 +211,17 @@ QString PCx_Graphics::getG1G8(unsigned int node, PCx_Audit::DFRFDIRI mode, PCx_A
     if(cumule==false)
     {
         if(modeORED!=PCx_Audit::ORED::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
     }
 
     else
     {
         if(modeORED!=PCx_Audit::ORED::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(PCx_Audit::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
     }
 
     /*
@@ -296,7 +296,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
     QColor c=getColorDFBar();
     int alpha=getAlpha();
 
-    dfBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::DF));
+    dfBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::DF));
     pen.setColor(c);
     dfBar->setPen(pen);
     c.setAlpha(alpha);
@@ -304,7 +304,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     c=getColorRFBar();
 
-    rfBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::RF));
+    rfBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::RF));
     pen.setColor(c);
     rfBar->setPen(pen);
     c.setAlpha(alpha);
@@ -312,7 +312,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     c=getColorDIBar();
 
-    diBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::DI));
+    diBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::DI));
     pen.setColor(c);
     diBar->setPen(pen);
     c.setAlpha(alpha);
@@ -320,7 +320,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
 
     c=getColorRIBar();
 
-    riBar->setName(PCx_Audit::modeToCompleteString(PCx_Audit::DFRFDIRI::RI));
+    riBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::RI));
     pen.setColor(c);
     riBar->setPen(pen);
     c.setAlpha(alpha);

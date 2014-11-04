@@ -45,7 +45,9 @@ SOURCES += main.cpp\
     pcx_nodesimilaritytablemodel.cpp \
     pcx_tree.cpp \
     pcx_treemodel.cpp \
-    pcx_auditwithtreemodel.cpp
+    pcx_auditwithtreemodel.cpp \
+    pcx_reporting.cpp \
+    formmanagereportings.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -76,7 +78,9 @@ HEADERS  += mainwindow.h \
     pcx_nodesimilaritytablemodel.h \
     pcx_tree.h \
     pcx_treemodel.h \
-    pcx_auditwithtreemodel.h
+    pcx_auditwithtreemodel.h \
+    pcx_reporting.h \
+    formmanagereportings.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -89,7 +93,8 @@ FORMS    += mainwindow.ui \
     formqueries.ui \
     dialogduplicateaudit.ui \
     formauditinfos.ui \
-    formtreeconsistency.ui
+    formtreeconsistency.ui \
+    formmanagereportings.ui
 
 
 QMAKE_CXXFLAGS_DEBUG += -Og

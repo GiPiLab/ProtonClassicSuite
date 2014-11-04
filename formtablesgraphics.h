@@ -63,7 +63,7 @@ private:
 
     QList<PCx_Tables::PRESETS> selectedTabs;
     QList<PCx_Graphics::GRAPHICS> selectedGraphics;
-    PCx_Audit::DFRFDIRI selectedMode;
+    MODES::DFRFDIRI selectedMode;
 
     bool ready;
 };

@@ -35,35 +35,35 @@ public:
 
     PCx_Tables(PCx_Audit *model);
 
-    QString getPresetDayOfWork(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getPresetBase100(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getPresetEvolutionCumul(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getPresetEvolution(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getPresetOverview(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getPresetDayOfWork(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPresetBase100(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPresetEvolution(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPresetOverview(unsigned int node, MODES::DFRFDIRI mode) const;
     QString getPresetResults(unsigned int node) const;
 
     static QString getCSS();
 
     //Content of preset "OVERVIEW"
-    QString getT1(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getT4(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getT8(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getT1(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getT4(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getT8(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "EVOLUTION"
-    QString getT2bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getT3bis(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getT2bis(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getT3bis(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "EVOLUTIONCUMUL"
-    QString getT2(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getT3(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getT2(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getT3(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "BASE100"
-    QString getT5(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getT6(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getT5(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getT6(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "DAYOFWORK"
-    QString getT7(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
-    QString getT9(unsigned int node, PCx_Audit::DFRFDIRI mode) const;
+    QString getT7(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getT9(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "RESULTS"
     QString getT10(unsigned int node) const;

@@ -1,5 +1,6 @@
-#ifndef PCX_AUDIT_H
-#define PCX_AUDIT_H
+#ifndef PCX_REPORTING_H
+#define PCX_REPORTING_H
+
 
 #include "pcx_tree.h"
 #include "utils.h"
@@ -7,51 +8,49 @@
 
 
 /**
- * @brief The PCx_Audit class represents an audit in the database
+ * @brief The PCx_Reporting class represents a reporting in the database
  *
- * An audit contains values about spendings and receipts for several years and each nodes of a tree
- * An audit is associated with a tree. It consists of four tables DF,RF,DI,RI which contains values
- * for each node of the tree and each years of the audit. An audit must be finished in order to be
- * usable in tables, graphics and queries forms.
+ * A reporting contains values about spendings and receipts for each nodes of a tree, for several dates inside a year
+ * A reporting is associated with a tree. It consists of four tables DF,RF,DI,RI which contains values
+ * for each node of the tree.
  */
-class PCx_Audit
+class PCx_Reporting
 {
 
 public:
 
+
     /**
-     * @brief The ORED enum describes the available data columns in each table of an audit
+     * @brief The OREDPCR enum describes the available data columns in each table of a reporting
      */
-    enum ORED
+    enum OREDPCR
     {
         OUVERTS, ///<the amount of available money at the beginning of the year
         REALISES, ///<the amount of used money
         ENGAGES, ///<the amount of committed money
-        DISPONIBLES ///<OUVERTS-(REALISES+ENGAGES)
+        DISPONIBLES, ///<OUVERTS-(REALISES+ENGAGES)
+        BP,
+        REPORTS,
+        OCDM,
+        VCDM,
+        BUDGETVOTE,
+        VIREMENTSINTERNES,
+        RATTACHENMOINS1
     };
 
-    /**
-     * @brief The ListAuditsMode enum describes which audit will be shown in combobox
-     */
-    enum ListAuditsMode
-    {
-        FinishedAuditsOnly,
-        UnFinishedAuditsOnly,
-        AllAudits
-    };
 
     /**
-     * @brief PCx_Audit constructs an audit from an audit identifier in the database
-     * @param auditId the identifier of the audit in the database
+     * @brief PCx_Reporting constructs a reporting from an identifier in the database
+     * @param auditId the identifier of the reporting in the database
      */
-    explicit PCx_Audit(unsigned int auditId);
-    virtual ~PCx_Audit();
+    explicit PCx_Reporting(unsigned int reportingId);
+    virtual ~PCx_Reporting();
 
     /**
-     * @brief getAuditId gets the audit identifier
-     * @return the identifier of the audit in the database
+     * @brief getReportingId gets the reporting identifier
+     * @return the identifier of the reporting in the database
      */
-    unsigned int getAuditId() const{return auditId;}
+    unsigned int getReportingId() const{return reportingId;}
 
     /**
      * @brief getAttachedTree gets the attached tree
@@ -60,10 +59,10 @@ public:
     virtual PCx_Tree *getAttachedTree() const{return attachedTree;}
 
     /**
-     * @brief getAuditName gets the name of the audit
-     * @return the name of the audit
+     * @brief getReportingName gets the name of the reporting
+     * @return the name of the reporting
      */
-    QString getAuditName() const{return auditName;}
+    QString getReportingName() const{return reportingName;}
 
     /**
      * @brief getAttachedTreeName convenience method equivalent to PCx_Tree::getName()
@@ -79,40 +78,11 @@ public:
 
     /**
      * @brief getAttachedTreeId static convenience method equivalent to PCx_Tree::getTreeId()
-     * @param auditId the audit identifier
-     * @return the identifier of the tree attached to auditId
+     * @param reportingId the reporting identifier
+     * @return the identifier of the tree attached to reportingId
      */
-    static unsigned int getAttachedTreeId(unsigned int auditId);
+    static unsigned int getAttachedTreeId(unsigned int reportingId);
 
-    /**
-     * @brief isFinished is this audit finished ?
-     * @return true if the audit is finished, ie can be used in computation, or false
-     */
-    bool isFinished() const{return finished;}
-
-    /**
-     * @brief isFinishedString gets a string to indicate if an audit is finished
-     * @return a string representation of the boolean value returned by isFinished()
-     */
-    QString isFinishedString() const{return finishedString;}
-
-    /**
-     * @brief getYears gets the years that are covered by this audit
-     * @return a list of years
-     */
-    QList<unsigned int> getYears() const{return years;}
-
-    /**
-     * @brief getYearsString gets a string of the years that are covered by this audit
-     * @return a string in the FIRSTYEAR-LASTYEAR format
-     */
-    QString getYearsString() const{return yearsString;}
-
-    /**
-     * @brief getYearsStringList convenience method to gets the years as a list of strings
-     * @return the years covered by this audit in a QStringList
-     */
-    QStringList getYearsStringList() const{return yearsStringList;}
 
     /**
      * @brief getCreationTimeUTC gets the creation time/date of the audit in UTC
@@ -126,17 +96,6 @@ public:
      */
     QDateTime getCreationTimeLocal()const{return creationTimeLocal;}
 
-    /**
-     * @brief finishAudit marks an audit as finished.
-     *
-     * A finished audit cannot be modified. Only a finished audit can be used in later computations
-     */
-    void finishAudit();
-
-    /**
-     * @brief unFinishAudit marks an audit as un-finished, in order to modify its data
-     */
-    void unFinishAudit();
 
     /**
      * @brief setLeafValues sets the values of a leaf
@@ -147,7 +106,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode=false);
+    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Reporting::OREDPCR, double> vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the audit value of a node
@@ -157,7 +116,7 @@ public:
      * @param year the year to read
      * @return the node value in qint64 format (uses formatDouble or formatCurrency to display), or -MAX_NUM on NULL or unavailable node
      */
-    qint64 getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year) const;
+    qint64 getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Reporting::OREDPCR ored, unsigned int year) const;
 
 
     /**
@@ -167,7 +126,7 @@ public:
      * @param year the year to read
      * @return node values for each field in qint64 format
      */
-    QHash<PCx_Audit::ORED,qint64> getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const;
+    QHash<PCx_Reporting::OREDPCR,qint64> getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const;
 
 
     /**
@@ -186,7 +145,7 @@ public:
      * @param copyRI if true copy nodes data for RI mode
      * @return -1 if the newName exists, the new audit identifier on success
      */
-    int duplicateAudit(const QString &newName,QList<unsigned int> years,
+    int duplicateReporting(const QString &newName,
                                 bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
 
     /**
@@ -264,7 +223,7 @@ public:
      * @brief generateHTMLAuditTitle gets the HTML title for the audit
      * @return the title of the audit, to be inserted in the "<body>"
      */
-    QString generateHTMLAuditTitle() const;
+    QString generateHTMLReportingTitle() const;
 
     /**
      * @brief getHTMLAuditStatistics generates some useful statistics about the audit in HTML
@@ -275,74 +234,62 @@ public:
      */
     QString getHTMLAuditStatistics() const;
 
-
-
-
     /**
-     * @brief OREDtoCompleteString converts an ORED item to its textual representation
-     * @param ored the ORED item
-     * @return the QString representation of the ORED
+     * @brief OREDPCRtoCompleteString converts an OREDPCR item to its textual representation
+     * @param ored the OREDPCR item
+     * @return the QString representation of the OREDPCR
      */
-    static QString OREDtoCompleteString(ORED ored);
+    static QString OREDPCRtoCompleteString(OREDPCR ored);
 
     /**
-     * @brief OREDtoTableString converts an ORED item to its database column name
-     * @param ored the ORED item
+     * @brief OREDPCRtoTableString converts an OREDPCR item to its database column name
+     * @param ored the OREDPCR item
      * @return the database column name
      */
-    static QString OREDtoTableString(ORED ored);
+    static QString OREDPCRtoTableString(OREDPCR ored);
 
     /**
-     * @brief OREDFromTableString converts a column name to its corresponding ORED item
+     * @brief OREDPCRFromTableString converts a column name to its corresponding ORED item
      * @param ored the column name to convert
      * @return the ORED item, or ORED::OUVERTS in case of invalid name
      */
-    static ORED OREDFromTableString(const QString &ored);
+    static OREDPCR OREDPCRFromTableString(const QString &ored);
 
     /**
      * @brief addNewAudit creates a new audit
      * @param name the audit name
-     * @param years the years that will be covered by the audit
      * @param attachedTreeId the identifier of the tree
      * @return the identifier of the new audit, or 0 if the audit name exists, or the tree id does not exists (or is not finished)
      */
-    static unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
+    static unsigned int addNewReporting(const QString &name, unsigned int attachedTreeId);
 
     /**
      * @brief deleteAudit removes an audit from the database
      * @param auditId the identifier of the audit to remove
      * @return true on success, false if the auditId does not exists
      */
-    static bool deleteAudit(unsigned int auditId);
+    static bool deleteReporting(unsigned int reportingId);
 
     /**
-     * @brief auditNameExists checks if the audit name exists
-     * @param auditName the name to check
+     * @brief reportingNameExists checks if the audit name exists
+     * @param reportingName the name to check
      * @return true if the name exists, false otherwise
      */
-    static bool auditNameExists(const QString &auditName);
+    static bool reportingNameExists(const QString &reportingName);
 
     /**
-     * @brief getListOfAudits gets a list of audits to fill a QComboBox
-     * @param mode filter the audits not finished, finished or both
+     * @brief getListOfReportings gets a list of audits to fill a QComboBox
      * @return a list of auditID, audit description
      */
-    static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
+    static QList<QPair<unsigned int, QString> > getListOfReportings();
 
 protected:
 
-    unsigned int auditId;
-    QString auditName;
+    unsigned int reportingId;
+    QString reportingName;
     unsigned int attachedTreeId;
 
     QString attachedTreeName;
-
-    QList<unsigned int> years;
-    QString yearsString;
-    QStringList yearsStringList;
-
-    bool finished;
-    QString finishedString;
 
     QDateTime creationTimeUTC;
     QDateTime creationTimeLocal;
@@ -360,10 +307,11 @@ protected:
 
 private:
 
-    PCx_Audit(const PCx_Audit &c);
-    PCx_Audit &operator=(const PCx_Audit &);
+    PCx_Reporting(const PCx_Reporting &c);
+    PCx_Reporting &operator=(const PCx_Reporting &);
 
 
 };
 
-#endif // PCX_AUDIT_H
+
+#endif // PCX_REPORTING_H
