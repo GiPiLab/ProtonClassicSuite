@@ -96,55 +96,20 @@ Chart::~Chart()
 void Chart::addSeries(const CellRange &range, AbstractSheet *sheet)
 {
     Q_D(Chart);
-    if (!range.isValid())
-        return;
     if (sheet && sheet->sheetType() != AbstractSheet::ST_WorkSheet)
         return;
     if (!sheet && d->sheet->sheetType() != AbstractSheet::ST_WorkSheet)
         return;
 
-    QString sheetName = sheet ? sheet->sheetName() : d->sheet->sheetName();
+    QString serRef = sheet ? sheet->sheetName() : d->sheet->sheetName();
 
-    if (range.columnCount() == 1 || range.rowCount() == 1) {
-        QSharedPointer<XlsxSeries> series = QSharedPointer<XlsxSeries>(new XlsxSeries);
-        series->numberDataSource_numRef = sheetName + QLatin1String("!") + range.toString(true, true);
-        d->seriesList.append(series);
-    } else if (range.columnCount() < range.rowCount()) {
-        //Column based series
-        int firstDataColumn = range.firstColumn();
-        QString axDataSouruce_numRef;
-        if (d->chartType == CT_Scatter || d->chartType == CT_Bubble) {
-            firstDataColumn += 1;
-            CellRange subRange(range.firstRow(), range.firstColumn(), range.lastRow(), range.firstColumn());
-            axDataSouruce_numRef = sheetName + QLatin1String("!") + subRange.toString(true, true);
-        }
+    serRef += QLatin1String("!");
+    serRef += range.toString(true, true);
 
-        for (int col=firstDataColumn; col<=range.lastColumn(); ++col) {
-            CellRange subRange(range.firstRow(), col, range.lastRow(), col);
-            QSharedPointer<XlsxSeries> series = QSharedPointer<XlsxSeries>(new XlsxSeries);
-            series->axDataSource_numRef = axDataSouruce_numRef;
-            series->numberDataSource_numRef = sheetName + QLatin1String("!") + subRange.toString(true, true);
-            d->seriesList.append(series);
-        }
+    XlsxSeries *series = new XlsxSeries;
+    series->numRef = serRef;
 
-    } else {
-        //Row based series
-        int firstDataRow = range.firstRow();
-        QString axDataSouruce_numRef;
-        if (d->chartType == CT_Scatter || d->chartType == CT_Bubble) {
-            firstDataRow += 1;
-            CellRange subRange(range.firstRow(), range.firstColumn(), range.firstRow(), range.lastColumn());
-            axDataSouruce_numRef = sheetName + QLatin1String("!") + subRange.toString(true, true);
-        }
-
-        for (int row=firstDataRow; row<=range.lastRow(); ++row) {
-            CellRange subRange(row, range.firstColumn(), row, range.lastColumn());
-            QSharedPointer<XlsxSeries> series = QSharedPointer<XlsxSeries>(new XlsxSeries);
-            series->axDataSource_numRef = axDataSouruce_numRef;
-            series->numberDataSource_numRef = sheetName + QLatin1String("!") + subRange.toString(true, true);
-            d->seriesList.append(series);
-        }
-    }
+    d->seriesList.append(QSharedPointer<XlsxSeries>(series));
 }
 
 /*!
@@ -288,55 +253,21 @@ bool ChartPrivate::loadXmlSer(QXmlStreamReader &reader)
 {
     Q_ASSERT(reader.name() == QLatin1String("ser"));
 
-    QSharedPointer<XlsxSeries> series = QSharedPointer<XlsxSeries>(new XlsxSeries);
-    seriesList.append(series);
-
-    while (!reader.atEnd() && !(reader.tokenType() == QXmlStreamReader::EndElement
-                                && reader.name() == QLatin1String("ser"))) {
-        if (reader.readNextStartElement()) {
-            QStringRef name = reader.name();
-            if (name == QLatin1String("cat") || name == QLatin1String("xVal")) {
-                while (!reader.atEnd() && !(reader.tokenType() == QXmlStreamReader::EndElement
-                                            && reader.name() == name)) {
-                    if (reader.readNextStartElement()) {
-                        if (reader.name() == QLatin1String("numRef"))
-                            series->axDataSource_numRef = loadXmlNumRef(reader);
-                    }
-                }
-            } else if (name == QLatin1String("val") || name == QLatin1String("yVal")) {
-                while (!reader.atEnd() && !(reader.tokenType() == QXmlStreamReader::EndElement
-                                            && reader.name() == name)) {
-                    if (reader.readNextStartElement()) {
-                        if (reader.name() == QLatin1String("numRef"))
-                            series->numberDataSource_numRef = loadXmlNumRef(reader);
-                    }
-                }
-            } else if (name == QLatin1String("extLst")) {
-                while (!reader.atEnd() && !(reader.tokenType() == QXmlStreamReader::EndElement
-                                            && reader.name() == name)) {
-                    reader.readNextStartElement();
-                }
+    while (!reader.atEnd()) {
+        reader.readNextStartElement();
+        if (reader.tokenType() == QXmlStreamReader::StartElement) {
+            if (reader.name() == QLatin1String("f")) {
+                XlsxSeries *series = new XlsxSeries;
+                series->numRef = reader.readElementText();
+                seriesList.append(QSharedPointer<XlsxSeries>(series));
             }
+        } else if (reader.tokenType() == QXmlStreamReader::EndElement
+                   && reader.name() == QLatin1String("ser")) {
+            break;
         }
     }
 
     return true;
-}
-
-
-QString ChartPrivate::loadXmlNumRef(QXmlStreamReader &reader)
-{
-    Q_ASSERT(reader.name() == QLatin1String("numRef"));
-
-    while (!reader.atEnd() && !(reader.tokenType() == QXmlStreamReader::EndElement
-                                && reader.name() == QLatin1String("numRef"))) {
-        if (reader.readNextStartElement()) {
-            if (reader.name() == QLatin1String("f"))
-                return reader.readElementText();
-        }
-    }
-
-    return QString();
 }
 
 void ChartPrivate::saveXmlChart(QXmlStreamWriter &writer) const
@@ -462,7 +393,7 @@ void ChartPrivate::saveXmlScatterChart(QXmlStreamWriter &writer) const
         saveXmlSer(writer, seriesList[i].data(), i);
 
     if (axisList.isEmpty()) {
-        const_cast<ChartPrivate*>(this)->axisList.append(QSharedPointer<XlsxAxis>(new XlsxAxis(XlsxAxis::T_Val, XlsxAxis::Bottom, 0, 1)));
+        const_cast<ChartPrivate*>(this)->axisList.append(QSharedPointer<XlsxAxis>(new XlsxAxis(XlsxAxis::T_Cat, XlsxAxis::Bottom, 0, 1)));
         const_cast<ChartPrivate*>(this)->axisList.append(QSharedPointer<XlsxAxis>(new XlsxAxis(XlsxAxis::T_Val, XlsxAxis::Left, 1, 0)));
     }
 
@@ -528,29 +459,14 @@ void ChartPrivate::saveXmlSer(QXmlStreamWriter &writer, XlsxSeries *ser, int id)
     writer.writeAttribute(QStringLiteral("val"), QString::number(id));
     writer.writeEmptyElement(QStringLiteral("c:order"));
     writer.writeAttribute(QStringLiteral("val"), QString::number(id));
-
-    if (!ser->axDataSource_numRef.isEmpty()) {
-        if (chartType == Chart::CT_Scatter || chartType == Chart::CT_Bubble)
-            writer.writeStartElement(QStringLiteral("c:xVal"));
-        else
-            writer.writeStartElement(QStringLiteral("c:cat"));
-        writer.writeStartElement(QStringLiteral("c:numRef"));
-        writer.writeTextElement(QStringLiteral("c:f"), ser->axDataSource_numRef);
-        writer.writeEndElement();//c:numRef
-        writer.writeEndElement();//c:cat or c:xVal
-    }
-
-    if (!ser->numberDataSource_numRef.isEmpty()) {
-        if (chartType == Chart::CT_Scatter || chartType == Chart::CT_Bubble)
-            writer.writeStartElement(QStringLiteral("c:yVal"));
-        else
-            writer.writeStartElement(QStringLiteral("c:val"));
-        writer.writeStartElement(QStringLiteral("c:numRef"));
-        writer.writeTextElement(QStringLiteral("c:f"), ser->numberDataSource_numRef);
-        writer.writeEndElement();//c:numRef
-        writer.writeEndElement();//c:val or c:yVal
-    }
-
+    if (chartType == Chart::CT_Scatter)
+        writer.writeStartElement(QStringLiteral("c:yVal"));
+    else
+        writer.writeStartElement(QStringLiteral("c:val"));
+    writer.writeStartElement(QStringLiteral("c:numRef"));
+    writer.writeTextElement(QStringLiteral("c:f"), ser->numRef);
+    writer.writeEndElement();//c:numRef
+    writer.writeEndElement();//c:val
     writer.writeEndElement();//c:ser
 }
 

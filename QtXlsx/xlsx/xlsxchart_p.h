@@ -50,9 +50,9 @@ namespace QXlsx {
 class XlsxSeries
 {
 public:
-    //At present, we care about number cell ranges only!
-    QString numberDataSource_numRef; //yval, val
-    QString axDataSource_numRef; //xval, cat
+
+    QString numRef;// For scatterChart, means y values
+    QString numRef_x;
 };
 
 class XlsxAxis
@@ -99,7 +99,6 @@ public:
     bool loadXmlPlotArea(QXmlStreamReader &reader);
     bool loadXmlXxxChart(QXmlStreamReader &reader);
     bool loadXmlSer(QXmlStreamReader &reader);
-    QString loadXmlNumRef(QXmlStreamReader &reader);
     bool loadXmlAxis(QXmlStreamReader &reader);
 
     void saveXmlChart(QXmlStreamWriter &writer) const;

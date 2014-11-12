@@ -3,6 +3,7 @@
 #include "pcx_report.h"
 #include "xlsxdocument.h"
 #include "pcx_query.h"
+#include "xlsxutility_p.h"
 #include "utils.h"
 #include <QMessageBox>
 #include <QSqlQuery>
@@ -739,16 +740,18 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         QVariant nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
         nodeType=xlsx.read(row,1);
         nodeName=xlsx.read(row,2);
-        date=xlsx.read(row,3);
-        ouverts=xlsx.read(row,4);
-        realises=xlsx.read(row,5);
-        engages=xlsx.read(row,6);
-        bp=xlsx.read(row,7);
-        reports=xlsx.read(row,8);
-        ocdm=xlsx.read(row,9);
-        vcdm=xlsx.read(row,10);
-        budgetvote=xlsx.read(row,11);
-        vcinternes=xlsx.read(row,12);
+        //Do not use read for date, always assume "1900" mode to ensure libreoffice compatibility
+        date=xlsx.cellAt(row,3)->value();
+        bp=xlsx.read(row,4);
+        reports=xlsx.read(row,5);
+        ocdm=xlsx.read(row,6);
+        vcdm=xlsx.read(row,7);
+        budgetvote=xlsx.read(row,8);
+        vcinternes=xlsx.read(row,9);
+        ouverts=xlsx.read(row,10);
+        qDebug()<<"OUV="<<ouverts;
+        realises=xlsx.read(row,11);
+        engages=xlsx.read(row,12);
         rattachesnmoins1=xlsx.read(row,13);
 
 
@@ -778,9 +781,6 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         double dblBudgetVote=budgetvote.toDouble();
         double dblVInternes=vcinternes.toDouble();
         double dblRattachesNMoins1=rattachesnmoins1.toDouble();
-
-
-        qDebug()<<xlsx.cellAt(row,3)->dateTime();
 
         if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM||dblBP>=MAX_NUM||dblReports>=MAX_NUM
                 ||dblOCDM>=MAX_NUM||dblVCDM>=MAX_NUM||dblBudgetVote>=MAX_NUM||dblVInternes>=MAX_NUM
@@ -839,11 +839,6 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
     QSqlDatabase::database().transaction();
 
-    this->clearAllData(mode);
-
-
-    // QCoreApplication::processEvents(QEventLoop::AllEvents);
-
     QProgressDialog progress2(QObject::tr("Chargement des données en cours..."),QObject::tr("Annuler"),2,rowCount);
 
     progress2.setMinimumDuration(200);
@@ -857,20 +852,23 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         QVariant nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
         nodeType=xlsx.read(row,1);
         nodeName=xlsx.read(row,2);
-        date=xlsx.read(row,3);
-        ouverts=xlsx.read(row,4);
-        realises=xlsx.read(row,5);
-        engages=xlsx.read(row,6);
-        bp=xlsx.read(row,7);
-        reports=xlsx.read(row,8);
-        ocdm=xlsx.read(row,9);
-        vcdm=xlsx.read(row,10);
-        budgetvote=xlsx.read(row,11);
-        vcinternes=xlsx.read(row,12);
+        //Do not use read for date, always assume "1900" mode to ensure libreoffice compatibility
+        date=xlsx.cellAt(row,3)->value();
+        bp=xlsx.read(row,4);
+        reports=xlsx.read(row,5);
+        ocdm=xlsx.read(row,6);
+        vcdm=xlsx.read(row,7);
+        budgetvote=xlsx.read(row,8);
+        vcinternes=xlsx.read(row,9);
+        ouverts=xlsx.read(row,10);
+        realises=xlsx.read(row,11);
+        engages=xlsx.read(row,12);
         rattachesnmoins1=xlsx.read(row,13);
 
+        QDate laDate=QXlsx::datetimeFromNumber(date.toDouble()).date();
+        qDebug()<<laDate;
 
-        //Here year and node are found and correct
+
         QPair<QString,QString> typeAndNode;
         typeAndNode.first=nodeType.toString().simplified();
         typeAndNode.second=nodeName.toString().simplified();
@@ -932,7 +930,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         if(vals.size()>0)
         {
             //setLeafValues in fast mode only die on db error
-            setLeafValues(nodeId,mode,date.toDate(),vals,true);
+            setLeafValues(nodeId,mode,laDate,vals,true);
         }
         vals.clear();
 
@@ -979,7 +977,7 @@ bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
         QPair<QString,QString> typeAndNodeName=attachedTree->getTypeNameAndNodeName(leaf);
         xlsx.write(row,1,typeAndNodeName.first);
         xlsx.write(row,2,typeAndNodeName.second);
-        xlsx.write(row,3,QDate(2002,05,13));
+//        xlsx.write(row,3,QDate(2002,05,13));
         row++;
     }
 

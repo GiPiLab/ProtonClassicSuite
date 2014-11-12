@@ -41,7 +41,6 @@
 #include "xlsxcell.h"
 #include "xlsxdatavalidation.h"
 #include "xlsxconditionalformatting.h"
-#include "xlsxcellformula.h"
 
 #include <QImage>
 #include <QSharedPointer>
@@ -160,7 +159,6 @@ public:
     QString generateDimensionString() const;
     void calculateSpans() const;
     void splitColsInfo(int colFirst, int colLast);
-    void validateDimension();
 
     void saveXmlSheetData(QXmlStreamWriter &writer) const;
     void saveXmlCellData(QXmlStreamWriter &writer, int row, int col, QSharedPointer<Cell> cell) const;
@@ -171,6 +169,7 @@ public:
     int rowPixelsSize(int row) const;
     int colPixelsSize(int col) const;
 
+    QSharedPointer<Cell> loadXmlNumericCellData(QXmlStreamReader &reader);
     void loadXmlSheetData(QXmlStreamReader &reader);
     void loadXmlColumnsInfo(QXmlStreamReader &reader);
     void loadXmlMergeCells(QXmlStreamReader &reader);
@@ -196,7 +195,6 @@ public:
 
     QList<DataValidation> dataValidationsList;
     QList<ConditionalFormatting> conditionalFormattingList;
-    QMap<int, CellFormula> sharedFormulaMap;
 
     CellRange dimension;
     int previous_row;

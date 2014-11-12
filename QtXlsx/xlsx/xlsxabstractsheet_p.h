@@ -56,7 +56,7 @@ public:
 
     QString name;
     int id;
-    AbstractSheet::SheetState sheetState;
+    bool hidden;
     AbstractSheet::SheetType type;
 };
 

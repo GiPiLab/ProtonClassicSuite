@@ -40,7 +40,6 @@
 #include "xlsxcell.h"
 #include "xlsxcellrange.h"
 #include "xlsxrichstring.h"
-#include "xlsxcellformula.h"
 #include <QList>
 #include <QSharedPointer>
 
@@ -54,9 +53,10 @@ public:
     CellPrivate(const CellPrivate * const cp);
 
     QVariant value;
-    CellFormula formula;
-    Cell::CellType cellType;
+    QString formula;
+    Cell::DataType dataType;
     Format format;
+    CellRange range; //used for arrayFormula
 
     RichString richString;
 

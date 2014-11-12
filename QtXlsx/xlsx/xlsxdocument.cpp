@@ -46,6 +46,7 @@
 #include <QPointF>
 #include <QBuffer>
 #include <QDir>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE_XLSX
 
@@ -380,10 +381,21 @@ Document::Document(const QString &name, QObject *parent) :
     QObject(parent), d_ptr(new DocumentPrivate(this))
 {
     d_ptr->packageName = name;
-    if (QFile::exists(name)) {
+    //NOTE : Patch QtXLSX to add a bit of sanity check
+    QFileInfo fi(name);
+    if (fi.exists() && fi.isFile() && fi.isReadable()) {
         QFile xlsx(name);
         if (xlsx.open(QFile::ReadOnly))
-            d_ptr->loadPackage(&xlsx);
+        {
+            if(d_ptr->loadPackage(&xlsx)==false)
+            {
+                qCritical()<<tr("Error reading XLSX file");
+            }
+        }
+        else
+        {
+            qCritical()<<tr("Unable to open file: ")<<xlsx.errorString();
+        }
     }
     d_ptr->init();
 }
@@ -397,14 +409,20 @@ Document::Document(QIODevice *device, QObject *parent) :
     QObject(parent), d_ptr(new DocumentPrivate(this))
 {
     if (device && device->isReadable())
-        d_ptr->loadPackage(device);
+        //NOTE : Patch QtXLSX to add a bit of sanity check
+    {
+        if(d_ptr->loadPackage(device)==false)
+        {
+            qCritical()<<tr("Unable to read XLSX content!");
+        }
+    }
     d_ptr->init();
 }
 
 /*!
     \overload
 
-    Write \a value to cell \a row_column with the given \a format.
+    Write \a value to cell \a row_column with the \a format.
  */
 bool Document::write(const CellReference &row_column, const QVariant &value, const Format &format)
 {
@@ -415,7 +433,6 @@ bool Document::write(const CellReference &row_column, const QVariant &value, con
 
 /*!
  * Write \a value to cell (\a row, \a col) with the \a format.
- * Returns true on success.
  */
 bool Document::write(int row, int col, const QVariant &value, const Format &format)
 {
@@ -427,8 +444,6 @@ bool Document::write(int row, int col, const QVariant &value, const Format &form
 /*!
     \overload
     Returns the contents of the cell \a cell.
-
-    \sa cellAt()
 */
 QVariant Document::read(const CellReference &cell) const
 {
@@ -439,8 +454,6 @@ QVariant Document::read(const CellReference &cell) const
 
 /*!
     Returns the contents of the cell (\a row, \a col).
-
-    \sa cellAt()
  */
 QVariant Document::read(int row, int col) const
 {
@@ -473,11 +486,10 @@ Chart *Document::insertChart(int row, int col, const QSize &size)
 }
 
 /*!
-  Merge a \a range of cells. The first cell should contain the data and the others should
-  be blank. All cells will be applied the same style if a valid \a format is given.
-  Returns true on success.
+    Merge a \a range of cells. The first cell should contain the data and the others should
+    be blank. All cells will be applied the same style if a valid \a format is given.
 
-  \note All cells except the top-left one will be cleared.
+    \note All cells except the top-left one will be cleared.
  */
 bool Document::mergeCells(const CellRange &range, const Format &format)
 {
@@ -487,8 +499,7 @@ bool Document::mergeCells(const CellRange &range, const Format &format)
 }
 
 /*!
-  Unmerge the cells in the \a range.
-  Returns true on success.
+    Unmerge the cells in the \a range.
 */
 bool Document::unmergeCells(const CellRange &range)
 {
@@ -498,7 +509,7 @@ bool Document::unmergeCells(const CellRange &range)
 }
 
 /*!
-  Sets width in characters of columns with the given \a range and \a width.
+  Sets width in characters of a range of columns.
   Returns true on success.
  */
 bool Document::setColumnWidth(const CellRange &range, double width)
@@ -509,7 +520,7 @@ bool Document::setColumnWidth(const CellRange &range, double width)
 }
 
 /*!
-  Sets format property of columns with the gien \a range and \a format.
+  Sets format property of a range of columns.
   Returns true on success.
  */
 bool Document::setColumnFormat(const CellRange &range, const Format &format)
@@ -520,7 +531,7 @@ bool Document::setColumnFormat(const CellRange &range, const Format &format)
 }
 
 /*!
-  Sets hidden property of columns \a range to \a hidden. Columns are 1-indexed.
+  Sets hidden property of a range of columns. Columns are 1-indexed.
   Hidden columns are not visible.
   Returns true on success.
  */
@@ -532,7 +543,7 @@ bool Document::setColumnHidden(const CellRange &range, bool hidden)
 }
 
 /*!
-  Sets width in characters \a column to \a width. Columns are 1-indexed.
+  Sets width in characters of a range of columns. Columns are 1-indexed.
   Returns true on success.
  */
 bool Document::setColumnWidth(int column, double width)
@@ -541,8 +552,7 @@ bool Document::setColumnWidth(int column, double width)
 }
 
 /*!
-  Sets format property \a column to \a format. Columns are 1-indexed.
-  Returns true on success.
+  Sets format property of a range of columns. Columns are 1-indexed.
  */
 bool Document::setColumnFormat(int column, const Format &format)
 {
@@ -550,8 +560,7 @@ bool Document::setColumnFormat(int column, const Format &format)
 }
 
 /*!
-  Sets hidden property of a \a column. Columns are 1-indexed.
-  Returns true on success.
+  Sets hidden property of a column. Columns are 1-indexed.
  */
 bool Document::setColumnHidden(int column, bool hidden)
 {
@@ -559,7 +568,7 @@ bool Document::setColumnHidden(int column, bool hidden)
 }
 
 /*!
-  Sets width in characters for columns [\a colFirst, \a colLast]. Columns are 1-indexed.
+  Sets width in characters of a range of columns. Columns are 1-indexed.
   Returns true on success.
  */
 bool Document::setColumnWidth(int colFirst, int colLast, double width)
@@ -570,9 +579,7 @@ bool Document::setColumnWidth(int colFirst, int colLast, double width)
 }
 
 /*!
-  Sets format property of columns [\a colFirst, \a colLast] to \a format.
-  Columns are 1-indexed.
-  Returns true on success.
+  Sets format property of a range of columns. Columns are 1-indexed.
  */
 bool Document::setColumnFormat(int colFirst, int colLast, const Format &format)
 {
@@ -583,9 +590,7 @@ bool Document::setColumnFormat(int colFirst, int colLast, const Format &format)
 
 
 /*!
-  Sets hidden property of columns [\a colFirst, \a colLast] to \a hidden.
-  Columns are 1-indexed.
-  Returns true on success.
+  Sets hidden property of a range of columns. Columns are 1-indexed.
  */
 bool Document::setColumnHidden(int colFirst, int colLast, bool hidden)
 {
@@ -595,9 +600,7 @@ bool Document::setColumnHidden(int colFirst, int colLast, bool hidden)
 }
 
 /*!
-  Returns width of the \a column in characters of the normal font.
-  Columns are 1-indexed.
-  Returns true on success.
+  Returns width of the column in characters of the normal font. Columns are 1-indexed.
  */
 double Document::columnWidth(int column)
 {
@@ -607,7 +610,7 @@ double Document::columnWidth(int column)
 }
 
 /*!
-  Returns formatting of the \a column. Columns are 1-indexed.
+  Returns formatting of the column. Columns are 1-indexed.
  */
 Format Document::columnFormat(int column)
 {
@@ -617,7 +620,7 @@ Format Document::columnFormat(int column)
 }
 
 /*!
-  Returns true if \a column is hidden. Columns are 1-indexed.
+  Returns true if column is hidden. Columns are 1-indexed.
  */
 bool Document::isColumnHidden(int column)
 {
@@ -627,7 +630,7 @@ bool Document::isColumnHidden(int column)
 }
 
 /*!
-  Sets the \a format of the \a row.
+  Sets the \a format of the row \a row.
   Rows are 1-indexed.
 
   Returns true if success.
@@ -773,11 +776,7 @@ bool Document::addConditionalFormatting(const ConditionalFormatting &cf)
 }
 
 /*!
- * \overload
- * Returns the cell at the position \a pos. If there is no cell at
- * the specified position, the function returns 0.
- *
- * \sa read()
+ * Returns a Cell object based on the given \a pos. 0 will be returned if the cell doesn't exist.
  */
 Cell *Document::cellAt(const CellReference &pos) const
 {
@@ -787,10 +786,7 @@ Cell *Document::cellAt(const CellReference &pos) const
 }
 
 /*!
- * Returns the cell at the given \a row and \a col. If there
- * is no cell at the specified position, the function returns 0.
- *
- * \sa read()
+ * Returns a Cell object based on the given \a row and \a col.
  */
 Cell *Document::cellAt(int row, int col) const
 {
@@ -893,7 +889,7 @@ AbstractSheet *Document::sheet(const QString &sheetName) const
 }
 
 /*!
- * Creates and append an sheet with the given \a name and \a type.
+ * Creates and append an document with name \a name.
  * Return true if success.
  */
 bool Document::addSheet(const QString &name, AbstractSheet::SheetType type)
@@ -903,7 +899,7 @@ bool Document::addSheet(const QString &name, AbstractSheet::SheetType type)
 }
 
 /*!
- * Creates and inserts an document with the given \a name and \a type at the \a index.
+ * Creates and inserts an document with name \a name at the \a index.
  * Returns false if the \a name already used.
  */
 bool Document::insertSheet(int index, const QString &name, AbstractSheet::SheetType type)
@@ -1026,8 +1022,6 @@ bool Document::saveAs(const QString &name) const
 /*!
  * \overload
  * This function writes a document to the given \a device.
- *
- * \warning The \a device will be closed when this function returned.
  */
 bool Document::saveAs(QIODevice *device) const
 {

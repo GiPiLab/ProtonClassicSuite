@@ -45,6 +45,7 @@
     <addaction name="separator"/>
     <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
+    <addaction name="actionEditAudit"/>
     <addaction name="separator"/>
     <addaction name="actionTablesGraphics"/>
     <addaction name="actionReport"/>

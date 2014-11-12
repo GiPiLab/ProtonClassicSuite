@@ -46,9 +46,7 @@ HEADERS += $$PWD/xlsxdocpropscore_p.h \
     $$PWD/xlsxabstractooxmlfile_p.h \
     $$PWD/xlsxchart.h \
     $$PWD/xlsxchart_p.h \
-    $$PWD/xlsxsimpleooxmlfile_p.h \
-    $$PWD/xlsxcellformula.h \
-    $$PWD/xlsxcellformula_p.h
+    $$PWD/xlsxsimpleooxmlfile_p.h
 
 SOURCES += $$PWD/xlsxdocpropscore.cpp \
     $$PWD/xlsxdocpropsapp.cpp \
@@ -79,6 +77,5 @@ SOURCES += $$PWD/xlsxdocpropscore.cpp \
     $$PWD/xlsxmediafile.cpp \
     $$PWD/xlsxabstractooxmlfile.cpp \
     $$PWD/xlsxchart.cpp \
-    $$PWD/xlsxsimpleooxmlfile.cpp \
-    $$PWD/xlsxcellformula.cpp
+    $$PWD/xlsxsimpleooxmlfile.cpp
 
