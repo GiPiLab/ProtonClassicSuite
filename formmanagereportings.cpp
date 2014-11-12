@@ -6,22 +6,27 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QInputDialog>
+#include <QFileDialog>
+#include <QStandardPaths>
+
 
 FormManageReportings::FormManageReportings(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormManageReportings)
 {
     ui->setupUi(this);
+    selectedReporting=nullptr;
     updateListOfTrees();
     updateListOfReportings();
 }
 
 FormManageReportings::~FormManageReportings()
 {
+    qDebug()<<"Destructor";
+    if(selectedReporting!=nullptr)
+        delete selectedReporting;
     delete ui;
 }
-
-
 
 void FormManageReportings::onLOTchanged()
 {
@@ -99,7 +104,6 @@ void FormManageReportings::on_pushButtonAddReporting_clicked()
         {
             updateListOfReportings();
             emit(listOfReportingsChanged());
-            QMessageBox::information(this,tr("Information"),tr("Nouveau reporting ajouté, ouvrez la fenêtre 'saisie des données' pour le compléter"));
         }
     }
 }
@@ -142,5 +146,66 @@ void FormManageReportings::on_pushButtonDeleteReporting_clicked()
 
 void FormManageReportings::on_comboListOfReportings_activated(int index)
 {
+    if(index==-1 || ui->comboListOfReportings->count()==0)return;
+    unsigned int selectedReportingId=ui->comboListOfReportings->currentData().toUInt();
+
+    if(selectedReporting!=nullptr)
+    {
+        delete selectedReporting;
+        selectedReporting=nullptr;
+    }
+
+    selectedReporting=new PCx_Reporting(selectedReportingId);
+
+    ui->labelTreeName->setText(QString("%1 (%2 noeuds)").arg(selectedReporting->getAttachedTreeName()).arg(selectedReporting->getAttachedTree()->getNumberOfNodes()));
 
 }
+
+void FormManageReportings::on_pushButtonExportLeaves_clicked()
+{
+    if(selectedReporting!=nullptr)
+    {
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le squelette de reporting"),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        QFileInfo fi(fileName);
+        if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+            fileName.append(".xlsx");
+        fi=QFileInfo(fileName);
+
+        bool res=selectedReporting->exportLeavesSkeleton(fileName);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("Squelette de reporting enregistré !"));
+        }
+        else
+        {
+            QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+        }
+
+    }
+
+
+}
+
+void FormManageReportings::on_pushButtonLoadDF_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DF);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DF)));
+    }
+}
+
+

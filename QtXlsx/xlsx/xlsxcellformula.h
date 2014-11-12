@@ -22,55 +22,57 @@
 ** WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-#ifndef XLSXABSTRACTSHEET_H
-#define XLSXABSTRACTSHEET_H
+#ifndef QXLSX_XLSXCELLFORMULA_H
+#define QXLSX_XLSXCELLFORMULA_H
 
-#include "xlsxabstractooxmlfile.h"
-#include <QStringList>
-#include <QSharedPointer>
+#include "xlsxglobal.h"
+#include <QExplicitlySharedDataPointer>
+
+class QXmlStreamWriter;
+class QXmlStreamReader;
 
 QT_BEGIN_NAMESPACE_XLSX
-class Workbook;
-class Drawing;
-class AbstractSheetPrivate;
-class Q_XLSX_EXPORT AbstractSheet : public AbstractOOXmlFile
+
+class CellFormulaPrivate;
+class CellRange;
+class Worksheet;
+class WorksheetPrivate;
+
+class Q_XLSX_EXPORT CellFormula
 {
-    Q_DECLARE_PRIVATE(AbstractSheet)
 public:
-    enum SheetType {
-        ST_WorkSheet,
-        ST_ChartSheet,
-        ST_DialogSheet,
-        ST_MacroSheet
+    enum FormulaType {
+        NormalType,
+        ArrayType,
+        DataTableType,
+        SharedType
     };
 
-    enum SheetState {
-        SS_Visible,
-        SS_Hidden,
-        SS_VeryHidden
-    };
+    CellFormula();
+    CellFormula(const char *formula, FormulaType type=NormalType);
+    CellFormula(const QString &formula, FormulaType type=NormalType);
+    CellFormula(const QString &formula, const CellRange &ref, FormulaType type);
+    CellFormula(const CellFormula &other);
+    ~CellFormula();
+    CellFormula &operator =(const CellFormula &other);
+    bool isValid() const;
 
-    QString sheetName() const;
-    SheetType sheetType() const;
-    SheetState sheetState() const;
-    void setSheetState(SheetState ss);
-    bool isHidden() const;
-    bool isVisible() const;
-    void setHidden(bool hidden);
-    void setVisible(bool visible);
+    FormulaType formulaType() const;
+    QString formulaText() const;
+    CellRange reference() const;
+    int sharedIndex() const;
 
-    Workbook *workbook() const;
+    bool operator == (const CellFormula &formula) const;
+    bool operator != (const CellFormula &formula) const;
 
-protected:
-    friend class Workbook;
-    AbstractSheet(const QString &sheetName, int sheetId, Workbook *book, AbstractSheetPrivate *d);
-    virtual AbstractSheet *copy(const QString &distName, int distId) const = 0;
-    void setSheetName(const QString &sheetName);
-    void setSheetType(SheetType type);
-    int sheetId() const;
-
-    Drawing *drawing() const;
+    bool saveToXml(QXmlStreamWriter &writer) const;
+    bool loadFromXml(QXmlStreamReader &reader);
+private:
+    friend class Worksheet;
+    friend class WorksheetPrivate;
+    QExplicitlySharedDataPointer<CellFormulaPrivate> d;
 };
 
 QT_END_NAMESPACE_XLSX
-#endif // XLSXABSTRACTSHEET_H
+
+#endif // QXLSX_XLSXCELLFORMULA_H

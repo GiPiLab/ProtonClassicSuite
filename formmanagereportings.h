@@ -2,6 +2,7 @@
 #define FORMMANAGEREPORTINGS_H
 
 #include <QWidget>
+#include "pcx_reporting.h"
 
 namespace Ui {
 class FormManageReportings;
@@ -30,10 +31,15 @@ private slots:
 
     void on_comboListOfReportings_activated(int index);
 
+    void on_pushButtonExportLeaves_clicked();
+
+    void on_pushButtonLoadDF_clicked();
+
 private:
     Ui::FormManageReportings *ui;
     void updateListOfTrees();
     void updateListOfReportings();
+    PCx_Reporting *selectedReporting;
 };
 
 #endif // FORMMANAGEREPORTINGS_H

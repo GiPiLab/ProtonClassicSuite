@@ -33,6 +33,7 @@ QT_BEGIN_NAMESPACE_XLSX
 
 class Worksheet;
 class Format;
+class CellFormula;
 class CellPrivate;
 class WorksheetPrivate;
 
@@ -40,21 +41,21 @@ class Q_XLSX_EXPORT Cell
 {
     Q_DECLARE_PRIVATE(Cell)
 public:
-    enum DataType {
-        Blank,
-        String,
-        Numeric,
-        Formula,
-        Boolean,
-        Error,
-        InlineString,
-        ArrayFormula
+    enum CellType {
+        BooleanType,      //t="b"
+        NumberType,       //t="n" (default)
+        ErrorType,        //t="e"
+        SharedStringType, //t="s"
+        StringType,       //t="str"
+        InlineStringType  //t="inlineStr"
     };
 
-    DataType dataType() const;
+    CellType cellType() const;
     QVariant value() const;
     Format format() const;
-    QString formula() const;
+
+    bool hasFormula() const;
+    CellFormula formula() const;
 
     bool isDateTime() const;
     QDateTime dateTime() const;
@@ -66,7 +67,7 @@ private:
     friend class Worksheet;
     friend class WorksheetPrivate;
 
-    Cell(const QVariant &data=QVariant(), DataType type=Blank, const Format &format=Format(), Worksheet *parent=0);
+    Cell(const QVariant &data=QVariant(), CellType type=NumberType, const Format &format=Format(), Worksheet *parent=0);
     Cell(const Cell * const cell);
     CellPrivate * const d_ptr;
 };

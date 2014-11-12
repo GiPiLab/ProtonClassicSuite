@@ -129,6 +129,7 @@ void ContentTypes::addCalcChain()
 
 void ContentTypes::addVbaProject()
 {
+    //:TODO
     addOverride(QStringLiteral("bin"), QStringLiteral("application/vnd.ms-office.vbaProject"));
 }
 

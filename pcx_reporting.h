@@ -101,12 +101,12 @@ public:
      * @brief setLeafValues sets the values of a leaf
      * @param leafId the identifier of the leaf
      * @param mode the mode to set
-     * @param year the year to set
+     * @param date the date to set
      * @param vals the values of the node for the mode and the year
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Reporting::OREDPCR, double> vals, bool fastMode=false);
+    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QHash<PCx_Reporting::OREDPCR, double> vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the audit value of a node
@@ -283,6 +283,10 @@ public:
      */
     static QList<QPair<unsigned int, QString> > getListOfReportings();
 
+    bool exportLeavesSkeleton(const QString &fileName) const;
+
+
+
 protected:
 
     unsigned int reportingId;
@@ -294,7 +298,7 @@ protected:
     QDateTime creationTimeUTC;
     QDateTime creationTimeLocal;
 
-    void updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
+    void updateParent(const QString &tableName, QDate date, unsigned int nodeId);
 
     /**
      * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier

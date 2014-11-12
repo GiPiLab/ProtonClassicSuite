@@ -130,6 +130,7 @@ void MainWindow::onFormManageAuditsWindowsDestroyed()
 void MainWindow::onFormManageReportingsWindowsDestroyed()
 {
     formManageReportings=nullptr;
+    //qDebug()<<"FormManageReporting window closed";
 }
 
 void MainWindow::onFormEditAuditWindowsDestroyed()

@@ -22,55 +22,43 @@
 ** WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
-#ifndef XLSXABSTRACTSHEET_H
-#define XLSXABSTRACTSHEET_H
+#ifndef XLSXCELLFORMULA_P_H
+#define XLSXCELLFORMULA_P_H
 
-#include "xlsxabstractooxmlfile.h"
-#include <QStringList>
-#include <QSharedPointer>
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt Xlsx API.  It exists for the convenience
+// of the Qt Xlsx.  This header file may change from
+// version to version without notice, or even be removed.
+//
+// We mean it.
+//
+
+#include "xlsxglobal.h"
+#include "xlsxcellformula.h"
+#include "xlsxcellrange.h"
+
+#include <QSharedData>
+#include <QString>
 
 QT_BEGIN_NAMESPACE_XLSX
-class Workbook;
-class Drawing;
-class AbstractSheetPrivate;
-class Q_XLSX_EXPORT AbstractSheet : public AbstractOOXmlFile
+
+class CellFormulaPrivate : public QSharedData
 {
-    Q_DECLARE_PRIVATE(AbstractSheet)
 public:
-    enum SheetType {
-        ST_WorkSheet,
-        ST_ChartSheet,
-        ST_DialogSheet,
-        ST_MacroSheet
-    };
+    CellFormulaPrivate(const QString &formula, const CellRange &reference, CellFormula::FormulaType type);
+    CellFormulaPrivate(const CellFormulaPrivate &other);
+    ~CellFormulaPrivate();
 
-    enum SheetState {
-        SS_Visible,
-        SS_Hidden,
-        SS_VeryHidden
-    };
-
-    QString sheetName() const;
-    SheetType sheetType() const;
-    SheetState sheetState() const;
-    void setSheetState(SheetState ss);
-    bool isHidden() const;
-    bool isVisible() const;
-    void setHidden(bool hidden);
-    void setVisible(bool visible);
-
-    Workbook *workbook() const;
-
-protected:
-    friend class Workbook;
-    AbstractSheet(const QString &sheetName, int sheetId, Workbook *book, AbstractSheetPrivate *d);
-    virtual AbstractSheet *copy(const QString &distName, int distId) const = 0;
-    void setSheetName(const QString &sheetName);
-    void setSheetType(SheetType type);
-    int sheetId() const;
-
-    Drawing *drawing() const;
+    QString formula; //formula contents
+    CellFormula::FormulaType type;
+    CellRange reference;
+    bool ca; //Calculate Cell
+    int si;  //Shared group index
 };
 
 QT_END_NAMESPACE_XLSX
-#endif // XLSXABSTRACTSHEET_H
+
+#endif // XLSXCELLFORMULA_P_H

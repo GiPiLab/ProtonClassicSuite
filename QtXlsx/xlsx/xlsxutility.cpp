@@ -23,6 +23,7 @@
 **
 ****************************************************************************/
 #include "xlsxutility_p.h"
+#include "xlsxcellreference.h"
 
 #include <QString>
 #include <QPoint>
@@ -143,6 +144,98 @@ bool isSpaceReserveNeeded(const QString &s)
 {
     QString spaces(QStringLiteral(" \t\n\r"));
     return !s.isEmpty() && (spaces.contains(s.at(0))||spaces.contains(s.at(s.length()-1)));
+}
+
+/*
+ * Convert shared formula for non-root cells.
+ *
+ * For example, if "B1:B10" have shared formula "=A1*A1", this function will return "=A2*A2"
+ * for "B2" cell, "=A3*A3" for "B3" cell, etc.
+ *
+ * Note, the formula "=A1*A1" for B1 can also be written as "=RC[-1]*RC[-1]", which is the same
+ * for all other cells. In other words, this formula is shared.
+ *
+ * For long run, we need a formula parser.
+ */
+QString convertSharedFormula(const QString &rootFormula, const CellReference &rootCell, const CellReference &cell)
+{
+    //Find all the "$?[A-Z]+$?[0-9]+" patterns in the rootFormula.
+    QList<QPair<QString, int> > segments;
+
+    QString segment;
+    bool inQuote = false;
+    enum RefState{INVALID, PRE_AZ, AZ, PRE_09, _09};
+    RefState refState = INVALID;
+    int refFlag = 0; // 0x00, 0x01, 0x02, 0x03 ==> A1, $A1, A$1, $A$1
+    foreach (QChar ch, rootFormula) {
+        if (inQuote) {
+            segment.append(ch);
+            if (ch == QLatin1Char('"'))
+                inQuote = false;
+        } else {
+            if (ch == QLatin1Char('"')) {
+                inQuote = true;
+                refState = INVALID;
+                segment.append(ch);
+            } else if (ch == QLatin1Char('$')) {
+                if (refState == AZ) {
+                    segment.append(ch);
+                    refState = PRE_09;
+                    refFlag |= 0x02;
+                } else {
+                    segments.append(qMakePair(segment, refState==_09 ? refFlag : -1));
+                    segment = QString(ch); //Start new segment.
+                    refState = PRE_AZ;
+                    refFlag = 0x01;
+                }
+            } else if (ch >= QLatin1Char('A') && ch <=QLatin1Char('Z')) {
+                if (refState == PRE_AZ || refState == AZ) {
+                    segment.append(ch);
+                } else {
+                    segments.append(qMakePair(segment, refState==_09 ? refFlag : -1));
+                    segment = QString(ch); //Start new segment.
+                    refFlag = 0x00;
+                }
+                refState = AZ;
+            } else if (ch >= QLatin1Char('0') && ch <=QLatin1Char('9')) {
+                segment.append(ch);
+
+                if (refState == AZ || refState == PRE_09 || refState == _09)
+                    refState = _09;
+                else
+                    refState = INVALID;
+            } else {
+                if (refState == _09) {
+                    segments.append(qMakePair(segment, refFlag));
+                    segment = QString(ch); //Start new segment.
+                } else {
+                    segment.append(ch);
+                }
+                refState = INVALID;
+            }
+        }
+    }
+
+    if (!segment.isEmpty())
+        segments.append(qMakePair(segment, refState==_09 ? refFlag : -1));
+
+    //Replace "A1", "$A1", "A$1" segment with proper one.
+    QStringList result;
+    typedef QPair<QString, int> PairType;
+    foreach (PairType p, segments) {
+        //qDebug()<<p.first<<p.second;
+        if (p.second != -1 && p.second != 3) {
+            CellReference oldRef(p.first);
+            int row = p.second & 0x02 ? oldRef.row() : oldRef.row()-rootCell.row()+cell.row();
+            int col = p.second & 0x01 ? oldRef.column() : oldRef.column()-rootCell.column()+cell.column();
+            result.append(CellReference(row, col).toString(p.second & 0x02, p.second & 0x01));
+        } else {
+            result.append(p.first);
+        }
+    }
+
+    //OK
+    return result.join(QString());
 }
 
 } //namespace QXlsx

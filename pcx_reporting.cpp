@@ -72,7 +72,7 @@ unsigned int PCx_Reporting::getAttachedTreeId(unsigned int auditId)
 
 
 
-bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Reporting::OREDPCR,double> vals, bool fastMode)
+bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QHash<PCx_Reporting::OREDPCR,double> vals, bool fastMode)
 {
     if(!fastMode)
     {
@@ -83,52 +83,39 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, uns
         }
     }
 
-    QString reqString;
-
-    if(vals.contains(PCx_Reporting::OREDPCR::OUVERTS))
+    QString reqSet="id_node,date,";
+    QString reqBind=":id_node,:date,";
+    QStringList reqSetList,bindSetList;
+    foreach(PCx_Reporting::OREDPCR ored,vals.keys())
     {
-        if(!reqString.isEmpty())
-            reqString.append(",");
-        reqString.append("ouverts=:vouverts");
+        QString tblString=OREDPCRtoTableString(ored);
+        reqSetList.append(tblString);
+        bindSetList.append(":v"+tblString);
     }
-    if(vals.contains(PCx_Reporting::OREDPCR::REALISES))
-    {
-        if(!reqString.isEmpty())
-            reqString.append(",");
-        reqString.append("realises=:vrealises");
-    }
-    if(vals.contains(PCx_Reporting::OREDPCR::ENGAGES))
-    {
-        if(!reqString.isEmpty())
-            reqString.append(",");
-        reqString.append("engages=:vengages");
-    }
+    reqSetList.sort();
+    bindSetList.sort();
+    reqSet.append(reqSetList.join(","));
+    reqBind.append(bindSetList.join(","));
 
     QSqlQuery q;
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(reportingId);
+    QString tableName=QString("reporting_%1_%2").arg(MODES::modeToTableString(mode)).arg(reportingId);
 
-    //qDebug()<<"Request String ="<<reqString;
+    q.prepare(QString("insert into %1 (%2) values (%3)")
+              .arg(tableName).arg(reqSet).arg(reqBind));
 
-    q.prepare(QString("update %1 set %2 where id_node=:id_node and annee=:year")
-              .arg(tableName).arg(reqString));
-
-    if(vals.contains(PCx_Reporting::OREDPCR::OUVERTS))
+    foreach(PCx_Reporting::OREDPCR ored,vals.keys())
     {
-        q.bindValue(":vouverts",doubleToFixedPoint(vals.value(PCx_Reporting::OREDPCR::OUVERTS)));
-    }
-
-    if(vals.contains(PCx_Reporting::OREDPCR::REALISES))
-    {
-        q.bindValue(":vrealises",doubleToFixedPoint(vals.value(PCx_Reporting::OREDPCR::REALISES)));
-    }
-
-    if(vals.contains(PCx_Reporting::OREDPCR::ENGAGES))
-    {
-        q.bindValue(":vengages",doubleToFixedPoint(vals.value(PCx_Reporting::OREDPCR::ENGAGES)));
+        QString tblString=OREDPCRtoTableString(ored);
+        q.bindValue(":v"+tblString,doubleToFixedPoint(vals.value(ored)));
     }
 
     q.bindValue(":id_node",leafId);
-    q.bindValue(":year",year);
+
+    QDateTime dt(date);
+    unsigned int sSinceEpoch=dt.toTime_t();
+
+    q.bindValue(":date",sSinceEpoch);
+
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -141,9 +128,9 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, uns
         die();
     }
 
-    q.prepare(QString("update %1 set disponibles=ouverts-(realises+engages) where id_node=:id_node and annee=:year").arg(tableName));
+    q.prepare(QString("update %1 set disponibles=ouverts-(realises+engages) where id_node=:id_node and date=:date").arg(tableName));
     q.bindValue(":id_node",leafId);
-    q.bindValue(":year",year);
+    q.bindValue(":date",sSinceEpoch);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -156,7 +143,7 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, uns
         die();
     }
 
-    updateParent(tableName,year,leafId);
+    updateParent(tableName,date,leafId);
     return true;
 }
 
@@ -243,13 +230,8 @@ QHash<PCx_Reporting::OREDPCR, qint64> PCx_Reporting::getNodeValues(unsigned int 
 
 void PCx_Reporting::clearAllData(MODES::DFRFDIRI mode)
 {
-    QSqlQuery q(QString("update audit_%1_%2 set ouverts=NULL,realises=NULL,engages=NULL,disponibles=NULL").arg(modeToTableString(mode)).arg(reportingId));
+    QSqlQuery q(QString("delete from reporting_%1_%2").arg(modeToTableString(mode)).arg(reportingId));
     if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    if(q.numRowsAffected()<0)
     {
         qCritical()<<q.lastError();
         die();
@@ -414,7 +396,7 @@ int PCx_Reporting::duplicateReporting(const QString &newName, bool copyDF, bool 
 }
 
 
-void PCx_Reporting::updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId)
+void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned int nodeId)
 {
     QString childrenString;
     unsigned int parent;
@@ -448,8 +430,11 @@ void PCx_Reporting::updateParent(const QString &tableName, unsigned int annee, u
     //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
     QSqlQuery q;
 
-    q.prepare(QString("select ouverts,realises,engages,disponibles from %1 where id_node in(%2) and annee=:annee").arg(tableName).arg(childrenString));
-    q.bindValue(":annee",annee);
+    q.prepare(QString("select * from %1 where id_node in(%2) and date=:date").arg(tableName).arg(childrenString));
+    unsigned int tDate=QDateTime(date).toTime_t();
+
+
+    q.bindValue(":date",tDate);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -460,41 +445,89 @@ void PCx_Reporting::updateParent(const QString &tableName, unsigned int annee, u
     qint64 sumRealises=0;
     qint64 sumEngages=0;
     qint64 sumDisponibles=0;
+    qint64 sumBP=0;
+    qint64 sumReports=0;
+    qint64 sumOCDM=0;
+    qint64 sumVCDM=0;
+    qint64 sumBudgetVote=0;
+    qint64 sumVCInternes=0;
+    qint64 sumRattachesNMoins1=0;
 
     //To check if we need to insert 0.0 or NULL
     bool nullOuverts=true;
     bool nullEngages=true;
     bool nullRealises=true;
     bool nullDisponibles=true;
+    bool nullBP=true;
+    bool nullReports=true;
+    bool nullOCDM=true;
+    bool nullVCDM=true;
+    bool nullBudgetVote=true;
+    bool nullVCInternes=true;
+    bool nullRattachesNMoins1=true;
 
     while(q.next())
     {
-        //qDebug()<<"Node ID = "<<q.value("id_node")<< "Ouverts = "<<q.value("ouverts")<<" Realises = "<<q.value("realises")<<" Engages = "<<q.value("engages")<<" Disponibles = "<<q.value("disponibles");
-        //Uses index to speedup
-        if(!q.value(0).isNull())
+        if(!q.value("ouverts").isNull())
         {
-            sumOuverts+=q.value(0).toLongLong();
+            sumOuverts+=q.value("ouverts").toLongLong();
             nullOuverts=false;
         }
-
-        if(!q.value(1).isNull())
+        if(!q.value("realises").isNull())
         {
-            sumRealises+=q.value(1).toLongLong();
+            sumRealises+=q.value("realises").toLongLong();
             nullRealises=false;
         }
-        if(!q.value(2).isNull())
+        if(!q.value("engages").isNull())
         {
-            sumEngages+=q.value(2).toLongLong();
+            sumEngages+=q.value("engages").toLongLong();
             nullEngages=false;
         }
-        if(!q.value(3).isNull())
+        if(!q.value("disponibles").isNull())
         {
-            sumDisponibles+=q.value(3).toLongLong();
+            sumDisponibles+=q.value("disponibles").toLongLong();
             nullDisponibles=false;
+        }
+        if(!q.value("bp").isNull())
+        {
+            sumBP+=q.value("bp").toLongLong();
+            nullBP=false;
+        }
+        if(!q.value("reports").isNull())
+        {
+            sumReports+=q.value("reports").toLongLong();
+            nullReports=false;
+        }
+        if(!q.value("ocdm").isNull())
+        {
+            sumOCDM+=q.value("ocdm").toLongLong();
+            nullOCDM=false;
+        }
+        if(!q.value("vcdm").isNull())
+        {
+            sumVCDM+=q.value("vcdm").toLongLong();
+            nullVCDM=false;
+        }
+        if(!q.value("budgetvote").isNull())
+        {
+            sumBudgetVote+=q.value("budgetvote").toLongLong();
+            nullBudgetVote=false;
+        }
+        if(!q.value("vcinterne").isNull())
+        {
+            sumVCInternes+=q.value("vcinterne").toLongLong();
+            nullVCInternes=false;
+        }
+        if(!q.value("rattachenmoins1").isNull())
+        {
+            sumRattachesNMoins1+=q.value("rattachenmoins1").toLongLong();
+            nullRattachesNMoins1=false;
         }
     }
 
-    q.prepare(QString("update %1 set ouverts=:ouverts,realises=:realises,engages=:engages,disponibles=:disponibles where annee=:annee and id_node=:id_node").arg(tableName));
+    q.prepare(QString("insert into %1 (id_node,date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1) "
+                      "values(:id_node,:date,:ouverts,:realises,:engages,:disponibles,:bp,:reports,:ocdm,:vcdm,:budgetvote,:vcinterne,"
+                      ":rattachenmoins1)").arg(tableName));
     if(nullOuverts)
         q.bindValue(":ouverts",QVariant(QVariant::LongLong));
     else
@@ -515,8 +548,46 @@ void PCx_Reporting::updateParent(const QString &tableName, unsigned int annee, u
     else
         q.bindValue(":disponibles",sumDisponibles);
 
-    q.bindValue(":annee",annee);
+    if(nullBP)
+        q.bindValue(":bp",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":bp",sumBP);
+
+    if(nullReports)
+        q.bindValue(":reports",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":reports",sumReports);
+
+    if(nullOCDM)
+        q.bindValue(":ocdm",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":ocdm",sumOCDM);
+
+    if(nullVCDM)
+        q.bindValue(":vcdm",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":vcdm",sumVCDM);
+
+    if(nullBudgetVote)
+        q.bindValue(":budgetvote",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":budgetvote",sumBudgetVote);
+
+    if(nullVCInternes)
+        q.bindValue(":vcinterne",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":vcinterne",sumVCInternes);
+
+    if(nullRattachesNMoins1)
+        q.bindValue(":rattachenmoins1",QVariant(QVariant::LongLong));
+    else
+        q.bindValue(":rattachenmoins1",sumRattachesNMoins1);
+
+
+    q.bindValue(":date",tDate);
     q.bindValue(":id_node",parent);
+
+    qDebug()<<"tDate ="<<tDate;
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -530,7 +601,7 @@ void PCx_Reporting::updateParent(const QString &tableName, unsigned int annee, u
 
     if(parent>1)
     {
-        updateParent(tableName,annee,parent);
+        updateParent(tableName,date,parent);
     }
 }
 
@@ -635,9 +706,13 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
     if(!(xlsx.read(1,1).isValid() && xlsx.read(1,2).isValid() &&
          xlsx.read(1,3).isValid() && xlsx.read(1,4).isValid() &&
-         xlsx.read(1,5).isValid() && xlsx.read(1,6).isValid()))
+         xlsx.read(1,5).isValid() && xlsx.read(1,6).isValid() &&
+         xlsx.read(1,7).isValid() && xlsx.read(1,8).isValid() &&
+         xlsx.read(1,9).isValid() && xlsx.read(1,10).isValid() &&
+         xlsx.read(1,11).isValid() && xlsx.read(1,12).isValid() &&
+         xlsx.read(1,13).isValid()))
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier pré-rempli à l'aide du bouton exporter dans la fenêtre de saisie des données."));
+        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
         return false;
     }
 
@@ -647,7 +722,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
     int row=2;
     if(rowCount<2)
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier vide. Vous pouvez exporter un fichier pré-rempli à l'aide du bouton exporter dans la fenêtre de saisie des données."));
+        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
         return false;
     }
 
@@ -661,17 +736,25 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
     do
     {
-        QVariant nodeType,nodeName,year,ouverts,realises,engages;
+        QVariant nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
         nodeType=xlsx.read(row,1);
         nodeName=xlsx.read(row,2);
-        year=xlsx.read(row,3);
+        date=xlsx.read(row,3);
         ouverts=xlsx.read(row,4);
         realises=xlsx.read(row,5);
         engages=xlsx.read(row,6);
+        bp=xlsx.read(row,7);
+        reports=xlsx.read(row,8);
+        ocdm=xlsx.read(row,9);
+        vcdm=xlsx.read(row,10);
+        budgetvote=xlsx.read(row,11);
+        vcinternes=xlsx.read(row,12);
+        rattachesnmoins1=xlsx.read(row,13);
 
-        if(!(nodeType.isValid() && nodeName.isValid() && year.isValid()))
+
+        if(!(nodeType.isValid() && nodeName.isValid() && date.isValid()))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez le type et le nom du noeud ainsi que l'année d'application").arg(row));
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez le type et le nom du noeud ainsi que la date d'application").arg(row));
             return false;
         }
 
@@ -685,25 +768,39 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
         }
 
-
         double dblOuv=ouverts.toDouble();
         double dblReal=realises.toDouble();
         double dblEng=engages.toDouble();
+        double dblBP=bp.toDouble();
+        double dblReports=reports.toDouble();
+        double dblOCDM=ocdm.toDouble();
+        double dblVCDM=vcdm.toDouble();
+        double dblBudgetVote=budgetvote.toDouble();
+        double dblVInternes=vcinternes.toDouble();
+        double dblRattachesNMoins1=rattachesnmoins1.toDouble();
 
 
-        if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM)
+        qDebug()<<xlsx.cellAt(row,3)->dateTime();
+
+        if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM||dblBP>=MAX_NUM||dblReports>=MAX_NUM
+                ||dblOCDM>=MAX_NUM||dblVCDM>=MAX_NUM||dblBudgetVote>=MAX_NUM||dblVInternes>=MAX_NUM
+                ||dblRattachesNMoins1>=MAX_NUM)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
             return false;
         }
 
-        if(!qIsFinite(dblOuv)||!qIsFinite(dblReal)||!qIsFinite(dblEng))
+        if(!qIsFinite(dblOuv)||!qIsFinite(dblReal)||!qIsFinite(dblEng)
+                ||!qIsFinite(dblBP)||!qIsFinite(dblReports)||!qIsFinite(dblOCDM)
+                ||!qIsFinite(dblVCDM)||!qIsFinite(dblBudgetVote)||!qIsFinite(dblVInternes)
+                ||!qIsFinite(dblRattachesNMoins1))
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur infinie ligne %1 non autorisée !").arg(row));
             return false;
         }
 
-        if(dblOuv<0.0 || dblReal<0.0 || dblEng<0.0)
+        if(dblOuv<0.0 || dblReal<0.0 || dblEng<0.0 || dblBP<0.0|| dblReports <0.0
+                ||dblBudgetVote<0.0 || dblRattachesNMoins1<0.0)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur négative ligne %1 non autorisée !").arg(row));
             return false;
@@ -757,13 +854,21 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
     do
     {
-        QVariant nodeType,nodeName,year,ouverts,realises,engages;
+        QVariant nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
         nodeType=xlsx.read(row,1);
         nodeName=xlsx.read(row,2);
-        year=xlsx.read(row,3);
+        date=xlsx.read(row,3);
         ouverts=xlsx.read(row,4);
         realises=xlsx.read(row,5);
         engages=xlsx.read(row,6);
+        bp=xlsx.read(row,7);
+        reports=xlsx.read(row,8);
+        ocdm=xlsx.read(row,9);
+        vcdm=xlsx.read(row,10);
+        budgetvote=xlsx.read(row,11);
+        vcinternes=xlsx.read(row,12);
+        rattachesnmoins1=xlsx.read(row,13);
+
 
         //Here year and node are found and correct
         QPair<QString,QString> typeAndNode;
@@ -788,10 +893,46 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
             double valDbl=engages.toDouble();
             vals.insert(PCx_Reporting::OREDPCR::ENGAGES,valDbl);
         }
+        if(bp.isValid())
+        {
+            double valDbl=bp.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::BP,valDbl);
+        }
+        if(reports.isValid())
+        {
+            double valDbl=reports.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::REPORTS,valDbl);
+        }
+        if(ocdm.isValid())
+        {
+            double valDbl=ocdm.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::OCDM,valDbl);
+        }
+        if(vcdm.isValid())
+        {
+            double valDbl=vcdm.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::VCDM,valDbl);
+        }
+        if(budgetvote.isValid())
+        {
+            double valDbl=budgetvote.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::BUDGETVOTE,valDbl);
+        }
+        if(rattachesnmoins1.isValid())
+        {
+            double valDbl=rattachesnmoins1.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::RATTACHENMOINS1,valDbl);
+        }
+        if(vcinternes.isValid())
+        {
+            double valDbl=vcinternes.toDouble();
+            vals.insert(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,valDbl);
+        }
+
         if(vals.size()>0)
         {
             //setLeafValues in fast mode only die on db error
-            setLeafValues(nodeId,mode,year.toUInt(),vals,true);
+            setLeafValues(nodeId,mode,date.toDate(),vals,true);
         }
         vals.clear();
 
@@ -814,8 +955,40 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
 }
 
+bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
+{
+    QXlsx::Document xlsx;
+    QList<unsigned int> leavesId=attachedTree->getLeavesId();
+    xlsx.write(1,1,"Type noeud");
+    xlsx.write(1,2,"Nom noeud");
+    xlsx.write(1,3,"Date");
+    xlsx.write(1,4,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP));
+    xlsx.write(1,5,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS));
+    xlsx.write(1,6,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM));
+    xlsx.write(1,7,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM));
+    xlsx.write(1,8,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BUDGETVOTE));
+    xlsx.write(1,9,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES));
+    xlsx.write(1,10,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OUVERTS));
+    xlsx.write(1,11,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REALISES));
+    xlsx.write(1,12,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::ENGAGES));
+    xlsx.write(1,13,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::RATTACHENMOINS1));
+
+    int row=2;
+    foreach(unsigned int leaf, leavesId)
+    {
+        QPair<QString,QString> typeAndNodeName=attachedTree->getTypeNameAndNodeName(leaf);
+        xlsx.write(row,1,typeAndNodeName.first);
+        xlsx.write(row,2,typeAndNodeName.second);
+        xlsx.write(row,3,QDate(2002,05,13));
+        row++;
+    }
+
+    return xlsx.saveAs(fileName);
+}
+
 bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileName) const
 {
+    /*
     QXlsx::Document xlsx;
     QList<unsigned int> leavesId=attachedTree->getLeavesId();
     xlsx.write(1,1,"Type noeud");
@@ -869,6 +1042,7 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & f
     }
 
     return xlsx.saveAs(fileName);
+    */
 }
 
 QString PCx_Reporting::getCSS()
@@ -908,6 +1082,21 @@ QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored)
         return QObject::tr("engagé");
     case OREDPCR::DISPONIBLES:
         return QObject::tr("disponible");
+    case OREDPCR::BP:
+        return QObject::tr("BP");
+    case OREDPCR::REPORTS:
+        return QObject::tr("reports");
+    case OREDPCR::OCDM:
+        return QObject::tr("OCDM");
+    case OREDPCR::VCDM:
+        return QObject::tr("VCDM");
+    case OREDPCR::BUDGETVOTE:
+        return QObject::tr("budget voté");
+    case OREDPCR::RATTACHENMOINS1:
+        return QObject::tr("rattachés N-1");
+    case OREDPCR::VIREMENTSINTERNES:
+        return QObject::tr("virements internes");
+
     default:
         qWarning()<<"Invalid ORED specified !";
     }
@@ -926,6 +1115,24 @@ QString PCx_Reporting::OREDPCRtoTableString(OREDPCR ored)
         return "engages";
     case OREDPCR::DISPONIBLES:
         return "disponibles";
+    case OREDPCR::BP:
+        return "bp";
+    case OREDPCR::REPORTS:
+        return "reports";
+    case OREDPCR::OCDM:
+        return "ocdm";
+    case OREDPCR::VCDM:
+        return "vcdm";
+    case OREDPCR::BUDGETVOTE:
+        return "budgetvote";
+    case OREDPCR::RATTACHENMOINS1:
+        return "rattachenmoins1";
+    case OREDPCR::VIREMENTSINTERNES:
+        return "vcinterne";
+
+
+
+
     default:
         qWarning()<<"Invalid ORED specified !";
     }
@@ -942,6 +1149,21 @@ PCx_Reporting::OREDPCR PCx_Reporting::OREDPCRFromTableString(const QString &ored
         return OREDPCR::ENGAGES;
     if(ored==OREDPCRtoTableString(OREDPCR::DISPONIBLES))
         return OREDPCR::DISPONIBLES;
+
+    if(ored==OREDPCRtoTableString(OREDPCR::BP))
+        return OREDPCR::BP;
+    if(ored==OREDPCRtoTableString(OREDPCR::REPORTS))
+        return OREDPCR::REPORTS;
+    if(ored==OREDPCRtoTableString(OREDPCR::OCDM))
+        return OREDPCR::OCDM;
+    if(ored==OREDPCRtoTableString(OREDPCR::VCDM))
+        return OREDPCR::VCDM;
+    if(ored==OREDPCRtoTableString(OREDPCR::VIREMENTSINTERNES))
+        return OREDPCR::VIREMENTSINTERNES;
+    if(ored==OREDPCRtoTableString(OREDPCR::RATTACHENMOINS1))
+        return OREDPCR::RATTACHENMOINS1;
+    if(ored==OREDPCRtoTableString(OREDPCR::BUDGETVOTE))
+        return OREDPCR::BUDGETVOTE;
 
     qWarning()<<"Invalid ORED string specified, defaulting to ouverts";
     return OREDPCR::OUVERTS;
@@ -1004,11 +1226,12 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
     }
     unsigned int uLastId=lastId.toUInt();
 
+    //FIXME : use OREDPCRToTableString (too long, don't write)
     //Data are integer for fixed points arithmetics, stored with 3 decimals
-    if(!q.exec(QString("create table reporting_DF_%1(id integer primary key autoincrement, id_node integer not null, date text not null, "
+    if(!q.exec(QString("create table reporting_DF_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1026,10 +1249,10 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
         die();
     }
 
-    if(!q.exec(QString("create table reporting_RF_%1(id integer primary key autoincrement, id_node integer not null, date text not null, "
+    if(!q.exec(QString("create table reporting_RF_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1047,10 +1270,10 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
         die();
     }
 
-    if(!q.exec(QString("create table reporting_DI_%1(id integer primary key autoincrement, id_node integer not null, date text not null, "
+    if(!q.exec(QString("create table reporting_DI_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1067,10 +1290,10 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
         die();
     }
 
-    if(!q.exec(QString("create table reporting_RI_%1(id integer primary key autoincrement, id_node integer not null, date text not null, "
+    if(!q.exec(QString("create table reporting_RI_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1105,7 +1328,7 @@ bool PCx_Reporting::deleteReporting(unsigned int reportingId)
     {
         if(q.value(0).toInt()==0)
         {
-            qWarning()<<"Attempting to delete an inexistant audit !";
+            qWarning()<<"Attempting to delete an inexistant reporting !";
             return false;
         }
     }
