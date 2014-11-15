@@ -209,3 +209,52 @@ void FormManageReportings::on_pushButtonLoadDF_clicked()
 }
 
 
+
+void FormManageReportings::on_pushButtonLoadRF_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RF);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RF)));
+    }
+
+}
+
+void FormManageReportings::on_pushButtonLoadDI_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DI);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DI)));
+    }
+}
+
+void FormManageReportings::on_pushButtonLoadRI_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RI);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RI)));
+    }
+}

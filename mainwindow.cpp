@@ -385,7 +385,38 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
         }
 
+        foreach(FormReportingTables *dlg,listOfFormReportingTables)
+        {
+            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        }
         //FIXME : connect !
 
     }
 }
+
+void MainWindow::on_actionExploreReportings_triggered()
+{
+    FormReportingTables *dlg=new FormReportingTables();
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    ui->mdiArea->addSubWindow(dlg);
+    dlg->show();
+    listOfFormReportingTables.append(dlg);
+
+    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingTablesWindowsDestroyed(QObject *)));
+
+    if(formManageReportings!=nullptr)
+    {
+        //FIXME : connect !
+        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+    }
+
+}
+
+void MainWindow::onFormReportingTablesWindowsDestroyed(QObject *obj)
+{
+    listOfFormReportingTables.removeAt(listOfFormReportingTables.indexOf(static_cast<FormReportingTables *>(obj)));
+}
+
+
+

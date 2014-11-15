@@ -7,6 +7,7 @@
 
 #include "formmanagereportings.h"
 #include "formmanageaudits.h"
+#include "formreportingtables.h"
 #include "formedittree.h"
 #include "formeditaudit.h"
 #include "formtablesgraphics.h"
@@ -69,6 +70,9 @@ private slots:
 
     void on_actionGestion_des_reportings_triggered();
 
+    void on_actionExploreReportings_triggered();
+
+    void onFormReportingTablesWindowsDestroyed(QObject *obj);
 private:
 
     Ui::MainWindow *ui;
@@ -83,6 +87,8 @@ private:
 
     //Multiple "tables" dialogs are allowed
     QList<FormTablesGraphics *>listOfFormTablesGraphics;
+
+    QList<FormReportingTables *>listOfFormReportingTables;
 
     QList<FormQueries *>listOfFormQueries;
     QString recentDb;

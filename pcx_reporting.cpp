@@ -1,5 +1,4 @@
 #include "pcx_reporting.h"
-#include "pcx_audit.h"
 #include "pcx_report.h"
 #include "xlsxdocument.h"
 #include "pcx_query.h"
@@ -148,11 +147,11 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
     return true;
 }
 
-qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OREDPCR ored, unsigned int year) const
+qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OREDPCR ored, QDate date) const
 {
     QSqlQuery q;
-    q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDPCRtoTableString(ored)).arg(modeToTableString(mode)).arg(reportingId));
-    q.bindValue(":year",year);
+    q.prepare(QString("select %1 from reporting_%2_%3 where date=:date and id_node=:node").arg(OREDPCRtoTableString(ored)).arg(modeToTableString(mode)).arg(reportingId));
+    q.bindValue(":date",QDateTime(date).toTime_t());
     q.bindValue(":node",nodeId);
     if(!q.exec())
     {
@@ -171,12 +170,13 @@ qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OR
     return q.value(OREDPCRtoTableString(ored)).toLongLong();
 }
 
-QHash<PCx_Reporting::OREDPCR, qint64> PCx_Reporting::getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const
+/*
+QHash<PCx_Reporting::OREDPCR, qint64> PCx_Reporting::getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, QDate date) const
 {
     QSqlQuery q;
     QHash<PCx_Reporting::OREDPCR,qint64> output;
-    q.prepare(QString("select * from audit_%2_%3 where annee=:year and id_node=:node").arg(modeToTableString(mode)).arg(reportingId));
-    q.bindValue(":year",year);
+    q.prepare(QString("select * from reporting_%2_%3 where date=:date and id_node=:node").arg(modeToTableString(mode)).arg(reportingId));
+    q.bindValue(":year",QDateTime(date).toTime_t());
     q.bindValue(":node",nodeId);
     if(!q.exec())
     {
@@ -185,7 +185,7 @@ QHash<PCx_Reporting::OREDPCR, qint64> PCx_Reporting::getNodeValues(unsigned int 
     }
     if(!q.next())
     {
-        qWarning()<<"Missing node values for audit"<<reportingId<<", node"<<nodeId<<"and"<<modeToCompleteString(mode);
+        qWarning()<<"Missing node values for reporting"<<reportingId<<", node"<<nodeId<<"and"<<modeToCompleteString(mode);
         return output;
     }
 
@@ -228,6 +228,7 @@ QHash<PCx_Reporting::OREDPCR, qint64> PCx_Reporting::getNodeValues(unsigned int 
 
     return output;
 }
+*/
 
 void PCx_Reporting::clearAllData(MODES::DFRFDIRI mode)
 {
@@ -238,6 +239,7 @@ void PCx_Reporting::clearAllData(MODES::DFRFDIRI mode)
         die();
     }
 }
+
 
 int PCx_Reporting::duplicateReporting(const QString &newName, bool copyDF, bool copyRF, bool copyDI, bool copyRI) const
 {
@@ -1059,7 +1061,7 @@ QString PCx_Reporting::getCSS()
 
 QString PCx_Reporting::generateHTMLHeader() const
 {
-    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(reportingName.toHtmlEscaped()).arg(getCSS());
+    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Reporting %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(reportingName.toHtmlEscaped()).arg(getCSS());
 }
 
 QString PCx_Reporting::generateHTMLReportingTitle() const

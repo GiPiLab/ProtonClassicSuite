@@ -116,7 +116,7 @@ public:
      * @param year the year to read
      * @return the node value in qint64 format (uses formatDouble or formatCurrency to display), or -MAX_NUM on NULL or unavailable node
      */
-    qint64 getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Reporting::OREDPCR ored, unsigned int year) const;
+    qint64 getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Reporting::OREDPCR ored, QDate date) const;
 
 
     /**
@@ -126,7 +126,7 @@ public:
      * @param year the year to read
      * @return node values for each field in qint64 format
      */
-    QHash<PCx_Reporting::OREDPCR,qint64> getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const;
+    //QHash<PCx_Reporting::OREDPCR,qint64> getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, QDate date) const;
 
 
     /**
