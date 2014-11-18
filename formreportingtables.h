@@ -58,12 +58,20 @@ private slots:
 
     void on_checkBoxDisponibles_toggled(bool checked);
 
+    void on_pushButtonExportHtml_clicked();
+
+    void on_comboBoxRefColumn_activated(int index);
+
+    void on_comboBoxRefDate_activated(int index);
+
 private:
     Ui::FormReportingTables *ui;
     void updateListOfReportings();
     PCx_ReportingWithTreeModel *selectedReporting;
     PCx_ReportingTableOverviewModel *tableOverviewModel;
     QSortFilterProxyModel *proxyModel;
+    MODES::DFRFDIRI getSelectedMode() const;
+    unsigned int selectedNodeId;
 };
 
 #endif // FORMREPORTINGTABLES_H

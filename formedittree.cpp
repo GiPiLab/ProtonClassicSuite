@@ -339,7 +339,7 @@ void FormEditTree::on_comboBox_activated(int index)
     ui->treeView->expandToDepth(1);
 
     m=ui->listTypesView->selectionModel();
-    Q_ASSERT(model->getTypes()->getTableModel()!=nullptr);
+    Q_ASSERT(model->getTypesTableModel()!=nullptr);
     ui->listTypesView->setModel(model->getTypesTableModel());
     ui->listTypesView->setModelColumn(1);
     delete m;

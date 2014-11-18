@@ -78,6 +78,56 @@ QString generateUniqueFileName(const QString &suffix)
     return uniqueName;
 }
 
+QString qTableViewToHtml(QTableView *tableView)
+{
+    const int rowCount = tableView->model()->rowCount();
+    const int columnCount = tableView->model()->columnCount();
+    QString out="<table border='1'>\n";
+
+    out.append("<thead><tr>");
+    for (int column = 0; column < columnCount; column++)
+    {
+        if (!tableView->isColumnHidden(column))
+            out.append(QString("<th>%1</th>").arg(tableView->model()->headerData(column, Qt::Horizontal).toString().toHtmlEscaped()));
+    }
+    out.append("</tr></thead>\n");
+
+    for (int row = 0; row < rowCount; row++) {
+        out.append("<tr>");
+        for (int column = 0; column < columnCount; column++)
+        {
+            QString cellStyle;
+            QModelIndex index=tableView->model()->index(row,column);
+            if (!tableView->isColumnHidden(column))
+            {
+                QVariant color=tableView->model()->data(index,Qt::TextColorRole);
+                QVariant alignment=tableView->model()->data(index,Qt::TextAlignmentRole);
+                if(alignment.isValid())
+                {
+                    if(alignment.toInt()==Qt::AlignCenter)
+                    {
+                        cellStyle.append("text-align:center;");
+                    }
+                }
+                if(color.isValid())
+                {
+                    QColor textColor=color.value<QColor>();
+                    cellStyle.append(QString("text-color:%1;").arg(textColor.name()));
+                }
+                else
+                {
+                    cellStyle.append("text-color:0;");
+                }
+                QString data = tableView->model()->data(index).toString().toHtmlEscaped();
+                out.append(QString("<td style='%1'>%2</td>").arg(cellStyle).arg((!data.isEmpty()) ? data : QString("&nbsp;")));
+            }
+        }
+        out.append("</tr>\n");
+    }
+    out.append("</table>\n");
+    return out;
+}
+
 
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
 {

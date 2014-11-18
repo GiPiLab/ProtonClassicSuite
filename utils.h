@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <QString>
+#include <QTableView>
 
 #define VERSION __DATE__
 
@@ -19,6 +20,14 @@
 # endif
 #define INT64_MAX		(__INT64_C(9223372036854775807))
 #endif
+
+/**
+ * @brief qTableViewToHtml converts a QTableView to HTML
+ * @param tableView the view to display in HTML
+ * @return an HTML table of the view
+ */
+QString qTableViewToHtml(QTableView *tableView);
+
 
 /**
  * @brief die exits the program properly by issuing a rollback on the last non-committed transaction, closing the db

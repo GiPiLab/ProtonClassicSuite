@@ -104,7 +104,7 @@ FORMS    += mainwindow.ui \
     formreportingtables.ui
 
 
-QMAKE_CXXFLAGS_DEBUG += -Og
+#QMAKE_CXXFLAGS_DEBUG += -Og
 
 unix|win32: LIBS += -lgvc -lcgraph
 

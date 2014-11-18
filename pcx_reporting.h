@@ -5,7 +5,7 @@
 #include "pcx_tree.h"
 #include "utils.h"
 #include <QDateTime>
-
+#include <QComboBox>
 
 /**
  * @brief The PCx_Reporting class represents a reporting in the database
@@ -35,8 +35,11 @@ public:
         VCDM,
         BUDGETVOTE,
         VIREMENTSINTERNES,
-        RATTACHENMOINS1
+        RATTACHENMOINS1,
+        NONE
     };
+
+
 
 
     /**
@@ -148,29 +151,6 @@ public:
     int duplicateReporting(const QString &newName,
                                 bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
 
-    /**
-     * @brief getNodesWithNonNullValues gets the nodes that contains at least one value
-     * @param mode the mode to analyze
-     * @param year the year to analyze
-     * @return a list of node identifiers
-     */
-    QList<unsigned int> getNodesWithNonNullValues(MODES::DFRFDIRI mode, unsigned int year) const;
-
-    /**
-     * @brief getNodesWithAllNullValues gets the nodes without any value
-     * @param mode the mode to analyze
-     * @param year the year to analyze
-     * @return a list of node identifiers
-     */
-    QList<unsigned int> getNodesWithAllNullValues(MODES::DFRFDIRI mode, unsigned int year) const;
-
-    /**
-     * @brief getNodesWithAllZeroValues gets the nodes that contains not null but all zero values
-     * @param mode the mode to analyze
-     * @param year the year to analyze
-     * @return a list of node identifiers
-     */
-    QList<unsigned int> getNodesWithAllZeroValues(MODES::DFRFDIRI mode, unsigned int year) const;
 
 
     /**
@@ -233,6 +213,33 @@ public:
      * @return HTML with statistics
      */
     QString getHTMLAuditStatistics() const;
+
+    /**
+     * @brief fillDateComboBox fills a QComboBox with available dates for a node and a mode
+     * @param combo the combobox to fill
+     * @param mode the mode
+     * @param nodeId the identifier of the node
+     */
+    void fillDateComboBox(QComboBox *combo, MODES::DFRFDIRI mode, unsigned int nodeId) const;
+
+
+    /**
+     * @brief dateExistsForNodeAndMode checks if there are data associated with this date for this node
+     * @param date the date to check
+     * @param mode the mode
+     * @param nodeId the identifier of the node
+     * @return true if there are data, false otherwise
+     */
+    bool dateExistsForNodeAndMode(QDate date,MODES::DFRFDIRI mode,unsigned int nodeId)const;
+
+    bool dateExistsForNodeAndMode(unsigned int timeT, MODES::DFRFDIRI mode, unsigned int nodeId) const;
+
+
+    /**
+     * @brief OREDPCRToComboBox fills a QComboBox with OREDPCR values
+     * @param combo the QComboBox to fill
+     */
+    static void OREDPCRToComboBox(QComboBox *combo);
 
     /**
      * @brief OREDPCRtoCompleteString converts an OREDPCR item to its textual representation

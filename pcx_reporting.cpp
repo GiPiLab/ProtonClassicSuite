@@ -609,88 +609,6 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
 }
 
 
-QList<unsigned int> PCx_Reporting::getNodesWithAllNullValues(MODES::DFRFDIRI mode,unsigned int year) const
-{
-    QString tableMode=MODES::modeToTableString(mode);
-    Q_ASSERT(year>=years.first()&& year<=years.last());
-    QList<unsigned int> nodes;
-    QStringList oredStrings;
-    oredStrings<<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)
-              <<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)
-              <<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::ENGAGES);
-    QSqlQuery q;
-    q.prepare(QString("select id_node from audit_%1_%2 where (%3 is null and %4 is null and %5 is null) and annee=:year").arg(tableMode).arg(reportingId)
-              .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
-
-    q.bindValue(":year",year);
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    while(q.next())
-    {
-        nodes.append(q.value("id_node").toUInt());
-    }
-    return nodes;
-}
-
-
-QList<unsigned int> PCx_Reporting::getNodesWithNonNullValues(MODES::DFRFDIRI mode,unsigned int year) const
-{
-    QString tableMode=MODES::modeToTableString(mode);
-    Q_ASSERT(year>=years.first()&& year<=years.last());
-    QList<unsigned int> nodes;
-    QStringList oredStrings;
-    oredStrings<<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)
-              <<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)
-                 <<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::ENGAGES);
-    QSqlQuery q;
-    q.prepare(QString("select id_node from audit_%1_%2 where (%3 not null or %4 not null or %5 not null) and annee=:year").arg(tableMode).arg(reportingId)
-                .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
-
-    q.bindValue(":year",year);
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    while(q.next())
-    {
-        nodes.append(q.value("id_node").toUInt());
-    }
-    return nodes;
-}
-
-QList<unsigned int> PCx_Reporting::getNodesWithAllZeroValues(MODES::DFRFDIRI mode, unsigned int year) const
-{
-    QString tableMode=MODES::modeToTableString(mode);
-    Q_ASSERT(year>=years.first()&& year<=years.last());
-    QList<unsigned int> nodes;
-    QStringList oredStrings;
-    oredStrings<<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)<<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)
-                 <<PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::ENGAGES);
-    QSqlQuery q;
-    QString sq=QString("select id_node from audit_%1_%2 where (%3 = 0 and %4 = 0 and %5 = 0) and annee=:year").arg(tableMode).arg(reportingId)
-                .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2));
-
-    q.prepare(sq);
-    q.bindValue(":year",year);
-
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-
-    while(q.next())
-    {
-        nodes.append(q.value("id_node").toUInt());
-    }
-    return nodes;
-}
 
 bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode)
 {
@@ -1069,6 +987,63 @@ QString PCx_Reporting::generateHTMLReportingTitle() const
     return QString("<h3>Reporting %1, arbre %3</h3>").arg(reportingName.toHtmlEscaped()).arg(attachedTreeName.toHtmlEscaped());
 }
 
+void PCx_Reporting::fillDateComboBox(QComboBox *combo, MODES::DFRFDIRI mode, unsigned int nodeId) const
+{
+    Q_ASSERT(combo!=nullptr);
+    combo->clear();
+    QSqlQuery q;
+    q.prepare(QString("select date from reporting_%1_%2 where id_node=:idnode order by date").arg(MODES::modeToTableString(mode)).arg(reportingId));
+    q.bindValue(":idnode",nodeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    while(q.next())
+    {
+        unsigned int rowDate=q.value(0).toUInt();
+        QString laDate=QDateTime::fromTime_t(rowDate).date().toString(Qt::DefaultLocaleShortDate);
+        combo->addItem(laDate,rowDate);
+    }
+    combo->addItem("",-1);
+}
+
+bool PCx_Reporting::dateExistsForNodeAndMode(unsigned int timeT,MODES::DFRFDIRI mode, unsigned int nodeId) const
+{
+    return dateExistsForNodeAndMode(QDateTime::fromTime_t(timeT).date(),mode,nodeId);
+}
+
+
+bool PCx_Reporting::dateExistsForNodeAndMode(QDate date, MODES::DFRFDIRI mode, unsigned int nodeId) const
+{
+    QSqlQuery q;
+    QDateTime dt(date);
+    unsigned int dateToCheck=dt.toTime_t();
+    q.prepare(QString("select count(*) from reporting_%1_%2 where date=:date and id_node=:idnode").arg(MODES::modeToTableString(mode)).arg(reportingId));
+    q.bindValue(":date",dateToCheck);
+    q.bindValue(":idnode",nodeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.value(0).toInt()>0)
+        return true;
+    return false;
+}
+
+void PCx_Reporting::OREDPCRToComboBox(QComboBox *combo)
+{
+    combo->clear();
+    for(int i=(int)OREDPCR::OUVERTS;i<=(int)OREDPCR::NONE;i++)
+        combo->addItem(OREDPCRtoCompleteString((OREDPCR)i),(OREDPCR)i);
+}
+
 
 QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored)
 {
@@ -1095,7 +1070,9 @@ QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored)
     case OREDPCR::RATTACHENMOINS1:
         return QObject::tr("rattachés N-1");
     case OREDPCR::VIREMENTSINTERNES:
-        return QObject::tr("virements internes");
+        return QObject::tr("v. internes");
+    case OREDPCR::NONE:
+        return QString();
 
     default:
         qWarning()<<"Invalid ORED specified !";
@@ -1130,9 +1107,6 @@ QString PCx_Reporting::OREDPCRtoTableString(OREDPCR ored)
     case OREDPCR::VIREMENTSINTERNES:
         return "vcinterne";
 
-
-
-
     default:
         qWarning()<<"Invalid ORED specified !";
     }
@@ -1165,8 +1139,8 @@ PCx_Reporting::OREDPCR PCx_Reporting::OREDPCRFromTableString(const QString &ored
     if(ored==OREDPCRtoTableString(OREDPCR::BUDGETVOTE))
         return OREDPCR::BUDGETVOTE;
 
-    qWarning()<<"Invalid ORED string specified, defaulting to ouverts";
-    return OREDPCR::OUVERTS;
+    qWarning()<<"Invalid ORED string specified, defaulting to NONE";
+    return OREDPCR::NONE;
 }
 
 unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int attachedTreeId)

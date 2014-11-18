@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Exploration des reportings</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
@@ -46,8 +46,18 @@
          <property name="title">
           <string>Mode</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="radioButtonDI">
+            <property name="text">
+             <string>DI</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <widget class="QComboBox" name="comboBoxRefColumn"/>
+          </item>
+          <item row="0" column="0">
            <widget class="QRadioButton" name="radioButtonDF">
             <property name="text">
              <string>DF</string>
@@ -57,21 +67,31 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="0" column="1">
            <widget class="QRadioButton" name="radioButtonRF">
             <property name="text">
              <string>RF</string>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QRadioButton" name="radioButtonDI">
+          <item row="0" column="4">
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>DI</string>
+             <string>Colonne de référence</string>
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="5">
+           <widget class="QComboBox" name="comboBoxRefDate"/>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Date de référence</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
            <widget class="QRadioButton" name="radioButtonRI">
             <property name="text">
              <string>RI</string>
@@ -95,6 +115,16 @@
          <attribute name="verticalHeaderVisible">
           <bool>false</bool>
          </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonExportHtml">
+         <property name="text">
+          <string>Exporter HTML</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -107,6 +137,46 @@
       <string>Colonnes</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QCheckBox" name="checkBoxOuverts">
+        <property name="text">
+         <string>Prévus</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxRealises">
+        <property name="text">
+         <string>Réalisés</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxEngages">
+        <property name="text">
+         <string>Engagés</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxDisponibles">
+        <property name="text">
+         <string>Disponibles</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QCheckBox" name="checkBoxBP">
         <property name="text">
@@ -171,46 +241,6 @@
        <widget class="QCheckBox" name="checkBoxRattaches">
         <property name="text">
          <string>Rattachés N-1</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxOuverts">
-        <property name="text">
-         <string>Prévus</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxRealises">
-        <property name="text">
-         <string>Réalisés</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxEngages">
-        <property name="text">
-         <string>Engagés</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxDisponibles">
-        <property name="text">
-         <string>Disponibles</string>
         </property>
         <property name="checked">
          <bool>true</bool>
