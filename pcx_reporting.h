@@ -139,21 +139,6 @@ public:
     virtual void clearAllData(MODES::DFRFDIRI mode);
 
     /**
-     * @brief duplicateAudit duplicates an audit
-     * @param newName the new name of the audit
-     * @param years a list of years covered by the audit
-     * @param copyDF if true copy nodes data for DF mode
-     * @param copyRF if true copy nodes data for RF mode
-     * @param copyDI if true copy nodes data for DI mode
-     * @param copyRI if true copy nodes data for RI mode
-     * @return -1 if the newName exists, the new audit identifier on success
-     */
-    int duplicateReporting(const QString &newName,
-                                bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
-
-
-
-    /**
      * @brief importDataFromXLSX imports audit data from an XLSX file
      *
      * The file must contains data in 6 columns, each row represents a leaf and a year:
@@ -214,25 +199,20 @@ public:
      */
     QString getHTMLAuditStatistics() const;
 
-    /**
-     * @brief fillDateComboBox fills a QComboBox with available dates for a node and a mode
-     * @param combo the combobox to fill
-     * @param mode the mode
-     * @param nodeId the identifier of the node
-     */
-    void fillDateComboBox(QComboBox *combo, MODES::DFRFDIRI mode, unsigned int nodeId) const;
+
+    QSet<QDate> getDatesForNodeAndMode(unsigned int nodeId, MODES::DFRFDIRI mode) const;
 
 
     /**
      * @brief dateExistsForNodeAndMode checks if there are data associated with this date for this node
      * @param date the date to check
-     * @param mode the mode
      * @param nodeId the identifier of the node
+     * @param mode the mode
      * @return true if there are data, false otherwise
      */
-    bool dateExistsForNodeAndMode(QDate date,MODES::DFRFDIRI mode,unsigned int nodeId)const;
+    bool dateExistsForNodeAndMode(QDate date,unsigned int nodeId,MODES::DFRFDIRI mode)const;
 
-    bool dateExistsForNodeAndMode(unsigned int timeT, MODES::DFRFDIRI mode, unsigned int nodeId) const;
+    bool dateExistsForNodeAndMode(unsigned int timeT, unsigned int nodeId, MODES::DFRFDIRI mode) const;
 
 
     /**

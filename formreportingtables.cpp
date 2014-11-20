@@ -56,19 +56,21 @@ void FormReportingTables::on_comboListReportings_activated(int index)
         proxyModel=nullptr;
     }
 
+    ui->comboBoxRefColumn->setCurrentIndex(ui->comboBoxRefColumn->count());
+    ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
+
     selectedReporting=new PCx_ReportingWithTreeModel(selectedReportingId);
-    tableOverviewModel=new PCx_ReportingTableOverviewModel(selectedReporting,1,MODES::DF);
+    tableOverviewModel=new PCx_ReportingTableOverviewModel(selectedReporting,1,getSelectedMode());
     proxyModel=new QSortFilterProxyModel(this);
     proxyModel->setSourceModel(tableOverviewModel);
 
     ui->tableView->setModel(proxyModel);
     ui->treeView->setModel(selectedReporting->getAttachedTree());
     ui->treeView->expandToDepth(1);
-    ui->tableView->resizeColumnsToContents();
     QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
     selectedNodeId=1;
     on_treeView_clicked(rootIndex);
-
+    ui->tableView->resizeColumnsToContents();
 }
 
 void FormReportingTables::updateListOfReportings()
@@ -85,21 +87,139 @@ void FormReportingTables::updateListOfReportings()
     this->on_comboListReportings_activated(0);
 }
 
-MODES::DFRFDIRI FormReportingTables::getSelectedMode() const
+void FormReportingTables::updateComboRefDate(QComboBox *combo)
+{
+    PCx_ReportingTableOverviewModel::OVERVIEWMODE selectedMode=getSelectedMode();
+
+    combo->clear();
+    QSet<QDate> datesForNode;
+
+    if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
+    {
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DF);
+    }
+    else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF)
+    {
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RF);
+    }
+    else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI)
+    {
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DI);
+    }
+    else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI)
+    {
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RI);
+    }
+    else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF)
+    {
+        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DF);
+        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RF);
+        datesForNode=dates1.intersect(dates2);
+    }
+    else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI)
+    {
+        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DI);
+        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RI);
+        datesForNode=dates1.intersect(dates2);
+    }
+    else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
+    {
+        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DF);
+        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RF);
+        QSet<QDate> dates3=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DI);
+        QSet<QDate> dates4=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RI);
+        datesForNode=dates1.intersect(dates2).intersect(dates3).intersect(dates4);
+    }
+
+
+    foreach(QDate date,datesForNode)
+    {
+        QDateTime dt(date);
+        combo->addItem(date.toString(Qt::DefaultLocaleShortDate),dt.toTime_t());
+    }
+    combo->addItem("",-1);
+
+
+}
+
+void FormReportingTables::changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode)
+{
+    tableOverviewModel->setMode(mode);
+    updateComboRefDate(ui->comboBoxRefDate);
+
+    int dateRef=tableOverviewModel->getDateRef();
+    if(dateRef!=-1)
+    {
+        if(!dateExistsForNodeAndMode(dateRef,selectedNodeId,mode))
+        {
+            ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
+            tableOverviewModel->setDateRef(-1);
+        }
+        else
+        {
+            for(int i=0;i<ui->comboBoxRefDate->count();i++)
+            {
+                if(ui->comboBoxRefDate->itemData(i)==dateRef)
+                {
+                    ui->comboBoxRefDate->setCurrentIndex(i);
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
+    }
+    ui->tableView->resizeColumnsToContents();
+}
+
+bool FormReportingTables::dateExistsForNodeAndMode(unsigned int timeT, unsigned int nodeId, PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) const
+{
+    if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
+        return selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DF);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF)
+        return selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RF);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI)
+        return selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DI);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI)
+        return selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RI);
+
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF)
+        return (selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DF) &  selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RF));
+
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI)
+        return (selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DI) &  selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RI));
+
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
+        return (selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DF) &  selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RF) &
+                selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DI) &  selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RI));
+    qDebug()<<"Unsupported case found !";
+    return false;
+}
+
+PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingTables::getSelectedMode() const
 {
     if(ui->radioButtonDF->isChecked())
-        return MODES::DF;
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
     if(ui->radioButtonRF->isChecked())
-        return MODES::RF;
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF;
     if(ui->radioButtonDI->isChecked())
-        return MODES::DI;
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI;
     if(ui->radioButtonRI->isChecked())
-        return MODES::RI;
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI;
+    if(ui->radioButtonRFDF->isChecked())
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF;
+    if(ui->radioButtonRIDI->isChecked())
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI;
+    if(ui->radioButtonRFDFRIDI->isChecked())
+        return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI;
+
     else
     {
         qDebug()<<"Invalid selection";
     }
-    return MODES::GLOBAL;
+    return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
 }
 
 void FormReportingTables::on_treeView_clicked(const QModelIndex &index)
@@ -108,12 +228,12 @@ void FormReportingTables::on_treeView_clicked(const QModelIndex &index)
     selectedNodeId=nodeId;
     ui->groupBoxMode->setTitle(index.data().toString());
     tableOverviewModel->setNodeId(nodeId);
-    selectedReporting->fillDateComboBox(ui->comboBoxRefDate,getSelectedMode(),nodeId);
+    updateComboRefDate(ui->comboBoxRefDate);
 
     int dateRef=tableOverviewModel->getDateRef();
     if(dateRef!=-1)
     {
-        if(!selectedReporting->dateExistsForNodeAndMode(dateRef,getSelectedMode(),selectedNodeId))
+        if(!dateExistsForNodeAndMode(dateRef,selectedNodeId,getSelectedMode()))
         {
             ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
             tableOverviewModel->setDateRef(-1);
@@ -141,33 +261,7 @@ void FormReportingTables::on_radioButtonDF_toggled(bool checked)
 {
     if(checked)
     {
-        tableOverviewModel->setMode(MODES::DF);
-        selectedReporting->fillDateComboBox(ui->comboBoxRefDate,MODES::DFRFDIRI::DF,selectedNodeId);
-
-        int dateRef=tableOverviewModel->getDateRef();
-        if(dateRef!=-1)
-        {
-            if(!selectedReporting->dateExistsForNodeAndMode(dateRef,MODES::DF,selectedNodeId))
-            {
-                ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-                tableOverviewModel->setDateRef(-1);
-            }
-            else
-            {
-                for(int i=0;i<ui->comboBoxRefDate->count();i++)
-                {
-                    if(ui->comboBoxRefDate->itemData(i)==dateRef)
-                    {
-                        ui->comboBoxRefDate->setCurrentIndex(i);
-                        break;
-                    }
-                }
-            }
-        }
-        else
-        {
-            ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-        }
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF);
     }
 }
 
@@ -175,33 +269,7 @@ void FormReportingTables::on_radioButtonRF_toggled(bool checked)
 {
     if(checked)
     {
-        tableOverviewModel->setMode(MODES::RF);
-        selectedReporting->fillDateComboBox(ui->comboBoxRefDate,MODES::DFRFDIRI::RF,selectedNodeId);
-
-        int dateRef=tableOverviewModel->getDateRef();
-        if(dateRef!=-1)
-        {
-            if(!selectedReporting->dateExistsForNodeAndMode(dateRef,MODES::RF,selectedNodeId))
-            {
-                ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-                tableOverviewModel->setDateRef(-1);
-            }
-            else
-            {
-                for(int i=0;i<ui->comboBoxRefDate->count();i++)
-                {
-                    if(ui->comboBoxRefDate->itemData(i)==dateRef)
-                    {
-                        ui->comboBoxRefDate->setCurrentIndex(i);
-                        break;
-                    }
-                }
-            }
-        }
-        else
-        {
-            ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-        }
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF);
     }
 }
 
@@ -209,33 +277,7 @@ void FormReportingTables::on_radioButtonRI_toggled(bool checked)
 {
     if(checked)
     {
-        tableOverviewModel->setMode(MODES::RI);
-        selectedReporting->fillDateComboBox(ui->comboBoxRefDate,MODES::DFRFDIRI::RI,selectedNodeId);
-
-        int dateRef=tableOverviewModel->getDateRef();
-        if(dateRef!=-1)
-        {
-            if(!selectedReporting->dateExistsForNodeAndMode(dateRef,MODES::RI,selectedNodeId))
-            {
-                ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-                tableOverviewModel->setDateRef(-1);
-            }
-            else
-            {
-                for(int i=0;i<ui->comboBoxRefDate->count();i++)
-                {
-                    if(ui->comboBoxRefDate->itemData(i)==dateRef)
-                    {
-                        ui->comboBoxRefDate->setCurrentIndex(i);
-                        break;
-                    }
-                }
-            }
-        }
-        else
-        {
-            ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-        }
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI);
     }
 }
 
@@ -243,35 +285,38 @@ void FormReportingTables::on_radioButtonDI_toggled(bool checked)
 {
     if(checked)
     {
-        tableOverviewModel->setMode(MODES::DI);
-        selectedReporting->fillDateComboBox(ui->comboBoxRefDate,MODES::DFRFDIRI::DI,selectedNodeId);
-
-        int dateRef=tableOverviewModel->getDateRef();
-        if(dateRef!=-1)
-        {
-            if(!selectedReporting->dateExistsForNodeAndMode(dateRef,MODES::DI,selectedNodeId))
-            {
-                ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-                tableOverviewModel->setDateRef(-1);
-            }
-            else
-            {
-                for(int i=0;i<ui->comboBoxRefDate->count();i++)
-                {
-                    if(ui->comboBoxRefDate->itemData(i)==dateRef)
-                    {
-                        ui->comboBoxRefDate->setCurrentIndex(i);
-                        break;
-                    }
-                }
-            }
-        }
-        else
-        {
-            ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-        }
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI);
     }
 }
+
+void FormReportingTables::on_radioButtonRFDF_toggled(bool checked)
+{
+    if(checked)
+    {
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF);
+    }
+}
+
+void FormReportingTables::on_radioButtonRIDI_toggled(bool checked)
+{
+    if(checked)
+    {
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI);
+    }
+}
+
+void FormReportingTables::on_radioButtonRFDFRIDI_toggled(bool checked)
+{
+    if(checked)
+    {
+        changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI);
+    }
+}
+
+
+
+
+
 
 
 void FormReportingTables::on_checkBoxBP_toggled(bool checked)
@@ -422,7 +467,7 @@ void FormReportingTables::on_comboBoxRefColumn_activated(int index)
     {
         ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
     }
-
+    ui->tableView->resizeColumnsToContents();
 }
 
 void FormReportingTables::on_comboBoxRefDate_activated(int index)
@@ -436,4 +481,8 @@ void FormReportingTables::on_comboBoxRefDate_activated(int index)
     {
         ui->comboBoxRefColumn->setCurrentIndex(ui->comboBoxRefColumn->count());
     }
+    ui->tableView->resizeColumnsToContents();
 }
+
+
+

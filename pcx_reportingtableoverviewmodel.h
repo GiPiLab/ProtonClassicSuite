@@ -9,12 +9,25 @@ class PCx_ReportingTableOverviewModel : public QSqlQueryModel
 {
     Q_OBJECT
 public:
-    explicit PCx_ReportingTableOverviewModel(PCx_Reporting * reporting, unsigned int nodeId, MODES::DFRFDIRI mode, QObject *parent = 0);
+
+    enum OVERVIEWMODE
+    {
+        DF,
+        RF,
+        DI,
+        RI,
+        RFDF,
+        RIDI,
+        RFDFRIDI
+    };
+
+
+    explicit PCx_ReportingTableOverviewModel(PCx_Reporting * reporting, unsigned int nodeId, OVERVIEWMODE mode, QObject *parent = 0);
 
     unsigned int getNodeId()const{return nodeId;}
-    MODES::DFRFDIRI getMode() const{return mode;}
+    PCx_ReportingTableOverviewModel::OVERVIEWMODE getMode() const{return mode;}
     void setNodeId(unsigned int nodeId);
-    void setMode(MODES::DFRFDIRI mode);
+    void setMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode);
     PCx_Reporting::OREDPCR getColRef()const{return colRef;}
     void setColRef(PCx_Reporting::OREDPCR ref);
 
@@ -40,7 +53,7 @@ public slots:
 private:
     PCx_Reporting *reporting;
     unsigned int nodeId;
-    MODES::DFRFDIRI mode;
+    PCx_ReportingTableOverviewModel::OVERVIEWMODE mode;
     PCx_Reporting::OREDPCR colRef;
     int dateRef;
     void updateQuery();

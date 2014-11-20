@@ -194,17 +194,20 @@ void FormManageReportings::on_pushButtonExportLeaves_clicked()
 
 void FormManageReportings::on_pushButtonLoadDF_clicked()
 {
-    QFileDialog fileDialog;
-    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
-    if(fileName.isEmpty())
-        return;
-
-    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DF);
-
-    if(res==true)
+    if(selectedReporting!=nullptr)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DF)));
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DF);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DF)));
+        }
     }
 }
 
@@ -212,49 +215,169 @@ void FormManageReportings::on_pushButtonLoadDF_clicked()
 
 void FormManageReportings::on_pushButtonLoadRF_clicked()
 {
-    QFileDialog fileDialog;
-    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
-    if(fileName.isEmpty())
-        return;
-
-    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RF);
-
-    if(res==true)
+    if(selectedReporting!=nullptr)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RF)));
-    }
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
 
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RF);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RF)));
+        }
+    }
 }
 
 void FormManageReportings::on_pushButtonLoadDI_clicked()
 {
-    QFileDialog fileDialog;
-    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
-    if(fileName.isEmpty())
-        return;
-
-    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DI);
-
-    if(res==true)
+    if(selectedReporting!=nullptr)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DI)));
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DI);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DI)));
+        }
     }
 }
 
 void FormManageReportings::on_pushButtonLoadRI_clicked()
 {
-    QFileDialog fileDialog;
-    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
-    if(fileName.isEmpty())
-        return;
-
-    bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RI);
-
-    if(res==true)
+    if(selectedReporting!=nullptr)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RI)));
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RI);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RI)));
+        }
+    }
+}
+
+void FormManageReportings::on_pushButtonExportDF_clicked()
+{
+    if(selectedReporting!=nullptr)
+    {
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF)),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        QFileInfo fi(fileName);
+        if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+            fileName.append(".xlsx");
+        fi=QFileInfo(fileName);
+
+        bool res=selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::DF,fileName);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 enregistrées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF)));
+        }
+        else
+        {
+            QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+        }
+    }
+}
+
+void FormManageReportings::on_pushButtonExportRF_clicked()
+{
+    if(selectedReporting!=nullptr)
+    {
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF)),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        QFileInfo fi(fileName);
+        if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+            fileName.append(".xlsx");
+        fi=QFileInfo(fileName);
+
+        bool res=selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::RF,fileName);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 enregistrées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF)));
+        }
+        else
+        {
+            QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+        }
+    }
+}
+
+void FormManageReportings::on_pushButtonExportDI_clicked()
+{
+    if(selectedReporting!=nullptr)
+    {
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI)),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        QFileInfo fi(fileName);
+        if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+            fileName.append(".xlsx");
+        fi=QFileInfo(fileName);
+
+        bool res=selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::DI,fileName);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 enregistrées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI)));
+        }
+        else
+        {
+            QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+        }
+    }
+}
+
+void FormManageReportings::on_pushButtonExportRI_clicked()
+{
+    if(selectedReporting!=nullptr)
+    {
+        QFileDialog fileDialog;
+        fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+        QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI)),"",tr("Fichiers XLSX (*.xlsx)"));
+        if(fileName.isEmpty())
+            return;
+
+        QFileInfo fi(fileName);
+        if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+            fileName.append(".xlsx");
+        fi=QFileInfo(fileName);
+
+        bool res=selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::RI,fileName);
+
+        if(res==true)
+        {
+            QMessageBox::information(this,tr("Succès"),tr("%1 enregistrées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI)));
+        }
+        else
+        {
+            QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+        }
     }
 }

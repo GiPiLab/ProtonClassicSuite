@@ -42,11 +42,8 @@ unsigned int PCx_TreeModel::addNode(unsigned int typeId, const QString &name, co
 bool PCx_TreeModel::updateTree()
 {
     bool res;
-    QElapsedTimer timer;
-    timer.start();
     clear();
     res=createChildrenItems(invisibleRootItem());
-    qDebug()<<"Update Tree done in"<<timer.elapsed()<<"ms";
     return res;
 }
 

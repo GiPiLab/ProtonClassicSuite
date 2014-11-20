@@ -85,7 +85,7 @@ enum DFRFDIRI
     RF, ///<recettes de fonctionnement (receipts)
     DI, ///<dépenses d'investissement (spendings)
     RI, ///<recettes d'investissement (receipts)
-    GLOBAL ///<a meta-mode not stored in database
+    GLOBAL, ///<a meta-mode not stored in database
 };
 
 

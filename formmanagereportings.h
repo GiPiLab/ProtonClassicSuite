@@ -41,6 +41,14 @@ private slots:
 
     void on_pushButtonLoadRI_clicked();
 
+    void on_pushButtonExportDF_clicked();
+
+    void on_pushButtonExportRF_clicked();
+
+    void on_pushButtonExportDI_clicked();
+
+    void on_pushButtonExportRI_clicked();
+
 private:
     Ui::FormManageReportings *ui;
     void updateListOfTrees();

@@ -64,13 +64,23 @@ private slots:
 
     void on_comboBoxRefDate_activated(int index);
 
+    void on_radioButtonRFDF_toggled(bool checked);
+
+    void on_radioButtonRIDI_toggled(bool checked);
+
+    void on_radioButtonRFDFRIDI_toggled(bool checked);
+
 private:
     Ui::FormReportingTables *ui;
     void updateListOfReportings();
+    void updateComboRefDate(QComboBox *combo);
+    void changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode);
+
+    bool dateExistsForNodeAndMode(unsigned int timeT, unsigned int nodeId, PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) const;
     PCx_ReportingWithTreeModel *selectedReporting;
     PCx_ReportingTableOverviewModel *tableOverviewModel;
     QSortFilterProxyModel *proxyModel;
-    MODES::DFRFDIRI getSelectedMode() const;
+    PCx_ReportingTableOverviewModel::OVERVIEWMODE getSelectedMode() const;
     unsigned int selectedNodeId;
 };
 
