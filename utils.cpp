@@ -66,6 +66,7 @@ bool loadDb(const QString &databaseName)
     QSqlQuery("PRAGMA cache_size = 16384");
     QSqlQuery("PRAGMA temp_store = MEMORY");*/
 
+    initializeNewDb();
 
     return true;
 }
