@@ -30,6 +30,29 @@ void PCx_ReportingTableOverviewModel::setColRef(PCx_Reporting::OREDPCR ref)
     updateQuery();
 }
 
+QString PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode)
+{
+    if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
+        return MODES::modeToCompleteString(MODES::DFRFDIRI::DF);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF)
+        return MODES::modeToCompleteString(MODES::DFRFDIRI::RF);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI)
+        return MODES::modeToCompleteString(MODES::DFRFDIRI::DI);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI)
+        return MODES::modeToCompleteString(MODES::DFRFDIRI::RI);
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF)
+        return tr("Synthèse de fonctionnement (RF - DF)");
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI)
+        return tr("Synthèse d'investissement (RI - DI)");
+    else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
+        return tr("Synthèse fonctionnement + investissement (RF - DF + RI - DI)");
+    else
+    {
+        qDebug()<<"Invalid mode";
+    }
+    return QString();
+}
+
 void PCx_ReportingTableOverviewModel::setDateRef(int dateFromTimet)
 {
     dateRef=dateFromTimet;

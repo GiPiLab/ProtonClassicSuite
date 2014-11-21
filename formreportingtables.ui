@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>769</width>
+    <width>819</width>
     <height>446</height>
    </rect>
   </property>
@@ -40,8 +40,32 @@
       </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="0" colspan="2">
+        <widget class="QTableView" name="tableView">
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <attribute name="verticalHeaderDefaultSectionSize">
+          <number>20</number>
+         </attribute>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxMode">
          <property name="title">
           <string>Mode</string>
@@ -101,14 +125,14 @@
           <item row="1" column="0">
            <widget class="QRadioButton" name="radioButtonRFDF">
             <property name="text">
-             <string>Synthèse F</string>
+             <string>Synthèse F (RF-DF)</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
            <widget class="QRadioButton" name="radioButtonRIDI">
             <property name="text">
-             <string>Synthèse I</string>
+             <string>Synthèse I (RI-DI)</string>
             </property>
            </widget>
           </item>
@@ -122,29 +146,27 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QTableView" name="tableView">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="showDropIndicator" stdset="0">
-          <bool>false</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>true</bool>
-         </property>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-         <attribute name="verticalHeaderDefaultSectionSize">
-          <number>20</number>
-         </attribute>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButtonExportHtml">
+       <item row="4" column="0">
+        <widget class="QPushButton" name="pushButtonExportHTML">
          <property name="text">
           <string>Exporter HTML</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButtonCopyToDocument">
+         <property name="text">
+          <string>Copier</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QTextEdit" name="textEdit"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QPushButton" name="pushButtonClear">
+         <property name="text">
+          <string>Effacer</string>
          </property>
         </widget>
        </item>
@@ -265,6 +287,20 @@
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonSelectAll">
+        <property name="text">
+         <string>Tout</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonSelectNone">
+        <property name="text">
+         <string>Rien</string>
         </property>
        </widget>
       </item>

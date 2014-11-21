@@ -1,5 +1,8 @@
 #include "formreportingtables.h"
 #include "ui_formreportingtables.h"
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QMessageBox>
 
 FormReportingTables::FormReportingTables(QWidget *parent) :
     QWidget(parent),
@@ -79,6 +82,14 @@ void FormReportingTables::updateListOfReportings()
 
     QList<QPair<unsigned int,QString> > listOfReportings=PCx_Reporting::getListOfReportings();
     QPair<unsigned int,QString> p;
+    if(listOfReportings.count()==0)
+    {
+        setEnabled(false);
+        return;
+    }
+    else
+        setEnabled(true);
+
     foreach(p,listOfReportings)
     {
         ui->comboListReportings->insertItem(0,p.second,p.first);
@@ -131,15 +142,12 @@ void FormReportingTables::updateComboRefDate(QComboBox *combo)
         datesForNode=dates1.intersect(dates2).intersect(dates3).intersect(dates4);
     }
 
-
     foreach(QDate date,datesForNode)
     {
         QDateTime dt(date);
         combo->addItem(date.toString(Qt::DefaultLocaleShortDate),dt.toTime_t());
     }
     combo->addItem("",-1);
-
-
 }
 
 void FormReportingTables::changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode)
@@ -254,7 +262,7 @@ void FormReportingTables::on_treeView_clicked(const QModelIndex &index)
     {
         ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
     }
-
+    ui->tableView->resizeColumnsToContents();
 }
 
 void FormReportingTables::on_radioButtonDF_toggled(bool checked)
@@ -312,12 +320,6 @@ void FormReportingTables::on_radioButtonRFDFRIDI_toggled(bool checked)
         changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI);
     }
 }
-
-
-
-
-
-
 
 void FormReportingTables::on_checkBoxBP_toggled(bool checked)
 {
@@ -451,9 +453,11 @@ void FormReportingTables::on_checkBoxDisponibles_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_pushButtonExportHtml_clicked()
+void FormReportingTables::on_pushButtonCopyToDocument_clicked()
 {
-    qDebug()<<qTableViewToHtml(ui->tableView);
+    QTextCursor cursor=ui->textEdit->textCursor();
+    cursor.insertHtml(QString("<p>%1 - %2</p>").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(getSelectedMode())));
+    cursor.insertHtml(qTableViewToHtml(ui->tableView));
 }
 
 void FormReportingTables::on_comboBoxRefColumn_activated(int index)
@@ -486,3 +490,78 @@ void FormReportingTables::on_comboBoxRefDate_activated(int index)
 
 
 
+void FormReportingTables::on_pushButtonClear_clicked()
+{
+    ui->textEdit->clear();
+}
+
+void FormReportingTables::on_pushButtonSelectAll_clicked()
+{
+    ui->checkBoxBP->setChecked(true);
+    ui->checkBoxBudgetVote->setChecked(true);
+    ui->checkBoxDisponibles->setChecked(true);
+    ui->checkBoxRealises->setChecked(true);
+    ui->checkBoxEngages->setChecked(true);
+    ui->checkBoxOCDM->setChecked(true);
+    ui->checkBoxOuverts->setChecked(true);
+    ui->checkBoxRattaches->setChecked(true);
+    ui->checkBoxReports->setChecked(true);
+    ui->checkBoxVCDM->setChecked(true);
+    ui->checkBoxVCInternes->setChecked(true);
+    ui->checkBoxVCInternes->setChecked(true);
+}
+
+void FormReportingTables::on_pushButtonSelectNone_clicked()
+{
+    ui->checkBoxBP->setChecked(false);
+    ui->checkBoxBudgetVote->setChecked(false);
+    ui->checkBoxDisponibles->setChecked(false);
+    ui->checkBoxRealises->setChecked(false);
+    ui->checkBoxEngages->setChecked(false);
+    ui->checkBoxOCDM->setChecked(false);
+    ui->checkBoxOuverts->setChecked(false);
+    ui->checkBoxRattaches->setChecked(false);
+    ui->checkBoxReports->setChecked(false);
+    ui->checkBoxVCDM->setChecked(false);
+    ui->checkBoxVCInternes->setChecked(false);
+    ui->checkBoxVCInternes->setChecked(false);
+
+}
+
+void FormReportingTables::on_pushButtonExportHTML_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    if(fileName.isEmpty())
+        return;
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
+        fileName.append(".html");
+    fi=QFileInfo(fileName);
+
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+        return;
+    }
+
+    QTextDocument doc;
+    doc.setHtml(selectedReporting->generateHTMLReportingTitle()+ui->textEdit->toHtml());
+
+    QString output=doc.toHtml("utf-8");
+    output.replace(" -qt-block-indent:0;","");
+
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+    stream<<output;
+    stream.flush();
+    file.close();
+    if(stream.status()==QTextStream::Ok)
+        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName()));
+    else
+        QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
+
+}

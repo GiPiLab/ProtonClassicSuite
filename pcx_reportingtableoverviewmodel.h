@@ -31,6 +31,8 @@ public:
     PCx_Reporting::OREDPCR getColRef()const{return colRef;}
     void setColRef(PCx_Reporting::OREDPCR ref);
 
+    static QString OVERVIEWMODEToCompleteString(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode);
+
     /**
      * @brief getDateRef returns the date that should be used as reference, -1 if none
      * @return the date in time_t format

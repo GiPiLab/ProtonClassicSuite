@@ -82,13 +82,13 @@ QString qTableViewToHtml(QTableView *tableView)
 {
     const int rowCount = tableView->model()->rowCount();
     const int columnCount = tableView->model()->columnCount();
-    QString out="<table border='1'>\n";
+    QString out="<table cellpadding='2' align='center' border='1'>\n";
 
     out.append("<thead><tr>");
     for (int column = 0; column < columnCount; column++)
     {
         if (!tableView->isColumnHidden(column))
-            out.append(QString("<th>%1</th>").arg(tableView->model()->headerData(column, Qt::Horizontal).toString().toHtmlEscaped()));
+            out.append(QString("<th valign='middle'>%1</th>").arg(tableView->model()->headerData(column, Qt::Horizontal).toString().toHtmlEscaped()));
     }
     out.append("</tr></thead>\n");
 
@@ -97,6 +97,7 @@ QString qTableViewToHtml(QTableView *tableView)
         for (int column = 0; column < columnCount; column++)
         {
             QString cellStyle;
+            QString align;
             QModelIndex index=tableView->model()->index(row,column);
             if (!tableView->isColumnHidden(column))
             {
@@ -107,19 +108,20 @@ QString qTableViewToHtml(QTableView *tableView)
                     if(alignment.toInt()==Qt::AlignCenter)
                     {
                         cellStyle.append("text-align:center;");
+                        align="align='center'";
                     }
                 }
                 if(color.isValid())
                 {
                     QColor textColor=color.value<QColor>();
-                    cellStyle.append(QString("text-color:%1;").arg(textColor.name()));
+                    cellStyle.append(QString("color:%1;").arg(textColor.name()));
                 }
                 else
                 {
-                    cellStyle.append("text-color:0;");
+                    cellStyle.append("color:0;");
                 }
                 QString data = tableView->model()->data(index).toString().toHtmlEscaped();
-                out.append(QString("<td style='%1'>%2</td>").arg(cellStyle).arg((!data.isEmpty()) ? data : QString("&nbsp;")));
+                out.append(QString("<td %3 style='%1'>%2</td>").arg(cellStyle).arg((!data.isEmpty()) ? data : QString("&nbsp;")).arg(align));
             }
         }
         out.append("</tr>\n");

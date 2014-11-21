@@ -2,6 +2,7 @@
 #define FORMREPORTINGTABLES_H
 
 #include <QWidget>
+#include <QTextDocument>
 #include <QSortFilterProxyModel>
 #include "pcx_reportingtableoverviewmodel.h"
 #include "pcx_reportingwithtreemodel.h"
@@ -58,7 +59,7 @@ private slots:
 
     void on_checkBoxDisponibles_toggled(bool checked);
 
-    void on_pushButtonExportHtml_clicked();
+    void on_pushButtonCopyToDocument_clicked();
 
     void on_comboBoxRefColumn_activated(int index);
 
@@ -69,6 +70,16 @@ private slots:
     void on_radioButtonRIDI_toggled(bool checked);
 
     void on_radioButtonRFDFRIDI_toggled(bool checked);
+
+
+
+    void on_pushButtonClear_clicked();
+
+    void on_pushButtonSelectAll_clicked();
+
+    void on_pushButtonSelectNone_clicked();
+
+    void on_pushButtonExportHTML_clicked();
 
 private:
     Ui::FormReportingTables *ui;
