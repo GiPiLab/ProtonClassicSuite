@@ -1,12 +1,12 @@
-#include "formreportingtables.h"
+#include "formreportingoverview.h"
 #include "ui_formreportingtables.h"
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QMessageBox>
 
-FormReportingTables::FormReportingTables(QWidget *parent) :
+FormReportingOverview::FormReportingOverview(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FormReportingTables)
+    ui(new Ui::FormReportingOverview)
 {
     ui->setupUi(this);
     selectedReporting=nullptr;
@@ -20,7 +20,7 @@ FormReportingTables::FormReportingTables(QWidget *parent) :
     ui->splitter->setStretchFactor(1,1);
 }
 
-FormReportingTables::~FormReportingTables()
+FormReportingOverview::~FormReportingOverview()
 {
     delete ui;
     if(proxyModel!=nullptr)
@@ -31,12 +31,12 @@ FormReportingTables::~FormReportingTables()
         delete tableOverviewModel;
 }
 
-void FormReportingTables::onListOfReportingsChanged()
+void FormReportingOverview::onListOfReportingsChanged()
 {
     updateListOfReportings();
 }
 
-void FormReportingTables::on_comboListReportings_activated(int index)
+void FormReportingOverview::on_comboListReportings_activated(int index)
 {
     if(index==-1 || ui->comboListReportings->count()==0)return;
     unsigned int selectedReportingId=ui->comboListReportings->currentData().toUInt();
@@ -76,7 +76,7 @@ void FormReportingTables::on_comboListReportings_activated(int index)
     ui->tableView->resizeColumnsToContents();
 }
 
-void FormReportingTables::updateListOfReportings()
+void FormReportingOverview::updateListOfReportings()
 {
     ui->comboListReportings->clear();
 
@@ -98,7 +98,7 @@ void FormReportingTables::updateListOfReportings()
     this->on_comboListReportings_activated(0);
 }
 
-void FormReportingTables::updateComboRefDate(QComboBox *combo)
+void FormReportingOverview::updateComboRefDate(QComboBox *combo)
 {
     PCx_ReportingTableOverviewModel::OVERVIEWMODE selectedMode=getSelectedMode();
 
@@ -150,7 +150,7 @@ void FormReportingTables::updateComboRefDate(QComboBox *combo)
     combo->addItem("",-1);
 }
 
-void FormReportingTables::changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode)
+void FormReportingOverview::changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode)
 {
     tableOverviewModel->setMode(mode);
     updateComboRefDate(ui->comboBoxRefDate);
@@ -182,7 +182,7 @@ void FormReportingTables::changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMO
     ui->tableView->resizeColumnsToContents();
 }
 
-bool FormReportingTables::dateExistsForNodeAndMode(unsigned int timeT, unsigned int nodeId, PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) const
+bool FormReportingOverview::dateExistsForNodeAndMode(unsigned int timeT, unsigned int nodeId, PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) const
 {
     if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
         return selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DF);
@@ -206,7 +206,7 @@ bool FormReportingTables::dateExistsForNodeAndMode(unsigned int timeT, unsigned 
     return false;
 }
 
-PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingTables::getSelectedMode() const
+PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingOverview::getSelectedMode() const
 {
     if(ui->radioButtonDF->isChecked())
         return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
@@ -230,7 +230,7 @@ PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingTables::getSelectedMo
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
 }
 
-void FormReportingTables::on_treeView_clicked(const QModelIndex &index)
+void FormReportingOverview::on_treeView_clicked(const QModelIndex &index)
 {
     unsigned int nodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
     selectedNodeId=nodeId;
@@ -265,7 +265,7 @@ void FormReportingTables::on_treeView_clicked(const QModelIndex &index)
     ui->tableView->resizeColumnsToContents();
 }
 
-void FormReportingTables::on_radioButtonDF_toggled(bool checked)
+void FormReportingOverview::on_radioButtonDF_toggled(bool checked)
 {
     if(checked)
     {
@@ -273,7 +273,7 @@ void FormReportingTables::on_radioButtonDF_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_radioButtonRF_toggled(bool checked)
+void FormReportingOverview::on_radioButtonRF_toggled(bool checked)
 {
     if(checked)
     {
@@ -281,7 +281,7 @@ void FormReportingTables::on_radioButtonRF_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_radioButtonRI_toggled(bool checked)
+void FormReportingOverview::on_radioButtonRI_toggled(bool checked)
 {
     if(checked)
     {
@@ -289,7 +289,7 @@ void FormReportingTables::on_radioButtonRI_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_radioButtonDI_toggled(bool checked)
+void FormReportingOverview::on_radioButtonDI_toggled(bool checked)
 {
     if(checked)
     {
@@ -297,7 +297,7 @@ void FormReportingTables::on_radioButtonDI_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_radioButtonRFDF_toggled(bool checked)
+void FormReportingOverview::on_radioButtonRFDF_toggled(bool checked)
 {
     if(checked)
     {
@@ -305,7 +305,7 @@ void FormReportingTables::on_radioButtonRFDF_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_radioButtonRIDI_toggled(bool checked)
+void FormReportingOverview::on_radioButtonRIDI_toggled(bool checked)
 {
     if(checked)
     {
@@ -313,7 +313,7 @@ void FormReportingTables::on_radioButtonRIDI_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_radioButtonRFDFRIDI_toggled(bool checked)
+void FormReportingOverview::on_radioButtonRFDFRIDI_toggled(bool checked)
 {
     if(checked)
     {
@@ -321,7 +321,7 @@ void FormReportingTables::on_radioButtonRFDFRIDI_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxBP_toggled(bool checked)
+void FormReportingOverview::on_checkBoxBP_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -333,7 +333,7 @@ void FormReportingTables::on_checkBoxBP_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxReports_toggled(bool checked)
+void FormReportingOverview::on_checkBoxReports_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -345,7 +345,7 @@ void FormReportingTables::on_checkBoxReports_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxOCDM_toggled(bool checked)
+void FormReportingOverview::on_checkBoxOCDM_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -357,7 +357,7 @@ void FormReportingTables::on_checkBoxOCDM_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxVCDM_toggled(bool checked)
+void FormReportingOverview::on_checkBoxVCDM_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -369,7 +369,7 @@ void FormReportingTables::on_checkBoxVCDM_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxBudgetVote_toggled(bool checked)
+void FormReportingOverview::on_checkBoxBudgetVote_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -381,7 +381,7 @@ void FormReportingTables::on_checkBoxBudgetVote_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxVCInternes_toggled(bool checked)
+void FormReportingOverview::on_checkBoxVCInternes_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -393,7 +393,7 @@ void FormReportingTables::on_checkBoxVCInternes_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxRattaches_toggled(bool checked)
+void FormReportingOverview::on_checkBoxRattaches_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -405,7 +405,7 @@ void FormReportingTables::on_checkBoxRattaches_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxOuverts_toggled(bool checked)
+void FormReportingOverview::on_checkBoxOuverts_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -417,7 +417,7 @@ void FormReportingTables::on_checkBoxOuverts_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxRealises_toggled(bool checked)
+void FormReportingOverview::on_checkBoxRealises_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -429,7 +429,7 @@ void FormReportingTables::on_checkBoxRealises_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxEngages_toggled(bool checked)
+void FormReportingOverview::on_checkBoxEngages_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -441,7 +441,7 @@ void FormReportingTables::on_checkBoxEngages_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_checkBoxDisponibles_toggled(bool checked)
+void FormReportingOverview::on_checkBoxDisponibles_toggled(bool checked)
 {
     for(int i=0;i<proxyModel->columnCount();i++)
     {
@@ -453,14 +453,14 @@ void FormReportingTables::on_checkBoxDisponibles_toggled(bool checked)
     }
 }
 
-void FormReportingTables::on_pushButtonCopyToDocument_clicked()
+void FormReportingOverview::on_pushButtonCopyToDocument_clicked()
 {
     QTextCursor cursor=ui->textEdit->textCursor();
     cursor.insertHtml(QString("<p>%1 - %2</p>").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(getSelectedMode())));
     cursor.insertHtml(qTableViewToHtml(ui->tableView));
 }
 
-void FormReportingTables::on_comboBoxRefColumn_activated(int index)
+void FormReportingOverview::on_comboBoxRefColumn_activated(int index)
 {
     Q_UNUSED(index);
     if(ui->comboBoxRefColumn->count()==0)
@@ -474,7 +474,7 @@ void FormReportingTables::on_comboBoxRefColumn_activated(int index)
     ui->tableView->resizeColumnsToContents();
 }
 
-void FormReportingTables::on_comboBoxRefDate_activated(int index)
+void FormReportingOverview::on_comboBoxRefDate_activated(int index)
 {
     Q_UNUSED(index);
     if(ui->comboBoxRefDate->count()==0)
@@ -490,12 +490,12 @@ void FormReportingTables::on_comboBoxRefDate_activated(int index)
 
 
 
-void FormReportingTables::on_pushButtonClear_clicked()
+void FormReportingOverview::on_pushButtonClear_clicked()
 {
     ui->textEdit->clear();
 }
 
-void FormReportingTables::on_pushButtonSelectAll_clicked()
+void FormReportingOverview::on_pushButtonSelectAll_clicked()
 {
     ui->checkBoxBP->setChecked(true);
     ui->checkBoxBudgetVote->setChecked(true);
@@ -511,7 +511,7 @@ void FormReportingTables::on_pushButtonSelectAll_clicked()
     ui->checkBoxVCInternes->setChecked(true);
 }
 
-void FormReportingTables::on_pushButtonSelectNone_clicked()
+void FormReportingOverview::on_pushButtonSelectNone_clicked()
 {
     ui->checkBoxBP->setChecked(false);
     ui->checkBoxBudgetVote->setChecked(false);
@@ -528,7 +528,7 @@ void FormReportingTables::on_pushButtonSelectNone_clicked()
 
 }
 
-void FormReportingTables::on_pushButtonExportHTML_clicked()
+void FormReportingOverview::on_pushButtonExportHTML_clicked()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));

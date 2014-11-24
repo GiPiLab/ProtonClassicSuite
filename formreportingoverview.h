@@ -1,5 +1,5 @@
-#ifndef FORMREPORTINGTABLES_H
-#define FORMREPORTINGTABLES_H
+#ifndef FORMREPORTINGOVERVIEW_H
+#define FORMREPORTINGOVERVIEW_H
 
 #include <QWidget>
 #include <QTextDocument>
@@ -8,16 +8,16 @@
 #include "pcx_reportingwithtreemodel.h"
 
 namespace Ui {
-class FormReportingTables;
+class FormReportingOverview;
 }
 
-class FormReportingTables : public QWidget
+class FormReportingOverview : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit FormReportingTables(QWidget *parent = 0);
-    ~FormReportingTables();
+    explicit FormReportingOverview(QWidget *parent = 0);
+    ~FormReportingOverview();
 
 
 public slots:
@@ -82,7 +82,7 @@ private slots:
     void on_pushButtonExportHTML_clicked();
 
 private:
-    Ui::FormReportingTables *ui;
+    Ui::FormReportingOverview *ui;
     void updateListOfReportings();
     void updateComboRefDate(QComboBox *combo);
     void changeMode(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode);
@@ -95,4 +95,4 @@ private:
     unsigned int selectedNodeId;
 };
 
-#endif // FORMREPORTINGTABLES_H
+#endif // FORMREPORTINGOVERVIEW_H

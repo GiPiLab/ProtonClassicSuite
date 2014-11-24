@@ -385,7 +385,12 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
         }
 
-        foreach(FormReportingTables *dlg,listOfFormReportingTables)
+        foreach(FormReportingOverview *dlg,listOfFormReportingTables)
+        {
+            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        }
+
+        foreach(FormReportingSupervision *dlg,listOfFormReportingSupervision)
         {
             connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
         }
@@ -396,7 +401,7 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
 
 void MainWindow::on_actionExploreReportings_triggered()
 {
-    FormReportingTables *dlg=new FormReportingTables();
+    FormReportingOverview *dlg=new FormReportingOverview();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     ui->mdiArea->addSubWindow(dlg);
@@ -407,7 +412,6 @@ void MainWindow::on_actionExploreReportings_triggered()
 
     if(formManageReportings!=nullptr)
     {
-        //FIXME : connect !
         connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
     }
 
@@ -415,8 +419,29 @@ void MainWindow::on_actionExploreReportings_triggered()
 
 void MainWindow::onFormReportingTablesWindowsDestroyed(QObject *obj)
 {
-    listOfFormReportingTables.removeAt(listOfFormReportingTables.indexOf(static_cast<FormReportingTables *>(obj)));
+    listOfFormReportingTables.removeAt(listOfFormReportingTables.indexOf(static_cast<FormReportingOverview *>(obj)));
+}
+
+void MainWindow::onFormReportingSupervisionWindowsDestroyed(QObject *obj)
+{
+    listOfFormReportingSupervision.removeAt(listOfFormReportingSupervision.indexOf(static_cast<FormReportingSupervision *>(obj)));
 }
 
 
 
+void MainWindow::on_actionSurveillance_des_reportings_triggered()
+{
+    FormReportingSupervision *dlg=new FormReportingSupervision();
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    ui->mdiArea->addSubWindow(dlg);
+    dlg->show();
+    listOfFormReportingSupervision.append(dlg);
+
+    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingSupervisionWindowsDestroyed(QObject *)));
+
+    if(formManageReportings!=nullptr)
+    {
+        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+    }
+}

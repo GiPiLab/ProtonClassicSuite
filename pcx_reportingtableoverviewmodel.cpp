@@ -221,7 +221,6 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
                     return QVariant::fromValue(QColor(Qt::blue));
             }
         }
-
     }
 
     else if(role==Qt::TextAlignmentRole && item.column()>0)

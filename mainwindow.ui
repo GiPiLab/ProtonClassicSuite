@@ -67,6 +67,7 @@
     <addaction name="actionManageTree"/>
     <addaction name="actionGestion_des_reportings"/>
     <addaction name="actionExploreReportings"/>
+    <addaction name="actionSurveillance_des_reportings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
@@ -207,6 +208,11 @@
   <action name="actionExploreReportings">
    <property name="text">
     <string>Exploration des reportings</string>
+   </property>
+  </action>
+  <action name="actionSurveillance_des_reportings">
+   <property name="text">
+    <string>Surveillance des reportings</string>
    </property>
   </action>
  </widget>

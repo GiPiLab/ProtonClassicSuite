@@ -5,9 +5,10 @@
 #include <QMdiSubWindow>
 #include <QList>
 
+#include "formreportingsupervision.h"
 #include "formmanagereportings.h"
 #include "formmanageaudits.h"
-#include "formreportingtables.h"
+#include "formreportingoverview.h"
 #include "formedittree.h"
 #include "formeditaudit.h"
 #include "formtablesgraphics.h"
@@ -20,7 +21,6 @@ namespace Ui {
 class MainWindow;
 }
 
-#define MAXRECENTFILES 4
 
 class MainWindow : public QMainWindow
 {
@@ -73,6 +73,10 @@ private slots:
     void on_actionExploreReportings_triggered();
 
     void onFormReportingTablesWindowsDestroyed(QObject *obj);
+    void onFormReportingSupervisionWindowsDestroyed(QObject *obj);
+
+    void on_actionSurveillance_des_reportings_triggered();
+
 private:
 
     Ui::MainWindow *ui;
@@ -88,7 +92,8 @@ private:
     //Multiple "tables" dialogs are allowed
     QList<FormTablesGraphics *>listOfFormTablesGraphics;
 
-    QList<FormReportingTables *>listOfFormReportingTables;
+    QList<FormReportingOverview *>listOfFormReportingTables;
+    QList<FormReportingSupervision *>listOfFormReportingSupervision;
 
     QList<FormQueries *>listOfFormQueries;
     QString recentDb;

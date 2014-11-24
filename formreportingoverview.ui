@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormReportingTables</class>
- <widget class="QWidget" name="FormReportingTables">
+ <class>FormReportingOverview</class>
+ <widget class="QWidget" name="FormReportingOverview">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>819</width>
+    <width>909</width>
     <height>446</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="layoutWidget1">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QComboBox" name="comboListReportings"/>
@@ -53,6 +53,9 @@
          </property>
          <property name="showDropIndicator" stdset="0">
           <bool>false</bool>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
          <property name="sortingEnabled">
           <bool>true</bool>
