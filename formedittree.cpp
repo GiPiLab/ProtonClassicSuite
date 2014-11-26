@@ -136,10 +136,11 @@ void FormEditTree::on_newTreeButton_clicked()
 
     if(ok)
     {
-        if(PCx_Tree::addTree(text)!=-1)
-        {
-            emit(listOfTreeChanged());
-        }
+       if(PCx_Tree::addTree(text)!=-1)
+       {
+           emit(listOfTreeChanged());
+           updateListOfTree();
+       }
     }
 }
 

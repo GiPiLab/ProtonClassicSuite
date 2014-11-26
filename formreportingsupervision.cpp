@@ -299,3 +299,90 @@ QSize FormReportingSupervision::sizeHint() const
 {
     return QSize(1050,500);
 }
+
+void FormReportingSupervision::on_checkBoxRealisePredit_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+
+}
+
+void FormReportingSupervision::on_checkBoxDifference_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+}
+
+
+
+void FormReportingSupervision::on_checkBoxDECICO_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ECICO))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+}
+
+void FormReportingSupervision::on_checkBoxERO2_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ERO2))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+}
+
+void FormReportingSupervision::on_checkBoxRAC_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+}
+
+void FormReportingSupervision::on_checkBox15NRest_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+}
+
+void FormReportingSupervision::on_checkBoxCPP15N_toggled(bool checked)
+{
+    for(int i=0;i<proxyModel->columnCount();i++)
+    {
+        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR))
+        {
+            ui->tableView->setColumnHidden(i,!checked);
+            break;
+        }
+    }
+}

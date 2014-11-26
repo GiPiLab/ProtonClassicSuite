@@ -31,15 +31,30 @@ QString PCx_ReportingTableSupervisionModel::getColumnName(PCx_ReportingTableSupe
     case TABLESUPERVISIONCOLUMNS::DISPONIBLES:
         return PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::DISPONIBLES);
     case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
-        return tr("Taux de réalisation");
+        return tr("% réalisé");
     case TABLESUPERVISIONCOLUMNS::TAUXECART:
         return tr("Taux d'écart");
     case TABLESUPERVISIONCOLUMNS::PERCENTBP:
-        return tr("Variation du BP");
+        return tr("% BP");
     case TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
-        return tr("Taux d'engagé");
+        return tr("% engagé");
     case TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
-        return tr("Taux de disponible");
+        return tr("% disponible");
+    case TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
+        return tr("Réalises prédits");
+    case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+        return tr("Diff. estimée");
+    case TABLESUPERVISIONCOLUMNS::ECICO:
+        return tr("DECICP");
+    case TABLESUPERVISIONCOLUMNS::ERO2:
+        return tr("DER=P/2");
+    case TABLESUPERVISIONCOLUMNS::RAC:
+        return tr("RAC");
+    case TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
+        return tr("#15NR");
+    case TABLESUPERVISIONCOLUMNS::CPP15NR:
+        return tr("CPP15N");
+
     default:
         qDebug()<<"Unsupported mode";
     }
@@ -55,7 +70,7 @@ int PCx_ReportingTableSupervisionModel::rowCount(const QModelIndex &parent) cons
 int PCx_ReportingTableSupervisionModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 12;
+    return 19;
 }
 
 
@@ -74,78 +89,101 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             return reporting->getAttachedTree()->getNodeName(entry.nodeId);
         case 1:
             return entry.date.toString(Qt::DefaultLocaleShortDate);
-        case 2:
+        case TABLESUPERVISIONCOLUMNS::BP:
             computedValue=entry.BP;
-            output=NUMBERSFORMAT::formatDouble(entry.BP);
             break;
-        case 3:
+        case TABLESUPERVISIONCOLUMNS::OUVERTS:
             computedValue=entry.ouverts;
-            output=NUMBERSFORMAT::formatDouble(entry.ouverts);
             break;
-        case 4:
+        case TABLESUPERVISIONCOLUMNS::REALISES:
             computedValue=entry.realises;
-            output=NUMBERSFORMAT::formatDouble(entry.realises);
             break;
-        case 5:
+        case TABLESUPERVISIONCOLUMNS::ENGAGES:
             computedValue=entry.engages;
-            output=NUMBERSFORMAT::formatDouble(entry.engages);
             break;
-        case 6:
+        case TABLESUPERVISIONCOLUMNS::DISPONIBLES:
             computedValue=entry.disponibles;
-            output=NUMBERSFORMAT::formatDouble(entry.disponibles);
             break;
-        case 7:
+        case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
             if(!qIsNaN(entry.percentReal))
             {
                 percentMode=true;
                 computedValue=entry.percentReal;
-                output=NUMBERSFORMAT::formatDouble(entry.percentReal);
             }
             else
-                output="DIV0";
+                return("DIV0");
             break;
-        case 8:
+        case TABLESUPERVISIONCOLUMNS::TAUXECART:
             if(!qIsNaN(entry.tauxEcart))
             {
                 percentMode=true;
                 computedValue=entry.tauxEcart;
-                output=NUMBERSFORMAT::formatDouble(entry.tauxEcart);
             }
             else
-                output="DIV0";
+                return("DIV0");
             break;
-        case 9:
+        case TABLESUPERVISIONCOLUMNS::PERCENTBP:
             if(!qIsNaN(entry.percentBP))
             {
                 percentMode=true;
                 computedValue=entry.percentBP;
-                output=NUMBERSFORMAT::formatDouble(entry.percentBP);
             }
             else
-                output="DIV0";
+                return("DIV0");
             break;
-        case 10:
+        case TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
             if(!qIsNaN(entry.percentEngage))
             {
                 percentMode=true;
                 computedValue=entry.percentEngage;
-                output=NUMBERSFORMAT::formatDouble(entry.percentEngage);
             }
             else
-                output="DIV0";
+                return("DIV0");
             break;
 
-        case 11:
+        case TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
             if(!qIsNaN(entry.percentDisponible))
             {
                 percentMode=true;
                 computedValue=entry.percentDisponible;
-                output=NUMBERSFORMAT::formatDouble(entry.percentDisponible);
             }
             else
-                output="DIV0";
+                return("DIV0");
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
+            computedValue=entry.realisesPredits;
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+            computedValue=entry.diffRealisesPreditsOuverts;
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::ECICO:
+            return entry.dECICO.toString(Qt::DefaultLocaleShortDate);
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::ERO2:
+            return entry.dERO2.toString(Qt::DefaultLocaleShortDate);
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::RAC:
+            computedValue=entry.resteAConsommer;
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
+            return(entry.nb15NRestantes);
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::CPP15NR:
+            computedValue=entry.consommePrevPar15N;
             break;
         }
+
+
+        output=NUMBERSFORMAT::formatDouble(computedValue);
+
+
         if(role==Qt::DisplayRole)
         {
             if(percentMode==true)
@@ -218,8 +256,47 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
     this->disponibles=NUMBERSFORMAT::fixedPointToDouble(disponibles);
     date=QDateTime::fromTime_t(dateTimeT).date();
 
-    int nbJoursDepuisDebutAnnee=date.dayOfYear()+1;
+    //WARNING : Check if +1 is needed
+    int nbJoursDepuisDebutAnnee=date.dayOfYear();
+    int nbJoursRestants=365-nbJoursDepuisDebutAnnee;
+    nb15NRestantes=(int)(floor((double)nbJoursRestants/15.0));
+    resteAConsommer=this->ouverts-this->realises;
+    if(nb15NRestantes!=0)
+    {
+        consommePrevPar15N=resteAConsommer/nb15NRestantes;
+    }
+    else
+        consommePrevPar15N=NAN;
+
+   // qDebug()<<nbJoursDepuisDebutAnnee;
     double jourReal=this->realises/nbJoursDepuisDebutAnnee;
+    realisesPredits=this->realises+(this->realises*nbJoursRestants/nbJoursDepuisDebutAnnee);
+    diffRealisesPreditsOuverts=this->ouverts-realisesPredits;
+
+    this->dECICO=QDate();
+    this->dERO2=QDate();
+    if(realisesPredits!=0.0)
+    {
+        int joursDCICO=(int)(365*this->ouverts/realisesPredits);
+        if(joursDCICO>0)
+        {
+            QDate tmpDate(date.year(),1,1);
+            dECICO=tmpDate.addDays(joursDCICO);
+        }
+    }
+
+    double ouvertsDemi=this->ouverts/2.0;
+    if(this->realises<ouvertsDemi)
+    {
+        if(this->realises!=0.0)
+        {
+            QDate tmpDate(date.year(),1,1);
+            int joursCoupure=(int)(ouvertsDemi*nbJoursDepuisDebutAnnee/this->realises);
+            this->dERO2=tmpDate.addDays(joursCoupure);
+        }
+    }
+
+
 
     if(ouverts!=0)
     {

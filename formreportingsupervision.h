@@ -53,6 +53,20 @@ private slots:
 
     void on_pushButtonExportHTML_clicked();
 
+    void on_checkBoxRealisePredit_toggled(bool checked);
+
+    void on_checkBoxDifference_toggled(bool checked);
+
+    void on_checkBoxDECICO_toggled(bool checked);
+
+    void on_checkBoxERO2_toggled(bool checked);
+
+    void on_checkBoxRAC_toggled(bool checked);
+
+    void on_checkBox15NRest_toggled(bool checked);
+
+    void on_checkBoxCPP15N_toggled(bool checked);
+
 private:
     Ui::FormReportingSupervision *ui;
     QSize sizeHint()const;

@@ -23,7 +23,15 @@ public:
         TAUXECART,
         PERCENTBP,
         PERCENTENGAGES,
-        PERCENTDISPONIBLES
+        PERCENTDISPONIBLES,
+        REALISESPREDITS, //Realises prédits à ce rythme
+        DIFFREALISESPREDITSOUVERTS, //Difference REALISESPREDITS-OUVERTS
+        ECICO, //Date estimee de consommation integrale des credits
+        ERO2, //Date estimee du realise = ouverts/2
+        RAC, //Reste à consommer
+        NB15NRESTANTES, //Nombre de 15N restant dans l'année
+        CPP15NR //Consommé prévisionnel par 15N restante
+
     };
 
 
@@ -49,9 +57,12 @@ private:
     public:
         explicit Entry(unsigned int nodeId,unsigned int dateTimeT,qint64 BP,qint64 ouverts,qint64 realises,qint64 engages,qint64 disponibles);
         unsigned int nodeId;
-        QDate date;
+        QDate date,dECICO,dERO2;
         double BP,ouverts,realises,engages,disponibles;
         double percentReal,tauxEcart,percentEngage,percentDisponible,percentBP;
+        double realisesPredits,diffRealisesPreditsOuverts,resteAConsommer;
+        unsigned int nb15NRestantes;
+        double consommePrevPar15N;
     };
 
     PCx_Reporting *reporting;
