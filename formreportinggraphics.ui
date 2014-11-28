@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Graphiques de reportings</string>
+   <string>Exploration graphique des reportings</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>

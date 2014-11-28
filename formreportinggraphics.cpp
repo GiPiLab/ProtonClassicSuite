@@ -127,8 +127,12 @@ QList<PCx_Reporting::OREDPCR> FormReportingGraphics::getSelectedOREDPCR() const
     return selection;
 }
 
+/**
+ * @brief FormReportingGraphics::updatePlot draw the plot with selected datas
+ */
 void FormReportingGraphics::updatePlot()
 {
+    //TODO : Perhaps refactor to PCx_Graphics
     MODES::DFRFDIRI mode=getSelectedMode();
     QList<PCx_Reporting::OREDPCR> selectedOREDPCR=getSelectedOREDPCR();
 
