@@ -1,5 +1,5 @@
 #include "formreportingoverview.h"
-#include "ui_formreportingtables.h"
+#include "ui_formreportingoverview.h"
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QMessageBox>
