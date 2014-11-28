@@ -6,6 +6,7 @@
 #include <QList>
 
 #include "formreportingsupervision.h"
+#include "formreportinggraphics.h"
 #include "formmanagereportings.h"
 #include "formmanageaudits.h"
 #include "formreportingoverview.h"
@@ -74,8 +75,11 @@ private slots:
 
     void onFormReportingTablesWindowsDestroyed(QObject *obj);
     void onFormReportingSupervisionWindowsDestroyed(QObject *obj);
+    void onFormReportingGraphicsWindowsDestroyed(QObject *obj);
 
     void on_actionSurveillance_des_reportings_triggered();
+
+    void on_actionGraphiques_triggered();
 
 private:
 
@@ -94,6 +98,7 @@ private:
 
     QList<FormReportingOverview *>listOfFormReportingTables;
     QList<FormReportingSupervision *>listOfFormReportingSupervision;
+    QList<FormReportingGraphics *>listOfFormReportingGraphics;
 
     QList<FormQueries *>listOfFormQueries;
     QString recentDb;

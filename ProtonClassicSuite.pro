@@ -52,7 +52,8 @@ SOURCES += main.cpp\
     pcx_reportingtableoverviewmodel.cpp \
     pcx_reportingtablesupervisionmodel.cpp \
     formreportingsupervision.cpp \
-    formreportingoverview.cpp
+    formreportingoverview.cpp \
+    formreportinggraphics.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -90,7 +91,8 @@ HEADERS  += mainwindow.h \
     pcx_reportingtableoverviewmodel.h \
     pcx_reportingtablesupervisionmodel.h \
     formreportingsupervision.h \
-    formreportingoverview.h
+    formreportingoverview.h \
+    formreportinggraphics.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -106,7 +108,8 @@ FORMS    += mainwindow.ui \
     formtreeconsistency.ui \
     formmanagereportings.ui \
     formreportingsupervision.ui \
-    formreportingoverview.ui
+    formreportingoverview.ui \
+    formreportinggraphics.ui
 
 
 #QMAKE_CXXFLAGS_DEBUG += -Og

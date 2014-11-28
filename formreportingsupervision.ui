@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>619</width>
-    <height>529</height>
+    <height>604</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -219,7 +219,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxDifference">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Différence estimée entre les réalisés prédits pour la fin de l'année et les crédits prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Différence estimée entre les réalisés prédits pour la fin de l'année et les crédits prévus au rythme de consommation actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Différence estimée</string>
@@ -232,7 +232,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxDECICO">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée de consommation intégrale des crédits prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée de consommation intégrale des crédits prévus au rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Date ECICP</string>
@@ -245,7 +245,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxERO2">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée à laquelle les réalisés atteindront la moitié des crédits prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée à laquelle les réalisés atteindront la moitié des crédits prévus au rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Date ER=P/2</string>

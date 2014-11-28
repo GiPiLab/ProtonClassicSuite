@@ -68,6 +68,7 @@
     <addaction name="actionGestion_des_reportings"/>
     <addaction name="actionExploreReportings"/>
     <addaction name="actionSurveillance_des_reportings"/>
+    <addaction name="actionGraphiques"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
@@ -213,6 +214,11 @@
   <action name="actionSurveillance_des_reportings">
    <property name="text">
     <string>Surveillance des reportings</string>
+   </property>
+  </action>
+  <action name="actionGraphiques">
+   <property name="text">
+    <string>Graphiques</string>
    </property>
   </action>
  </widget>

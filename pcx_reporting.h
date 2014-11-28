@@ -25,7 +25,7 @@ public:
      */
     enum OREDPCR
     {
-        OUVERTS, ///<the amount of available money at the beginning of the year
+        OUVERTS=0, ///<the amount of available money at the beginning of the year
         REALISES, ///<the amount of used money
         ENGAGES, ///<the amount of committed money
         DISPONIBLES, ///<OUVERTS-(REALISES+ENGAGES)
