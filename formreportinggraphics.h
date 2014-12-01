@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "pcx_reportingwithtreemodel.h"
-
+#include "pcx_graphics.h"
 namespace Ui {
 class FormReportingGraphics;
 }
@@ -56,6 +56,10 @@ private slots:
 
     void on_pushButtonExportPlot_clicked();
 
+    void on_pushButtonExpandAll_clicked();
+
+    void on_pushButtonCollapseAll_clicked();
+
 private:
     Ui::FormReportingGraphics *ui;
     PCx_ReportingWithTreeModel *selectedReporting;
@@ -63,6 +67,7 @@ private:
     void updateListOfReportings();
     MODES::DFRFDIRI getSelectedMode() const;
     void updatePlot();
+    PCx_Graphics *graphics;
     QList<PCx_Reporting::OREDPCR> getSelectedOREDPCR() const;
     QSize sizeHint() const;
 };

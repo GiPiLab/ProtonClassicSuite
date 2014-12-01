@@ -36,7 +36,7 @@ public:
         BUDGETVOTE,
         VIREMENTSINTERNES,
         RATTACHENMOINS1,
-        NONE
+        NONELAST ///<Must be the last column
     };
 
 

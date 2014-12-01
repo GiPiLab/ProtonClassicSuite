@@ -467,7 +467,7 @@ void FormReportingOverview::on_comboBoxRefColumn_activated(int index)
         return;
     PCx_Reporting::OREDPCR selectedOred=(PCx_Reporting::OREDPCR)ui->comboBoxRefColumn->currentData().toInt();
     tableOverviewModel->setColRef(selectedOred);
-    if(selectedOred!=PCx_Reporting::OREDPCR::NONE)
+    if(selectedOred!=PCx_Reporting::OREDPCR::NONELAST)
     {
         ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
     }
@@ -564,4 +564,15 @@ void FormReportingOverview::on_pushButtonExportHTML_clicked()
     else
         QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
 
+}
+
+void FormReportingOverview::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
+}
+
+void FormReportingOverview::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
 }

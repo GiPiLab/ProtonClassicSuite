@@ -81,6 +81,10 @@ private slots:
 
     void on_pushButtonExportHTML_clicked();
 
+    void on_pushButtonExpandAll_clicked();
+
+    void on_pushButtonCollapseAll_clicked();
+
 private:
     Ui::FormReportingOverview *ui;
     void updateListOfReportings();

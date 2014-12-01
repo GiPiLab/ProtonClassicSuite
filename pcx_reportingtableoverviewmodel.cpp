@@ -7,7 +7,7 @@ PCx_ReportingTableOverviewModel::PCx_ReportingTableOverviewModel(PCx_Reporting *
 {
     Q_ASSERT(reporting!=nullptr&&nodeId>0);
     updateQuery();
-    colRef=PCx_Reporting::OREDPCR::NONE;
+    colRef=PCx_Reporting::OREDPCR::NONELAST;
     dateRef=-1;
 }
 
@@ -56,7 +56,7 @@ QString PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(PCx_Report
 void PCx_ReportingTableOverviewModel::setDateRef(int dateFromTimet)
 {
     dateRef=dateFromTimet;
-    colRef=PCx_Reporting::OREDPCR::NONE;
+    colRef=PCx_Reporting::OREDPCR::NONELAST;
     updateQuery();
 }
 
@@ -190,7 +190,7 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
         }
 
 
-        else if(colRef!=PCx_Reporting::OREDPCR::NONE)
+        else if(colRef!=PCx_Reporting::OREDPCR::NONELAST)
         {
             qint64 valRef=record(item.row()).value(PCx_Reporting::OREDPCRtoTableString(colRef)).toLongLong();
             if(valRef!=0)

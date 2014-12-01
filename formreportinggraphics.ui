@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
+    <width>395</width>
     <height>530</height>
    </rect>
   </property>
@@ -19,27 +19,37 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QComboBox" name="comboListOfReportings"/>
-       </item>
-       <item>
-        <widget class="QTreeView" name="treeView">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="headerHidden">
-          <bool>true</bool>
+     <widget class="QWidget" name="layoutWidget1">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="pushButtonExpandAll">
+         <property name="text">
+          <string>Déplier tout</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="pushButtonCollapseAll">
+         <property name="text">
+          <string>Replier tout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Mode</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>3</number>
+          </property>
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButtonDF">
             <property name="text">
@@ -53,14 +63,14 @@
           <item row="0" column="1">
            <widget class="QRadioButton" name="radioButtonRF">
             <property name="text">
-             <string>Dépenses invest.</string>
+             <string>Recettes fonc.</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
            <widget class="QRadioButton" name="radioButtonDI">
             <property name="text">
-             <string>Recettes fonc.</string>
+             <string>Dépenses invest.</string>
             </property>
            </widget>
           </item>
@@ -74,12 +84,21 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item row="4" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxGraphs">
          <property name="title">
           <string>Courbes</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
+          <property name="topMargin">
+           <number>3</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
           <item row="0" column="1">
            <widget class="QCheckBox" name="checkBoxReports">
             <property name="text">
@@ -165,6 +184,19 @@
           </item>
          </layout>
         </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QTreeView" name="treeView">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="headerHidden">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="comboListOfReportings"/>
        </item>
       </layout>
      </widget>

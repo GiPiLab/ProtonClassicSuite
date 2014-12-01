@@ -1,7 +1,6 @@
 #include "formreportinggraphics.h"
 #include "ui_formreportinggraphics.h"
 #include "QCustomPlot/qcustomplot.h"
-#include "pcx_graphics.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QStandardPaths>
@@ -13,10 +12,12 @@ FormReportingGraphics::FormReportingGraphics(QWidget *parent) :
 {
     ui->setupUi(this);
     selectedReporting=nullptr;
+    graphics=nullptr;
     //Root ID
     selectedNodeId=1;
     ui->splitter->setStretchFactor(1,1);
-    updateListOfReportings();
+    updateListOfReportings();    
+
 }
 
 FormReportingGraphics::~FormReportingGraphics()
@@ -24,6 +25,8 @@ FormReportingGraphics::~FormReportingGraphics()
     delete ui;
     if(selectedReporting!=nullptr)
         delete selectedReporting;
+    if(graphics!=nullptr)
+        delete graphics;
 }
 
 void FormReportingGraphics::onListOfReportingsChanged()
@@ -64,8 +67,14 @@ void FormReportingGraphics::on_comboListOfReportings_activated(int index)
         delete selectedReporting;
         selectedReporting=nullptr;
     }
+    if(graphics!=nullptr)
+    {
+        delete graphics;
+        graphics=nullptr;
+    }
 
     selectedReporting=new PCx_ReportingWithTreeModel(selectedReportingId);
+    graphics=new PCx_Graphics(selectedReporting,ui->plot);
     ui->treeView->setModel(selectedReporting->getAttachedTree());
     ui->treeView->expandToDepth(1);
     QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
@@ -132,134 +141,7 @@ QList<PCx_Reporting::OREDPCR> FormReportingGraphics::getSelectedOREDPCR() const
  */
 void FormReportingGraphics::updatePlot()
 {
-    //TODO : Perhaps refactor to PCx_Graphics
-    MODES::DFRFDIRI mode=getSelectedMode();
-    QList<PCx_Reporting::OREDPCR> selectedOREDPCR=getSelectedOREDPCR();
-
-    QCustomPlot *plot=ui->plot;
-
-    plot->clearItems();
-    plot->clearGraphs();
-    plot->clearPlottables();
-
-
-    if(selectedOREDPCR.isEmpty())
-    {
-        plot->replot();
-        return;
-    }
-
-    Qt::GlobalColor PENCOLORS[PCx_Reporting::OREDPCR::NONE]=
-    {
-        Qt::blue,
-        Qt::red,
-        Qt::yellow,
-        Qt::green,
-        Qt::magenta,
-        Qt::cyan,
-        Qt::darkRed,
-        Qt::darkBlue,
-        Qt::darkGray,
-        Qt::darkGreen,
-        Qt::darkYellow
-    };
-
-    QSqlQuery q;
-
-
-    q.prepare(QString("select * from reporting_%1_%2 where id_node=:id order by date").arg(MODES::modeToTableString(mode)).arg(selectedReporting->getReportingId()));
-    q.bindValue(":id",selectedNodeId);
-    q.exec();
-
-    if(!q.isActive())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    QVector<double> dataX,dataY[PCx_Reporting::OREDPCR::NONE];
-
-    while(q.next())
-    {
-        unsigned int date=q.value("date").toUInt();
-        dataX.append((double)date);
-
-        for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONE;i++)
-        {
-            if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
-            {
-                qint64 data=q.value(PCx_Reporting::OREDPCRtoTableString((PCx_Reporting::OREDPCR)i)).toLongLong();
-                dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
-            }
-        }
-    }
-
-    bool first=true;
-    for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONE;i++)
-    {
-        if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
-        {
-            plot->addGraph();
-            plot->graph()->setData(dataX,dataY[i]);
-            plot->graph()->setName(PCx_Reporting::OREDPCRtoCompleteString((PCx_Reporting::OREDPCR)i));
-            plot->graph()->setPen(QPen(PENCOLORS[i]));
-            plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
-            plot->graph()->rescaleAxes(!first);
-            first=false;
-        }
-    }
-
-    QCPRange range;
-    unsigned int year=QDateTime::fromTime_t((int)dataX.first()).date().year();
-    QDateTime dtBegin(QDate(year,1,1));
-    QDateTime dtEnd(QDate(year,12,31));
-    plot->xAxis->setRangeLower((double)dtBegin.toTime_t());
-    plot->xAxis->setRangeUpper((double)dtEnd.toTime_t());
-
-    range=plot->yAxis->range();
-    range.lower-=(range.lower*20.0/100.0);
-    range.upper+=(range.upper*10.0/100.0);
-    plot->yAxis->setRange(range);
-
-    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-
-    plot->legend->setVisible(true);
-    plot->legend->setFont(QFont(QFont().family(),8));
-    plot->legend->setRowSpacing(-5);
-    plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignRight);
-
-    QString plotTitle=QObject::tr("%1 (%2)").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
-
-    QCPPlotTitle * title;
-    if(plot->plotLayout()->elementCount()==1)
-    {
-        plot->plotLayout()->insertRow(0);
-        title=new QCPPlotTitle(plot,plotTitle);
-        title->setFont(QFont(QFont().family(),12));
-        plot->plotLayout()->addElement(0,0,title);
-    }
-    else
-    {
-        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
-        title->setText(plotTitle);
-    }
-
-    plot->xAxis->setAutoTicks(true);
-
-    plot->xAxis->setAutoTickLabels(true);
-    plot->xAxis->setTickLabelRotation(0);
-
-    plot->yAxis->setAutoTicks(true);
-    plot->yAxis->setAutoTickLabels(true);
-    plot->yAxis->setAutoTickLabels(true);
-
-    plot->xAxis->setTickLabelType(QCPAxis::ltDateTime);
-   // plot->xAxis->setAutoTickStep(false);
-   // plot->xAxis->setTickStep(3600*24*15);
-
-    plot->xAxis->setDateTimeFormat("MMM\nyyyy");
-
-
-    plot->replot();
+    graphics->getPCRG1(selectedNodeId,getSelectedMode(),getSelectedOREDPCR());
 
 }
 
@@ -383,4 +265,15 @@ void FormReportingGraphics::on_pushButtonExportPlot_clicked()
         QMessageBox::information(this,tr("Information"),tr("Image enregistrée"));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Image non enregistrée !"));
+}
+
+void FormReportingGraphics::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
+}
+
+void FormReportingGraphics::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
 }

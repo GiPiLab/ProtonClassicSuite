@@ -920,7 +920,7 @@ bool PCx_Reporting::dateExistsForNodeAndMode(QDate date, unsigned int nodeId, MO
 void PCx_Reporting::OREDPCRToComboBox(QComboBox *combo)
 {
     combo->clear();
-    for(int i=(int)OREDPCR::OUVERTS;i<=(int)OREDPCR::NONE;i++)
+    for(int i=(int)OREDPCR::OUVERTS;i<=(int)OREDPCR::NONELAST;i++)
         combo->addItem(OREDPCRtoCompleteString((OREDPCR)i),(OREDPCR)i);
 }
 
@@ -951,7 +951,7 @@ QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored)
         return QObject::tr("rattachés N-1");
     case OREDPCR::VIREMENTSINTERNES:
         return QObject::tr("v. internes");
-    case OREDPCR::NONE:
+    case OREDPCR::NONELAST:
         return QString();
 
     default:
@@ -1020,7 +1020,7 @@ PCx_Reporting::OREDPCR PCx_Reporting::OREDPCRFromTableString(const QString &ored
         return OREDPCR::BUDGETVOTE;
 
     qWarning()<<"Invalid ORED string specified, defaulting to NONE";
-    return OREDPCR::NONE;
+    return OREDPCR::NONELAST;
 }
 
 unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int attachedTreeId)

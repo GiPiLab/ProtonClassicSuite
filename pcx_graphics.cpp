@@ -7,9 +7,10 @@
 
 using namespace NUMBERSFORMAT;
 
-PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model)
+PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):auditModel(model)
 {
     Q_ASSERT(model!=nullptr);
+    reportingModel=nullptr;
     setGraphicsWidth(graphicsWidth);
     setGraphicsHeight(graphicsHeight);
     setScale(scale);
@@ -26,6 +27,27 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
     }
 }
 
+PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight, double scale):reportingModel(reportingModel)
+{
+    Q_ASSERT(reportingModel!=nullptr);
+    auditModel=nullptr;
+    setGraphicsWidth(graphicsWidth);
+    setGraphicsHeight(graphicsHeight);
+    setScale(scale);
+
+    if(plot==0)
+    {
+        this->plot=new QCustomPlot();
+        ownPlot=true;
+    }
+    else
+    {
+        this->plot=plot;
+        ownPlot=false;
+    }
+
+}
+
 PCx_Graphics::~PCx_Graphics()
 {
     if(ownPlot==true)
@@ -36,6 +58,11 @@ PCx_Graphics::~PCx_Graphics()
 QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Model error";
+        return QString();
+    }
     QString tableName=MODES::modeToTableString(mode);
     QString oredName=PCx_Audit::OREDtoTableString(modeORED);
 
@@ -44,7 +71,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit
     //Will contain data read from db
     QMap<unsigned int, qint64> dataRoot,dataNode;
 
-    q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=1 order by annee").arg(tableName).arg(model->getAuditId()));
+    q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=1 order by annee").arg(tableName).arg(auditModel->getAuditId()));
     q.bindValue(":id",node);
     q.exec();
 
@@ -147,7 +174,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit
     plot->graph(1)->setData(dataPlotRootX,dataPlotRootY);
 
     //Legend
-    QString nodeName=model->getAttachedTree()->getNodeName(node);
+    QString nodeName=auditModel->getAttachedTree()->getNodeName(node);
     plot->graph(0)->setName(nodeName);
     plot->graph(1)->setName(QString("Total - %1").arg(nodeName));
 
@@ -211,17 +238,17 @@ QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit
     if(cumule==false)
     {
         if(modeORED!=PCx_Audit::ORED::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
     }
 
     else
     {
         if(modeORED!=PCx_Audit::ORED::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
         else
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
     }
 
     /*
@@ -276,7 +303,15 @@ QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit
 QString PCx_Graphics::getG9(unsigned int node) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Model error";
+        return QString();
+    }
+
+
     QString plotTitle;
+
 
     plot->clearItems();
     plot->clearGraphs();
@@ -338,7 +373,7 @@ QString PCx_Graphics::getG9(unsigned int node) const
                       "from audit_DF_%1 a, audit_RF_%1 b, audit_DI_%1 c,audit_RI_%1 d "
                       "where a.id_node=:id_node and a.id_node=b.id_node and b.id_node=c.id_node "
                       "and c.id_node=d.id_node and a.annee=b.annee and b.annee=c.annee and c.annee=d.annee "
-                      "order by a.annee").arg(model->getAuditId()));
+                      "order by a.annee").arg(auditModel->getAuditId()));
     q.bindValue(":id_node",node);
     q.exec();
     if(!q.isActive())
@@ -436,9 +471,150 @@ QString PCx_Graphics::getG9(unsigned int node) const
     plot->xAxis->setRange(0,tickCounter);
     plot->yAxis->setRange(0,150);
 
-    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped());
+    plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
     return plotTitle;
 
+}
+
+QString PCx_Graphics::getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR) const
+{
+    if(reportingModel==nullptr)
+    {
+        qDebug()<<"Model error";
+        return QString();
+    }
+
+    plot->clearItems();
+    plot->clearGraphs();
+    plot->clearPlottables();
+
+    QString plotTitle=QObject::tr("%1 (%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+
+    QCPPlotTitle * title;
+    if(plot->plotLayout()->elementCount()==1)
+    {
+        plot->plotLayout()->insertRow(0);
+        title=new QCPPlotTitle(plot,plotTitle);
+        title->setFont(QFont(QFont().family(),12));
+        plot->plotLayout()->addElement(0,0,title);
+    }
+    else
+    {
+        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+        title->setText(plotTitle);
+    }
+
+    if(selectedOREDPCR.isEmpty())
+    {
+        plot->replot();
+        return QString();
+    }
+
+    //Colors for each graph
+    Qt::GlobalColor PENCOLORS[PCx_Reporting::OREDPCR::NONELAST]=
+    {
+        Qt::blue,
+        Qt::red,
+        Qt::yellow,
+        Qt::green,
+        Qt::magenta,
+        Qt::cyan,
+        Qt::darkRed,
+        Qt::darkBlue,
+        Qt::darkGray,
+        Qt::darkGreen,
+        Qt::darkYellow
+    };
+
+    QSqlQuery q;
+
+
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:id order by date").arg(MODES::modeToTableString(mode)).arg(reportingModel->getReportingId()));
+    q.bindValue(":id",selectedNodeId);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    QVector<double> dataX,dataY[PCx_Reporting::OREDPCR::NONELAST];
+
+    while(q.next())
+    {
+        unsigned int date=q.value("date").toUInt();
+        dataX.append((double)date);
+
+        for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONELAST;i++)
+        {
+            if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
+            {
+                qint64 data=q.value(PCx_Reporting::OREDPCRtoTableString((PCx_Reporting::OREDPCR)i)).toLongLong();
+                dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
+            }
+        }
+    }
+
+    if(dataX.isEmpty())
+    {
+        plot->replot();
+        return QString();
+    }
+
+    bool first=true;
+    for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONELAST;i++)
+    {
+        if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
+        {
+            plot->addGraph();
+            plot->graph()->setData(dataX,dataY[i]);
+            plot->graph()->setName(PCx_Reporting::OREDPCRtoCompleteString((PCx_Reporting::OREDPCR)i));
+            plot->graph()->setPen(QPen(PENCOLORS[i]));
+            plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
+            plot->graph()->rescaleAxes(!first);
+            first=false;
+        }
+    }
+
+    QCPRange range;
+    unsigned int year=QDateTime::fromTime_t((int)dataX.first()).date().year();
+    QDateTime dtBegin(QDate(year,1,1));
+    QDateTime dtEnd(QDate(year,12,31));
+    plot->xAxis->setRangeLower((double)dtBegin.toTime_t());
+    plot->xAxis->setRangeUpper((double)dtEnd.toTime_t());
+
+    range=plot->yAxis->range();
+    range.lower-=(range.lower*20.0/100.0);
+    range.upper+=(range.upper*10.0/100.0);
+    plot->yAxis->setRange(range);
+
+    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
+    plot->legend->setVisible(true);
+    plot->legend->setFont(QFont(QFont().family(),8));
+    plot->legend->setRowSpacing(-5);
+    plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignRight);
+
+
+
+    plot->xAxis->setAutoTicks(true);
+
+    plot->xAxis->setAutoTickLabels(true);
+    plot->xAxis->setTickLabelRotation(0);
+
+    plot->yAxis->setAutoTicks(true);
+    plot->yAxis->setAutoTickLabels(true);
+    plot->yAxis->setAutoTickLabels(true);
+
+    plot->xAxis->setTickLabelType(QCPAxis::ltDateTime);
+   // plot->xAxis->setAutoTickStep(false);
+   // plot->xAxis->setTickStep(3600*24*15);
+
+    plot->xAxis->setDateTimeFormat("MMM\nyyyy");
+
+
+    plot->replot();
+    return plotTitle;
 }
 
 void PCx_Graphics::setGraphicsWidth(int width)

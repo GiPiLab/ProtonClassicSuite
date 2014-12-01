@@ -2,6 +2,7 @@
 #define PCX_GRAPHICS_H
 
 #include "pcx_audit.h"
+#include "pcx_reporting.h"
 #include "QCustomPlot/qcustomplot.h"
 
 class PCx_Graphics
@@ -38,10 +39,12 @@ public:
         G6,
         G7,
         G8,
-        G9
+        G9,
+        PCRG1
     };
 
-    PCx_Graphics(PCx_Audit *model, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
+    PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
+    PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     virtual ~PCx_Graphics();
 
     QString getG1(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false);}
@@ -55,6 +58,15 @@ public:
     QString getG8(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true);}
 
     QString getG9(unsigned int node) const;
+
+
+
+
+    QString getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
+
+
+
+
 
     QCustomPlot * getPlot() const{return plot;}
     int getGraphicsWidth() const{return graphicsWidth;}
@@ -79,7 +91,8 @@ public:
 
 
 private:
-    PCx_Audit *model;
+    PCx_Audit *auditModel;
+    PCx_Reporting *reportingModel;
 
     //Returns the title of the graphic in html
     QString getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const;
