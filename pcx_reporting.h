@@ -224,9 +224,10 @@ public:
     /**
      * @brief OREDPCRtoCompleteString converts an OREDPCR item to its textual representation
      * @param ored the OREDPCR item
+     * @param capitalizeFirstLetter if true returns the string with the first letter capitalized
      * @return the QString representation of the OREDPCR
      */
-    static QString OREDPCRtoCompleteString(OREDPCR ored);
+    static QString OREDPCRtoCompleteString(OREDPCR ored, bool capitalizeFirstLetter=false);
 
     /**
      * @brief OREDPCRtoTableString converts an OREDPCR item to its database column name
@@ -271,6 +272,9 @@ public:
     static QList<QPair<unsigned int, QString> > getListOfReportings();
 
     bool exportLeavesSkeleton(const QString &fileName) const;
+
+    QDate getLastReportingDate(unsigned int node, MODES::DFRFDIRI mode) const;
+
 
 
 

@@ -2,97 +2,105 @@
 #include "utils.h"
 #include "pcx_query.h"
 
-PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):model(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
+PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):auditModel(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
     Q_ASSERT(model!=nullptr);
+    reportingModel=nullptr;
 }
 
+PCx_Report::PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight, double scale):reportingModel(reportingModel),tables(reportingModel),graphics(reportingModel,plot,graphicsWidth,graphicsHeight,scale)
+{
+    auditModel=nullptr;
+}
 
-
-
-QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
+QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs, QList<PCx_Tables::PCATABLES> listOfTables, QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
                                               unsigned int selectedNode, MODES::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
                                               const QString &relativeImagePath,QProgressDialog *progress) const
 {
     Q_ASSERT(selectedNode>0);
+    if(auditModel==nullptr)
+    {
+        qCritical()<<"Invalid null audit model";
+        return QString();
+    }
 
     QString output;
 
     //Either group of tables, or individual tables
     if(!listOfTabs.isEmpty())
     {
-        foreach(PCx_Tables::PRESETS tab,listOfTabs)
+        foreach(PCx_Tables::PCAPRESETS tab,listOfTabs)
         {
             switch(tab)
             {
-            case PCx_Tables::OVERVIEW:
-                output.append(tables.getPresetOverview(selectedNode,mode));
+            case PCx_Tables::PCAOVERVIEW:
+                output.append(tables.getPCAPresetOverview(selectedNode,mode));
                 break;
-            case PCx_Tables::EVOLUTION:
-                output.append(tables.getPresetEvolution(selectedNode,mode));
+            case PCx_Tables::PCAEVOLUTION:
+                output.append(tables.getPCAPresetEvolution(selectedNode,mode));
                 break;
-            case PCx_Tables::EVOLUTIONCUMUL:
-                output.append(tables.getPresetEvolutionCumul(selectedNode,mode));
+            case PCx_Tables::PCAEVOLUTIONCUMUL:
+                output.append(tables.getPCAPresetEvolutionCumul(selectedNode,mode));
                 break;
-            case PCx_Tables::BASE100:
-                output.append(tables.getPresetBase100(selectedNode,mode));
+            case PCx_Tables::PCABASE100:
+                output.append(tables.getPCAPresetBase100(selectedNode,mode));
                 break;
-            case PCx_Tables::DAYOFWORK:
-                output.append(tables.getPresetDayOfWork(selectedNode,mode));
+            case PCx_Tables::PCADAYOFWORK:
+                output.append(tables.getPCAPresetDayOfWork(selectedNode,mode));
                 break;
-            case PCx_Tables::RESULTS:
-                output.append(tables.getPresetResults(selectedNode));
+            case PCx_Tables::PCARESULTS:
+                output.append(tables.getPCAPresetResults(selectedNode));
                 break;
             }
         }
     }
     else
     {
-        foreach(PCx_Tables::TABLES table,listOfTables)
+        foreach(PCx_Tables::PCATABLES table,listOfTables)
         {
             switch(table)
             {
-            case PCx_Tables::T1:
-                output.append(tables.getT1(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT1:
+                output.append(tables.getPCAT1(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T2:
-                output.append(tables.getT2(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT2:
+                output.append(tables.getPCAT2(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T2BIS:
-                output.append(tables.getT2bis(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT2BIS:
+                output.append(tables.getPCAT2bis(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T3:
-                output.append(tables.getT3(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT3:
+                output.append(tables.getPCAT3(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T3BIS:
-                output.append(tables.getT3bis(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT3BIS:
+                output.append(tables.getPCAT3bis(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T4:
-                output.append(tables.getT4(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT4:
+                output.append(tables.getPCAT4(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T5:
-                output.append(tables.getT5(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT5:
+                output.append(tables.getPCAT5(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T6:
-                output.append(tables.getT6(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT6:
+                output.append(tables.getPCAT6(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T7:
-                output.append(tables.getT7(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT7:
+                output.append(tables.getPCAT7(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T8:
-                output.append(tables.getT8(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT8:
+                output.append(tables.getPCAT8(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T9:
-                output.append(tables.getT9(selectedNode,mode)+"<br>");
+            case PCx_Tables::PCAT9:
+                output.append(tables.getPCAT9(selectedNode,mode)+"<br>");
                 break;
-            case PCx_Tables::T10:
-                output.append(tables.getT10(selectedNode)+"<br>");
+            case PCx_Tables::PCAT10:
+                output.append(tables.getPCAT10(selectedNode)+"<br>");
                 break;
-            case PCx_Tables::T11:
-                output.append(tables.getT11(selectedNode)+"<br>");
+            case PCx_Tables::PCAT11:
+                output.append(tables.getPCAT11(selectedNode)+"<br>");
                 break;
-            case PCx_Tables::T12:
-                output.append(tables.getT12(selectedNode)+"<br>");
+            case PCx_Tables::PCAT12:
+                output.append(tables.getPCAT12(selectedNode)+"<br>");
                 break;
             }
         }
@@ -107,36 +115,36 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfT
     //Inline graphics mode
     if(document!=nullptr)
     {
-        foreach(PCx_Graphics::GRAPHICS graph,listOfGraphics)
+        foreach(PCx_Graphics::PCAGRAPHICS graph,listOfGraphics)
         {
             switch(graph)
             {
-            case PCx_Graphics::G1:
-                output.append("<div align='center' class='g'><b>"+graphics.getG1(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG1:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG1(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G2:
-                output.append("<div align='center' class='g'><b>"+graphics.getG2(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG2:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG2(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G3:
-                output.append("<div align='center' class='g'><b>"+graphics.getG3(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG3:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG3(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G4:
-                output.append("<div align='center' class='g'><b>"+graphics.getG4(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG4:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG4(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G5:
-                output.append("<div align='center' class='g'><b>"+graphics.getG5(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG5:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG5(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G6:
-                output.append("<div align='center' class='g'><b>"+graphics.getG6(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG6:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG6(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G7:
-                output.append("<div align='center' class='g'><b>"+graphics.getG7(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG7:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG7(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G8:
-                output.append("<div align='center' class='g'><b>"+graphics.getG8(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG8:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG8(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G9:
-                output.append("<div align='center' class='g'><b>"+graphics.getG9(selectedNode)+"</b><br>");
+            case PCx_Graphics::PCAG9:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG9(selectedNode)+"</b><br>");
                 break;
             }
             QString name="mydata://"+QString::number(qrand());
@@ -184,36 +192,36 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfT
             die();
         }
 
-        foreach(PCx_Graphics::GRAPHICS graph,listOfGraphics)
+        foreach(PCx_Graphics::PCAGRAPHICS graph,listOfGraphics)
         {
             switch(graph)
             {
-            case PCx_Graphics::G1:
-                output.append("<div align='center' class='g'><b>"+graphics.getG1(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG1:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG1(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G2:
-                output.append("<div align='center' class='g'><b>"+graphics.getG2(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG2:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG2(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G3:
-                output.append("<div align='center' class='g'><b>"+graphics.getG3(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG3:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG3(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G4:
-                output.append("<div align='center' class='g'><b>"+graphics.getG4(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG4:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG4(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G5:
-                output.append("<div align='center' class='g'><b>"+graphics.getG5(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG5:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG5(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G6:
-                output.append("<div align='center' class='g'><b>"+graphics.getG6(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG6:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG6(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G7:
-                output.append("<div align='center' class='g'><b>"+graphics.getG7(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG7:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG7(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G8:
-                output.append("<div align='center' class='g'><b>"+graphics.getG8(selectedNode,mode)+"</b><br>");
+            case PCx_Graphics::PCAG8:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG8(selectedNode,mode)+"</b><br>");
                 break;
-            case PCx_Graphics::G9:
-                output.append("<div align='center' class='g'><b>"+graphics.getG9(selectedNode)+"</b><br>");
+            case PCx_Graphics::PCAG9:
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAG9(selectedNode)+"</b><br>");
                 break;
             }
 
@@ -238,10 +246,29 @@ QString PCx_Report::generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfT
     return output;
 }
 
+QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets, unsigned int selectedNode, MODES::DFRFDIRI mode, QTextDocument *document, const QString &absoluteImagePath, const QString &relativeImagePath, QProgressDialog *progress) const
+{
+    if(reportingModel==nullptr)
+    {
+        qCritical()<<"NULL model error";
+        return QString();
+    }
+    QString output=tables.getPCRRatioParents(selectedNode,mode);
+
+
+
+    if(listOfPresets.contains(PCRPRESETS::PCRPRESET_A))
+    {
+        output.append(tables.getPCRProvenance(selectedNode,mode));
+    }
+    return output;
+
+}
+
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const
 {
     QString output="<ul>\n";
-    PCx_Tree *tree=model->getAttachedTree();
+    PCx_Tree *tree=auditModel->getAttachedTree();
     foreach(unsigned int node,nodes)
     {
         output.append(QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(tree->getNodeName(node).toHtmlEscaped()));

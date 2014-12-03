@@ -66,9 +66,11 @@
     </property>
     <addaction name="actionManageTree"/>
     <addaction name="actionGestion_des_reportings"/>
-    <addaction name="actionExploreReportings"/>
+    <addaction name="actionReportingOverview"/>
     <addaction name="actionGraphiques"/>
     <addaction name="actionSurveillance_des_reportings"/>
+    <addaction name="actionExploreReportings"/>
+    <addaction name="actionGenerateur_de_rapports"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
@@ -206,9 +208,9 @@
     <string>&amp;Gestion des reportings</string>
    </property>
   </action>
-  <action name="actionExploreReportings">
+  <action name="actionReportingOverview">
    <property name="text">
-    <string>Exploration et ratios</string>
+    <string>Vue d'ensemble</string>
    </property>
   </action>
   <action name="actionSurveillance_des_reportings">
@@ -218,7 +220,17 @@
   </action>
   <action name="actionGraphiques">
    <property name="text">
-    <string>Exploration graphique</string>
+    <string>Graphiques</string>
+   </property>
+  </action>
+  <action name="actionExploreReportings">
+   <property name="text">
+    <string>Exploration des reportings</string>
+   </property>
+  </action>
+  <action name="actionGenerateur_de_rapports">
+   <property name="text">
+    <string>Générateur de rapports</string>
    </property>
   </action>
  </widget>

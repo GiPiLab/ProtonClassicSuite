@@ -742,6 +742,22 @@ bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
     return xlsx.saveAs(fileName);
 }
 
+QDate PCx_Reporting::getLastReportingDate(unsigned int node, MODES::DFRFDIRI mode) const
+{
+    QSqlQuery q;
+    q.prepare(QString("select date from reporting_%1_%2 where id_node=:idnode order by date desc limit 1").arg(MODES::modeToTableString(mode)).arg(reportingId));
+    q.bindValue(":idnode",node);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+        return QDate();
+
+    return QDateTime::fromTime_t(q.value(0).toUInt()).date();
+}
+
 bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileName) const
 {
     QXlsx::Document xlsx;
@@ -925,37 +941,75 @@ void PCx_Reporting::OREDPCRToComboBox(QComboBox *combo)
 }
 
 
-QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored)
+QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored,bool capitalizeFirstLetter)
 {
-    switch(ored)
+    if(capitalizeFirstLetter==false)
     {
-    case OREDPCR::OUVERTS:
-        return QObject::tr("prévu");
-    case OREDPCR::REALISES:
-        return QObject::tr("réalisé");
-    case OREDPCR::ENGAGES:
-        return QObject::tr("engagé");
-    case OREDPCR::DISPONIBLES:
-        return QObject::tr("disponible");
-    case OREDPCR::BP:
-        return QObject::tr("BP");
-    case OREDPCR::REPORTS:
-        return QObject::tr("reports");
-    case OREDPCR::OCDM:
-        return QObject::tr("OCDM");
-    case OREDPCR::VCDM:
-        return QObject::tr("VCDM");
-    case OREDPCR::BUDGETVOTE:
-        return QObject::tr("budget voté");
-    case OREDPCR::RATTACHENMOINS1:
-        return QObject::tr("rattachés N-1");
-    case OREDPCR::VIREMENTSINTERNES:
-        return QObject::tr("v. internes");
-    case OREDPCR::NONELAST:
-        return QString();
+        switch(ored)
+        {
+        case OREDPCR::OUVERTS:
+            return QObject::tr("prévu");
+        case OREDPCR::REALISES:
+            return QObject::tr("réalisé");
+        case OREDPCR::ENGAGES:
+            return QObject::tr("engagé");
+        case OREDPCR::DISPONIBLES:
+            return QObject::tr("disponible");
+        case OREDPCR::BP:
+            return QObject::tr("BP");
+        case OREDPCR::REPORTS:
+            return QObject::tr("reports");
+        case OREDPCR::OCDM:
+            return QObject::tr("OCDM");
+        case OREDPCR::VCDM:
+            return QObject::tr("VCDM");
+        case OREDPCR::BUDGETVOTE:
+            return QObject::tr("budget voté");
+        case OREDPCR::RATTACHENMOINS1:
+            return QObject::tr("rattachés N-1");
+        case OREDPCR::VIREMENTSINTERNES:
+            return QObject::tr("v. internes");
+        case OREDPCR::NONELAST:
+            return QString();
 
-    default:
-        qWarning()<<"Invalid ORED specified !";
+        default:
+            qWarning()<<"Invalid ORED specified !";
+        }
+    }
+
+    else
+    {
+
+        switch(ored)
+        {
+        case OREDPCR::OUVERTS:
+            return QObject::tr("Prévu");
+        case OREDPCR::REALISES:
+            return QObject::tr("Réalisé");
+        case OREDPCR::ENGAGES:
+            return QObject::tr("Engagé");
+        case OREDPCR::DISPONIBLES:
+            return QObject::tr("Disponible");
+        case OREDPCR::BP:
+            return QObject::tr("BP");
+        case OREDPCR::REPORTS:
+            return QObject::tr("Reports");
+        case OREDPCR::OCDM:
+            return QObject::tr("OCDM");
+        case OREDPCR::VCDM:
+            return QObject::tr("VCDM");
+        case OREDPCR::BUDGETVOTE:
+            return QObject::tr("Budget voté");
+        case OREDPCR::RATTACHENMOINS1:
+            return QObject::tr("Rattachés N-1");
+        case OREDPCR::VIREMENTSINTERNES:
+            return QObject::tr("V. internes");
+        case OREDPCR::NONELAST:
+            return QString();
+
+        default:
+            qWarning()<<"Invalid ORED specified !";
+        }
     }
     return QString();
 }

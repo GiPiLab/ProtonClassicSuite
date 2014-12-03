@@ -1169,6 +1169,19 @@ int PCx_Tree::deleteTree(unsigned int treeId)
         }
     }
 
+    if(!query.exec(QString("select count(*) from index_reportings where id_arbre='%1'").arg(treeId)))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+    if(query.next())
+    {
+        if(query.value(0).toInt()>0)
+        {
+           return 0;
+        }
+    }
+
 
     QSqlDatabase::database().transaction();
     if(!query.exec(QString("delete from index_arbres where id='%1'").arg(treeId)))

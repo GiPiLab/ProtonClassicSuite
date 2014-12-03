@@ -1,5 +1,7 @@
 #include "pcx_tables.h"
+#include "pcx_reportingtableoverviewmodel.h"
 #include "utils.h"
+#include <QTableView>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
@@ -8,24 +10,34 @@ using namespace NUMBERSFORMAT;
 
 
 
-PCx_Tables::PCx_Tables(PCx_Audit *model):model(model)
+PCx_Tables::PCx_Tables(PCx_Audit *model):auditModel(model)
 {
-    Q_ASSERT(model!=nullptr);
+    reportingModel=nullptr;
+}
+
+PCx_Tables::PCx_Tables(PCx_Reporting *reportingModel):reportingModel(reportingModel)
+{
+    auditModel=nullptr;
 }
 
 
-QString PCx_Tables::getT1(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     QString output=QString("\n<table align='center' width='98%' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
                            "<th>R&eacute;alis&eacute;</th><th>%/pr&eacute;vu</th>"
                            "<th>Engag&eacute;</th><th>%/pr&eacute;vu</th><th>Disponible</th><th>%/pr&eacute;vu</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -65,17 +77,22 @@ QString PCx_Tables::getT1(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT2(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
     QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
@@ -161,10 +178,17 @@ QString PCx_Tables::getT2(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT2bis(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
+
+
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     //The classes "t3xxx" are not a mistake
     QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
@@ -172,7 +196,7 @@ QString PCx_Tables::getT2bis(unsigned int node, MODES::DFRFDIRI mode) const
                            "<b>&Eacute;volution du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
@@ -262,11 +286,17 @@ QString PCx_Tables::getT2bis(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT3(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     //The classes "t2xxx" are not a mistake
     QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
@@ -274,7 +304,7 @@ QString PCx_Tables::getT3(unsigned int node, MODES::DFRFDIRI mode) const
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -326,16 +356,22 @@ QString PCx_Tables::getT3(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT3bis(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
+
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
     QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -391,16 +427,21 @@ QString PCx_Tables::getT3bis(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT4(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
     QString output=QString("\n<table align='center' width='65%' cellpadding='5'>"
                            "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>au sein de la Collectivit&eacute; "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t4entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QHash<unsigned int,qint64> ouvertsRoot,realisesRoot;
 
@@ -456,11 +497,16 @@ QString PCx_Tables::getT4(unsigned int node, MODES::DFRFDIRI mode) const
 }
 
 
-QString PCx_Tables::getT5(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t5entete'><td colspan=6 align='center'>"
@@ -469,7 +515,7 @@ QString PCx_Tables::getT5(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t5entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Pr&eacute;vu</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t5entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot,engagesRoot,disponiblesRoot;
     qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0,firstYearEngagesRoot=0,firstYearDisponiblesRoot=0;
@@ -585,11 +631,16 @@ QString PCx_Tables::getT5(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT6(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t6entete'><td colspan=6 align='center'>"
@@ -598,7 +649,7 @@ QString PCx_Tables::getT6(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t6entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Pr&eacute;vu</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t6entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
     QSqlQuery q;
@@ -667,11 +718,16 @@ QString PCx_Tables::getT6(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT7(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t7entete'><td colspan=5 align='center'>"
@@ -680,7 +736,7 @@ QString PCx_Tables::getT7(unsigned int node, MODES::DFRFDIRI mode) const
                            " 365/365<sup>&egrave;me</sup> entre le r&eacute;alis&eacute; budg&eacute;taire et l'ann&eacute;e</u></b>"
                            "<tr class='t7entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th>"
                            "<th>Engag&eacute;</th><th>Disponible</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
     QSqlQuery q;
@@ -720,15 +776,20 @@ QString PCx_Tables::getT7(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT8(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
     QString output=QString("\n<table width='50%' align='center' cellpadding='5'>"
                            "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
     QSqlQuery q;
@@ -772,17 +833,22 @@ QString PCx_Tables::getT8(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getT9(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
-    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(model->getAuditId());
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     QString output=QString("\n<table width='60%' align='center' cellpadding='5'>"
                            "<tr class='t9entete'><td colspan=2 align='center'>"
                            "<b>&Eacute;quivalences moyennes en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>[ %1 ]"
                            " (<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b>"
-                           "</td></tr>").arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+                           "</td></tr>").arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -825,23 +891,28 @@ QString PCx_Tables::getT9(unsigned int node, MODES::DFRFDIRI mode) const
 
 
 
-QString PCx_Tables::getT10(unsigned int node) const
+QString PCx_Tables::getPCAT10(unsigned int node) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
     q.prepare(QString("select a.annee,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as diff_ouverts, "
                       "coalesce(a.realises,0)-coalesce(b.realises,0) as diff_realises, "
                       "coalesce(a.engages,0)-coalesce(b.engages,0) as diff_engages "
                       "from audit_RF_%1 as a, audit_DF_%1 as b where a.id_node=:id and b.id_node=:id "
-                      "and a.annee=b.annee order by a.annee").arg(model->getAuditId()));
+                      "and a.annee=b.annee order by a.annee").arg(auditModel->getAuditId()));
     q.bindValue(":id",node);
     q.exec();
 
@@ -892,23 +963,28 @@ QString PCx_Tables::getT10(unsigned int node) const
     return output;
 }
 
-QString PCx_Tables::getT11(unsigned int node) const
+QString PCx_Tables::getPCAT11(unsigned int node) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS d'INVESTISSEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
     q.prepare(QString("select a.annee,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as diff_ouverts, "
                       "coalesce(a.realises,0)-coalesce(b.realises,0) as diff_realises, "
                       "coalesce(a.engages,0)-coalesce(b.engages,0) as diff_engages "
                       "from audit_RI_%1 as a, audit_DI_%1 as b where a.id_node=:id and b.id_node=:id "
-                      "and a.annee=b.annee order by a.annee").arg(model->getAuditId()));
+                      "and a.annee=b.annee order by a.annee").arg(auditModel->getAuditId()));
     q.bindValue(":id",node);
     q.exec();
 
@@ -959,16 +1035,21 @@ QString PCx_Tables::getT11(unsigned int node) const
     return output;
 }
 
-QString PCx_Tables::getT12(unsigned int node) const
+QString PCx_Tables::getPCAT12(unsigned int node) const
 {
     Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS BUDG&Eacute;TAIRES de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
-            .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
     q.prepare(QString("select a.annee, "
@@ -980,7 +1061,7 @@ QString PCx_Tables::getT12(unsigned int node) const
                       " + (coalesce(c.engages,0)-coalesce(d.engages,0)) as diff_engages "
                       "from audit_RF_%1 as a, audit_DF_%1 as b, audit_RI_%1 as c, audit_DI_%1 as d"
                       " where a.id_node=:id and b.id_node=:id and c.id_node=:id and d.id_node=:id "
-                      "and a.annee=b.annee and b.annee=c.annee and c.annee=d.annee order by a.annee").arg(model->getAuditId()));
+                      "and a.annee=b.annee and b.annee=c.annee and c.annee=d.annee order by a.annee").arg(auditModel->getAuditId()));
     q.bindValue(":id",node);
     q.exec();
 
@@ -1031,15 +1112,162 @@ QString PCx_Tables::getT12(unsigned int node) const
     return output;
 }
 
-QString PCx_Tables::getPresetOverview(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    QString out=getT1(node,mode)+"<br>\n"+getT4(node,mode)+"<br>\n"+getT8(node,mode)+"<br>\n";
+    if(reportingModel==nullptr)
+    {
+        qDebug()<<"Invalid model usage";
+        return QString();
+    }
+
+    QDate lastDate=reportingModel->getLastReportingDate(node,mode);
+    if(lastDate.isNull()||!lastDate.isValid())
+        return QString();
+
+    qint64 nodeVal=reportingModel->getNodeValue(node,mode,PCx_Reporting::OREDPCR::OUVERTS,lastDate);
+
+    QString out=QObject::tr("<p>Le %1, date de la dernière situation PCR, les crédits ouverts pour <strong>%2</strong> s'élevaient à %3 € %4</p>")
+            .arg(lastDate.toString(Qt::DefaultLocaleShortDate))
+            .arg(reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+            .arg(NUMBERSFORMAT::formatFixedPoint(nodeVal))
+            .arg(node!=1?"représentant : ":"");
+
+    out.append("<ul>");
+    unsigned int pid;
+    unsigned int tmpNode=node;
+
+    while((pid=reportingModel->getAttachedTree()->getParentId(tmpNode))!=0)
+    {
+        qint64 pidVal=reportingModel->getNodeValue(pid,mode,PCx_Reporting::OREDPCR::OUVERTS,lastDate);
+        if(pidVal!=0)
+        {
+            out.append(QString("<li>%1 % des crédits de <b>%2</b></li>")
+                       .arg(formatDouble((double)nodeVal/(double)pidVal*100.0))
+                       .arg(reportingModel->getAttachedTree()->getNodeName(pid).toHtmlEscaped())
+                       );
+        }
+        tmpNode=pid;
+    }
+    out.append("</ul>");
+
     return out;
 }
 
-QString PCx_Tables::getPresetResults(unsigned int node) const
+QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    QString out=getT10(node)+"<br>\n"+getT11(node)+"<br>\n"+getT12(node)+"<br>\n";
+    QSqlQuery q;
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date desc limit 1").arg(MODES::modeToTableString(mode)).arg(reportingModel->getReportingId()));
+    q.bindValue(":idnode",node);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    double percentBP=NAN,percentReports=NAN,percentOCDM=NAN,percentVCDM=NAN,percentVINT=NAN,sumPercent=NAN;
+
+    if(q.next())
+    {
+        qint64 ouverts=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)).toLongLong();
+        qint64 bp=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::BP)).toLongLong();
+        qint64 reports=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REPORTS)).toLongLong();
+        qint64 ocdm=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OCDM)).toLongLong();
+        qint64 vcdm=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::VCDM)).toLongLong();
+        qint64 vInt=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES)).toLongLong();
+        if(ouverts!=0)
+        {
+            percentBP=(double)bp/(double)ouverts*100.0;
+            percentReports=(double)reports/(double)ouverts*100.0;
+            percentOCDM=(double)ocdm/(double)ouverts*100.0;
+            percentVCDM=(double)vcdm/(double)ouverts*100.0;
+            percentVINT=(double)vInt/(double)ouverts*100.0;
+            sumPercent=percentBP+percentReports+percentOCDM+percentVCDM+percentVINT;
+        }
+
+        qint64 sum=bp+reports+ocdm+vcdm+vInt;
+
+        QString out=QString("<table cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Part des cr&eacute;dits ouverts</th></tr>"
+                            "<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(bp))
+                .arg(NUMBERSFORMAT::formatDouble(percentBP));
+        out.append(QString("<tr><td class='t1annee'>%1</td><td class='t1valeur' align='right'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(reports))
+                .arg(NUMBERSFORMAT::formatDouble(percentReports)));
+        out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(ocdm))
+                .arg(NUMBERSFORMAT::formatDouble(percentOCDM)));
+        out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(vcdm))
+                .arg(NUMBERSFORMAT::formatDouble(percentVCDM)));
+        out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(vInt))
+                .arg(NUMBERSFORMAT::formatDouble(percentVINT)));
+        out.append(QString("<tr><td class='t1annee'><b>TOTAL</b></td><td align='right'  class='t1valeur'><b>%1</b></td><td align='right'  class='t1pourcent'><b>%2 \%</b></td></tr></table>")
+                   .arg(NUMBERSFORMAT::formatFixedPoint(sum))
+                   .arg(NUMBERSFORMAT::formatDouble(sumPercent))
+                   );
+
+        return out;
+    }
+
+    qDebug()<<"Missing data";
+    return QString();
+}
+
+QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) const
+{
+
+}
+
+QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) const
+{
+
+}
+
+QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const
+{
+
+}
+
+QString PCx_Tables::getPCRRFDF(unsigned int node) const
+{
+    PCx_ReportingTableOverviewModel tableModel(reportingModel,node,PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF);
+    QTableView view;
+    view.setModel(&tableModel);
+    return qTableViewToHtml(&view);
+}
+
+QString PCx_Tables::getPCRRIDI(unsigned int node) const
+{
+    PCx_ReportingTableOverviewModel tableModel(reportingModel,node,PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI);
+    QTableView view;
+    view.setModel(&tableModel);
+    return qTableViewToHtml(&view);
+
+}
+
+QString PCx_Tables::getPCRRFDFRIDI(unsigned int node) const
+{
+    PCx_ReportingTableOverviewModel tableModel(reportingModel,node,PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI);
+    QTableView view;
+    view.setModel(&tableModel);
+    return qTableViewToHtml(&view);
+}
+
+QString PCx_Tables::getPCAPresetOverview(unsigned int node, MODES::DFRFDIRI mode) const
+{
+    QString out=getPCAT1(node,mode)+"<br>\n"+getPCAT4(node,mode)+"<br>\n"+getPCAT8(node,mode)+"<br>\n";
+    return out;
+}
+
+QString PCx_Tables::getPCAPresetResults(unsigned int node) const
+{
+    QString out=getPCAT10(node)+"<br>\n"+getPCAT11(node)+"<br>\n"+getPCAT12(node)+"<br>\n";
     return out;
 }
 
@@ -1066,33 +1294,30 @@ QString PCx_Tables::getCSS()
     "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
 }
 
-QString PCx_Tables::getPresetEvolution(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetEvolution(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    QString out=getT2bis(node,mode)+"<br>\n"+getT3bis(node,mode)+"<br>\n";
+    QString out=getPCAT2bis(node,mode)+"<br>\n"+getPCAT3bis(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    QString out=getT2(node,mode)+"<br>\n"+getT3(node,mode)+"<br>\n";
+    QString out=getPCAT2(node,mode)+"<br>\n"+getPCAT3(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getPresetBase100(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetBase100(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    QString out=getT5(node,mode)+"<br>\n"+getT6(node,mode)+"<br>\n";
+    QString out=getPCAT5(node,mode)+"<br>\n"+getPCAT6(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getPresetDayOfWork(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetDayOfWork(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    QString out=getT7(node,mode)+"<br>\n"+getT9(node,mode)+"<br>\n";
+    QString out=getPCAT7(node,mode)+"<br>\n"+getPCAT9(node,mode)+"<br>\n";
     return out;
 }
-
-
-
 

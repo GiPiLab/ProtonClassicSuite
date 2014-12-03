@@ -314,6 +314,10 @@ QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits)
 
 QString formatDouble(double num, int decimals, bool forcedUnits)
 {
+    //Convention
+    if(qIsNaN(num))
+        return "DIV0";
+
     QLocale locale;
     QString out;
 

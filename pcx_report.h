@@ -3,17 +3,35 @@
 
 #include "pcx_tables.h"
 #include "pcx_audit.h"
+#include "pcx_reporting.h"
 #include "pcx_graphics.h"
 
 class PCx_Report
 {
 public:
-    PCx_Report(PCx_Audit *model,QCustomPlot *plot=0,int graphicsWidth=650,int graphicsHeight=400,double scale=1.0);
+
+    //Presets for PCR Reports, each of them except the last one contains tables and graphics
+    enum PCRPRESETS
+    {
+        PCRPRESET_A,
+        PCRPRESET_B,
+        PCRPRESET_C,
+        PCRPRESET_D,
+        PCRPRESET_S
+    };
+
+    explicit PCx_Report(PCx_Audit *auditModel,QCustomPlot *plot=0,int graphicsWidth=650,int graphicsHeight=400,double scale=1.0);
+
+    explicit PCx_Report(PCx_Reporting *reportingModel,QCustomPlot *plot=0,int graphicsWidth=650,int graphicsHeight=400,double scale=1.0);
 
 
-    QString generateHTMLReportForNode(QList<PCx_Tables::PRESETS> listOfTabs, QList<PCx_Tables::TABLES> listOfTables, QList<PCx_Graphics::GRAPHICS> listOfGraphics,
+    QString generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs, QList<PCx_Tables::PCATABLES> listOfTables, QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
                                       unsigned int selectedNode, MODES::DFRFDIRI mode,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
                                       const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
+
+
+    QString generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets,unsigned int selectedNode, MODES::DFRFDIRI mode, QTextDocument *document=nullptr,
+                                               const QString &absoluteImagePath="",const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
     QString generateHTMLTOC(QList<unsigned int> nodes) const;
 
@@ -24,7 +42,8 @@ public:
 
 
 private:
-    PCx_Audit *model;
+    PCx_Audit *auditModel;
+    PCx_Reporting *reportingModel;
     PCx_Tables tables;
     PCx_Graphics graphics;
 

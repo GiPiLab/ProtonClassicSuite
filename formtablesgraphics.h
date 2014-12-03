@@ -61,8 +61,8 @@ private:
     PCx_AuditWithTreeModel *model;
     PCx_Report *report;
 
-    QList<PCx_Tables::PRESETS> selectedTabs;
-    QList<PCx_Graphics::GRAPHICS> selectedGraphics;
+    QList<PCx_Tables::PCAPRESETS> selectedTabs;
+    QList<PCx_Graphics::PCAGRAPHICS> selectedGraphics;
     MODES::DFRFDIRI selectedMode;
 
     bool ready;

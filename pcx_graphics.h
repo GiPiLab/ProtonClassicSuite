@@ -29,43 +29,37 @@ public:
 
     static const int DEFAULTALPHA=70;
 
-    enum GRAPHICS
+    enum PCAGRAPHICS
     {
-        G1,
-        G2,
-        G3,
-        G4,
-        G5,
-        G6,
-        G7,
-        G8,
-        G9,
-        PCRG1
+        PCAG1,
+        PCAG2,
+        PCAG3,
+        PCAG4,
+        PCAG5,
+        PCAG6,
+        PCAG7,
+        PCAG8,
+        PCAG9
     };
 
     PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     virtual ~PCx_Graphics();
 
-    QString getG1(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false);}
-    QString getG3(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::REALISES,false);}
-    QString getG5(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::ENGAGES,false);}
-    QString getG7(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,false);}
+    QString getPCAG1(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false);}
+    QString getPCAG3(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,false);}
+    QString getPCAG5(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,false);}
+    QString getPCAG7(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,false);}
 
-    QString getG2(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::OUVERTS,true);}
-    QString getG4(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::REALISES,true);}
-    QString getG6(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::ENGAGES,true);}
-    QString getG8(unsigned int node,MODES::DFRFDIRI mode) const {return getG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true);}
+    QString getPCAG2(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,true);}
+    QString getPCAG4(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,true);}
+    QString getPCAG6(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,true);}
+    QString getPCAG8(unsigned int node,MODES::DFRFDIRI mode) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true);}
 
-    QString getG9(unsigned int node) const;
-
-
+    QString getPCAG9(unsigned int node) const;
 
 
     QString getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
-
-
-
 
 
     QCustomPlot * getPlot() const{return plot;}
@@ -95,7 +89,7 @@ private:
     PCx_Reporting *reportingModel;
 
     //Returns the title of the graphic in html
-    QString getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const;
+    QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const;
     bool ownPlot;
     int graphicsWidth,graphicsHeight;
     double scale;

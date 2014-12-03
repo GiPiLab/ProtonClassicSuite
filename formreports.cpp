@@ -30,52 +30,52 @@ void FormReports::populateLists()
 {
     QListWidgetItem *item;
     item=new QListWidgetItem(tr("Récapitulatif"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T1);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT1);
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T2);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT2);
     item=new QListWidgetItem(tr("Évolution du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T2BIS);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT2BIS);
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T3);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT3);
     item=new QListWidgetItem(tr("Évolution du compte administratif de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T3BIS);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT3BIS);
     item=new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T4);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT4);
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T5);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT5);
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T6);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT6);
     item=new QListWidgetItem(tr("Transcription en \"jours/activité\" de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T7);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT7);
     item=new QListWidgetItem(tr("Moyennes budgétaires de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T8);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT8);
     item=new QListWidgetItem(tr("Equivalences moyennes en \"jours activité\" de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T9);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT9);
     item=new QListWidgetItem(tr("Résultats de fonctionnement de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T10);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT10);
     item=new QListWidgetItem(tr("Résultats d'investissement de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T11);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT11);
     item=new QListWidgetItem(tr("Résultats budgétaire de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::T12);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT12);
 
     item=new QListWidgetItem(tr("Évolution comparée du prévu de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G1);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG1);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du prévu de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G2);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG2);
     item=new QListWidgetItem(tr("Évolution comparée du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G3);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG3);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G4);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG4);
     item=new QListWidgetItem(tr("Évolution comparée de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G5);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG5);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G6);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG6);
     item=new QListWidgetItem(tr("Évolution comparée du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G7);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG7);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G8);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::G9);
+    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG9);
 }
 
 void FormReports::onListOfAuditsChanged()
@@ -168,19 +168,19 @@ void FormReports::on_saveButton_clicked()
     QList<QListWidgetItem *>selectedItemsTables=ui->listTables->selectedItems();
     QList<QListWidgetItem *>selectedItemsGraphics=ui->listGraphics->selectedItems();
 
-    QList<PCx_Tables::TABLES> selectedTables;
-    QList<PCx_Graphics::GRAPHICS> selectedGraphics;
+    QList<PCx_Tables::PCATABLES> selectedTables;
+    QList<PCx_Graphics::PCAGRAPHICS> selectedGraphics;
 
     foreach(QListWidgetItem *item, selectedItemsTables)
     {
       //  qDebug()<<"Selecting table "<<item->data(PCx_TreeModel::NodeIdUserRole).toUInt();
-        selectedTables.append((PCx_Tables::TABLES)item->data(PCx_TreeModel::NodeIdUserRole).toUInt());
+        selectedTables.append((PCx_Tables::PCATABLES)item->data(PCx_TreeModel::NodeIdUserRole).toUInt());
     }
 
     foreach(QListWidgetItem *item, selectedItemsGraphics)
     {
       //  qDebug()<<"Selecting graphic "<<item->data(PCx_TreeModel::NodeIdUserRole).toUInt();
-        selectedGraphics.append((PCx_Graphics::GRAPHICS)item->data(PCx_TreeModel::NodeIdUserRole).toUInt());
+        selectedGraphics.append((PCx_Graphics::PCAGRAPHICS)item->data(PCx_TreeModel::NodeIdUserRole).toUInt());
     }
 
     if(selectedTables.isEmpty() && selectedGraphics.isEmpty())
@@ -189,29 +189,29 @@ void FormReports::on_saveButton_clicked()
         return;
     }
 
-    QList<PCx_Tables::TABLES> modeIndependantTables;
-    QList<PCx_Graphics::GRAPHICS> modeIndependantGraphics;
+    QList<PCx_Tables::PCATABLES> modeIndependantTables;
+    QList<PCx_Graphics::PCAGRAPHICS> modeIndependantGraphics;
 
     //Isolate mode-independant tables and graphics
-    if(selectedTables.contains(PCx_Tables::T10))
+    if(selectedTables.contains(PCx_Tables::PCAT10))
     {
-        modeIndependantTables.append(PCx_Tables::T10);
-        selectedTables.removeAll(PCx_Tables::T10);
+        modeIndependantTables.append(PCx_Tables::PCAT10);
+        selectedTables.removeAll(PCx_Tables::PCAT10);
     }
-    if(selectedTables.contains(PCx_Tables::T11))
+    if(selectedTables.contains(PCx_Tables::PCAT11))
     {
-        modeIndependantTables.append(PCx_Tables::T11);
-        selectedTables.removeAll(PCx_Tables::T11);
+        modeIndependantTables.append(PCx_Tables::PCAT11);
+        selectedTables.removeAll(PCx_Tables::PCAT11);
     }
-    if(selectedTables.contains(PCx_Tables::T12))
+    if(selectedTables.contains(PCx_Tables::PCAT12))
     {
-        modeIndependantTables.append(PCx_Tables::T12);
-        selectedTables.removeAll(PCx_Tables::T12);
+        modeIndependantTables.append(PCx_Tables::PCAT12);
+        selectedTables.removeAll(PCx_Tables::PCAT12);
     }
-    if(selectedGraphics.contains(PCx_Graphics::G9))
+    if(selectedGraphics.contains(PCx_Graphics::PCAG9))
     {
-        modeIndependantGraphics.append(PCx_Graphics::G9);
-        selectedGraphics.removeAll(PCx_Graphics::G9);
+        modeIndependantGraphics.append(PCx_Graphics::PCAG9);
+        selectedGraphics.removeAll(PCx_Graphics::PCAG9);
     }
 
 
@@ -309,11 +309,11 @@ void FormReports::on_saveButton_clicked()
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::PRESETS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,MODES::DFRFDIRI::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,MODES::DFRFDIRI::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
         }
         foreach(MODES::DFRFDIRI mode,listModes)
         {
-            output.append(report->generateHTMLReportForNode(QList<PCx_Tables::PRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
             output.append("<br><br><br>");

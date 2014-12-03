@@ -55,7 +55,7 @@ PCx_Graphics::~PCx_Graphics()
 }
 
 
-QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
+QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
     if(auditModel==nullptr)
@@ -300,7 +300,7 @@ QString PCx_Graphics::getG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit
     return plotTitle;
 }
 
-QString PCx_Graphics::getG9(unsigned int node) const
+QString PCx_Graphics::getPCAG9(unsigned int node) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
     if(auditModel==nullptr)

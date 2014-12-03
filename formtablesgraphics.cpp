@@ -90,7 +90,7 @@ void FormTablesGraphics::updateTextBrowser()
 
     QString output=model->generateHTMLHeader();
     output.append(model->generateHTMLAuditTitle());
-    output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,selectedNode,selectedMode,doc));
+    output.append(report->generateHTMLAuditReportForNode(selectedTabs,QList<PCx_Tables::PCATABLES>(),selectedGraphics,selectedNode,selectedMode,doc));
     output.append("</body></html>");
     doc->setHtml(output);
     sb->setValue(sbval);
@@ -127,52 +127,52 @@ void FormTablesGraphics::getSelections()
     if(selectedMode!=MODES::DFRFDIRI::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
-            selectedTabs.append(PCx_Tables::OVERVIEW);
+            selectedTabs.append(PCx_Tables::PCAOVERVIEW);
 
         if(ui->checkBoxEvolution->isChecked())
-            selectedTabs.append(PCx_Tables::EVOLUTION);
+            selectedTabs.append(PCx_Tables::PCAEVOLUTION);
 
         if(ui->checkBoxEvolutionCumul->isChecked())
-            selectedTabs.append(PCx_Tables::EVOLUTIONCUMUL);
+            selectedTabs.append(PCx_Tables::PCAEVOLUTIONCUMUL);
 
         if(ui->checkBoxBase100->isChecked())
-            selectedTabs.append(PCx_Tables::BASE100);
+            selectedTabs.append(PCx_Tables::PCABASE100);
 
         if(ui->checkBoxJoursAct->isChecked())
-            selectedTabs.append(PCx_Tables::DAYOFWORK);
+            selectedTabs.append(PCx_Tables::PCADAYOFWORK);
 
         if(ui->checkBoxPrevu->isChecked())
-            selectedGraphics.append(PCx_Graphics::G1);
+            selectedGraphics.append(PCx_Graphics::PCAG1);
 
         if(ui->checkBoxPrevuCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::G2);
+            selectedGraphics.append(PCx_Graphics::PCAG2);
 
         if(ui->checkBoxRealise->isChecked())
-            selectedGraphics.append(PCx_Graphics::G3);
+            selectedGraphics.append(PCx_Graphics::PCAG3);
 
         if(ui->checkBoxRealiseCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::G4);
+            selectedGraphics.append(PCx_Graphics::PCAG4);
 
         if(ui->checkBoxEngage->isChecked())
-            selectedGraphics.append(PCx_Graphics::G5);
+            selectedGraphics.append(PCx_Graphics::PCAG5);
 
         if(ui->checkBoxEngageCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::G6);
+            selectedGraphics.append(PCx_Graphics::PCAG6);
 
         if(ui->checkBoxDisponible->isChecked())
-            selectedGraphics.append(PCx_Graphics::G7);
+            selectedGraphics.append(PCx_Graphics::PCAG7);
 
         if(ui->checkBoxDisponibleCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::G8);
+            selectedGraphics.append(PCx_Graphics::PCAG8);
     }
 
     else
     {
         if(ui->checkBoxResults->isChecked())
-            selectedTabs.append(PCx_Tables::RESULTS);
+            selectedTabs.append(PCx_Tables::PCARESULTS);
 
         if(ui->checkBoxRecapGraph->isChecked())
-            selectedGraphics.append(PCx_Graphics::G9);
+            selectedGraphics.append(PCx_Graphics::PCAG9);
     }
 }
 
@@ -319,7 +319,7 @@ void FormTablesGraphics::on_saveButton_clicked()
     //Generate report in non-embedded mode, saving images
     QString output=model->generateHTMLHeader();
     output.append(model->generateHTMLAuditTitle());
-    output.append(report->generateHTMLReportForNode(selectedTabs,QList<PCx_Tables::TABLES>(),selectedGraphics,node,selectedMode,nullptr,absoluteImagePath,relativeImagePath,&progress));
+    output.append(report->generateHTMLAuditReportForNode(selectedTabs,QList<PCx_Tables::PCATABLES>(),selectedGraphics,node,selectedMode,nullptr,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
 

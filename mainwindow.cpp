@@ -385,7 +385,7 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
         }
 
-        foreach(FormReportingOverview *dlg,listOfFormReportingTables)
+        foreach(FormReportingOverview *dlg,listOfFormReportingOverview)
         {
             connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
         }
@@ -398,19 +398,22 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
         {
             connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
         }
+        foreach(FormReportingExplore *dlg,listOfFormReportingExplore)
+        {
+            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        }
         //FIXME : connect !
-
     }
 }
 
-void MainWindow::on_actionExploreReportings_triggered()
+void MainWindow::on_actionReportingOverview_triggered()
 {
     FormReportingOverview *dlg=new FormReportingOverview();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     ui->mdiArea->addSubWindow(dlg);
     dlg->show();
-    listOfFormReportingTables.append(dlg);
+    listOfFormReportingOverview.append(dlg);
 
     connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingTablesWindowsDestroyed(QObject *)));
 
@@ -423,7 +426,7 @@ void MainWindow::on_actionExploreReportings_triggered()
 
 void MainWindow::onFormReportingTablesWindowsDestroyed(QObject *obj)
 {
-    listOfFormReportingTables.removeAt(listOfFormReportingTables.indexOf(static_cast<FormReportingOverview *>(obj)));
+    listOfFormReportingOverview.removeAt(listOfFormReportingOverview.indexOf(static_cast<FormReportingOverview *>(obj)));
 }
 
 void MainWindow::onFormReportingSupervisionWindowsDestroyed(QObject *obj)
@@ -434,6 +437,11 @@ void MainWindow::onFormReportingSupervisionWindowsDestroyed(QObject *obj)
 void MainWindow::onFormReportingGraphicsWindowsDestroyed(QObject *obj)
 {
     listOfFormReportingGraphics.removeAt(listOfFormReportingGraphics.indexOf(static_cast<FormReportingGraphics *>(obj)));
+}
+
+void MainWindow::onFormReportingExploreWindowsDestroyed(QObject *obj)
+{
+    listOfFormReportingExplore.removeAt(listOfFormReportingExplore.indexOf(static_cast<FormReportingExplore *>(obj)));
 }
 
 
@@ -470,4 +478,22 @@ void MainWindow::on_actionGraphiques_triggered()
     {
         connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
     }
+}
+
+void MainWindow::on_actionExploreReportings_triggered()
+{
+    FormReportingExplore *dlg=new FormReportingExplore();
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    ui->mdiArea->addSubWindow(dlg);
+    dlg->show();
+    listOfFormReportingExplore.append(dlg);
+
+    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingExploreWindowsDestroyed(QObject *)));
+
+    if(formManageReportings!=nullptr)
+    {
+        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+    }
+
 }

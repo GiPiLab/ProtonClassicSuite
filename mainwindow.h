@@ -2,9 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QMdiSubWindow>
 #include <QList>
 
+#include "formreportingexplore.h"
 #include "formreportingsupervision.h"
 #include "formreportinggraphics.h"
 #include "formmanagereportings.h"
@@ -71,15 +71,19 @@ private slots:
 
     void on_actionGestion_des_reportings_triggered();
 
-    void on_actionExploreReportings_triggered();
+    void on_actionReportingOverview_triggered();
 
     void onFormReportingTablesWindowsDestroyed(QObject *obj);
     void onFormReportingSupervisionWindowsDestroyed(QObject *obj);
     void onFormReportingGraphicsWindowsDestroyed(QObject *obj);
+    void onFormReportingExploreWindowsDestroyed(QObject *obj);
+
 
     void on_actionSurveillance_des_reportings_triggered();
 
     void on_actionGraphiques_triggered();
+
+    void on_actionExploreReportings_triggered();
 
 private:
 
@@ -96,9 +100,10 @@ private:
     //Multiple "tables" dialogs are allowed
     QList<FormTablesGraphics *>listOfFormTablesGraphics;
 
-    QList<FormReportingOverview *>listOfFormReportingTables;
+    QList<FormReportingOverview *>listOfFormReportingOverview;
     QList<FormReportingSupervision *>listOfFormReportingSupervision;
     QList<FormReportingGraphics *>listOfFormReportingGraphics;
+    QList<FormReportingExplore *>listOfFormReportingExplore;
 
     QList<FormQueries *>listOfFormQueries;
     QString recentDb;
