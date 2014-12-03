@@ -136,7 +136,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
 QVariant PCx_ReportingTableOverviewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     QVariant value=QSqlQueryModel::headerData(section,orientation,role);
-    if(value.isValid()&& role==Qt::DisplayRole)
+    if(value.isValid()&& role==Qt::DisplayRole && orientation==Qt::Horizontal)
     {
         QString val=value.toString();
         if(val!="date")

@@ -46,8 +46,7 @@ QVariant PCx_NodeSimilarityTableModel::data(const QModelIndex &index, int role) 
 
 QVariant PCx_NodeSimilarityTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    Q_UNUSED(orientation);
-    if(role==Qt::DisplayRole)
+    if(role==Qt::DisplayRole && orientation==Qt::Horizontal)
     {
         switch(section)
         {

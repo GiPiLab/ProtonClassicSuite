@@ -1073,7 +1073,7 @@ PCx_Reporting::OREDPCR PCx_Reporting::OREDPCRFromTableString(const QString &ored
     if(ored==OREDPCRtoTableString(OREDPCR::BUDGETVOTE))
         return OREDPCR::BUDGETVOTE;
 
-    qWarning()<<"Invalid ORED string specified, defaulting to NONE";
+    qWarning()<<"Invalid ORED string"<<ored<<"specified, defaulting to NONE";
     return OREDPCR::NONELAST;
 }
 

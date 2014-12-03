@@ -261,6 +261,19 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     {
         output.append(tables.getPCRProvenance(selectedNode,mode));
     }
+
+    if(listOfPresets.contains(PCRPRESETS::PCRPRESET_S))
+    {
+        output.append("<p>Synthèse de fonctionnement (RF-DF)</p>");
+        output.append(tables.getPCRRFDF(selectedNode));
+        output.append("<p>Synthèse d'investissement (RI-DI)</p>");
+        output.append(tables.getPCRRIDI(selectedNode));
+        output.append("<p>Synthèse globale (RF-DF)+(RI-DI)</p>");
+        output.append(tables.getPCRRFDFRIDI(selectedNode));
+
+    }
+
+
     return output;
 
 }
