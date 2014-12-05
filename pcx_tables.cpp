@@ -1186,7 +1186,7 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
 
         qint64 sum=bp+reports+ocdm+vcdm+vInt;
 
-        QString out=QString("<table cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Part des cr&eacute;dits ouverts</th></tr>"
+        QString out=QString("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Part des cr&eacute;dits ouverts</th></tr>"
                             "<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(bp))
@@ -1221,17 +1221,314 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
 
 QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) const
 {
+    QSqlQuery q;
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date desc limit 1").arg(MODES::modeToTableString(mode)).arg(reportingModel->getReportingId()));
+    q.bindValue(":idnode",node);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    double percentOCDM=NAN,percentVCDM=NAN,percentVINT=NAN,sumPercent=NAN;
+
+    if(q.next())
+    {
+        unsigned int dateTimeT=q.value("date").toUInt();
+        QDate laDate=QDateTime::fromTime_t(dateTimeT).date();
+        qint64 bp=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::BP)).toLongLong();
+        qint64 ocdm=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OCDM)).toLongLong();
+        qint64 vcdm=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::VCDM)).toLongLong();
+        qint64 vInt=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES)).toLongLong();
+        if(bp!=0)
+        {
+            percentOCDM=(double)ocdm/(double)bp*100.0;
+            percentVCDM=(double)vcdm/(double)bp*100.0;
+            percentVINT=(double)vInt/(double)bp*100.0;
+            sumPercent=percentOCDM+percentVCDM+percentVINT;
+        }
+
+        qint64 sum=ocdm+vcdm+vInt;
+
+        QString out=QString("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Variation en \% du BP</th></tr>");
+
+        out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(ocdm))
+                .arg(NUMBERSFORMAT::formatDouble(percentOCDM)));
+        out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(vcdm))
+                .arg(NUMBERSFORMAT::formatDouble(percentVCDM)));
+        out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true))
+                .arg(NUMBERSFORMAT::formatFixedPoint(vInt))
+                .arg(NUMBERSFORMAT::formatDouble(percentVINT)));
+        out.append(QString("<tr><td class='t1annee'><b>TOTAL</b></td><td align='right'  class='t1valeur'><b>%1</b></td><td align='right'  class='t1pourcent'><b>%2 \%</b></td></tr></table>")
+                   .arg(NUMBERSFORMAT::formatFixedPoint(sum))
+                   .arg(NUMBERSFORMAT::formatDouble(sumPercent))
+                   );
+
+        out.prepend(QString("<p>Entre le 1er janvier et le %1, date de la dernière situation PCR, les crédits alloués au budget primitif à <b>%2</b> ont "
+                            "enregistré une variation de %3 €, correspondant à %4 \% de l'autorisation d'origine</p>")
+                    .arg(laDate.toString(Qt::DefaultLocaleShortDate))
+                    .arg(reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+                    .arg(NUMBERSFORMAT::formatFixedPoint(sum))
+                    .arg(NUMBERSFORMAT::formatDouble(sumPercent)));
+
+        return out;
+    }
+
+    qDebug()<<"Missing data";
+    return QString();
 
 }
 
 QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) const
 {
+    QSqlQuery q;
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date desc limit 1").arg(MODES::modeToTableString(mode)).arg(reportingModel->getReportingId()));
+    q.bindValue(":idnode",node);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    double percentRealises=NAN,percentEngages=NAN,percentDispo=NAN,percentNonUtilise=NAN,percentUtilise=NAN;
+
+    if(q.next())
+    {
+        //unsigned int dateTimeT=q.value("date").toUInt();
+        //QDate laDate=QDateTime::fromTime_t(dateTimeT).date();
+        qint64 ouverts=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)).toLongLong();
+        qint64 realises=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)).toLongLong();
+        qint64 engages=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::ENGAGES)).toLongLong();
+        qint64 disponibles=q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::DISPONIBLES)).toLongLong();
+        qint64 nonUtilise=engages+disponibles;
+        qint64 utilise=realises+engages;
+        if(ouverts!=0)
+        {
+            percentRealises=(double)realises/(double)ouverts*100.0;
+            percentEngages=(double)engages/(double)ouverts*100.0;
+            percentDispo=(double)disponibles/(double)ouverts*100.0;
+            percentNonUtilise=(double)nonUtilise/(double)ouverts*100.0;
+            percentUtilise=(double)utilise/(double)ouverts*100.0;
+        }
+
+
+        //First table
+        QString outGlob="<table align='center' cellspacing='5' width='80%'><tr><td>";
+
+        QString out=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage des crédits ouverts</th></tr>");
+
+        out.append("<tr><td colspan='3' class='t1annee'>UTILISÉ</td></tr>");
+
+        out.append(QString("<tr><td class='t1annee' align='right'>=> Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(realises))
+                .arg(NUMBERSFORMAT::formatDouble(percentRealises)));
+        //out.append("<tr><td colspan='3'>&nbsp;</td></tr>");
+        out.append(QString("<tr><td class='t1annee'>NON UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(nonUtilise))
+                .arg(NUMBERSFORMAT::formatDouble(percentNonUtilise)));
+        out.append(QString("<tr><td class='t1annee' align='right'>=> Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(engages))
+                .arg(NUMBERSFORMAT::formatDouble(percentEngages)));
+        out.append(QString("<tr><td class='t1annee' align='right'>=> Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
+                .arg(NUMBERSFORMAT::formatDouble(percentDispo)));
+
+        outGlob.append(out);
+        outGlob.append("</td><td>");
+
+
+
+        QString out2=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage des crédits ouverts</th></tr>");
+        out2.append(QString("<tr><td class='t1annee'>UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(utilise))
+                .arg(NUMBERSFORMAT::formatDouble(percentUtilise)));
+        out2.append(QString("<tr><td class='t1annee' align='right'>=> Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(realises))
+                .arg(NUMBERSFORMAT::formatDouble(percentRealises)));
+        out2.append(QString("<tr><td class='t1annee' align='right'>=> Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(engages))
+                .arg(NUMBERSFORMAT::formatDouble(percentEngages)));
+        //out2.append("<tr><td colspan='3'>&nbsp;</td></tr>");
+
+
+        out2.append("<tr><td colspan='3' class='t1annee'>NON UTILISÉ</td></tr>");
+
+        out2.append(QString("<tr><td class='t1annee' align='right'>=> Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
+                .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
+                .arg(NUMBERSFORMAT::formatDouble(percentDispo)));
+
+        outGlob.append(out2);
+        outGlob.append("</td></tr></table>");
+
+        return outGlob;
+    }
+
+    qDebug()<<"Missing data";
+    return QString();
 
 }
 
 QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const
 {
+    QSqlQuery q;
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date desc limit 1").arg(MODES::modeToTableString(mode)).arg(reportingModel->getReportingId()));
+    q.bindValue(":idnode",node);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
 
+    if(q.next())
+    {
+        unsigned int dateTimeT=q.value("date").toUInt();
+        QDate laDate=QDateTime::fromTime_t(dateTimeT).date();
+        double ouverts=NUMBERSFORMAT::fixedPointToDouble(q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)).toLongLong());
+        double realises=NUMBERSFORMAT::fixedPointToDouble(q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)).toLongLong());
+
+        double journ=ouverts/365;
+        double hebd=journ*7;
+        double mens=ouverts/12;
+
+        int nbJoursDepuisDebutAnnee=laDate.dayOfYear();
+        double journReal=realises/nbJoursDepuisDebutAnnee;
+        double hebdReal=journReal*7;
+        double mensReal=journReal*365/12;
+
+        QString out=QString("<ol><li>Utilisation <b>théorique</b> moyenne des crédits :<ul>"
+                            "<li>journalière = <b>%1</b> €</li>"
+                            "<li>hebdomadaire = <b>%2</b> €</li>"
+                            "<li>mensuelle = <b>%3</b> €</li>"
+                            "<li>trimestrielle = <b>%4</b> €</li>"
+                            "<li>semestrielle = <b>%5</b> €</li>"
+                            "<li>annuelle = <b>%6</b> €</li>"
+                            "</ul></li>")
+                .arg(NUMBERSFORMAT::formatDouble(journ))
+                .arg(NUMBERSFORMAT::formatDouble(hebd))
+                .arg(NUMBERSFORMAT::formatDouble(mens))
+                .arg(NUMBERSFORMAT::formatDouble(mens*3))
+                .arg(NUMBERSFORMAT::formatDouble(mens*6))
+                .arg(NUMBERSFORMAT::formatDouble(ouverts));
+
+        out.append(QString("<li>Utilisation <b>effective</b> moyenne des crédits :<ul>"
+                           "<li>journalière = <b>%1</b> €</li>")
+                   .arg(NUMBERSFORMAT::formatDouble(journReal)));
+
+        if(nbJoursDepuisDebutAnnee<7)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>hebdomadaire = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(hebdReal)));
+        }
+        else
+        {
+            out.append(QString("<li>hebdomadaire = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble(hebdReal)));
+        }
+
+        if(nbJoursDepuisDebutAnnee<30)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>mensuelle = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal)));
+        }
+        else
+        {
+            out.append(QString("<li>mensuelle = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal)));
+        }
+        if(nbJoursDepuisDebutAnnee<91)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>trimestrielle = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal*3)));
+        }
+        else
+        {
+            out.append(QString("<li>trimestrielle = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal*3)));
+        }
+
+        if(nbJoursDepuisDebutAnnee<182)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>semestrielle = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal*6)));
+        }
+        else
+        {
+            out.append(QString("<li>semestrielle = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal*6)));
+        }
+
+        out.append(QString("<li><em><span style='color:#aaa'>annuelle = <b>%1</b> €</span></em></li></ul></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(journReal*365)));
+
+
+        out.append(QString("<li>Écart entre les utilisations <b>effective</b> et <b>théorique</b> moyennes des crédits :<ul>"
+                           "<li>journalière = <b>%1</b> €</li>")
+                   .arg(NUMBERSFORMAT::formatDouble(journReal-journ)));
+        if(nbJoursDepuisDebutAnnee<7)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>hebdomadaire = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(hebdReal-hebd)));
+        }
+        else
+        {
+            out.append(QString("<li>hebdomadaire = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble(hebdReal-hebd)));
+        }
+
+        if(nbJoursDepuisDebutAnnee<30)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>mensuelle = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal-mens)));
+        }
+        else
+        {
+            out.append(QString("<li>mensuelle = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble(mensReal-mens)));
+        }
+        if(nbJoursDepuisDebutAnnee<91)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>trimestrielle = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble((mensReal*3)-(mens*3))));
+        }
+        else
+        {
+            out.append(QString("<li>trimestrielle = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble((mensReal*3)-(mens*3))));
+        }
+
+        if(nbJoursDepuisDebutAnnee<182)
+        {
+            out.append(QString("<li><em><span style='color:#aaa'>semestrielle = <b>%1</b> €</span></em></li>")
+                       .arg(NUMBERSFORMAT::formatDouble((mensReal*6)-(mens*6))));
+        }
+        else
+        {
+            out.append(QString("<li>semestrielle = <b>%1</b> €</li>")
+                       .arg(NUMBERSFORMAT::formatDouble((mensReal*6)-(mens*6))));
+        }
+
+        out.append(QString("<li><em><span style='color:#aaa'>annuelle = <b>%1</b> €</span></em></li></ul></li>")
+                       .arg(NUMBERSFORMAT::formatDouble((journReal*365)-(journ*365))));
+
+        if(q.value("ouverts").toLongLong()!=0)
+        {
+            out.append(QString("<li>Taux d'écart constaté le %1, date de la dernière situation PCR = <b>%2 \%</b></li></ol>")
+                       .arg(laDate.toString(Qt::DefaultLocaleShortDate))
+                       .arg(NUMBERSFORMAT::formatDouble((journReal*365-ouverts)/ouverts*100)));
+
+            out.append("<p>Le taux d'écart signale, s'il est négatif, un cycle à venir, s'il est positif, un cycle en cours ou passé."
+                       " En l'absence de cycle, le taux d'écart anticipe, s'il est positif, une insuffisance de crédits, s'il est négatif un excédent de crédits.</p>");
+        }
+
+        return out;
+    }
+    qDebug()<<"Missing data";
+    return QString();
 }
 
 QString PCx_Tables::getPCRRFDF(unsigned int node) const

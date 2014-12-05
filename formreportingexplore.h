@@ -51,6 +51,7 @@ private:
     void updateListOfReportings();
     QTextDocument *document;
     PCx_Report * report;
+    QSize sizeHint()const;
 
     QList<PCx_Report::PCRPRESETS> getPresets() const;
     MODES::DFRFDIRI getSelectedMode() const;

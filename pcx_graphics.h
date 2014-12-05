@@ -60,6 +60,7 @@ public:
 
 
     QString getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
+    QString getPCRHistoPercent(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color)const;
 
 
     QCustomPlot * getPlot() const{return plot;}

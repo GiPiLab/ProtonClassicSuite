@@ -56,6 +56,11 @@ void FormReportingExplore::updateListOfReportings()
     this->on_comboListReportings_activated(0);
 }
 
+QSize FormReportingExplore::sizeHint() const
+{
+    return QSize(1000,500);
+}
+
 void FormReportingExplore::on_comboListReportings_activated(int index)
 {
     if(index==-1 || ui->comboListReportings->count()==0)return;
@@ -74,7 +79,15 @@ void FormReportingExplore::on_comboListReportings_activated(int index)
     {
         delete report;
     }
-    report=new PCx_Report(selectedReporting);
+
+
+
+    QSettings settings;
+    int graphicsWidth=settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt();
+    int graphicsHeight=settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt();
+
+    report=new PCx_Report(selectedReporting,0,graphicsWidth,graphicsHeight,1.0);
+
 
     document->clear();
 
@@ -123,11 +136,18 @@ MODES::DFRFDIRI FormReportingExplore::getSelectedMode() const
 
 void FormReportingExplore::updateTextEdit()
 {
+
+    QScrollBar *sb=ui->textEdit->verticalScrollBar();
+    int sbval=sb->value();
+
     QString output=selectedReporting->generateHTMLHeader()+selectedReporting->generateHTMLReportingTitle();
+    document->clear();
 
-    output.append(report->generateHTMLReportingReportForNode(getPresets(),selectedNode,getSelectedMode()));
+    output.append(report->generateHTMLReportingReportForNode(getPresets(),selectedNode,getSelectedMode(),document));
+    document->setHtml(output);
 
-    ui->textEdit->setHtml(output);
+    ui->textEdit->setDocument(document);
+    sb->setValue(sbval);
 }
 
 

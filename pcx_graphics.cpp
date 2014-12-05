@@ -595,8 +595,6 @@ QString PCx_Graphics::getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode
     plot->legend->setRowSpacing(-5);
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignRight);
 
-
-
     plot->xAxis->setAutoTicks(true);
 
     plot->xAxis->setAutoTickLabels(true);
@@ -614,6 +612,104 @@ QString PCx_Graphics::getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode
 
 
     plot->replot();
+    return plotTitle;
+}
+
+QString PCx_Graphics::getPCRHistoPercent(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,QColor color) const
+{
+    if(reportingModel==nullptr)
+    {
+        qDebug()<<"Model error";
+        return QString();
+    }
+
+    plot->clearItems();
+    plot->clearGraphs();
+    plot->clearPlottables();
+
+    QCPPlotTitle * title;
+    if(plot->plotLayout()->elementCount()==1)
+    {
+        plot->plotLayout()->insertRow(0);
+        title=new QCPPlotTitle(plot,plotTitle);
+        title->setFont(QFont(QFont().family(),12));
+        plot->plotLayout()->addElement(0,0,title);
+    }
+    else
+    {
+        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+        title->setText(plotTitle);
+    }
+
+    QCPBars *bars=new QCPBars(plot->xAxis,plot->yAxis);
+    plot->addPlottable(bars);
+
+    QPen pen;
+    pen.setWidth(0);
+
+    int alpha=getAlpha();
+
+    pen.setColor(color);
+    bars->setPen(pen);
+    color.setAlpha(alpha);
+    bars->setBrush(color);
+
+
+    QSqlQuery q;
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:id_node order by date desc limit 1")
+              .arg(MODES::modeToTableString(mode))
+              .arg(reportingModel->getReportingId()));
+    q.bindValue(":id_node",selectedNodeId);
+    q.exec();
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    QVector<double> ticks;
+    QVector<QString> labels;
+    QVector<double> values;
+
+    int i=1;
+    foreach(PCx_Reporting::OREDPCR ored,selectedOREDPCR)
+    {
+        labels.append(PCx_Reporting::OREDPCRtoCompleteString(ored));
+        ticks.append(i++);
+
+    }
+
+    while(q.next())
+    {
+            qint64 refVal=q.value(PCx_Reporting::OREDPCRtoTableString(oredReference)).toLongLong();
+            if(refVal==0)
+                return plotTitle;
+
+            foreach(PCx_Reporting::OREDPCR ored,selectedOREDPCR)
+            {
+                qint64 val=q.value(PCx_Reporting::OREDPCRtoTableString(ored)).toLongLong();
+                values.append((double)val/(double)refVal*100.0);
+            }
+    }
+
+    bars->setData(ticks,values);
+
+    plot->legend->setVisible(false);
+
+    plot->xAxis->setAutoTicks(false);
+    plot->xAxis->setAutoTickLabels(false);
+    plot->yAxis->setLabel("%");
+    plot->xAxis->setTickLength(0,0);
+    plot->xAxis->grid()->setVisible(false);
+    //plot->xAxis->setTickLabelRotation(90);
+    plot->xAxis->setTickVector(ticks);
+    plot->xAxis->setTickVectorLabels(labels);
+    plot->xAxis->setSubTickCount(0);
+    //plot->graph()->rescaleAxes();
+    plot->xAxis->setRange(0,ticks.count()+1);
+    plot->yAxis->rescale();
+    //plot->yAxis->setRange(0,150);
+
     return plotTitle;
 }
 

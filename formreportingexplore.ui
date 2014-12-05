@@ -19,7 +19,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QComboBox" name="comboListReportings"/>
@@ -43,7 +43,7 @@
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButtonDF">
             <property name="text">
-             <string>DF</string>
+             <string>Dépense fonc.</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -53,21 +53,21 @@
           <item row="0" column="1">
            <widget class="QRadioButton" name="radioButtonRF">
             <property name="text">
-             <string>RF</string>
+             <string>Recettes fonc.</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
            <widget class="QRadioButton" name="radioButtonDI">
             <property name="text">
-             <string>DI</string>
+             <string>Dépenses invest.</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
            <widget class="QRadioButton" name="radioButtonRI">
             <property name="text">
-             <string>RI</string>
+             <string>Recettes invest.</string>
             </property>
            </widget>
           </item>
@@ -77,41 +77,44 @@
        <item>
         <widget class="QGroupBox" name="groupBoxFields">
          <property name="title">
-          <string>Champs</string>
+          <string>Crédits</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="0" column="0">
            <widget class="QCheckBox" name="checkBoxA">
             <property name="text">
-             <string>A</string>
+             <string>Provenances</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QCheckBox" name="checkBoxB">
             <property name="text">
-             <string>B</string>
+             <string>Variations</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="checkBoxC">
             <property name="text">
-             <string>C</string>
+             <string>Utilisations</string>
             </property>
            </widget>
           </item>
           <item row="1" column="1">
            <widget class="QCheckBox" name="checkBoxD">
             <property name="text">
-             <string>D</string>
+             <string>Cycles et écarts</string>
             </property>
            </widget>
           </item>
           <item row="2" column="0" colspan="2">
            <widget class="QCheckBox" name="checkBoxS">
             <property name="text">
-             <string>S</string>
+             <string>Synthèse</string>
             </property>
            </widget>
           </item>
@@ -120,7 +123,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QTextEdit" name="textEdit">
