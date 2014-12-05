@@ -44,6 +44,8 @@ private slots:
 
     void on_radioButtonRI_toggled(bool checked);
 
+    void on_pushButtonExport_clicked();
+
 private:
     Ui::FormReportingExplore *ui;
     PCx_ReportingWithTreeModel *selectedReporting;

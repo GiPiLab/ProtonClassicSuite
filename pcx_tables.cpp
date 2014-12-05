@@ -1318,23 +1318,23 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
 
         //First table
-        QString outGlob="<table align='center' cellspacing='5' width='80%'><tr><td>";
+        QString outGlob="<table align='center' cellspacing='5'><tr><td>";
 
-        QString out=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage des crédits ouverts</th></tr>");
+        QString out=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
 
         out.append("<tr><td colspan='3' class='t1annee'>UTILISÉ</td></tr>");
 
-        out.append(QString("<tr><td class='t1annee' align='right'>=> Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+        out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(realises))
                 .arg(NUMBERSFORMAT::formatDouble(percentRealises)));
         //out.append("<tr><td colspan='3'>&nbsp;</td></tr>");
-        out.append(QString("<tr><td class='t1annee'>NON UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+        out.append(QString("<tr><td class='t1annee'>NON&nbsp;UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(nonUtilise))
                 .arg(NUMBERSFORMAT::formatDouble(percentNonUtilise)));
-        out.append(QString("<tr><td class='t1annee' align='right'>=> Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+        out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(engages))
                 .arg(NUMBERSFORMAT::formatDouble(percentEngages)));
-        out.append(QString("<tr><td class='t1annee' align='right'>=> Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
+        out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
                 .arg(NUMBERSFORMAT::formatDouble(percentDispo)));
 
@@ -1343,22 +1343,22 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
 
 
-        QString out2=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage des crédits ouverts</th></tr>");
+        QString out2=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
         out2.append(QString("<tr><td class='t1annee'>UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(utilise))
                 .arg(NUMBERSFORMAT::formatDouble(percentUtilise)));
-        out2.append(QString("<tr><td class='t1annee' align='right'>=> Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+        out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(realises))
                 .arg(NUMBERSFORMAT::formatDouble(percentRealises)));
-        out2.append(QString("<tr><td class='t1annee' align='right'>=> Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
+        out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(engages))
                 .arg(NUMBERSFORMAT::formatDouble(percentEngages)));
         //out2.append("<tr><td colspan='3'>&nbsp;</td></tr>");
 
 
-        out2.append("<tr><td colspan='3' class='t1annee'>NON UTILISÉ</td></tr>");
+        out2.append("<tr><td colspan='3' class='t1annee'>NON&nbsp;UTILISÉ</td></tr>");
 
-        out2.append(QString("<tr><td class='t1annee' align='right'>=> Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
+        out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
                 .arg(NUMBERSFORMAT::formatDouble(percentDispo)));
 

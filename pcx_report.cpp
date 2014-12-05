@@ -333,7 +333,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         {
             QString name="mydata://"+QString::number(qrand());
              document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                            .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
         }
@@ -349,7 +349,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 qCritical()<<"Unable to save "<<imageAbsoluteName;
                 die();
             }
-            output.append(QString("<div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
             if(progress!=nullptr)
                 progress->setValue(++progressValue);
@@ -372,7 +372,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         {
             QString name="mydata://"+QString::number(qrand());
              document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                            .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
         }
@@ -388,7 +388,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 qCritical()<<"Unable to save "<<imageAbsoluteName;
                 die();
             }
-            output.append(QString("<div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
             if(progress!=nullptr)
                 progress->setValue(++progressValue);
@@ -411,7 +411,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         {
             QString name="mydata://"+QString::number(qrand());
              document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                            .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
         }
@@ -427,7 +427,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 qCritical()<<"Unable to save "<<imageAbsoluteName;
                 die();
             }
-            output.append(QString("<div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
             if(progress!=nullptr)
                 progress->setValue(++progressValue);
@@ -447,7 +447,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         {
             QString name="mydata://"+QString::number(qrand());
              document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                            .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
         }
@@ -463,7 +463,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 qCritical()<<"Unable to save "<<imageAbsoluteName;
                 die();
             }
-            output.append(QString("<div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
             if(progress!=nullptr)
                 progress->setValue(++progressValue);
