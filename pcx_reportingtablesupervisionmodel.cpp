@@ -256,7 +256,6 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
     this->disponibles=NUMBERSFORMAT::fixedPointToDouble(disponibles);
     date=QDateTime::fromTime_t(dateTimeT).date();
 
-    //WARNING : Check if +1 is needed
     int nbJoursDepuisDebutAnnee=date.dayOfYear();
     int nbJoursRestants=365-nbJoursDepuisDebutAnnee;
     nb15NRestantes=(int)(floor((double)nbJoursRestants/15.0));

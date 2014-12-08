@@ -70,7 +70,7 @@
     <addaction name="actionGraphiques"/>
     <addaction name="actionSurveillance_des_reportings"/>
     <addaction name="actionExploreReportings"/>
-    <addaction name="actionGenerateur_de_rapports"/>
+    <addaction name="actionReportingGenerateur_de_rapports"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuDataInput"/>
@@ -228,7 +228,7 @@
     <string>Exploration des reportings</string>
    </property>
   </action>
-  <action name="actionGenerateur_de_rapports">
+  <action name="actionReportingGenerateur_de_rapports">
    <property name="text">
     <string>Générateur de rapports</string>
    </property>

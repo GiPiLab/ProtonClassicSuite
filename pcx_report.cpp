@@ -14,8 +14,8 @@ PCx_Report::PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot, int gra
 }
 
 QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs, QList<PCx_Tables::PCATABLES> listOfTables, QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
-                                              unsigned int selectedNode, MODES::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
-                                              const QString &relativeImagePath,QProgressDialog *progress) const
+                                                   unsigned int selectedNode, MODES::DFRFDIRI mode,QTextDocument *document,const QString &absoluteImagePath,
+                                                   const QString &relativeImagePath,QProgressDialog *progress) const
 {
     Q_ASSERT(selectedNode>0);
     if(auditModel==nullptr)
@@ -246,7 +246,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     return output;
 }
 
-QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets, unsigned int selectedNode, MODES::DFRFDIRI mode, QTextDocument *document, const QString &absoluteImagePath, const QString &relativeImagePath, QProgressDialog *progress) const
+QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets, unsigned int selectedNode, MODES::DFRFDIRI mode, bool includeGraphics, QTextDocument *document, const QString &absoluteImagePath, const QString &relativeImagePath, QProgressDialog *progress) const
 {
     if(reportingModel==nullptr)
     {
@@ -299,62 +299,65 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     int graphicsHeight=graphics.getGraphicsHeight()/1.2;
     double scale=graphics.getScale();
 
-    QString nodeName=reportingModel->getAttachedTree()->getNodeName(selectedNode);
-    QString modeName=MODES::modeToCompleteString(mode);
-    QString output=QString("<h2>%1 - %2</h2>").arg(nodeName.toHtmlEscaped())
-            .arg(modeName);
-
-    output.append(tables.getPCRRatioParents(selectedNode,mode));
+    QString output;
 
     if(listOfPresets.contains(PCRPRESETS::PCRPRESET_S))
     {
-        output.append("<h2>Synthèse</h2><h4>Synthèse de fonctionnement (RF-DF)</h4>");
+        output.append("<h4>Synthèse de fonctionnement (RF-DF)</h4>");
         output.append(tables.getPCRRFDF(selectedNode));
         output.append("<h4>Synthèse d'investissement (RI-DI)</h4>");
         output.append(tables.getPCRRIDI(selectedNode));
         output.append("<h4>Synthèse globale (RF-DF)+(RI-DI)</h4>");
         output.append(tables.getPCRRFDFRIDI(selectedNode));
+        listOfPresets.removeAll(PCRPRESETS::PCRPRESET_S);
     }
+
+    if(listOfPresets.isEmpty())
+        return output;
+
+    QString modeName=MODES::modeToCompleteString(mode);
+
+    output.append(QString("<h2>%1</h2>").arg(modeName));
+
+    output.append(tables.getPCRRatioParents(selectedNode,mode));
 
     if(listOfPresets.contains(PCRPRESETS::PCRPRESET_A))
     {
         output.append("<h4>Provenance des crédits</h4>");
         output.append(tables.getPCRProvenance(selectedNode,mode));
 
-        QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::BP,
-                                                    PCx_Reporting::REPORTS,
-                                                    PCx_Reporting::OCDM,
-                                                    PCx_Reporting::VCDM,
-                                                    PCx_Reporting::VIREMENTSINTERNES
-                                                   };
-        graphics.getPCRHistoPercent(selectedNode,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de %1\n(%2)").arg(nodeName).arg(modeName),graphics.getColorDFBar());
-
-        if(inlineImageMode)
+        if(includeGraphics)
         {
-            QString name="mydata://"+QString::number(qrand());
-             document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                           .arg(graphicsWidth).arg(graphicsHeight).arg(name));
+            graphics.getPCRProvenance(selectedNode,mode);
 
-        }
-        else
-        {
-            QString imageName=generateUniqueFileName(suffix);
-            QString imageAbsoluteName=imageName;
-            imageName.prepend(relativeImagePath+"/");
-            imageAbsoluteName.prepend(absoluteImagePath+"/");
-
-            if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+            if(inlineImageMode)
             {
-                qCritical()<<"Unable to save "<<imageAbsoluteName;
-                die();
-            }
-            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                          .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
-            if(progress!=nullptr)
-                progress->setValue(++progressValue);
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
+            }
+            else
+            {
+                QString imageName=generateUniqueFileName(suffix);
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                    die();
+                }
+                output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
+                if(progress!=nullptr)
+                    progress->setValue(++progressValue);
+
+            }
         }
+
     }
 
     if(listOfPresets.contains(PCRPRESETS::PCRPRESET_B))
@@ -362,37 +365,37 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         output.append("<h4>Facteurs de variation des crédits</h4>");
         output.append(tables.getPCRVariation(selectedNode,mode));
 
-        QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::OCDM,
-                                                    PCx_Reporting::VCDM,
-                                                    PCx_Reporting::VIREMENTSINTERNES
-                                                   };
-        graphics.getPCRHistoPercent(selectedNode,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de %1\n(%2)").arg(nodeName).arg(modeName),graphics.getColorRFBar());
-
-        if(inlineImageMode)
+        if(includeGraphics)
         {
-            QString name="mydata://"+QString::number(qrand());
-             document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                           .arg(graphicsWidth).arg(graphicsHeight).arg(name));
+            graphics.getPCRVariation(selectedNode,mode);
 
-        }
-        else
-        {
-            QString imageName=generateUniqueFileName(suffix);
-            QString imageAbsoluteName=imageName;
-            imageName.prepend(relativeImagePath+"/");
-            imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-            if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+            if(inlineImageMode)
             {
-                qCritical()<<"Unable to save "<<imageAbsoluteName;
-                die();
-            }
-            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                          .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
-            if(progress!=nullptr)
-                progress->setValue(++progressValue);
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
+            }
+            else
+            {
+                QString imageName=generateUniqueFileName(suffix);
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                    die();
+                }
+                output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
+                if(progress!=nullptr)
+                    progress->setValue(++progressValue);
+
+            }
         }
     }
 
@@ -401,37 +404,36 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         output.append("<h4>Utilisation des crédits</h4>");
         output.append(tables.getPCRUtilisation(selectedNode,mode));
 
-        QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::REALISES,
-                                                    PCx_Reporting::ENGAGES,
-                                                    PCx_Reporting::DISPONIBLES
-                                                   };
-        graphics.getPCRHistoPercent(selectedNode,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de %1\n(%2)").arg(nodeName).arg(modeName),graphics.getColorDIBar());
-
-        if(inlineImageMode)
+        if(includeGraphics)
         {
-            QString name="mydata://"+QString::number(qrand());
-             document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                           .arg(graphicsWidth).arg(graphicsHeight).arg(name));
+            graphics.getPCRUtilisation(selectedNode,mode);
 
-        }
-        else
-        {
-            QString imageName=generateUniqueFileName(suffix);
-            QString imageAbsoluteName=imageName;
-            imageName.prepend(relativeImagePath+"/");
-            imageAbsoluteName.prepend(absoluteImagePath+"/");
-
-            if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+            if(inlineImageMode)
             {
-                qCritical()<<"Unable to save "<<imageAbsoluteName;
-                die();
-            }
-            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                          .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
-            if(progress!=nullptr)
-                progress->setValue(++progressValue);
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
+            }
+            else
+            {
+                QString imageName=generateUniqueFileName(suffix);
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                    die();
+                }
+                output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
+                if(progress!=nullptr)
+                    progress->setValue(++progressValue);
+
+            }
         }
 
     }
@@ -440,34 +442,37 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     {
         output.append("<h4>Détection des cycles et des écarts</h4>");
         output.append(tables.getPCRCycles(selectedNode,mode));
-        QList<PCx_Reporting::OREDPCR> oredPCR={PCx_Reporting::OREDPCR::OUVERTS,PCx_Reporting::OREDPCR::REALISES};
-        graphics.getPCRG1(selectedNode,mode,oredPCR);
 
-        if(inlineImageMode)
+        if(includeGraphics)
         {
-            QString name="mydata://"+QString::number(qrand());
-             document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
-             output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                           .arg(graphicsWidth).arg(graphicsHeight).arg(name));
+            graphics.getPCRCycles(selectedNode,mode);
 
-        }
-        else
-        {
-            QString imageName=generateUniqueFileName(suffix);
-            QString imageAbsoluteName=imageName;
-            imageName.prepend(relativeImagePath+"/");
-            imageAbsoluteName.prepend(absoluteImagePath+"/");
-
-            if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+            if(inlineImageMode)
             {
-                qCritical()<<"Unable to save "<<imageAbsoluteName;
-                die();
-            }
-            output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                          .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
-            if(progress!=nullptr)
-                progress->setValue(++progressValue);
+                QString name="mydata://"+QString::number(qrand());
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
+            }
+            else
+            {
+                QString imageName=generateUniqueFileName(suffix);
+                QString imageAbsoluteName=imageName;
+                imageName.prepend(relativeImagePath+"/");
+                imageAbsoluteName.prepend(absoluteImagePath+"/");
+
+                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                {
+                    qCritical()<<"Unable to save "<<imageAbsoluteName;
+                    die();
+                }
+                output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
+                if(progress!=nullptr)
+                    progress->setValue(++progressValue);
+
+            }
         }
     }
 
@@ -477,7 +482,14 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const
 {
     QString output="<ul>\n";
-    PCx_Tree *tree=auditModel->getAttachedTree();
+    PCx_Tree *tree=nullptr;
+    if(auditModel!=nullptr)
+        tree=auditModel->getAttachedTree();
+    else if(reportingModel!=nullptr)
+    {
+        tree=reportingModel->getAttachedTree();
+    }
+
     foreach(unsigned int node,nodes)
     {
         output.append(QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(tree->getNodeName(node).toHtmlEscaped()));

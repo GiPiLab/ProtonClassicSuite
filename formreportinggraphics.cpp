@@ -141,7 +141,7 @@ QList<PCx_Reporting::OREDPCR> FormReportingGraphics::getSelectedOREDPCR() const
  */
 void FormReportingGraphics::updatePlot()
 {
-    graphics->getPCRG1(selectedNodeId,getSelectedMode(),getSelectedOREDPCR());
+    graphics->getPCRHistory(selectedNodeId,getSelectedMode(),getSelectedOREDPCR());
 
 }
 

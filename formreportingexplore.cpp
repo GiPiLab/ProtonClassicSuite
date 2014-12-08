@@ -146,7 +146,9 @@ void FormReportingExplore::updateTextEdit()
     QString output=selectedReporting->generateHTMLHeader()+selectedReporting->generateHTMLReportingTitle();
     document->clear();
 
-    output.append(report->generateHTMLReportingReportForNode(getPresets(),selectedNode,getSelectedMode(),document));
+    output.append(QString("<h1>%1</h1>").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()));
+
+    output.append(report->generateHTMLReportingReportForNode(getPresets(),selectedNode,getSelectedMode(),true,document));
     document->setHtml(output);
 
     ui->textEdit->setDocument(document);
@@ -270,7 +272,8 @@ void FormReportingExplore::on_pushButtonExport_clicked()
     //Generate report in non-embedded mode, saving images
     QString output=selectedReporting->generateHTMLHeader();
     output.append(selectedReporting->generateHTMLReportingTitle());
-    output.append(report->generateHTMLReportingReportForNode(getPresets(),selectedNode,getSelectedMode(),nullptr,absoluteImagePath,relativeImagePath));
+    output.append(QString("<h1 id='node%2'>%1</h1>").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
+    output.append(report->generateHTMLReportingReportForNode(getPresets(),selectedNode,getSelectedMode(),true,nullptr,absoluteImagePath,relativeImagePath));
     output.append("</body></html>");
 
 

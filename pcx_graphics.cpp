@@ -476,7 +476,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
 
 }
 
-QString PCx_Graphics::getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR) const
+QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR) const
 {
     if(reportingModel==nullptr)
     {
@@ -615,7 +615,50 @@ QString PCx_Graphics::getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode
     return plotTitle;
 }
 
-QString PCx_Graphics::getPCRHistoPercent(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,QColor color) const
+QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) const
+{
+    QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
+    QString modeName=MODES::modeToCompleteString(mode);
+
+    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::BP,
+                                                PCx_Reporting::REPORTS,
+                                                PCx_Reporting::OCDM,
+                                                PCx_Reporting::VCDM,
+                                                PCx_Reporting::VIREMENTSINTERNES
+                                               };
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de %1\n(%2)").arg(nodeName).arg(modeName),getColorDFBar());
+}
+
+QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) const
+{
+    QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
+    QString modeName=MODES::modeToCompleteString(mode);
+
+    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::OCDM,
+                                                PCx_Reporting::VCDM,
+                                                PCx_Reporting::VIREMENTSINTERNES
+                                               };
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de %1\n(%2)").arg(nodeName).arg(modeName),getColorRFBar());
+}
+
+QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) const
+{
+    QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
+    QString modeName=MODES::modeToCompleteString(mode);
+    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::REALISES,
+                                                PCx_Reporting::ENGAGES,
+                                                PCx_Reporting::DISPONIBLES
+                                               };
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de %1\n(%2)").arg(nodeName).arg(modeName),getColorDIBar());
+}
+
+QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const
+{
+    QList<PCx_Reporting::OREDPCR> oredPCR={PCx_Reporting::OREDPCR::OUVERTS,PCx_Reporting::OREDPCR::REALISES};
+    return getPCRHistory(nodeId,mode,oredPCR);
+}
+
+QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,QColor color) const
 {
     if(reportingModel==nullptr)
     {

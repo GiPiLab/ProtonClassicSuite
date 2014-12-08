@@ -54,7 +54,8 @@ SOURCES += main.cpp\
     formreportingsupervision.cpp \
     formreportingoverview.cpp \
     formreportinggraphics.cpp \
-    formreportingexplore.cpp
+    formreportingexplore.cpp \
+    formreportingreports.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -94,7 +95,8 @@ HEADERS  += mainwindow.h \
     formreportingsupervision.h \
     formreportingoverview.h \
     formreportinggraphics.h \
-    formreportingexplore.h
+    formreportingexplore.h \
+    formreportingreports.h
 
 FORMS    += mainwindow.ui \
     formtablesgraphics.ui \
@@ -112,7 +114,8 @@ FORMS    += mainwindow.ui \
     formreportingsupervision.ui \
     formreportingoverview.ui \
     formreportinggraphics.ui \
-    formreportingexplore.ui
+    formreportingexplore.ui \
+    formreportingreports.ui
 
 
 #QMAKE_CXXFLAGS_DEBUG += -Og

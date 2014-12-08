@@ -30,7 +30,7 @@ public:
                                       const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
 
-    QString generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets,unsigned int selectedNode, MODES::DFRFDIRI mode, QTextDocument *document=nullptr,
+    QString generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets,unsigned int selectedNode, MODES::DFRFDIRI mode, bool includeGraphics=true, QTextDocument *document=nullptr,
                                                const QString &absoluteImagePath="",const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
 
     QString generateHTMLTOC(QList<unsigned int> nodes) const;

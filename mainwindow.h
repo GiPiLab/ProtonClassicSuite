@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QList>
 
+#include "formreportingreports.h"
 #include "formreportingexplore.h"
 #include "formreportingsupervision.h"
 #include "formreportinggraphics.h"
@@ -63,6 +64,8 @@ private slots:
 
     void onFormReportsWindowsDestroyed();
 
+    void onFormReportingReportsWindowsDestroyed();
+
     void on_actionO_ptions_triggered();
 
     void on_actionQueries_triggered();
@@ -79,11 +82,14 @@ private slots:
     void onFormReportingExploreWindowsDestroyed(QObject *obj);
 
 
+
     void on_actionSurveillance_des_reportings_triggered();
 
     void on_actionGraphiques_triggered();
 
     void on_actionExploreReportings_triggered();
+
+    void on_actionReportingGenerateur_de_rapports_triggered();
 
 private:
 
@@ -94,6 +100,7 @@ private:
     FormManageAudits *formManageAudits;
     FormEditAudit *formEditAudit;
     FormReports *formReports;
+    FormReportingReports *formReportingReports;
     FormManageReportings *formManageReportings;
 
 

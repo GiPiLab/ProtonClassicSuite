@@ -65,19 +65,19 @@ void PCx_ReportingTableOverviewModel::updateQuery()
     switch(mode)
     {
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DF_%1 where id_node=%2 order by date").arg(reporting->getReportingId()).arg(nodeId));
+        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RF_%1 where id_node=%2 order by date").arg(reporting->getReportingId()).arg(nodeId));
+        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DI_%1 where id_node=%2 order by date").arg(reporting->getReportingId()).arg(nodeId));
+        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RI_%1 where id_node=%2 order by date").arg(reporting->getReportingId()).arg(nodeId));
+        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF:
@@ -93,7 +93,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
                          "coalesce(a.vcinterne,0)-coalesce(b.vcinterne,0) as vcinterne,"
                          "coalesce(a.rattachenmoins1,0)-coalesce(b.rattachenmoins1,0) as rattachenmoins1 "
                          "from reporting_RF_%1 as a, reporting_DF_%1 as b where a.id_node=%2 and b.id_node=%2 "
-                         "and a.date=b.date order by a.date").arg(reporting->getReportingId()).arg(nodeId));
+                         "and a.date=b.date order by a.date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI:
@@ -109,7 +109,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
                          "coalesce(a.vcinterne,0)-coalesce(b.vcinterne,0) as vcinterne,"
                          "coalesce(a.rattachenmoins1,0)-coalesce(b.rattachenmoins1,0) as rattachenmoins1 "
                          "from reporting_RI_%1 as a, reporting_DI_%1 as b where a.id_node=%2 and b.id_node=%2 "
-                         "and a.date=b.date order by a.date").arg(reporting->getReportingId()).arg(nodeId));
+                         "and a.date=b.date order by a.date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI:
@@ -125,7 +125,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
                          "coalesce(a.vcinterne,0)-coalesce(b.vcinterne,0) + coalesce(c.vcinterne,0)-coalesce(d.vcinterne,0) as vcinterne,"
                          "coalesce(a.rattachenmoins1,0)-coalesce(b.rattachenmoins1,0) + coalesce(c.rattachenmoins1,0)-coalesce(d.rattachenmoins1,0) as rattachenmoins1 "
                          "from reporting_RF_%1 as a, reporting_DF_%1 as b, reporting_RI_%1 as c, reporting_DI_%1 as d where a.id_node=%2 and b.id_node=%2 "
-                         "and c.id_node=%2 and d.id_node=%2 and a.date=b.date and b.date=c.date and c.date=d.date order by a.date").arg(reporting->getReportingId()).arg(nodeId));
+                         "and c.id_node=%2 and d.id_node=%2 and a.date=b.date and b.date=c.date and c.date=d.date order by a.date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
     default:
         qDebug()<<"Unsupported case";

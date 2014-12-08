@@ -42,6 +42,15 @@ public:
         PCAG9
     };
 
+    enum PCRGRAPHICS
+    {
+        PCRHISTORY,
+        PCRGPROVENANCE,
+        PCRGVARIATION,
+        PCRGUTILISATION,
+        PCRCYCLES
+    };
+
     PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     virtual ~PCx_Graphics();
@@ -59,8 +68,13 @@ public:
     QString getPCAG9(unsigned int node) const;
 
 
-    QString getPCRG1(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
-    QString getPCRHistoPercent(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color)const;
+    //History line plot with selected OREDPCR
+    QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
+
+    QString getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) const;
+    QString getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) const;
+    QString getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) const;
+    QString getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const;
 
 
     QCustomPlot * getPlot() const{return plot;}
@@ -91,6 +105,9 @@ private:
 
     //Returns the title of the graphic in html
     QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const;
+
+    //Histogram comparing percents of selected OREDs regarding to a reference for the last reporting date
+    QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color)const;
     bool ownPlot;
     int graphicsWidth,graphicsHeight;
     double scale;

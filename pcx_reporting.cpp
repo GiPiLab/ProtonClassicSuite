@@ -1134,8 +1134,6 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
     }
     unsigned int uLastId=lastId.toUInt();
 
-    //FIXME : use OREDPCRToTableString (too long, don't write)
-    //Data are integer for fixed points arithmetics, stored with 3 decimals
     if(!q.exec(QString("create table reporting_DF_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "

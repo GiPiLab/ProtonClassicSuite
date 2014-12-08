@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formEditAudit=nullptr;
     formReports=nullptr;
     formManageReportings=nullptr;
+    formReportingReports=nullptr;
 
     restoreSettings();
     updateTitle();
@@ -143,6 +144,12 @@ void MainWindow::onFormReportsWindowsDestroyed()
 {
     formReports=nullptr;
     qDebug()<<"FormReports window closed";
+}
+
+void MainWindow::onFormReportingReportsWindowsDestroyed()
+{
+    formReportingReports=nullptr;
+    qDebug()<<"FormReportingReports window closed";
 }
 
 
@@ -385,6 +392,11 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
         }
 
+        if(formReportingReports!=nullptr)
+        {
+            connect(formReportingReports,SIGNAL(listOfReportingsChanged()),formReportingReports,SLOT(onListOfReportingsChanged()));
+        }
+
         foreach(FormReportingOverview *dlg,listOfFormReportingOverview)
         {
             connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
@@ -494,6 +506,24 @@ void MainWindow::on_actionExploreReportings_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+    }
+
+}
+
+void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
+{
+    if(formReportingReports==nullptr)
+    {
+        formReportingReports=new FormReportingReports(this);
+        formReportingReports->setAttribute(Qt::WA_DeleteOnClose);
+        ui->mdiArea->addSubWindow(formReportingReports);
+        formReportingReports->show();
+        connect(formReportingReports,SIGNAL(destroyed()),this,SLOT(onFormReportingReportsWindowsDestroyed()));
+
+        if(formManageReportings!=nullptr)
+        {
+            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),formReportingReports,SLOT(onListOfReportingsChanged()));
+        }
     }
 
 }
