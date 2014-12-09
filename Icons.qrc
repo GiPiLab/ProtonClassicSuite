@@ -23,5 +23,6 @@
         <file>icons/exit.png</file>
         <file>icons/question.png</file>
         <file>icons/help.png</file>
+        <file>icons/logo64_64.ico</file>
     </qresource>
 </RCC>

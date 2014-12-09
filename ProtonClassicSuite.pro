@@ -120,7 +120,7 @@ FORMS    += mainwindow.ui \
     formreportingreports.ui \
     dialogabout.ui
 
-
+RC_ICONS = icons/logo64_64.ico
 #QMAKE_CXXFLAGS_DEBUG += -Og
 
 unix|win32: LIBS += -lgvc -lcgraph
