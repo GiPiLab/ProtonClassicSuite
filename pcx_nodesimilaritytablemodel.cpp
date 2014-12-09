@@ -100,7 +100,7 @@ void PCx_NodeSimilarityTableModel::computeDistances()
         }
         progress.setValue(++nbVals);
     }
-    qDebug()<<distances.size()<<" distances computed in"<<timer.elapsed()<<"ms";
+    //qDebug()<<distances.size()<<" distances computed in"<<timer.elapsed()<<"ms";
 }
 
 

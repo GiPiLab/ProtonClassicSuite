@@ -207,8 +207,8 @@ void FormReportingReports::on_saveButton_clicked()
     report->getGraphics().setGraphicsHeight(settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt());
     report->getGraphics().setScale(settings.value("graphics/scale",PCx_Graphics::DEFAULTSCALE).toDouble());
 
-    QElapsedTimer timer;
-    timer.start();
+   // QElapsedTimer timer;
+   // timer.start();
 
     output.append(report->generateHTMLTOC(sortedSelectedNodes));
 
@@ -266,7 +266,7 @@ void FormReportingReports::on_saveButton_clicked()
         return;
     }
 
-    qDebug()<<"Report generated in "<<timer.elapsed()<<"ms";
+    //qDebug()<<"Report generated in "<<timer.elapsed()<<"ms";
 
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {

@@ -60,7 +60,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     Q_ASSERT(node>0 && plot!=nullptr);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Model error";
+        qWarning()<<"Model error";
         return QString();
     }
     QString tableName=MODES::modeToTableString(mode);
@@ -305,7 +305,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     Q_ASSERT(node>0 && plot!=nullptr);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Model error";
+        qWarning()<<"Model error";
         return QString();
     }
 
@@ -480,7 +480,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 {
     if(reportingModel==nullptr)
     {
-        qDebug()<<"Model error";
+        qWarning()<<"Model error";
         return QString();
     }
 
@@ -662,7 +662,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
 {
     if(reportingModel==nullptr)
     {
-        qDebug()<<"Model error";
+        qWarning()<<"Model error";
         return QString();
     }
 

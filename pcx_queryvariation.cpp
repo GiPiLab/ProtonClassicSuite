@@ -124,8 +124,8 @@ QString PCx_QueryVariation::getDescription() const
 QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 {
     Q_ASSERT(year1>0 && year2>0 && year1<year2 && year1<3000 && year2>1900);
-    QElapsedTimer timer;
-    timer.start();
+    //QElapsedTimer timer;
+    //timer.start();
     QMap<unsigned int,qint64> valuesForYear1,valuesForYear2;
     QMap<unsigned int,qint64> variations,matchingNodes;
     QList<unsigned int>nodesOfThisType,problemNodes;
@@ -287,9 +287,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
         QString sheetName="ReqVar_"+name;
         if(xlsDoc->sheetNames().contains(sheetName))
         {
-            qDebug()<<"Duplicate sheet name !";
             sheetName="ReqVar_"+name+"_"+generateUniqueFileName();
-
         }
         xlsDoc->addSheet(sheetName);
         xlsDoc->selectSheet(sheetName);
@@ -364,7 +362,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
     }
 
     output.append("</table>");
-    qDebug()<<"ReqVar computed in"<<timer.elapsed()<<"ms";
+   // qDebug()<<"ReqVar computed in"<<timer.elapsed()<<"ms";
     return output;
 }
 

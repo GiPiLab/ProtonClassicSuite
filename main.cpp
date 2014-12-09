@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     qInstallMessageHandler(myMessageOutput);
 
-    qDebug()<<"***ProtonClassicSuite starting***";
+    //qDebug()<<"***ProtonClassicSuite starting***";
 
 /*
     QPixmap pixmap(":/icons/icons/logo.png");

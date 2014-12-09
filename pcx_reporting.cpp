@@ -454,8 +454,8 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
 bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode)
 {
     Q_ASSERT(!fileName.isEmpty());
-    QElapsedTimer timer;
-    timer.start();
+    //QElapsedTimer timer;
+    //timer.start();
 
     QFileInfo fi(fileName);
     if(!fi.isReadable()||!fi.isFile())
@@ -706,7 +706,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
     }while(row<=rowCount);
 
     QSqlDatabase::database().commit();
-    qDebug()<<"Import done in "<<timer.elapsed()<<" ms";
+    //qDebug()<<"Import done in "<<timer.elapsed()<<" ms";
     return true;
 
 }

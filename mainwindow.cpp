@@ -73,6 +73,13 @@ void MainWindow::setMenusState()
         ui->actionQueries->setEnabled(false);
         ui->actionReport->setEnabled(false);
         ui->actionTablesGraphics->setEnabled(false);
+        ui->actionElaboration_budg_taire_PCB->setEnabled(false);
+        ui->actionExploreReportings->setEnabled(false);
+        ui->actionGestion_des_reportings->setEnabled(false);
+        ui->actionGraphiques->setEnabled(false);
+        ui->actionReportingGenerateur_de_rapports->setEnabled(false);
+        ui->actionReportingOverview->setEnabled(false);
+        ui->actionSurveillance_des_reportings->setEnabled(false);
     }
     else
     {
@@ -85,6 +92,14 @@ void MainWindow::setMenusState()
         ui->actionQueries->setEnabled(true);
         ui->actionReport->setEnabled(true);
         ui->actionTablesGraphics->setEnabled(true);
+
+        ui->actionElaboration_budg_taire_PCB->setEnabled(true);
+        ui->actionExploreReportings->setEnabled(true);
+        ui->actionGestion_des_reportings->setEnabled(true);
+        ui->actionGraphiques->setEnabled(true);
+        ui->actionReportingGenerateur_de_rapports->setEnabled(true);
+        ui->actionReportingOverview->setEnabled(true);
+        ui->actionSurveillance_des_reportings->setEnabled(true);
     }
 }
 

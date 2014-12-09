@@ -22,7 +22,6 @@ FormManageReportings::FormManageReportings(QWidget *parent) :
 
 FormManageReportings::~FormManageReportings()
 {
-    qDebug()<<"Destructor";
     if(selectedReporting!=nullptr)
         delete selectedReporting;
     delete ui;
@@ -51,7 +50,6 @@ void FormManageReportings::on_pushButtonDisplayTree_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qDebug()<<"No finished tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();
@@ -77,7 +75,6 @@ void FormManageReportings::on_pushButtonAddReporting_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qDebug()<<"No finished tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();

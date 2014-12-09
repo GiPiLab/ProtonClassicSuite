@@ -100,7 +100,6 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
         QString sheetName="ReqMinMax_"+name;
         if(xlsDoc->sheetNames().contains(sheetName))
         {
-            qDebug()<<"Duplicate sheet name !";
             sheetName="ReqMinMax_"+name+"_"+generateUniqueFileName();
 
         }

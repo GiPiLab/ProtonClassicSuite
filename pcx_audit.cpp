@@ -789,8 +789,8 @@ QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(MODES::DFRFDIRI mode, u
 bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode)
 {
     Q_ASSERT(!fileName.isEmpty());
-    QElapsedTimer timer;
-    timer.start();
+    //QElapsedTimer timer;
+    //timer.start();
 
     QFileInfo fi(fileName);
     if(!fi.isReadable()||!fi.isFile())
@@ -981,7 +981,7 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
     }while(row<=rowCount);
 
     QSqlDatabase::database().commit();
-    qDebug()<<"Import done in "<<timer.elapsed()<<" ms";
+    //qDebug()<<"Import done in "<<timer.elapsed()<<" ms";
     return true;
 
 }

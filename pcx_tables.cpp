@@ -26,7 +26,7 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -82,7 +82,7 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -183,7 +183,7 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -291,7 +291,7 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -361,7 +361,7 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -432,7 +432,7 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -502,7 +502,7 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -636,7 +636,7 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -723,7 +723,7 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -781,7 +781,7 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -838,7 +838,7 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -896,7 +896,7 @@ QString PCx_Tables::getPCAT10(unsigned int node) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -968,7 +968,7 @@ QString PCx_Tables::getPCAT11(unsigned int node) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -1040,7 +1040,7 @@ QString PCx_Tables::getPCAT12(unsigned int node) const
     Q_ASSERT(node>0);
     if(auditModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -1116,7 +1116,7 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
 {
     if(reportingModel==nullptr)
     {
-        qDebug()<<"Invalid model usage";
+        qWarning()<<"Invalid model usage";
         return QString();
     }
 
@@ -1214,8 +1214,6 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
 
         return out;
     }
-
-    qDebug()<<"Missing data";
     return QString();
 }
 
@@ -1278,8 +1276,6 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
 
         return out;
     }
-
-    qDebug()<<"Missing data";
     return QString();
 
 }
@@ -1368,7 +1364,6 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
         return outGlob;
     }
 
-    qDebug()<<"Missing data";
     return QString();
 
 }
@@ -1527,7 +1522,6 @@ QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const
 
         return out;
     }
-    qDebug()<<"Missing data";
     return QString();
 }
 

@@ -93,7 +93,6 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
         QString sheetName="ReqRank_"+name;
         if(xlsDoc->sheetNames().contains(sheetName))
         {
-            qDebug()<<"Duplicate sheet name !";
             sheetName="ReqRank_"+name+"_"+generateUniqueFileName();
 
         }

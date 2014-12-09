@@ -202,7 +202,7 @@ bool FormReportingOverview::dateExistsForNodeAndMode(unsigned int timeT, unsigne
     else if(mode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
         return (selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DF) &  selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RF) &
                 selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::DI) &  selectedReporting->dateExistsForNodeAndMode(timeT,nodeId,MODES::DFRFDIRI::RI));
-    qDebug()<<"Unsupported case found !";
+    qWarning()<<"Unsupported case found !";
     return false;
 }
 
@@ -225,7 +225,7 @@ PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingOverview::getSelected
 
     else
     {
-        qDebug()<<"Invalid selection";
+        qWarning()<<"Invalid selection";
     }
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
 }

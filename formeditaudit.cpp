@@ -84,7 +84,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
-    qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
     if(auditModel!=nullptr)
     {
         delete auditModel;
@@ -164,8 +164,8 @@ void FormEditAudit::on_randomDataButton_clicked()
         return;
     }
 
-    QElapsedTimer timer;
-    timer.start();
+    //QElapsedTimer timer;
+    //timer.start();
     QList<unsigned int> leaves=auditModel->getAttachedTree()->getLeavesId();
     QList<unsigned int> years=auditModel->getYears();
 
@@ -232,7 +232,7 @@ void FormEditAudit::on_randomDataButton_clicked()
     if(tblModel!=nullptr)
         tblModel->select();
 
-    qDebug()<<"Done in "<<timer.elapsed()<<"ms";
+    //qDebug()<<"Done in "<<timer.elapsed()<<"ms";
 }
 
 void FormEditAudit::on_clearDataButton_clicked()

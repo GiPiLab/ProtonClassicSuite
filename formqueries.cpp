@@ -137,7 +137,7 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     if(index==-1||ui->comboBoxListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboBoxListAudits->currentData().toUInt();
     Q_ASSERT(selectedAuditId>0);
-    qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=nullptr)
         delete model;

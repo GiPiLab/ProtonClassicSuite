@@ -105,7 +105,7 @@ void FormReports::on_comboListAudits_activated(int index)
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
     Q_ASSERT(selectedAuditId>0);
-    qDebug()<<"Selected audit ID = "<<selectedAuditId;
+    //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=nullptr)
     {

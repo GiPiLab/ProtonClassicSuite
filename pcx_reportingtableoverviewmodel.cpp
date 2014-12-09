@@ -48,7 +48,7 @@ QString PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(PCx_Report
         return tr("Synthèse fonctionnement + investissement (RF - DF + RI - DI)");
     else
     {
-        qDebug()<<"Invalid mode";
+        qWarning()<<"Invalid mode";
     }
     return QString();
 }
@@ -128,7 +128,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
                          "and c.id_node=%2 and d.id_node=%2 and a.date=b.date and b.date=c.date and c.date=d.date order by a.date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
     default:
-        qDebug()<<"Unsupported case";
+        qWarning()<<"Unsupported case";
         break;
     }
 }
@@ -173,11 +173,7 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
                     break;
                 }
             }
-            if(valRefDate==-1)
-            {
-                qDebug()<<"Ref date not found";
-            }
-            else if(valRefDate==0)
+            if(valRefDate==0)
             {
                 return "DIV0";
             }

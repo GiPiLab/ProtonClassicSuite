@@ -131,7 +131,7 @@ MODES::DFRFDIRI FormReportingExplore::getSelectedMode() const
 
     else
     {
-        qDebug()<<"Invalid selection";
+        qWarning()<<"Invalid selection";
     }
     return MODES::DFRFDIRI::DF;
 }

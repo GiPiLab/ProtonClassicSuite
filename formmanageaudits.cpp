@@ -69,7 +69,6 @@ void FormManageAudits::on_addAuditButton_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qDebug()<<"No finished tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();
@@ -133,7 +132,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
 
     selectedAudit=new PCx_Audit(selectedAuditId);
 
-    qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
+   // qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
 
     ui->labelDate->setText(selectedAudit->getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
     if(selectedAudit->isFinished()==true)
@@ -191,7 +190,7 @@ void FormManageAudits::on_finishAuditButton_clicked()
     }
     else
     {
-        qDebug()<<"Invalid audit selected !";
+        qWarning()<<"Invalid audit selected !";
     }
     updateListOfAudits();
     emit(listOfAuditsChanged());
@@ -213,7 +212,7 @@ void FormManageAudits::on_unFinishAuditButton_clicked()
     }
     else
     {
-        qDebug()<<"Invalid audit selected !";
+        qWarning()<<"Invalid audit selected !";
     }
 
     updateListOfAudits();
@@ -236,7 +235,6 @@ void FormManageAudits::on_pushButtonDisplayTree_clicked()
 {
     if(ui->comboListOfTrees->count()==0)
     {
-        qDebug()<<"No finished tree";
         return;
     }
     int selectedIndex=ui->comboListOfTrees->currentIndex();

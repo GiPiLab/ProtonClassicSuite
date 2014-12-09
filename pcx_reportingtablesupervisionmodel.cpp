@@ -56,7 +56,7 @@ QString PCx_ReportingTableSupervisionModel::getColumnName(PCx_ReportingTableSupe
         return tr("CPP15N");
 
     default:
-        qDebug()<<"Unsupported mode";
+        qWarning()<<"Unsupported mode";
     }
     return QString();
 }
