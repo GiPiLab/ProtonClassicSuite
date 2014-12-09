@@ -548,7 +548,6 @@ void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
             connect(formManageReportings,SIGNAL(listOfReportingsChanged()),formReportingReports,SLOT(onListOfReportingsChanged()));
         }
     }
-
 }
 
 void MainWindow::on_actionExploreAudits_triggered()
