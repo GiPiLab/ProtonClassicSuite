@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Vue d'ensemble des reportings</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/reportingOverview.png</normaloff>:/icons/icons/reportingOverview.png</iconset>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QSplitter" name="splitter">
@@ -326,6 +330,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

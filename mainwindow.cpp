@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "dialogabout.h"
 
 using namespace NUMBERSFORMAT;
 
@@ -96,7 +97,8 @@ void MainWindow::on_actionManageTree_triggered()
         formEditTreeWin=new FormEditTree(this);
         formEditTreeWin->setAttribute(Qt::WA_DeleteOnClose);
 
-        ui->mdiArea->addSubWindow(formEditTreeWin);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formEditTreeWin);
+        subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
         formEditTreeWin->show();
         if(formManageAudits!=nullptr)
         {
@@ -119,13 +121,13 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::onFormEditTreeWindowsDestroyed()
 {
     formEditTreeWin=nullptr;
-    qDebug()<<"FormEditTree window closed";
+  //  qDebug()<<"FormEditTree window closed";
 }
 
 void MainWindow::onFormManageAuditsWindowsDestroyed()
 {
     formManageAudits=nullptr;
-    qDebug()<<"FormManageAudits window closed";
+    //qDebug()<<"FormManageAudits window closed";
 }
 
 void MainWindow::onFormManageReportingsWindowsDestroyed()
@@ -137,32 +139,32 @@ void MainWindow::onFormManageReportingsWindowsDestroyed()
 void MainWindow::onFormEditAuditWindowsDestroyed()
 {
     formEditAudit=nullptr;
-    qDebug()<<"FormEditAudit window closed";
+    //qDebug()<<"FormEditAudit window closed";
 }
 
 void MainWindow::onFormReportsWindowsDestroyed()
 {
     formReports=nullptr;
-    qDebug()<<"FormReports window closed";
+    //qDebug()<<"FormReports window closed";
 }
 
 void MainWindow::onFormReportingReportsWindowsDestroyed()
 {
     formReportingReports=nullptr;
-    qDebug()<<"FormReportingReports window closed";
+    //qDebug()<<"FormReportingReports window closed";
 }
 
 
 void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
 {
     listOfFormTablesGraphics.removeAt(listOfFormTablesGraphics.indexOf(static_cast<FormTablesGraphics *>(obj)));
-    qDebug()<<"FormTables window closed, remaining :"<<listOfFormTablesGraphics;
+    //qDebug()<<"FormTables window closed, remaining :"<<listOfFormTablesGraphics;
 }
 
 void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
 {
     listOfFormQueries.removeAt(listOfFormQueries.indexOf(static_cast<FormQueries *>(obj)));
-    qDebug()<<"FormQueries window closed, remaining :"<<listOfFormQueries;
+    //qDebug()<<"FormQueries window closed, remaining :"<<listOfFormQueries;
 }
 
 void MainWindow::on_actionManageAudits_triggered()
@@ -172,7 +174,8 @@ void MainWindow::on_actionManageAudits_triggered()
         formManageAudits=new FormManageAudits(this);
         formManageAudits->setAttribute(Qt::WA_DeleteOnClose);
 
-        ui->mdiArea->addSubWindow(formManageAudits);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formManageAudits);
+        subWin->setWindowIcon(QIcon(":/icons/icons/manage_sources.png"));
         formManageAudits->show();
         connect(formManageAudits,SIGNAL(destroyed()),this,SLOT(onFormManageAuditsWindowsDestroyed()));
 
@@ -209,7 +212,9 @@ void MainWindow::on_actionEditAudit_triggered()
     {
         formEditAudit=new FormEditAudit(this);
         formEditAudit->setAttribute(Qt::WA_DeleteOnClose);
-        ui->mdiArea->addSubWindow(formEditAudit);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formEditAudit);
+        subWin->setWindowIcon(QIcon(":/icons/icons/table_edit.png"));
+
         formEditAudit->show();
         connect(formEditAudit,SIGNAL(destroyed()),this,SLOT(onFormEditAuditWindowsDestroyed()));
 
@@ -225,7 +230,9 @@ void MainWindow::on_actionTablesGraphics_triggered()
     FormTablesGraphics *dlg=new FormTablesGraphics();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->mdiArea->addSubWindow(dlg);
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/exploreAudit.png"));
+
     dlg->show();
     listOfFormTablesGraphics.append(dlg);
 
@@ -330,7 +337,8 @@ void MainWindow::on_actionReport_triggered()
     {
         formReports=new FormReports(this);
         formReports->setAttribute(Qt::WA_DeleteOnClose);
-        ui->mdiArea->addSubWindow(formReports);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formReports);
+        subWin->setWindowIcon(QIcon(":/icons/icons/report.png"));
         formReports->show();
         connect(formReports,SIGNAL(destroyed()),this,SLOT(onFormReportsWindowsDestroyed()));
 
@@ -358,7 +366,8 @@ void MainWindow::on_actionQueries_triggered()
     FormQueries *dlg=new FormQueries(this);
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->mdiArea->addSubWindow(dlg);
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/queries.png"));
     dlg->show();
     listOfFormQueries.append(dlg);
 
@@ -373,7 +382,8 @@ void MainWindow::on_actionQueries_triggered()
 
 void MainWindow::on_actionA_propos_triggered()
 {
-    QMessageBox::information(this,tr("A propos"),tr("ProtonClassicSuite dev (%1)\n©2006-%2 Laboratoire de Recherche pour le Développement Local (http://gipilab.org)").arg(VERSION).arg(QDate::currentDate().year()));
+    DialogAbout dlg(this);
+    dlg.exec();
 }
 
 void MainWindow::on_actionGestion_des_reportings_triggered()
@@ -383,7 +393,8 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
         formManageReportings=new FormManageReportings(this);
         formManageReportings->setAttribute(Qt::WA_DeleteOnClose);
 
-        ui->mdiArea->addSubWindow(formManageReportings);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formManageReportings);
+        subWin->setWindowIcon(QIcon(":/icons/icons/reportingManage.png"));
         formManageReportings->show();
         connect(formManageReportings,SIGNAL(destroyed()),this,SLOT(onFormManageReportingsWindowsDestroyed()));
 
@@ -423,7 +434,8 @@ void MainWindow::on_actionReportingOverview_triggered()
     FormReportingOverview *dlg=new FormReportingOverview();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->mdiArea->addSubWindow(dlg);
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/reportingOverview.png"));
     dlg->show();
     listOfFormReportingOverview.append(dlg);
 
@@ -463,7 +475,8 @@ void MainWindow::on_actionSurveillance_des_reportings_triggered()
     FormReportingSupervision *dlg=new FormReportingSupervision();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->mdiArea->addSubWindow(dlg);
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/reportingForecast.png"));
     dlg->show();
     listOfFormReportingSupervision.append(dlg);
 
@@ -480,7 +493,8 @@ void MainWindow::on_actionGraphiques_triggered()
     FormReportingGraphics *dlg=new FormReportingGraphics();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->mdiArea->addSubWindow(dlg);
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/reportingGraphics.png"));
     dlg->show();
     listOfFormReportingGraphics.append(dlg);
 
@@ -497,7 +511,8 @@ void MainWindow::on_actionExploreReportings_triggered()
     FormReportingExplore *dlg=new FormReportingExplore();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-    ui->mdiArea->addSubWindow(dlg);
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/reportingExplore.png"));
     dlg->show();
     listOfFormReportingExplore.append(dlg);
 
@@ -516,7 +531,8 @@ void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
     {
         formReportingReports=new FormReportingReports(this);
         formReportingReports->setAttribute(Qt::WA_DeleteOnClose);
-        ui->mdiArea->addSubWindow(formReportingReports);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formReportingReports);
+        subWin->setWindowIcon(QIcon(":/icons/icons/reportingReport.png"));
         formReportingReports->show();
         connect(formReportingReports,SIGNAL(destroyed()),this,SLOT(onFormReportingReportsWindowsDestroyed()));
 

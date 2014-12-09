@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Gestion des audits</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/manage_sources.png</normaloff>:/icons/icons/manage_sources.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="groupBoxAudits">
@@ -274,6 +278,8 @@
   <tabstop>deleteAuditButton</tabstop>
   <tabstop>cloneAuditButton</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

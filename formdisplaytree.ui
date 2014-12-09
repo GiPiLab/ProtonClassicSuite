@@ -6,12 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>510</width>
+    <width>530</width>
     <height>277</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Instantané d'arbre</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">

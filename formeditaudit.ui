@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Saisie des données</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/table_edit.png</normaloff>:/icons/icons/table_edit.png</iconset>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_6">
    <item>
     <widget class="QSplitter" name="splitter">
@@ -267,6 +271,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

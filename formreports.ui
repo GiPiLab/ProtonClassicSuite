@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Générateur de rapports</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/report.png</normaloff>:/icons/icons/report.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0" colspan="2">
     <widget class="QSplitter" name="splitter">
@@ -311,6 +315,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

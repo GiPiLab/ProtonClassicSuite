@@ -316,7 +316,8 @@ void FormEditTree::on_viewTreeButton_clicked()
     ddt->setAttribute(Qt::WA_DeleteOnClose);
     QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
-    mdiArea->addSubWindow(ddt);
+    QMdiSubWindow *subWin=mdiArea->addSubWindow(ddt);
+    subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
     ddt->show();
 }
 
@@ -454,7 +455,8 @@ void FormEditTree::on_consistencyButton_clicked()
     form->setAttribute(Qt::WA_DeleteOnClose);
     QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
-    mdiArea->addSubWindow(form);
+    QMdiSubWindow *subWin=mdiArea->addSubWindow(form);
+    subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
     form->show();
 }
 

@@ -12,5 +12,16 @@
         <file>icons/excel_imports.png</file>
         <file>icons/setting_tools.png</file>
         <file>icons/pdf_exports.png</file>
+        <file>icons/reportingGraphics.png</file>
+        <file>icons/reportingReport.png</file>
+        <file>icons/reportingExplore.png</file>
+        <file>icons/reportingOverview.png</file>
+        <file>icons/reportingForecast.png</file>
+        <file>icons/reportingManage.png</file>
+        <file>icons/logo64_64.png</file>
+        <file>icons/logo.png</file>
+        <file>icons/exit.png</file>
+        <file>icons/question.png</file>
+        <file>icons/help.png</file>
     </qresource>
 </RCC>

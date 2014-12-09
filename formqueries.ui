@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Requêtes personnalisées</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/queries.png</normaloff>:/icons/icons/queries.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="2">
     <widget class="QFrame" name="frame_2">
@@ -440,6 +444,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

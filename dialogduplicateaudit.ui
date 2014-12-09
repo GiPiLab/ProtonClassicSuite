@@ -22,6 +22,10 @@
   <property name="windowTitle">
    <string>Dupliquer un audit</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/manage_sources.png</normaloff>:/icons/icons/manage_sources.png</iconset>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
@@ -239,6 +243,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -54,12 +54,28 @@ int main(int argc, char *argv[])
 
     qDebug()<<"***ProtonClassicSuite starting***";
 
+/*
+    QPixmap pixmap(":/icons/icons/logo.png");
+    QSplashScreen splash(pixmap);
+    splash.show();
+
+
+    QTime dieTime= QTime::currentTime().addSecs(1);
+    while( QTime::currentTime() < dieTime )
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+*/
+
+
+
+
+
     int retval;
 
     QSqlDatabase::addDatabase("QSQLITE");
 
     MainWindow w;
     w.show();
+  //  splash.finish(&w);
 
     retval=a.exec();
     QSqlDatabase::database().close();

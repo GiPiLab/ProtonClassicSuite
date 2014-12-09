@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Statistiques et similarités</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
     <widget class="QLabel" name="label_3">
@@ -141,6 +145,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

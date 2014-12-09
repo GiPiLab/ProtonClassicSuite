@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Générateur de rapports pour les reportings</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/reportingReport.png</normaloff>:/icons/icons/reportingReport.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="1">
     <widget class="QGroupBox" name="groupBox">
@@ -243,6 +247,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

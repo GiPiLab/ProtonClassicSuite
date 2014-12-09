@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Gestion des arbres</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="1" column="2" rowspan="3">
     <widget class="QListView" name="listTypesView">
@@ -88,7 +92,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>760</width>
+        <width>774</width>
         <height>98</height>
        </rect>
       </property>

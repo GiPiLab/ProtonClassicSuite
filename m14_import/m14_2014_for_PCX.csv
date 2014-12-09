@@ -1,0 +1,1669 @@
+Type noeud	Nom noeud	Type pere	Nom pere
+_	M14_2014
+_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)	_	M14_2014
+_	10 - DOTATIONS, FONDS DIVERS ET RESERVES	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	102 - Dotations et fonds d'investissement	_	10 - DOTATIONS, FONDS DIVERS ET RESERVES
+_	1021 - Dotation	_	102 - Dotations et fonds d'investissement
+_	1022 - Fonds d'investissement	_	102 - Dotations et fonds d'investissement
+_	10222 - F.C.T.V.A.	_	1022 - Fonds d'investissement
+_	10223 - T.L.E.	_	1022 - Fonds d'investissement
+_	10224 - Versements pour dépassement du plafond légal de densité (P.L.D.)	_	1022 - Fonds d'investissement
+_	10225 - Participations en cas de dépassement du coefficient d'occupation du sol (C.O.S.)	_	1022 - Fonds d'investissement
+_	10226 - Taxe d'aménagement	_	1022 - Fonds d'investissement
+_	10227 - Versement pour sous-densité	_	1022 - Fonds d'investissement
+_	10228 - Autres fonds	_	1022 - Fonds d'investissement
+_	10229 - Reprise sur F.C.T.V.A. et autres fonds	_	1022 - Fonds d'investissement
+_	102291 - Reprise sur F.C.T.V.A.	_	10229 - Reprise sur F.C.T.V.A. et autres fonds
+_	102296 - Reprise sur taxe d'aménagement	_	10229 - Reprise sur F.C.T.V.A. et autres fonds
+_	102297 - Reprise sur versement pour sous-densité	_	10229 - Reprise sur F.C.T.V.A. et autres fonds
+_	102298 - Reprise sur autres fonds	_	10229 - Reprise sur F.C.T.V.A. et autres fonds
+_	1025 - Dons et legs en capital	_	102 - Dotations et fonds d'investissement
+_	10251 - Dons et legs en capital	_	1025 - Dons et legs en capital
+_	10259 - Reprise sur dons et legs en capital	_	1025 - Dons et legs en capital
+_	1027 - Mise à disposition (chez le bénéficiaire)	_	102 - Dotations et fonds d'investissement
+_	106 - Réserves 	_	10 - DOTATIONS, FONDS DIVERS ET RESERVES
+_	1068 - Excédents de fonctionnement capitalisés 	_	106 - Réserves 
+_	1069 - Reprise 1997 sur les excédents capitalisés - Neutralisation de l'excédent des charges sur les produits	_	106 - Réserves 
+_	11 - REPORT À NOUVEAU (SOLDE CRÉDITEUR OU DÉBITEUR) 	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	110 - Report à nouveau (solde créditeur)	_	11 - REPORT À NOUVEAU (SOLDE CRÉDITEUR OU DÉBITEUR) 
+_	119 - Report à nouveau (solde débiteur)	_	11 - REPORT À NOUVEAU (SOLDE CRÉDITEUR OU DÉBITEUR) 
+_	12 - RÉSULTAT DE L'EXERCICE (EXCÉDENTAIRE OU DÉFICITAIRE)	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	13 - SUBVENTIONS D'INVESTISSEMENT	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	131 - Subventions d'équipement transférables	_	13 - SUBVENTIONS D'INVESTISSEMENT
+_	1311 - État et établissements nationaux	_	131 - Subventions d'équipement transférables
+_	1312 - Régions	_	131 - Subventions d'équipement transférables
+_	1313 - Départements	_	131 - Subventions d'équipement transférables
+_	1314 - Communes	_	131 - Subventions d'équipement transférables
+_	13141 - Communes membres du GFP	_	1314 - Communes
+_	13148 - Autres communes	_	1314 - Communes
+_	1315 - Groupements de collectivités	_	131 - Subventions d'équipement transférables
+_	13151 - GFP de rattachement	_	1315 - Groupements de collectivités
+_	13158 - Autres groupements	_	1315 - Groupements de collectivités
+_	1316 - Autres établissements publics locaux	_	131 - Subventions d'équipement transférables
+_	1317 - Budget communautaire et fonds structurels	_	131 - Subventions d'équipement transférables
+_	1318 - Autres	_	131 - Subventions d'équipement transférables
+_	132 - Subventions d'équipement non transférables 	_	13 - SUBVENTIONS D'INVESTISSEMENT
+_	1321 - État et établissements nationaux	_	132 - Subventions d'équipement non transférables 
+_	1322 - Régions	_	132 - Subventions d'équipement non transférables 
+_	1323 - Départements	_	132 - Subventions d'équipement non transférables 
+_	1324 - Communes	_	132 - Subventions d'équipement non transférables 
+_	13241 - Communes membres du GFP	_	1324 - Communes
+_	13248 - Autres communes	_	1324 - Communes
+_	1325 - Groupements de collectivités	_	132 - Subventions d'équipement non transférables 
+_	13251 - GFP de rattachement	_	1325 - Groupements de collectivités
+_	13258 - Autres groupements	_	1325 - Groupements de collectivités
+_	1326 - Autres établissements publics locaux	_	132 - Subventions d'équipement non transférables 
+_	1327 - Budget communautaire et fonds structurels	_	132 - Subventions d'équipement non transférables 
+_	1328 - Autres	_	132 - Subventions d'équipement non transférables 
+_	133 - Fonds affectés à l'équipement transférables	_	13 - SUBVENTIONS D'INVESTISSEMENT
+_	1331 - Dotation d'équipement des territoires ruraux	_	133 - Fonds affectés à l'équipement transférables
+_	1332 - Amendes de police	_	133 - Fonds affectés à l'équipement transférables
+_	1333 - P.A.E. (Programme d'Aménagement d'Ensemble)	_	133 - Fonds affectés à l'équipement transférables
+_	1334 - Surtaxes locales temporaires	_	133 - Fonds affectés à l'équipement transférables
+_	1335 - Participations pour non réalisation d'aires de stationnement	_	133 - Fonds affectés à l'équipement transférables
+_	1336 - Participations pour voirie et réseaux	_	133 - Fonds affectés à l'équipement transférables
+_	1338 - Autres	_	133 - Fonds affectés à l'équipement transférables
+_	134 - Fonds affectés à l'équipement non transférables	_	13 - SUBVENTIONS D'INVESTISSEMENT
+_	1341 - Dotation d'équipement des territoires ruraux 	_	134 - Fonds affectés à l'équipement non transférables
+_	1342 - Amendes de police	_	134 - Fonds affectés à l'équipement non transférables
+_	1343 - P.A.E. (Programme d'Aménagement d'Ensemble)	_	134 - Fonds affectés à l'équipement non transférables
+_	1344 - Surtaxes locales temporaires	_	134 - Fonds affectés à l'équipement non transférables
+_	1345 - Participations pour non réalisation d'aires de stationnement	_	134 - Fonds affectés à l'équipement non transférables
+_	1346 - Participations pour voirie et réseaux	_	134 - Fonds affectés à l'équipement non transférables
+_	1348 - Autres	_	134 - Fonds affectés à l'équipement non transférables
+_	138 - Autres subventions d'investissement non transférables	_	13 - SUBVENTIONS D'INVESTISSEMENT
+_	1381 - État et établissements nationaux	_	138 - Autres subventions d'investissement non transférables
+_	1382 - Régions	_	138 - Autres subventions d'investissement non transférables
+_	1383 - Départements	_	138 - Autres subventions d'investissement non transférables
+_	1384 - Communes	_	138 - Autres subventions d'investissement non transférables
+_	1385 - Groupements de collectivités	_	138 - Autres subventions d'investissement non transférables
+_	1386 - Autres établissements publics locaux	_	138 - Autres subventions d'investissement non transférables
+_	1387 - Budget communautaire et fonds structurels	_	138 - Autres subventions d'investissement non transférables
+_	1388 - Autres	_	138 - Autres subventions d'investissement non transférables
+_	139 - Subventions d'investissement transférées au compte de résultat	_	13 - SUBVENTIONS D'INVESTISSEMENT
+_	1391 - Subventions d'équipement (à subdiviser comme le compte 131)	_	139 - Subventions d'investissement transférées au compte de résultat
+_	1393 - Fonds affectés à l'équipement	_	139 - Subventions d'investissement transférées au compte de résultat
+_	13931 - Dotation d'équipement des territoires ruraux	_	1393 - Fonds affectés à l'équipement
+_	13932 - Amendes de police	_	1393 - Fonds affectés à l'équipement
+_	13933 - P.A.E. (Programme d'Aménagement d'Ensemble)	_	1393 - Fonds affectés à l'équipement
+_	13934 - Surtaxes locales temporaires	_	1393 - Fonds affectés à l'équipement
+_	13935 - Participations pour non réalisation d'aires de stationnement	_	1393 - Fonds affectés à l'équipement
+_	13936 - Participations pour voirie et réseaux	_	1393 - Fonds affectés à l'équipement
+_	13938 - Autres	_	1393 - Fonds affectés à l'équipement
+_	15 - PROVISIONS POUR RISQUES ET CHARGES	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	151 - Provisions pour risques	_	15 - PROVISIONS POUR RISQUES ET CHARGES
+_	1511 - Provisions pour litiges	_	151 - Provisions pour risques
+_	15111 - Provisions pour litiges (non budgétaires)	_	1511 - Provisions pour litiges
+_	15112 - Provisions pour litiges (budgétaires)	_	1511 - Provisions pour litiges
+_	1515 - Provisions pour pertes de change	_	151 - Provisions pour risques
+_	15151 - Provisions pour pertes de change (non budgétaires)	_	1515 - Provisions pour pertes de change
+_	15152 - Provisions pour pertes de change (budgétaires)	_	1515 - Provisions pour pertes de change
+_	1517 - Provisions pour garanties d'emprunts	_	151 - Provisions pour risques
+_	15171 - Provisions pour garanties d'emprunts (non budgétaires)	_	1517 - Provisions pour garanties d'emprunts
+_	15172 - Provisions pour garanties d'emprunts (budgétaires)	_	1517 - Provisions pour garanties d'emprunts
+_	1518 - Autres provisions pour risques	_	151 - Provisions pour risques
+_	15181 - Autres provisions pour risques (non budgétaires)	_	1518 - Autres provisions pour risques
+_	15182 - Autres provisions pour risques (budgétaires)	_	1518 - Autres provisions pour risques
+_	152 - Provisions pour risques et charges sur emprunts	_	15 - PROVISIONS POUR RISQUES ET CHARGES
+_	1521 - Provisions pour risques et charges sur emprunts (non budgétaire)	_	152 - Provisions pour risques et charges sur emprunts
+_	1522 - Provisions pour risques et charges sur emprunts (budgétaire)	_	152 - Provisions pour risques et charges sur emprunts
+_	157 - Provisions pour charges à répartir sur plusieurs exercices	_	15 - PROVISIONS POUR RISQUES ET CHARGES
+_	1572 - Provisions pour grosses réparations	_	157 - Provisions pour charges à répartir sur plusieurs exercices
+_	15721 - Provisions pour grosses réparations (non budgétaires)	_	1572 - Provisions pour grosses réparations
+_	15722 - Provisions pour grosses réparations (budgétaires)	_	1572 - Provisions pour grosses réparations
+_	158 - Autres provisions pour charges	_	15 - PROVISIONS POUR RISQUES ET CHARGES
+_	1581 - Autres provisions pour charges (non budgétaires)	_	158 - Autres provisions pour charges
+_	1582 - Autres provisions pour charges (budgétaires)	_	158 - Autres provisions pour charges
+_	16 - EMPRUNTS ET DETTES ASSIMILEES	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	163 - Emprunts obligataires	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	1631 - Emprunts obligataires	_	163 - Emprunts obligataires
+_	16311 - Emprunts remboursables in fine	_	1631 - Emprunts obligataires
+_	16318 - Autres 	_	1631 - Emprunts obligataires
+_	1632 - Opérations sur capital non échu des emprunts obligataires remboursables in fine - Anticipation du remboursement en capital	_	163 - Emprunts obligataires
+_	164 - Emprunts auprès des établissements de crédit	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	1641 - Emprunts en euros	_	164 - Emprunts auprès des établissements de crédit
+_	1643 - Emprunts en devises	_	164 - Emprunts auprès des établissements de crédit
+_	1644 - Emprunts assortis d'une option de tirage sur ligne de trésorerie	_	164 - Emprunts auprès des établissements de crédit
+_	16441 - Opérations afférentes à l'emprunt	_	1644 - Emprunts assortis d'une option de tirage sur ligne de trésorerie
+_	16449 - Opérations afférentes à l'option de tirage sur ligne de trésorerie	_	1644 - Emprunts assortis d'une option de tirage sur ligne de trésorerie
+_	1645 - Remboursements temporaires sur emprunts auprès des établissements de crédits	_	164 - Emprunts auprès des établissements de crédit
+_	16451 - Remboursements temporaires sur emprunts en euros	_	1645 - Remboursements temporaires sur emprunts auprès des établissements de crédits
+_	16452 - Remboursements temporaires sur emprunts en devises	_	1645 - Remboursements temporaires sur emprunts auprès des établissements de crédits
+_	165 - Dépôts et cautionnements reçus	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	166 - Refinancement de dette	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	167 - Emprunts et dettes assortis de conditions particulières	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	1671 - Avances consolidées du Trésor	_	167 - Emprunts et dettes assortis de conditions particulières
+_	1672 - Emprunts sur comptes spéciaux du Trésor	_	167 - Emprunts et dettes assortis de conditions particulières
+_	1675 - Dettes afférentes aux M.E.T.P. et P.P.P.	_	167 - Emprunts et dettes assortis de conditions particulières
+_	1676 - Dettes envers locataires-acquéreurs	_	167 - Emprunts et dettes assortis de conditions particulières
+_	1678 - Autres emprunts et dettes	_	167 - Emprunts et dettes assortis de conditions particulières
+_	168 - Autres emprunts et dettes assimilées	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	1681 - Autres emprunts	_	168 - Autres emprunts et dettes assimilées
+_	16811 - Organismes d'assurances	_	1681 - Autres emprunts
+_	16812 - Entreprises non financières	_	1681 - Autres emprunts
+_	16813 - Particuliers	_	1681 - Autres emprunts
+_	16814 - Étrangers	_	1681 - Autres emprunts
+_	16818 - Autres prêteurs	_	1681 - Autres emprunts
+_	1682 - Bons à moyen terme négociables	_	168 - Autres emprunts et dettes assimilées
+_	1687 - Autres dettes	_	168 - Autres emprunts et dettes assimilées
+_	16871 - État et établissements nationaux	_	1687 - Autres dettes
+_	16872 - Régions	_	1687 - Autres dettes
+_	16873 - Départements	_	1687 - Autres dettes
+_	16874 - Communes	_	1687 - Autres dettes
+_	168741 - Communes membres du GFP	_	16874 - Communes
+_	168748 - Autres communes	_	16874 - Communes
+_	16875 - Groupements de collectivités	_	1687 - Autres dettes
+_	168751 - GFP de rattachement	_	16875 - Groupements de collectivités
+_	168758 - Autres groupements	_	16875 - Groupements de collectivités
+_	16876 - Autres établissements publics locaux	_	1687 - Autres dettes
+_	16878 - Autres organismes et particuliers 	_	1687 - Autres dettes
+_	1688 - Intérêts courus	_	168 - Autres emprunts et dettes assimilées
+_	16883 - Intérêts courus sur emprunts obligataires	_	1688 - Intérêts courus
+_	16884 - Intérêts courus sur emprunts auprès des établissements de crédit	_	1688 - Intérêts courus
+_	16888 - Intérêts sur autres emprunts et dettes assimilées	_	1688 - Intérêts courus
+_	169 - Primes de remboursement des obligations	_	16 - EMPRUNTS ET DETTES ASSIMILEES
+_	18 - compte de liaison : affectation (budgets annexes - régies non personnalisées)	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	181 - Compte de liaison : affectation à...	_	18 - compte de liaison : affectation (budgets annexes - régies non personnalisées)
+_	19 - DIFFERENCES SUR REALISATIONS D'IMMOBILISATIONS	_	1 - COMPTES DE CAPITAUX (FONDS PROPRES, EMPRUNTS ET DETTES ASSIMILÉES)
+_	192 - Plus ou moins-values sur cessions d'immobilisations	_	19 - DIFFERENCES SUR REALISATIONS D'IMMOBILISATIONS
+_	193 - Autres différences sur réalisations d'immobilisations	_	19 - DIFFERENCES SUR REALISATIONS D'IMMOBILISATIONS
+_	194 - Provisions pour risques sur emprunts - Stock au 1er janvier 2013	_	19 - DIFFERENCES SUR REALISATIONS D'IMMOBILISATIONS
+_	2 - COMPTES D'IMMOBILISATIONS	_	M14_2014
+_	20 - IMMOBILISATIONS INCORPORELLES	_	2 - COMPTES D'IMMOBILISATIONS
+_	202 - Frais liés à la réalisation des documents d'urbanisme et à la numérisation du cadastre	_	20 - IMMOBILISATIONS INCORPORELLES
+_	203 - Frais d'études, de recherche et de développement et frais d'insertion	_	20 - IMMOBILISATIONS INCORPORELLES
+_	2031 - Frais d'études	_	203 - Frais d'études, de recherche et de développement et frais d'insertion
+_	2032 - Frais de recherche et de développement	_	203 - Frais d'études, de recherche et de développement et frais d'insertion
+_	2033 - Frais d'insertion	_	203 - Frais d'études, de recherche et de développement et frais d'insertion
+_	204 - Subventions d'équipement versées	_	20 - IMMOBILISATIONS INCORPORELLES
+_	2041 - Subventions d'équipement aux organismes publics	_	204 - Subventions d'équipement versées
+_	20411 - État	_	2041 - Subventions d'équipement aux organismes publics
+_	204111 - Biens mobiliers, matériel et études	_	20411 - État
+_	204112 - Bâtiments et installations	_	20411 - État
+_	204113 - Projets d'infrastructures d'intérêt national	_	20411 - État
+_	20412 - Régions	_	2041 - Subventions d'équipement aux organismes publics
+_	204121 - Biens mobiliers, matériel et études	_	20412 - Régions
+_	204122 - Bâtiments et installations	_	20412 - Régions
+_	204123 - Projets d'infrastructures d'intérêt national	_	20412 - Régions
+_	20413 - Départements	_	2041 - Subventions d'équipement aux organismes publics
+_	204131 - Biens mobiliers, matériel et études	_	20413 - Départements
+_	204132 - Bâtiments et installations	_	20413 - Départements
+_	204133 - Projets d'infrastructures d'intérêt national	_	20413 - Départements
+_	20414 - Communes	_	2041 - Subventions d'équipement aux organismes publics
+_	204141 - Communes membres du GFP	_	20414 - Communes
+_	2041411 - Biens mobiliers, matériel et études	_	204141 - Communes membres du GFP
+_	2041412 - Bâtiments et installations	_	204141 - Communes membres du GFP
+_	20414113 - Projets d'infrastructures d'intérêt national	_	2041411 - Biens mobiliers, matériel et études
+_	204148 - Autres communes	_	20414 - Communes
+_	2041481 - Biens mobiliers, matériel et études	_	204148 - Autres communes
+_	2041482 - Bâtiments et installations	_	204148 - Autres communes
+_	2041483 - Projets d'infrastructures d'intérêt national	_	204148 - Autres communes
+_	20415 - Groupements de collectivités	_	2041 - Subventions d'équipement aux organismes publics
+_	204151 - GFP de rattachement	_	20415 - Groupements de collectivités
+_	2041511 - Biens mobiliers, matériel et études	_	204151 - GFP de rattachement
+_	2041512 - Bâtiments et installations	_	204151 - GFP de rattachement
+_	2041513 - Projets d'infrastructures d'intérêt national	_	204151 - GFP de rattachement
+_	204158 - Autres groupements	_	20415 - Groupements de collectivités
+_	2041581 - Biens mobiliers, matériel et études	_	204158 - Autres groupements
+_	2041582 - Bâtiments et installations	_	204158 - Autres groupements
+_	2041583 - Projets d'infrastructures d'intérêt national	_	204158 - Autres groupements
+_	20416 - Établissements et services rattachés	_	2041 - Subventions d'équipement aux organismes publics
+_	204161 - Caisse des écoles	_	20416 - Établissements et services rattachés
+_	2041611 - Biens mobiliers, matériel et études	_	204161 - Caisse des écoles
+_	2041612 - Bâtiments et installations	_	204161 - Caisse des écoles
+_	2041613 - Projets d'infrastructures d'intérêt national	_	204161 - Caisse des écoles
+_	204162 - CCAS	_	20416 - Établissements et services rattachés
+_	2041621 - Biens mobiliers, matériel et études	_	204162 - CCAS
+_	2041622 - Bâtiments et installations	_	204162 - CCAS
+_	2041623 - Projets d'infrastructures d'intérêt national	_	204162 - CCAS
+_	204163 - A caractère administratif	_	20416 - Établissements et services rattachés
+_	2041631 - Biens mobiliers, matériel et études	_	204163 - A caractère administratif
+_	2041632 - Bâtiments et installations	_	204163 - A caractère administratif
+_	2041633 - Projets d'infrastructures d'intérêt national	_	204163 - A caractère administratif
+_	204164 - A caractère industriel et commercial	_	20416 - Établissements et services rattachés
+_	2041641 - Biens mobiliers, matériel et études	_	204164 - A caractère industriel et commercial
+_	2041642 - Bâtiments et installations	_	204164 - A caractère industriel et commercial
+_	2041643 - Projets d'infrastructures d'intérêt national	_	204164 - A caractère industriel et commercial
+_	20417 - Autres établissements publics locaux	_	2041 - Subventions d'équipement aux organismes publics
+_	204171 - Biens mobiliers, matériel et études	_	20417 - Autres établissements publics locaux
+_	204172 - Bâtiments et installations	_	20417 - Autres établissements publics locaux
+_	204173 - Projets d'infrastructures d'intérêt national	_	20417 - Autres établissements publics locaux
+_	20418 - Autres organismes publics	_	2041 - Subventions d'équipement aux organismes publics
+_	204181 - Biens mobiliers, matériel et études	_	20418 - Autres organismes publics
+_	204182 - Bâtiments et installations	_	20418 - Autres organismes publics
+_	204183 - Projets d'infrastructures d'intérêt national	_	20418 - Autres organismes publics
+_	2042 - Subventions d'équipement aux personnes de droit privé	_	204 - Subventions d'équipement versées
+_	20421 - Biens mobiliers, matériel et études	_	2042 - Subventions d'équipement aux personnes de droit privé
+_	20422 - Bâtiments et installations	_	2042 - Subventions d'équipement aux personnes de droit privé
+_	20423 - Projets d'infrastructures d'intérêt national	_	2042 - Subventions d'équipement aux personnes de droit privé
+_	2044 - Subventions d'équipement en nature	_	204 - Subventions d'équipement versées
+_	20441 - Organismes publics	_	2044 - Subventions d'équipement en nature
+_	204411 - Biens mobiliers, matériel et études	_	20441 - Organismes publics
+_	204412 - Bâtiments et installations	_	20441 - Organismes publics
+_	204413 - Projets d'infrastructures d'intérêt national	_	20441 - Organismes publics
+_	20442 - Personnes de droit privé	_	2044 - Subventions d'équipement en nature
+_	204421 - Biens mobiliers, matériel et études	_	20442 - Personnes de droit privé
+_	204422 - Bâtiments et installations	_	20442 - Personnes de droit privé
+_	204423 - Projets d'infrastructures d'intérêt national 	_	20442 - Personnes de droit privé
+_	205 - Concessions et droits similaires, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires	_	20 - IMMOBILISATIONS INCORPORELLES
+_	2051 - Concessions et droits similaires	_	205 - Concessions et droits similaires, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires
+_	2052 - Quotas de gaz à effet de serre	_	205 - Concessions et droits similaires, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires
+_	2053 - Droit de superficie	_	205 - Concessions et droits similaires, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires
+_	208 - Autres immobilisations incorporelles	_	20 - IMMOBILISATIONS INCORPORELLES
+_	2087 - Immobilisations incorporelles reçues au titre d'une mise à disposition	_	208 - Autres immobilisations incorporelles
+_	2088 - Autres immobilisations incorporelles	_	208 - Autres immobilisations incorporelles
+_	209 - Restitutions sur immobilisations incorporelles	_	20 - IMMOBILISATIONS INCORPORELLES
+_	2095 - Consommation de quotas de gaz à effet de serre	_	209 - Restitutions sur immobilisations incorporelles
+_	21 - IMMOBILISATIONS CORPORELLES	_	2 - COMPTES D'IMMOBILISATIONS
+_	211 - Terrains	_	21 - IMMOBILISATIONS CORPORELLES
+_	2111 - Terrains nus	_	211 - Terrains
+_	2112 - Terrains de voirie	_	211 - Terrains
+_	2113 - Terrains aménagés autres que voirie	_	211 - Terrains
+_	2114 - Terrains de gisement	_	211 - Terrains
+_	2115 - Terrains bâtis	_	211 - Terrains
+_	2116 - Cimetières	_	211 - Terrains
+_	2117 - Bois et forêts	_	211 - Terrains
+_	2118 - Autres terrains	_	211 - Terrains
+_	212 - Agencements et aménagements de terrains	_	21 - IMMOBILISATIONS CORPORELLES
+_	2121 - Plantations d'arbres et d'arbustes	_	212 - Agencements et aménagements de terrains
+_	2128 - Autres agencements et aménagements de terrains	_	212 - Agencements et aménagements de terrains
+_	213 - Constructions	_	21 - IMMOBILISATIONS CORPORELLES
+_	2131 - Bâtiments publics	_	213 - Constructions
+_	21311 - Hôtel de ville	_	2131 - Bâtiments publics
+_	21312 - Bâtiments scolaires	_	2131 - Bâtiments publics
+_	21316 - Équipements du cimetière	_	2131 - Bâtiments publics
+_	21318 - Autres bâtiments publics	_	2131 - Bâtiments publics
+_	2132 - Immeubles de rapport	_	213 - Constructions
+_	2135 - Installations générales, agencements, aménagements des constructions	_	213 - Constructions
+_	2138 - Autres constructions	_	213 - Constructions
+_	214 - Constructions sur sol d'autrui	_	21 - IMMOBILISATIONS CORPORELLES
+_	2141 - Constructions sur sol d'autrui - Bâtiments publics	_	214 - Constructions sur sol d'autrui
+_	2142 - Constructions sur sol d'autrui - Immeubles de rapport	_	214 - Constructions sur sol d'autrui
+_	2143 - Constructions sur sol d'autrui - Droit de superficie	_	214 - Constructions sur sol d'autrui
+_	2145 - Construction sur sol d'autrui - Installations générales, agencements, aménagements	_	214 - Constructions sur sol d'autrui
+_	2148 - Constructions sur sol d'autrui - Autres constructions	_	214 - Constructions sur sol d'autrui
+_	215 - Installations, matériel et outillage techniques	_	21 - IMMOBILISATIONS CORPORELLES
+_	2151 - Réseaux de voirie	_	215 - Installations, matériel et outillage techniques
+_	2152 - Installations de voirie 	_	215 - Installations, matériel et outillage techniques
+_	2153 - Réseaux divers	_	215 - Installations, matériel et outillage techniques
+_	21531 - Réseaux d'adduction d'eau	_	2153 - Réseaux divers
+_	21532 - Réseaux d'assainissement	_	2153 - Réseaux divers
+_	21533 - Réseaux câblés	_	2153 - Réseaux divers
+_	21534 - Réseaux d'électrification	_	2153 - Réseaux divers
+_	21538 - Autres réseaux	_	2153 - Réseaux divers
+_	2156 - Matériel et outillage d'incendie et de défense civile	_	215 - Installations, matériel et outillage techniques
+_	21561 - Matériel roulant	_	2156 - Matériel et outillage d'incendie et de défense civile
+_	21568 - Autre matériel et outillage d'incendie et de défense civile	_	2156 - Matériel et outillage d'incendie et de défense civile
+_	2157 - Matériel et outillage de voirie	_	215 - Installations, matériel et outillage techniques
+_	21571 - Matériel roulant	_	2157 - Matériel et outillage de voirie
+_	21578 - Autre matériel et outillage de voirie	_	2157 - Matériel et outillage de voirie
+_	2158 - Autres installations, matériel et outillage techniques	_	215 - Installations, matériel et outillage techniques
+_	216 - Collections et oeuvres d'art	_	21 - IMMOBILISATIONS CORPORELLES
+_	2161 - Oeuvres et objets d'art	_	216 - Collections et oeuvres d'art
+_	2162 - Fonds anciens des bibliothèques et musées	_	216 - Collections et oeuvres d'art
+_	2168 - Autres collections et oeuvres d'art	_	216 - Collections et oeuvres d'art
+_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition	_	21 - IMMOBILISATIONS CORPORELLES
+_	2171 - Terrains	_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	21711 - Terrains nus	_	2171 - Terrains
+_	21712 - Terrains de voirie	_	2171 - Terrains
+_	21713 - Terrains aménagés autres que voirie	_	2171 - Terrains
+_	21714 - Terrains de gisement	_	2171 - Terrains
+_	21715 - Terrains bâtis	_	2171 - Terrains
+_	21718 - Autres terrains	_	2171 - Terrains
+_	2172 - Agencements et aménagements de terrains	_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	21721 - Plantations d'arbres et d'arbustes	_	2172 - Agencements et aménagements de terrains
+_	21728 - Autres agencements et aménagements de terrains	_	2172 - Agencements et aménagements de terrains
+_	2173 - Constructions	_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	21731 - Bâtiments publics	_	2173 - Constructions
+_	21732 - Immeubles de rapport	_	2173 - Constructions
+_	21735 - Installations générales, agencements, aménagements des constructions	_	2173 - Constructions
+_	21738 - Autres constructions	_	2173 - Constructions
+_	2174 - Constructions sur sol d'autrui	_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	21741 - Constructions sur sol d'autrui - Bâtiments publics	_	2174 - Constructions sur sol d'autrui
+_	21742 - Constructions sur sol d'autrui - Immeubles de rapport 	_	2174 - Constructions sur sol d'autrui
+_	21745 - Constructions sur sol d'autrui - Installations générales, agencements, aménagements	_	2174 - Constructions sur sol d'autrui
+_	21748 - Constructions sur sol d'autrui - Autres constructions	_	2174 - Constructions sur sol d'autrui
+_	2175 - Installations, matériel et outillage techniques	_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	21751 - Réseaux de voirie	_	2175 - Installations, matériel et outillage techniques
+_	21752 - Installations de voirie	_	2175 - Installations, matériel et outillage techniques
+_	21753 - Réseaux divers	_	2175 - Installations, matériel et outillage techniques
+_	217533 - Réseaux câblés	_	21753 - Réseaux divers
+_	217534 - Réseaux d'électrification	_	21753 - Réseaux divers
+_	217538 - Autres réseaux	_	21753 - Réseaux divers
+_	21757 - Matériel et outillage de voirie	_	2175 - Installations, matériel et outillage techniques
+_	21758 - Autres installations, matériel et outillage techniques	_	2175 - Installations, matériel et outillage techniques
+_	2178 - Autres immobilisations corporelles reçues au titre d'une mise à disposition	_	217 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	21782 - Matériel de transport	_	2178 - Autres immobilisations corporelles reçues au titre d'une mise à disposition
+_	21783 - Matériel de bureau et matériel informatique	_	2178 - Autres immobilisations corporelles reçues au titre d'une mise à disposition
+_	21784 - Mobilier	_	2178 - Autres immobilisations corporelles reçues au titre d'une mise à disposition
+_	21785 - Cheptel	_	2178 - Autres immobilisations corporelles reçues au titre d'une mise à disposition
+_	21788 - Autres immobilisations corporelles reçues au titre d'une mise à disposition	_	2178 - Autres immobilisations corporelles reçues au titre d'une mise à disposition
+_	218 - Autres immobilisations corporelles	_	21 - IMMOBILISATIONS CORPORELLES
+_	2181 - Installations générales, agencements et aménagements divers	_	218 - Autres immobilisations corporelles
+_	2182 - Matériel de transport	_	218 - Autres immobilisations corporelles
+_	2183 - Matériel de bureau et matériel informatique	_	218 - Autres immobilisations corporelles
+_	2184 - Mobilier	_	218 - Autres immobilisations corporelles
+_	2185 - Cheptel	_	218 - Autres immobilisations corporelles
+_	2188 - Autres immobilisations corporelles	_	218 - Autres immobilisations corporelles
+_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION	_	2 - COMPTES D'IMMOBILISATIONS
+_	221 - Terrains	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2211 - Terrains nus	_	221 - Terrains
+_	2213 - Terrains aménagés autres que voirie	_	221 - Terrains
+_	2214 - Terrains de gisement	_	221 - Terrains
+_	2215 - Terrains bâtis	_	221 - Terrains
+_	2218 - Autres terrains	_	221 - Terrains
+_	222 - Agencements et aménagements de terrains	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2221 - Plantations d'arbres et d'arbustes	_	222 - Agencements et aménagements de terrains
+_	2228 - Autres agencements et aménagements de terrains 	_	222 - Agencements et aménagements de terrains
+_	223 - Constructions	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2231 - Bâtiments publics	_	223 - Constructions
+_	2232 - Immeubles de rapport	_	223 - Constructions
+_	2235 - Installations générales, agencements, aménagements des constructions	_	223 - Constructions
+_	2238 - Autres constructions	_	223 - Constructions
+_	224 - Constructions sur sol d'autrui	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2241 - Constructions sur sol d'autrui - Bâtiments publics	_	224 - Constructions sur sol d'autrui
+_	2242 - Constructions sur sol d'autrui - Immeubles de rapport	_	224 - Constructions sur sol d'autrui
+_	2245 - Constructions sur sol d'autrui - Installations générales, agencements, aménagements	_	224 - Constructions sur sol d'autrui
+_	2248 - Constructions sur sol d'autrui - Autres constructions	_	224 - Constructions sur sol d'autrui
+_	225 - Installations, matériel et outillage techniques	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2253 - Réseaux divers	_	225 - Installations, matériel et outillage techniques
+_	22533 - Réseaux câblés	_	2253 - Réseaux divers
+_	22534 - Réseaux d'électrification	_	2253 - Réseaux divers
+_	22538 - Autres réseaux	_	2253 - Réseaux divers
+_	2256 - Matériel et outillage d'incendie et de défense civile	_	225 - Installations, matériel et outillage techniques
+_	2257 - Matériel et outillage de voirie	_	225 - Installations, matériel et outillage techniques
+_	2258 - Autres installations, matériel et outillage techniques 	_	225 - Installations, matériel et outillage techniques
+_	226 - Collections et oeuvres d'art	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2261 - Oeuvres et objets d'art	_	226 - Collections et oeuvres d'art
+_	2262 - Fonds anciens des bibliothèques et musées	_	226 - Collections et oeuvres d'art
+_	2268 - Autres collections et oeuvres d'art	_	226 - Collections et oeuvres d'art
+_	228 - Autres immobilisations corporelles	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2281 - Installations générales, agencements et aménagements divers	_	228 - Autres immobilisations corporelles
+_	2282 - Matériel de transport	_	228 - Autres immobilisations corporelles
+_	2283 - Matériel de bureau et matériel informatique	_	228 - Autres immobilisations corporelles
+_	2284 - Mobilier	_	228 - Autres immobilisations corporelles
+_	2285 - Cheptel	_	228 - Autres immobilisations corporelles
+_	2288 - Autres immobilisations corporelles	_	228 - Autres immobilisations corporelles
+_	229 - Droits de l'affectant	_	22 - IMMOBILISATIONS REÇUES EN AFFECTATION
+_	2291 - Commune	_	229 - Droits de l'affectant
+_	2293 - Établissements Publics de Coopération Intercommunale	_	229 - Droits de l'affectant
+_	2298 - Autres droits de l'affectant 	_	229 - Droits de l'affectant
+_	23 - IMMOBILISATIONS EN COURS	_	2 - COMPTES D'IMMOBILISATIONS
+_	231 - Immobilisations corporelles en cours	_	23 - IMMOBILISATIONS EN COURS
+_	2312 - Agencements et aménagements de terrains	_	231 - Immobilisations corporelles en cours
+_	2313 - Constructions	_	231 - Immobilisations corporelles en cours
+_	2314 - Constructions sur sol d'autrui	_	231 - Immobilisations corporelles en cours
+_	2315 - Installations, matériel et outillage techniques	_	231 - Immobilisations corporelles en cours
+_	2316 - Restauration des collections et oeuvres d'art	_	231 - Immobilisations corporelles en cours
+_	2317 - Immobilisations corporelles reçues au titre d'une mise à disposition	_	231 - Immobilisations corporelles en cours
+_	2318 - Autres immobilisations corporelles en cours	_	231 - Immobilisations corporelles en cours
+_	232 - Immobilisations incorporelles en cours	_	23 - IMMOBILISATIONS EN COURS
+_	235 - Part investissement  P.P.P.	_	23 - IMMOBILISATIONS EN COURS
+_	237 - Avances versées sur commandes d'immobilisations incorporelles	_	23 - IMMOBILISATIONS EN COURS
+_	238 - Avances versées sur commandes d'immobilisations corporelles	_	23 - IMMOBILISATIONS EN COURS
+_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION	_	2 - COMPTES D'IMMOBILISATIONS
+_	241 - Immobilisations mises en concession ou en affermage	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	242 - Immobilisations mises à disposition dans le cadre du transfert de compétences	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	2421 - de la région (enseignement)	_	242 - Immobilisations mises à disposition dans le cadre du transfert de compétences
+_	2422 - du département (enseignement)	_	242 - Immobilisations mises à disposition dans le cadre du transfert de compétences
+_	2423 - d'établissements publics de coopération intercommunale	_	242 - Immobilisations mises à disposition dans le cadre du transfert de compétences
+_	2424 - des services départementaux d'incendie et de secours	_	242 - Immobilisations mises à disposition dans le cadre du transfert de compétences
+_	243 - Immobilisations mises en affectation à une régie dotée de la personnalité morale et de l'autonomie financière	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	244 - Immobilisations mises en affectation à un centre communal d'action sociale	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	245 - Immobilisations mises en affectation à une caisse des écoles	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	246 - Immobilisations mises en affectation à un établissement public de coopération intercommunale	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	248 - Autres immobilisations mises en affectation	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	249 - Droits du remettant	_	24 - IMMOBILISATIONS AFFECTEES, CONCÉDÉES, AFFERMÉES OU MISES À DISPOSITION
+_	2491 - Mises en concession ou en affermage	_	249 - Droits du remettant
+_	2492 - Mises à disposition dans le cadre du transfert de compétences	_	249 - Droits du remettant
+_	2493 - Mises en affectation à une régie dotée de la personnalité morale et de l'autonomie financière 	_	249 - Droits du remettant
+_	2494 - Mises en affectation à un centre communal d'action sociale	_	249 - Droits du remettant
+_	2495 - Mises en affectation à une caisse des écoles	_	249 - Droits du remettant
+_	2496 - Mises en affectation à un établissement public de coopération intercommunale	_	249 - Droits du remettant
+_	2498 - Autres mises en affectation	_	249 - Droits du remettant
+_	26 - PARTICIPATIONS ET CRÉANCES RATTACHÉES À DES PARTICIPATIONS	_	2 - COMPTES D'IMMOBILISATIONS
+_	261 - Titres de participation	_	26 - PARTICIPATIONS ET CRÉANCES RATTACHÉES À DES PARTICIPATIONS
+_	266 - Autres formes de participation	_	26 - PARTICIPATIONS ET CRÉANCES RATTACHÉES À DES PARTICIPATIONS
+_	269 - Versements restant à effectuer sur titres de participation non libérés	_	26 - PARTICIPATIONS ET CRÉANCES RATTACHÉES À DES PARTICIPATIONS
+_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES	_	2 - COMPTES D'IMMOBILISATIONS
+_	271 - Titres immobilisés (droits de propriété)	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	272 - Titres immobilisés (droits de créance)	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	273 - Comptes de placements (long terme)	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	2731 - Comptes de placements rémunérés	_	273 - Comptes de placements (long terme)
+_	2732 - Fonds d'épargne forestière	_	273 - Comptes de placements (long terme)
+_	274 - Prêts	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	275 - Dépôts et cautionnements versés	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	276 - Autres créances immobilisées	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	2761 - Créances pour avances en garantie d'emprunt	_	276 - Autres créances immobilisées
+_	2762 - Créances sur transfert de droits à déduction de T.V.A.	_	276 - Autres créances immobilisées
+_	2763 - Créances sur des collectivités et établissements publics	_	276 - Autres créances immobilisées
+_	27631 - État et établissements nationaux	_	2763 - Créances sur des collectivités et établissements publics
+_	27632 - Régions	_	2763 - Créances sur des collectivités et établissements publics
+_	27633 - Départements	_	2763 - Créances sur des collectivités et établissements publics
+_	27634 - Communes	_	2763 - Créances sur des collectivités et établissements publics
+_	276341 - Communes membres du GFP	_	27634 - Communes
+_	276348 - Autres communes	_	27634 - Communes
+_	27635 - Groupements de collectivités	_	2763 - Créances sur des collectivités et établissements publics
+_	276351 - GFP de rattachement	_	27635 - Groupements de collectivités
+_	276358 - Autres groupements	_	27635 - Groupements de collectivités
+_	27636 - C.C.A.S. et caisse des écoles	_	2763 - Créances sur des collectivités et établissements publics
+_	27638 - Autres établissements publics	_	2763 - Créances sur des collectivités et établissements publics
+_	2764 - Créances sur des particuliers et autres personnes de droit privé	_	276 - Autres créances immobilisées
+_	2766 - Créances pour locations-acquisitions 	_	276 - Autres créances immobilisées
+_	2768 - Intérêts courus	_	276 - Autres créances immobilisées
+_	27682 - Intérêts courus sur titres immobilisés (droits de créance)	_	2768 - Intérêts courus
+_	27684 - Intérêts courus sur prêts	_	2768 - Intérêts courus
+_	27688 - Intérêts courus sur créances diverses	_	2768 - Intérêts courus
+_	279 - Versements restant à effectuer sur titres immobilisés non libérés	_	27 - AUTRES IMMOBILISATIONS FINANCIÈRES
+_	28 - AMORTISSEMENTS DES IMMOBILISATIONS	_	2 - COMPTES D'IMMOBILISATIONS
+_	280 - Amortissements des immobilisations incorporelles	_	28 - AMORTISSEMENTS DES IMMOBILISATIONS
+_	2802 - Frais liés à la réalisation des documents d'urbanisme et à la numérisation du cadastre	_	280 - Amortissements des immobilisations incorporelles
+_	2803 - Frais d'études, de recherche et de développement et frais d'insertion	_	280 - Amortissements des immobilisations incorporelles
+_	28031 - Frais d'études	_	2803 - Frais d'études, de recherche et de développement et frais d'insertion
+_	28032 - Frais de recherche et de développement	_	2803 - Frais d'études, de recherche et de développement et frais d'insertion
+_	28033 - Frais d'insertion	_	2803 - Frais d'études, de recherche et de développement et frais d'insertion
+_	2804 - Subventions d'équipement versées	_	280 - Amortissements des immobilisations incorporelles
+_	28041 - Subventions d'équipement aux organismes publics	_	2804 - Subventions d'équipement versées
+_	280411 - État 	_	28041 - Subventions d'équipement aux organismes publics
+_	2804111 - Biens mobiliers, matériel et études	_	280411 - État 
+_	2804112 - Bâtiments et installations	_	280411 - État 
+_	2804113 - Projets d'infrastructures d'intérêt national	_	280411 - État 
+_	280412 - Régions	_	28041 - Subventions d'équipement aux organismes publics
+_	2804121 - Biens mobiliers, matériel et études	_	280412 - Régions
+_	2804122 - Bâtiments et installations	_	280412 - Régions
+_	2804123 - Projets d'infrastructures d'intérêt national	_	280412 - Régions
+_	280413 - Départements	_	28041 - Subventions d'équipement aux organismes publics
+_	2804131 - Biens mobiliers, matériel et études	_	280413 - Départements
+_	2804132 - Bâtiments et installations	_	280413 - Départements
+_	2804133 - Projets d'infrastructures d'intérêt national	_	280413 - Départements
+_	280414 - Communes	_	28041 - Subventions d'équipement aux organismes publics
+_	2804141 - Communes membres du GFP	_	280414 - Communes
+_	28041411 - Biens mobiliers, matériel et études	_	2804141 - Communes membres du GFP
+_	28041412 - Bâtiments et installations	_	2804141 - Communes membres du GFP
+_	280414113 - Projets d'infrastructures d'intérêt national	_	28041411 - Biens mobiliers, matériel et études
+_	2804148 - Autres communes	_	280414 - Communes
+_	28041481 - Biens mobiliers, matériel et études	_	2804148 - Autres communes
+_	28041482 - Bâtiments et installations	_	2804148 - Autres communes
+_	28041483 - Projets d'infrastructures d'intérêt national	_	2804148 - Autres communes
+_	280415 - Groupements de collectivités	_	28041 - Subventions d'équipement aux organismes publics
+_	2804151 - GFP de rattachement	_	280415 - Groupements de collectivités
+_	28041511 - Biens mobiliers, matériel et études	_	2804151 - GFP de rattachement
+_	28041512 - Bâtiments et installations	_	2804151 - GFP de rattachement
+_	28041513 - Projets d'infrastructures d'intérêt national	_	2804151 - GFP de rattachement
+_	2804158 - Autres groupements	_	280415 - Groupements de collectivités
+_	28041581 - Biens mobiliers, matériel et études	_	2804158 - Autres groupements
+_	28041582 - Bâtiments et installations	_	2804158 - Autres groupements
+_	28041583 - Projets d'infrastructures d'intérêt national	_	2804158 - Autres groupements
+_	280416 - Établissements et services rattachés	_	28041 - Subventions d'équipement aux organismes publics
+_	2804161 - Caisse des écoles	_	280416 - Établissements et services rattachés
+_	28041611 - Biens mobiliers, matériel et études	_	2804161 - Caisse des écoles
+_	28041612 - Bâtiments et installations	_	2804161 - Caisse des écoles
+_	28041613 - Projets d'infrastructures d'intérêt national	_	2804161 - Caisse des écoles
+_	2804162 - CCAS	_	280416 - Établissements et services rattachés
+_	28041621 - Biens mobiliers, matériel et études	_	2804162 - CCAS
+_	28041622 - Bâtiments et installations	_	2804162 - CCAS
+_	28041623 - Projets d'infrastructures d'intérêt national	_	2804162 - CCAS
+_	2804163 - A caractère administratif	_	280416 - Établissements et services rattachés
+_	28041631 - Biens mobiliers, matériel et études	_	2804163 - A caractère administratif
+_	28041632 - Bâtiments et installations	_	2804163 - A caractère administratif
+_	28041633 - Projets d'infrastructures d'intérêt national	_	2804163 - A caractère administratif
+_	2804164 - A caractère industriel et commercial	_	280416 - Établissements et services rattachés
+_	28041641 - Biens mobiliers, matériel et études	_	2804164 - A caractère industriel et commercial
+_	28041642 - Bâtiments et installations	_	2804164 - A caractère industriel et commercial
+_	28041643 - Projets d'infrastructures d'intérêt national	_	2804164 - A caractère industriel et commercial
+_	280417 - Autres établissements publics locaux	_	28041 - Subventions d'équipement aux organismes publics
+_	2804171 - Biens mobiliers, matériel et études	_	280417 - Autres établissements publics locaux
+_	2804172 - Bâtiments et installations	_	280417 - Autres établissements publics locaux
+_	2804173 - Projets d'infrastructures d'intérêt national	_	280417 - Autres établissements publics locaux
+_	280418 - Autres organismes publics	_	28041 - Subventions d'équipement aux organismes publics
+_	2804181 - Biens mobiliers, matériel et études	_	280418 - Autres organismes publics
+_	2804182 - Bâtiments et installations	_	280418 - Autres organismes publics
+_	2804183 - Projets d'infrastructures d'intérêt national	_	280418 - Autres organismes publics
+_	28042 - Subventions d'équipement aux personnes de droit privé	_	2804 - Subventions d'équipement versées
+_	280421 - Biens mobiliers, matériel et études	_	28042 - Subventions d'équipement aux personnes de droit privé
+_	280422 - Bâtiments et installations	_	28042 - Subventions d'équipement aux personnes de droit privé
+_	280423 - Projets d'infrastructures d'intérêt national	_	28042 - Subventions d'équipement aux personnes de droit privé
+_	28044 - Subventions d'équipement en nature	_	2804 - Subventions d'équipement versées
+_	280441 - Organismes publics	_	28044 - Subventions d'équipement en nature
+_	2804411 - Biens mobiliers, matériel et études	_	280441 - Organismes publics
+_	2804412 - Bâtiments et installations	_	280441 - Organismes publics
+_	2804413 - Projets d'infrastructures d'intérêt national	_	280441 - Organismes publics
+_	280442 - Personnes de droit privé	_	28044 - Subventions d'équipement en nature
+_	2804421 - Biens mobiliers, matériel et études	_	280442 - Personnes de droit privé
+_	2804422 - Bâtiments et installations	_	280442 - Personnes de droit privé
+_	2804423 - Projets d'infrastructures d'intérêt national 	_	280442 - Personnes de droit privé
+_	2805 - Concessions et droits similaires, brevets, licences, logiciels, droits et valeurs similaires	_	280 - Amortissements des immobilisations incorporelles
+_	28051 - Concessions et droits similaires	_	2805 - Concessions et droits similaires, brevets, licences, logiciels, droits et valeurs similaires
+_	2808 - Autres immobilisations incorporelles	_	280 - Amortissements des immobilisations incorporelles
+_	28087 - Immobilisations incorporelles reçues au titre d'une mise à disposition	_	2808 - Autres immobilisations incorporelles
+_	28088 - Autres immobilisations incorporelles	_	2808 - Autres immobilisations incorporelles
+_	281 - Amortissements des immobilisations corporelles	_	28 - AMORTISSEMENTS DES IMMOBILISATIONS
+_	2811 - Terrains de gisement	_	281 - Amortissements des immobilisations corporelles
+_	2812 - Agencements et aménagements de terrains	_	281 - Amortissements des immobilisations corporelles
+_	28121 - Plantations d'arbres et d'arbustes	_	2812 - Agencements et aménagements de terrains
+_	28128 - Autres agencements et aménagements de terrains	_	2812 - Agencements et aménagements de terrains
+_	2813 - Constructions	_	281 - Amortissements des immobilisations corporelles
+_	28131 - Bâtiments publics	_	2813 - Constructions
+_	281311 - Hôtel de ville	_	28131 - Bâtiments publics
+_	281312 - Bâtiments scolaires	_	28131 - Bâtiments publics
+_	281316 - Équipements du cimetière	_	28131 - Bâtiments publics
+_	281318 - Autres bâtiments publics	_	28131 - Bâtiments publics
+_	28132 - Immeubles de rapport	_	2813 - Constructions
+_	28135 - Installations générales, agencements, aménagements des constructions	_	2813 - Constructions
+_	28138 - Autres constructions	_	2813 - Constructions
+_	2814 - Constructions sur sol d'autrui	_	281 - Amortissements des immobilisations corporelles
+_	28141 - Bâtiments publics	_	2814 - Constructions sur sol d'autrui
+_	28142 - Immeubles de rapport	_	2814 - Constructions sur sol d'autrui
+_	28143 - Droit de superficie	_	2814 - Constructions sur sol d'autrui
+_	28145 - Installations générales, agencements et aménagements	_	2814 - Constructions sur sol d'autrui
+_	28148 - Autres constructions sur sol d'autrui	_	2814 - Constructions sur sol d'autrui
+_	2815 - Installations, matériel et outillage techniques	_	281 - Amortissements des immobilisations corporelles
+_	28151 - Réseaux de voirie	_	2815 - Installations, matériel et outillage techniques
+_	28152 - Installations de voirie	_	2815 - Installations, matériel et outillage techniques
+_	28153 - Réseaux divers	_	2815 - Installations, matériel et outillage techniques
+_	281531 - Réseaux d'adduction d'eau	_	28153 - Réseaux divers
+_	281532 - Réseaux d'assainissement	_	28153 - Réseaux divers
+_	281533 - Réseaux câblés	_	28153 - Réseaux divers
+_	281534 - Réseaux d'électrification	_	28153 - Réseaux divers
+_	281538 - Autres réseaux	_	28153 - Réseaux divers
+_	28156 - Matériel et outillage d'incendie et de défense civile	_	2815 - Installations, matériel et outillage techniques
+_	281561 - Matériel roulant	_	28156 - Matériel et outillage d'incendie et de défense civile
+_	281568 - Autre matériel et outillage d'incendie et de défense civile 	_	28156 - Matériel et outillage d'incendie et de défense civile
+_	28157 - Matériel et outillage de voirie	_	2815 - Installations, matériel et outillage techniques
+_	281571 - Matériel roulant	_	28157 - Matériel et outillage de voirie
+_	281578 - Autre matériel et outillage de voirie	_	28157 - Matériel et outillage de voirie
+_	28158 - Autres installations, matériel et outillage techniques	_	2815 - Installations, matériel et outillage techniques
+_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition	_	281 - Amortissements des immobilisations corporelles
+_	28171 - Terrains	_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	28172 - Agencements et aménagements de terrains	_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	281721 - Plantations d'arbres et d'arbustes	_	28172 - Agencements et aménagements de terrains
+_	281728 - Autres agencements et aménagements	_	28172 - Agencements et aménagements de terrains
+_	28173 - Constructions	_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	281731 - Bâtiments publics	_	28173 - Constructions
+_	281732 - Immeubles de rapport	_	28173 - Constructions
+_	281735 - Installations générales, agencements, aménagements des constructions	_	28173 - Constructions
+_	281738 - Autres constructions	_	28173 - Constructions
+_	28174 - Constructions sur sol d'autrui	_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	281741 - Constructions sur le sol d'autrui - Bâtiments publics	_	28174 - Constructions sur sol d'autrui
+_	281742 - Constructions sur le sol d'autrui - Immeubles de rapport	_	28174 - Constructions sur sol d'autrui
+_	281745 - Constructions sur le sol d'autrui - Installations générales, agencements, aménagements	_	28174 - Constructions sur sol d'autrui
+_	281748 - Constructions sur le sol d'autrui - Autres constructions	_	28174 - Constructions sur sol d'autrui
+_	28175 - Installations, matériel et outillage techniques	_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	281751 - Réseaux de voirie	_	28175 - Installations, matériel et outillage techniques
+_	281752 - Installations de voirie	_	28175 - Installations, matériel et outillage techniques
+_	281753 - Réseaux divers	_	28175 - Installations, matériel et outillage techniques
+_	2817533 - Réseaux câblés	_	281753 - Réseaux divers
+_	2817534 - Réseaux d'électrification	_	281753 - Réseaux divers
+_	2817538 - Autres réseaux	_	281753 - Réseaux divers
+_	281757 - Matériel et outillage de voirie	_	28175 - Installations, matériel et outillage techniques
+_	281758 - Autres installations, matériel et outillage techniques	_	28175 - Installations, matériel et outillage techniques
+_	28178 - Autres immobilisations corporelles reçues au titre d'une lise à disposition	_	2817 - Immobilisations corporelles reçues au titre d'une mise à disposition
+_	281782 - Matériel de transport	_	28178 - Autres immobilisations corporelles reçues au titre d'une lise à disposition
+_	281783 - Matériel de bureau et matériel informatique	_	28178 - Autres immobilisations corporelles reçues au titre d'une lise à disposition
+_	281784 - Mobilier	_	28178 - Autres immobilisations corporelles reçues au titre d'une lise à disposition
+_	281785 - Cheptel	_	28178 - Autres immobilisations corporelles reçues au titre d'une lise à disposition
+_	281788 - Autres immobilisations corporelles reçues au titre d'une mise à disposition 	_	28178 - Autres immobilisations corporelles reçues au titre d'une lise à disposition
+_	2818 - Autres immobilisations corporelles	_	281 - Amortissements des immobilisations corporelles
+_	28181 - Installations générales, agencements et aménagements divers	_	2818 - Autres immobilisations corporelles
+_	28182 - Matériel de transport	_	2818 - Autres immobilisations corporelles
+_	28183 - Matériel de bureau et matériel informatique	_	2818 - Autres immobilisations corporelles
+_	28184 - Mobilier	_	2818 - Autres immobilisations corporelles
+_	28185 - Cheptel	_	2818 - Autres immobilisations corporelles
+_	28188 - Autres immobilisations corporelles	_	2818 - Autres immobilisations corporelles
+_	282 - Amortissements des immobilisations reçues en affectation	_	28 - AMORTISSEMENTS DES IMMOBILISATIONS
+_	2821 - Terrains de gisement	_	282 - Amortissements des immobilisations reçues en affectation
+_	2822 - Agencements et aménagements de terrains	_	282 - Amortissements des immobilisations reçues en affectation
+_	28221 - Plantations d'arbres et d'arbustes	_	2822 - Agencements et aménagements de terrains
+_	28228 - Autres agencements et aménagements de terrains	_	2822 - Agencements et aménagements de terrains
+_	2823 - Constructions	_	282 - Amortissements des immobilisations reçues en affectation
+_	28231 - Bâtiments publics	_	2823 - Constructions
+_	28232 - Immeubles de rapport	_	2823 - Constructions
+_	28235 - Installations générales, agencements et aménagements des constructions	_	2823 - Constructions
+_	28238 - Autres constructions	_	2823 - Constructions
+_	2824 - Constructions sur sol d'autrui	_	282 - Amortissements des immobilisations reçues en affectation
+_	28241 - Bâtiments publics	_	2824 - Constructions sur sol d'autrui
+_	28242 - Immeubles de rapport	_	2824 - Constructions sur sol d'autrui
+_	28245 - Installations générales, agencements, aménagements	_	2824 - Constructions sur sol d'autrui
+_	28248 - Autres constructions	_	2824 - Constructions sur sol d'autrui
+_	2825 - Installations, matériel et outillage techniques	_	282 - Amortissements des immobilisations reçues en affectation
+_	28253 - Réseaux divers	_	2825 - Installations, matériel et outillage techniques
+_	282533 - Réseaux câblés	_	28253 - Réseaux divers
+_	282534 - Réseaux d'électrification	_	28253 - Réseaux divers
+_	282538 - Autres réseaux	_	28253 - Réseaux divers
+_	28256 - Matériel et outillage d'incendie et de défense civile	_	2825 - Installations, matériel et outillage techniques
+_	28257 - Matériel et outillage de nettoiement	_	2825 - Installations, matériel et outillage techniques
+_	28258 - Autres installations techniques, matériel et outillage industriel	_	2825 - Installations, matériel et outillage techniques
+_	2828 - Autres immobilisations corporelles	_	282 - Amortissements des immobilisations reçues en affectation
+_	28281 - Installations générales, agencements et aménagements divers	_	2828 - Autres immobilisations corporelles
+_	28282 - Matériel de transport	_	2828 - Autres immobilisations corporelles
+_	28283 - Matériel de bureau et matériel informatique	_	2828 - Autres immobilisations corporelles
+_	28284 - Mobilier	_	2828 - Autres immobilisations corporelles
+_	28285 - Cheptel	_	2828 - Autres immobilisations corporelles
+_	28288 - Autres immobilisations corporelles reçues en affectation	_	2828 - Autres immobilisations corporelles
+_	29 - PROVISIONS POUR DÉPRÉCIATION DES IMMOBILISATIONS	_	2 - COMPTES D'IMMOBILISATIONS
+_	290 - Provisions pour dépréciation des immobilisations incorporelles	_	29 - PROVISIONS POUR DÉPRÉCIATION DES IMMOBILISATIONS
+_	2905 - Marques, procédés, droits et valeurs similaires	_	290 - Provisions pour dépréciation des immobilisations incorporelles
+_	29051 - Marques, procédés, droits et valeurs similaires (non budgétaires)	_	2905 - Marques, procédés, droits et valeurs similaires
+_	29052 - Marques, procédés, droits et valeurs similaires (budgétaires)	_	2905 - Marques, procédés, droits et valeurs similaires
+_	2908 - Autres immobilisations incorporelles	_	290 - Provisions pour dépréciation des immobilisations incorporelles
+_	29081 - Autres immobilisations incorporelles (non budgétaires)	_	2908 - Autres immobilisations incorporelles
+_	29082 - Autres immobilisations incorporelles (budgétaires)	_	2908 - Autres immobilisations incorporelles
+_	291 - Provisions pour dépréciation des immobilisations corporelles	_	29 - PROVISIONS POUR DÉPRÉCIATION DES IMMOBILISATIONS
+_	2911 - Terrains (autres que terrains de gisement)	_	291 - Provisions pour dépréciation des immobilisations corporelles
+_	29111 - Terrains - autres que terrains de gisement (non budgétaires)	_	2911 - Terrains (autres que terrains de gisement)
+_	29112 - Terrains - autres que terrains de gisement (budgétaires)	_	2911 - Terrains (autres que terrains de gisement)
+_	2913 - Constructions	_	291 - Provisions pour dépréciation des immobilisations corporelles
+_	29131 - Constructions (non budgétaires)	_	2913 - Constructions
+_	29132 - Constructions (budgétaires)	_	2913 - Constructions
+_	2914 - Constructions sur sol d'autrui	_	291 - Provisions pour dépréciation des immobilisations corporelles
+_	29141 - Constructions sur sol d'autrui (non budgétaires)	_	2914 - Constructions sur sol d'autrui
+_	29142 - Constructions sur sol d'autrui (budgétaires)	_	2914 - Constructions sur sol d'autrui
+_	293 - Provisions pour dépréciation des immobilisations en cours	_	29 - PROVISIONS POUR DÉPRÉCIATION DES IMMOBILISATIONS
+_	2931 - Immobilisations corporelles en cours	_	293 - Provisions pour dépréciation des immobilisations en cours
+_	29311 - Immobilisations corporelles en cours (non budgétaires)	_	2931 - Immobilisations corporelles en cours
+_	29312 - Immobilisations corporelles en cours (budgétaires)	_	2931 - Immobilisations corporelles en cours
+_	2932 - Immobilisations incorporelles en cours	_	293 - Provisions pour dépréciation des immobilisations en cours
+_	29321 - Immobilisations incorporelles en cours (non budgétaires)	_	2932 - Immobilisations incorporelles en cours
+_	29322 - Immobilisations incorporelles en cours (budgétaires)	_	2932 - Immobilisations incorporelles en cours
+_	296 - Provisions pour dépréciation des participations et créances rattachées à des participations	_	29 - PROVISIONS POUR DÉPRÉCIATION DES IMMOBILISATIONS
+_	2961 - Titres de participation	_	296 - Provisions pour dépréciation des participations et créances rattachées à des participations
+_	29611 - Titres de participation (non budgétaires)	_	2961 - Titres de participation
+_	29612 - Titres de participation (budgétaires)	_	2961 - Titres de participation
+_	2966 - Autres formes de participation	_	296 - Provisions pour dépréciation des participations et créances rattachées à des participations
+_	29661 - Autres formes de participation (non budgétaires)	_	2966 - Autres formes de participation
+_	29662 - Autres formes de participation (budgétaires)	_	2966 - Autres formes de participation
+_	297 - Provisions pour dépréciation des autres immobilisations financières	_	29 - PROVISIONS POUR DÉPRÉCIATION DES IMMOBILISATIONS
+_	2971 - Titres immobilisés - Droits de propriété	_	297 - Provisions pour dépréciation des autres immobilisations financières
+_	29711 - Titres immobilisés - Droits de propriété (non budgétaires)	_	2971 - Titres immobilisés - Droits de propriété
+_	29712 - Titres immobilisés - Droits de propriété (budgétaires)	_	2971 - Titres immobilisés - Droits de propriété
+_	2972 - Titres immobilisés - Droits de créance	_	297 - Provisions pour dépréciation des autres immobilisations financières
+_	29721 - Titres immobilisés - Droits de créance (non budgétaires)	_	2972 - Titres immobilisés - Droits de créance
+_	29722 - Titres immobilisés - Droits de créance (budgétaires)	_	2972 - Titres immobilisés - Droits de créance
+_	2974 - Prêts	_	297 - Provisions pour dépréciation des autres immobilisations financières
+_	29741 - Prêts (non budgétaires)	_	2974 - Prêts
+_	29742 - Prêts (budgétaires)	_	2974 - Prêts
+_	2975 - Dépôts et cautionnements versés	_	297 - Provisions pour dépréciation des autres immobilisations financières
+_	29751 - Dépôts et cautionnements versés (non budgétaires)	_	2975 - Dépôts et cautionnements versés
+_	29752 - Dépôts et cautionnements versés (budgétaires)	_	2975 - Dépôts et cautionnements versés
+_	2976 - Autres créances immobilisées	_	297 - Provisions pour dépréciation des autres immobilisations financières
+_	29761 - Créances pour avances en garantie d'emprunt	_	2976 - Autres créances immobilisées
+_	297611 - Créances pour avances en garantie d'emprunt (non budgétaires)	_	29761 - Créances pour avances en garantie d'emprunt
+_	297612 - Créances pour avances en garantie d'emprunt (budgétaires)	_	29761 - Créances pour avances en garantie d'emprunt
+_	29768 - Autres créances immobilisées	_	2976 - Autres créances immobilisées
+_	297681 - Autres créances immobilisées (non budgétaires)	_	29768 - Autres créances immobilisées
+_	297682 - Autres créances immobilisées (budgétaires)	_	29768 - Autres créances immobilisées
+_	3 - COMPTES DE STOCKS ET EN-COURS	_	M14_2014
+_	31 - MATIÈRES PREMIÈRES (ET FOURNITURES)	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	311 - Matières premières et fournitures autres que terrains	_	31 - MATIÈRES PREMIÈRES (ET FOURNITURES)
+_	315 - Terrains à aménager	_	31 - MATIÈRES PREMIÈRES (ET FOURNITURES)
+_	32 - AUTRES APPROVISIONNEMENTS	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	321 - Matières consommables	_	32 - AUTRES APPROVISIONNEMENTS
+_	322 - Fournitures consommables autres qu'alimentation	_	32 - AUTRES APPROVISIONNEMENTS
+_	3221 - Combustibles et carburants	_	322 - Fournitures consommables autres qu'alimentation
+_	3222 - Produits d'entretien	_	322 - Fournitures consommables autres qu'alimentation
+_	3223 - Fournitures des ateliers municipaux	_	322 - Fournitures consommables autres qu'alimentation
+_	3224 - Fournitures administratives	_	322 - Fournitures consommables autres qu'alimentation
+_	3225 - Livres, disques, cassettes (bibliothèques, médiathèques)	_	322 - Fournitures consommables autres qu'alimentation
+_	3226 - Vêtements de travail	_	322 - Fournitures consommables autres qu'alimentation
+_	3227 - Fournitures scolaires	_	322 - Fournitures consommables autres qu'alimentation
+_	3228 - Autres fournitures consommables	_	322 - Fournitures consommables autres qu'alimentation
+_	323 - Alimentation	_	32 - AUTRES APPROVISIONNEMENTS
+_	33 - EN-COURS DE PRODUCTION DE BIENS	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	331 - Produits en cours	_	33 - EN-COURS DE PRODUCTION DE BIENS
+_	335 - Travaux en cours	_	33 - EN-COURS DE PRODUCTION DE BIENS
+_	3351 - Terrains	_	335 - Travaux en cours
+_	3354 - Études et prestations de services	_	335 - Travaux en cours
+_	3355 - Travaux	_	335 - Travaux en cours
+_	3358 - Frais annexes	_	335 - Travaux en cours
+_	33581 - Frais accessoires	_	3358 - Frais annexes
+_	33586 - Frais financiers	_	3358 - Frais annexes
+_	34 - EN-COURS DE PRODUCTION DE SERVICES	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	35 - STOCKS DE PRODUITS	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	351 - Produits intermédiaires	_	35 - STOCKS DE PRODUITS
+_	355 - Produits finis	_	35 - STOCKS DE PRODUITS
+_	3551 - Produits finis (autres que terrains aménagés)	_	355 - Produits finis
+_	3555 - Terrains aménagés	_	355 - Produits finis
+_	358 - Produits résiduels	_	35 - STOCKS DE PRODUITS
+_	37 - STOCKS DE MARCHANDISES ET DE TERRAINS NUS	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS	_	3 - COMPTES DE STOCKS ET EN-COURS
+_	391 - Provisions pour dépréciation des matières premières (et fournitures)	_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS
+_	3911 - Provisions pour dépréciation des matières premières (et fournitures) (non budgétaires)	_	391 - Provisions pour dépréciation des matières premières (et fournitures)
+_	3912 - Provisions pour dépréciation des matières premières (et fournitures) (budgétaires)	_	391 - Provisions pour dépréciation des matières premières (et fournitures)
+_	392 - Provisions pour dépréciation des autres approvisionnements (non budgétaires)	_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS
+_	393 - Provisions pour dépréciation des en-cours de production de biens	_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS
+_	3931 - Provisions pour dépréciation des en-cours de production de biens (non budgétaires)	_	393 - Provisions pour dépréciation des en-cours de production de biens
+_	3932 - Provisions pour dépréciation des en-cours de production de biens (budgétaires)	_	393 - Provisions pour dépréciation des en-cours de production de biens
+_	394 - Provisions pour dépréciation des en-cours de production de services	_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS
+_	3941 - Provisions pour dépréciation des en-cours de production de services (non budgétaires)	_	394 - Provisions pour dépréciation des en-cours de production de services
+_	3942 - Provisions pour dépréciation des en-cours de production de services (budgétaires)	_	394 - Provisions pour dépréciation des en-cours de production de services
+_	395 - Provisions pour dépréciation des stocks de produits	_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS
+_	3951 - Provisions pour dépréciation des produits finis (autres que terrains aménagés)	_	395 - Provisions pour dépréciation des stocks de produits
+_	39511 - Provisions pour dépréciation des produits finis autres que terrains aménagés (non budgétaires)	_	3951 - Provisions pour dépréciation des produits finis (autres que terrains aménagés)
+_	39512 - Provisions pour dépréciation des produits finis autres que terrains aménagés (budgétaires)	_	3951 - Provisions pour dépréciation des produits finis (autres que terrains aménagés)
+_	3955 - Provisions pour dépréciation des terrains aménagés	_	395 - Provisions pour dépréciation des stocks de produits
+_	39551 - Provisions pour dépréciation des terrains aménagés (non budgétaires)	_	3955 - Provisions pour dépréciation des terrains aménagés
+_	39552 - Provisions pour dépréciation des terrains aménagés (budgétaires)	_	3955 - Provisions pour dépréciation des terrains aménagés
+_	397 - Provisions pour dépréciation des stocks de marchandises (non budgétaires)	_	39 - PROVISIONS POUR DÉPRÉCIATION DES STOCKS ET EN-COURS
+_	4 - COMPTES DE TIERS	_	M14_2014
+_	40 - FOURNISSEURS ET COMPTES RATTACHÉS	_	4 - COMPTES DE TIERS
+_	401 - Fournisseurs 	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	4011 - Fournisseurs 	_	401 - Fournisseurs 
+_	4017 - Fournisseurs - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés	_	401 - Fournisseurs 
+_	40171 - Fournisseurs - Retenues de garantie	_	4017 - Fournisseurs - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés
+_	40172 - Fournisseurs - Cessions, oppositions	_	4017 - Fournisseurs - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés
+_	40173 - Fournisseurs - Pénalités de retard d'exécution des marchés	_	4017 - Fournisseurs - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés
+_	403 - Fournisseurs - Lettre-change relevé (L.C.R.)	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	404 - Fournisseurs d'immobilisations	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	4041 - Fournisseurs d'immobilisations 	_	404 - Fournisseurs d'immobilisations
+_	4047 - Fournisseurs d'immobilisations - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés	_	404 - Fournisseurs d'immobilisations
+_	40471 - Fournisseurs d'immobilisations - Retenues de garantie	_	4047 - Fournisseurs d'immobilisations - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés
+_	40472 - Fournisseurs d'immobilisations - Cessions, oppositions	_	4047 - Fournisseurs d'immobilisations - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés
+_	40473 - Fournisseurs d'immobilisations - Pénalités de retard d'exécution des marchés	_	4047 - Fournisseurs d'immobilisations - Retenues de garantie, oppositions et pénalités de retard d'exécution des marchés
+_	405 - Fournisseurs d'immobilisations - Lettre-change relevé (L.C.R.)	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	407 - Différences de conversion - Fournisseurs	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	4071 - Différences de conversion - Fournisseurs	_	407 - Différences de conversion - Fournisseurs
+_	4074 - Différences de conversion - Fournisseurs d'immobilisations	_	407 - Différences de conversion - Fournisseurs
+_	408 - Fournisseurs - Factures non parvenues	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	409 - Fournisseurs débiteurs	_	40 - FOURNISSEURS ET COMPTES RATTACHÉS
+_	4091 - Avances versées sur commande	_	409 - Fournisseurs débiteurs
+_	4093 - Mandat - Avance de fonds ou remboursement de débours	_	409 - Fournisseurs débiteurs
+_	4097 - Fournisseurs - Autres avoirs	_	409 - Fournisseurs débiteurs
+_	40971 - Fournisseurs - Autres avoirs - Amiable	_	4097 - Fournisseurs - Autres avoirs
+_	40976 - Fournisseurs - Autres avoirs - Contentieux	_	4097 - Fournisseurs - Autres avoirs
+_	4098 - Rabais, remises, ristournes à obtenir et autres avoirs non encore reçus	_	409 - Fournisseurs débiteurs
+_	41 - REDEVABLES ET COMPTES RATTACHÉS	_	4 - COMPTES DE TIERS
+_	411 - Redevables	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	4111 - Redevables - Amiable	_	411 - Redevables
+_	4116 - Redevables - Contentieux	_	411 - Redevables
+_	412 - Acquéreurs de terrains aménagés stockés	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	4121 - Acquéreurs de terrains aménagés stockés - Amiable	_	412 - Acquéreurs de terrains aménagés stockés
+_	4126 - Acquéreurs de terrains aménagés stockés - Contentieux	_	412 - Acquéreurs de terrains aménagés stockés
+_	414 - Locataires-acquéreurs et locataires	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	4141 - Locataires - acquéreurs et locataires - Amiable	_	414 - Locataires-acquéreurs et locataires
+_	4146 - Locataires - acquéreurs et locataires - Contentieux	_	414 - Locataires-acquéreurs et locataires
+_	415 - Traites de coupe de bois (régime forestier)	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	4151 - Traites de coupe de bois (régime forestier) - Amiable	_	415 - Traites de coupe de bois (régime forestier)
+_	4156 - Traites de coupe de bois (régime forestier) - Contentieux	_	415 - Traites de coupe de bois (régime forestier)
+_	416 - Clients douteux	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	4161 - Créances douteuses	_	416 - Clients douteux
+_	4162 - Créances irrécouvrables admises par le juge des comptes	_	416 - Clients douteux
+_	417 - Différences de conversion - Redevables	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	418 - Redevables et acquéreurs de terrains aménagés stockés - Produits non encore facturés	_	41 - REDEVABLES ET COMPTES RATTACHÉS
+_	4181 - Redevables - Produits non encore facturés	_	418 - Redevables et acquéreurs de terrains aménagés stockés - Produits non encore facturés
+_	4182 - Acquéreurs de terrains aménagés stockés - Produits non encore facturés	_	418 - Redevables et acquéreurs de terrains aménagés stockés - Produits non encore facturés
+_	42 - PERSONNEL ET COMPTES RATTACHÉS	_	4 - COMPTES DE TIERS
+_	421 - Personnel - Rémunérations dues	_	42 - PERSONNEL ET COMPTES RATTACHÉS
+_	425 - Personnel - Avances et acomptes	_	42 - PERSONNEL ET COMPTES RATTACHÉS
+_	427 - Personnel - Oppositions	_	42 - PERSONNEL ET COMPTES RATTACHÉS
+_	428 - Personnel - Charges à payer et produits à recevoir	_	42 - PERSONNEL ET COMPTES RATTACHÉS
+_	4282 - Dettes provisionnées pour congés à payer	_	428 - Personnel - Charges à payer et produits à recevoir
+_	4286 - Autres charges à payer	_	428 - Personnel - Charges à payer et produits à recevoir
+_	4287 - Produits à recevoir	_	428 - Personnel - Charges à payer et produits à recevoir
+_	429 - Déficits et débets des comptables et régisseurs	_	42 - PERSONNEL ET COMPTES RATTACHÉS
+_	43 - SÉCURITÉ SOCIALE ET AUTRES ORGANISMES SOCIAUX	_	4 - COMPTES DE TIERS
+_	431 - Sécurité sociale	_	43 - SÉCURITÉ SOCIALE ET AUTRES ORGANISMES SOCIAUX
+_	437 - Autres organismes sociaux	_	43 - SÉCURITÉ SOCIALE ET AUTRES ORGANISMES SOCIAUX
+_	438 - Organismes sociaux - Charges à payer et produits à recevoir	_	43 - SÉCURITÉ SOCIALE ET AUTRES ORGANISMES SOCIAUX
+_	4386 - Autres charges à payer	_	438 - Organismes sociaux - Charges à payer et produits à recevoir
+_	4387 - Produits à recevoir 	_	438 - Organismes sociaux - Charges à payer et produits à recevoir
+_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES	_	4 - COMPTES DE TIERS
+_	441 - État et autres collectivités publiques - Subventions à recevoir	_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES
+_	4411 - État et autres collectivités publiques - Subventions à recevoir - Amiable	_	441 - État et autres collectivités publiques - Subventions à recevoir
+_	4416 - État et autres collectivités publiques - Subventions à recevoir - Contentieux	_	441 - État et autres collectivités publiques - Subventions à recevoir
+_	442 - État - Impôts et taxes recouvrables sur des tiers	_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES
+_	443 - Opérations particulières avec l'État et les collectivités publiques	_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES
+_	4431 - État	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44311 - Dépenses	_	4431 - État
+_	44312 - Recettes - Amiable	_	4431 - État
+_	44316 - Recettes - Contentieux	_	4431 - État
+_	4432 - Régions	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44321 - Dépenses	_	4432 - Régions
+_	44322 - Recettes - Amiable	_	4432 - Régions
+_	44326 - Recettes - Contentieux	_	4432 - Régions
+_	4433 - Départements	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44331 - Dépenses	_	4433 - Départements
+_	44332 - Recettes - Amiable	_	4433 - Départements
+_	44336 - Recettes - Contentieux	_	4433 - Départements
+_	4434 - Communes	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44341 - Dépenses	_	4434 - Communes
+_	44342 - Recettes - Amiable	_	4434 - Communes
+_	44346 - Recettes - Contentieux	_	4434 - Communes
+_	4435 - Groupements de collectivités	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44351 - Dépenses	_	4435 - Groupements de collectivités
+_	44352 - Recettes - Amiable	_	4435 - Groupements de collectivités
+_	44356 - Recettes - Contentieux	_	4435 - Groupements de collectivités
+_	4436 - Caisse des écoles	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44361 - Dépenses	_	4436 - Caisse des écoles
+_	44362 - Recettes - Amiable	_	4436 - Caisse des écoles
+_	44366 - Recettes - Contentieux	_	4436 - Caisse des écoles
+_	4437 - C.C.A.S.	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44371 - Dépenses	_	4437 - C.C.A.S.
+_	44372 - Recettes - Amiable	_	4437 - C.C.A.S.
+_	44376 - Recettes - Contentieux	_	4437 - C.C.A.S.
+_	4438 - Autres services et organismes publics	_	443 - Opérations particulières avec l'État et les collectivités publiques
+_	44381 - Dépenses	_	4438 - Autres services et organismes publics
+_	44382 - Recettes - Amiable	_	4438 - Autres services et organismes publics
+_	44386 - Recettes - Contentieux	_	4438 - Autres services et organismes publics
+_	445 - État - Taxes sur le chiffre d'affaires	_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES
+_	4452 - TVA due intracommunautaire	_	445 - État - Taxes sur le chiffre d'affaires
+_	4455 - Taxes sur le chiffre d'affaires à décaisser 	_	445 - État - Taxes sur le chiffre d'affaires
+_	44551 - T.V.A. à décaisser	_	4455 - Taxes sur le chiffre d'affaires à décaisser 
+_	44558 - Taxes assimilées à la T.V.A.	_	4455 - Taxes sur le chiffre d'affaires à décaisser 
+_	4456 - Taxes sur le chiffre d'affaires déductibles	_	445 - État - Taxes sur le chiffre d'affaires
+_	44562 - T.V.A. sur immobilisations	_	4456 - Taxes sur le chiffre d'affaires déductibles
+_	44566 - T.V.A. sur autres biens et services	_	4456 - Taxes sur le chiffre d'affaires déductibles
+_	44567 - Crédit de T.V.A. à reporter	_	4456 - Taxes sur le chiffre d'affaires déductibles
+_	44568 - Taxes assimilées à la T.V.A.	_	4456 - Taxes sur le chiffre d'affaires déductibles
+_	4457 - Taxes sur le chiffre d'affaires collectées	_	445 - État - Taxes sur le chiffre d'affaires
+_	44571 - T.V.A. collectée	_	4457 - Taxes sur le chiffre d'affaires collectées
+_	44578 - Taxes assimilées à la T.V.A.	_	4457 - Taxes sur le chiffre d'affaires collectées
+_	4458 - Taxes sur le chiffre d'affaires à régulariser ou en attente	_	445 - État - Taxes sur le chiffre d'affaires
+_	44581 - Acomptes - Régime simplifié d'imposition	_	4458 - Taxes sur le chiffre d'affaires à régulariser ou en attente
+_	44583 - Remboursement de taxes sur le chiffre d'affaires demandé	_	4458 - Taxes sur le chiffre d'affaires à régulariser ou en attente
+_	44585 - TVA à régulariser - Retenue de garantie	_	4458 - Taxes sur le chiffre d'affaires à régulariser ou en attente
+_	44588 - Autres taxes sur le chiffre d'affaires à régulariser ou en attente	_	4458 - Taxes sur le chiffre d'affaires à régulariser ou en attente
+_	445884 - TVA déduite sur avances versées - Régime  des encaissements 	_	44588 - Autres taxes sur le chiffre d'affaires à régulariser ou en attente
+_	445885 - TVA décaissée sur avances reçues - Régime  des encaissements	_	44588 - Autres taxes sur le chiffre d'affaires à régulariser ou en attente
+_	445886 - TVA à déduire lors du paiement - Régime  des encaissements	_	44588 - Autres taxes sur le chiffre d'affaires à régulariser ou en attente
+_	445888 - Autres taxes sur le chiffre d'affaires à régulariser ou en attente	_	44588 - Autres taxes sur le chiffre d'affaires à régulariser ou en attente
+_	447 - Autres impôts, taxes et versements assimilés	_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES
+_	448 - État - Charges à payer et produits à recevoir	_	44 - ETAT ET AUTRES COLLECTIVITÉS PUBLIQUES
+_	4486 - Autres charges à payer	_	448 - État - Charges à payer et produits à recevoir
+_	4487 - Produits à recevoir	_	448 - État - Charges à payer et produits à recevoir
+_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE	_	4 - COMPTES DE TIERS
+_	451 - Compte de rattachement avec...(à subdiviser par budget annexe)	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	452 - C.C.A.S. rattaché	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	453 - Caisse des écoles rattachée	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	454 - Travaux effectués d'office pour le compte de tiers	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	4541 - Dépenses	_	454 - Travaux effectués d'office pour le compte de tiers
+_	4542 - Recettes	_	454 - Travaux effectués d'office pour le compte de tiers
+_	455 - Recettes sur rôles pour le compte de tiers	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	4551 - Redevables sur rôles pour le compte de tiers	_	455 - Recettes sur rôles pour le compte de tiers
+_	4557 - Produits sur rôle pour le compte de tiers	_	455 - Recettes sur rôles pour le compte de tiers
+_	4558 - TVA sur rôle pour le compte de tiers 	_	455 - Recettes sur rôles pour le compte de tiers
+_	45581 - TVA sur rôle pour le compte de tiers - Prise en compte	_	4558 - TVA sur rôle pour le compte de tiers 
+_	45582 - TVA sur rôle pour le compte de tiers - Encaissements	_	4558 - TVA sur rôle pour le compte de tiers 
+_	4559 - Versements sur rôle pour le compte de tiers 	_	455 - Recettes sur rôles pour le compte de tiers
+_	45591 - TVA sur rôle pour le compte de tiers - Produits	_	4559 - Versements sur rôle pour le compte de tiers 
+_	45592 - TVA sur rôle pour le compte de tiers - TVA	_	4559 - Versements sur rôle pour le compte de tiers 
+_	456 - Opérations d'investissement sur établissements d'enseignement (à subdiviser par mandat)	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	4561 - Remis à la région	_	456 - Opérations d'investissement sur établissements d'enseignement (à subdiviser par mandat)
+_	45611 - Dépenses (à subdiviser par mandat)	_	4561 - Remis à la région
+_	45612 - Recettes (à subdiviser par mandat)	_	4561 - Remis à la région
+_	4562 - Remis au département	_	456 - Opérations d'investissement sur établissements d'enseignement (à subdiviser par mandat)
+_	45621 - Dépenses (à subdiviser par mandat)	_	4562 - Remis au département
+_	45622 - Recettes (à subdiviser par mandat)	_	4562 - Remis au département
+_	458 - Opérations sous mandat (à subdiviser par mandat)	_	45 - COMPTABILITÉ DISTINCTE RATTACHÉE
+_	4581 - Dépenses (à subdiviser par mandat)	_	458 - Opérations sous mandat (à subdiviser par mandat)
+_	4582 - Recettes (à subdiviser par mandat)	_	458 - Opérations sous mandat (à subdiviser par mandat)
+_	46 - DÉBITEURS ET CRÉDITEURS DIVERS	_	4 - COMPTES DE TIERS
+_	461 - Dons et legs en instance	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	462 - Créances sur cessions d'immobilisations	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	4621 - Créances sur cessions d'immobilisations - Amiable	_	462 - Créances sur cessions d'immobilisations
+_	4626 - Créances sur cessions d'immobilisations - Contentieux	_	462 - Créances sur cessions d'immobilisations
+_	463 - Emprunts souscrits dans le public gérés par la collectivité	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	4631 - Souscriptions reçues	_	463 - Emprunts souscrits dans le public gérés par la collectivité
+_	4632 - Intérêts à payer	_	463 - Emprunts souscrits dans le public gérés par la collectivité
+_	4633 - Titres amortis (ou capital) à rembourser	_	463 - Emprunts souscrits dans le public gérés par la collectivité
+_	464 - Encaissements pour le compte de tiers	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	4641 - Coupes affouagères distribuées en nature	_	464 - Encaissements pour le compte de tiers
+_	4642 - Coupes affouagères à répartir	_	464 - Encaissements pour le compte de tiers
+_	4643 - Vacations encaissées à reverser	_	464 - Encaissements pour le compte de tiers
+_	4645 - Fonds des bénéficiaires d'une MASP	_	464 - Encaissements pour le compte de tiers
+_	4648 - Autres encaissements pour le compte de tiers	_	464 - Encaissements pour le compte de tiers
+_	465 - Avances en garantie d'emprunt	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	466 - Excédents de versement	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	467 - Autres comptes débiteurs ou créditeurs	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	4671 - Autres comptes créditeurs	_	467 - Autres comptes débiteurs ou créditeurs
+_	46711 - Autres comptes créditeurs	_	4671 - Autres comptes créditeurs
+_	46717 - Autres comptes créditeurs - cessions, oppositions 	_	4671 - Autres comptes créditeurs
+_	4672 - Autres comptes débiteurs	_	467 - Autres comptes débiteurs ou créditeurs
+_	46721 - Débiteurs divers - Amiable	_	4672 - Autres comptes débiteurs
+_	46726 - Débiteurs divers - Contentieux	_	4672 - Autres comptes débiteurs
+_	4673 - Opérations avec des gérants d'immeubles et des régisseurs intéressés	_	467 - Autres comptes débiteurs ou créditeurs
+_	4675 - Mandataire - Opérations déléguées - Recettes	_	467 - Autres comptes débiteurs ou créditeurs
+_	4677 - Différences de conversion - Débiteurs ou créditeurs divers	_	467 - Autres comptes débiteurs ou créditeurs
+_	46771 - Différences de conversion - Créditeurs divers	_	4677 - Différences de conversion - Débiteurs ou créditeurs divers
+_	46772 - Différences de conversion - Débiteurs divers	_	4677 - Différences de conversion - Débiteurs ou créditeurs divers
+_	468 - Divers - Charges à payer et produits à recevoir	_	46 - DÉBITEURS ET CRÉDITEURS DIVERS
+_	4686 - Charges à payer	_	468 - Divers - Charges à payer et produits à recevoir
+_	4687 - Produits à recevoir	_	468 - Divers - Charges à payer et produits à recevoir
+_	47 - COMPTES TRANSITOIRES OU D'ATTENTE	_	4 - COMPTES DE TIERS
+_	471 - Recettes à classer ou à régulariser	_	47 - COMPTES TRANSITOIRES OU D'ATTENTE
+_	4711 - Versements des régisseurs	_	471 - Recettes à classer ou à régulariser
+_	4712 - Virements réimputés	_	471 - Recettes à classer ou à régulariser
+_	4713 - Recettes perçues avant émission des titres	_	471 - Recettes à classer ou à régulariser
+_	47131 - Versements sur contributions directes	_	4713 - Recettes perçues avant émission des titres
+_	47132 - Versements sur dotation globale de fonctionnement 	_	4713 - Recettes perçues avant émission des titres
+_	47133 - Fonds d'emprunt	_	4713 - Recettes perçues avant émission des titres
+_	47134 - Subventions	_	4713 - Recettes perçues avant émission des titres
+_	47138 - Autres	_	4713 - Recettes perçues avant émission des titres
+_	4714 - Recettes à réimputer	_	471 - Recettes à classer ou à régulariser
+_	47141 - Recettes perçues en excédent à réimputer	_	4714 - Recettes à réimputer
+_	471411 - Excédent à réimputer - Personnes physiques	_	47141 - Recettes perçues en excédent à réimputer
+_	471412 - Excédent à réimputer - Personnes morales	_	47141 - Recettes perçues en excédent à réimputer
+_	47142 - Frais de saisie perçus avant prise en charge	_	4714 - Recettes à réimputer
+_	47143 - Flux d'encaissement à réimputer	_	4714 - Recettes à réimputer
+_	4715 - Recettes à ventiler - Cartes multiservices	_	471 - Recettes à classer ou à régulariser
+_	4717 - Recettes relevé banque de France 	_	471 - Recettes à classer ou à régulariser
+_	47171 - Recettes relevé banque de France - Hors CloHélios	_	4717 - Recettes relevé banque de France 
+_	47172 - Recettes relevé banque de France - CloHélios	_	4717 - Recettes relevé banque de France 
+_	4718 - Autres recettes à régulariser	_	471 - Recettes à classer ou à régulariser
+_	472 - Dépenses à classer ou à régulariser	_	47 - COMPTES TRANSITOIRES OU D'ATTENTE
+_	4721 - Dépenses réglées sans mandatement préalable,	_	472 - Dépenses à classer ou à régulariser
+_	47211 - Remboursements d'annuités d'emprunts	_	4721 - Dépenses réglées sans mandatement préalable,
+_	47218 - Autres dépenses	_	4721 - Dépenses réglées sans mandatement préalable,
+_	4722 - Commissions bancaires en instance de mandatement (carte bancaire)	_	472 - Dépenses à classer ou à régulariser
+_	4725 - Secours d'urgence	_	472 - Dépenses à classer ou à régulariser
+_	4727 - Avances pour achat de valeurs mobilières	_	472 - Dépenses à classer ou à régulariser
+_	4728 - Autres dépenses à régulariser	_	472 - Dépenses à classer ou à régulariser
+_	475 - Recettes sur rôle	_	47 - COMPTES TRANSITOIRES OU D'ATTENTE
+_	4751 - Redevables sur rôle	_	475 - Recettes sur rôle
+_	4757 - Produits sur rôle	_	475 - Recettes sur rôle
+_	4758 - TVA sur rôle	_	475 - Recettes sur rôle
+_	4759 - Versement du tiers en charge du rôle	_	475 - Recettes sur rôle
+_	476 - Différences de conversion - Actif	_	47 - COMPTES TRANSITOIRES OU D'ATTENTE
+_	4761 - Diminution des créances	_	476 - Différences de conversion - Actif
+_	47611 - Diminution des prêts	_	4761 - Diminution des créances
+_	47612 - Diminution d'autres créances	_	4761 - Diminution des créances
+_	4762 - Augmentation des dettes	_	476 - Différences de conversion - Actif
+_	47621 - Augmentation d'emprunts et dettes assimilées	_	4762 - Augmentation des dettes
+_	47622 - Augmentation d'autres dettes	_	4762 - Augmentation des dettes
+_	4768 - Différences compensées par couverture de change	_	476 - Différences de conversion - Actif
+_	477 - Différences de conversion - Passif	_	47 - COMPTES TRANSITOIRES OU D'ATTENTE
+_	4771 - Augmentation des créances	_	477 - Différences de conversion - Passif
+_	47711 - Augmentation des prêts	_	4771 - Augmentation des créances
+_	47712 - Augmentation d'autres créances	_	4771 - Augmentation des créances
+_	4772 - Diminution des dettes 	_	477 - Différences de conversion - Passif
+_	47721 - Diminution d'emprunts et dettes assimilées	_	4772 - Diminution des dettes 
+_	47722 - Diminution d'autres dettes	_	4772 - Diminution des dettes 
+_	4778 - Différences compensées par couverture de change	_	477 - Différences de conversion - Passif
+_	478 - Autres comptes transitoires	_	47 - COMPTES TRANSITOIRES OU D'ATTENTE
+_	4781 - Frais de poursuite rattachés	_	478 - Autres comptes transitoires
+_	4784 - Arrondis sur déclaration de TVA	_	478 - Autres comptes transitoires
+_	4788 - Autres comptes transitoires	_	478 - Autres comptes transitoires
+_	48 - COMPTES DE RÉGULARISATION	_	4 - COMPTES DE TIERS
+_	481 - Charges à répartir sur plusieurs exercices	_	48 - COMPTES DE RÉGULARISATION
+_	4812 - Frais d'acquisition des immobilisations	_	481 - Charges à répartir sur plusieurs exercices
+_	4816 - Frais d'émission des emprunts	_	481 - Charges à répartir sur plusieurs exercices
+_	4817 - Pénalités de renégociation de la dette	_	481 - Charges à répartir sur plusieurs exercices
+_	4818 - Charges à étaler	_	481 - Charges à répartir sur plusieurs exercices
+_	486 - Charges constatées d'avance	_	48 - COMPTES DE RÉGULARISATION
+_	487 - Produits constatés d'avance	_	48 - COMPTES DE RÉGULARISATION
+_	49 - PROVISIONS POUR DÉPRÉCIATION DES COMPTES DE TIERS	_	4 - COMPTES DE TIERS
+_	491 - Provisions pour dépréciation des comptes de redevables	_	49 - PROVISIONS POUR DÉPRÉCIATION DES COMPTES DE TIERS
+_	4911 - Provisions pour dépréciation des comptes de redevables (non budgétaires)	_	491 - Provisions pour dépréciation des comptes de redevables
+_	4912 - Provisions pour dépréciation des comptes de redevables (budgétaires)	_	491 - Provisions pour dépréciation des comptes de redevables
+_	496 - Provisions pour dépréciation des comptes de débiteurs divers	_	49 - PROVISIONS POUR DÉPRÉCIATION DES COMPTES DE TIERS
+_	4961 - Provisions pour dépréciation des comptes de débiteurs divers (non budgétaires)	_	496 - Provisions pour dépréciation des comptes de débiteurs divers
+_	4962 - Provisions pour dépréciation des comptes de débiteurs divers (budgétaires)	_	496 - Provisions pour dépréciation des comptes de débiteurs divers
+_	5 - COMPTES FINANCIERS	_	M14_2014
+_	50 - VALEURS MOBILIÈRES DE PLACEMENT	_	5 - COMPTES FINANCIERS
+_	506 - Obligations	_	50 - VALEURS MOBILIÈRES DE PLACEMENT
+_	507 - Bons du Trésor 	_	50 - VALEURS MOBILIÈRES DE PLACEMENT
+_	508 - Autres valeurs mobilières et créances assimilées	_	50 - VALEURS MOBILIÈRES DE PLACEMENT
+_	51 - TRÉSOR, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS	_	5 - COMPTES FINANCIERS
+_	511 - Valeurs à l'encaissement	_	51 - TRÉSOR, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS
+_	5113 - Titres spéciaux de paiement et assimilés à l'encaissement	_	511 - Valeurs à l'encaissement
+_	5115 - Cartes bancaires à l'encaissement	_	511 - Valeurs à l'encaissement
+_	5116 - TIP à l'encaissement	_	511 - Valeurs à l'encaissement
+_	5117 - Valeurs impayées	_	511 - Valeurs à l'encaissement
+_	51172 - Chèques impayés	_	5117 - Valeurs impayées
+_	51175 - Cartes bancaires impayées	_	5117 - Valeurs impayées
+_	51176 - TIP impayés	_	5117 - Valeurs impayées
+_	51178 - Autres valeurs impayées	_	5117 - Valeurs impayées
+_	5118 - Autres valeurs à l'encaissement	_	511 - Valeurs à l'encaissement
+_	515 - Compte au Trésor	_	51 - TRÉSOR, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS
+_	516 - Comptes de placements (court terme)	_	51 - TRÉSOR, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS
+_	5161 - Comptes de placements rémunérés	_	516 - Comptes de placements (court terme)
+_	5162 - Comptes à terme	_	516 - Comptes de placements (court terme)
+_	518 - Intérêts courus	_	51 - TRÉSOR, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS
+_	5186 - Intérêts courus à payer	_	518 - Intérêts courus
+_	5187 - Intérêts courus à recevoir	_	518 - Intérêts courus
+_	519 - Concours financiers à court terme	_	51 - TRÉSOR, ÉTABLISSEMENTS FINANCIERS ET ASSIMILÉS
+_	5191 - Avances du Trésor	_	519 - Concours financiers à court terme
+_	5192 - Avances de trésorerie	_	519 - Concours financiers à court terme
+_	5193 - Lignes de crédit de trésorerie	_	519 - Concours financiers à court terme
+_	51931 - Lignes de crédit de trésorerie	_	5193 - Lignes de crédit de trésorerie
+_	51932 - Lignes de crédit de trésorerie liées à un emprunt	_	5193 - Lignes de crédit de trésorerie
+_	5194 - Billets de trésorerie	_	519 - Concours financiers à court terme
+_	5198 - Autres crédits de trésorerie	_	519 - Concours financiers à court terme
+_	54 - RÉGIES D'AVANCES ET ACCRÉDITIFS	_	5 - COMPTES FINANCIERS
+_	541 - Disponibilités chez les régisseurs	_	54 - RÉGIES D'AVANCES ET ACCRÉDITIFS
+_	5411 - Régisseurs d'avances (avances)	_	541 - Disponibilités chez les régisseurs
+_	5412 - Régisseurs de recettes (fonds de caisse)	_	541 - Disponibilités chez les régisseurs
+_	542 - Disponibilités chez d'autres tiers	_	54 - RÉGIES D'AVANCES ET ACCRÉDITIFS
+_	5421 - Administrateurs de legs	_	542 - Disponibilités chez d'autres tiers
+_	5428 - Disponibilités chez d'autres tiers	_	542 - Disponibilités chez d'autres tiers
+_	55 - AVANCES DE TRÉSORERIE VERSÉES	_	5 - COMPTES FINANCIERS
+_	551 - Avances à des établissements publics locaux	_	55 - AVANCES DE TRÉSORERIE VERSÉES
+_	5511 - Avances aux hôpitaux	_	551 - Avances à des établissements publics locaux
+_	5512 - Avances aux EPCI en début d'activité	_	551 - Avances à des établissements publics locaux
+_	552 - Avances aux sociétés d'économie mixte	_	55 - AVANCES DE TRÉSORERIE VERSÉES
+_	553 - Avances à des régies dotées de la seule autonomie financière	_	55 - AVANCES DE TRÉSORERIE VERSÉES
+_	558 - Autres avances de trésorerie versées	_	55 - AVANCES DE TRÉSORERIE VERSÉES
+_	58 - VIREMENTS INTERNES	_	5 - COMPTES FINANCIERS
+_	580 - Opérations d'ordre budgétaires	_	58 - VIREMENTS INTERNES
+_	584 - Encaissements par lecture optique	_	58 - VIREMENTS INTERNES
+_	586 - Opérations financières entre le budget principal et ses budgets comptablement rattachés	_	58 - VIREMENTS INTERNES
+_	587 - Comptes pivots	_	58 - VIREMENTS INTERNES
+_	5871 - Compte pivot - Encaissement régie à ventiler 	_	587 - Comptes pivots
+_	5872 - Compte pivot - Admission en non-valeur	_	587 - Comptes pivots
+_	588 - Autres virements internes	_	58 - VIREMENTS INTERNES
+_	589 - Comptes techniques	_	58 - VIREMENTS INTERNES
+_	5891 - Reprise des balances d'entrée	_	589 - Comptes techniques
+_	5892 - Migration	_	589 - Comptes techniques
+_	5893 - Migration des rôles 	_	589 - Comptes techniques
+_	5894 - Ventilation comptes budgétaires	_	589 - Comptes techniques
+_	59 - PROVISIONS POUR DÉPRÉCIATION DES COMPTES FINANCIERS	_	5 - COMPTES FINANCIERS
+_	590 - Provisions pour dépréciation des valeurs mobilières de placement	_	59 - PROVISIONS POUR DÉPRÉCIATION DES COMPTES FINANCIERS
+_	5906 - Obligations	_	590 - Provisions pour dépréciation des valeurs mobilières de placement
+_	59061 - Obligations (non budgétaires)	_	5906 - Obligations
+_	59062 - Obligations (budgétaires)	_	5906 - Obligations
+_	5908 - Autres valeurs mobilières et créances assimilées	_	590 - Provisions pour dépréciation des valeurs mobilières de placement
+_	59081 - Autres valeurs mobilières et créances assimilées (non budgétaires)	_	5908 - Autres valeurs mobilières et créances assimilées
+_	59082 - Autres valeurs mobilières et créances assimilées (budgétaires)	_	5908 - Autres valeurs mobilières et créances assimilées
+_	595 - Provisions pour dépréciation des avances de trésorerie versées	_	59 - PROVISIONS POUR DÉPRÉCIATION DES COMPTES FINANCIERS
+_	5951 - Provisions pour dépréciation des avances de trésorerie versées (non budgétaires)	_	595 - Provisions pour dépréciation des avances de trésorerie versées
+_	5952 - Provisions pour dépréciation des avances de trésorerie versées (budgétaires)	_	595 - Provisions pour dépréciation des avances de trésorerie versées
+_	6 - COMPTES DE CHARGES	_	M14_2014
+_	60 - ACHATS ET VARIATION DES STOCKS	_	6 - COMPTES DE CHARGES
+_	601 - Achats stockés - Matières premières (et fournitures)	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6011 - Matières premières et fournitures autres que terrains	_	601 - Achats stockés - Matières premières (et fournitures)
+_	6015 - Terrains à aménager	_	601 - Achats stockés - Matières premières (et fournitures)
+_	602 - Achats stockés - Autres approvisionnements	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6021 - Matières consommables	_	602 - Achats stockés - Autres approvisionnements
+_	6022 - Fournitures consommables autres qu'alimentation	_	602 - Achats stockés - Autres approvisionnements
+_	60221 - Combustibles et carburants	_	6022 - Fournitures consommables autres qu'alimentation
+_	60222 - Produits d'entretien	_	6022 - Fournitures consommables autres qu'alimentation
+_	60223 - Fournitures des ateliers municipaux	_	6022 - Fournitures consommables autres qu'alimentation
+_	60224 - Fournitures administratives	_	6022 - Fournitures consommables autres qu'alimentation
+_	60225 - Livres, disques, cassettes (bibliothèques, médiathèques)	_	6022 - Fournitures consommables autres qu'alimentation
+_	60226 - Vêtements de travail	_	6022 - Fournitures consommables autres qu'alimentation
+_	60227 - Fournitures scolaires	_	6022 - Fournitures consommables autres qu'alimentation
+_	60228 - Autres fournitures consommables	_	6022 - Fournitures consommables autres qu'alimentation
+_	6023 - Alimentation	_	602 - Achats stockés - Autres approvisionnements
+_	603 - Variation des stocks (approvisionnements et marchandises)	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6031 - Variation des stocks de matières premières (et fournitures)	_	603 - Variation des stocks (approvisionnements et marchandises)
+_	60311 - Variation des stocks de matières premières et fournitures autres que de terrains	_	6031 - Variation des stocks de matières premières (et fournitures)
+_	60315 - Variation des stocks des terrains à aménager	_	6031 - Variation des stocks de matières premières (et fournitures)
+_	6032 - Variation des stocks des autres approvisionnements	_	603 - Variation des stocks (approvisionnements et marchandises)
+_	6037 - Variation des stocks de marchandises et de terrains nus	_	603 - Variation des stocks (approvisionnements et marchandises)
+_	604 - Achats d'études, prestations de services	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6041 - Achats d'études (autres que terrains à aménager)	_	604 - Achats d'études, prestations de services
+_	6042 - Achats de prestations de services (autres que terrains à aménager)	_	604 - Achats d'études, prestations de services
+_	6045 - Achats d'études, prestations de services (terrains à aménager)	_	604 - Achats d'études, prestations de services
+_	605 - Achats de matériel, équipements et travaux	_	60 - ACHATS ET VARIATION DES STOCKS
+_	606 - Achats non stockés de matières et fournitures	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6061 - Fournitures non stockables	_	606 - Achats non stockés de matières et fournitures
+_	60611 - Eau et assainissement	_	6061 - Fournitures non stockables
+_	60612 - Énergie - Électricité	_	6061 - Fournitures non stockables
+_	60613 - Chauffage urbain	_	6061 - Fournitures non stockables
+_	60618 - Autres fournitures non stockables	_	6061 - Fournitures non stockables
+_	6062 - Fournitures non stockées	_	606 - Achats non stockés de matières et fournitures
+_	60621 - Combustibles	_	6062 - Fournitures non stockées
+_	60622 - Carburants	_	6062 - Fournitures non stockées
+_	60623 - Alimentation	_	6062 - Fournitures non stockées
+_	60624 - Produits de traitement	_	6062 - Fournitures non stockées
+_	60628 - Autres fournitures non stockées	_	6062 - Fournitures non stockées
+_	6063 - Fournitures d'entretien et de petit équipement	_	606 - Achats non stockés de matières et fournitures
+_	60631 - Fournitures d'entretien	_	6063 - Fournitures d'entretien et de petit équipement
+_	60632 - Fournitures de petit équipement	_	6063 - Fournitures d'entretien et de petit équipement
+_	60633 - Fournitures de voirie	_	6063 - Fournitures d'entretien et de petit équipement
+_	60636 - Vêtements de travail	_	6063 - Fournitures d'entretien et de petit équipement
+_	6064 - Fournitures administratives	_	606 - Achats non stockés de matières et fournitures
+_	6065 - Livres, disques, cassettes...(bibliothèques et médiathèques)	_	606 - Achats non stockés de matières et fournitures
+_	6067 - Fournitures scolaires	_	606 - Achats non stockés de matières et fournitures
+_	6068 - Autres matières et fournitures	_	606 - Achats non stockés de matières et fournitures
+_	607 - Achats de marchandises	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6071 - Compteurs	_	607 - Achats de marchandises
+_	6078 - Autres marchandises	_	607 - Achats de marchandises
+_	608 - Frais accessoires sur terrains en cours d'aménagement	_	60 - ACHATS ET VARIATION DES STOCKS
+_	609 - Rabais, remises et ristournes obtenus sur achats	_	60 - ACHATS ET VARIATION DES STOCKS
+_	6091 - de matières premières (et fournitures)	_	609 - Rabais, remises et ristournes obtenus sur achats
+_	6092 - d'autres approvisionnements stockés	_	609 - Rabais, remises et ristournes obtenus sur achats
+_	6094 - d'études et prestations de services	_	609 - Rabais, remises et ristournes obtenus sur achats
+_	6095 - de matériel, équipements et travaux	_	609 - Rabais, remises et ristournes obtenus sur achats
+_	6096 - d'approvisionnements non stockés	_	609 - Rabais, remises et ristournes obtenus sur achats
+_	6097 - de marchandises	_	609 - Rabais, remises et ristournes obtenus sur achats
+_	61 - SERVICES EXTÉRIEURS	_	6 - COMPTES DE CHARGES
+_	611 - Contrats de prestations de services 	_	61 - SERVICES EXTÉRIEURS
+_	612 - Redevances de crédit-bail	_	61 - SERVICES EXTÉRIEURS
+_	6122 - Crédit-bail mobilier	_	612 - Redevances de crédit-bail
+_	6125 - Crédit-bail immobilier	_	612 - Redevances de crédit-bail
+_	613 - Locations	_	61 - SERVICES EXTÉRIEURS
+_	6132 - Locations immobilières	_	613 - Locations
+_	6135 - Locations mobilières	_	613 - Locations
+_	614 - Charges locatives et de copropriété	_	61 - SERVICES EXTÉRIEURS
+_	615 - Entretien et réparations	_	61 - SERVICES EXTÉRIEURS
+_	6152 - Entretien et réparations sur biens immobiliers	_	615 - Entretien et réparations
+_	61521 - Terrains	_	6152 - Entretien et réparations sur biens immobiliers
+_	61522 - Bâtiments	_	6152 - Entretien et réparations sur biens immobiliers
+_	61523 - Voies et réseaux	_	6152 - Entretien et réparations sur biens immobiliers
+_	61524 - Bois et forêts	_	6152 - Entretien et réparations sur biens immobiliers
+_	6155 - Entretien et réparations sur biens mobiliers	_	615 - Entretien et réparations
+_	61551 - Matériel roulant	_	6155 - Entretien et réparations sur biens mobiliers
+_	61558 - Autres biens mobiliers	_	6155 - Entretien et réparations sur biens mobiliers
+_	6156 - Maintenance	_	615 - Entretien et réparations
+_	616 - Primes d'assurance	_	61 - SERVICES EXTÉRIEURS
+_	617 - Études et recherches	_	61 - SERVICES EXTÉRIEURS
+_	618 - Divers	_	61 - SERVICES EXTÉRIEURS
+_	6182 - Documentation générale et technique	_	618 - Divers
+_	6184 - Versements à des organismes de formation	_	618 - Divers
+_	6185 - Frais de colloques et séminaires	_	618 - Divers
+_	6188 - Autres frais divers	_	618 - Divers
+_	619 - Rabais, remises et ristournes obtenus sur services extérieurs	_	61 - SERVICES EXTÉRIEURS
+_	62 - AUTRES SERVICES EXTÉRIEURS	_	6 - COMPTES DE CHARGES
+_	621 - Personnel extérieur au service	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6215 - Personnel affecté par la collectivité de rattachement	_	621 - Personnel extérieur au service
+_	6216 - Personnel affecté par le GFP de rattachement  	_	621 - Personnel extérieur au service
+_	6217 - Personnel affecté par la commune membre du GFP 	_	621 - Personnel extérieur au service
+_	6218 - Autre personnel extérieur	_	621 - Personnel extérieur au service
+_	622 - Rémunérations d'intermédiaires et honoraires	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6225 - Indemnités au comptable et aux régisseurs	_	622 - Rémunérations d'intermédiaires et honoraires
+_	6226 - Honoraires	_	622 - Rémunérations d'intermédiaires et honoraires
+_	6227 - Frais d'actes et de contentieux	_	622 - Rémunérations d'intermédiaires et honoraires
+_	6228 - Divers	_	622 - Rémunérations d'intermédiaires et honoraires
+_	623 - Publicité, publications, relations publiques	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6231 - Annonces et insertions	_	623 - Publicité, publications, relations publiques
+_	6232 - Fêtes et cérémonies	_	623 - Publicité, publications, relations publiques
+_	6233 - Foires et expositions	_	623 - Publicité, publications, relations publiques
+_	6236 - Catalogues et imprimés	_	623 - Publicité, publications, relations publiques
+_	6237 - Publications	_	623 - Publicité, publications, relations publiques
+_	6238 - Divers	_	623 - Publicité, publications, relations publiques
+_	624 - Transports de biens et transports collectifs	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6241 - Transports de biens	_	624 - Transports de biens et transports collectifs
+_	6244 - Transports administratifs	_	624 - Transports de biens et transports collectifs
+_	6247 - Transports collectifs	_	624 - Transports de biens et transports collectifs
+_	6248 - Divers	_	624 - Transports de biens et transports collectifs
+_	625 - Déplacements, missions et réceptions	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6251 - Voyages et déplacements	_	625 - Déplacements, missions et réceptions
+_	6255 - Frais de déménagement	_	625 - Déplacements, missions et réceptions
+_	6256 - Missions	_	625 - Déplacements, missions et réceptions
+_	6257 - Réceptions	_	625 - Déplacements, missions et réceptions
+_	626 - Frais postaux et frais de télécommunications	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6261 - Frais d'affranchissement	_	626 - Frais postaux et frais de télécommunications
+_	6262 - Frais de télécommunications	_	626 - Frais postaux et frais de télécommunications
+_	627 - Services bancaires et assimilés	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	628 - Divers	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	6281 - Concours divers (cotisations...)	_	628 - Divers
+_	6282 - Frais de gardiennage (églises, forêts et bois communaux ...)	_	628 - Divers
+_	6283 - Frais de nettoyage des locaux	_	628 - Divers
+_	6284 - Redevances pour services rendus	_	628 - Divers
+_	6287 - Remboursements de frais	_	628 - Divers
+_	62871 - A la collectivité de rattachement	_	6287 - Remboursements de frais
+_	62872 - Aux budgets annexes et aux régies municipales	_	6287 - Remboursements de frais
+_	62873 - Au C.C.A.S.	_	6287 - Remboursements de frais
+_	62874 - A la caisse des écoles	_	6287 - Remboursements de frais
+_	62875 - Aux communes membres du GFP 	_	6287 - Remboursements de frais
+_	62876 - Au GFP de rattachement 	_	6287 - Remboursements de frais
+_	62878 - A d'autres organismes	_	6287 - Remboursements de frais
+_	6288 - Autres services extérieurs	_	628 - Divers
+_	629 - Rabais, remises et ristournes obtenus sur autres services extérieurs	_	62 - AUTRES SERVICES EXTÉRIEURS
+_	63 - IMPÔTS, TAXES ET VERSEMENTS ASSIMILÉS	_	6 - COMPTES DE CHARGES
+_	631 - Impôts, taxes et versements assimilés sur rémunérations (administration des impôts)	_	63 - IMPÔTS, TAXES ET VERSEMENTS ASSIMILÉS
+_	633 - Impôts, taxes et versements assimilés sur rémunérations (autres organismes)	_	63 - IMPÔTS, TAXES ET VERSEMENTS ASSIMILÉS
+_	6331 - Versement de transport	_	633 - Impôts, taxes et versements assimilés sur rémunérations (autres organismes)
+_	6332 - Cotisations versées au F.N.A.L.	_	633 - Impôts, taxes et versements assimilés sur rémunérations (autres organismes)
+_	6333 - Participation des employeurs à la formation professionnelle continue	_	633 - Impôts, taxes et versements assimilés sur rémunérations (autres organismes)
+_	6336 - Cotisations au centre national et aux centres de gestion de la fonction publique territoriale	_	633 - Impôts, taxes et versements assimilés sur rémunérations (autres organismes)
+_	6338 - Autres impôts, taxes et versements assimilés sur rémunérations	_	633 - Impôts, taxes et versements assimilés sur rémunérations (autres organismes)
+_	635 - Autres impôts, taxes et versements assimilés (administration des impôts)	_	63 - IMPÔTS, TAXES ET VERSEMENTS ASSIMILÉS
+_	6351 - Impôts directs	_	635 - Autres impôts, taxes et versements assimilés (administration des impôts)
+_	63512 - Taxes foncières	_	6351 - Impôts directs
+_	63513 - Autres impôts locaux	_	6351 - Impôts directs
+_	6353 - Impôts indirects	_	635 - Autres impôts, taxes et versements assimilés (administration des impôts)
+_	6354 - Droits d'enregistrement et de timbre	_	635 - Autres impôts, taxes et versements assimilés (administration des impôts)
+_	6355 - Taxes et impôts sur les véhicules	_	635 - Autres impôts, taxes et versements assimilés (administration des impôts)
+_	6358 - Autres droits	_	635 - Autres impôts, taxes et versements assimilés (administration des impôts)
+_	637 - Autres impôts, taxes et versements assimilés (autres organismes)	_	63 - IMPÔTS, TAXES ET VERSEMENTS ASSIMILÉS
+_	64 - CHARGES DE PERSONNEL	_	6 - COMPTES DE CHARGES
+_	641 - Rémunérations du personnel	_	64 - CHARGES DE PERSONNEL
+_	6411 - Personnel titulaire	_	641 - Rémunérations du personnel
+_	64111 - Rémunération principale	_	6411 - Personnel titulaire
+_	64112 - NBI, supplément familial de traitement et indemnité de résidence	_	6411 - Personnel titulaire
+_	64116 - Indemnités de préavis et de licenciement	_	6411 - Personnel titulaire
+_	64118 - Autres indemnités.	_	6411 - Personnel titulaire
+_	6413 - Personnel non titulaire	_	641 - Rémunérations du personnel
+_	64131 - Rémunérations	_	6413 - Personnel non titulaire
+_	64136 - Indemnités de préavis et de licenciement	_	6413 - Personnel non titulaire
+_	64138 - Autres indemnités	_	6413 - Personnel non titulaire
+_	6416 - Emplois d'insertion	_	641 - Rémunérations du personnel
+_	64161 - Emplois jeunes	_	6416 - Emplois d'insertion
+_	64162 - Emplois d'avenir	_	6416 - Emplois d'insertion
+_	64168 - Autres emplois d'insertion	_	6416 - Emplois d'insertion
+_	6417 - Rémunérations des apprentis	_	641 - Rémunérations du personnel
+_	6419 - Remboursements sur rémunérations du personnel	_	641 - Rémunérations du personnel
+_	645 - Charges de sécurité sociale et de prévoyance 	_	64 - CHARGES DE PERSONNEL
+_	6451 - Cotisations à l'U.R.S.S.A.F.	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6453 - Cotisations aux caisses de retraites	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6454 - Cotisations aux A.S.S.E.D.I.C	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6455 - Cotisations pour assurance du personnel	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6456 - Versement au F.N.C du supplément familial	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6457 - Cotisations sociales liées à l'apprentissage	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6458 - Cotisations aux autres organismes sociaux	_	645 - Charges de sécurité sociale et de prévoyance 
+_	6459 - Remboursements sur charges de sécurité sociale et de prévoyance	_	645 - Charges de sécurité sociale et de prévoyance 
+_	647 - Autres charges sociales	_	64 - CHARGES DE PERSONNEL
+_	6471 - Prestations versées pour le compte du F.N.A.L.	_	647 - Autres charges sociales
+_	6472 - Prestations familiales directes	_	647 - Autres charges sociales
+_	6473 - Allocations de chômage	_	647 - Autres charges sociales
+_	64731 - Versées directement	_	6473 - Allocations de chômage
+_	64732 - Versées aux A.S.S.E.D.I.C.	_	6473 - Allocations de chômage
+_	6474 - Versements aux autres oeuvres sociales	_	647 - Autres charges sociales
+_	6475 - Médecine du travail, pharmacie	_	647 - Autres charges sociales
+_	6478 - Autres charges sociales diverses	_	647 - Autres charges sociales
+_	6479 - Remboursements sur autres charges sociales	_	647 - Autres charges sociales
+_	648 - Autres charges de personnel	_	64 - CHARGES DE PERSONNEL
+_	6483 - Cessation progressive d'activité	_	648 - Autres charges de personnel
+_	64831 - Indemnités aux agents	_	6483 - Cessation progressive d'activité
+_	64832 - Contributions au fonds de compensation de cessation progressive d'activité	_	6483 - Cessation progressive d'activité
+_	6488 - Autres charges	_	648 - Autres charges de personnel
+_	65 - AUTRES CHARGES DE GESTION COURANTE	_	6 - COMPTES DE CHARGES
+_	651 - Redevances pour concessions, brevets, licences, procédés, logiciels, droits et valeurs similaires	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	652 - Déficit ou excédent des budgets annexes à caractère administratif	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	6521 - Déficit des budgets annexes à caractère administratif	_	652 - Déficit ou excédent des budgets annexes à caractère administratif
+_	6522 - Reversement de l'excédent des budgets annexes à caractère administratif au budget principal	_	652 - Déficit ou excédent des budgets annexes à caractère administratif
+_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	6531 - Indemnités	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	6532 - Frais de mission	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	6533 - Cotisations de retraite	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	6534 - Cotisations de sécurité sociale - part patronale	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	6535 - Formation	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	6536 - Frais de représentation du maire	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	6537 - Compensations pour perte de revenus	_	653 - Indemnités, frais de mission et de formation des maires, adjoints et conseillers
+_	65371 - Compensations pour formation	_	6537 - Compensations pour perte de revenus
+_	65372 - Cotisations au fonds de financement de l'allocation de fin de mandat	_	6537 - Compensations pour perte de revenus
+_	654 - Pertes sur créances irrécouvrables	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	6541 - Créances admises en non valeur	_	654 - Pertes sur créances irrécouvrables
+_	6542 - Créances éteintes 	_	654 - Pertes sur créances irrécouvrables
+_	655 - Contingents et participations obligatoires	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	6551 - Police d'État	_	655 - Contingents et participations obligatoires
+_	6552 - Aide sociale du département	_	655 - Contingents et participations obligatoires
+_	6553 - Service d'incendie	_	655 - Contingents et participations obligatoires
+_	6554 - Contributions aux organismes de regroupement	_	655 - Contingents et participations obligatoires
+_	6555 - Contributions au C.N.F.P.T. (personnel privé d'emploi)  	_	655 - Contingents et participations obligatoires
+_	6556 - Indemnités de logement aux instituteurs	_	655 - Contingents et participations obligatoires
+_	6557 - Contributions au titre de la politique de l'habitat	_	655 - Contingents et participations obligatoires
+_	6558 - Autres contributions obligatoires	_	655 - Contingents et participations obligatoires
+_	656 - Frais de fonctionnement des groupes d'élus	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	6561 - Frais de personnel	_	656 - Frais de fonctionnement des groupes d'élus
+_	6562 - Matériel, équipement et fournitures	_	656 - Frais de fonctionnement des groupes d'élus
+_	657 - Subventions de fonctionnement versées	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	6573 - Subventions de fonctionnement aux organismes publics	_	657 - Subventions de fonctionnement versées
+_	65731 - État	_	6573 - Subventions de fonctionnement aux organismes publics
+_	65732 - Régions	_	6573 - Subventions de fonctionnement aux organismes publics
+_	65733 - Départements	_	6573 - Subventions de fonctionnement aux organismes publics
+_	65734 - Communes	_	6573 - Subventions de fonctionnement aux organismes publics
+_	657341 - Communes membres du GFP 	_	65734 - Communes
+_	657348 - Autres communes  	_	65734 - Communes
+_	65735 - Groupements de collectivités	_	6573 - Subventions de fonctionnement aux organismes publics
+_	657351 - GFP de rattachement 	_	65735 - Groupements de collectivités
+_	657358 - Autres groupements 	_	65735 - Groupements de collectivités
+_	65736 - Établissements et services rattachés	_	6573 - Subventions de fonctionnement aux organismes publics
+_	657361 - Caisse des écoles	_	65736 - Établissements et services rattachés
+_	657362 - CCAS	_	65736 - Établissements et services rattachés
+_	657363 - A caractère administratif	_	65736 - Établissements et services rattachés
+_	657364 - A caractère industriel et commercial	_	65736 - Établissements et services rattachés
+_	65737 - Autres établissements publics locaux	_	6573 - Subventions de fonctionnement aux organismes publics
+_	65738 - Autres organismes publics	_	6573 - Subventions de fonctionnement aux organismes publics
+_	6574 - Subventions de fonctionnement aux associations et autres personnes de droit privé	_	657 - Subventions de fonctionnement versées
+_	658 - Charges diverses de la gestion courante	_	65 - AUTRES CHARGES DE GESTION COURANTE
+_	66 - CHARGES FINANCIÈRES	_	6 - COMPTES DE CHARGES
+_	661 - Charges d'intérêts	_	66 - CHARGES FINANCIÈRES
+_	6611 - Intérêts des emprunts et dettes	_	661 - Charges d'intérêts
+_	66111 - Intérêts réglés à l'échéance	_	6611 - Intérêts des emprunts et dettes
+_	66112 - Intérêts - Rattachement des ICNE	_	6611 - Intérêts des emprunts et dettes
+_	66113 - Remboursements d'intérêts d'emprunts transférés  	_	6611 - Intérêts des emprunts et dettes
+_	661131 - aux communes membres du GFP  	_	66113 - Remboursements d'intérêts d'emprunts transférés  
+_	661132 - au GFP de rattachement   	_	66113 - Remboursements d'intérêts d'emprunts transférés  
+_	661133 - à la collectivité ou à l'établissement de rattachement	_	66113 - Remboursements d'intérêts d'emprunts transférés  
+_	661138 - à d'autres tiers  	_	66113 - Remboursements d'intérêts d'emprunts transférés  
+_	6615 - Intérêts des comptes courants et de dépôts créditeurs	_	661 - Charges d'intérêts
+_	6616 - Intérêts bancaires et sur opérations de financement (escompte,...)	_	661 - Charges d'intérêts
+_	6618 - Intérêts des autres dettes	_	661 - Charges d'intérêts
+_	665 - Escomptes accordés	_	66 - CHARGES FINANCIÈRES
+_	666 - Pertes de change	_	66 - CHARGES FINANCIÈRES
+_	667 - Charges nettes sur cessions de valeurs mobilières de placement	_	66 - CHARGES FINANCIÈRES
+_	668 - Autres charges financières	_	66 - CHARGES FINANCIÈRES
+_	67 - CHARGES EXCEPTIONNELLES	_	6 - COMPTES DE CHARGES
+_	671 - Charges exceptionnelles sur opérations de gestion	_	67 - CHARGES EXCEPTIONNELLES
+_	6711 - Intérêts moratoires et pénalités sur marchés	_	671 - Charges exceptionnelles sur opérations de gestion
+_	6712 - Amendes fiscales et pénales	_	671 - Charges exceptionnelles sur opérations de gestion
+_	6713 - Secours et dots	_	671 - Charges exceptionnelles sur opérations de gestion
+_	6714 - Bourses et prix	_	671 - Charges exceptionnelles sur opérations de gestion
+_	6718 - Autres charges exceptionnelles sur opérations de gestion	_	671 - Charges exceptionnelles sur opérations de gestion
+_	673 - Titres annulés (sur exercices antérieurs)	_	67 - CHARGES EXCEPTIONNELLES
+_	674 - Subventions de fonctionnement exceptionnelles	_	67 - CHARGES EXCEPTIONNELLES
+_	6743 - Subventions de fonctionnement (versées par les groupements)	_	674 - Subventions de fonctionnement exceptionnelles
+_	6744 - Subventions aux S.P.I.C. (autres que les services de transport, d'eau et d'assainissement)	_	674 - Subventions de fonctionnement exceptionnelles
+_	67441 - aux budgets annexes et aux régies dotées de la seule autonomie financière	_	6744 - Subventions aux S.P.I.C. (autres que les services de transport, d'eau et d'assainissement)
+_	67442 - aux régies dotées de la personnalité morale	_	6744 - Subventions aux S.P.I.C. (autres que les services de transport, d'eau et d'assainissement)
+_	67443 - aux fermiers et aux concessionnaires	_	6744 - Subventions aux S.P.I.C. (autres que les services de transport, d'eau et d'assainissement)
+_	67444 - aux syndicats exploitant un SPIC	_	6744 - Subventions aux S.P.I.C. (autres que les services de transport, d'eau et d'assainissement)
+_	6745 - Subventions aux personnes de droit privé	_	674 - Subventions de fonctionnement exceptionnelles
+_	6746 - Bonifications d'intérêts	_	674 - Subventions de fonctionnement exceptionnelles
+_	6748 - Autres subventions exceptionnelles	_	674 - Subventions de fonctionnement exceptionnelles
+_	675 - Valeurs comptables des immobilisations cédées	_	67 - CHARGES EXCEPTIONNELLES
+_	676 - Différences sur réalisations (positives) transférées en investissement	_	67 - CHARGES EXCEPTIONNELLES
+_	678 - Autres charges exceptionnelles	_	67 - CHARGES EXCEPTIONNELLES
+_	68 - DOTATIONS AUX AMORTISSEMENTS ET PROVISIONS	_	6 - COMPTES DE CHARGES
+_	681 - Dotations aux amortissements et aux provisions - Charges de fonctionnement courant	_	68 - DOTATIONS AUX AMORTISSEMENTS ET PROVISIONS
+_	6811 - Dotations aux amortissements des immobilisations incorporelles et corporelles	_	681 - Dotations aux amortissements et aux provisions - Charges de fonctionnement courant
+_	6812 - Dotations aux amortissements des charges de fonctionnement à répartir	_	681 - Dotations aux amortissements et aux provisions - Charges de fonctionnement courant
+_	6815 - Dotations aux provisions pour risques et charges de fonctionnement courant	_	681 - Dotations aux amortissements et aux provisions - Charges de fonctionnement courant
+_	6816 - Dotations aux provisions pour dépréciation des immobilisations incorporelles et corporelles	_	681 - Dotations aux amortissements et aux provisions - Charges de fonctionnement courant
+_	6817 - Dotations aux provisions pour dépréciation des actifs circulants	_	681 - Dotations aux amortissements et aux provisions - Charges de fonctionnement courant
+_	686 - Dotations aux amortissements et aux provisions - Charges financières	_	68 - DOTATIONS AUX AMORTISSEMENTS ET PROVISIONS
+_	6861 - Dotations aux amortissements des primes de remboursement des obligations	_	686 - Dotations aux amortissements et aux provisions - Charges financières
+_	6862 - Dotations aux amortissements des charges financières à répartir	_	686 - Dotations aux amortissements et aux provisions - Charges financières
+_	6865 - Dotations aux provisions pour risques et charges financiers	_	686 - Dotations aux amortissements et aux provisions - Charges financières
+_	6866 - Dotations aux provisions pour dépréciation des éléments financiers	_	686 - Dotations aux amortissements et aux provisions - Charges financières
+_	687 - Dotations aux amortissements et aux provisions - Charges exceptionnelles	_	68 - DOTATIONS AUX AMORTISSEMENTS ET PROVISIONS
+_	6871 - Dotations aux amortissements exceptionnels des immobilisations	_	687 - Dotations aux amortissements et aux provisions - Charges exceptionnelles
+_	6875 - Dotations aux provisions pour risques et charges exceptionnels	_	687 - Dotations aux amortissements et aux provisions - Charges exceptionnelles
+_	6876 - Dotations aux provisions pour dépréciations exceptionnelles	_	687 - Dotations aux amortissements et aux provisions - Charges exceptionnelles
+_	7 - COMPTES DE PRODUITS	_	M14_2014
+_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES	_	7 - COMPTES DE PRODUITS
+_	701 - Ventes de produits finis	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	7011 - Ventes d'eau	_	701 - Ventes de produits finis
+_	7012 - Taxes et redevances d'eau	_	701 - Ventes de produits finis
+_	70124 - Redevance pour pollution d'origine domestique  	_	7012 - Taxes et redevances d'eau
+_	701241 - Redevance pour pollution d'origine domestique 	_	70124 - Redevance pour pollution d'origine domestique  
+_	701249 - Reversement de la redevance pour pollution d'origine domestique2 	_	70124 - Redevance pour pollution d'origine domestique  
+_	70128 - Autres taxes et redevances d'eau 	_	7012 - Taxes et redevances d'eau
+_	7013 - Vente de produits résiduels	_	701 - Ventes de produits finis
+_	7015 - Ventes de terrains aménagés	_	701 - Ventes de produits finis
+_	7018 - Autres ventes de produits finis	_	701 - Ventes de produits finis
+_	702 - Ventes de récoltes et de produits forestiers	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	7021 - Ventes de récoltes	_	702 - Ventes de récoltes et de produits forestiers
+_	7022 - Coupes de bois	_	702 - Ventes de récoltes et de produits forestiers
+_	7023 - Menus produits forestiers	_	702 - Ventes de récoltes et de produits forestiers
+_	7024 - Remboursement forfaitaire T.V.A.	_	702 - Ventes de récoltes et de produits forestiers
+_	7025 - Taxes d'affouage	_	702 - Ventes de récoltes et de produits forestiers
+_	7028 - Autres produits agricoles et forestiers	_	702 - Ventes de récoltes et de produits forestiers
+_	703 - Redevances et recettes d'utilisation du domaine	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	7031 - Concessions et redevances funéraires	_	703 - Redevances et recettes d'utilisation du domaine
+_	70311 - Concession dans les cimetières (produit net)	_	7031 - Concessions et redevances funéraires
+_	70312 - Redevances funéraires	_	7031 - Concessions et redevances funéraires
+_	7032 - Droits de permis de stationnement et de location sur la voie publique, les rivières, ports et quais fluviaux et autres lieux publics	_	703 - Redevances et recettes d'utilisation du domaine
+_	70321 - Droits de stationnement et de location sur la voie publique	_	7032 - Droits de permis de stationnement et de location sur la voie publique, les rivières, ports et quais fluviaux et autres lieux publics
+_	70322 - Droits de stationnement et de location sur le domaine public portuaire et fluvial	_	7032 - Droits de permis de stationnement et de location sur la voie publique, les rivières, ports et quais fluviaux et autres lieux publics
+_	70323 - Redevance d'occupation du domaine public communal	_	7032 - Droits de permis de stationnement et de location sur la voie publique, les rivières, ports et quais fluviaux et autres lieux publics
+_	70328 - Autres droits de stationnement et de location	_	7032 - Droits de permis de stationnement et de location sur la voie publique, les rivières, ports et quais fluviaux et autres lieux publics
+_	7033 - Redevances pour appareils distributeurs d'essence	_	703 - Redevances et recettes d'utilisation du domaine
+_	7034 - Péage, droits de pesage, mesurage, jaugeage	_	703 - Redevances et recettes d'utilisation du domaine
+_	7035 - Locations de droits de chasse et de pêche	_	703 - Redevances et recettes d'utilisation du domaine
+_	7036 - Taxes de pâturage et de tourbage	_	703 - Redevances et recettes d'utilisation du domaine
+_	7037 - Contribution pour dégradation des voies et chemins	_	703 - Redevances et recettes d'utilisation du domaine
+_	7038 - Autres redevances et recettes d'utilisation du domaine	_	703 - Redevances et recettes d'utilisation du domaine
+_	70381 - Taxe de pavage et de trottoirs	_	7038 - Autres redevances et recettes d'utilisation du domaine
+_	70382 - Redevances de ski de fond	_	7038 - Autres redevances et recettes d'utilisation du domaine
+_	70388 - Autres redevances et recettes diverses	_	7038 - Autres redevances et recettes d'utilisation du domaine
+_	70389 - Reversements sur redevance de ski de fond	_	7038 - Autres redevances et recettes d'utilisation du domaine
+_	704 - Travaux	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	705 - Études	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	706 - Prestations de services	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	7061 - Redevances d'enlèvement des ordures et des déchets	_	706 - Prestations de services
+_	70611 - Redevance d'enlèvement des ordures ménagères	_	7061 - Redevances d'enlèvement des ordures et des déchets
+_	70612 - Redevance spéciale d'enlèvement des ordures 	_	7061 - Redevances d'enlèvement des ordures et des déchets
+_	70613 - Abonnement ou redevance pour enlèvement des déchets industriels et commerciaux	_	7061 - Redevances d'enlèvement des ordures et des déchets
+_	70619 - Reversements sur redevances d'enlèvement des ordures et des déchets	_	7061 - Redevances d'enlèvement des ordures et des déchets
+_	7062 - Redevances et droits des services à caractère culturel	_	706 - Prestations de services
+_	7063 - Redevances et droits des services à caractère sportif et de loisirs	_	706 - Prestations de services
+_	70631 - A caractère sportif	_	7063 - Redevances et droits des services à caractère sportif et de loisirs
+_	70632 - A caractère de loisirs	_	7063 - Redevances et droits des services à caractère sportif et de loisirs
+_	7064 - Taxes de désinfection (services d'hygiène)	_	706 - Prestations de services
+_	7065 - Droits de ports et de navigation (autres que stationnement et location)	_	706 - Prestations de services
+_	7066 - Redevances et droits des services à caractère social	_	706 - Prestations de services
+_	7067 - Redevances et droits des services périscolaires et d'enseignement	_	706 - Prestations de services
+_	7068 - Autres redevances et droits	_	706 - Prestations de services
+_	70681 - Redevances d'assainissement collectif et pour modernisation des réseaux de collecte 	_	7068 - Autres redevances et droits
+_	706811 - Redevance d'assainissement collectif 	_	70681 - Redevances d'assainissement collectif et pour modernisation des réseaux de collecte 
+_	706812 - Redevance pour modernisation des réseaux de collecte 	_	70681 - Redevances d'assainissement collectif et pour modernisation des réseaux de collecte 
+_	7068121 - Redevance pour  modernisation des réseaux de collecte  	_	706812 - Redevance pour modernisation des réseaux de collecte 
+_	7068129 - Reversement de la redevance pour modernisation des réseaux de collecte1 	_	706812 - Redevance pour modernisation des réseaux de collecte 
+_	706813 - Participations pour l'assainissement collectif	_	70681 - Redevances d'assainissement collectif et pour modernisation des réseaux de collecte 
+_	70682 - Location de compteurs	_	7068 - Autres redevances et droits
+_	70683 - Produits des commissions pour recouvrement de la redevance d'assainissement	_	7068 - Autres redevances et droits
+_	70684 - Redevances d'archéologie préventive	_	7068 - Autres redevances et droits
+_	70688 - Autres prestations de services	_	7068 - Autres redevances et droits
+_	707 - Ventes de marchandises	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	7071 - Compteurs	_	707 - Ventes de marchandises
+_	7078 - Autres marchandises	_	707 - Ventes de marchandises
+_	708 - Autres produits	_	70 - PRODUITS DES SERVICES, DU DOMAINE ET VENTES DIVERSES
+_	7081 - Produits des services exploités dans l'intérêt du personnel	_	708 - Autres produits
+_	7082 - Commissions	_	708 - Autres produits
+_	7083 - Locations diverses (autres qu'immeubles)	_	708 - Autres produits
+_	7084 - Mise à disposition de personnel facturée	_	708 - Autres produits
+_	70841 - aux budgets annexes, régies municipales, C.C.A.S. et caisse des écoles	_	7084 - Mise à disposition de personnel facturée
+_	70845 - aux communes membres du GFP 	_	7084 - Mise à disposition de personnel facturée
+_	70846 - au GFP de rattachement  	_	7084 - Mise à disposition de personnel facturée
+_	70848 - aux autres organismes	_	7084 - Mise à disposition de personnel facturée
+_	7087 - Remboursements de frais	_	708 - Autres produits
+_	70871 - par la collectivité de rattachement	_	7087 - Remboursements de frais
+_	70872 - par les budgets annexes et les régies municipales	_	7087 - Remboursements de frais
+_	70873 - par les C.C.A.S.	_	7087 - Remboursements de frais
+_	70874 - par les caisses des écoles	_	7087 - Remboursements de frais
+_	70875 - par les communes membres du GFP  	_	7087 - Remboursements de frais
+_	70876 - par le GFP de rattachement  	_	7087 - Remboursements de frais
+_	70878 - par d'autres redevables	_	7087 - Remboursements de frais
+_	7088 - Autres produits d'activités annexes (abonnements et vente d'ouvrages...)	_	708 - Autres produits
+_	71 - PRODUCTION STOCKEE (OU DESTOCKAGE)	_	7 - COMPTES DE PRODUITS
+_	713 - Variation des stocks (en-cours de production, produits)	_	71 - PRODUCTION STOCKEE (OU DESTOCKAGE)
+_	7133 - Variation des en-cours de production de biens	_	713 - Variation des stocks (en-cours de production, produits)
+_	7134 - Variation des en-cours de production de services	_	713 - Variation des stocks (en-cours de production, produits)
+_	7135 - Variation des stocks de produits	_	713 - Variation des stocks (en-cours de production, produits)
+_	71351 - Variation des stocks de produits autres que terrains	_	7135 - Variation des stocks de produits
+_	71355 - Variation des stocks de terrains aménagés 	_	7135 - Variation des stocks de produits
+_	72 - TRAVAUX EN RÉGIE	_	7 - COMPTES DE PRODUITS
+_	721 - Immobilisations incorporelles	_	72 - TRAVAUX EN RÉGIE
+_	722 - Immobilisations corporelles	_	72 - TRAVAUX EN RÉGIE
+_	73 - IMPÔTS ET TAXES	_	7 - COMPTES DE PRODUITS
+_	731 - Impôts locaux	_	73 - IMPÔTS ET TAXES
+_	7311 - Contributions directes	_	731 - Impôts locaux
+_	73111 - Taxes foncières et d'habitation	_	7311 - Contributions directes
+_	73112 - Cotisations sur la valeur ajoutée des Entreprises	_	7311 - Contributions directes
+_	73113 - Taxe sur les surfaces commerciales	_	7311 - Contributions directes
+_	73114 - Impositions forfaitaires sur les entreprises de réseau	_	7311 - Contributions directes
+_	7318 - Autres impôts locaux ou assimilés	_	731 - Impôts locaux
+_	732 - Fiscalité reversée	_	73 - IMPÔTS ET TAXES
+_	7321 - Attribution de compensation	_	732 - Fiscalité reversée
+_	7322 - Dotation de solidarité communautaire	_	732 - Fiscalité reversée
+_	7323 - F.N.G.I.R.	_	732 - Fiscalité reversée
+_	7324 - Fonds de solidarité des communes de la région Ile-de-France	_	732 - Fiscalité reversée
+_	7325 - Fonds de péréquation des ressources communales et intercommunales	_	732 - Fiscalité reversée
+_	7328 - Autres reversements de fiscalité	_	732 - Fiscalité reversée
+_	733 - Taxes pour utilisation des services publics et du domaine	_	73 - IMPÔTS ET TAXES
+_	7331 - Taxe d'enlèvement des ordures ménagères	_	733 - Taxes pour utilisation des services publics et du domaine
+_	7332 - Taxe de balayage	_	733 - Taxes pour utilisation des services publics et du domaine
+_	7333 - Taxes funéraires	_	733 - Taxes pour utilisation des services publics et du domaine
+_	7334 - Taxe sur les passagers	_	733 - Taxes pour utilisation des services publics et du domaine
+_	7336 - Droits de place	_	733 - Taxes pour utilisation des services publics et du domaine
+_	7337 - Droits de stationnement	_	733 - Taxes pour utilisation des services publics et du domaine
+_	7338 - Autres taxes	_	733 - Taxes pour utilisation des services publics et du domaine
+_	734 - Taxes et participations liées à l'urbanisation et à l'environnement	_	73 - IMPÔTS ET TAXES
+_	7341 - Taxe nationale sur les véhicules de transport de marchandises	_	734 - Taxes et participations liées à l'urbanisation et à l'environnement
+_	7342 - Versement de transport	_	734 - Taxes et participations liées à l'urbanisation et à l'environnement
+_	7343 - Taxe sur les pylônes électriques	_	734 - Taxes et participations liées à l'urbanisation et à l'environnement
+_	7344 - Taxe sur les déchets stockés	_	734 - Taxes et participations liées à l'urbanisation et à l'environnement
+_	7345 - Taxe sur les eaux pluviales	_	734 - Taxes et participations liées à l'urbanisation et à l'environnement
+_	7346 - Taxe pour la gestion des milieux aquatiques et la prévention des inondations	_	734 - Taxes et participations liées à l'urbanisation et à l'environnement
+_	735 - Impôts et taxes spécifiques liés à la production énergétique et industrielle	_	73 - IMPÔTS ET TAXES
+_	7351 - Taxe sur l'électricité	_	735 - Impôts et taxes spécifiques liés à la production énergétique et industrielle
+_	7353 - Redevance des mines	_	735 - Impôts et taxes spécifiques liés à la production énergétique et industrielle
+_	7354 - Surtaxe sur les eaux minérales	_	735 - Impôts et taxes spécifiques liés à la production énergétique et industrielle
+_	7355 - Taxe sur l'énergie hydraulique	_	735 - Impôts et taxes spécifiques liés à la production énergétique et industrielle
+_	736 - Impôts et taxes spécifiques liés aux activités de services	_	73 - IMPÔTS ET TAXES
+_	7362 - Taxes de séjour	_	736 - Impôts et taxes spécifiques liés aux activités de services
+_	7363 - Impôt sur les spectacles	_	736 - Impôts et taxes spécifiques liés aux activités de services
+_	7364 - Prélèvement sur les produits des jeux 	_	736 - Impôts et taxes spécifiques liés aux activités de services
+_	7366 - Taxe sur les remontées mécaniques	_	736 - Impôts et taxes spécifiques liés aux activités de services
+_	7368 - Taxe locale sur la publicité extérieure	_	736 - Impôts et taxes spécifiques liés aux activités de services
+_	737 - Impôts et taxes d'Outre-Mer	_	73 - IMPÔTS ET TAXES
+_	7371 - Taxe sur les rhums	_	737 - Impôts et taxes d'Outre-Mer
+_	7372 - Taxes sur les carburants	_	737 - Impôts et taxes d'Outre-Mer
+_	7373 - Octroi de mer	_	737 - Impôts et taxes d'Outre-Mer
+_	7378 - Autres impôts et taxes d'Outre-Mer 	_	737 - Impôts et taxes d'Outre-Mer
+_	738 - Autres taxes	_	73 - IMPÔTS ET TAXES
+_	7381 - Taxe additionnelle aux droits de mutation ou à la taxe de publicité foncière	_	738 - Autres taxes
+_	7388 - Autres taxes diverses	_	738 - Autres taxes
+_	739 - Reversements et restitutions sur impôts et taxes	_	73 - IMPÔTS ET TAXES
+_	7391 - Reversements et restitutions sur impôts  locaux 	_	739 - Reversements et restitutions sur impôts et taxes
+_	73911 -  Reversements et restitutions sur contributions directes	_	7391 - Reversements et restitutions sur impôts  locaux 
+_	739113 - Reversements conventionnels de fiscalité 	_	73911 -  Reversements et restitutions sur contributions directes
+_	739115 - Prélèvement au titre de l'article 55 de la loi SRU 	_	73911 -  Reversements et restitutions sur contributions directes
+_	739117 - Restitutions au titre des dégrèvements à la charge des collectivités locales 	_	73911 -  Reversements et restitutions sur contributions directes
+_	7391171 - Dégrèvement de taxe foncière sur les propriétés non bâties en faveur des jeunes agriculteurs 	_	739117 - Restitutions au titre des dégrèvements à la charge des collectivités locales 
+_	7391172 - Dégrèvement de taxe d'habitation sur les logements vacants	_	739117 - Restitutions au titre des dégrèvements à la charge des collectivités locales 
+_	7391173 - Dégrèvement au titre du plafonnement de la TP et de la CET sur la valeur ajoutée 	_	739117 - Restitutions au titre des dégrèvements à la charge des collectivités locales 
+_	7391178 - Autres restitutions au titre de dégrèvements sur contributions directes	_	739117 - Restitutions au titre des dégrèvements à la charge des collectivités locales 
+_	739118 - Autres reversements de fiscalité 	_	73911 -  Reversements et restitutions sur contributions directes
+_	73918 -  Autres reversements sur autres impôts locaux ou assimilés	_	7391 - Reversements et restitutions sur impôts  locaux 
+_	7392 - Prélèvements pour reversements de fiscalité	_	739 - Reversements et restitutions sur impôts et taxes
+_	73921 - Attributions de compensation	_	7392 - Prélèvements pour reversements de fiscalité
+_	73922 - Dotation de solidarité communautaire	_	7392 - Prélèvements pour reversements de fiscalité
+_	73923 - Reversement sur FNGIR	_	7392 - Prélèvements pour reversements de fiscalité
+_	73924 - Fonds de solidarité des communes de la région Ile-de-France	_	7392 - Prélèvements pour reversements de fiscalité
+_	73925 - Fonds de péréquation des ressources communales et intercommunales	_	7392 - Prélèvements pour reversements de fiscalité
+_	73928 - Autres	_	7392 - Prélèvements pour reversements de fiscalité
+_	7394 - Reversements de taxes et participations liées à l'urbanisation et à l'environnement 	_	739 - Reversements et restitutions sur impôts et taxes
+_	73942 - Reversement sur taxe de versement de transport 	_	7394 - Reversements de taxes et participations liées à l'urbanisation et à l'environnement 
+_	73945 - Reversement sur taxes sur les eaux pluviales 	_	7394 - Reversements de taxes et participations liées à l'urbanisation et à l'environnement 
+_	7396 - Reversement sur impôts sur les spectacles (CCAS) 	_	739 - Reversements et restitutions sur impôts et taxes
+_	7398 - Reversements, restitutions et prélèvements divers	_	739 - Reversements et restitutions sur impôts et taxes
+_	74 - DOTATIONS ET PARTICIPATIONS	_	7 - COMPTES DE PRODUITS
+_	741 - D.G.F.	_	74 - DOTATIONS ET PARTICIPATIONS
+_	7411 - Dotation forfaitaire	_	741 - D.G.F.
+_	7412 - Dotation d'aménagement	_	741 - D.G.F.
+_	74121 - Dotation de solidarité rurale 	_	7412 - Dotation d'aménagement
+_	74123 - Dotation de solidarité urbaine	_	7412 - Dotation d'aménagement
+_	74124 - Dotation d'intercommunalité	_	7412 - Dotation d'aménagement
+_	74126 - Dotation de compensation des groupements de communes	_	7412 - Dotation d'aménagement
+_	74127 - Dotation nationale de péréquation	_	7412 - Dotation d'aménagement
+_	7413 - D.G.F. des permanents syndicaux	_	741 - D.G.F.
+_	7419 - Reversement sur D.G.F.	_	741 - D.G.F.
+_	742 - Dotations aux élus locaux	_	74 - DOTATIONS ET PARTICIPATIONS
+_	744 - Dotations : régularisation de l'exercice écoulé	_	74 - DOTATIONS ET PARTICIPATIONS
+_	745 - Dotation spéciale au titre des instituteurs	_	74 - DOTATIONS ET PARTICIPATIONS
+_	746 - Dotation générale de décentralisation	_	74 - DOTATIONS ET PARTICIPATIONS
+_	747 - Participations	_	74 - DOTATIONS ET PARTICIPATIONS
+_	7471 - État	_	747 - Participations
+_	74711 - Emplois-jeunes	_	7471 - État
+_	74712 - Emplois d'avenir	_	7471 - État
+_	74718 - Autres 	_	7471 - État
+_	7472 - Régions	_	747 - Participations
+_	7473 - Départements	_	747 - Participations
+_	7474 - Communes	_	747 - Participations
+_	74741 - Communes membres du GFP 	_	7474 - Communes
+_	74748 - Autres communes  	_	7474 - Communes
+_	7475 - Groupements de collectivités	_	747 - Participations
+_	74751 - GFP de rattachement  	_	7475 - Groupements de collectivités
+_	74758 - Autres groupements  	_	7475 - Groupements de collectivités
+_	7476 - C.C.A.S. et caisses des écoles	_	747 - Participations
+_	7477 - Budget communautaire et fonds structurels	_	747 - Participations
+_	7478 - Autres organismes	_	747 - Participations
+_	748 - Autres attributions et participations	_	74 - DOTATIONS ET PARTICIPATIONS
+_	7481 - Attributions sur le versement représentatif d'impôt sur les spectacles	_	748 - Autres attributions et participations
+_	7482 - Compensation pour perte de taxe additionnelle aux droits de mutation ou à la taxe de publicité foncière	_	748 - Autres attributions et participations
+_	7483 - Attributions de péréquation et de compensation	_	748 - Autres attributions et participations
+_	74831 - Dotations et compensations relatives à la taxe professionnelle et à la CET	_	7483 - Attributions de péréquation et de compensation
+_	748311 - Compensation des pertes de bases d'imposition à la CET	_	74831 - Dotations et compensations relatives à la taxe professionnelle et à la CET
+_	748313 - Dotation de compensation de la réforme de la taxe professionnelle	_	74831 - Dotations et compensations relatives à la taxe professionnelle et à la CET
+_	748314 - Dotation unique des compensations spécifiques à la taxe professionnelle	_	74831 - Dotations et compensations relatives à la taxe professionnelle et à la CET
+_	74832 - Attribution du fonds départemental de la taxe professionnelle	_	7483 - Attributions de péréquation et de compensation
+_	74833 - État - Compensation au titre de la Contribution Economique Territoriale (CVAE et CFE)	_	7483 - Attributions de péréquation et de compensation
+_	74834 - État - Compensation au titre des exonérations des taxes foncières	_	7483 - Attributions de péréquation et de compensation
+_	74835 - État - Compensation au titre des exonérations de taxe d'habitation	_	7483 - Attributions de péréquation et de compensation
+_	74836 - Dotations de compensation relatives à la taxe professionnelle - Syndicales	_	7483 - Attributions de péréquation et de compensation
+_	74837 - Dotations de développement 	_	7483 - Attributions de péréquation et de compensation
+_	748371 - Dotation d'équipement des territoires ruraux	_	74837 - Dotations de développement 
+_	748372 - Dotation de développement urbain 	_	74837 - Dotations de développement 
+_	74838 - Autres attributions de péréquation et de compensation  	_	7483 - Attributions de péréquation et de compensation
+_	7484 - Dotation de recensement	_	748 - Autres attributions et participations
+_	7485 - Dotation pour les titres sécurisés 	_	748 - Autres attributions et participations
+_	7487 - Dotations des arrondissements ou des communes associées	_	748 - Autres attributions et participations
+_	74871 - Dotation d'animation locale	_	7487 - Dotations des arrondissements ou des communes associées
+_	748711 - Dotation d'animation locale reçue	_	74871 - Dotation d'animation locale
+_	748719 - Dotation d'animation locale versée	_	74871 - Dotation d'animation locale
+_	74872 - Dotation de gestion locale	_	7487 - Dotations des arrondissements ou des communes associées
+_	748721 - Dotation de gestion locale reçue	_	74872 - Dotation de gestion locale
+_	748729 - Dotation de gestion locale versée	_	74872 - Dotation de gestion locale
+_	7488 - Autres attributions et participations	_	748 - Autres attributions et participations
+_	7489 - Reversement et restitution sur autres attributions et participations  	_	748 - Autres attributions et participations
+_	75 - AUTRES PRODUITS DE GESTION COURANTE	_	7 - COMPTES DE PRODUITS
+_	751 - Redevances pour concessions, brevets, licences, marques, procédés, logiciels, droits et valeurs similaires	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	752 - Revenus des immeubles	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	754 - Redevance pour défaut de branchement à l'égout	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	755 - Excédent ou déficit des budgets annexes à caractère administratif	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	7551 - Excédent des budgets annexes à caractère administratif	_	755 - Excédent ou déficit des budgets annexes à caractère administratif
+_	7552 - Prise en charge du déficit du budget annexe à caractère administratif par le budget principal	_	755 - Excédent ou déficit des budgets annexes à caractère administratif
+_	756 - Excédents reversés par les régies à caractère industriel et commercial	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	7561 - Régies dotées de la seule autonomie financière	_	756 - Excédents reversés par les régies à caractère industriel et commercial
+_	7562 - Régies dotées de la personnalité morale	_	756 - Excédents reversés par les régies à caractère industriel et commercial
+_	757 - Redevances versées par les fermiers et concessionnaires	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	758 - Produits divers de gestion courante	_	75 - AUTRES PRODUITS DE GESTION COURANTE
+_	76 - PRODUITS FINANCIERS	_	7 - COMPTES DE PRODUITS
+_	761 - Produits de participations	_	76 - PRODUITS FINANCIERS
+_	762 - Produits des autres immobilisations financières	_	76 - PRODUITS FINANCIERS
+_	7621 - Produits des autres immobilisations financières - encaissés à l'échéance	_	762 - Produits des autres immobilisations financières
+_	7622 - Produits des autres immobilisations financières - rattachement des ICNE	_	762 - Produits des autres immobilisations financières
+_	7623 - Remboursements d'intérêts d'emprunts transférés  	_	762 - Produits des autres immobilisations financières
+_	76231 - par les communes membres du GFP 	_	7623 - Remboursements d'intérêts d'emprunts transférés  
+_	76232 - par le GFP de rattachement	_	7623 - Remboursements d'intérêts d'emprunts transférés  
+_	76233 - par leurs BA et régies à seule autonomie financière  	_	7623 - Remboursements d'intérêts d'emprunts transférés  
+_	76238 - par d'autres tiers 	_	7623 - Remboursements d'intérêts d'emprunts transférés  
+_	764 - Revenus des valeurs mobilières de placement	_	76 - PRODUITS FINANCIERS
+_	765 - Escomptes obtenus	_	76 - PRODUITS FINANCIERS
+_	766 - Gains de change	_	76 - PRODUITS FINANCIERS
+_	767 - Produits nets sur cessions de valeurs mobilières de placement	_	76 - PRODUITS FINANCIERS
+_	768 - Autres produits financiers	_	76 - PRODUITS FINANCIERS
+_	7681 - Fonds de soutien - Sortie des emprunts à risque	_	768 - Autres produits financiers
+_	7688 - Autres	_	768 - Autres produits financiers
+_	77 - PRODUITS EXCEPTIONNELS	_	7 - COMPTES DE PRODUITS
+_	771 - Produits exceptionnels sur opérations de gestion	_	77 - PRODUITS EXCEPTIONNELS
+_	7711 - Dédits et pénalités perçus	_	771 - Produits exceptionnels sur opérations de gestion
+_	7713 - Libéralités reçues	_	771 - Produits exceptionnels sur opérations de gestion
+_	7714 - Recouvrement sur créances admises en non valeur	_	771 - Produits exceptionnels sur opérations de gestion
+_	7718 - Autres produits exceptionnels sur opérations de gestion	_	771 - Produits exceptionnels sur opérations de gestion
+_	773 - Mandats annulés (sur exercices antérieurs) ou atteints par la déchéance quadriennale	_	77 - PRODUITS EXCEPTIONNELS
+_	774 - Subventions exceptionnelles 	_	77 - PRODUITS EXCEPTIONNELS
+_	775 - Produits des cessions d'immobilisations	_	77 - PRODUITS EXCEPTIONNELS
+_	776 - Différences sur réalisations (négatives) reprises au compte de résultat	_	77 - PRODUITS EXCEPTIONNELS
+_	777 - Quote-part des subventions d'investissement transférée au compte de résultat	_	77 - PRODUITS EXCEPTIONNELS
+_	778 - Autres produits exceptionnels	_	77 - PRODUITS EXCEPTIONNELS
+_	7785 - Excédent d'investissement transféré au compte de résultat	_	778 - Autres produits exceptionnels
+_	7788 - Produits exceptionnels divers	_	778 - Autres produits exceptionnels
+_	78 - REPRISES SUR AMORTISSEMENTS ET PROVISIONS	_	7 - COMPTES DE PRODUITS
+_	781 - Reprises sur amortissements et provisions - Produits de fonctionnement courant	_	78 - REPRISES SUR AMORTISSEMENTS ET PROVISIONS
+_	7811 - Reprises sur amortissements des immobilisations incorporelles et corporelles	_	781 - Reprises sur amortissements et provisions - Produits de fonctionnement courant
+_	7815 - Reprises sur provisions pour risques et charges de fonctionnement courant	_	781 - Reprises sur amortissements et provisions - Produits de fonctionnement courant
+_	7816 - Reprises sur provisions pour dépréciation des immobilisations incorporelles et corporelles	_	781 - Reprises sur amortissements et provisions - Produits de fonctionnement courant
+_	7817 - Reprises sur provisions pour dépréciation des actifs circulants	_	781 - Reprises sur amortissements et provisions - Produits de fonctionnement courant
+_	786 - Reprises sur provisions - Produits financiers	_	78 - REPRISES SUR AMORTISSEMENTS ET PROVISIONS
+_	7865 - Reprises sur provisions pour risques et charges financiers	_	786 - Reprises sur provisions - Produits financiers
+_	7866 - Reprises sur provisions pour dépréciation des éléments financiers	_	786 - Reprises sur provisions - Produits financiers
+_	787 - Reprises sur provisions - Produits exceptionnels	_	78 - REPRISES SUR AMORTISSEMENTS ET PROVISIONS
+_	7875 - Reprises sur provisions pour risques et charges exceptionnels	_	787 - Reprises sur provisions - Produits exceptionnels
+_	7876 - Reprises sur provisions pour dépréciations exceptionnelles	_	787 - Reprises sur provisions - Produits exceptionnels
+_	79 - TRANSFERTS DE CHARGES	_	7 - COMPTES DE PRODUITS
+_	791 - Transferts de charges de gestion courante	_	79 - TRANSFERTS DE CHARGES
+_	796 - Transferts de charges financières	_	79 - TRANSFERTS DE CHARGES
+_	797 - Transferts de charges exceptionnelles	_	79 - TRANSFERTS DE CHARGES
+_	8 - COMPTES SPECIAUX	_	M14_2014
+_	80 - ENGAGEMENTS HORS BILAN	_	8 - COMPTES SPECIAUX
+_	801 - Engagements donnés par la collectivité ou l'établissement	_	80 - ENGAGEMENTS HORS BILAN
+_	8015 - Engagement sur garanties d'emprunt	_	801 - Engagements donnés par la collectivité ou l'établissement
+_	8016 - Redevances de crédit-bail restant à courir	_	801 - Engagements donnés par la collectivité ou l'établissement
+_	80161 - Crédit-bail mobilier	_	8016 - Redevances de crédit-bail restant à courir
+_	80165 - Crédit-bail immobilier	_	8016 - Redevances de crédit-bail restant à courir
+_	8017 - Subventions à verser par annuités (annuités restant à courir)	_	801 - Engagements donnés par la collectivité ou l'établissement
+_	8018 - Autres engagements donnés	_	801 - Engagements donnés par la collectivité ou l'établissement
+_	802 - Engagements reçus par la collectivité ou l'établissement	_	80 - ENGAGEMENTS HORS BILAN
+_	8026 - Redevances de crédit-bail restant à recevoir	_	802 - Engagements reçus par la collectivité ou l'établissement
+_	80265 - Crédit-bail immobilier	_	8026 - Redevances de crédit-bail restant à recevoir
+_	8027 - Subventions à recevoir par annuités (annuités restant à recevoir)	_	802 - Engagements reçus par la collectivité ou l'établissement
+_	8028 - Autres engagements reçus	_	802 - Engagements reçus par la collectivité ou l'établissement
+_	86 - VALEURS INACTIVES	_	8 - COMPTES SPECIAUX
+_	861 - Comptes de position : titres et valeurs en portefeuille	_	86 - VALEURS INACTIVES
+_	862 - Comptes de position : titres et valeurs chez les correspondants	_	86 - VALEURS INACTIVES
+_	863 - Comptes de prise en charge	_	86 - VALEURS INACTIVES

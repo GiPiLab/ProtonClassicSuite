@@ -68,7 +68,8 @@ void FormManageReportings::on_pushButtonDisplayTree_clicked()
     ddt->setAttribute(Qt::WA_DeleteOnClose);
     QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
-    mdiArea->addSubWindow(ddt);
+    QMdiSubWindow *subWin=mdiArea->addSubWindow(ddt);
+    subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
     ddt->show();
 }
 
