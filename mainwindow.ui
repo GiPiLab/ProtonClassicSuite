@@ -39,7 +39,7 @@
     </property>
     <addaction name="actionNewDb"/>
     <addaction name="actionOpenDb"/>
-    <addaction name="actionO_ptions"/>
+    <addaction name="actionOptions"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuDataInput">
@@ -51,7 +51,7 @@
     <addaction name="actionManageAudits"/>
     <addaction name="actionEditAudit"/>
     <addaction name="separator"/>
-    <addaction name="actionTablesGraphics"/>
+    <addaction name="actionExploreAudits"/>
     <addaction name="actionReport"/>
     <addaction name="actionQueries"/>
     <addaction name="separator"/>
@@ -62,6 +62,8 @@
      <string>A&amp;ide</string>
     </property>
     <addaction name="actionA_propos"/>
+    <addaction name="actionCascade"/>
+    <addaction name="actionCloseAllSubwin"/>
    </widget>
    <widget class="QMenu" name="menuReporting">
     <property name="title">
@@ -85,6 +87,12 @@
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
+   <property name="iconSize">
+    <size>
+     <width>32</width>
+     <height>32</height>
+    </size>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -93,12 +101,12 @@
    </attribute>
    <addaction name="actionNewDb"/>
    <addaction name="actionOpenDb"/>
-   <addaction name="actionO_ptions"/>
+   <addaction name="actionOptions"/>
    <addaction name="separator"/>
    <addaction name="actionManageTree"/>
    <addaction name="actionManageAudits"/>
    <addaction name="actionEditAudit"/>
-   <addaction name="actionTablesGraphics"/>
+   <addaction name="actionExploreAudits"/>
    <addaction name="actionReport"/>
    <addaction name="actionQueries"/>
    <addaction name="separator"/>
@@ -117,7 +125,7 @@
      <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Arbres</string>
+    <string>Gestion des &amp;arbres</string>
    </property>
    <property name="toolTip">
     <string>Gestion des arbres</string>
@@ -150,13 +158,13 @@
     <string>&amp;Saisie des données</string>
    </property>
   </action>
-  <action name="actionTablesGraphics">
+  <action name="actionExploreAudits">
    <property name="icon">
     <iconset resource="Icons.qrc">
      <normaloff>:/icons/icons/exploreAudit.png</normaloff>:/icons/icons/exploreAudit.png</iconset>
    </property>
    <property name="text">
-    <string>E&amp;xplorateur d'audits</string>
+    <string>E&amp;xplorateur d'audit</string>
    </property>
   </action>
   <action name="actionReport">
@@ -165,7 +173,7 @@
      <normaloff>:/icons/icons/report.png</normaloff>:/icons/icons/report.png</iconset>
    </property>
    <property name="text">
-    <string>Générateur de &amp;rapports</string>
+    <string>Générateur de &amp;rapports d'audit</string>
    </property>
   </action>
   <action name="actionQueries">
@@ -174,7 +182,7 @@
      <normaloff>:/icons/icons/queries.png</normaloff>:/icons/icons/queries.png</iconset>
    </property>
    <property name="text">
-    <string>Requêtes &amp;personnalisées</string>
+    <string>Requêtes &amp;personnalisées sur l'audit</string>
    </property>
   </action>
   <action name="actionNewDb">
@@ -195,7 +203,7 @@
     <string>&amp;Ouvrir base de données</string>
    </property>
   </action>
-  <action name="actionO_ptions">
+  <action name="actionOptions">
    <property name="icon">
     <iconset resource="Icons.qrc">
      <normaloff>:/icons/icons/setting_tools.png</normaloff>:/icons/icons/setting_tools.png</iconset>
@@ -210,7 +218,7 @@
      <normaloff>:/icons/icons/question.png</normaloff>:/icons/icons/question.png</iconset>
    </property>
    <property name="text">
-    <string>A propos...</string>
+    <string>À &amp;propos...</string>
    </property>
   </action>
   <action name="actionElaboration_budg_taire_PCB">
@@ -233,7 +241,7 @@
      <normaloff>:/icons/icons/reportingOverview.png</normaloff>:/icons/icons/reportingOverview.png</iconset>
    </property>
    <property name="text">
-    <string>Vue d'&amp;ensemble</string>
+    <string>Vue d'&amp;ensemble du reporting</string>
    </property>
   </action>
   <action name="actionSurveillance_des_reportings">
@@ -242,7 +250,7 @@
      <normaloff>:/icons/icons/reportingForecast.png</normaloff>:/icons/icons/reportingForecast.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Surveillance et prévisions</string>
+    <string>&amp;Surveillance du reporting et prévisions</string>
    </property>
   </action>
   <action name="actionGraphiques">
@@ -251,7 +259,7 @@
      <normaloff>:/icons/icons/reportingGraphics.png</normaloff>:/icons/icons/reportingGraphics.png</iconset>
    </property>
    <property name="text">
-    <string>Gra&amp;phiques</string>
+    <string>Analyse gra&amp;phique du reporting</string>
    </property>
   </action>
   <action name="actionExploreReportings">
@@ -260,7 +268,7 @@
      <normaloff>:/icons/icons/reportingExplore.png</normaloff>:/icons/icons/reportingExplore.png</iconset>
    </property>
    <property name="text">
-    <string>E&amp;xploration des reportings</string>
+    <string>E&amp;xplorateur de reporting</string>
    </property>
   </action>
   <action name="actionReportingGenerateur_de_rapports">
@@ -269,7 +277,17 @@
      <normaloff>:/icons/icons/reportingReport.png</normaloff>:/icons/icons/reportingReport.png</iconset>
    </property>
    <property name="text">
-    <string>Générateur de &amp;rapports</string>
+    <string>Générateur de &amp;rapports de reporting</string>
+   </property>
+  </action>
+  <action name="actionCascade">
+   <property name="text">
+    <string>&amp;Cascade</string>
+   </property>
+  </action>
+  <action name="actionCloseAllSubwin">
+   <property name="text">
+    <string>&amp;Fermer tout</string>
    </property>
   </action>
  </widget>

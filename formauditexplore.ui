@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FormTablesGraphics</class>
- <widget class="QWidget" name="FormTablesGraphics">
+ <class>FormAuditExplore</class>
+ <widget class="QWidget" name="FormAuditExplore">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Explorateur d'audits</string>
+   <string>Explorateur d'audit</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">

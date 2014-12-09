@@ -57,6 +57,9 @@ void FormEditTree::updateListOfTree()
     ui->deleteTreeButton->setEnabled(nonEmpty);
     ui->duplicateTreeButton->setEnabled(nonEmpty);
     ui->viewTreeButton->setEnabled(nonEmpty);
+    ui->pushButtonExpandAll->setEnabled(nonEmpty);
+    ui->pushButtonCollapseAll->setEnabled(nonEmpty);
+    ui->consistencyButton->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;
     foreach(p,lot)
     {

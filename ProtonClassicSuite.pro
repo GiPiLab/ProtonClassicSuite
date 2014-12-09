@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     auditdatadelegate.cpp \
     utils.cpp \
     QCustomPlot/qcustomplot.cpp \
-    formtablesgraphics.cpp \
     formdisplaytree.cpp \
     formedittree.cpp \
     formeditaudit.cpp \
@@ -56,13 +55,13 @@ SOURCES += main.cpp\
     formreportinggraphics.cpp \
     formreportingexplore.cpp \
     formreportingreports.cpp \
-    dialogabout.cpp
+    dialogabout.cpp \
+    formauditexplore.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
     utils.h \
     QCustomPlot/qcustomplot.h \
-    formtablesgraphics.h \
     formdisplaytree.h \
     formedittree.h \
     formeditaudit.h \
@@ -98,10 +97,10 @@ HEADERS  += mainwindow.h \
     formreportinggraphics.h \
     formreportingexplore.h \
     formreportingreports.h \
-    dialogabout.h
+    dialogabout.h \
+    formauditexplore.h
 
 FORMS    += mainwindow.ui \
-    formtablesgraphics.ui \
     formdisplaytree.ui \
     formedittree.ui \
     formeditaudit.ui \
@@ -118,7 +117,8 @@ FORMS    += mainwindow.ui \
     formreportinggraphics.ui \
     formreportingexplore.ui \
     formreportingreports.ui \
-    dialogabout.ui
+    dialogabout.ui \
+    formauditexplore.ui
 
 RC_ICONS = icons/logo64_64.ico
 #QMAKE_CXXFLAGS_DEBUG += -Og

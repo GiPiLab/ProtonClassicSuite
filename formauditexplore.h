@@ -1,21 +1,21 @@
-#ifndef FORMTABLESGRAPHICS_H
-#define FORMTABLESGRAPHICS_H
+#ifndef FORMAUDITEXPLORE_H
+#define FORMAUDITEXPLORE_H
 
 #include <QWidget>
 #include "pcx_auditwithtreemodel.h"
 #include "pcx_report.h"
 
 namespace Ui {
-class FormTablesGraphics;
+class FormAuditExplore;
 }
 
-class FormTablesGraphics : public QWidget
+class FormAuditExplore : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit FormTablesGraphics(QWidget *parent = 0);
-    ~FormTablesGraphics();
+    explicit FormAuditExplore(QWidget *parent = 0);
+    ~FormAuditExplore();
 
 public slots:
     void onListOfAuditsChanged();
@@ -52,7 +52,7 @@ private slots:
     void on_pushButtonExpandAll_clicked();
 
 private:
-    Ui::FormTablesGraphics *ui;
+    Ui::FormAuditExplore *ui;
     void updateListOfAudits();
     void updateTextBrowser();
     void getSelections();
@@ -68,4 +68,4 @@ private:
     bool ready;
 };
 
-#endif // FORMTABLESGRAPHICS_H
+#endif // FORMAUDITEXPLORE_H

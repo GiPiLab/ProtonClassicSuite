@@ -1,5 +1,5 @@
-#include "formtablesgraphics.h"
-#include "ui_formtablesgraphics.h"
+#include "formauditexplore.h"
+#include "ui_formauditexplore.h"
 #include "utils.h"
 #include <QScrollBar>
 #include <QPrintDialog>
@@ -7,9 +7,9 @@
 
 //#include "QCustomPlot/qcpdocumentobject.h"
 
-FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
+FormAuditExplore::FormAuditExplore(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FormTablesGraphics)
+    ui(new Ui::FormAuditExplore)
 {
     model=nullptr;
     ready=false;
@@ -25,7 +25,7 @@ FormTablesGraphics::FormTablesGraphics(QWidget *parent) :
     ui->textEdit->moveCursor(QTextCursor::Start);
 }
 
-FormTablesGraphics::~FormTablesGraphics()
+FormAuditExplore::~FormAuditExplore()
 {
     delete ui;
     delete doc;
@@ -37,13 +37,13 @@ FormTablesGraphics::~FormTablesGraphics()
     }
 }
 
-void FormTablesGraphics::onListOfAuditsChanged()
+void FormAuditExplore::onListOfAuditsChanged()
 {
     updateListOfAudits();
 }
 
 
-void FormTablesGraphics::updateListOfAudits()
+void FormAuditExplore::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
@@ -64,7 +64,7 @@ void FormTablesGraphics::updateListOfAudits()
 }
 
 
-void FormTablesGraphics::updateTextBrowser()
+void FormAuditExplore::updateTextBrowser()
 {
     ui->saveButton->setEnabled(ready);
     if(!ready)
@@ -97,7 +97,7 @@ void FormTablesGraphics::updateTextBrowser()
 }
 
 
-void FormTablesGraphics::getSelections()
+void FormAuditExplore::getSelections()
 {
     selectedMode=MODES::DFRFDIRI::GLOBAL;
 
@@ -176,7 +176,7 @@ void FormTablesGraphics::getSelections()
     }
 }
 
-void FormTablesGraphics::on_comboListAudits_activated(int index)
+void FormAuditExplore::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
@@ -200,7 +200,7 @@ void FormTablesGraphics::on_comboListAudits_activated(int index)
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_treeView_clicked(const QModelIndex &index)
+void FormAuditExplore::on_treeView_clicked(const QModelIndex &index)
 {
     Q_UNUSED(index);
    // ui->groupBoxMode->setTitle(index.data().toString());
@@ -208,7 +208,7 @@ void FormTablesGraphics::on_treeView_clicked(const QModelIndex &index)
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
+void FormAuditExplore::on_radioButtonGlobal_toggled(bool checked)
 {
     if(checked)
     {
@@ -254,7 +254,7 @@ void FormTablesGraphics::on_radioButtonGlobal_toggled(bool checked)
 }
 
 
-void FormTablesGraphics::on_saveButton_clicked()
+void FormAuditExplore::on_saveButton_clicked()
 {
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
@@ -355,73 +355,73 @@ void FormTablesGraphics::on_saveButton_clicked()
 
 }
 
-void FormTablesGraphics::on_checkBoxResults_toggled(bool checked)
+void FormAuditExplore::on_checkBoxResults_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxRecapGraph_toggled(bool checked)
+void FormAuditExplore::on_checkBoxRecapGraph_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxPrevu_toggled(bool checked)
+void FormAuditExplore::on_checkBoxPrevu_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxEngage_toggled(bool checked)
+void FormAuditExplore::on_checkBoxEngage_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxPrevuCumul_toggled(bool checked)
+void FormAuditExplore::on_checkBoxPrevuCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxEngageCumul_toggled(bool checked)
+void FormAuditExplore::on_checkBoxEngageCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxRealise_toggled(bool checked)
+void FormAuditExplore::on_checkBoxRealise_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxDisponible_toggled(bool checked)
+void FormAuditExplore::on_checkBoxDisponible_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxRealiseCumul_toggled(bool checked)
+void FormAuditExplore::on_checkBoxRealiseCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxDisponibleCumul_toggled(bool checked)
+void FormAuditExplore::on_checkBoxDisponibleCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxPoidsRelatif_toggled(bool checked)
+void FormAuditExplore::on_checkBoxPoidsRelatif_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_radioButtonDF_toggled(bool checked)
+void FormAuditExplore::on_radioButtonDF_toggled(bool checked)
 {
     if(checked)
     {
@@ -429,7 +429,7 @@ void FormTablesGraphics::on_radioButtonDF_toggled(bool checked)
     }
 }
 
-void FormTablesGraphics::on_radioButtonRF_toggled(bool checked)
+void FormAuditExplore::on_radioButtonRF_toggled(bool checked)
 {
     if(checked)
     {
@@ -438,7 +438,7 @@ void FormTablesGraphics::on_radioButtonRF_toggled(bool checked)
 
 }
 
-void FormTablesGraphics::on_radioButtonDI_toggled(bool checked)
+void FormAuditExplore::on_radioButtonDI_toggled(bool checked)
 {
     if(checked)
     {
@@ -446,7 +446,7 @@ void FormTablesGraphics::on_radioButtonDI_toggled(bool checked)
     }
 }
 
-void FormTablesGraphics::on_radioButtonRI_toggled(bool checked)
+void FormAuditExplore::on_radioButtonRI_toggled(bool checked)
 {
     if(checked)
     {
@@ -454,37 +454,37 @@ void FormTablesGraphics::on_radioButtonRI_toggled(bool checked)
     }
 }
 
-void FormTablesGraphics::on_checkBoxEvolution_toggled(bool checked)
+void FormAuditExplore::on_checkBoxEvolution_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxEvolutionCumul_toggled(bool checked)
+void FormAuditExplore::on_checkBoxEvolutionCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxBase100_toggled(bool checked)
+void FormAuditExplore::on_checkBoxBase100_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_checkBoxJoursAct_toggled(bool checked)
+void FormAuditExplore::on_checkBoxJoursAct_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
 }
 
-void FormTablesGraphics::on_pushButtonCollapseAll_clicked()
+void FormAuditExplore::on_pushButtonCollapseAll_clicked()
 {
     ui->treeView->collapseAll();
     ui->treeView->expandToDepth(0);
 }
 
-void FormTablesGraphics::on_pushButtonExpandAll_clicked()
+void FormAuditExplore::on_pushButtonExpandAll_clicked()
 {
     ui->treeView->expandAll();
 }

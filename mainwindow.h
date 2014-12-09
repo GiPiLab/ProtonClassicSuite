@@ -13,7 +13,7 @@
 #include "formreportingoverview.h"
 #include "formedittree.h"
 #include "formeditaudit.h"
-#include "formtablesgraphics.h"
+#include "formauditexplore.h"
 #include "formreports.h"
 #include "dialogoptions.h"
 #include "formqueries.h"
@@ -54,8 +54,6 @@ private slots:
 
     void on_actionEditAudit_triggered();
 
-    void on_actionTablesGraphics_triggered();
-
     void on_actionNewDb_triggered();
 
     void on_actionOpenDb_triggered();
@@ -66,7 +64,7 @@ private slots:
 
     void onFormReportingReportsWindowsDestroyed();
 
-    void on_actionO_ptions_triggered();
+    void on_actionOptions_triggered();
 
     void on_actionQueries_triggered();
 
@@ -81,8 +79,6 @@ private slots:
     void onFormReportingGraphicsWindowsDestroyed(QObject *obj);
     void onFormReportingExploreWindowsDestroyed(QObject *obj);
 
-
-
     void on_actionSurveillance_des_reportings_triggered();
 
     void on_actionGraphiques_triggered();
@@ -90,6 +86,12 @@ private slots:
     void on_actionExploreReportings_triggered();
 
     void on_actionReportingGenerateur_de_rapports_triggered();
+
+    void on_actionExploreAudits_triggered();
+
+    void on_actionCascade_triggered();
+
+    void on_actionCloseAllSubwin_triggered();
 
 private:
 
@@ -105,7 +107,7 @@ private:
 
 
     //Multiple "tables" dialogs are allowed
-    QList<FormTablesGraphics *>listOfFormTablesGraphics;
+    QList<FormAuditExplore *>listOfFormAuditExplore;
 
     QList<FormReportingOverview *>listOfFormReportingOverview;
     QList<FormReportingSupervision *>listOfFormReportingSupervision;
@@ -119,6 +121,9 @@ private:
     void setMenusState();
     void saveSettings();
     void restoreSettings();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H

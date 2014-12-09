@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Générateur de rapports</string>
+   <string>Générateur de rapports d'audit</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">

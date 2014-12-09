@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Requêtes personnalisées</string>
+   <string>Requêtes personnalisées sur l'audit</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">

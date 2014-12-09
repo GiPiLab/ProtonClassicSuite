@@ -72,7 +72,7 @@ void MainWindow::setMenusState()
         ui->actionManageTree->setEnabled(false);
         ui->actionQueries->setEnabled(false);
         ui->actionReport->setEnabled(false);
-        ui->actionTablesGraphics->setEnabled(false);
+        ui->actionExploreAudits->setEnabled(false);
         ui->actionElaboration_budg_taire_PCB->setEnabled(false);
         ui->actionExploreReportings->setEnabled(false);
         ui->actionGestion_des_reportings->setEnabled(false);
@@ -91,7 +91,7 @@ void MainWindow::setMenusState()
         ui->actionManageTree->setEnabled(true);
         ui->actionQueries->setEnabled(true);
         ui->actionReport->setEnabled(true);
-        ui->actionTablesGraphics->setEnabled(true);
+        ui->actionExploreAudits->setEnabled(true);
 
         ui->actionElaboration_budg_taire_PCB->setEnabled(true);
         ui->actionExploreReportings->setEnabled(true);
@@ -124,6 +124,18 @@ void MainWindow::on_actionManageTree_triggered()
             connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
         }
         connect(formEditTreeWin,SIGNAL(destroyed()),this,SLOT(onFormEditTreeWindowsDestroyed()));
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    if(QMessageBox::question(this,"Quitter ?",tr("Voulez-vous vraiment quitter ?"))==QMessageBox::Yes)
+    {
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
     }
 }
 
@@ -172,8 +184,7 @@ void MainWindow::onFormReportingReportsWindowsDestroyed()
 
 void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
 {
-    listOfFormTablesGraphics.removeAt(listOfFormTablesGraphics.indexOf(static_cast<FormTablesGraphics *>(obj)));
-    //qDebug()<<"FormTables window closed, remaining :"<<listOfFormTablesGraphics;
+    listOfFormAuditExplore.removeAt(listOfFormAuditExplore.indexOf(static_cast<FormAuditExplore *>(obj)));
 }
 
 void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
@@ -209,7 +220,7 @@ void MainWindow::on_actionManageAudits_triggered()
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
         }
 
-        foreach(FormTablesGraphics *dlg,listOfFormTablesGraphics)
+        foreach(FormAuditExplore *dlg,listOfFormAuditExplore)
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
         }
@@ -237,25 +248,6 @@ void MainWindow::on_actionEditAudit_triggered()
         {
             connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
         }
-    }
-}
-
-void MainWindow::on_actionTablesGraphics_triggered()
-{
-    FormTablesGraphics *dlg=new FormTablesGraphics();
-    dlg->setAttribute(Qt::WA_DeleteOnClose);
-
-    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
-    subWin->setWindowIcon(QIcon(":/icons/icons/exploreAudit.png"));
-
-    dlg->show();
-    listOfFormTablesGraphics.append(dlg);
-
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormTablesWindowsDestroyed(QObject *)));
-
-    if(formManageAudits!=nullptr)
-    {
-        connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
     }
 }
 
@@ -364,7 +356,7 @@ void MainWindow::on_actionReport_triggered()
     }
 }
 
-void MainWindow::on_actionO_ptions_triggered()
+void MainWindow::on_actionOptions_triggered()
 {
     DialogOptions dialogOptions(this);
     if(dialogOptions.exec()==QDialog::Accepted)
@@ -557,4 +549,33 @@ void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
         }
     }
 
+}
+
+void MainWindow::on_actionExploreAudits_triggered()
+{
+    FormAuditExplore *dlg=new FormAuditExplore();
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    subWin->setWindowIcon(QIcon(":/icons/icons/exploreAudit.png"));
+
+    dlg->show();
+    listOfFormAuditExplore.append(dlg);
+
+    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormTablesWindowsDestroyed(QObject *)));
+
+    if(formManageAudits!=nullptr)
+    {
+        connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+    }
+}
+
+void MainWindow::on_actionCascade_triggered()
+{
+    ui->mdiArea->cascadeSubWindows();
+}
+
+void MainWindow::on_actionCloseAllSubwin_triggered()
+{
+    ui->mdiArea->closeAllSubWindows();
 }

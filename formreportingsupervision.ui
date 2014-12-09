@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Surveillance des reportings et prévisions</string>
+   <string>Surveillance du reporting et prévisions</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Exploration graphique des reportings</string>
+   <string>Analyse graphique du reporting</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons.qrc">
