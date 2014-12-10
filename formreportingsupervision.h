@@ -67,6 +67,10 @@ private slots:
 
     void on_checkBoxCPP15N_toggled(bool checked);
 
+    void on_pushButtonSelectNone_clicked();
+
+    void on_pushButtonSelectAll_clicked();
+
 private:
     Ui::FormReportingSupervision *ui;
     QSize sizeHint()const;
@@ -76,6 +80,7 @@ private:
     QSortFilterProxyModel *proxyModel;
     void updateListOfReportings();
     MODES::DFRFDIRI getSelectedMode() const;
+    void setColumnVisibility();
 };
 
 #endif // FORMREPORTINGSUPERVISION_H

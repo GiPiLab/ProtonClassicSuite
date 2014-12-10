@@ -14,11 +14,27 @@ FormReportingSupervision::FormReportingSupervision(QWidget *parent) :
     model=nullptr;
     proxyModel=nullptr;
     updateListOfReportings();
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,true);
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,true);
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,true);
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,true);
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,true);
+}
+
+void FormReportingSupervision::setColumnVisibility()
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,!ui->checkBoxBP->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,!ui->checkBoxOuverts->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,!ui->checkBoxRealises->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,!ui->checkBoxEngages->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,!ui->checkBoxDisponibles->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR,!ui->checkBoxCPP15N->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC,!ui->checkBoxRAC->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART,!ui->checkBoxTauxEcart->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP,!ui->checkBoxVariationBP->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES,!ui->checkBoxTauxDisponible->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES,!ui->checkBoxTauxEngage->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!ui->checkBoxTauxReal->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!ui->checkBox15NRest->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!ui->checkBoxDifference->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ECICO,!ui->checkBoxDECICO->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ERO2,!ui->checkBoxERO2->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!ui->checkBoxRealisePredit->isChecked());
 }
 
 FormReportingSupervision::~FormReportingSupervision()
@@ -87,6 +103,7 @@ void FormReportingSupervision::on_comboListReportings_activated(int index)
     proxyModel->setSourceModel(model);
 
     ui->tableView->setModel(proxyModel);
+    setColumnVisibility();
     ui->tableView->resizeColumnsToContents();
 }
 
@@ -111,145 +128,125 @@ MODES::DFRFDIRI FormReportingSupervision::getSelectedMode() const
 void FormReportingSupervision::on_radioButtonDF_toggled(bool checked)
 {
     if(checked)
+    {
         model->setMode(MODES::DFRFDIRI::DF);
+        ui->tableView->resizeColumnsToContents();
+    }
+
 }
 
 void FormReportingSupervision::on_radioButtonRF_toggled(bool checked)
 {
     if(checked)
+    {
         model->setMode(MODES::DFRFDIRI::RF);
+        ui->tableView->resizeColumnsToContents();
+    }
+
 }
 
 void FormReportingSupervision::on_radioButtonDI_toggled(bool checked)
 {
     if(checked)
+    {
         model->setMode(MODES::DFRFDIRI::DI);
+        ui->tableView->resizeColumnsToContents();
+    }
+
 }
 
 void FormReportingSupervision::on_radioButtonRI_toggled(bool checked)
 {
     if(checked)
+    {
         model->setMode(MODES::DFRFDIRI::RI);
+        ui->tableView->resizeColumnsToContents();
+    }
 }
 
 void FormReportingSupervision::on_checkBoxBP_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxOuverts_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxRealises_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxEngages_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxDisponibles_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxReal_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxEcart_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxVariationBP_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxEngage_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxDisponible_toggled(bool checked)
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES,!checked);
+}
+
+void FormReportingSupervision::on_checkBoxRealisePredit_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!checked);
+}
+
+void FormReportingSupervision::on_checkBoxDifference_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!checked);
+}
+
+void FormReportingSupervision::on_checkBoxDECICO_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ECICO,!checked);
+}
+
+void FormReportingSupervision::on_checkBoxERO2_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ERO2,!checked);
+}
+
+void FormReportingSupervision::on_checkBoxRAC_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC,!checked);
+}
+
+void FormReportingSupervision::on_checkBox15NRest_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!checked);
+}
+
+void FormReportingSupervision::on_checkBoxCPP15N_toggled(bool checked)
+{
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR,!checked);
 }
 
 void FormReportingSupervision::on_pushButtonExportHTML_clicked()
@@ -300,89 +297,46 @@ QSize FormReportingSupervision::sizeHint() const
     return QSize(1050,500);
 }
 
-void FormReportingSupervision::on_checkBoxRealisePredit_toggled(bool checked)
+void FormReportingSupervision::on_pushButtonSelectNone_clicked()
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
-
+    ui->checkBox15NRest->setChecked(false);
+    ui->checkBoxBP->setChecked(false);
+    ui->checkBoxCPP15N->setChecked(false);
+    ui->checkBoxDECICO->setChecked(false);
+    ui->checkBoxDifference->setChecked(false);
+    ui->checkBoxDisponibles->setChecked(false);
+    ui->checkBoxEngages->setChecked(false);
+    ui->checkBoxERO2->setChecked(false);
+    ui->checkBoxDECICO->setChecked(false);
+    ui->checkBoxTauxDisponible->setChecked(false);
+    ui->checkBoxTauxEcart->setChecked(false);
+    ui->checkBoxTauxEngage->setChecked(false);
+    ui->checkBoxTauxReal->setChecked(false);
+    ui->checkBoxRAC->setChecked(false);
+    ui->checkBoxRealisePredit->setChecked(false);
+    ui->checkBoxRealises->setChecked(false);
+    ui->checkBoxOuverts->setChecked(false);
+    ui->checkBoxVariationBP->setChecked(false);
 }
 
-void FormReportingSupervision::on_checkBoxDifference_toggled(bool checked)
+void FormReportingSupervision::on_pushButtonSelectAll_clicked()
 {
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
-}
-
-
-
-void FormReportingSupervision::on_checkBoxDECICO_toggled(bool checked)
-{
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ECICO))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
-}
-
-void FormReportingSupervision::on_checkBoxERO2_toggled(bool checked)
-{
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ERO2))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
-}
-
-void FormReportingSupervision::on_checkBoxRAC_toggled(bool checked)
-{
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
-}
-
-void FormReportingSupervision::on_checkBox15NRest_toggled(bool checked)
-{
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
-}
-
-void FormReportingSupervision::on_checkBoxCPP15N_toggled(bool checked)
-{
-    for(int i=0;i<proxyModel->columnCount();i++)
-    {
-        if(proxyModel->headerData(i,Qt::Horizontal)==model->getColumnName(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR))
-        {
-            ui->tableView->setColumnHidden(i,!checked);
-            break;
-        }
-    }
+    ui->checkBox15NRest->setChecked(true);
+    ui->checkBoxBP->setChecked(true);
+    ui->checkBoxCPP15N->setChecked(true);
+    ui->checkBoxDECICO->setChecked(true);
+    ui->checkBoxDifference->setChecked(true);
+    ui->checkBoxDisponibles->setChecked(true);
+    ui->checkBoxEngages->setChecked(true);
+    ui->checkBoxERO2->setChecked(true);
+    ui->checkBoxDECICO->setChecked(true);
+    ui->checkBoxTauxDisponible->setChecked(true);
+    ui->checkBoxTauxEcart->setChecked(true);
+    ui->checkBoxTauxEngage->setChecked(true);
+    ui->checkBoxTauxReal->setChecked(true);
+    ui->checkBoxRAC->setChecked(true);
+    ui->checkBoxRealisePredit->setChecked(true);
+    ui->checkBoxRealises->setChecked(true);
+    ui->checkBoxOuverts->setChecked(true);
+    ui->checkBoxVariationBP->setChecked(true);
 }

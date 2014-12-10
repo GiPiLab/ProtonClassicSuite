@@ -192,17 +192,25 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
         }
         else if(role==Qt::TextColorRole)
         {
-            if(index.column()>1)
+            switch(index.column())
             {
-                if(computedValue<0.0)
+            case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+            case TABLESUPERVISIONCOLUMNS::TAUXECART:
+            {
+                if(computedValue>0.0)
                     return QVariant::fromValue(QColor(Qt::red));
-                if(percentMode)
-                {
-                    if(computedValue>100.0)
-                        return QVariant::fromValue(QColor(Qt::green));
-                    if(computedValue>0.0 && computedValue<100.0)
-                        return QVariant::fromValue(QColor(Qt::blue));
-                }
+                else
+                    return QVariant::fromValue(QColor(Qt::darkGreen));
+            }
+                break;
+            case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
+            {
+                if(computedValue>100.0)
+                    return QVariant::fromValue(QColor(Qt::red));
+                else
+                    return QVariant::fromValue(QColor(Qt::darkGreen));
+            }
+                break;
             }
         }
     }
@@ -267,10 +275,9 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
     else
         consommePrevPar15N=NAN;
 
-   // qDebug()<<nbJoursDepuisDebutAnnee;
-    double jourReal=this->realises/nbJoursDepuisDebutAnnee;
-    realisesPredits=this->realises+(this->realises*nbJoursRestants/nbJoursDepuisDebutAnnee);
-    diffRealisesPreditsOuverts=this->ouverts-realisesPredits;
+    realisesPredits=this->realises/nbJoursDepuisDebutAnnee*365;
+
+    diffRealisesPreditsOuverts=realisesPredits-this->ouverts;
 
     this->dECICO=QDate();
     this->dERO2=QDate();
@@ -295,15 +302,13 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
         }
     }
 
-
-
     if(ouverts!=0)
     {
         percentReal=this->realises/this->ouverts*100.0;
         percentBP=this->BP/this->ouverts*100.0;
         percentEngage=this->engages/this->ouverts*100.0;
         percentDisponible=this->disponibles/this->ouverts*100.0;
-        tauxEcart=(jourReal*365-this->ouverts)/this->ouverts*100.0;
+        tauxEcart=(realisesPredits-this->ouverts)/this->ouverts*100.0;
     }
     else
     {

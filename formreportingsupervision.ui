@@ -42,9 +42,6 @@
      </attribute>
     </widget>
    </item>
-   <item row="0" column="1" colspan="3">
-    <widget class="QComboBox" name="comboListReportings"/>
-   </item>
    <item row="2" column="2">
     <widget class="QGroupBox" name="groupBoxMode">
      <property name="sizePolicy">
@@ -122,12 +119,18 @@
         <property name="text">
          <string>Prévus</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBoxRealises">
         <property name="text">
          <string>Réalisés</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -159,16 +162,6 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBoxTauxEcart">
-        <property name="text">
-         <string>Taux d'écart</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
        <widget class="QCheckBox" name="checkBoxVariationBP">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage du BP par rapport aux prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -177,7 +170,7 @@
          <string>% BP</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -190,7 +183,7 @@
          <string>% Engagés</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -203,14 +196,14 @@
          <string>% Disponibles</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBoxRealisePredit">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Quantité de réalisés qui seront consommés à la fin de l'année en suivant le rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Quantité de réalisés qui seront consommés à la fin de l'année en suivant le rythme actuel (= réalisés / nombre_de_jours_depuis_le_début_d'année * 365)&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Réalisés prédits</string>
@@ -227,6 +220,19 @@
         </property>
         <property name="text">
          <string>Différence estimée</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxTauxEcart">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Taux d'écart entre les crédits prévus et le réalisé prévisionnel de fin d'exercice.&lt;/p&gt;&lt;p&gt;Taux d'écart = (réalisé_prévisonnel - crédits_prévus)/crédits_prévus * 100&lt;/p&gt;&lt;p&gt;avec réalisé_prévisionnel = réalisés / nombre_de_jours_depuis_le_début_d'année * 365&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Taux d'écart</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -255,20 +261,7 @@
          <string>Date ER=P/2</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkBoxRAC">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Crédits restant à consommer&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Reste à consommer</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -281,25 +274,55 @@
          <string>Quinzaines restantes</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="checkBoxRAC">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Crédits restant à consommer (=prévus-réalisés)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Reste à consommer</string>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="checkBoxCPP15N">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Consommé Prévu Par Quinzaine Restante&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Consommé Prévu Par Quinzaine Restante (=reste à consommer / quinzaines restantes)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>CPP15NR</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonSelectAll">
+        <property name="text">
+         <string>Tout</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButtonSelectNone">
+        <property name="text">
+         <string>Rien</string>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QComboBox" name="comboListReportings"/>
    </item>
   </layout>
  </widget>

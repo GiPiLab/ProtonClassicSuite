@@ -465,5 +465,5 @@ void FormEditTree::on_consistencyButton_clicked()
 
 QSize FormEditTree::sizeHint() const
 {
-    return QSize(600,450);
+    return QSize(700,550);
 }
