@@ -1,5 +1,5 @@
-#ifndef FORMREPORTS_H
-#define FORMREPORTS_H
+#ifndef FORMAUDITREPORTS_H
+#define FORMAUDITREPORTS_H
 
 #include "pcx_auditwithtreemodel.h"
 #include "pcx_report.h"
@@ -7,16 +7,16 @@
 #include <QWidget>
 
 namespace Ui {
-class FormReports;
+class FormAuditReports;
 }
 
-class FormReports : public QWidget
+class FormAuditReports : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit FormReports(QWidget *parent = 0);
-    ~FormReports();
+    explicit FormAuditReports(QWidget *parent = 0);
+    ~FormAuditReports();
 
 public slots:
     void onListOfAuditsChanged();
@@ -52,7 +52,7 @@ private slots:
     void on_pushButtonUnSelectAllNodes_clicked();
 
 private:
-    Ui::FormReports *ui;
+    Ui::FormAuditReports *ui;
     QSize sizeHint()const;
     void updateListOfAudits();
     PCx_AuditWithTreeModel *model;
@@ -61,4 +61,4 @@ private:
     QCustomPlot *plot;
 };
 
-#endif // FORMREPORTS_H
+#endif // FORMAUDITREPORTS_H

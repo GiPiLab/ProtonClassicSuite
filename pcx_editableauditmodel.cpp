@@ -48,10 +48,10 @@ PCx_EditableAuditModel::PCx_EditableAuditModel(unsigned int auditId,QObject *par
     modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
     modelRF->select();
 
-    connect(modelDF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-    connect(modelRF,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-    connect(modelDI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
-    connect(modelRI,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onModelDataChanged(const QModelIndex &, const QModelIndex &)));
+    connect(modelDF,&QAbstractItemModel::dataChanged,this,&PCx_EditableAuditModel::onModelDataChanged);
+    connect(modelRF,&QAbstractItemModel::dataChanged,this,&PCx_EditableAuditModel::onModelDataChanged);
+    connect(modelDI,&QAbstractItemModel::dataChanged,this,&PCx_EditableAuditModel::onModelDataChanged);
+    connect(modelRI,&QAbstractItemModel::dataChanged,this,&PCx_EditableAuditModel::onModelDataChanged);
 }
 
 PCx_EditableAuditModel::~PCx_EditableAuditModel()

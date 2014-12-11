@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     formedittree.cpp \
     formeditaudit.cpp \
     formmanageaudits.cpp \
-    formreports.cpp \
     dialogoptions.cpp \
     pcx_tables.cpp \
     pcx_report.cpp \
@@ -56,7 +55,8 @@ SOURCES += main.cpp\
     formreportingexplore.cpp \
     formreportingreports.cpp \
     dialogabout.cpp \
-    formauditexplore.cpp
+    formauditexplore.cpp \
+    formauditreports.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -66,7 +66,6 @@ HEADERS  += mainwindow.h \
     formedittree.h \
     formeditaudit.h \
     formmanageaudits.h \
-    formreports.h \
     dialogoptions.h \
     pcx_tables.h \
     pcx_report.h \
@@ -98,14 +97,14 @@ HEADERS  += mainwindow.h \
     formreportingexplore.h \
     formreportingreports.h \
     dialogabout.h \
-    formauditexplore.h
+    formauditexplore.h \
+    formauditreports.h
 
 FORMS    += mainwindow.ui \
     formdisplaytree.ui \
     formedittree.ui \
     formeditaudit.ui \
     formmanageaudits.ui \
-    formreports.ui \
     dialogoptions.ui \
     formqueries.ui \
     dialogduplicateaudit.ui \
@@ -118,7 +117,8 @@ FORMS    += mainwindow.ui \
     formreportingexplore.ui \
     formreportingreports.ui \
     dialogabout.ui \
-    formauditexplore.ui
+    formauditexplore.ui \
+    formauditreports.ui
 
 RC_ICONS = icons/logo64_64.ico
 #QMAKE_CXXFLAGS_DEBUG += -Og

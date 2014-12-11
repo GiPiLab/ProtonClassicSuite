@@ -74,6 +74,7 @@ void FormReportingOverview::on_comboListReportings_activated(int index)
     selectedNodeId=1;
     on_treeView_clicked(rootIndex);
     ui->tableView->resizeColumnsToContents();
+    ui->textEdit->clear();
 }
 
 void FormReportingOverview::updateListOfReportings()

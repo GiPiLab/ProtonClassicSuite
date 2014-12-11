@@ -15,7 +15,7 @@ PCx_TreeModel::PCx_TreeModel(unsigned int treeId, QObject *parent) :
     typesTableModel->setTable(QString("types_%1").arg(treeId));
     typesTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
     typesTableModel->select();
-    connect(typesTableModel,SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),this,SLOT(onTypesModelDataChanged(const QModelIndex &, const QModelIndex &)));
+    connect(typesTableModel,&QAbstractItemModel::dataChanged,this,&PCx_TreeModel::onTypesModelDataChanged);
 }
 
 PCx_TreeModel::~PCx_TreeModel()

@@ -1,11 +1,11 @@
-#include "formreports.h"
-#include "ui_formreports.h"
+#include "formauditreports.h"
+#include "ui_formauditreports.h"
 #include "pcx_auditwithtreemodel.h"
 
 
-FormReports::FormReports(QWidget *parent) :
+FormAuditReports::FormAuditReports(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FormReports)
+    ui(new Ui::FormAuditReports)
 {
     ui->setupUi(this);
     ui->splitter->setStretchFactor(1,1);
@@ -15,7 +15,7 @@ FormReports::FormReports(QWidget *parent) :
     updateListOfAudits();
 }
 
-FormReports::~FormReports()
+FormAuditReports::~FormAuditReports()
 {
     delete ui;
     if(model!=nullptr)
@@ -26,7 +26,7 @@ FormReports::~FormReports()
     delete plot;
 }
 
-void FormReports::populateLists()
+void FormAuditReports::populateLists()
 {
     QListWidgetItem *item;
     item=new QListWidgetItem(tr("Récapitulatif"),ui->listTables);
@@ -78,13 +78,13 @@ void FormReports::populateLists()
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG9);
 }
 
-void FormReports::onListOfAuditsChanged()
+void FormAuditReports::onListOfAuditsChanged()
 {
     updateListOfAudits();
 }
 
 
-void FormReports::updateListOfAudits()
+void FormAuditReports::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
@@ -100,7 +100,7 @@ void FormReports::updateListOfAudits()
     on_comboListAudits_activated(0);
 }
 
-void FormReports::on_comboListAudits_activated(int index)
+void FormAuditReports::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
@@ -133,7 +133,7 @@ void FormReports::on_comboListAudits_activated(int index)
     ui->comboListTypes->setCurrentIndex(0);
 }
 
-void FormReports::on_saveButton_clicked()
+void FormAuditReports::on_saveButton_clicked()
 {
     //TODO for V2 : Order tables and graphics
     QItemSelectionModel *sel=ui->treeView->selectionModel();
@@ -377,7 +377,7 @@ void FormReports::on_saveButton_clicked()
 }
 
 //WARNING : Preselections are done with fixed indexing, refers to populateLists
-void FormReports::on_pushButtonPoidsRelatifs_clicked()
+void FormAuditReports::on_pushButtonPoidsRelatifs_clicked()
 {
     //T1,T4,T8
     ui->listTables->item(0)->setSelected(true);
@@ -385,14 +385,14 @@ void FormReports::on_pushButtonPoidsRelatifs_clicked()
     ui->listTables->item(9)->setSelected(true);
 }
 
-void FormReports::on_pushButtonBase100_clicked()
+void FormAuditReports::on_pushButtonBase100_clicked()
 {
     //T5,T6
     ui->listTables->item(6)->setSelected(true);
     ui->listTables->item(7)->setSelected(true);
 }
 
-void FormReports::on_pushButtonEvolution_clicked()
+void FormAuditReports::on_pushButtonEvolution_clicked()
 {
     //T2bis,T3bis
     ui->listTables->item(2)->setSelected(true);
@@ -405,7 +405,7 @@ void FormReports::on_pushButtonEvolution_clicked()
     ui->listGraphics->item(6)->setSelected(true);
 }
 
-void FormReports::on_pushButtonEvolutionCumul_clicked()
+void FormAuditReports::on_pushButtonEvolutionCumul_clicked()
 {
     //T2,T3
     ui->listTables->item(1)->setSelected(true);
@@ -418,14 +418,14 @@ void FormReports::on_pushButtonEvolutionCumul_clicked()
     ui->listGraphics->item(7)->setSelected(true);
 }
 
-void FormReports::on_pushButtonJoursAct_clicked()
+void FormAuditReports::on_pushButtonJoursAct_clicked()
 {
     //T7,T9
     ui->listTables->item(8)->setSelected(true);
     ui->listTables->item(10)->setSelected(true);
 }
 
-void FormReports::on_pushButtonResultats_clicked()
+void FormAuditReports::on_pushButtonResultats_clicked()
 {
     //T10,T11,T12
     ui->listTables->item(11)->setSelected(true);
@@ -437,30 +437,30 @@ void FormReports::on_pushButtonResultats_clicked()
 
 }
 
-void FormReports::on_pushButtonExpandAll_clicked()
+void FormAuditReports::on_pushButtonExpandAll_clicked()
 {
     ui->treeView->expandAll();
 }
 
-void FormReports::on_pushButtonCollapseAll_clicked()
+void FormAuditReports::on_pushButtonCollapseAll_clicked()
 {
     ui->treeView->collapseAll();
     ui->treeView->expandToDepth(0);
 }
 
-void FormReports::on_pushButtonSelectAll_clicked()
+void FormAuditReports::on_pushButtonSelectAll_clicked()
 {
     ui->listTables->selectAll();
     ui->listGraphics->selectAll();
 }
 
-void FormReports::on_pushButtonSelectNone_clicked()
+void FormAuditReports::on_pushButtonSelectNone_clicked()
 {
     ui->listTables->clearSelection();
     ui->listGraphics->clearSelection();
 }
 
-void FormReports::on_pushButtonSelectType_clicked()
+void FormAuditReports::on_pushButtonSelectType_clicked()
 {
     PCx_TreeModel *treeModel=model->getAttachedTree();
     unsigned int selectedType=ui->comboListTypes->currentData().toUInt();
@@ -472,18 +472,18 @@ void FormReports::on_pushButtonSelectType_clicked()
     }
 }
 
-void FormReports::on_pushButtonSelectAllNodes_clicked()
+void FormAuditReports::on_pushButtonSelectAllNodes_clicked()
 {
     ui->treeView->expandAll();
     ui->treeView->selectAll();
 }
 
-void FormReports::on_pushButtonUnSelectAllNodes_clicked()
+void FormAuditReports::on_pushButtonUnSelectAllNodes_clicked()
 {
     ui->treeView->clearSelection();
 }
 
-QSize FormReports::sizeHint() const
+QSize FormAuditReports::sizeHint() const
 {
     return QSize(900,600);
 }

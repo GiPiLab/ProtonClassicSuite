@@ -52,7 +52,7 @@
     <addaction name="actionEditAudit"/>
     <addaction name="separator"/>
     <addaction name="actionExploreAudits"/>
-    <addaction name="actionReport"/>
+    <addaction name="actionAuditReport"/>
     <addaction name="actionQueries"/>
     <addaction name="separator"/>
     <addaction name="actionElaboration_budg_taire_PCB"/>
@@ -107,7 +107,7 @@
    <addaction name="actionManageAudits"/>
    <addaction name="actionEditAudit"/>
    <addaction name="actionExploreAudits"/>
-   <addaction name="actionReport"/>
+   <addaction name="actionAuditReport"/>
    <addaction name="actionQueries"/>
    <addaction name="separator"/>
    <addaction name="actionGestion_des_reportings"/>
@@ -167,7 +167,7 @@
     <string>E&amp;xplorateur d'audit</string>
    </property>
   </action>
-  <action name="actionReport">
+  <action name="actionAuditReport">
    <property name="icon">
     <iconset resource="Icons.qrc">
      <normaloff>:/icons/icons/report.png</normaloff>:/icons/icons/report.png</iconset>

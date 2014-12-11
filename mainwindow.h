@@ -14,7 +14,7 @@
 #include "formedittree.h"
 #include "formeditaudit.h"
 #include "formauditexplore.h"
-#include "formreports.h"
+#include "formauditreports.h"
 #include "dialogoptions.h"
 #include "formqueries.h"
 #include "utils.h"
@@ -58,7 +58,7 @@ private slots:
 
     void on_actionOpenDb_triggered();
 
-    void on_actionReport_triggered();
+    void on_actionAuditReport_triggered();
 
     void onFormReportsWindowsDestroyed();
 
@@ -101,7 +101,7 @@ private:
     FormEditTree *formEditTreeWin;
     FormManageAudits *formManageAudits;
     FormEditAudit *formEditAudit;
-    FormReports *formReports;
+    FormAuditReports *formReports;
     FormReportingReports *formReportingReports;
     FormManageReportings *formManageReportings;
 

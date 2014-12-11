@@ -71,7 +71,7 @@ void MainWindow::setMenusState()
         ui->actionManageAudits->setEnabled(false);
         ui->actionManageTree->setEnabled(false);
         ui->actionQueries->setEnabled(false);
-        ui->actionReport->setEnabled(false);
+        ui->actionAuditReport->setEnabled(false);
         ui->actionExploreAudits->setEnabled(false);
         ui->actionElaboration_budg_taire_PCB->setEnabled(false);
         ui->actionExploreReportings->setEnabled(false);
@@ -90,7 +90,7 @@ void MainWindow::setMenusState()
         ui->actionManageAudits->setEnabled(true);
         ui->actionManageTree->setEnabled(true);
         ui->actionQueries->setEnabled(true);
-        ui->actionReport->setEnabled(true);
+        ui->actionAuditReport->setEnabled(true);
         ui->actionExploreAudits->setEnabled(true);
 
         ui->actionElaboration_budg_taire_PCB->setEnabled(true);
@@ -117,13 +117,13 @@ void MainWindow::on_actionManageTree_triggered()
         formEditTreeWin->show();
         if(formManageAudits!=nullptr)
         {
-            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
+            connect(formEditTreeWin,&FormEditTree::listOfTreeChanged,formManageAudits,&FormManageAudits::onLOTchanged);
         }
         if(formManageReportings!=nullptr)
         {
-            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
+            connect(formEditTreeWin,&FormEditTree::listOfTreeChanged,formManageReportings,&FormManageReportings::onLOTchanged);
         }
-        connect(formEditTreeWin,SIGNAL(destroyed()),this,SLOT(onFormEditTreeWindowsDestroyed()));
+        connect(formEditTreeWin,&QObject::destroyed,this,&MainWindow::onFormEditTreeWindowsDestroyed);
     }
 }
 
@@ -203,32 +203,31 @@ void MainWindow::on_actionManageAudits_triggered()
         QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formManageAudits);
         subWin->setWindowIcon(QIcon(":/icons/icons/manage_sources.png"));
         formManageAudits->show();
-        connect(formManageAudits,SIGNAL(destroyed()),this,SLOT(onFormManageAuditsWindowsDestroyed()));
+        connect(formManageAudits,&QObject::destroyed,this,&MainWindow::onFormManageAuditsWindowsDestroyed);
 
         if(formEditTreeWin!=nullptr)
         {
-            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageAudits,SLOT(onLOTchanged()));
+            connect(formEditTreeWin,&FormEditTree::listOfTreeChanged,formManageAudits,&FormManageAudits::onLOTchanged);
         }
 
         if(formEditAudit!=nullptr)
         {
-            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
         }
 
         if(formReports!=nullptr)
         {
-            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formReports,&FormAuditReports::onListOfAuditsChanged);
         }
 
         foreach(FormAuditExplore *dlg,listOfFormAuditExplore)
         {
-            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditExplore::onListOfAuditsChanged);
         }
         foreach(FormQueries *dlg,listOfFormQueries)
         {
-            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormQueries::onListOfAuditsChanged);
         }
-
     }
 }
 
@@ -242,11 +241,11 @@ void MainWindow::on_actionEditAudit_triggered()
         subWin->setWindowIcon(QIcon(":/icons/icons/table_edit.png"));
 
         formEditAudit->show();
-        connect(formEditAudit,SIGNAL(destroyed()),this,SLOT(onFormEditAuditWindowsDestroyed()));
+        connect(formEditAudit,&QObject::destroyed,this,&MainWindow::onFormEditAuditWindowsDestroyed);
 
         if(formManageAudits!=nullptr)
         {
-            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formEditAudit,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
         }
     }
 }
@@ -338,20 +337,20 @@ void MainWindow::on_actionOpenDb_triggered()
     setMenusState();
 }
 
-void MainWindow::on_actionReport_triggered()
+void MainWindow::on_actionAuditReport_triggered()
 {
     if(formReports==nullptr)
     {
-        formReports=new FormReports(this);
+        formReports=new FormAuditReports(this);
         formReports->setAttribute(Qt::WA_DeleteOnClose);
         QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formReports);
         subWin->setWindowIcon(QIcon(":/icons/icons/report.png"));
         formReports->show();
-        connect(formReports,SIGNAL(destroyed()),this,SLOT(onFormReportsWindowsDestroyed()));
+        connect(formReports,&QObject::destroyed,this,&MainWindow::onFormReportsWindowsDestroyed);
 
         if(formManageAudits!=nullptr)
         {
-            connect(formManageAudits,SIGNAL(listOfAuditsChanged()),formReports,SLOT(onListOfAuditsChanged()));
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formReports,&FormAuditReports::onListOfAuditsChanged);
         }
     }
 }
@@ -378,11 +377,11 @@ void MainWindow::on_actionQueries_triggered()
     dlg->show();
     listOfFormQueries.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormQueriesWindowsDestroyed(QObject *)));
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormQueriesWindowsDestroyed);
 
     if(formManageAudits!=nullptr)
     {
-        connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+        connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormQueries::onListOfAuditsChanged);
     }
 
 }
@@ -403,34 +402,34 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
         QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formManageReportings);
         subWin->setWindowIcon(QIcon(":/icons/icons/reportingManage.png"));
         formManageReportings->show();
-        connect(formManageReportings,SIGNAL(destroyed()),this,SLOT(onFormManageReportingsWindowsDestroyed()));
+        connect(formManageReportings,&QObject::destroyed,this,&MainWindow::onFormManageReportingsWindowsDestroyed);
 
         if(formEditTreeWin!=nullptr)
         {
-            connect(formEditTreeWin,SIGNAL(listOfTreeChanged()),formManageReportings,SLOT(onLOTchanged()));
+            connect(formEditTreeWin,&FormEditTree::listOfTreeChanged,formManageReportings,&FormManageReportings::onLOTchanged);
         }
 
         if(formReportingReports!=nullptr)
         {
-            connect(formReportingReports,SIGNAL(listOfReportingsChanged()),formReportingReports,SLOT(onListOfReportingsChanged()));
+            connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,formReportingReports,&FormReportingReports::onListOfReportingsChanged);
         }
 
         foreach(FormReportingOverview *dlg,listOfFormReportingOverview)
         {
-            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+            connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingOverview::onListOfReportingsChanged);
         }
 
         foreach(FormReportingSupervision *dlg,listOfFormReportingSupervision)
         {
-            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+            connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingSupervision::onListOfReportingsChanged);
         }
         foreach(FormReportingGraphics *dlg,listOfFormReportingGraphics)
         {
-            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+            connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingGraphics::onListOfReportingsChanged);
         }
         foreach(FormReportingExplore *dlg,listOfFormReportingExplore)
         {
-            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+            connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
         }
         //FIXME : connect !
     }
@@ -446,11 +445,11 @@ void MainWindow::on_actionReportingOverview_triggered()
     dlg->show();
     listOfFormReportingOverview.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingTablesWindowsDestroyed(QObject *)));
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormReportingTablesWindowsDestroyed);
 
     if(formManageReportings!=nullptr)
     {
-        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingOverview::onListOfReportingsChanged);
     }
 
 }
@@ -487,11 +486,11 @@ void MainWindow::on_actionSurveillance_des_reportings_triggered()
     dlg->show();
     listOfFormReportingSupervision.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingSupervisionWindowsDestroyed(QObject *)));
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormReportingSupervisionWindowsDestroyed);
 
     if(formManageReportings!=nullptr)
     {
-        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingSupervision::onListOfReportingsChanged);
     }
 }
 
@@ -505,11 +504,11 @@ void MainWindow::on_actionGraphiques_triggered()
     dlg->show();
     listOfFormReportingGraphics.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingGraphicsWindowsDestroyed(QObject *)));
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormReportingGraphicsWindowsDestroyed);
 
     if(formManageReportings!=nullptr)
     {
-        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingGraphics::onListOfReportingsChanged);
     }
 }
 
@@ -523,11 +522,11 @@ void MainWindow::on_actionExploreReportings_triggered()
     dlg->show();
     listOfFormReportingExplore.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormReportingExploreWindowsDestroyed(QObject *)));
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormReportingExploreWindowsDestroyed);
 
     if(formManageReportings!=nullptr)
     {
-        connect(formManageReportings,SIGNAL(listOfReportingsChanged()),dlg,SLOT(onListOfReportingsChanged()));
+        connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
     }
 
 }
@@ -541,11 +540,11 @@ void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
         QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formReportingReports);
         subWin->setWindowIcon(QIcon(":/icons/icons/reportingReport.png"));
         formReportingReports->show();
-        connect(formReportingReports,SIGNAL(destroyed()),this,SLOT(onFormReportingReportsWindowsDestroyed()));
+        connect(formReportingReports,&QObject::destroyed,this,&MainWindow::onFormReportingReportsWindowsDestroyed);
 
         if(formManageReportings!=nullptr)
         {
-            connect(formManageReportings,SIGNAL(listOfReportingsChanged()),formReportingReports,SLOT(onListOfReportingsChanged()));
+            connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,formReportingReports,&FormReportingReports::onListOfReportingsChanged);
         }
     }
 }
@@ -561,11 +560,11 @@ void MainWindow::on_actionExploreAudits_triggered()
     dlg->show();
     listOfFormAuditExplore.append(dlg);
 
-    connect(dlg,SIGNAL(destroyed(QObject *)),this,SLOT(onFormTablesWindowsDestroyed(QObject *)));
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormTablesWindowsDestroyed);
 
     if(formManageAudits!=nullptr)
     {
-        connect(formManageAudits,SIGNAL(listOfAuditsChanged()),dlg,SLOT(onListOfAuditsChanged()));
+        connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditExplore::onListOfAuditsChanged);
     }
 }
 

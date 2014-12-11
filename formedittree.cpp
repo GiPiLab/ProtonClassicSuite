@@ -349,7 +349,7 @@ void FormEditTree::on_comboBox_activated(int index)
     ui->listTypesView->setModelColumn(1);
     delete m;
 
-    connect(model,SIGNAL(typesUpdated()),this,SLOT(onTypesChanged()));
+    connect(model,&PCx_TreeModel::typesUpdated,this,&FormEditTree::onTypesChanged);
     setReadOnly(model->isFinished());
 }
 

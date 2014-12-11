@@ -748,7 +748,7 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
 
 bool PCx_Tree::validateType(const QString &newType)
 {
-    qDebug()<<"Type to validate = "<<newType;
+   // qDebug()<<"Type to validate = "<<newType;
     if(newType.isEmpty())
     {
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Vous ne pouvez pas utiliser un type vide !"));
