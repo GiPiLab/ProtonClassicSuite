@@ -20,6 +20,8 @@ public:
 
 public slots:
     void onListOfReportingsChanged();
+    void onReportingDataChanged(unsigned int reportingId);
+
 private slots:
     void on_comboListReportings_activated(int index);
 

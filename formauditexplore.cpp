@@ -42,6 +42,19 @@ void FormAuditExplore::onListOfAuditsChanged()
     updateListOfAudits();
 }
 
+void FormAuditExplore::onSettingsChanged()
+{
+    if(ui->treeView->currentIndex().isValid())
+    {
+        on_treeView_clicked(ui->treeView->currentIndex());
+    }
+    else
+    {
+        QModelIndex rootIndex=model->getAttachedTree()->index(0,0);
+        on_treeView_clicked(rootIndex);
+    }
+}
+
 
 void FormAuditExplore::updateListOfAudits()
 {
@@ -197,6 +210,7 @@ void FormAuditExplore::on_comboListAudits_activated(int index)
     ui->treeView->expandToDepth(1);
     QModelIndex rootIndex=model->getAttachedTree()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
+    on_treeView_clicked(rootIndex);
     updateTextBrowser();
 }
 

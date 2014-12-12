@@ -368,9 +368,21 @@ void MainWindow::on_actionOptions_triggered()
         {
             formEditAudit->updateRandomButtonVisibility();
         }
+        if(formManageReportings!=nullptr)
+        {
+            formManageReportings->updateRandomVisibility();
+        }
         foreach(FormQueries *q, listOfFormQueries)
         {
             q->onColorChanged();
+        }
+        foreach(FormAuditExplore *form,listOfFormAuditExplore)
+        {
+            form->onSettingsChanged();
+        }
+        foreach(FormReportingExplore *form,listOfFormReportingExplore)
+        {
+            form->onSettingsChanged();
         }
     }
 }
@@ -425,19 +437,25 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
         foreach(FormReportingOverview *dlg,listOfFormReportingOverview)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingOverview::onListOfReportingsChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingOverview::onReportingDataChanged);
         }
 
         foreach(FormReportingSupervision *dlg,listOfFormReportingSupervision)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingSupervision::onListOfReportingsChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingSupervision::onReportingDataChanged);
+
         }
         foreach(FormReportingGraphics *dlg,listOfFormReportingGraphics)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingGraphics::onListOfReportingsChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingGraphics::onReportingDataChanged);
+
         }
         foreach(FormReportingExplore *dlg,listOfFormReportingExplore)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingExplore::onReportingDataChanged);
         }
         //FIXME : connect !
     }
@@ -458,6 +476,7 @@ void MainWindow::on_actionReportingOverview_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingOverview::onListOfReportingsChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingOverview::onReportingDataChanged);
     }
 
 }
@@ -499,6 +518,7 @@ void MainWindow::on_actionSurveillance_des_reportings_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingSupervision::onListOfReportingsChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingSupervision::onReportingDataChanged);
     }
 }
 
@@ -517,6 +537,7 @@ void MainWindow::on_actionGraphiques_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingGraphics::onListOfReportingsChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingGraphics::onReportingDataChanged);
     }
 }
 
@@ -535,6 +556,7 @@ void MainWindow::on_actionExploreReportings_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingExplore::onReportingDataChanged);
     }
 
 }

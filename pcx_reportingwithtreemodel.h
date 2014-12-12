@@ -14,6 +14,14 @@ public:
 
 
 private:
+
+
+    /**
+     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier.
+     *
+     * MUST NOT BE USED DIRECTLY AS IT IS INVALID IN DERIVED CLASS, USE getAttachedTree instead
+     *
+     */
     PCx_TreeModel *attachedTree;
     PCx_ReportingWithTreeModel(const PCx_ReportingWithTreeModel &c);
     PCx_ReportingWithTreeModel &operator=(const PCx_ReportingWithTreeModel &);

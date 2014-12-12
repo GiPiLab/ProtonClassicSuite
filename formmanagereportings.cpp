@@ -6,6 +6,7 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QInputDialog>
+#include <QSettings>
 #include <QFileDialog>
 #include <QStandardPaths>
 
@@ -18,6 +19,7 @@ FormManageReportings::FormManageReportings(QWidget *parent) :
     selectedReporting=nullptr;
     updateListOfTrees();
     updateListOfReportings();
+    updateRandomVisibility();
 }
 
 FormManageReportings::~FormManageReportings()
@@ -121,6 +123,15 @@ void FormManageReportings::updateListOfReportings()
     this->on_comboListOfReportings_activated(0);
 }
 
+void FormManageReportings::updateRandomVisibility()
+{
+    QSettings settings;
+    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    ui->pushButtonRandomDF->setEnabled(randomAllowed);
+    ui->pushButtonRandomRF->setEnabled(randomAllowed);
+    ui->pushButtonRandomDI->setEnabled(randomAllowed);
+    ui->pushButtonRandomRI->setEnabled(randomAllowed);
+}
 
 void FormManageReportings::on_pushButtonDeleteReporting_clicked()
 {
@@ -154,8 +165,8 @@ void FormManageReportings::on_comboListOfReportings_activated(int index)
     }
 
     selectedReporting=new PCx_Reporting(selectedReportingId);
+    updateReportingInfos();
 
-    ui->labelTreeName->setText(QString("%1 (%2 noeuds)").arg(selectedReporting->getAttachedTreeName()).arg(selectedReporting->getAttachedTree()->getNumberOfNodes()));
 
 }
 
@@ -205,6 +216,7 @@ void FormManageReportings::on_pushButtonLoadDF_clicked()
         if(res==true)
         {
             QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DF)));
+            updateReportingInfos();
         }
     }
 }
@@ -226,6 +238,7 @@ void FormManageReportings::on_pushButtonLoadRF_clicked()
         if(res==true)
         {
             QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RF)));
+            updateReportingInfos();
         }
     }
 }
@@ -245,6 +258,7 @@ void FormManageReportings::on_pushButtonLoadDI_clicked()
         if(res==true)
         {
             QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DI)));
+            updateReportingInfos();
         }
     }
 }
@@ -264,6 +278,7 @@ void FormManageReportings::on_pushButtonLoadRI_clicked()
         if(res==true)
         {
             QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RI)));
+            updateReportingInfos();
         }
     }
 }
@@ -352,6 +367,20 @@ void FormManageReportings::on_pushButtonExportDI_clicked()
     }
 }
 
+void FormManageReportings::updateReportingInfos()
+{
+    if(selectedReporting!=nullptr)
+    {
+        ui->labelTreeName->setText(QString("%1 (%2 noeuds)").arg(selectedReporting->getAttachedTreeName()).arg(selectedReporting->getAttachedTree()->getNumberOfNodes()));
+        ui->labelLastDF->setText(selectedReporting->getLastReportingDate(1,MODES::DF).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRF->setText(selectedReporting->getLastReportingDate(1,MODES::RF).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastDI->setText(selectedReporting->getLastReportingDate(1,MODES::DI).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRI->setText(selectedReporting->getLastReportingDate(1,MODES::RI).toString(Qt::DefaultLocaleShortDate));
+        emit(reportingDataChanged(selectedReporting->getReportingId()));
+    }
+}
+
+
 void FormManageReportings::on_pushButtonExportRI_clicked()
 {
     if(selectedReporting!=nullptr)
@@ -377,5 +406,77 @@ void FormManageReportings::on_pushButtonExportRI_clicked()
         {
             QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
         }
+    }
+}
+
+void FormManageReportings::on_pushButtonClearDF_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
+    {
+        selectedReporting->clearAllData(MODES::DF);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonClearRF_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
+    {
+        selectedReporting->clearAllData(MODES::RF);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonClearDI_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
+    {
+        selectedReporting->clearAllData(MODES::DI);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonClearRI_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
+    {
+        selectedReporting->clearAllData(MODES::RI);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonRandomDF_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
+    {
+        selectedReporting->addRandomDataForNext15(MODES::DF);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonRandomRF_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
+    {
+        selectedReporting->addRandomDataForNext15(MODES::RF);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonRandomDI_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
+    {
+        selectedReporting->addRandomDataForNext15(MODES::DI);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonRandomRI_clicked()
+{
+    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
+    {
+        selectedReporting->addRandomDataForNext15(MODES::RI);
+        updateReportingInfos();
     }
 }

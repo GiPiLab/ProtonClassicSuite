@@ -14,6 +14,8 @@ class FormReportingGraphics : public QWidget
 
 public slots:
     void onListOfReportingsChanged();
+    void onReportingDataChanged(unsigned int reportingId);
+
 
 public:
     explicit FormReportingGraphics(QWidget *parent = 0);

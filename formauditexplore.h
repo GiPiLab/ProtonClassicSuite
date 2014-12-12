@@ -19,6 +19,7 @@ public:
 
 public slots:
     void onListOfAuditsChanged();
+    void onSettingsChanged();
 
 private slots:
 

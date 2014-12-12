@@ -29,7 +29,7 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="layoutWidget2">
       <layout class="QGridLayout" name="gridLayout">
        <item row="3" column="0">
         <widget class="QPushButton" name="pushButtonExpandAll">
@@ -53,9 +53,6 @@
          <property name="showDropIndicator" stdset="0">
           <bool>false</bool>
          </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::NoSelection</enum>
-         </property>
          <attribute name="headerVisible">
           <bool>false</bool>
          </attribute>
@@ -66,7 +63,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="1" column="0" colspan="3">
         <widget class="QTabWidget" name="tabWidget">

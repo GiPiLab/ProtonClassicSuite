@@ -84,7 +84,7 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
 {
     if(!fastMode)
     {
-        if(!attachedTree->isLeaf(leafId))
+        if(!getAttachedTree()->isLeaf(leafId))
         {
             qWarning()<<"Not a leaf !";
             return false;
@@ -195,7 +195,7 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
     parent=idToPid.value(nodeId);
     if(parent==0)
     {
-        parent=attachedTree->getParentId(nodeId);
+        parent=getAttachedTree()->getParentId(nodeId);
         idToPid.insert(nodeId,parent);
     }
 
@@ -208,7 +208,7 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
     }
     else
     {
-        listOfChildren=attachedTree->getChildren(parent);
+        listOfChildren=getAttachedTree()->getChildren(parent);
         idToChildren.insert(parent,listOfChildren);
         QStringList l;
         foreach (unsigned int childId, listOfChildren)
@@ -514,14 +514,14 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         }
 
         int nodeId;
-        nodeId=attachedTree->getNodeIdFromTypeAndNodeName(typeAndNode);
+        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
         if(nodeId<=0)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Noeud introuvable ligne %1").arg(row));
             return false;
         }
 
-        bool leaf=attachedTree->isLeaf(nodeId);
+        bool leaf=getAttachedTree()->isLeaf(nodeId);
 
         if(!leaf)
         {
@@ -578,7 +578,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         typeAndNode.first=nodeType.toString().simplified();
         typeAndNode.second=nodeName.toString().simplified();
         int nodeId;
-        nodeId=attachedTree->getNodeIdFromTypeAndNodeName(typeAndNode);
+        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
 
         QHash<PCx_Reporting::OREDPCR,double> vals;
         if(ouverts.isValid())
@@ -661,7 +661,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
 {
     QXlsx::Document xlsx;
-    QList<unsigned int> leavesId=attachedTree->getLeavesId();
+    QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
     xlsx.write(1,1,"Type noeud");
     xlsx.write(1,2,"Nom noeud");
     xlsx.write(1,3,"Date");
@@ -679,7 +679,7 @@ bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
     int row=2;
     foreach(unsigned int leaf, leavesId)
     {
-        QPair<QString,QString> typeAndNodeName=attachedTree->getTypeNameAndNodeName(leaf);
+        QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leaf);
         xlsx.write(row,1,typeAndNodeName.first);
         xlsx.write(row,2,typeAndNodeName.second);
 //        xlsx.write(row,3,QDate(2002,05,13));
@@ -708,7 +708,7 @@ QDate PCx_Reporting::getLastReportingDate(unsigned int node, MODES::DFRFDIRI mod
 bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileName) const
 {
     QXlsx::Document xlsx;
-    QList<unsigned int> leavesId=attachedTree->getLeavesId();
+    QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
     xlsx.write(1,1,"Type noeud");
     xlsx.write(1,2,"Nom noeud");
     xlsx.write(1,3,"Date");
@@ -727,7 +727,7 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & f
     int row=2;
     foreach(unsigned int leafId,leavesId)
     {
-        QPair<QString,QString> typeAndNodeName=attachedTree->getTypeNameAndNodeName(leafId);
+        QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leafId);
             q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date").
                       arg(MODES::modeToTableString(mode)).arg(reportingId));
 
@@ -854,6 +854,64 @@ QSet<QDate> PCx_Reporting::getDatesForNodeAndMode( unsigned int nodeId, MODES::D
 bool PCx_Reporting::dateExistsForNodeAndMode(unsigned int timeT,unsigned int nodeId,MODES::DFRFDIRI mode) const
 {
     return dateExistsForNodeAndMode(QDateTime::fromTime_t(timeT).date(),nodeId,mode);
+}
+
+void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
+{
+    QList<unsigned int> leaves=getAttachedTree()->getLeavesId();
+
+    QHash<PCx_Reporting::OREDPCR,double> data;
+
+    int maxVal=leaves.size();
+
+    QProgressDialog progress(QObject::tr("Génération des données aléatoires..."),QObject::tr("Annuler"),0,maxVal);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    progress.setMinimumDuration(300);
+    progress.setValue(0);
+
+    QSqlDatabase::database().transaction();
+
+    int nbNode=0;
+    qsrand(time(NULL));
+
+    double randval;
+
+    QDate lastDate=getLastReportingDate(1,mode);
+    QDate nextDate;
+    if(!lastDate.isNull())
+        nextDate=lastDate.addDays(15);
+    else
+        nextDate=QDate(2013,1,1);
+
+    foreach(unsigned int leaf,leaves)
+    {
+            data.clear();
+
+            for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONELAST;i++)
+            {
+                if(i==PCx_Reporting::OREDPCR::DISPONIBLES)
+                    continue;
+                randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+                data.insert(PCx_Reporting::OREDPCR(i),randval);
+            }
+
+            //the transaction will be rollback in setLeafValues=>die
+            setLeafValues(leaf,mode,nextDate,data,true);
+
+        nbNode++;
+        if(!progress.wasCanceled())
+        {
+            progress.setValue(nbNode);
+        }
+        else
+        {
+            QSqlDatabase::database().rollback();
+            return;
+        }
+    }
+    QSqlDatabase::database().commit();
 }
 
 

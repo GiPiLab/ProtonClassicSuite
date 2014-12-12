@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>400</height>
+    <height>474</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,24 +24,24 @@
       <string>Gestion des reportings</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="1">
-       <widget class="QPushButton" name="pushButtonLoadRI">
+      <item row="11" column="0">
+       <widget class="QPushButton" name="pushButtonRandomDF">
         <property name="text">
-         <string>Charger RI</string>
+         <string>Aléatoire DF</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="9" column="2">
+       <widget class="QPushButton" name="pushButtonExportDI">
+        <property name="text">
+         <string>Exporter DI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
        <widget class="QPushButton" name="pushButtonLoadRF">
         <property name="text">
          <string>Charger RF</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="pushButtonLoadDI">
-        <property name="text">
-         <string>Charger DI</string>
         </property>
        </widget>
       </item>
@@ -52,45 +52,31 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="8" column="0">
        <widget class="QPushButton" name="pushButtonLoadDF">
         <property name="text">
          <string>Charger DF</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QPushButton" name="pushButtonExportDF">
-        <property name="text">
-         <string>Exporter DF</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="3">
-       <widget class="QPushButton" name="pushButtonExportRF">
-        <property name="text">
-         <string>Exporter RF</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QPushButton" name="pushButtonExportDI">
-        <property name="text">
-         <string>Exporter DI</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
+      <item row="9" column="3">
        <widget class="QPushButton" name="pushButtonExportRI">
         <property name="text">
          <string>Exporter RI</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="4">
+      <item row="6" column="0" colspan="4">
        <widget class="QPushButton" name="pushButtonExportLeaves">
         <property name="text">
          <string>Générer le fichier squelette</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0" colspan="4">
+       <widget class="QPushButton" name="pushButtonDeleteReporting">
+        <property name="text">
+         <string>Supprimer reporting</string>
         </property>
        </widget>
       </item>
@@ -107,10 +93,148 @@
       <item row="0" column="0" colspan="4">
        <widget class="QComboBox" name="comboListOfReportings"/>
       </item>
-      <item row="5" column="0" colspan="4">
-       <widget class="QPushButton" name="pushButtonDeleteReporting">
+      <item row="12" column="1">
+       <widget class="QPushButton" name="pushButtonClearRF">
         <property name="text">
-         <string>Supprimer reporting</string>
+         <string>Vider RF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QPushButton" name="pushButtonRandomRF">
+        <property name="text">
+         <string>Aléatoire RF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="3">
+       <widget class="QPushButton" name="pushButtonRandomRI">
+        <property name="text">
+         <string>Aléatoire RI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="2">
+       <widget class="QPushButton" name="pushButtonRandomDI">
+        <property name="text">
+         <string>Aléatoire DI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="2">
+       <widget class="QPushButton" name="pushButtonClearDI">
+        <property name="text">
+         <string>Vider DI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="3">
+       <widget class="QPushButton" name="pushButtonClearRI">
+        <property name="text">
+         <string>Vider RI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="QPushButton" name="pushButtonLoadRI">
+        <property name="text">
+         <string>Charger RI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QPushButton" name="pushButtonExportDF">
+        <property name="text">
+         <string>Exporter DF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QPushButton" name="pushButtonLoadDI">
+        <property name="text">
+         <string>Charger DI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QPushButton" name="pushButtonExportRF">
+        <property name="text">
+         <string>Exporter RF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0">
+       <widget class="QPushButton" name="pushButtonClearDF">
+        <property name="text">
+         <string>Vider DF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Dernière situation DF :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="QLabel" name="labelLastDF">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2" colspan="2">
+       <widget class="QLabel" name="labelLastRF">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2" colspan="2">
+       <widget class="QLabel" name="labelLastDI">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2" colspan="2">
+       <widget class="QLabel" name="labelLastRI">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Dernière situation RF :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Dernière situation DI :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Dernière situation RI :</string>
         </property>
        </widget>
       </item>

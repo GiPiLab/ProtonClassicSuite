@@ -488,14 +488,14 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->clearGraphs();
     plot->clearPlottables();
 
-    QString plotTitle=QObject::tr("%1 (%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+    QString plotTitle=QObject::tr("%1\n(%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QCPPlotTitle * title;
     if(plot->plotLayout()->elementCount()==1)
     {
         plot->plotLayout()->insertRow(0);
         title=new QCPPlotTitle(plot,plotTitle);
-        title->setFont(QFont(QFont().family(),12));
+        title->setFont(QFont(QFont().family(),11));
         plot->plotLayout()->addElement(0,0,title);
     }
     else
@@ -626,7 +626,7 @@ QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode
                                                 PCx_Reporting::VCDM,
                                                 PCx_Reporting::VIREMENTSINTERNES
                                                };
-    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de %1\n(%2)").arg(nodeName).arg(modeName),getColorDFBar());
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorDFBar());
 }
 
 QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) const
@@ -638,7 +638,7 @@ QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode)
                                                 PCx_Reporting::VCDM,
                                                 PCx_Reporting::VIREMENTSINTERNES
                                                };
-    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de %1\n(%2)").arg(nodeName).arg(modeName),getColorRFBar());
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorRFBar());
 }
 
 QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) const
@@ -649,7 +649,7 @@ QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mod
                                                 PCx_Reporting::ENGAGES,
                                                 PCx_Reporting::DISPONIBLES
                                                };
-    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de %1\n(%2)").arg(nodeName).arg(modeName),getColorDIBar());
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorDIBar());
 }
 
 QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const
@@ -675,7 +675,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
     {
         plot->plotLayout()->insertRow(0);
         title=new QCPPlotTitle(plot,plotTitle);
-        title->setFont(QFont(QFont().family(),12));
+        title->setFont(QFont(QFont().family(),11));
         plot->plotLayout()->addElement(0,0,title);
     }
     else

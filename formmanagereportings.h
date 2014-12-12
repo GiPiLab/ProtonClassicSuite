@@ -18,9 +18,12 @@ public:
 
 public slots:
     void onLOTchanged();
+    void updateRandomVisibility();
+
 
 signals:
     void listOfReportingsChanged();
+    void reportingDataChanged(unsigned int reportingId);
 
 private slots:
     void on_pushButtonDisplayTree_clicked();
@@ -49,11 +52,28 @@ private slots:
 
     void on_pushButtonExportRI_clicked();
 
+    void on_pushButtonClearDF_clicked();
+
+    void on_pushButtonClearRF_clicked();
+
+    void on_pushButtonClearDI_clicked();
+
+    void on_pushButtonClearRI_clicked();
+
+    void on_pushButtonRandomDF_clicked();
+
+    void on_pushButtonRandomRF_clicked();
+
+    void on_pushButtonRandomDI_clicked();
+
+    void on_pushButtonRandomRI_clicked();
+
 private:
     Ui::FormManageReportings *ui;
     void updateListOfTrees();
     void updateListOfReportings();
     PCx_Reporting *selectedReporting;
+    void updateReportingInfos();
 };
 
 #endif // FORMMANAGEREPORTINGS_H

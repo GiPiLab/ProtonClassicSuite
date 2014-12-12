@@ -138,7 +138,7 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigne
             qWarning()<<"Invalid years !";
             return false;
         }
-        if(!attachedTree->isLeaf(leafId))
+        if(!getAttachedTree()->isLeaf(leafId))
         {
             qWarning()<<"Not a leaf !";
             return false;
@@ -428,7 +428,7 @@ void PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     parent=idToPid.value(nodeId);
     if(parent==0)
     {
-        parent=attachedTree->getParentId(nodeId);
+        parent=getAttachedTree()->getParentId(nodeId);
         idToPid.insert(nodeId,parent);
     }
 
@@ -441,7 +441,7 @@ void PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     }
     else
     {
-        listOfChildren=attachedTree->getChildren(parent);
+        listOfChildren=getAttachedTree()->getChildren(parent);
         idToChildren.insert(parent,listOfChildren);
         QStringList l;
         foreach (unsigned int childId, listOfChildren)
@@ -551,7 +551,7 @@ QString PCx_Audit::getHTMLAuditStatistics() const
                        "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
                        "</table>\n")
                .arg(attachedTreeName.toHtmlEscaped())
-               .arg(attachedTree->getNumberOfNodes())
+               .arg(getAttachedTree()->getNumberOfNodes())
                .arg(yearsString)
                .arg(creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped())
                .arg(finishedString);
@@ -815,14 +815,14 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
         }
 
         int nodeId;
-        nodeId=attachedTree->getNodeIdFromTypeAndNodeName(typeAndNode);
+        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
         if(nodeId<=0)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Noeud introuvable ligne %1").arg(row));
             return false;
         }
 
-        bool leaf=attachedTree->isLeaf(nodeId);
+        bool leaf=getAttachedTree()->isLeaf(nodeId);
 
         if(!leaf)
         {
@@ -875,7 +875,7 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
         typeAndNode.first=nodeType.toString().simplified();
         typeAndNode.second=nodeName.toString().simplified();
         int nodeId;
-        nodeId=attachedTree->getNodeIdFromTypeAndNodeName(typeAndNode);
+        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
 
         QHash<PCx_Audit::ORED,double> vals;
         if(ouverts.isValid())
@@ -922,7 +922,7 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
 bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileName) const
 {
     QXlsx::Document xlsx;
-    QList<unsigned int> leavesId=attachedTree->getLeavesId();
+    QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
     xlsx.write(1,1,"Type noeud");
     xlsx.write(1,2,"Nom noeud");
     xlsx.write(1,3,"Année");
@@ -934,7 +934,7 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileN
     int row=2;
     foreach(unsigned int leafId,leavesId)
     {
-        QPair<QString,QString> typeAndNodeName=attachedTree->getTypeNameAndNodeName(leafId);
+        QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leafId);
             q.prepare(QString("select * from audit_%1_%2 where id_node=:idnode order by annee").
                       arg(MODES::modeToTableString(mode)).arg(auditId));
 
@@ -974,6 +974,59 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileN
     }
 
     return xlsx.saveAs(fileName);
+}
+
+void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
+{
+    QList<unsigned int> leaves=getAttachedTree()->getLeavesId();
+
+    QHash<PCx_Audit::ORED,double> data;
+
+    int maxVal=leaves.size();
+
+    QProgressDialog progress(QObject::tr("Génération des données aléatoires..."),QObject::tr("Annuler"),0,maxVal);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    progress.setMinimumDuration(300);
+    progress.setValue(0);
+
+    QSqlDatabase::database().transaction();
+
+    clearAllData(mode);
+
+    int nbNode=0;
+    qsrand(time(NULL));
+
+    double randval;
+
+    foreach(unsigned int leaf,leaves)
+    {
+        foreach(unsigned int year,years)
+        {
+            data.clear();
+            randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+            data.insert(PCx_Audit::ORED::OUVERTS,randval);
+            randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+            data.insert(PCx_Audit::ORED::REALISES,randval);
+            randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+            data.insert(PCx_Audit::ORED::ENGAGES,randval);
+
+            //the transaction will be rollback in setLeafValues=>die
+            setLeafValues(leaf,mode,year,data,true);
+        }
+        nbNode++;
+        if(!progress.wasCanceled())
+        {
+            progress.setValue(nbNode);
+        }
+        else
+        {
+            QSqlDatabase::database().rollback();
+            return;
+        }
+    }
+    QSqlDatabase::database().commit();
 }
 
 QString PCx_Audit::getCSS()

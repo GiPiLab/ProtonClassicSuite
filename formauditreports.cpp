@@ -118,8 +118,8 @@ void FormAuditReports::on_comboListAudits_activated(int index)
     ui->treeView->setModel(model->getAttachedTree());
     delete m;
     ui->treeView->expandToDepth(1);
-    QModelIndex rootIndex=model->getAttachedTree()->index(0,0);
-    ui->treeView->setCurrentIndex(rootIndex);
+    //QModelIndex rootIndex=model->getAttachedTree()->index(0,0);
+    //ui->treeView->setCurrentIndex(rootIndex);
 
     ui->comboListTypes->clear();
 

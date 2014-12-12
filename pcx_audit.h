@@ -233,6 +233,12 @@ public:
     bool exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString &fileName) const;
 
     /**
+     * @brief fillWithRandomData fills an audit with random data
+     * @param mode the mode to fill. All previous data will be erased
+     */
+    void fillWithRandomData(MODES::DFRFDIRI mode);
+
+    /**
      * @brief getCSS gets the css to display an audit in HTML
      * @return a string with CSS rules
      */
@@ -329,7 +335,10 @@ protected:
 
 private:
     /**
-     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier
+     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier.
+     *
+     * MUST NOT BE USED DIRECTLY AS IT IS INVALID IN DERIVED CLASS, USE getAttachedTree instead
+     *
      */
     PCx_Tree *attachedTree;
 

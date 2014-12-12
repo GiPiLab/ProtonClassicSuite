@@ -1142,7 +1142,7 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
         if(pidVal!=0)
         {
             out.append(QString("<li>%1 % des crédits de <b>%2</b></li>")
-                       .arg(formatDouble((double)nodeVal/(double)pidVal*100.0))
+                       .arg(formatDouble((double)nodeVal/(double)pidVal*100.0,-1,true))
                        .arg(reportingModel->getAttachedTree()->getNodeName(pid).toHtmlEscaped())
                        );
         }
@@ -1190,26 +1190,26 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
                             "<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(bp))
-                .arg(NUMBERSFORMAT::formatDouble(percentBP));
+                .arg(NUMBERSFORMAT::formatDouble(percentBP,-1,true));
         out.append(QString("<tr><td class='t1annee'>%1</td><td class='t1valeur' align='right'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(reports))
-                .arg(NUMBERSFORMAT::formatDouble(percentReports)));
+                .arg(NUMBERSFORMAT::formatDouble(percentReports,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(ocdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentOCDM)));
+                .arg(NUMBERSFORMAT::formatDouble(percentOCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(vcdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentVCDM)));
+                .arg(NUMBERSFORMAT::formatDouble(percentVCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(vInt))
-                .arg(NUMBERSFORMAT::formatDouble(percentVINT)));
+                .arg(NUMBERSFORMAT::formatDouble(percentVINT,-1,true)));
         out.append(QString("<tr><td class='t1annee'><b>TOTAL</b></td><td align='right'  class='t1valeur'><b>%1</b></td><td align='right'  class='t1pourcent'><b>%2 \%</b></td></tr></table>")
                    .arg(NUMBERSFORMAT::formatFixedPoint(sum))
-                   .arg(NUMBERSFORMAT::formatDouble(sumPercent))
+                   .arg(NUMBERSFORMAT::formatDouble(sumPercent,-1,true))
                    );
 
         return out;
@@ -1253,18 +1253,18 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(ocdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentOCDM)));
+                .arg(NUMBERSFORMAT::formatDouble(percentOCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(vcdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentVCDM)));
+                .arg(NUMBERSFORMAT::formatDouble(percentVCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true))
                 .arg(NUMBERSFORMAT::formatFixedPoint(vInt))
-                .arg(NUMBERSFORMAT::formatDouble(percentVINT)));
+                .arg(NUMBERSFORMAT::formatDouble(percentVINT,-1,true)));
         out.append(QString("<tr><td class='t1annee'><b>TOTAL</b></td><td align='right'  class='t1valeur'><b>%1</b></td><td align='right'  class='t1pourcent'><b>%2 \%</b></td></tr></table>")
                    .arg(NUMBERSFORMAT::formatFixedPoint(sum))
-                   .arg(NUMBERSFORMAT::formatDouble(sumPercent))
+                   .arg(NUMBERSFORMAT::formatDouble(sumPercent,-1,true))
                    );
 
         out.prepend(QString("<p>Entre le 1er janvier et le %1, date de la dernière situation PCR, les crédits alloués au budget primitif à <b>%2</b> ont "
@@ -1272,7 +1272,7 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
                     .arg(laDate.toString(Qt::DefaultLocaleShortDate))
                     .arg(reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                     .arg(NUMBERSFORMAT::formatFixedPoint(sum))
-                    .arg(NUMBERSFORMAT::formatDouble(sumPercent)));
+                    .arg(NUMBERSFORMAT::formatDouble(sumPercent,-1,true)));
 
         return out;
     }
@@ -1322,17 +1322,17 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(realises))
-                .arg(NUMBERSFORMAT::formatDouble(percentRealises)));
+                .arg(NUMBERSFORMAT::formatDouble(percentRealises,-1,true)));
         //out.append("<tr><td colspan='3'>&nbsp;</td></tr>");
         out.append(QString("<tr><td class='t1annee'>NON&nbsp;UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(nonUtilise))
-                .arg(NUMBERSFORMAT::formatDouble(percentNonUtilise)));
+                .arg(NUMBERSFORMAT::formatDouble(percentNonUtilise,-1,true)));
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(engages))
-                .arg(NUMBERSFORMAT::formatDouble(percentEngages)));
+                .arg(NUMBERSFORMAT::formatDouble(percentEngages,-1,true)));
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
-                .arg(NUMBERSFORMAT::formatDouble(percentDispo)));
+                .arg(NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
 
         outGlob.append(out);
         outGlob.append("</td><td>");
@@ -1342,13 +1342,13 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
         QString out2=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
         out2.append(QString("<tr><td class='t1annee'>UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(utilise))
-                .arg(NUMBERSFORMAT::formatDouble(percentUtilise)));
+                .arg(NUMBERSFORMAT::formatDouble(percentUtilise,-1,true)));
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(realises))
-                .arg(NUMBERSFORMAT::formatDouble(percentRealises)));
+                .arg(NUMBERSFORMAT::formatDouble(percentRealises,-1,true)));
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(engages))
-                .arg(NUMBERSFORMAT::formatDouble(percentEngages)));
+                .arg(NUMBERSFORMAT::formatDouble(percentEngages,-1,true)));
         //out2.append("<tr><td colspan='3'>&nbsp;</td></tr>");
 
 
@@ -1356,7 +1356,7 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
-                .arg(NUMBERSFORMAT::formatDouble(percentDispo)));
+                .arg(NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
 
         outGlob.append(out2);
         outGlob.append("</td></tr></table>");

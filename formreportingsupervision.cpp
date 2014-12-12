@@ -74,6 +74,14 @@ void FormReportingSupervision::onListOfReportingsChanged()
 {
     updateListOfReportings();
 }
+
+void FormReportingSupervision::onReportingDataChanged(unsigned int reportingId)
+{
+    if(selectedReporting->getReportingId()==reportingId)
+    {
+        model->setMode(getSelectedMode());
+    }
+}
 void FormReportingSupervision::on_comboListReportings_activated(int index)
 {
     if(index==-1 || ui->comboListReportings->count()==0)return;

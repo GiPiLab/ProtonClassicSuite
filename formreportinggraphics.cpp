@@ -34,6 +34,22 @@ void FormReportingGraphics::onListOfReportingsChanged()
     updateListOfReportings();
 }
 
+void FormReportingGraphics::onReportingDataChanged(unsigned int reportingId)
+{
+    if(selectedReporting->getReportingId()==reportingId)
+    {
+        if(ui->treeView->currentIndex().isValid())
+        {
+            on_treeView_clicked(ui->treeView->currentIndex());
+        }
+        else
+        {
+            QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
+            on_treeView_clicked(rootIndex);
+        }
+    }
+}
+
 void FormReportingGraphics::updateListOfReportings()
 {
     ui->comboListOfReportings->clear();
@@ -79,8 +95,8 @@ void FormReportingGraphics::on_comboListOfReportings_activated(int index)
     ui->treeView->expandToDepth(1);
     QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
     selectedNodeId=1;
+    ui->treeView->setCurrentIndex(rootIndex);
     on_treeView_clicked(rootIndex);
-
 }
 
 void FormReportingGraphics::on_treeView_clicked(const QModelIndex &index)

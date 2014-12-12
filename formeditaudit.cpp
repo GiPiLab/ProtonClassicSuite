@@ -135,6 +135,11 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewRF->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
     ui->tableViewDI->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
     ui->tableViewRI->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
+
+
+    QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);
+    ui->treeView->setCurrentIndex(rootIndex);
+    on_treeView_clicked(rootIndex);
 }
 
 void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
@@ -168,16 +173,6 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
 
 void FormEditAudit::on_randomDataButton_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Remplir le mode (DF/RF/DI/RI) de l'audit de données aléatoires ?"))==QMessageBox::No)
-    {
-        return;
-    }
-
-    //QElapsedTimer timer;
-    //timer.start();
-    QList<unsigned int> leaves=auditModel->getAttachedTree()->getLeavesId();
-    QList<unsigned int> years=auditModel->getYears();
-
     MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
     if(ui->tabWidget->currentWidget()==ui->tabDF)
         mode=MODES::DFRFDIRI::DF;
@@ -189,54 +184,15 @@ void FormEditAudit::on_randomDataButton_clicked()
         mode=MODES::DFRFDIRI::RI;
 
 
-    QHash<PCx_Audit::ORED,double> data;
-
-    int maxVal=leaves.size();
-
-    QProgressDialog progress(QObject::tr("Génération des données aléatoires..."),QObject::tr("Annuler"),0,maxVal);
-
-    progress.setWindowModality(Qt::ApplicationModal);
-
-    progress.setMinimumDuration(300);
-    progress.setValue(0);
-
-    QSqlDatabase::database().transaction();
-
-    auditModel->clearAllData(mode);
-
-    int nbNode=0;
-    qsrand(time(NULL));
-
-    double randval;
-
-    foreach(unsigned int leaf,leaves)
+    if(QMessageBox::question(this,tr("Attention"),tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
     {
-        foreach(unsigned int year,years)
-        {
-            data.clear();
-            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
-            data.insert(PCx_Audit::ORED::OUVERTS,randval);
-            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
-            data.insert(PCx_Audit::ORED::REALISES,randval);
-            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM);
-            data.insert(PCx_Audit::ORED::ENGAGES,randval);
-
-            //the transaction will be rollback in setLeafValues=>die
-            auditModel->setLeafValues(leaf,mode,year,data,true);
-        }
-        nbNode++;
-        if(!progress.wasCanceled())
-        {
-            progress.setValue(nbNode);
-        }
-        else
-        {
-            QSqlDatabase::database().rollback();
-            return;
-        }
+        return;
     }
-    QSqlDatabase::database().commit();
 
+    //QElapsedTimer timer;
+    //timer.start();
+
+    auditModel->fillWithRandomData(mode);
     QSqlTableModel *tblModel=auditModel->getTableModel(mode);
     if(tblModel!=nullptr)
         tblModel->select();
@@ -246,13 +202,8 @@ void FormEditAudit::on_randomDataButton_clicked()
 
 void FormEditAudit::on_clearDataButton_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Effacer toutes les données du mode (DF/RF/DI/RI) sélectionné ?"))==QMessageBox::No)
-    {
-        return;
-    }
 
     MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
-
 
     if(ui->tabWidget->currentWidget()==ui->tabDF)
         mode=MODES::DFRFDIRI::DF;
@@ -262,6 +213,11 @@ void FormEditAudit::on_clearDataButton_clicked()
         mode=MODES::DFRFDIRI::DI;
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
         mode=MODES::DFRFDIRI::RI;
+
+    if(QMessageBox::question(this,tr("Attention"),tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
+    {
+        return;
+    }
 
     auditModel->clearAllData(mode);
 }

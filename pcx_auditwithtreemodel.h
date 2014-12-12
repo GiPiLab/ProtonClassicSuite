@@ -15,6 +15,12 @@ public:
     PCx_TreeModel *getAttachedTree() const{return attachedTree;}
 
 private:
+    /**
+     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier.
+     *
+     * MUST NOT BE USED DIRECTLY AS IT IS INVALID IN DERIVED CLASS, USE getAttachedTree instead
+     *
+     */
     PCx_TreeModel *attachedTree;
     PCx_AuditWithTreeModel(const PCx_AuditWithTreeModel &c);
     PCx_AuditWithTreeModel &operator=(const PCx_AuditWithTreeModel &);

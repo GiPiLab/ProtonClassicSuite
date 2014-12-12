@@ -37,6 +37,35 @@ void FormReportingExplore::onListOfReportingsChanged()
     updateListOfReportings();
 }
 
+void FormReportingExplore::onReportingDataChanged(unsigned int reportingId)
+{
+    if(selectedReporting->getReportingId()==reportingId)
+    {
+        if(ui->treeView->currentIndex().isValid())
+        {
+            on_treeView_clicked(ui->treeView->currentIndex());
+        }
+        else
+        {
+            QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
+            on_treeView_clicked(rootIndex);
+        }
+    }
+}
+
+void FormReportingExplore::onSettingsChanged()
+{
+    if(ui->treeView->currentIndex().isValid())
+    {
+        on_treeView_clicked(ui->treeView->currentIndex());
+    }
+    else
+    {
+        QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
+        on_treeView_clicked(rootIndex);
+    }
+}
+
 void FormReportingExplore::updateListOfReportings()
 {
     ui->comboListReportings->clear();
@@ -99,6 +128,7 @@ void FormReportingExplore::on_comboListReportings_activated(int index)
     ui->treeView->expandToDepth(1);
     QModelIndex rootIndex=selectedReporting->getAttachedTree()->index(0,0);
     selectedNode=1;
+    ui->treeView->setCurrentIndex(rootIndex);
     on_treeView_clicked(rootIndex);
 }
 

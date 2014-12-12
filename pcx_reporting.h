@@ -192,6 +192,13 @@ public:
 
 
     /**
+     * @brief addRandomDataForNext15 adds random data for a date 15 day after the last reporting date
+     * @param mode the mode to fill
+     */
+    void addRandomDataForNext15(MODES::DFRFDIRI mode);
+
+
+    /**
      * @brief OREDPCRToComboBox fills a QComboBox with OREDPCR values
      * @param combo the QComboBox to fill
      */
@@ -270,10 +277,11 @@ protected:
 
 private:
 
-    //FIXME : REFACTOR TO AVOID DOUBLE TREE CONSTRUCTOR
-
     /**
-     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier
+     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier.
+     *
+     * MUST NOT BE USED DIRECTLY AS IT IS INVALID IN DERIVED CLASS, USE getAttachedTree instead
+     *
      */
     PCx_Tree *attachedTree;
     PCx_Reporting(const PCx_Reporting &c);
