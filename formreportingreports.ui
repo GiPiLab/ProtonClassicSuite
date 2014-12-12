@@ -38,7 +38,7 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
+      <item row="6" column="1">
        <widget class="QCheckBox" name="checkBoxRI">
         <property name="text">
          <string>Recettes d'investissement</string>
@@ -62,27 +62,27 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="checkBoxDF">
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="checkBoxRF">
         <property name="text">
-         <string>Dépenses de fonctionnement</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string>Recettes de fonctionnement</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <widget class="QCheckBox" name="checkBoxDI">
         <property name="text">
          <string>Dépenses d'investissement</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QCheckBox" name="checkBoxRF">
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="checkBoxDF">
         <property name="text">
-         <string>Recettes de fonctionnement</string>
+         <string>Dépenses de fonctionnement</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -93,28 +93,28 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
-       <widget class="QPushButton" name="pushButtonSelectAll">
-        <property name="text">
-         <string>Tout</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2">
+      <item row="4" column="0" colspan="2">
        <widget class="Line" name="line">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="3" column="0">
+       <widget class="QPushButton" name="pushButtonSelectAll">
+        <property name="text">
+         <string>Tout</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
        <widget class="QPushButton" name="pushButtonSelectNone">
         <property name="text">
          <string>Rien</string>
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
+      <item row="2" column="1">
        <widget class="QCheckBox" name="checkBoxIncludeGraphics">
         <property name="text">
          <string>Inclure les graphiques</string>
@@ -227,6 +227,9 @@
       </property>
       <item>
        <widget class="QRadioButton" name="radioButtonBFS">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, B, A1, A2, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Largeur d'abord</string>
         </property>
@@ -234,6 +237,9 @@
       </item>
       <item>
        <widget class="QRadioButton" name="radioButtonDFS">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, A1, A2, B, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Profondeur d'abord</string>
         </property>

@@ -12,6 +12,7 @@
 #include <QStandardPaths>
 #include <QElapsedTimer>
 #include <QProgressDialog>
+#include <QSettings>
 #include "formauditinfos.h"
 
 FormEditAudit::FormEditAudit(QWidget *parent) :
@@ -38,6 +39,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) :
     ui->tableViewRI->setItemDelegate(delegateRI);
 
     updateListOfAudits();
+    updateRandomButtonVisibility();
 }
 
 FormEditAudit::~FormEditAudit()
@@ -56,6 +58,13 @@ FormEditAudit::~FormEditAudit()
 void FormEditAudit::onListOfAuditsChanged()
 {
     updateListOfAudits();
+}
+
+void FormEditAudit::updateRandomButtonVisibility()
+{
+    QSettings settings;
+    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    ui->randomDataButton->setEnabled(randomAllowed);
 }
 
 void FormEditAudit::updateListOfAudits()

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "utils.h"
 #include <QApplication>
+#include <QSharedMemory>
 #include <QSqlDatabase>
 #include <QTranslator>
 #include <QLibraryInfo>
@@ -42,6 +43,19 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     QTranslator qtTranslator;
+
+    //Avoid multiple application instances
+    QSharedMemory sharedMemory;
+    sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
+    sharedMemory.attach(QSharedMemory::ReadWrite);
+
+    if (!sharedMemory.create(1)) {
+        return EXIT_FAILURE;
+    }
+
+
+
+
     qtTranslator.load(
                 "qt_" + QLocale::system().name(),
                 QLibraryInfo::location(QLibraryInfo::TranslationsPath)
@@ -66,9 +80,6 @@ int main(int argc, char *argv[])
 */
 
 
-
-
-
     int retval;
 
     QSqlDatabase::addDatabase("QSQLITE");
@@ -79,5 +90,6 @@ int main(int argc, char *argv[])
 
     retval=a.exec();
     QSqlDatabase::database().close();
+    sharedMemory.detach();
     return retval;
 }

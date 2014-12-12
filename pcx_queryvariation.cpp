@@ -395,6 +395,7 @@ const QString PCx_QueryVariation::operatorToString(OPERATORS op)
     return output;
 }
 
+/*
 PCx_QueryVariation::OPERATORS PCx_QueryVariation::stringToOperator(const QString &s)
 {
     if(s=="<")
@@ -412,7 +413,7 @@ PCx_QueryVariation::OPERATORS PCx_QueryVariation::stringToOperator(const QString
 
     qWarning()<<"Invalid operator string, defaulting to EQUAL";
     return EQUAL;
-}
+}*/
 
 const QString PCx_QueryVariation::incDecToString(INCREASEDECREASE incDec)
 {

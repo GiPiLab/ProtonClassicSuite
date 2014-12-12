@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QSqlQuery>
+#include <QSharedMemory>
 #include <QSqlError>
 #include <QSqlDatabase>
 #include <QUuid>
@@ -18,6 +19,10 @@ void die(int retcode)
 {
     QSqlDatabase::database().rollback();
     QSqlDatabase::database().close();
+    QSharedMemory sharedMemory;
+    sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
+    if(sharedMemory.isAttached())
+        sharedMemory.detach();
     QApplication::instance()->exit(retcode);
     exit(retcode);
 }
@@ -239,28 +244,7 @@ QString modeToTableString(DFRFDIRI mode)
     return QString();
 }
 
-
-DFRFDIRI modeFromTableString(const QString &mode)
-{
-    if(mode==modeToTableString(DFRFDIRI::DF))
-        return DFRFDIRI::DF;
-    if(mode==modeToTableString(DFRFDIRI::RF))
-        return DFRFDIRI::RF;
-    if(mode==modeToTableString(DFRFDIRI::DI))
-        return DFRFDIRI::DI;
-    if(mode==modeToTableString(DFRFDIRI::RI))
-        return DFRFDIRI::RI;
-
-    qWarning()<<"Invalid DFRFDIRI string specified, defaulting to DF";
-    return DFRFDIRI::DF;
 }
-
-
-
-}
-
-
-
 
 
 
@@ -268,12 +252,6 @@ namespace NUMBERSFORMAT
 {
 FORMATMODE currentFormatMode=FORMATMODENORMAL;
 unsigned int currentNumDecimals=DEFAULTNUMDECIMALS;
-
-unsigned int getCurrentNumDecimals()
-{
-    return currentNumDecimals;
-}
-
 
 void updateFormatModeAndDecimals()
 {

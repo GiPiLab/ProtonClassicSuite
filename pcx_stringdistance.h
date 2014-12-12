@@ -69,7 +69,7 @@ private:
      */
     double normalizedLevenshteinDistance(const QString &sa, const QString &ta, bool caseInsensitive=false);
 
-    unsigned int minimum(unsigned int a, unsigned int b, unsigned int c);
+    static unsigned int minimum(unsigned int a, unsigned int b, unsigned int c);
 
     /**
      * @brief jaroWinklerDistance computes the Jaro-Winkler similarity

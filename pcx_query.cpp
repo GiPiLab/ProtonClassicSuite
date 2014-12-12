@@ -10,6 +10,11 @@
 
 PCx_Query::PCx_Query(PCx_Audit *model):model(model),queryId(0)
 {
+    dfrfdiri=MODES::GLOBAL;
+    ored=PCx_Audit::OUVERTS;
+    typeId=0;
+    year1=0;
+    year2=0;
 }
 
 PCx_Query::PCx_Query(PCx_Audit *model, unsigned int typeId, PCx_Audit::ORED ored, MODES::DFRFDIRI dfrfdiri,

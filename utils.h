@@ -96,12 +96,6 @@ enum DFRFDIRI
  */
 QString modeToCompleteString(DFRFDIRI mode);
 
-/**
- * @brief modeFromTableString converts a table name for a mode to a DFRFDIRI value
- * @param mode the table name of the mode (for example, "DF")
- * @return the mode, or DFRFDIRI::DF if not found
- */
-DFRFDIRI modeFromTableString(const QString &mode);
 
 /**
  * @brief modeToTableString converts a mode to its database table name
@@ -127,13 +121,6 @@ enum FORMATMODE
     FORMATMODEMILLIONS ///< numbers are divided by 1000000 before beeing displayed
 };
 
-
-
-/**
- * @brief getCurrentNumDecimals fast function that returns the number of decimals to display. Faster than calling QSettings
- * @return the number of decimals to display
- */
-unsigned int getCurrentNumDecimals();
 
 /**
  * @brief updateFormatModeAndDecimals retrieves QSettings user properties about number of decimals and number format mode

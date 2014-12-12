@@ -55,7 +55,7 @@ public:
     OPERATORS getOperator() const{return op;}
 
     static const QString operatorToString(OPERATORS op);
-    static OPERATORS stringToOperator(const QString &s);
+    //static OPERATORS stringToOperator(const QString &s);
 
     INCREASEDECREASE getIncDec() const{return incDec;}
     void setIncDec(INCREASEDECREASE incDec){this->incDec=incDec;}

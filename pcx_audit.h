@@ -43,8 +43,9 @@ public:
     /**
      * @brief PCx_Audit constructs an audit from an audit identifier in the database
      * @param auditId the identifier of the audit in the database
+     * @param _noLoadAttachedTree if true does not create a tree (a TreeModel will be constructed in derived class)
      */
-    explicit PCx_Audit(unsigned int auditId);
+    explicit PCx_Audit(unsigned int auditId, bool _noLoadAttachedTree=false);
     virtual ~PCx_Audit();
 
     /**
@@ -77,12 +78,6 @@ public:
      */
     unsigned int getAttachedTreeId() const{return attachedTreeId;}
 
-    /**
-     * @brief getAttachedTreeId static convenience method equivalent to PCx_Tree::getTreeId()
-     * @param auditId the audit identifier
-     * @return the identifier of the tree attached to auditId
-     */
-    static unsigned int getAttachedTreeId(unsigned int auditId);
 
     /**
      * @brief isFinished is this audit finished ?
@@ -158,17 +153,6 @@ public:
      * @return the node value in qint64 format (uses formatDouble or formatCurrency to display), or -MAX_NUM on NULL or unavailable node
      */
     qint64 getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year) const;
-
-
-    /**
-     * @brief getNodeValues convenience method to gets all value fields of a node for a mode and a year
-     * @param nodeId the node identifier
-     * @param mode the mode to read
-     * @param year the year to read
-     * @return node values for each field in qint64 format
-     */
-    QHash<PCx_Audit::ORED,qint64> getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const;
-
 
     /**
      * @brief clearAllData erases all audit data for a specific mode
@@ -275,9 +259,6 @@ public:
      */
     QString getHTMLAuditStatistics() const;
 
-
-
-
     /**
      * @brief OREDtoCompleteString converts an ORED item to its textual representation
      * @param ored the ORED item
@@ -291,13 +272,6 @@ public:
      * @return the database column name
      */
     static QString OREDtoTableString(ORED ored);
-
-    /**
-     * @brief OREDFromTableString converts a column name to its corresponding ORED item
-     * @param ored the column name to convert
-     * @return the ORED item, or ORED::OUVERTS in case of invalid name
-     */
-    static ORED OREDFromTableString(const QString &ored);
 
     /**
      * @brief addNewAudit creates a new audit
@@ -349,16 +323,15 @@ protected:
 
     void updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
-    /**
-     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier
-     */
-    PCx_Tree *attachedTree;
-
     QHash<unsigned int,unsigned int> idToPid;
     QHash<unsigned int,QList<unsigned int> >idToChildren;
     QHash<unsigned int,QString> idToChildrenString;
 
 private:
+    /**
+     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier
+     */
+    PCx_Tree *attachedTree;
 
     PCx_Audit(const PCx_Audit &c);
     PCx_Audit &operator=(const PCx_Audit &);

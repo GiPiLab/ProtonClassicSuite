@@ -18,6 +18,10 @@ DialogOptions::DialogOptions(QWidget *parent) :
 {
     ui->setupUi(this);
     QSettings settings;
+
+
+    ui->checkBoxRandomAllowed->setChecked(settings.value("misc/randomAllowed",false).toBool());
+
     QString css=settings.value("output/style","CSS").toString();
     if(css=="CSS")
         ui->radioButtonCSS->setChecked(true);
@@ -120,6 +124,12 @@ DialogOptions::~DialogOptions()
 void DialogOptions::on_pushButtonOk_clicked()
 {
     QSettings settings;
+
+    if(ui->checkBoxRandomAllowed->isChecked())
+        settings.setValue("misc/randomAllowed",true);
+    else
+        settings.setValue("misc/randomAllowed",false);
+
     if(ui->radioButtonCSS->isChecked())
         settings.setValue("output/style","CSS");
     else if(ui->radioButtonInline->isChecked())
@@ -204,6 +214,8 @@ void DialogOptions::on_pushButtonReset_clicked()
     ui->spinBoxNumDecimals->setValue(DEFAULTNUMDECIMALS);
 
     ui->radioButtonUnits->setChecked(true);
+
+    ui->checkBoxRandomAllowed->setChecked(false);
 
     ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
     ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());

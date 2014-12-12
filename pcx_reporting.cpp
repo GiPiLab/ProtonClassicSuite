@@ -16,7 +16,7 @@
 
 using namespace NUMBERSFORMAT;
 
-PCx_Reporting::PCx_Reporting(unsigned int reportingId) :
+PCx_Reporting::PCx_Reporting(unsigned int reportingId,bool _noLoadAttachedTree) :
     reportingId(reportingId)
 {
     Q_ASSERT(reportingId>0);
@@ -43,20 +43,28 @@ PCx_Reporting::PCx_Reporting(unsigned int reportingId) :
         qCritical()<<"Invalid reporting ID !";
         die();
     }
-    attachedTree=new PCx_Tree(attachedTreeId);
-    attachedTreeName=attachedTree->getName();
+    if(_noLoadAttachedTree)
+    {
+        attachedTree=nullptr;
+    }
+    else
+    {
+        attachedTree=new PCx_Tree(attachedTreeId);
+        attachedTreeName=attachedTree->getName();
+    }
 
 }
 
 PCx_Reporting::~PCx_Reporting()
 {
-    delete attachedTree;
+    if(attachedTree!=nullptr)
+        delete attachedTree;
 }
 
-unsigned int PCx_Reporting::getAttachedTreeId(unsigned int auditId)
+unsigned int PCx_Reporting::getAttachedTreeId(unsigned int reportingId)
 {
         QSqlQuery q;
-        if(!q.exec(QString("select id_arbre from index_reportings where id=%1").arg(auditId)))
+        if(!q.exec(QString("select id_arbre from index_reportings where id=%1").arg(reportingId)))
         {
             qCritical()<<q.lastError();
             die();
@@ -170,66 +178,6 @@ qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OR
     return q.value(OREDPCRtoTableString(ored)).toLongLong();
 }
 
-/*
-QHash<PCx_Reporting::OREDPCR, qint64> PCx_Reporting::getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, QDate date) const
-{
-    QSqlQuery q;
-    QHash<PCx_Reporting::OREDPCR,qint64> output;
-    q.prepare(QString("select * from reporting_%2_%3 where date=:date and id_node=:node").arg(modeToTableString(mode)).arg(reportingId));
-    q.bindValue(":year",QDateTime(date).toTime_t());
-    q.bindValue(":node",nodeId);
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    if(!q.next())
-    {
-        qWarning()<<"Missing node values for reporting"<<reportingId<<", node"<<nodeId<<"and"<<modeToCompleteString(mode);
-        return output;
-    }
-
-
-    if(q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)).isNull())
-    {
-        output.insert(PCx_Reporting::OREDPCR::OUVERTS,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Reporting::OREDPCR::OUVERTS,q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)).toLongLong());
-    }
-
-    if(q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)).isNull())
-    {
-        output.insert(PCx_Reporting::OREDPCR::REALISES,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Reporting::OREDPCR::REALISES,q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::REALISES)).toLongLong());
-    }
-
-    if(q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::ENGAGES)).isNull())
-    {
-        output.insert(PCx_Reporting::OREDPCR::ENGAGES,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Reporting::OREDPCR::ENGAGES,q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::ENGAGES)).toLongLong());
-    }
-
-    if(q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::DISPONIBLES)).isNull())
-    {
-        output.insert(PCx_Reporting::OREDPCR::DISPONIBLES,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Reporting::OREDPCR::DISPONIBLES,q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::DISPONIBLES)).toLongLong());
-    }
-
-    return output;
-}
-*/
-
 void PCx_Reporting::clearAllData(MODES::DFRFDIRI mode)
 {
     QSqlQuery q(QString("delete from reporting_%1_%2").arg(modeToTableString(mode)).arg(reportingId));
@@ -239,7 +187,6 @@ void PCx_Reporting::clearAllData(MODES::DFRFDIRI mode)
         die();
     }
 }
-
 
 void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned int nodeId)
 {
@@ -1345,7 +1292,3 @@ QList<QPair<unsigned int, QString> > PCx_Reporting::getListOfReportings()
 
     return listOfReportings;
 }
-
-
-
-

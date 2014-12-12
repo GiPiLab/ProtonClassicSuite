@@ -15,7 +15,7 @@
 
 using namespace NUMBERSFORMAT;
 
-PCx_Audit::PCx_Audit(unsigned int auditId) :
+PCx_Audit::PCx_Audit(unsigned int auditId,bool _noLoadAttachedTree) :
     auditId(auditId)
 {
     Q_ASSERT(auditId>0);
@@ -68,33 +68,23 @@ PCx_Audit::PCx_Audit(unsigned int auditId) :
         qCritical()<<"Invalid audit ID !";
         die();
     }
-    attachedTree=new PCx_Tree(attachedTreeId);
-    attachedTreeName=attachedTree->getName();
+    if(_noLoadAttachedTree)
+    {
+        attachedTree=nullptr;
+    }
+    else
+    {
+        attachedTree=new PCx_Tree(attachedTreeId);
+        attachedTreeName=attachedTree->getName();
+    }
 
 }
 
 PCx_Audit::~PCx_Audit()
 {
-    delete attachedTree;
+    if(attachedTree!=nullptr)
+        delete attachedTree;
 }
-
-unsigned int PCx_Audit::getAttachedTreeId(unsigned int auditId)
-{
-        QSqlQuery q;
-        if(!q.exec(QString("select id_arbre from index_audits where id=%1").arg(auditId)))
-        {
-            qCritical()<<q.lastError();
-            die();
-        }
-        if(!q.next())
-        {
-            qWarning()<<"Invalid audit ID !";
-            return 0;
-        }
-        return q.value(0).toUInt();
-}
-
-
 
 void PCx_Audit::finishAudit()
 {
@@ -255,63 +245,6 @@ qint64 PCx_Audit::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Au
     return q.value(OREDtoTableString(ored)).toLongLong();
 }
 
-QHash<PCx_Audit::ORED, qint64> PCx_Audit::getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const
-{
-    QSqlQuery q;
-    QHash<PCx_Audit::ORED,qint64> output;
-    q.prepare(QString("select * from audit_%2_%3 where annee=:year and id_node=:node").arg(modeToTableString(mode)).arg(auditId));
-    q.bindValue(":year",year);
-    q.bindValue(":node",nodeId);
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    if(!q.next())
-    {
-        qWarning()<<"Missing node values for audit"<<auditId<<", node"<<nodeId<<"and"<<modeToCompleteString(mode);
-        return output;
-    }
-
-
-    if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS)).isNull())
-    {
-        output.insert(PCx_Audit::ORED::OUVERTS,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Audit::ORED::OUVERTS,q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS)).toLongLong());
-    }
-
-    if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES)).isNull())
-    {
-        output.insert(PCx_Audit::ORED::REALISES,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Audit::ORED::REALISES,q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES)).toLongLong());
-    }
-
-    if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES)).isNull())
-    {
-        output.insert(PCx_Audit::ORED::ENGAGES,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Audit::ORED::ENGAGES,q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES)).toLongLong());
-    }
-
-    if(q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES)).isNull())
-    {
-        output.insert(PCx_Audit::ORED::DISPONIBLES,-MAX_NUM);
-    }
-    else
-    {
-        output.insert(PCx_Audit::ORED::DISPONIBLES,q.value(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES)).toLongLong());
-    }
-
-    return output;
-}
 
 void PCx_Audit::clearAllData(MODES::DFRFDIRI mode)
 {
@@ -1107,20 +1040,6 @@ QString PCx_Audit::OREDtoTableString(ORED ored)
     return QString();
 }
 
-PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &ored)
-{
-    if(ored==OREDtoTableString(ORED::OUVERTS))
-        return ORED::OUVERTS;
-    if(ored==OREDtoTableString(ORED::REALISES))
-        return ORED::REALISES;
-    if(ored==OREDtoTableString(ORED::ENGAGES))
-        return ORED::ENGAGES;
-    if(ored==OREDtoTableString(ORED::DISPONIBLES))
-        return ORED::DISPONIBLES;
-
-    qWarning()<<"Invalid ORED string specified, defaulting to ouverts";
-    return ORED::OUVERTS;
-}
 
 unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId)
 {

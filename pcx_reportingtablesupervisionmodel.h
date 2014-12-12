@@ -55,10 +55,10 @@ private:
     class Entry
     {
     public:
-        explicit Entry(unsigned int nodeId,unsigned int dateTimeT,qint64 BP,qint64 ouverts,qint64 realises,qint64 engages,qint64 disponibles);
+        explicit Entry(unsigned int nodeId,unsigned int dateTimeT,qint64 _bp,qint64 ouverts,qint64 realises,qint64 engages,qint64 disponibles);
         unsigned int nodeId;
         QDate date,dECICO,dERO2;
-        double BP,ouverts,realises,engages,disponibles;
+        double bp,ouverts,realises,engages,disponibles;
         double percentReal,tauxEcart,percentEngage,percentDisponible,percentBP;
         double realisesPredits,diffRealisesPreditsOuverts,resteAConsommer;
         unsigned int nb15NRestantes;

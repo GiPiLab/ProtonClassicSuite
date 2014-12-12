@@ -360,6 +360,14 @@ void MainWindow::on_actionOptions_triggered()
     DialogOptions dialogOptions(this);
     if(dialogOptions.exec()==QDialog::Accepted)
     {
+        if(formEditTreeWin!=nullptr)
+        {
+            formEditTreeWin->updateRandomButtonVisibility();
+        }
+        if(formEditAudit!=nullptr)
+        {
+            formEditAudit->updateRandomButtonVisibility();
+        }
         foreach(FormQueries *q, listOfFormQueries)
         {
             q->onColorChanged();

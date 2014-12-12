@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>619</width>
-    <height>604</height>
+    <height>660</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -203,7 +203,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxRealisePredit">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Quantité de réalisés qui seront consommés à la fin de l'année en suivant le rythme actuel (= réalisés / nombre_de_jours_depuis_le_début_d'année * 365)&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Quantité de réalisés qui seront consommés à la fin de l'année en suivant le rythme actuel (= réalisés / nombre_de_jours_depuis_le_début_d'année * 365)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Réalisés prédits</string>

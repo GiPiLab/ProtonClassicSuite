@@ -90,7 +90,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
         case 1:
             return entry.date.toString(Qt::DefaultLocaleShortDate);
         case TABLESUPERVISIONCOLUMNS::BP:
-            computedValue=entry.BP;
+            computedValue=entry.bp;
             break;
         case TABLESUPERVISIONCOLUMNS::OUVERTS:
             computedValue=entry.ouverts;
@@ -254,10 +254,10 @@ void PCx_ReportingTableSupervisionModel::updateQuery()
     }
 }
 
-PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned int dateTimeT, qint64 BP, qint64 ouverts, qint64 realises, qint64 engages, qint64 disponibles):nodeId(nodeId)
+PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned int dateTimeT, qint64 _bp, qint64 ouverts, qint64 realises, qint64 engages, qint64 disponibles):nodeId(nodeId)
 
 {
-    this->BP=NUMBERSFORMAT::fixedPointToDouble(BP);
+    this->bp=NUMBERSFORMAT::fixedPointToDouble(_bp);
     this->ouverts=NUMBERSFORMAT::fixedPointToDouble(ouverts);
     this->realises=NUMBERSFORMAT::fixedPointToDouble(realises);
     this->engages=NUMBERSFORMAT::fixedPointToDouble(engages);
@@ -305,7 +305,7 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
     if(ouverts!=0)
     {
         percentReal=this->realises/this->ouverts*100.0;
-        percentBP=this->BP/this->ouverts*100.0;
+        percentBP=this->bp/this->ouverts*100.0;
         percentEngage=this->engages/this->ouverts*100.0;
         percentDisponible=this->disponibles/this->ouverts*100.0;
         tauxEcart=(realisesPredits-this->ouverts)/this->ouverts*100.0;

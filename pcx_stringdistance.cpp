@@ -80,7 +80,7 @@ double PCx_StringDistance::normalizedLevenshteinDistance(const QString &sa, cons
     return (double)distance/maxSize;
 }
 
-inline unsigned int PCx_StringDistance::minimum(unsigned int a, unsigned int b, unsigned int c)
+unsigned int PCx_StringDistance::minimum(unsigned int a, unsigned int b, unsigned int c)
 {
     unsigned int min=a;
     if(b<min)

@@ -17,6 +17,13 @@ public:
     explicit FormEditTree(QWidget *parent = 0);
     ~FormEditTree();
 
+public slots:
+    void updateRandomButtonVisibility();
+
+
+
+
+
 private slots:
 
     void on_addTypeButton_clicked();
@@ -50,7 +57,6 @@ private slots:
     void on_pushButtonExpandAll_clicked();
 
     void on_pushButtonCollapseAll_clicked();
-
 
     void on_importTreeButton_clicked();
 

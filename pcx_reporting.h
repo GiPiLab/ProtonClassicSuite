@@ -44,9 +44,10 @@ public:
 
     /**
      * @brief PCx_Reporting constructs a reporting from an identifier in the database
-     * @param auditId the identifier of the reporting in the database
+     * @param reportingId the identifier of the reporting in the database
+     * @param _noLoadAttachedTree if true does not create a tree (a TreeModel will be constructed in derived class)
      */
-    explicit PCx_Reporting(unsigned int reportingId);
+    explicit PCx_Reporting(unsigned int reportingId, bool _noLoadAttachedTree=false);
     virtual ~PCx_Reporting();
 
     /**
@@ -57,7 +58,7 @@ public:
 
     /**
      * @brief getAttachedTree gets the attached tree
-     * @return a pointer to the tree associated with this audit
+     * @return a pointer to the tree associated with this reporting
      */
     virtual PCx_Tree *getAttachedTree() const{return attachedTree;}
 
@@ -88,13 +89,13 @@ public:
 
 
     /**
-     * @brief getCreationTimeUTC gets the creation time/date of the audit in UTC
+     * @brief getCreationTimeUTC gets the creation time/date of the reporting in UTC
      * @return the creation time and date in UTC
      */
     QDateTime getCreationTimeUTC()const{return creationTimeUTC;}
 
     /**
-     * @brief getCreationTimeLocal gets the creation time/date of the audit in locale DST
+     * @brief getCreationTimeLocal gets the creation time/date of the reporting in locale DST
      * @return the creation time and date in locale DST
      */
     QDateTime getCreationTimeLocal()const{return creationTimeLocal;}
@@ -106,13 +107,13 @@ public:
      * @param mode the mode to set
      * @param date the date to set
      * @param vals the values of the node for the mode and the year
-     * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
+     * @param fastMode if true, skip few checks (is the node a leaf) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
     virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QHash<PCx_Reporting::OREDPCR, double> vals, bool fastMode=false);
 
     /**
-     * @brief getNodeValue gets the audit value of a node
+     * @brief getNodeValue gets the reporting value of a node
      * @param nodeId the identifier of the node
      * @param mode the mode to read
      * @param ored the field to read
@@ -133,21 +134,13 @@ public:
 
 
     /**
-     * @brief clearAllData erases all audit data for a specific mode
+     * @brief clearAllData erases all reporting data for a specific mode
      * @param mode the mode to clear
      */
     virtual void clearAllData(MODES::DFRFDIRI mode);
 
     /**
-     * @brief importDataFromXLSX imports audit data from an XLSX file
-     *
-     * The file must contains data in 6 columns, each row represents a leaf and a year:
-     * COLUMN 1 is the type name of the leaf
-     * COLUMN 2 is the name of the leaf
-     * COLUMN 3 is the year
-     * COLUMN 4 is the OUVERTS value, in double
-     * COLUMN 5 is the REALISES value, in double
-     * COLUMN 6 is the ENGAGES value, in double
+     * @brief importDataFromXLSX imports reporting data from an XLSX file
      *
      * @param fileName the name of the file to import
      * @param mode the mode to import
@@ -158,14 +151,6 @@ public:
     /**
      * @brief exportLeavesDataXLSX exports leaf data in an XSLX file
      *
-     * The file will contains data in 6 columns, each row represents a leaf and a year:
-     * COLUMN 1 is the type name of the leaf
-     * COLUMN 2 is the name of the leaf
-     * COLUMN 3 is the year
-     * COLUMN 4 is the OUVERTS value, in double
-     * COLUMN 5 is the REALISES value, in double
-     * COLUMN 6 is the ENGAGES value, in double
-     *
      * @param mode the mode to export
      * @param fileName the name of the file were data will be saved
      * @return true on success, false otherwise
@@ -173,31 +158,22 @@ public:
     bool exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString &fileName) const;
 
     /**
-     * @brief getCSS gets the css to display an audit in HTML
+     * @brief getCSS gets the css to display an reporting in HTML
      * @return a string with CSS rules
      */
     static QString getCSS();
 
     /**
-     * @brief generateHTMLHeader gets the header of an html document, with css and audit title
+     * @brief generateHTMLHeader gets the header of an html document, with css and reporting title
      * @return the HTML header including the opening "<body>"
      */
     QString generateHTMLHeader() const;
 
     /**
-     * @brief generateHTMLAuditTitle gets the HTML title for the audit
-     * @return the title of the audit, to be inserted in the "<body>"
+     * @brief generateHTMLReportingTitle gets the HTML title for the reporting
+     * @return the title of the reporting, to be inserted in the "<body>"
      */
     QString generateHTMLReportingTitle() const;
-
-    /**
-     * @brief getHTMLAuditStatistics generates some useful statistics about the audit in HTML
-     *
-     * Mostly a wrapper to getNodesWithAllNullValues(), getNodesWithAllZeroValues() and getNodesWithNonNullValues()
-     *
-     * @return HTML with statistics
-     */
-    QString getHTMLAuditStatistics() const;
 
 
     QSet<QDate> getDatesForNodeAndMode(unsigned int nodeId, MODES::DFRFDIRI mode) const;
@@ -244,39 +220,36 @@ public:
     static OREDPCR OREDPCRFromTableString(const QString &ored);
 
     /**
-     * @brief addNewAudit creates a new audit
-     * @param name the audit name
+     * @brief addNewReporting creates a new reporting
+     * @param name the reporting name
      * @param attachedTreeId the identifier of the tree
-     * @return the identifier of the new audit, or 0 if the audit name exists, or the tree id does not exists (or is not finished)
+     * @return the identifier of the new reporting, or 0 if the reporting name exists, or the tree id does not exists (or is not finished)
      */
     static unsigned int addNewReporting(const QString &name, unsigned int attachedTreeId);
 
     /**
-     * @brief deleteAudit removes an audit from the database
-     * @param auditId the identifier of the audit to remove
-     * @return true on success, false if the auditId does not exists
+     * @brief deleteReporting removes an reporting from the database
+     * @param reportingId the identifier of the reporting to remove
+     * @return true on success, false if the reportingId does not exists
      */
     static bool deleteReporting(unsigned int reportingId);
 
     /**
-     * @brief reportingNameExists checks if the audit name exists
+     * @brief reportingNameExists checks if the reporting name exists
      * @param reportingName the name to check
      * @return true if the name exists, false otherwise
      */
     static bool reportingNameExists(const QString &reportingName);
 
     /**
-     * @brief getListOfReportings gets a list of audits to fill a QComboBox
-     * @return a list of auditID, audit description
+     * @brief getListOfReportings gets a list of reportings to fill a QComboBox
+     * @return a list of reportingID, reporting description
      */
     static QList<QPair<unsigned int, QString> > getListOfReportings();
 
     bool exportLeavesSkeleton(const QString &fileName) const;
 
     QDate getLastReportingDate(unsigned int node, MODES::DFRFDIRI mode) const;
-
-
-
 
 protected:
 
@@ -291,17 +264,18 @@ protected:
 
     void updateParent(const QString &tableName, QDate date, unsigned int nodeId);
 
-    /**
-     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier
-     */
-    PCx_Tree *attachedTree;
-
     QHash<unsigned int,unsigned int> idToPid;
     QHash<unsigned int,QList<unsigned int> >idToChildren;
     QHash<unsigned int,QString> idToChildrenString;
 
 private:
 
+    //FIXME : REFACTOR TO AVOID DOUBLE TREE CONSTRUCTOR
+
+    /**
+     * @brief attachedTree a pointer to the attached tree. Constructed here with the tree identifier
+     */
+    PCx_Tree *attachedTree;
     PCx_Reporting(const PCx_Reporting &c);
     PCx_Reporting &operator=(const PCx_Reporting &);
 

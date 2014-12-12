@@ -121,20 +121,6 @@ public:
      */
     QStringList getListOfCompleteNodeNames() const;
 
-    /**
-     * @brief PCx_Tree::getListOfNodeNames gets the list of simple node names (without the name of the type)
-     *
-     * For example, if a tree contains three nodes "T1 N1", "T1 N2" and "T2 N3"
-     * getListOfNodeNames will return ("N1","N2","N3)
-     * @return The QStringList of simple node names
-     */
-    QStringList getListOfNodeNames() const;
-
-    /**
-     * @brief getNonLeavesId gets non-leaves
-     * @return the list of nodes identifier that are not leaves
-     */
-    QList<unsigned int> getNonLeavesId() const;
 
     /**
      * @brief getNodesWithSharedName gets nodes that have the same name but not the same type
@@ -149,11 +135,6 @@ public:
      */
     bool isLeaf(unsigned int nodeId) const;
 
-    /**
-     * @brief getTreeDepth computes the depth of the tree
-     * @return the maximum depth of the tree (0 for a tree with only a root)
-     */
-    unsigned int getTreeDepth() const;
 
     /**
      * @brief getParentId gets the PID of a node
@@ -184,12 +165,6 @@ public:
     QPair<QString, QString> getTypeNameAndNodeName(unsigned int node) const;
 
 
-    /**
-     * @brief getIdsOfNodesWithThisType gets all nodes that have a specific type
-     * @param typeId the type identifier
-     * @return a list of node identifier that have the specified type
-     */
-    QList<unsigned int> getIdsOfNodesWithThisType(unsigned int typeId) const;
 
     /**
      * @brief getNumberOfNodesWithThisType gets the number of nodes that have a specific type

@@ -138,22 +138,6 @@ QStringList PCx_Tree::getListOfCompleteNodeNames() const
 }
 
 
-QStringList PCx_Tree::getListOfNodeNames() const
-{
-    QStringList nodeNames;
-    QSqlQuery q;
-    if(!q.exec(QString("select distinct nom from arbre_%1 where id>1").arg(treeId)))
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    while(q.next())
-    {
-        nodeNames.append(q.value("nom").toString());
-    }
-    return nodeNames;
-}
-
 QList<unsigned int> PCx_Tree::getLeavesId() const
 {
     QList<unsigned int> leaves;
@@ -168,23 +152,6 @@ QList<unsigned int> PCx_Tree::getLeavesId() const
     }
     //qDebug()<<"Leaves for tree "<<treeId<< " = "<<leaves;
     return leaves;
-}
-
-
-QList<unsigned int> PCx_Tree::getNonLeavesId() const
-{
-    QList<unsigned int> nonleaves;
-    QList<unsigned int> nodes;
-    nodes=getNodesId();
-    foreach (unsigned int node, nodes)
-    {
-        if(!isLeaf(node))
-        {
-            nonleaves.append(node);
-        }
-    }
-    //qDebug()<<"Non-leaves for tree "<<treeId<< " = "<<nonleaves;
-    return nonleaves;
 }
 
 QSet<unsigned int> PCx_Tree::getNodesWithSharedName() const
@@ -236,51 +203,6 @@ bool PCx_Tree::isLeaf(unsigned int nodeId) const
     return false;
 }
 
-unsigned int PCx_Tree::getTreeDepth() const
-{
-    unsigned int maxDepth=0;
-    QList<unsigned int> nodes=getNodesId();
-    unsigned int depth,pid,curNode;
-    foreach(unsigned int node, nodes)
-    {
-        if(node==1)
-            continue;
-        depth=0;
-
-        curNode=node;
-        do
-        {
-            pid=getParentId(curNode);
-            depth++;
-            curNode=pid;
-        }while(pid!=1);
-
-        if(depth>maxDepth)
-            maxDepth=depth;
-    }
-    return maxDepth;
-}
-
-
-
-QList<unsigned int> PCx_Tree::getIdsOfNodesWithThisType(unsigned int typeId) const
-{
-    Q_ASSERT(typeId>0);
-    QSqlQuery q;
-    QList<unsigned int> nodes;
-    q.prepare(QString("select id from arbre_%1 where type=:typeId").arg(treeId));
-    q.bindValue(":typeId",typeId);
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    while(q.next())
-    {
-        nodes.append(q.value(0).toUInt());
-    }
-    return nodes;
-}
 
 unsigned int PCx_Tree::getNumberOfNodesWithThisType(unsigned int typeId) const
 {

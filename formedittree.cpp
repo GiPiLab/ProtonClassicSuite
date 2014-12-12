@@ -12,18 +12,26 @@
 #include <QMdiSubWindow>
 #include <QStandardPaths>
 #include <QFileDialog>
+#include <QSettings>
 
 FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEditTree)
 {
     ui->setupUi(this);
     model=nullptr;
-    updateListOfTree();
+    updateListOfTree();    
 }
 
 FormEditTree::~FormEditTree()
 {
     if(model!=nullptr)delete model;
     delete ui;
+}
+
+void FormEditTree::updateRandomButtonVisibility()
+{
+    QSettings settings;
+    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    ui->randomTreeButton->setEnabled(randomAllowed);
 }
 
 

@@ -490,6 +490,12 @@ QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const
         tree=reportingModel->getAttachedTree();
     }
 
+    if(tree==nullptr)
+    {
+        qWarning()<<"Invalid model used";
+        return QString();
+    }
+
     foreach(unsigned int node,nodes)
     {
         output.append(QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(tree->getNodeName(node).toHtmlEscaped()));
