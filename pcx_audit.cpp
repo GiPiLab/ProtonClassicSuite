@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <QMessageBox>
 #include <QSqlQuery>
+#include <ctime>
 #include <QSqlError>
 #include <QSet>
 #include <QDebug>

@@ -8,6 +8,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSet>
+#include <ctime>
 #include <QDebug>
 #include <QProgressDialog>
 #include <QCoreApplication>

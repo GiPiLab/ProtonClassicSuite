@@ -4,7 +4,6 @@
 #include "utils.h"
 #include <QMessageBox>
 #include <QtGlobal>
-#include <ctime>
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QFile>
