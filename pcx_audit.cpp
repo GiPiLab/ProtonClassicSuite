@@ -1006,11 +1006,14 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
         foreach(unsigned int year,years)
         {
             data.clear();
-            randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+
             data.insert(PCx_Audit::ORED::OUVERTS,randval);
-            randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+
             data.insert(PCx_Audit::ORED::REALISES,randval);
-            randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+
             data.insert(PCx_Audit::ORED::ENGAGES,randval);
 
             //the transaction will be rollback in setLeafValues=>die

@@ -894,7 +894,8 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
             {
                 if(i==PCx_Reporting::OREDPCR::DISPONIBLES)
                     continue;
-                randval=qrand()/1000*(double)(RAND_MAX/(double)MAX_NUM);
+                randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+
                 data.insert(PCx_Reporting::OREDPCR(i),randval);
             }
 
