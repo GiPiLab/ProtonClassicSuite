@@ -14,7 +14,7 @@
    <string>Instantané d'arbre</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -27,7 +27,7 @@
       <string>Exporter XLSX</string>
      </property>
      <property name="icon">
-      <iconset resource="Icons.qrc">
+      <iconset resource="Images.qrc">
        <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
      </property>
     </widget>
@@ -41,7 +41,7 @@
       <string>Exporter PDF</string>
      </property>
      <property name="icon">
-      <iconset resource="Icons.qrc">
+      <iconset resource="Images.qrc">
        <normaloff>:/icons/icons/pdf_exports.png</normaloff>:/icons/icons/pdf_exports.png</iconset>
      </property>
     </widget>
@@ -99,7 +99,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

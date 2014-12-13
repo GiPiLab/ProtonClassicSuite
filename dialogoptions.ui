@@ -29,7 +29,7 @@
    <string>Options</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/setting_tools.png</normaloff>:/icons/icons/setting_tools.png</iconset>
   </property>
   <property name="modal">
@@ -500,7 +500,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

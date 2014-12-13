@@ -14,7 +14,7 @@
    <string>Explorateur d'audit</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/exploreAudit.png</normaloff>:/icons/icons/exploreAudit.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -405,7 +405,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

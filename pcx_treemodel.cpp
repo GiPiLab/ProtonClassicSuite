@@ -114,7 +114,7 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
     Q_ASSERT(nodeIndex.isValid());
     unsigned int nodeId=nodeIndex.data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
-    qDebug()<<"Node to be updated = "<<nodeId;
+    //qDebug()<<"Node to be updated = "<<nodeId;
 
     bool res=PCx_Tree::updateNode(nodeId,newName,newType);
 

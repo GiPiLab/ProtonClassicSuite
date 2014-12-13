@@ -337,7 +337,7 @@ void FormQueries::on_pushButtonDelete_clicked()
     QModelIndexList selection=ui->listView->selectionModel()->selectedIndexes();
     if(selection.isEmpty())return;
 
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> les requêtes sélectionnées ? Cette action ne peut être annulée"))==QMessageBox::No)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> les requêtes sélectionnées ? Cette action ne peut être annulée"))==QMessageBox::No)
     {
         return;
     }

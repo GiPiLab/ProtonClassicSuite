@@ -19,10 +19,12 @@
         <file>icons/reportingForecast.png</file>
         <file>icons/reportingManage.png</file>
         <file>icons/logo64_64.png</file>
-        <file>icons/logo.png</file>
         <file>icons/exit.png</file>
         <file>icons/question.png</file>
         <file>icons/help.png</file>
         <file>icons/logo64_64.ico</file>
+    </qresource>
+    <qresource prefix="/Pictures">
+        <file>icons/logo.png</file>
     </qresource>
 </RCC>

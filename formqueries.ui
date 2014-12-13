@@ -14,7 +14,7 @@
    <string>Requêtes personnalisées sur l'audit</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/queries.png</normaloff>:/icons/icons/queries.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -445,7 +445,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

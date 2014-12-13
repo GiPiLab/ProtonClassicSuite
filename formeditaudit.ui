@@ -20,7 +20,7 @@
    <string>Saisie des données</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/table_edit.png</normaloff>:/icons/icons/table_edit.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -223,7 +223,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Statistiques</string>
+          <string>Statistiques de saisie</string>
          </property>
         </widget>
        </item>
@@ -260,7 +260,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

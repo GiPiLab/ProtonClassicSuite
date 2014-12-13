@@ -81,6 +81,24 @@ unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QStr
     return q.lastInsertId().toUInt();
 }
 
+unsigned int PCx_Tree::getTypeId(unsigned int nodeId) const
+{
+    QSqlQuery q;
+    q.prepare(QString("select type from arbre_%1 where id=:idnode").arg(treeId));
+    q.bindValue(":idnode",nodeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+    {
+        qWarning()<<"Missing node";
+        return 0;
+    }
+    return q.value(0).toUInt();
+}
+
 
 bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned int newType)
 {

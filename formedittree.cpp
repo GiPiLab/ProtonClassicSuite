@@ -97,7 +97,7 @@ void FormEditTree::on_deleteTreeButton_clicked()
 {
     if(model!=nullptr)
     {
-        if(QMessageBox::question(this,tr("Attention"),tr("Vous allez supprimer cet arbre. Cette action ne peut pas être annulée. En êtes-vous sûr ?"))==QMessageBox::No)
+        if(question(tr("Vous allez supprimer cet arbre. Cette action ne peut pas être annulée. En êtes-vous sûr ?"))==QMessageBox::No)
         {
             return;
         }
@@ -232,6 +232,8 @@ void FormEditTree::on_modifyNodeButton_clicked()
             return;
         }
         unsigned int selectedId=selection[0].data(PCx_TreeModel::NodeIdUserRole).toUInt();
+        unsigned int oldTypeId=model->getTypeId(selectedId);
+        QPair<QString,QString> typeAndNodeName=model->getTypeNameAndNodeName(selectedId);
         //qDebug()<<"Selected Node ID : "<<selectedId;
 
         //No modification for the root
@@ -255,13 +257,14 @@ void FormEditTree::on_modifyNodeButton_clicked()
 
         do
         {
-            text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok).simplified();
+            text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,typeAndNodeName.second,&ok).simplified();
 
         }while(ok && text.isEmpty());
 
         if(ok)
         {
-            model->updateNode(selection[0],text,selectedTypeId);
+            if(selectedTypeId!=oldTypeId || text!=typeAndNodeName.second)
+                model->updateNode(selection[0],text,selectedTypeId);
         }
     }
     else
@@ -296,7 +299,7 @@ void FormEditTree::on_deleteNodeButton_clicked()
             return;
         }
 
-        if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment supprimer le noeud <b>%1</b> ainsi que tous ses descendants ?").arg(selection[0].data().toString()))==QMessageBox::No)
+        if(question(tr("Voulez-vous vraiment supprimer le noeud <b>%1</b> ainsi que tous ses descendants ?").arg(selection[0].data().toString()))==QMessageBox::No)
         {
             return;
         }
@@ -308,7 +311,7 @@ void FormEditTree::on_finishTreeButton_clicked()
 {
     if(model!=nullptr)
     {
-        if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment terminer cet arbre ? Une fois terminé, vous ne pourrez plus le modifier."))==QMessageBox::No)
+        if(question(tr("Voulez-vous vraiment terminer cet arbre ? Une fois terminé, vous ne pourrez plus le modifier."))==QMessageBox::No)
         {
             return;
         }
@@ -361,13 +364,6 @@ void FormEditTree::on_comboBox_activated(int index)
     setReadOnly(model->isFinished());
 }
 
-void FormEditTree::on_treeView_activated(const QModelIndex &index)
-{
-    Q_UNUSED(index);
-    //Only edit unfinished trees
-    if(!model->isFinished())
-        on_modifyNodeButton_clicked();
-}
 
 void FormEditTree::on_duplicateTreeButton_clicked()
 {

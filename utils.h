@@ -71,6 +71,10 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
  *
  */
 
+
+int question(const QString &text, QWidget *parent=0);
+
+
 namespace MODES
 {
 /**

@@ -139,7 +139,7 @@ void FormManageReportings::on_pushButtonDeleteReporting_clicked()
     {
         return;
     }
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> le reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()))==QMessageBox::No)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> le reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()))==QMessageBox::No)
     {
         return;
     }
@@ -411,7 +411,7 @@ void FormManageReportings::on_pushButtonExportRI_clicked()
 
 void FormManageReportings::on_pushButtonClearDF_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
     {
         selectedReporting->clearAllData(MODES::DF);
         updateReportingInfos();
@@ -420,7 +420,7 @@ void FormManageReportings::on_pushButtonClearDF_clicked()
 
 void FormManageReportings::on_pushButtonClearRF_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
     {
         selectedReporting->clearAllData(MODES::RF);
         updateReportingInfos();
@@ -429,7 +429,7 @@ void FormManageReportings::on_pushButtonClearRF_clicked()
 
 void FormManageReportings::on_pushButtonClearDI_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
     {
         selectedReporting->clearAllData(MODES::DI);
         updateReportingInfos();
@@ -438,7 +438,7 @@ void FormManageReportings::on_pushButtonClearDI_clicked()
 
 void FormManageReportings::on_pushButtonClearRI_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
     {
         selectedReporting->clearAllData(MODES::RI);
         updateReportingInfos();
@@ -447,7 +447,7 @@ void FormManageReportings::on_pushButtonClearRI_clicked()
 
 void FormManageReportings::on_pushButtonRandomDF_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::DF);
         updateReportingInfos();
@@ -456,7 +456,7 @@ void FormManageReportings::on_pushButtonRandomDF_clicked()
 
 void FormManageReportings::on_pushButtonRandomRF_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::RF);
         updateReportingInfos();
@@ -465,7 +465,7 @@ void FormManageReportings::on_pushButtonRandomRF_clicked()
 
 void FormManageReportings::on_pushButtonRandomDI_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::DI);
         updateReportingInfos();
@@ -474,7 +474,7 @@ void FormManageReportings::on_pushButtonRandomDI_clicked()
 
 void FormManageReportings::on_pushButtonRandomRI_clicked()
 {
-    if(QMessageBox::question(this,tr("Attention"),tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::RI);
         updateReportingInfos();

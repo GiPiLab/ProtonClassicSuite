@@ -54,7 +54,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
     for(unsigned int i=year1;i<=year2;i++)
         years.append(i);
 
-    if(QMessageBox::question(this,tr("Attention"),tr("Voulez-vous vraiment dupliquer cet audit ? L'opération peut nécessiter du temps et ne peut être interrompue."))==QMessageBox::No)
+    if(question(tr("Voulez-vous vraiment dupliquer cet audit ? L'opération peut nécessiter du temps et ne peut être interrompue."))==QMessageBox::No)
     {
         return;
     }

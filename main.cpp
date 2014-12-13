@@ -42,8 +42,6 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QTranslator qtTranslator;
-
     //Avoid multiple application instances
     QSharedMemory sharedMemory;
     sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
@@ -53,14 +51,11 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-
-
-
-    qtTranslator.load(
-                "qt_" + QLocale::system().name(),
-                QLibraryInfo::location(QLibraryInfo::TranslationsPath)
-                );
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     a.installTranslator(&qtTranslator);
+
 
     //qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{message}");
 

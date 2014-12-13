@@ -12,6 +12,7 @@
 #include <QSettings>
 #include <cstdio>
 #include <QDebug>
+#include <QMessageBox>
 
 #include <graphviz/gvc.h>
 
@@ -202,6 +203,22 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     gvFreeContext(gvc);
     return true;
 }
+
+
+int question(const QString &text,QWidget *parent)
+{
+    QMessageBox messageBox;
+    messageBox.setParent(parent);
+    messageBox.setWindowIcon(QIcon(":/icons/icons/logo64_64.png"));
+    messageBox.setText(text);
+    messageBox.setIcon(QMessageBox::Question);
+    messageBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+    messageBox.setButtonText(QMessageBox::Yes,"&Oui");
+    messageBox.setButtonText(QMessageBox::No,"&Non");
+    return messageBox.exec();
+}
+
+
 
 
 namespace MODES

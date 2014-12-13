@@ -78,6 +78,12 @@ public:
      */
     unsigned int addNode(unsigned int pid, unsigned int type, const QString &name);
 
+    /**
+     * @brief getTypeId gets the type identifier of the node
+     * @param nodeId the node identifier
+     * @return the type identifier
+     */
+    unsigned int getTypeId(unsigned int nodeId) const;
 
     /**
      * @brief updateNode changes the name and the type of a node

@@ -14,7 +14,7 @@
    <string>Gestion des arbres</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/tree.png</normaloff>:/icons/icons/tree.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -94,7 +94,7 @@
          <string>&amp;Importer arbre</string>
         </property>
         <property name="icon">
-         <iconset resource="Icons.qrc">
+         <iconset resource="Images.qrc">
           <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
         </property>
        </widget>
@@ -214,7 +214,7 @@
   <tabstop>listTypesView</tabstop>
  </tabstops>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

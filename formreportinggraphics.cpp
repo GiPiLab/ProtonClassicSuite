@@ -277,7 +277,7 @@ void FormReportingGraphics::on_pushButtonExportPlot_clicked()
     }
     file.close();
 
-    if(ui->plot->savePng(fileName,0,0,4.0)==true)
+    if(ui->plot->savePng(fileName,0,0,3.0)==true)
         QMessageBox::information(this,tr("Information"),tr("Image enregistrée"));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Image non enregistrée !"));

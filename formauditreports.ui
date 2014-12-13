@@ -14,7 +14,7 @@
    <string>Générateur de rapports d'audit</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/report.png</normaloff>:/icons/icons/report.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
@@ -277,7 +277,7 @@
       <item>
        <widget class="QRadioButton" name="radioButtonDFS">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, B, A1, A2, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, A1, A2, B, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Profondeur d'abord</string>
@@ -290,7 +290,7 @@
       <item>
        <widget class="QRadioButton" name="radioButtonBFS">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, B, A1, A2, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, B, A1, A2, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Largeur d'abord</string>
@@ -322,7 +322,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

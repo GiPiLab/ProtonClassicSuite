@@ -183,7 +183,7 @@ void FormEditAudit::on_randomDataButton_clicked()
         mode=MODES::DFRFDIRI::RI;
 
 
-    if(QMessageBox::question(this,tr("Attention"),tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
+    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
     {
         return;
     }
@@ -213,7 +213,7 @@ void FormEditAudit::on_clearDataButton_clicked()
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
         mode=MODES::DFRFDIRI::RI;
 
-    if(QMessageBox::question(this,tr("Attention"),tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
+    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
     {
         return;
     }

@@ -14,7 +14,7 @@
    <string>Analyse graphique du reporting</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/reportingGraphics.png</normaloff>:/icons/icons/reportingGraphics.png</iconset>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -231,7 +231,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

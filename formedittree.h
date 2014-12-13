@@ -48,8 +48,6 @@ private slots:
 
     void on_comboBox_activated(int index);
 
-    void on_treeView_activated(const QModelIndex &index);
-
     void on_duplicateTreeButton_clicked();
 
     void on_randomTreeButton_clicked();

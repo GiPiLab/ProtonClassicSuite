@@ -17,7 +17,7 @@
    <string>Gestion des audits</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons.qrc">
+   <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/manage_sources.png</normaloff>:/icons/icons/manage_sources.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -194,6 +194,9 @@
         <property name="maximum">
          <number>2050</number>
         </property>
+        <property name="value">
+         <number>2011</number>
+        </property>
        </widget>
       </item>
       <item row="3" column="0">
@@ -265,6 +268,9 @@
         <property name="maximum">
          <number>2051</number>
         </property>
+        <property name="value">
+         <number>2014</number>
+        </property>
        </widget>
       </item>
      </layout>
@@ -279,7 +285,7 @@
   <tabstop>cloneAuditButton</tabstop>
  </tabstops>
  <resources>
-  <include location="Icons.qrc"/>
+  <include location="Images.qrc"/>
  </resources>
  <connections/>
 </ui>

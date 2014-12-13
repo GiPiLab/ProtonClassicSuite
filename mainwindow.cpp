@@ -129,7 +129,7 @@ void MainWindow::on_actionManageTree_triggered()
 
 void MainWindow::closeEvent(QCloseEvent * event)
 {
-    if(QMessageBox::question(this,"Quitter ?",tr("Voulez-vous vraiment quitter ?"))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment quitter ?"))==QMessageBox::Yes)
     {
         event->accept();
     }

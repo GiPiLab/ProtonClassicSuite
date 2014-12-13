@@ -134,5 +134,5 @@ win32:INCLUDEPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
 win32:DEPENDPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
 
 RESOURCES += \
-    Icons.qrc
+    Images.qrc
 
