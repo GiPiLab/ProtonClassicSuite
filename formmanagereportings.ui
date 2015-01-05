@@ -36,12 +36,20 @@
         <property name="text">
          <string>Exporter DI</string>
         </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
        </widget>
       </item>
       <item row="8" column="1">
        <widget class="QPushButton" name="pushButtonLoadRF">
         <property name="text">
          <string>Charger RF</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
         </property>
        </widget>
       </item>
@@ -57,19 +65,9 @@
         <property name="text">
          <string>Charger DF</string>
         </property>
-       </widget>
-      </item>
-      <item row="9" column="3">
-       <widget class="QPushButton" name="pushButtonExportRI">
-        <property name="text">
-         <string>Exporter RI</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0" colspan="4">
-       <widget class="QPushButton" name="pushButtonExportLeaves">
-        <property name="text">
-         <string>Générer le fichier squelette</string>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
         </property>
        </widget>
       </item>
@@ -80,13 +78,25 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="3">
-       <widget class="QLabel" name="labelTreeName">
+      <item row="6" column="0" colspan="4">
+       <widget class="QPushButton" name="pushButtonExportLeaves">
         <property name="text">
-         <string/>
+         <string>Générer le fichier squelette</string>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="3">
+       <widget class="QPushButton" name="pushButtonExportRI">
+        <property name="text">
+         <string>Exporter RI</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
         </property>
        </widget>
       </item>
@@ -97,6 +107,16 @@
        <widget class="QPushButton" name="pushButtonClearRF">
         <property name="text">
          <string>Vider RF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="3">
+       <widget class="QLabel" name="labelTreeName">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -114,17 +134,17 @@
         </property>
        </widget>
       </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Dernière situation RI :</string>
+        </property>
+       </widget>
+      </item>
       <item row="11" column="2">
        <widget class="QPushButton" name="pushButtonRandomDI">
         <property name="text">
          <string>Aléatoire DI</string>
-        </property>
-       </widget>
-      </item>
-      <item row="12" column="2">
-       <widget class="QPushButton" name="pushButtonClearDI">
-        <property name="text">
-         <string>Vider DI</string>
         </property>
        </widget>
       </item>
@@ -135,10 +155,21 @@
         </property>
        </widget>
       </item>
+      <item row="12" column="2">
+       <widget class="QPushButton" name="pushButtonClearDI">
+        <property name="text">
+         <string>Vider DI</string>
+        </property>
+       </widget>
+      </item>
       <item row="8" column="3">
        <widget class="QPushButton" name="pushButtonLoadRI">
         <property name="text">
          <string>Charger RI</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
         </property>
        </widget>
       </item>
@@ -147,6 +178,10 @@
         <property name="text">
          <string>Exporter DF</string>
         </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
        </widget>
       </item>
       <item row="8" column="2">
@@ -154,12 +189,20 @@
         <property name="text">
          <string>Charger DI</string>
         </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
+        </property>
        </widget>
       </item>
       <item row="9" column="1">
        <widget class="QPushButton" name="pushButtonExportRF">
         <property name="text">
          <string>Exporter RF</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
         </property>
        </widget>
       </item>
@@ -197,6 +240,13 @@
         </property>
        </widget>
       </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Dernière situation RF :</string>
+        </property>
+       </widget>
+      </item>
       <item row="4" column="2" colspan="2">
        <widget class="QLabel" name="labelLastDI">
         <property name="text">
@@ -204,6 +254,13 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Dernière situation DI :</string>
         </property>
        </widget>
       </item>
@@ -217,26 +274,15 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="label_3">
+      <item row="14" column="0">
+       <widget class="QPushButton" name="pushButtonFillAudit">
         <property name="text">
-         <string>Dernière situation RF :</string>
+         <string>Vers l'audit :</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Dernière situation DI :</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Dernière situation RI :</string>
-        </property>
-       </widget>
+      <item row="14" column="1" colspan="3">
+       <widget class="QComboBox" name="comboListOfAudits"/>
       </item>
      </layout>
     </widget>
@@ -246,21 +292,28 @@
      <property name="title">
       <string>Nouveau reporting</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="1" column="0">
        <widget class="QComboBox" name="comboListOfTrees"/>
       </item>
-      <item>
+      <item row="1" column="1">
        <widget class="QPushButton" name="pushButtonDisplayTree">
         <property name="text">
-         <string>Afficher l'arbre</string>
+         <string>Afficher</string>
         </property>
        </widget>
       </item>
-      <item>
+      <item row="3" column="0" colspan="2">
        <widget class="QPushButton" name="pushButtonAddReporting">
         <property name="text">
-         <string>Nouveau reporting</string>
+         <string>Créer un nouveau reporting</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="2">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Arbre associé :</string>
         </property>
        </widget>
       </item>

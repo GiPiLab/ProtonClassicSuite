@@ -202,6 +202,10 @@
          <property name="text">
           <string>Importer données</string>
          </property>
+         <property name="icon">
+          <iconset resource="Images.qrc">
+           <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
+         </property>
         </widget>
        </item>
        <item row="2" column="1">
@@ -212,18 +216,9 @@
          <property name="text">
           <string>Exporter données</string>
          </property>
-        </widget>
-       </item>
-       <item row="2" column="2" rowspan="2">
-        <widget class="QPushButton" name="statsButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Statistiques de saisie</string>
+         <property name="icon">
+          <iconset resource="Images.qrc">
+           <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
          </property>
         </widget>
        </item>
@@ -250,6 +245,19 @@
         <widget class="QLabel" name="label">
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2" rowspan="2">
+        <widget class="QPushButton" name="statsButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Statistiques de saisie</string>
          </property>
         </widget>
        </item>

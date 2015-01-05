@@ -283,29 +283,28 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
         modes.append(MODES::modeToTableString(MODES::DFRFDIRI::RI));
 
 
-    QProgressDialog progress(QObject::tr("Données en cours de recopie..."),QObject::tr("Annuler"),0,modes.size()*4+2);
-    progress.setMinimumDuration(600);
-    progress.setCancelButton(0);
+    QProgressDialog progress(QObject::tr("Données en cours de recopie..."),0,0,modes.size()*4+1);
+    progress.setMinimumDuration(0);
 
     progress.setWindowModality(Qt::ApplicationModal);
+    progress.show();
 
-    int progval=0;
-
+    int progval=1;
     progress.setValue(0);
+
 
     unsigned int newAuditId=PCx_Audit::addNewAudit(newName,years,attachedTreeId);
 
     Q_ASSERT(newAuditId>0);
 
     qSort(years);
+    progress.setValue(1);
     unsigned int year1=years.first();
     unsigned int year2=years.last();
 
     QSqlDatabase::database().transaction();
 
     QSqlQuery q;
-
-    progress.setValue(++progval);
 
 
     foreach(QString lemode,modes)
@@ -330,7 +329,6 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
             qCritical()<<q.lastError();
             die();
         }
-
         progress.setValue(++progval);
 
         q.prepare(QString("update audit_%3_%1 set realises="
@@ -1432,6 +1430,51 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode m
 
     QSqlQuery query;
     if(!query.exec("select * from index_audits order by datetime(le_timestamp)"))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    while(query.next())
+    {
+        QString item;
+        dt=QDateTime::fromString(query.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
+        dt.setTimeSpec(Qt::UTC);
+        QDateTime dtLocal=dt.toLocalTime();
+        QPair<unsigned int, QString> p;
+        if(query.value("termine").toBool()==true)
+        {
+            //Finished audit
+            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            if(mode!=UnFinishedAuditsOnly)
+            {
+                p.first=query.value("id").toUInt();
+                p.second=item;
+                listOfAudits.append(p);
+            }
+        }
+        else if(mode!=FinishedAuditsOnly)
+        {
+            //Unfinished audit
+            item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            p.first=query.value("id").toUInt();
+            p.second=item;
+            listOfAudits.append(p);
+        }
+    }
+    return listOfAudits;
+}
+
+QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisTree(unsigned int treeId, PCx_Audit::ListAuditsMode mode)
+{
+    QList<QPair<unsigned int,QString> > listOfAudits;
+    QDateTime dt;
+    Q_ASSERT(treeId>0);
+
+    QSqlQuery query;
+    query.prepare("select * from index_audits where id_arbre=:idarbre order by datetime(le_timestamp)");
+    query.bindValue(":idarbre",treeId);
+    if(!query.exec())
     {
         qCritical()<<query.lastError();
         die();

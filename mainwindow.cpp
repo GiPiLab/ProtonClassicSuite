@@ -220,6 +220,11 @@ void MainWindow::on_actionManageAudits_triggered()
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formReports,&FormAuditReports::onListOfAuditsChanged);
         }
 
+        if(formManageReportings!=nullptr)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManageReportings,&FormManageReportings::onListOfAuditsChanged);
+        }
+
         foreach(FormAuditExplore *dlg,listOfFormAuditExplore)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditExplore::onListOfAuditsChanged);
@@ -246,6 +251,10 @@ void MainWindow::on_actionEditAudit_triggered()
         if(formManageAudits!=nullptr)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
+        }
+        if(formManageReportings!=nullptr)
+        {
+            connect(formManageReportings,&FormManageReportings::auditDataUpdated,formEditAudit,&FormEditAudit::onAuditDataUpdated);
         }
     }
 }
@@ -428,6 +437,14 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
         {
             connect(formEditTreeWin,&FormEditTree::listOfTreeChanged,formManageReportings,&FormManageReportings::onLOTchanged);
         }
+        if(formManageAudits!=nullptr)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManageReportings,&FormManageReportings::onListOfAuditsChanged);
+        }
+        if(formEditAudit!=nullptr)
+        {
+            connect(formManageReportings,&FormManageReportings::auditDataUpdated,formEditAudit,&FormEditAudit::onAuditDataUpdated);
+        }
 
         if(formReportingReports!=nullptr)
         {
@@ -437,25 +454,25 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
         foreach(FormReportingOverview *dlg,listOfFormReportingOverview)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingOverview::onListOfReportingsChanged);
-            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingOverview::onReportingDataChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingOverview::onReportingDataChanged);
         }
 
         foreach(FormReportingSupervision *dlg,listOfFormReportingSupervision)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingSupervision::onListOfReportingsChanged);
-            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingSupervision::onReportingDataChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingSupervision::onReportingDataChanged);
 
         }
         foreach(FormReportingGraphics *dlg,listOfFormReportingGraphics)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingGraphics::onListOfReportingsChanged);
-            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingGraphics::onReportingDataChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingGraphics::onReportingDataChanged);
 
         }
         foreach(FormReportingExplore *dlg,listOfFormReportingExplore)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
-            connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingExplore::onReportingDataChanged);
+            connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingExplore::onReportingDataChanged);
         }
         //FIXME : connect !
     }
@@ -476,7 +493,7 @@ void MainWindow::on_actionReportingOverview_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingOverview::onListOfReportingsChanged);
-        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingOverview::onReportingDataChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingOverview::onReportingDataChanged);
     }
 
 }
@@ -518,7 +535,7 @@ void MainWindow::on_actionSurveillance_des_reportings_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingSupervision::onListOfReportingsChanged);
-        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingSupervision::onReportingDataChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingSupervision::onReportingDataChanged);
     }
 }
 
@@ -537,7 +554,7 @@ void MainWindow::on_actionGraphiques_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingGraphics::onListOfReportingsChanged);
-        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingGraphics::onReportingDataChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingGraphics::onReportingDataChanged);
     }
 }
 
@@ -556,7 +573,7 @@ void MainWindow::on_actionExploreReportings_triggered()
     if(formManageReportings!=nullptr)
     {
         connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
-        connect(formManageReportings,&FormManageReportings::reportingDataChanged,dlg,&FormReportingExplore::onReportingDataChanged);
+        connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingExplore::onReportingDataChanged);
     }
 
 }

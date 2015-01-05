@@ -19,11 +19,13 @@ public:
 public slots:
     void onLOTchanged();
     void updateRandomVisibility();
+    void onListOfAuditsChanged();
 
 
 signals:
     void listOfReportingsChanged();
-    void reportingDataChanged(unsigned int reportingId);
+    void reportingDataUpdated(unsigned int reportingId);
+    void auditDataUpdated(unsigned int auditId);
 
 private slots:
     void on_pushButtonDisplayTree_clicked();
@@ -68,10 +70,13 @@ private slots:
 
     void on_pushButtonRandomRI_clicked();
 
+    void on_pushButtonFillAudit_clicked();
+
 private:
     Ui::FormManageReportings *ui;
     void updateListOfTrees();
     void updateListOfReportings();
+    void updateListOfPotentialAudits();
     PCx_Reporting *selectedReporting;
     void updateReportingInfos();
 };

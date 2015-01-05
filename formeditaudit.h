@@ -20,7 +20,7 @@ public:
 public slots:
     void onListOfAuditsChanged();
     void updateRandomButtonVisibility();
-
+    void onAuditDataUpdated(unsigned int auditId);
 
 private slots:
     void on_comboListAudits_activated(int index);
@@ -45,6 +45,7 @@ private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();
     PCx_EditableAuditModel *auditModel;
+    unsigned int selectedNode;
     QSize sizeHint()const;
     //Perhaps only would be sufficient ?
     auditDataDelegate *delegateDF,*delegateRF,*delegateDI,*delegateRI;

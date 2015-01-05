@@ -205,6 +205,10 @@
      <property name="text">
       <string>Générer le rapport</string>
      </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
+     </property>
     </widget>
    </item>
    <item row="1" column="1">

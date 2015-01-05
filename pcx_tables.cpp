@@ -1120,7 +1120,7 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
         return QString();
     }
 
-    QDate lastDate=reportingModel->getLastReportingDate(node,mode);
+    QDate lastDate=reportingModel->getLastReportingDate(mode,node);
     if(lastDate.isNull()||!lastDate.isValid())
         return QString();
 

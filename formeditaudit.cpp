@@ -11,6 +11,7 @@
 #include <QStandardPaths>
 #include <QElapsedTimer>
 #include <QProgressDialog>
+#include <QTextDocument>
 #include <QSettings>
 #include "formauditinfos.h"
 
@@ -19,6 +20,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) :
     ui(new Ui::FormEditAudit)
 {
     ui->setupUi(this);
+    selectedNode=0;
     ui->splitter->setStretchFactor(1,1);
     ui->tableViewDF->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tableViewRF->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -70,7 +72,8 @@ void FormEditAudit::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::UnFinishedAuditsOnly);
+    //QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::UnFinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::AllAudits);
     bool nonEmpty=!listOfAudits.isEmpty();
     ui->splitter->setEnabled(nonEmpty);
 
@@ -139,11 +142,18 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
     on_treeView_clicked(rootIndex);
+
+
+    bool notFinished=!auditModel->isFinished();
+    ui->pushButtonImportLeaves->setEnabled(notFinished);
+    ui->clearDataButton->setEnabled(notFinished);
+    ui->randomDataButton->setEnabled(notFinished);
+
 }
 
 void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
 {
-    unsigned int selectedNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    selectedNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
     Q_ASSERT(selectedNode>0);
 
     auditModel->getTableModelDF()->setFilter(QString("id_node=%1").arg(selectedNode));
@@ -151,13 +161,17 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
     auditModel->getTableModelDI()->setFilter(QString("id_node=%1").arg(selectedNode));
     auditModel->getTableModelRI()->setFilter(QString("id_node=%1").arg(selectedNode));
     bool isLeaf=auditModel->getAttachedTree()->isLeaf(selectedNode);
+    bool isFinished=auditModel->isFinished();
 
     if(isLeaf)
     {
-        ui->tableViewDF->setEditTriggers(QAbstractItemView::AllEditTriggers);
-        ui->tableViewRF->setEditTriggers(QAbstractItemView::AllEditTriggers);
-        ui->tableViewDI->setEditTriggers(QAbstractItemView::AllEditTriggers);
-        ui->tableViewRI->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        if(!isFinished)
+        {
+            ui->tableViewDF->setEditTriggers(QAbstractItemView::AllEditTriggers);
+            ui->tableViewRF->setEditTriggers(QAbstractItemView::AllEditTriggers);
+            ui->tableViewDI->setEditTriggers(QAbstractItemView::AllEditTriggers);
+            ui->tableViewRI->setEditTriggers(QAbstractItemView::AllEditTriggers);
+        }
     }
     else
     {
@@ -310,5 +324,21 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
     if(res==true)
     {
         QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(mode)));
+    }
+}
+
+void FormEditAudit::onAuditDataUpdated(unsigned int auditId)
+{
+    if(auditModel->getAuditId()==auditId)
+    {
+        if(ui->treeView->currentIndex().isValid())
+        {
+            on_treeView_clicked(ui->treeView->currentIndex());
+        }
+        else
+        {
+            QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);
+            on_treeView_clicked(rootIndex);
+        }
     }
 }

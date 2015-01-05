@@ -172,12 +172,20 @@
        <property name="text">
         <string>Enregistrer HTML</string>
        </property>
+       <property name="icon">
+        <iconset resource="Images.qrc">
+         <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
+       </property>
       </widget>
      </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="pushButtonSaveXLSX">
        <property name="text">
         <string>Enregistrer XLSX</string>
+       </property>
+       <property name="icon">
+        <iconset resource="Images.qrc">
+         <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
        </property>
       </widget>
      </item>

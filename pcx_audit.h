@@ -92,8 +92,8 @@ public:
     QString isFinishedString() const{return finishedString;}
 
     /**
-     * @brief getYears gets the years that are covered by this audit
-     * @return a list of years
+     * @brief getYears gets the years that are covered by this audit, sorted
+     * @return a sorted list of years
      */
     QList<unsigned int> getYears() const{return years;}
 
@@ -308,6 +308,14 @@ public:
      * @return a list of auditID, audit description
      */
     static QList<QPair<unsigned int, QString> > getListOfAudits(ListAuditsMode mode);
+
+    /**
+     * @brief getListOfAuditsAttachedWithThisTree gets a list of audits to fill a QComboBox
+     * @param treeId the tree identifier to filter audits
+     * @param mode filter the audits not finished, finished or both
+     * @return a list of auditID, audit description
+     */
+    static QList<QPair<unsigned int, QString> > getListOfAuditsAttachedWithThisTree(unsigned int treeId,ListAuditsMode mode=ListAuditsMode::UnFinishedAuditsOnly);
 
 protected:
 

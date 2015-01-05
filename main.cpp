@@ -9,6 +9,7 @@
 #include <QLocale>
 #include <time.h>
 #include <iostream>
+#include <QSqlQuery>
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
@@ -84,6 +85,9 @@ int main(int argc, char *argv[])
   //  splash.finish(&w);
 
     retval=a.exec();
+    QSqlQuery q;
+    q.exec("vacuum");
+
     QSqlDatabase::database().close();
     sharedMemory.detach();
     return retval;

@@ -23,6 +23,7 @@
         <file>icons/question.png</file>
         <file>icons/help.png</file>
         <file>icons/logo64_64.ico</file>
+        <file>icons/html.png</file>
     </qresource>
     <qresource prefix="/Pictures">
         <file>icons/logo.png</file>

@@ -3,6 +3,7 @@
 
 
 #include "pcx_tree.h"
+#include "pcx_audit.h"
 #include "utils.h"
 #include <QDateTime>
 #include <QComboBox>
@@ -256,7 +257,25 @@ public:
 
     bool exportLeavesSkeleton(const QString &fileName) const;
 
-    QDate getLastReportingDate(unsigned int node, MODES::DFRFDIRI mode) const;
+    /**
+     * @brief getLastReportingDate gets the last reporting date for the specified mode and node
+     * @param mode the mode to check
+     * @param node the node to check, by default the root
+     * @return the last date
+     */
+    QDate getLastReportingDate(MODES::DFRFDIRI mode, unsigned int node=1) const;
+
+    /**
+     * @brief addLastReportingDateToExistingAudit imports the last reporting date in an audit
+     * The last reporting date will be added in the audit as values for the year. For example
+     * if the last reporting date is 30/10/2012 a new year will be added to the audit for 2012.
+     * - The audit must be on the same tree than the reporting
+     * @param audit the audit to extend
+     * @return true on success, false on error with an error message box
+     */
+    bool addLastReportingDateToExistingAudit(PCx_Audit *audit) const;
+
+
 
 protected:
 

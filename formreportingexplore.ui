@@ -139,7 +139,11 @@
        <item>
         <widget class="QPushButton" name="pushButtonExport">
          <property name="text">
-          <string>Exporter en HTML</string>
+          <string>Enregistrer en HTML</string>
+         </property>
+         <property name="icon">
+          <iconset resource="Images.qrc">
+           <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
          </property>
         </widget>
        </item>

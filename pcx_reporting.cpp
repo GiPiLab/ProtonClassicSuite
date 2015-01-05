@@ -690,7 +690,7 @@ bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
     return xlsx.saveAs(fileName);
 }
 
-QDate PCx_Reporting::getLastReportingDate(unsigned int node, MODES::DFRFDIRI mode) const
+QDate PCx_Reporting::getLastReportingDate(MODES::DFRFDIRI mode,unsigned int node) const
 {
     QSqlQuery q;
     q.prepare(QString("select date from reporting_%1_%2 where id_node=:idnode order by date desc limit 1").arg(MODES::modeToTableString(mode)).arg(reportingId));
@@ -704,6 +704,236 @@ QDate PCx_Reporting::getLastReportingDate(unsigned int node, MODES::DFRFDIRI mod
         return QDate();
 
     return QDateTime::fromTime_t(q.value(0).toUInt()).date();
+}
+
+bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
+{
+    if(audit==nullptr)
+    {
+        qDebug()<<"nullptr audit";
+        return false;
+    }
+    if(audit->getAttachedTreeId()!=attachedTreeId)
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("L'audit et le reporting ne portent pas sur le même arbre !"));
+        return false;
+    }
+    if(audit->isFinished())
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("L'audit est terminé ! Vous pouvez le rendre modifiable en le dé-terminant ou en le dupliquant."));
+        return false;
+    }
+
+    QDate dateDF=getLastReportingDate(MODES::DFRFDIRI::DF);
+    QDate dateRF=getLastReportingDate(MODES::DFRFDIRI::RF);
+    QDate dateDI=getLastReportingDate(MODES::DFRFDIRI::DI);
+    QDate dateRI=getLastReportingDate(MODES::DFRFDIRI::RI);
+
+    int yearDF=dateDF.year();
+    int yearRF=dateRF.year();
+    int yearDI=dateDI.year();
+    int yearRI=dateRI.year();
+
+    int auditLastYear=audit->getYears().last();
+    int auditFirstYear=audit->getYears().first();
+    if((yearDF>auditLastYear || yearDF<auditFirstYear) &&
+            (yearRF>auditLastYear || yearRF<auditFirstYear) &&
+            (yearDI>auditLastYear || yearDI<auditFirstYear) &&
+            (yearRI>auditLastYear || yearRI<auditFirstYear))
+
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Aucune année du reporting ne se retrouve dans l'audit. Vous devez tout d'abord étendre les années sur lesquelles porte l'audit en le dupliquant.\n"
+                                                                          "L'audit porte sur %1 - %2\n"                                                                        )
+                             .arg(auditFirstYear).arg(auditLastYear));
+
+        return false;
+    }
+
+    QList<unsigned int> leaves=attachedTree->getLeavesId();
+
+    bool doDF=false,doRF=false,doDI=false,doRI=false;
+    if(yearDF<=auditLastYear && yearDF>=auditFirstYear)
+        doDF=true;
+    if(yearRF<=auditLastYear && yearRF>=auditFirstYear)
+        doRF=true;
+    if(yearDI<=auditLastYear && yearDI>=auditFirstYear)
+        doDI=true;
+    if(yearRI<=auditLastYear && yearRI>=auditFirstYear)
+        doRI=true;
+
+    int nbDo=(int)doDF+(int)doRF+(int)doDI+(int)doRI;
+    int progressMax=nbDo*leaves.count();
+
+    QProgressDialog progress(QObject::tr("Mise à jour des données de l'audit..."),QObject::tr("Annuler"),0,progressMax);
+
+    progress.setWindowModality(Qt::ApplicationModal);
+
+    progress.setMinimumDuration(300);
+    progress.setValue(0);
+    int progressStep=0;
+
+    QSqlDatabase::database().transaction();
+    if(doDF)
+    {
+        foreach(unsigned int leaf,leaves)
+        {
+            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
+            QSqlQuery q;
+            q.prepare(QString("select ouverts,realises,engages from reporting_DF_%1 where date=:date and id_node=:node").arg(reportingId));
+            q.bindValue(":date",QDateTime(dateDF).toTime_t());
+            q.bindValue(":node",leaf);
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            if(q.next())
+            {
+                QHash<PCx_Audit::ORED,double> vals;
+                vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
+                vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
+                vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
+                if(audit->setLeafValues(leaf,MODES::DFRFDIRI::DF,yearDF,vals)==false)
+                {
+                    QSqlDatabase::database().rollback();
+                    return false;
+                }
+            }
+            if(!progress.wasCanceled())
+            {
+                progress.setValue(++progressStep);
+            }
+            else
+            {
+                QSqlDatabase::database().rollback();
+                return false;
+            }
+        }
+    }
+
+    if(doRF)
+    {
+        foreach(unsigned int leaf,leaves)
+        {
+            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
+            QSqlQuery q;
+            q.prepare(QString("select ouverts,realises,engages from reporting_RF_%1 where date=:date and id_node=:node").arg(reportingId));
+            q.bindValue(":date",QDateTime(dateRF).toTime_t());
+            q.bindValue(":node",leaf);
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            if(q.next())
+            {
+                QHash<PCx_Audit::ORED,double> vals;
+                vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
+                vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
+                vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
+                if(audit->setLeafValues(leaf,MODES::DFRFDIRI::RF,yearRF,vals)==false)
+                {
+                    QSqlDatabase::database().rollback();
+                    return false;
+                }
+            }
+
+            if(!progress.wasCanceled())
+            {
+                progress.setValue(++progressStep);
+            }
+            else
+            {
+                QSqlDatabase::database().rollback();
+                return false;
+            }
+        }
+
+    }
+
+    if(doDI)
+    {
+        foreach(unsigned int leaf,leaves)
+        {
+            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
+            QSqlQuery q;
+            q.prepare(QString("select ouverts,realises,engages from reporting_DI_%1 where date=:date and id_node=:node").arg(reportingId));
+            q.bindValue(":date",QDateTime(dateDI).toTime_t());
+            q.bindValue(":node",leaf);
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            if(q.next())
+            {
+                QHash<PCx_Audit::ORED,double> vals;
+                vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
+                vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
+                vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
+                if(audit->setLeafValues(leaf,MODES::DFRFDIRI::DI,yearDI,vals)==false)
+                {
+                    QSqlDatabase::database().rollback();
+                    return false;
+                }
+            }
+
+            if(!progress.wasCanceled())
+            {
+                progress.setValue(++progressStep);
+            }
+            else
+            {
+                QSqlDatabase::database().rollback();
+                return false;
+            }
+        }
+
+    }
+
+    if(doRI)
+    {
+        foreach(unsigned int leaf,leaves)
+        {
+            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
+            QSqlQuery q;
+            q.prepare(QString("select ouverts,realises,engages from reporting_RI_%1 where date=:date and id_node=:node").arg(reportingId));
+            q.bindValue(":date",QDateTime(dateRI).toTime_t());
+            q.bindValue(":node",leaf);
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            if(q.next())
+            {
+                QHash<PCx_Audit::ORED,double> vals;
+                vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
+                vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
+                vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
+                if(audit->setLeafValues(leaf,MODES::DFRFDIRI::RI,yearRI,vals)==false)
+                {
+                    QSqlDatabase::database().rollback();
+                    return false;
+                }
+            }
+
+            if(!progress.wasCanceled())
+            {
+                progress.setValue(++progressStep);
+            }
+            else
+            {
+                QSqlDatabase::database().rollback();
+                return false;
+            }
+        }
+
+    }
+    progress.setValue(progressMax);
+    QSqlDatabase::database().commit();
+
+    return true;
 }
 
 bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileName) const
@@ -879,12 +1109,12 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
 
     double randval;
 
-    QDate lastDate=getLastReportingDate(1,mode);
+    QDate lastDate=getLastReportingDate(mode);
     QDate nextDate;
     if(!lastDate.isNull())
         nextDate=lastDate.addDays(15);
     else
-        nextDate=QDate(2013,1,1);
+        nextDate=QDate(QDate::currentDate().year(),1,1);
 
     foreach(unsigned int leaf,leaves)
     {

@@ -34,6 +34,11 @@ void FormManageReportings::onLOTchanged()
     updateListOfTrees();
 }
 
+void FormManageReportings::onListOfAuditsChanged()
+{
+    updateListOfPotentialAudits();
+}
+
 void FormManageReportings::updateListOfTrees()
 {
     ui->comboListOfTrees->clear();
@@ -123,6 +128,20 @@ void FormManageReportings::updateListOfReportings()
     this->on_comboListOfReportings_activated(0);
 }
 
+void FormManageReportings::updateListOfPotentialAudits()
+{
+    ui->comboListOfAudits->clear();
+
+    QList<QPair<unsigned int,QString> > listOfAuditsWithThisTree=PCx_Audit::getListOfAuditsAttachedWithThisTree(selectedReporting->getAttachedTreeId());
+    ui->pushButtonFillAudit->setEnabled(!listOfAuditsWithThisTree.isEmpty());
+    QPair<unsigned int,QString> p;
+    foreach(p,listOfAuditsWithThisTree)
+    {
+        ui->comboListOfAudits->insertItem(0,p.second,p.first);
+    }
+    ui->comboListOfAudits->setCurrentIndex(0);
+}
+
 void FormManageReportings::updateRandomVisibility()
 {
     QSettings settings;
@@ -151,8 +170,6 @@ void FormManageReportings::on_pushButtonDeleteReporting_clicked()
 
 }
 
-
-
 void FormManageReportings::on_comboListOfReportings_activated(int index)
 {
     if(index==-1 || ui->comboListOfReportings->count()==0)return;
@@ -165,8 +182,10 @@ void FormManageReportings::on_comboListOfReportings_activated(int index)
     }
 
     selectedReporting=new PCx_Reporting(selectedReportingId);
-    updateReportingInfos();
 
+    updateListOfPotentialAudits();
+
+    updateReportingInfos();
 
 }
 
@@ -372,11 +391,11 @@ void FormManageReportings::updateReportingInfos()
     if(selectedReporting!=nullptr)
     {
         ui->labelTreeName->setText(QString("%1 (%2 noeuds)").arg(selectedReporting->getAttachedTreeName()).arg(selectedReporting->getAttachedTree()->getNumberOfNodes()));
-        ui->labelLastDF->setText(selectedReporting->getLastReportingDate(1,MODES::DF).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastRF->setText(selectedReporting->getLastReportingDate(1,MODES::RF).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastDI->setText(selectedReporting->getLastReportingDate(1,MODES::DI).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastRI->setText(selectedReporting->getLastReportingDate(1,MODES::RI).toString(Qt::DefaultLocaleShortDate));
-        emit(reportingDataChanged(selectedReporting->getReportingId()));
+        ui->labelLastDF->setText(selectedReporting->getLastReportingDate(MODES::DF).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRF->setText(selectedReporting->getLastReportingDate(MODES::RF).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastDI->setText(selectedReporting->getLastReportingDate(MODES::DI).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRI->setText(selectedReporting->getLastReportingDate(MODES::RI).toString(Qt::DefaultLocaleShortDate));
+        emit(reportingDataUpdated(selectedReporting->getReportingId()));
     }
 }
 
@@ -447,7 +466,7 @@ void FormManageReportings::on_pushButtonClearRI_clicked()
 
 void FormManageReportings::on_pushButtonRandomDF_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DF)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::DF);
         updateReportingInfos();
@@ -456,7 +475,7 @@ void FormManageReportings::on_pushButtonRandomDF_clicked()
 
 void FormManageReportings::on_pushButtonRandomRF_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RF)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::RF);
         updateReportingInfos();
@@ -465,7 +484,7 @@ void FormManageReportings::on_pushButtonRandomRF_clicked()
 
 void FormManageReportings::on_pushButtonRandomDI_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::DI)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::DI);
         updateReportingInfos();
@@ -474,9 +493,24 @@ void FormManageReportings::on_pushButtonRandomDI_clicked()
 
 void FormManageReportings::on_pushButtonRandomRI_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText()).arg(MODES::modeToCompleteString(MODES::RI)))==QMessageBox::Yes)
     {
         selectedReporting->addRandomDataForNext15(MODES::RI);
         updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonFillAudit_clicked()
+{
+    if(question(tr("Ajouter les données de la dernière situation du reporting <b>%1</b> à l'audit <b>%2</b> ?").arg(ui->comboListOfReportings->currentText()).arg(ui->comboListOfAudits->currentText()))==QMessageBox::Yes)
+    {
+        unsigned int selectedAuditId=ui->comboListOfAudits->currentData().toUInt();
+
+        PCx_Audit audit(selectedAuditId);
+        if(selectedReporting->addLastReportingDateToExistingAudit(&audit)==true)
+        {
+            emit(auditDataUpdated(selectedAuditId));
+            QMessageBox::information(nullptr,tr("Succès !"),tr("Données ajoutées à l'audit !"));
+        }
     }
 }
