@@ -148,7 +148,10 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     bool notFinished=!auditModel->isFinished();
     ui->pushButtonImportLeaves->setEnabled(notFinished);
     ui->clearDataButton->setEnabled(notFinished);
-    ui->randomDataButton->setEnabled(notFinished);
+    if(notFinished)
+        updateRandomButtonVisibility();
+    else
+        ui->randomDataButton->setEnabled(false);
 
 }
 
