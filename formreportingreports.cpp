@@ -10,6 +10,7 @@ FormReportingReports::FormReportingReports(QWidget *parent) :
     model=nullptr;
     plot=new QCustomPlot();
     updateListOfReportings();
+    updateTooltips();
 }
 
 FormReportingReports::~FormReportingReports()
@@ -45,6 +46,17 @@ void FormReportingReports::updateListOfReportings()
     on_comboListReportings_activated(0);
 }
 
+void FormReportingReports::updateTooltips()
+{
+    QList<unsigned int> leaves=model->getAttachedTree()->getLeavesId();
+    unsigned int nodeId=leaves.at(qrand()%leaves.count());
+    ui->checkBoxS->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCRRFDF(nodeId)+"</span>");
+    ui->checkBoxA->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCRProvenance(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    ui->checkBoxB->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCRVariation(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    ui->checkBoxC->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCRUtilisation(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    ui->checkBoxD->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCRCycles(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+}
+
 void FormReportingReports::on_comboListReportings_activated(int index)
 {
     if(index==-1||ui->comboListReportings->count()==0)return;
@@ -72,6 +84,7 @@ void FormReportingReports::on_comboListReportings_activated(int index)
         ui->comboListTypes->addItem(p.second,p.first);
     }
     ui->comboListTypes->setCurrentIndex(0);
+    updateTooltips();
 }
 
 void FormReportingReports::on_saveButton_clicked()

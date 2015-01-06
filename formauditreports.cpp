@@ -11,8 +11,9 @@ FormAuditReports::FormAuditReports(QWidget *parent) :
     ui->splitter->setStretchFactor(1,1);
     model=nullptr;
     plot=new QCustomPlot();
-    populateLists();
     updateListOfAudits();
+    populateLists();
+
 }
 
 FormAuditReports::~FormAuditReports()
@@ -28,35 +29,53 @@ FormAuditReports::~FormAuditReports()
 
 void FormAuditReports::populateLists()
 {
+    ui->listTables->clear();
+    ui->listGraphics->clear();
+    QList<unsigned int>leaves=model->getAttachedTree()->getLeavesId();
+    unsigned int nodeId=leaves.at(qrand()%leaves.count());
     QListWidgetItem *item;
     item=new QListWidgetItem(tr("Récapitulatif"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT1);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT1(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT2);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT2BIS);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2bis(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT3);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT3(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution du compte administratif de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT3BIS);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT3bis(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT4);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT4(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT5);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT5(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT6);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT6(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Transcription en \"jours/activité\" de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT7);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT7(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Moyennes budgétaires de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT8);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT8(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Equivalences moyennes en \"jours activité\" de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT9);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT9(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Résultats de fonctionnement de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT10);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT10(nodeId)+"</span>");
     item=new QListWidgetItem(tr("Résultats d'investissement de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT11);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT11(nodeId)+"</span>");
     item=new QListWidgetItem(tr("Résultats budgétaire de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT12);
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT12(nodeId)+"</span>");
 
     item=new QListWidgetItem(tr("Évolution comparée du prévu de la collectivité et de [...]"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG1);
@@ -76,6 +95,7 @@ void FormAuditReports::populateLists()
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG9);
+
 }
 
 void FormAuditReports::onListOfAuditsChanged()
@@ -131,6 +151,7 @@ void FormAuditReports::on_comboListAudits_activated(int index)
         ui->comboListTypes->addItem(p.second,p.first);
     }
     ui->comboListTypes->setCurrentIndex(0);
+    populateLists();
 }
 
 void FormAuditReports::on_saveButton_clicked()

@@ -43,6 +43,7 @@ private:
     Ui::FormReportingReports *ui;
     //QSize sizeHint()const;
     void updateListOfReportings();
+    void updateTooltips();
     PCx_ReportingWithTreeModel *model;
     PCx_Report *report;
     QCustomPlot *plot;
