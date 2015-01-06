@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formEditTreeWin=nullptr;
     formManageAudits=nullptr;
     formEditAudit=nullptr;
-    formReports=nullptr;
+    formAuditReports=nullptr;
     formManageReportings=nullptr;
     formReportingReports=nullptr;
 
@@ -125,6 +125,18 @@ void MainWindow::on_actionManageTree_triggered()
         }
         connect(formEditTreeWin,&QObject::destroyed,this,&MainWindow::onFormEditTreeWindowsDestroyed);
     }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formEditTreeWin->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
+        }
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent * event)
@@ -171,7 +183,7 @@ void MainWindow::onFormEditAuditWindowsDestroyed()
 
 void MainWindow::onFormReportsWindowsDestroyed()
 {
-    formReports=nullptr;
+    formAuditReports=nullptr;
     //qDebug()<<"FormReports window closed";
 }
 
@@ -215,9 +227,9 @@ void MainWindow::on_actionManageAudits_triggered()
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
         }
 
-        if(formReports!=nullptr)
+        if(formAuditReports!=nullptr)
         {
-            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formReports,&FormAuditReports::onListOfAuditsChanged);
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditReports,&FormAuditReports::onListOfAuditsChanged);
         }
 
         if(formManageReportings!=nullptr)
@@ -232,6 +244,18 @@ void MainWindow::on_actionManageAudits_triggered()
         foreach(FormQueries *dlg,listOfFormQueries)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormQueries::onListOfAuditsChanged);
+        }
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formManageAudits->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
         }
     }
 }
@@ -255,6 +279,18 @@ void MainWindow::on_actionEditAudit_triggered()
         if(formManageReportings!=nullptr)
         {
             connect(formManageReportings,&FormManageReportings::auditDataUpdated,formEditAudit,&FormEditAudit::onAuditDataUpdated);
+        }
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formEditAudit->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
         }
     }
 }
@@ -348,18 +384,30 @@ void MainWindow::on_actionOpenDb_triggered()
 
 void MainWindow::on_actionAuditReport_triggered()
 {
-    if(formReports==nullptr)
+    if(formAuditReports==nullptr)
     {
-        formReports=new FormAuditReports(this);
-        formReports->setAttribute(Qt::WA_DeleteOnClose);
-        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formReports);
+        formAuditReports=new FormAuditReports(this);
+        formAuditReports->setAttribute(Qt::WA_DeleteOnClose);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formAuditReports);
         subWin->setWindowIcon(QIcon(":/icons/icons/report.png"));
-        formReports->show();
-        connect(formReports,&QObject::destroyed,this,&MainWindow::onFormReportsWindowsDestroyed);
+        formAuditReports->show();
+        connect(formAuditReports,&QObject::destroyed,this,&MainWindow::onFormReportsWindowsDestroyed);
 
         if(formManageAudits!=nullptr)
         {
-            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formReports,&FormAuditReports::onListOfAuditsChanged);
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditReports,&FormAuditReports::onListOfAuditsChanged);
+        }
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formAuditReports->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
         }
     }
 }
@@ -475,6 +523,18 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
             connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingExplore::onReportingDataChanged);
         }
         //FIXME : connect !
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formManageReportings->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
+        }
     }
 }
 
@@ -592,6 +652,18 @@ void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
         if(formManageReportings!=nullptr)
         {
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,formReportingReports,&FormReportingReports::onListOfReportingsChanged);
+        }
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formReportingReports->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
         }
     }
 }

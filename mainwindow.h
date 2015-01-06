@@ -101,7 +101,7 @@ private:
     FormEditTree *formEditTreeWin;
     FormManageAudits *formManageAudits;
     FormEditAudit *formEditAudit;
-    FormAuditReports *formReports;
+    FormAuditReports *formAuditReports;
     FormReportingReports *formReportingReports;
     FormManageReportings *formManageReportings;
 
