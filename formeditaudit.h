@@ -41,6 +41,8 @@ private slots:
 
     void on_pushButtonImportLeaves_clicked();
 
+    void on_pushButtonExportHTML_clicked();
+
 private:
     Ui::FormEditAudit *ui;
     void updateListOfAudits();

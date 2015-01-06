@@ -1582,7 +1582,51 @@ QString PCx_Tables::getCSS()
     "\ntr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
     "\ntr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
     "\ntr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
-    "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
+           "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
+}
+
+QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
+{
+    Q_ASSERT(node>0);
+    if(auditModel==nullptr)
+    {
+        qWarning()<<"Invalid model usage";
+        return QString();
+    }
+
+    QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
+
+    QString output=QString("\n<table align='center' cellpadding='5'>"
+                           "<tr class='t1entete'><td align='center' colspan=5><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
+                           "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
+                           "<th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th><th>Disponible</th></tr>")
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+
+    QSqlQuery q;
+    q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
+    q.bindValue(":id",node);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    while(q.next())
+    {
+        qint64 ouverts=q.value("ouverts").toLongLong();
+        qint64 realises=q.value("realises").toLongLong();
+        qint64 engages=q.value("engages").toLongLong();
+        qint64 disponibles=q.value("disponibles").toLongLong();
+
+        output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
+                              "<td align='right' class='t1valeur'>%4</td><td align='right' class='t1valeur'>%5</td></tr>").arg(q.value("annee").toUInt())
+                      .arg(formatFixedPoint(ouverts)).arg(formatFixedPoint(realises)).arg(formatFixedPoint(engages)).arg(formatFixedPoint(disponibles)));
+    }
+
+    output.append("</table>");
+    return output;
 }
 
 QString PCx_Tables::getPCAPresetEvolution(unsigned int node, MODES::DFRFDIRI mode) const

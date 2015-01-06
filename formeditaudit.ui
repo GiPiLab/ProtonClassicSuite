@@ -200,7 +200,7 @@
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit &lt;span style=&quot; font-weight:600;&quot;&gt;pour le mode (&lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;dépenses ou recettes de fonctionnement ou d'investissement&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;) actif&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;Le fichier doit être au format XLSX et contenir les données des feuilles pour l'arbre et le mode concernés. Vous pouvez générer un squelette pré-rempli de ce fichier à l'aide du bouton &amp;quot;Exporter données&amp;quot; puis le compléter à l'aide d'un tableur.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>Importer données</string>
+          <string>Importer les feuilles</string>
          </property>
          <property name="icon">
           <iconset resource="Images.qrc">
@@ -214,7 +214,7 @@
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données actuelles &lt;span style=&quot; font-weight:600;&quot;&gt;du mode sélectionné (&lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;dépenses ou recettes de fonctionnement ou d'investissement&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;)&lt;/span&gt; dans un fichier tableur.&lt;/p&gt;&lt;p&gt;Seules les données des feuilles de l'arbre sont exportées, les noeuds de plus haut niveau dans l'arbre étant calculés automatiquement. Le fichier obtenu peut être modifié ou complété à l'aide d'un tableur.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
-          <string>Exporter données</string>
+          <string>Exporter les feuilles</string>
          </property>
          <property name="icon">
           <iconset resource="Images.qrc">
@@ -248,7 +248,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2" rowspan="2">
+       <item row="3" column="2">
         <widget class="QPushButton" name="statsButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -258,6 +258,17 @@
          </property>
          <property name="text">
           <string>Statistiques de saisie</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QPushButton" name="pushButtonExportHTML">
+         <property name="text">
+          <string>Enregistrer en HTML</string>
+         </property>
+         <property name="icon">
+          <iconset resource="Images.qrc">
+           <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
          </property>
         </widget>
        </item>

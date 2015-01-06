@@ -60,6 +60,9 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         {
             switch(table)
             {
+            case PCx_Tables::PCARAWDATA:
+                //NOTE : PCARAWDATA is not displayed, it is used to export data in FormEditAudit
+                break;
             case PCx_Tables::PCAT1:
                 output.append(tables.getPCAT1(selectedNode,mode)+"<br>");
                 break;

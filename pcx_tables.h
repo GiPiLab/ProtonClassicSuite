@@ -18,6 +18,7 @@ public:
     };
 
     enum PCATABLES{
+        PCARAWDATA,
         PCAT1,
         PCAT2,
         PCAT2BIS,
@@ -57,6 +58,8 @@ public:
     QString getPCAPresetResults(unsigned int node) const;
 
     static QString getCSS();
+
+    QString getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "OVERVIEW"
     QString getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const;
