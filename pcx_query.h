@@ -6,7 +6,7 @@
 #include "pcx_audit.h"
 
 /**
- * @brief The PCx_Query class is the base class for predefined queries
+ * @brief The PCx_Query class is the base class for predefined queries for an audit
  */
 class PCx_Query
 {

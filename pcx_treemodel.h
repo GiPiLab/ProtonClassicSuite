@@ -137,9 +137,6 @@ private:
     PCx_TreeModel(const PCx_TreeModel &c);
     PCx_TreeModel &operator=(const PCx_TreeModel &);
 
-
-
-
 signals:
 
     /**

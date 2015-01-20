@@ -1095,6 +1095,21 @@ QString PCx_Audit::OREDtoTableString(ORED ored)
     return QString();
 }
 
+PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &oredString)
+{
+    if(oredString==OREDtoTableString(ORED::OUVERTS))
+        return ORED::OUVERTS;
+    else if(oredString==OREDtoTableString(ORED::REALISES))
+        return ORED::REALISES;
+    else if(oredString==OREDtoTableString(ORED::ENGAGES))
+        return ORED::ENGAGES;
+    else if(oredString==OREDtoTableString(ORED::DISPONIBLES))
+        return ORED::DISPONIBLES;
+    else
+        qWarning()<<"Invalid ORED string !";
+    return ORED::OUVERTS;
+}
+
 
 unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId)
 {

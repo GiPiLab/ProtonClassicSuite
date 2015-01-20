@@ -280,6 +280,13 @@ public:
     static QString OREDtoTableString(ORED ored);
 
     /**
+     * @brief OREDFromTableString converts an ORED string to the ORED
+     * @param oredString the table string representation of the ORED
+     * @return the ORED item
+     */
+    static ORED OREDFromTableString(const QString & oredString);
+
+    /**
      * @brief addNewAudit creates a new audit
      * @param name the audit name
      * @param years the years that will be covered by the audit
