@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QList>
 
+#include "formauditprevisions.h"
 #include "formreportingreports.h"
 #include "formreportingexplore.h"
 #include "formreportingsupervision.h"
@@ -62,6 +63,8 @@ private slots:
 
     void onFormReportsWindowsDestroyed();
 
+    void onFormAuditPrevisionsWindowsDestroyed();
+
     void onFormReportingReportsWindowsDestroyed();
 
     void on_actionOptions_triggered();
@@ -93,6 +96,8 @@ private slots:
 
     void on_actionCloseAllSubwin_triggered();
 
+    void on_actionElaboration_budg_taire_PCB_triggered();
+
 private:
 
     Ui::MainWindow *ui;
@@ -104,11 +109,11 @@ private:
     FormAuditReports *formAuditReports;
     FormReportingReports *formReportingReports;
     FormManageReportings *formManageReportings;
+    FormAuditPrevisions *formAuditPrevisions;
 
 
     //Multiple "tables" dialogs are allowed
     QList<FormAuditExplore *>listOfFormAuditExplore;
-
     QList<FormReportingOverview *>listOfFormReportingOverview;
     QList<FormReportingSupervision *>listOfFormReportingSupervision;
     QList<FormReportingGraphics *>listOfFormReportingGraphics;

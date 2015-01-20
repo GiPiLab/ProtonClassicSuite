@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formAuditReports=nullptr;
     formManageReportings=nullptr;
     formReportingReports=nullptr;
+    formAuditPrevisions=nullptr;
 
     restoreSettings();
     updateTitle();
@@ -187,6 +188,11 @@ void MainWindow::onFormReportsWindowsDestroyed()
     //qDebug()<<"FormReports window closed";
 }
 
+void MainWindow::onFormAuditPrevisionsWindowsDestroyed()
+{
+    formAuditPrevisions=nullptr;
+}
+
 void MainWindow::onFormReportingReportsWindowsDestroyed()
 {
     formReportingReports=nullptr;
@@ -236,6 +242,11 @@ void MainWindow::on_actionManageAudits_triggered()
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManageReportings,&FormManageReportings::onListOfAuditsChanged);
         }
+        if(formAuditPrevisions!=nullptr)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfAuditsChanged);
+        }
+
 
         foreach(FormAuditExplore *dlg,listOfFormAuditExplore)
         {
@@ -695,4 +706,35 @@ void MainWindow::on_actionCascade_triggered()
 void MainWindow::on_actionCloseAllSubwin_triggered()
 {
     ui->mdiArea->closeAllSubWindows();
+}
+
+void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
+{
+    if(formAuditPrevisions==nullptr)
+    {
+        formAuditPrevisions=new FormAuditPrevisions(this);
+        formAuditPrevisions->setAttribute(Qt::WA_DeleteOnClose);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formAuditPrevisions);
+        //subWin->setWindowIcon(QIcon(":/icons/icons/reportingReport.png"));
+        formAuditPrevisions->show();
+        connect(formAuditPrevisions,&QObject::destroyed,this,&MainWindow::onFormAuditPrevisionsWindowsDestroyed);
+
+        if(formManageAudits!=nullptr)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfAuditsChanged);
+        }
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formAuditPrevisions->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
+        }
+    }
+
 }
