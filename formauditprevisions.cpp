@@ -1,14 +1,14 @@
 #include "formauditprevisions.h"
 #include "ui_formauditprevisions.h"
-#include "pcx_auditwithtreemodel.h"
+#include "pcx_prevision.h"
 
 FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormAuditPrevisions)
 {
-    auditModel=nullptr;
+    previsionModel=nullptr;
     ui->setupUi(this);
-    updateListOfAudits();
+    updateListOfPrevisions();
 }
 
 FormAuditPrevisions::~FormAuditPrevisions()
@@ -16,9 +16,9 @@ FormAuditPrevisions::~FormAuditPrevisions()
     delete ui;
 }
 
-void FormAuditPrevisions::onListOfAuditsChanged()
+void FormAuditPrevisions::onListOfPrevisionsChanged()
 {
-    updateListOfAudits();
+    updateListOfPrevisions();
 }
 
 void FormAuditPrevisions::onSettingsChanged()
@@ -29,49 +29,49 @@ void FormAuditPrevisions::onSettingsChanged()
     }
     else
     {
-        QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);
+        QModelIndex rootIndex=previsionModel->getAttachedAudit()->getAttachedTree()->index(0,0);
         on_treeView_clicked(rootIndex);
     }
 }
 
-void FormAuditPrevisions::updateListOfAudits()
+void FormAuditPrevisions::updateListOfPrevisions()
 {
-    ui->comboListAudits->clear();
+    ui->comboListPrevisions->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfPrevisions=PCx_Prevision::getListOfPrevisions();
     //do not update text browser if no audit are available
-    bool nonEmpty=!listOfAudits.isEmpty();
+    bool nonEmpty=!listOfPrevisions.isEmpty();
     this->setEnabled(nonEmpty);
     //doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));
 
     QPair<unsigned int, QString> p;
-    foreach(p,listOfAudits)
+    foreach(p,listOfPrevisions)
     {
-        ui->comboListAudits->insertItem(0,p.second,p.first);
+        ui->comboListPrevisions->insertItem(0,p.second,p.first);
     }
-    ui->comboListAudits->setCurrentIndex(0);
-    on_comboListAudits_activated(0);
+    ui->comboListPrevisions->setCurrentIndex(0);
+    on_comboListPrevisions_activated(0);
 }
 
 
-void FormAuditPrevisions::on_comboListAudits_activated(int index)
+void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
 {
-    if(index==-1||ui->comboListAudits->count()==0)return;
-    unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
-    Q_ASSERT(selectedAuditId>0);
+    if(index==-1||ui->comboListPrevisions->count()==0)return;
+    unsigned int selectedPrevisionId=ui->comboListPrevisions->currentData().toUInt();
+    Q_ASSERT(selectedPrevisionId>0);
     //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-    if(auditModel!=nullptr)
+    if(previsionModel!=nullptr)
     {
-        delete auditModel;
+        delete previsionModel;
     }
-    auditModel=new PCx_AuditWithTreeModel(selectedAuditId);
+    previsionModel=new PCx_Prevision(selectedPrevisionId);
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
-    ui->treeView->setModel(auditModel->getAttachedTree());
+    ui->treeView->setModel(previsionModel->getAttachedAudit()->getAttachedTree());
     delete m;
     ui->treeView->expandToDepth(1);
-    QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);
+    QModelIndex rootIndex=previsionModel->getAttachedAudit()->getAttachedTree()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
     on_treeView_clicked(rootIndex);
     //updateTextBrowser();

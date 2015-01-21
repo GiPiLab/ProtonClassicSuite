@@ -1,4 +1,5 @@
 #include "pcx_audit.h"
+#include "pcx_prevision.h"
 #include "pcx_report.h"
 #include "xlsxdocument.h"
 #include "pcx_query.h"
@@ -1349,6 +1350,20 @@ bool PCx_Audit::deleteAudit(unsigned int auditId)
         }
     }
 
+    if(!q.exec(QString("select count(*) from index_previsions where id_audit='%1'").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next())
+    {
+        if(q.value(0).toInt()>0)
+        {
+            qWarning()<<QObject::tr("Il existe des prévisions attachées à cet audit, supprimez-les d'abord");
+            return false;
+        }
+    }
+
     QSqlDatabase::database().transaction();
     if(!q.exec(QString("delete from index_audits where id='%1'").arg(auditId)))
     {
@@ -1411,6 +1426,7 @@ bool PCx_Audit::deleteAudit(unsigned int auditId)
         qCritical()<<q.lastError();
         die();
     }
+
 
     QSqlDatabase::database().commit();
     return true;

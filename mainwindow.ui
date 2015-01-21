@@ -46,6 +46,13 @@
     <property name="title">
      <string>A&amp;udits</string>
     </property>
+    <widget class="QMenu" name="menuPCB">
+     <property name="title">
+      <string>PCB</string>
+     </property>
+     <addaction name="actionElaboration_budg_taire_PCB"/>
+     <addaction name="actionGestion_des_pr_visions"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
@@ -55,7 +62,7 @@
     <addaction name="actionAuditReport"/>
     <addaction name="actionQueries"/>
     <addaction name="separator"/>
-    <addaction name="actionElaboration_budg_taire_PCB"/>
+    <addaction name="menuPCB"/>
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">
@@ -223,7 +230,7 @@
   </action>
   <action name="actionElaboration_budg_taire_PCB">
    <property name="text">
-    <string>Elaboration budgétaire (PCB)</string>
+    <string>Elaboration du budget</string>
    </property>
   </action>
   <action name="actionGestion_des_reportings">
@@ -288,6 +295,11 @@
   <action name="actionCloseAllSubwin">
    <property name="text">
     <string>&amp;Fermer tout</string>
+   </property>
+  </action>
+  <action name="actionGestion_des_pr_visions">
+   <property name="text">
+    <string>Gestion des prévisions</string>
    </property>
   </action>
  </widget>

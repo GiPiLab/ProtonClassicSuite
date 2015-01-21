@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formManageReportings=nullptr;
     formReportingReports=nullptr;
     formAuditPrevisions=nullptr;
+    formManagePrevisions=nullptr;
 
     restoreSettings();
     updateTitle();
@@ -81,6 +82,8 @@ void MainWindow::setMenusState()
         ui->actionReportingGenerateur_de_rapports->setEnabled(false);
         ui->actionReportingOverview->setEnabled(false);
         ui->actionSurveillance_des_reportings->setEnabled(false);
+        ui->actionGestion_des_pr_visions->setEnabled(false);
+        ui->actionElaboration_budg_taire_PCB->setEnabled(false);
     }
     else
     {
@@ -101,6 +104,8 @@ void MainWindow::setMenusState()
         ui->actionReportingGenerateur_de_rapports->setEnabled(true);
         ui->actionReportingOverview->setEnabled(true);
         ui->actionSurveillance_des_reportings->setEnabled(true);
+        ui->actionGestion_des_pr_visions->setEnabled(true);
+        ui->actionElaboration_budg_taire_PCB->setEnabled(true);
     }
 }
 
@@ -168,6 +173,11 @@ void MainWindow::onFormManageAuditsWindowsDestroyed()
 {
     formManageAudits=nullptr;
     //qDebug()<<"FormManageAudits window closed";
+}
+
+void MainWindow::onFormManagePrevisionsWindowsDestroyed()
+{
+    formManagePrevisions=nullptr;
 }
 
 void MainWindow::onFormManageReportingsWindowsDestroyed()
@@ -244,7 +254,11 @@ void MainWindow::on_actionManageAudits_triggered()
         }
         if(formAuditPrevisions!=nullptr)
         {
-            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfAuditsChanged);
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfPrevisionsChanged);
+        }
+        if(formManagePrevisions!=nullptr)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManagePrevisions,&FormManagePrevisions::onListOfAuditsChanged);
         }
 
 
@@ -719,9 +733,9 @@ void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
         formAuditPrevisions->show();
         connect(formAuditPrevisions,&QObject::destroyed,this,&MainWindow::onFormAuditPrevisionsWindowsDestroyed);
 
-        if(formManageAudits!=nullptr)
+        if(formManagePrevisions!=nullptr)
         {
-            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfAuditsChanged);
+            connect(formManagePrevisions,&FormManagePrevisions::listOfPrevisionsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfPrevisionsChanged);
         }
     }
     else
@@ -730,6 +744,43 @@ void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
         foreach(QMdiSubWindow * win,listSubWin)
         {
             if(win->windowTitle()==formAuditPrevisions->windowTitle())
+            {
+                win->setFocus();
+                break;
+            }
+        }
+    }
+
+}
+
+void MainWindow::on_actionGestion_des_pr_visions_triggered()
+{
+    if(formManagePrevisions==nullptr)
+    {
+        formManagePrevisions=new FormManagePrevisions(this);
+        formManagePrevisions->setAttribute(Qt::WA_DeleteOnClose);
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formManagePrevisions);
+        //subWin->setWindowIcon(QIcon(":/icons/icons/reportingReport.png"));
+        formManagePrevisions->show();
+        connect(formManagePrevisions,&QObject::destroyed,this,&MainWindow::onFormManagePrevisionsWindowsDestroyed);
+
+        if(formManageAudits!=nullptr)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManagePrevisions,&FormManagePrevisions::onListOfAuditsChanged);
+        }
+        if(formAuditPrevisions!=nullptr)
+        {
+            connect(formManagePrevisions,&FormManagePrevisions::listOfPrevisionsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfPrevisionsChanged);
+        }
+
+
+    }
+    else
+    {
+        QList<QMdiSubWindow *> listSubWin=ui->mdiArea->subWindowList();
+        foreach(QMdiSubWindow * win,listSubWin)
+        {
+            if(win->windowTitle()==formManagePrevisions->windowTitle())
             {
                 win->setFocus();
                 break;

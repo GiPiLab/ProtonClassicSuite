@@ -59,7 +59,8 @@ SOURCES += main.cpp\
     formauditreports.cpp \
     pcx_prevision.cpp \
     pcx_previsioncriteria.cpp \
-    formauditprevisions.cpp
+    formauditprevisions.cpp \
+    formmanageprevisions.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -104,7 +105,8 @@ HEADERS  += mainwindow.h \
     formauditreports.h \
     pcx_prevision.h \
     pcx_previsioncriteria.h \
-    formauditprevisions.h
+    formauditprevisions.h \
+    formmanageprevisions.h
 
 FORMS    += mainwindow.ui \
     formdisplaytree.ui \
@@ -125,7 +127,8 @@ FORMS    += mainwindow.ui \
     dialogabout.ui \
     formauditexplore.ui \
     formauditreports.ui \
-    formauditprevisions.ui
+    formauditprevisions.ui \
+    formmanageprevisions.ui
 
 RC_ICONS = icons/logo64_64.ico
 #QMAKE_CXXFLAGS_DEBUG += -Og

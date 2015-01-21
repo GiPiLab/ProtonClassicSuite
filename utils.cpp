@@ -39,13 +39,31 @@ void initializeNewDb(void)
         die();
     }
 
-    query.exec("create table if not exists index_audits(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, annees text not null, termine integer not null default 0, le_timestamp text default current_timestamp)");
+    if(!query.exec("create table if not exists index_audits(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, annees text not null, termine integer not null default 0, le_timestamp text default current_timestamp)"))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError();
         die();
     }
-    query.exec("create table if not exists index_reportings(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, le_timestamp text default current_timestamp)");
+    if(!query.exec("create table if not exists index_reportings(id integer primary key autoincrement, nom text unique not null, id_arbre integer not null, le_timestamp text default current_timestamp)"))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+    if(query.numRowsAffected()==-1)
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+    if(!query.exec("create table if not exists index_previsions(id integer primary key autoincrement, nom text unique not null, id_audit integer not null, le_timestamp text default current_timestamp)"))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
     if(query.numRowsAffected()==-1)
     {
         qCritical()<<query.lastError();
