@@ -46,13 +46,6 @@
     <property name="title">
      <string>A&amp;udits</string>
     </property>
-    <widget class="QMenu" name="menuPCB">
-     <property name="title">
-      <string>PCB</string>
-     </property>
-     <addaction name="actionElaboration_budg_taire_PCB"/>
-     <addaction name="actionGestion_des_pr_visions"/>
-    </widget>
     <addaction name="separator"/>
     <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
@@ -62,7 +55,8 @@
     <addaction name="actionAuditReport"/>
     <addaction name="actionQueries"/>
     <addaction name="separator"/>
-    <addaction name="menuPCB"/>
+    <addaction name="actionGestion_des_pr_visions"/>
+    <addaction name="actionElaboration_budg_taire_PCB"/>
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">

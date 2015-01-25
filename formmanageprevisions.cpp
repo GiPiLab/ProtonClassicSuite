@@ -57,14 +57,15 @@ void FormManagePrevisions::on_comboListPrevisions_activated(int index)
     }
 
     selectedPrevision=new PCx_Prevision(selectedPrevisionId);
+    PCx_Audit selectedAttachedAudit(selectedPrevision->getAttachedAuditId());
 
    // qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
 
     ui->labelDate->setText(selectedPrevision->getCreationTimeLocal().toString(Qt::DefaultLocaleLongDate));
     ui->labelName->setText(selectedPrevision->getPrevisionName());
-    ui->labelAttachedAudit->setText(selectedPrevision->getAttachedAudit()->getAuditName());
-
-
+    ui->labelAttachedAudit->setText(selectedAttachedAudit.getAuditName());
+    ui->labelAttachedAuditYears->setText(selectedAttachedAudit.getYearsString());
+    ui->labelAttachedTree->setText(selectedAttachedAudit.getAttachedTreeName());
 }
 
 void FormManagePrevisions::updateListOfAudits()

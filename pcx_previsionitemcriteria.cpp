@@ -1,48 +1,43 @@
-#include "pcx_previsioncriteria.h"
+#include "pcx_previsionitemcriteria.h"
 #include "utils.h"
 #include <QSqlQuery>
 #include <QSqlError>
 
-PCx_PrevisionCriteria::PCx_PrevisionCriteria(PREVISIONOPERATOR previsionOperator, PCx_Audit::ORED ored, qint64 previsionOperand)
+PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria(PREVISIONOPERATOR previsionOperator, PCx_Audit::ORED ored, qint64 previsionOperand)
     :previsionOperator(previsionOperator),previsionOredTarget(ored), previsionOperand(previsionOperand)
 {
 }
 
-PCx_PrevisionCriteria::PCx_PrevisionCriteria(const QString &serializedCriteria)
-{
-    Q_ASSERT(!serializedCriteria.isEmpty());
-    unserialize(serializedCriteria);
 
-}
 
-PCx_PrevisionCriteria::~PCx_PrevisionCriteria()
+PCx_PrevisionItemCriteria::~PCx_PrevisionItemCriteria()
 {
 
 }
 
-qint64 PCx_PrevisionCriteria::compute(PCx_Audit *audit, MODES::DFRFDIRI mode, unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
-    Q_ASSERT(audit!=nullptr && nodeId>0);
+    Q_ASSERT(auditId>0 && nodeId>0);
     switch(previsionOperator)
     {
     case PREVISIONOPERATOR::MINIMUM:
-        return getMinimumOf(audit,mode,nodeId);
+        return getMinimumOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::MAXIMUM:
-        return getMaximumOf(audit,mode,nodeId);
+        return getMaximumOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::AVERAGE:
-        return getAverageOf(audit,mode,nodeId);
+        return getAverageOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::MEDIAN:
-        return getMedianOf(audit,mode,nodeId);
+        return getMedianOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::REGLIN:
-        return getReglinOf(audit,mode,nodeId);
+        return getReglinOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::LASTVALUE:
-        return getLastValueOf(audit,mode,nodeId);
+        return getLastValueOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::PERCENT:
-        return getPercentOf(audit,mode,nodeId);
+        return getPercentOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::FIXEDVALUEFORLEAVES:
-        return getFixedValueForLeaves(audit,mode,nodeId);
+        return getFixedValueForLeaves(auditId,mode,nodeId);
     case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
-        return getFixedValueForNode(audit,mode,nodeId);
+        return getFixedValueForNode(auditId,mode,nodeId);
 
     }
     qWarning()<<"Unsupported case";
@@ -51,7 +46,7 @@ qint64 PCx_PrevisionCriteria::compute(PCx_Audit *audit, MODES::DFRFDIRI mode, un
 }
 
 
-QString PCx_PrevisionCriteria::getCriteriaLongDescription() const
+QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
 {
     QString output;
     switch(previsionOperator)
@@ -87,7 +82,7 @@ QString PCx_PrevisionCriteria::getCriteriaLongDescription() const
     return output;
 }
 
-QString PCx_PrevisionCriteria::getCriteriaShortDescription() const
+QString PCx_PrevisionItemCriteria::getCriteriaShortDescription() const
 {
     QString output;
     switch(previsionOperator)
@@ -123,7 +118,7 @@ QString PCx_PrevisionCriteria::getCriteriaShortDescription() const
     return output;
 }
 
-bool PCx_PrevisionCriteria::unserialize(const QString & criteriaString)
+bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
 {
     QStringList items=criteriaString.split(",");
     if(items.size()!=3)
@@ -187,7 +182,21 @@ bool PCx_PrevisionCriteria::unserialize(const QString & criteriaString)
     return true;
 }
 
-QString PCx_PrevisionCriteria::serialize() const
+void PCx_PrevisionItemCriteria::fillComboBoxWithOperators(QComboBox *combo)
+{
+    combo->clear();
+    combo->addItem(QObject::tr("Minimum"),PREVISIONOPERATOR::MINIMUM);
+    combo->addItem(QObject::tr("Maximum"),PREVISIONOPERATOR::MAXIMUM);
+    combo->addItem(QObject::tr("Moyenne"),PREVISIONOPERATOR::AVERAGE);
+    combo->addItem(QObject::tr("Médiane"),PREVISIONOPERATOR::MEDIAN);
+    combo->addItem(QObject::tr("Tendance"),PREVISIONOPERATOR::REGLIN);
+    combo->addItem(QObject::tr("Dernière valeur"),PREVISIONOPERATOR::LASTVALUE);
+    combo->addItem(QObject::tr("Pourcentage"),PREVISIONOPERATOR::PERCENT);
+    combo->addItem(QObject::tr("Valeur fixe par feuille"),PREVISIONOPERATOR::FIXEDVALUEFORLEAVES);
+    combo->addItem(QObject::tr("Valeur partagée"),PREVISIONOPERATOR::FIXEDVALUEFORNODE);
+}
+
+QString PCx_PrevisionItemCriteria::serialize() const
 {
     QString output;
     switch(previsionOperator)
@@ -225,35 +234,35 @@ QString PCx_PrevisionCriteria::serialize() const
     return output;
 }
 
-qint64 PCx_PrevisionCriteria::getLastValueOf(PCx_Audit *audit, MODES::DFRFDIRI mode, unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getLastValueOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
 
 }
 
-qint64 PCx_PrevisionCriteria::getPercentOf(PCx_Audit *audit, MODES::DFRFDIRI mode, unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
 
 }
 
-qint64 PCx_PrevisionCriteria::getFixedValueForLeaves(PCx_Audit *audit, MODES::DFRFDIRI mode, unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getFixedValueForLeaves(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
 
 }
 
-qint64 PCx_PrevisionCriteria::getFixedValueForNode(PCx_Audit *audit, MODES::DFRFDIRI mode, unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getFixedValueForNode(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
 
 }
 
-qint64 PCx_PrevisionCriteria::getMinimumOf(PCx_Audit *audit, MODES::DFRFDIRI mode,unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
     QSqlQuery q;
     q.prepare(QString("select min(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
               .arg(MODES::modeToTableString(mode))
-              .arg(audit->getAuditId()));
+              .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
     {
@@ -271,13 +280,13 @@ qint64 PCx_PrevisionCriteria::getMinimumOf(PCx_Audit *audit, MODES::DFRFDIRI mod
     return -MAX_NUM;
 }
 
-qint64 PCx_PrevisionCriteria::getMaximumOf(PCx_Audit *audit, MODES::DFRFDIRI mode,unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getMaximumOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
     QSqlQuery q;
     q.prepare(QString("select max(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
               .arg(MODES::modeToTableString(mode))
-              .arg(audit->getAuditId()));
+              .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
     {
@@ -296,13 +305,13 @@ qint64 PCx_PrevisionCriteria::getMaximumOf(PCx_Audit *audit, MODES::DFRFDIRI mod
 
 }
 
-qint64 PCx_PrevisionCriteria::getAverageOf(PCx_Audit *audit, MODES::DFRFDIRI mode,unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getAverageOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
     QSqlQuery q;
     q.prepare(QString("select avg(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
               .arg(MODES::modeToTableString(mode))
-              .arg(audit->getAuditId()));
+              .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
     {
@@ -321,13 +330,13 @@ qint64 PCx_PrevisionCriteria::getAverageOf(PCx_Audit *audit, MODES::DFRFDIRI mod
 
 }
 
-qint64 PCx_PrevisionCriteria::getMedianOf(PCx_Audit *audit, MODES::DFRFDIRI mode,unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
 
 }
 
-qint64 PCx_PrevisionCriteria::getReglinOf(PCx_Audit *audit, MODES::DFRFDIRI mode,unsigned int nodeId) const
+qint64 PCx_PrevisionItemCriteria::getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
 

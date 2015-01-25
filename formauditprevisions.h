@@ -26,9 +26,20 @@ private slots:
 
 
     void on_comboListPrevisions_activated(int index);
+    void on_comboBoxOperators_activated(int index);
+
+
+
+    void on_pushButtonAddCriteriaToAdd_clicked();
+
+    void on_pushButtonAddCriteriaToSubstract_clicked();
+
+    void on_pushButtonDelCriteria_clicked();
+
 private:
 
     PCx_Prevision *previsionModel;
+    PCx_AuditWithTreeModel *auditWithTreeModel;
     Ui::FormAuditPrevisions *ui;
     void updateListOfPrevisions();
 };

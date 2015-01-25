@@ -15,9 +15,7 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
     if(q.next())
     {
         previsionName=q.value("nom").toString();
-        unsigned int auditId=q.value("id_audit").toUInt();
-        attachedAudit=new PCx_AuditWithTreeModel(auditId);
-
+        attachedAuditId=q.value("id_audit").toUInt();
         creationTimeUTC=QDateTime::fromString(q.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         creationTimeUTC.setTimeSpec(Qt::UTC);
         creationTimeLocal=creationTimeUTC.toLocalTime();
@@ -31,38 +29,97 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
 }
 
 
-qint64 PCx_Prevision::computePrevision(unsigned int nodeId, MODES::DFRFDIRI mode, QList<PCx_PrevisionCriteria> criteriaToAdd, QList<PCx_PrevisionCriteria> criteriaToSubstract) const
+qint64 PCx_Prevision::computePrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, QList<PCx_PrevisionItemCriteria> criteriaToAdd, QList<PCx_PrevisionItemCriteria> criteriaToSubstract) const
 {
     Q_ASSERT(nodeId>0);
 
     qint64 value=0;
-    foreach(PCx_PrevisionCriteria oneCriteria,criteriaToAdd)
+
+    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToAdd)
     {
-        value+=oneCriteria.compute(attachedAudit,mode,nodeId);
+        value+=oneCriteria.compute(attachedAuditId,mode,nodeId);
     }
-    foreach(PCx_PrevisionCriteria oneCriteria,criteriaToSubstract)
+    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToSubstract)
     {
-        value-=oneCriteria.compute(attachedAudit,mode,nodeId);
+        value-=oneCriteria.compute(attachedAuditId,mode,nodeId);
     }
     return value;
-
 }
 
 
-bool PCx_Prevision::setPrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year, const QString &label, QList<PCx_PrevisionCriteria> criteriaToAdd, QList<PCx_PrevisionCriteria> criteriaToSubstract) const
+QHash<QString,QString> PCx_Prevision::getPrevisionItemDescription(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const
+{
+    QSqlQuery q;
+    QHash<QString,QString> description;
+
+    q.prepare(QString("select * from prevision_%1_%2 where id_node=:id_node and year=:year").arg(MODES::modeToTableString(mode))
+              .arg(previsionId));
+    q.bindValue(":id_node",nodeId);
+    q.bindValue(":year",year);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next())
+    {
+        description.insert("label",q.value("label").toString());
+        PCx_PrevisionItemCriteria criteria;
+
+        QStringList items=q.value("prevision_operators_to_add").toString().split(';');
+        QStringList itemDescriptions;
+        foreach(const QString &item,items)
+        {
+            if(criteria.unserialize(item))
+            {
+                itemDescriptions.append(criteria.getCriteriaLongDescription());
+            }
+            else
+            {
+                qDebug()<<"Unable to decode";
+                return description;
+            }
+
+        }
+        description.insert("add",itemDescriptions.join('+'));
+
+        itemDescriptions.clear();
+        items.clear();
+        items=q.value("prevision_operators_to_substract").toString().split(';');
+
+        foreach(const QString &item,items)
+        {
+            if(criteria.unserialize(item))
+            {
+                itemDescriptions.append(criteria.getCriteriaLongDescription());
+            }
+            else
+            {
+                qDebug()<<"Unable to decode";
+                return description;
+            }
+
+        }
+        description.insert("remove",itemDescriptions.join('-'));
+    }
+
+    return description;
+}
+
+
+int PCx_Prevision::setPrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year, const QString &label,
+                                    QList<PCx_PrevisionItemCriteria> criteriaToAdd, QList<PCx_PrevisionItemCriteria> criteriaToSubstract) const
 {
     Q_ASSERT(nodeId>0);
-    //FIXME : years
-    //if(year<=attachedAudit->getYears().last())
 
     QStringList operatorsToAddSerialized,operatorsToSubstractSerialized;
 
 
-    foreach(PCx_PrevisionCriteria oneCriteria,criteriaToAdd)
+    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToAdd)
     {
         operatorsToAddSerialized.append(oneCriteria.serialize());
     }
-    foreach(PCx_PrevisionCriteria oneCriteria,criteriaToSubstract)
+    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToSubstract)
     {
         operatorsToSubstractSerialized.append(oneCriteria.serialize());
     }
@@ -71,7 +128,7 @@ bool PCx_Prevision::setPrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, 
     q.prepare(QString("insert into prevision_%1_%2 (id_node,year,label,prevision_operators_to_add,"
                       "prevision_operators_to_substract) values (:id_node,:year,:label,:prevadd,:prevsub)")
               .arg(MODES::modeToTableString(mode))
-              .arg(attachedAudit->getAuditId()));
+              .arg(previsionId));
 
     q.bindValue(":id_node",nodeId);
     q.bindValue(":year",year);
@@ -81,30 +138,15 @@ bool PCx_Prevision::setPrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, 
     if(!q.exec())
     {
         qCritical()<<q.lastError();
-        return false;
+        return -1;
     }
     if(q.numRowsAffected()<=0)
     {
         qCritical()<<q.lastError();
-        return false;
+        return -1;
     }
-    return true;
+    return q.lastInsertId().toInt();
 }
-
-
-
-
-
-
-qint64 PCx_Prevision::computePrevision(unsigned int nodeId, MODES::DFRFDIRI mode) const
-{
-    Q_ASSERT(nodeId>0);
-
-}
-
-
-
-
 
 PCx_Prevision::~PCx_Prevision()
 {

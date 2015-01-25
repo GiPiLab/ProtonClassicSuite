@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>644</width>
-    <height>465</height>
+    <width>786</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,41 +17,42 @@
    <item row="0" column="0">
     <widget class="QComboBox" name="comboListPrevisions"/>
    </item>
-   <item row="0" column="1" rowspan="2">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>GroupBox</string>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="comboBoxOperators"/>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>des</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QRadioButton" name="radioButton">
-        <property name="text">
-         <string>RadioButton</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButton_2">
-        <property name="text">
-         <string>RadioButton</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButton_3">
-        <property name="text">
-         <string>RadioButton</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButton_4">
-        <property name="text">
-         <string>RadioButton</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QComboBox" name="comboBoxORED"/>
+   </item>
+   <item row="0" column="5">
+    <widget class="QDoubleSpinBox" name="doubleSpinBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="correctionMode">
+      <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+     </property>
+     <property name="showGroupSeparator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="suffix">
+      <string>%</string>
+     </property>
+     <property name="maximum">
+      <double>10000.000000000000000</double>
+     </property>
+     <property name="value">
+      <double>5.000000000000000</double>
+     </property>
     </widget>
    </item>
    <item row="1" column="0" rowspan="2">
@@ -66,9 +67,6 @@
       <bool>false</bool>
      </attribute>
     </widget>
-   </item>
-   <item row="2" column="1" rowspan="2">
-    <widget class="QTextEdit" name="textEdit"/>
    </item>
    <item row="3" column="0">
     <widget class="QGroupBox" name="groupBox">
@@ -106,6 +104,30 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="pushButtonDelCriteria">
+     <property name="text">
+      <string>Supprimer critère</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" colspan="2">
+    <widget class="QPushButton" name="pushButtonAddCriteriaToSubstract">
+     <property name="text">
+      <string>Ajouter ce critère comme soustraction</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QPushButton" name="pushButtonAddCriteriaToAdd">
+     <property name="text">
+      <string>Ajouter critère comme addition</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="4">
+    <widget class="QListWidget" name="listWidgetCriteria"/>
    </item>
   </layout>
  </widget>
