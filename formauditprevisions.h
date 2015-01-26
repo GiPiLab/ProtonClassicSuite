@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "pcx_prevision.h"
+#include "pcx_previsionitemtablemodel.h"
 
 namespace Ui {
 class FormAuditPrevisions;
@@ -36,12 +37,27 @@ private slots:
 
     void on_pushButtonDelCriteria_clicked();
 
+    void on_radioButtonDF_toggled(bool checked);
+
+    void on_radioButtonRF_toggled(bool checked);
+
+    void on_radioButtonDI_toggled(bool checked);
+
+    void on_radioButtonRI_toggled(bool checked);
+
+    void on_pushButtonDeleteAll_clicked();
+
 private:
 
     PCx_Prevision *previsionModel;
     PCx_AuditWithTreeModel *auditWithTreeModel;
+    PCx_PrevisionItemTableModel *previsionItemTableModel;
+    MODES::DFRFDIRI currentMode;
+    unsigned int currentNodeId;
     Ui::FormAuditPrevisions *ui;
     void updateListOfPrevisions();
+    void updatePrevisionItemListModel();
+    void updateLabels();
 };
 
 #endif // FORMAUDITPREVISIONS_H

@@ -28,126 +28,6 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
 
 }
 
-
-qint64 PCx_Prevision::computePrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, QList<PCx_PrevisionItemCriteria> criteriaToAdd, QList<PCx_PrevisionItemCriteria> criteriaToSubstract) const
-{
-    Q_ASSERT(nodeId>0);
-
-    qint64 value=0;
-
-    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToAdd)
-    {
-        value+=oneCriteria.compute(attachedAuditId,mode,nodeId);
-    }
-    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToSubstract)
-    {
-        value-=oneCriteria.compute(attachedAuditId,mode,nodeId);
-    }
-    return value;
-}
-
-
-QHash<QString,QString> PCx_Prevision::getPrevisionItemDescription(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const
-{
-    QSqlQuery q;
-    QHash<QString,QString> description;
-
-    q.prepare(QString("select * from prevision_%1_%2 where id_node=:id_node and year=:year").arg(MODES::modeToTableString(mode))
-              .arg(previsionId));
-    q.bindValue(":id_node",nodeId);
-    q.bindValue(":year",year);
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        die();
-    }
-    if(q.next())
-    {
-        description.insert("label",q.value("label").toString());
-        PCx_PrevisionItemCriteria criteria;
-
-        QStringList items=q.value("prevision_operators_to_add").toString().split(';');
-        QStringList itemDescriptions;
-        foreach(const QString &item,items)
-        {
-            if(criteria.unserialize(item))
-            {
-                itemDescriptions.append(criteria.getCriteriaLongDescription());
-            }
-            else
-            {
-                qDebug()<<"Unable to decode";
-                return description;
-            }
-
-        }
-        description.insert("add",itemDescriptions.join('+'));
-
-        itemDescriptions.clear();
-        items.clear();
-        items=q.value("prevision_operators_to_substract").toString().split(';');
-
-        foreach(const QString &item,items)
-        {
-            if(criteria.unserialize(item))
-            {
-                itemDescriptions.append(criteria.getCriteriaLongDescription());
-            }
-            else
-            {
-                qDebug()<<"Unable to decode";
-                return description;
-            }
-
-        }
-        description.insert("remove",itemDescriptions.join('-'));
-    }
-
-    return description;
-}
-
-
-int PCx_Prevision::setPrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year, const QString &label,
-                                    QList<PCx_PrevisionItemCriteria> criteriaToAdd, QList<PCx_PrevisionItemCriteria> criteriaToSubstract) const
-{
-    Q_ASSERT(nodeId>0);
-
-    QStringList operatorsToAddSerialized,operatorsToSubstractSerialized;
-
-
-    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToAdd)
-    {
-        operatorsToAddSerialized.append(oneCriteria.serialize());
-    }
-    foreach(PCx_PrevisionItemCriteria oneCriteria,criteriaToSubstract)
-    {
-        operatorsToSubstractSerialized.append(oneCriteria.serialize());
-    }
-
-    QSqlQuery q;
-    q.prepare(QString("insert into prevision_%1_%2 (id_node,year,label,prevision_operators_to_add,"
-                      "prevision_operators_to_substract) values (:id_node,:year,:label,:prevadd,:prevsub)")
-              .arg(MODES::modeToTableString(mode))
-              .arg(previsionId));
-
-    q.bindValue(":id_node",nodeId);
-    q.bindValue(":year",year);
-    q.bindValue(":label",label);
-    q.bindValue(":prevadd",operatorsToAddSerialized.join(';'));
-    q.bindValue(":prevsub",operatorsToSubstractSerialized.join(';'));
-    if(!q.exec())
-    {
-        qCritical()<<q.lastError();
-        return -1;
-    }
-    if(q.numRowsAffected()<=0)
-    {
-        qCritical()<<q.lastError();
-        return -1;
-    }
-    return q.lastInsertId().toInt();
-}
-
 PCx_Prevision::~PCx_Prevision()
 {
 
@@ -250,10 +130,6 @@ bool PCx_Prevision::deletePrevision(unsigned int previsionId)
     return true;
 }
 
-
-
-
-
 QList<QPair<unsigned int, QString> > PCx_Prevision::getListOfPrevisions()
 {
     QList<QPair<unsigned int,QString> > listOfPrevisions;
@@ -309,11 +185,6 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
         QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Il existe déjà une prévision portant ce nom !"));
         return false;
     }
-
-
-
-
-
 
     QSqlDatabase::database().transaction();
     q.prepare("insert into index_previsions (nom,id_audit) values (:nom,:id_audit)");

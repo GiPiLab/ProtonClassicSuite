@@ -3,6 +3,16 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
+PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria()
+{
+
+}
+
+PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria(const QString &serializedCriteria)
+{
+    unserialize(serializedCriteria);
+}
+
 PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria(PREVISIONOPERATOR previsionOperator, PCx_Audit::ORED ored, qint64 previsionOperand)
     :previsionOperator(previsionOperator),previsionOredTarget(ored), previsionOperand(previsionOperand)
 {
@@ -18,6 +28,7 @@ PCx_PrevisionItemCriteria::~PCx_PrevisionItemCriteria()
 qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
     Q_ASSERT(auditId>0 && nodeId>0);
+
     switch(previsionOperator)
     {
     case PREVISIONOPERATOR::MINIMUM:
@@ -38,11 +49,8 @@ qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI 
         return getFixedValueForLeaves(auditId,mode,nodeId);
     case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
         return getFixedValueForNode(auditId,mode,nodeId);
-
     }
-    qWarning()<<"Unsupported case";
     return -MAX_NUM;
-
 }
 
 
@@ -103,10 +111,10 @@ QString PCx_PrevisionItemCriteria::getCriteriaShortDescription() const
         output=QObject::tr("tendance %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
     case PREVISIONOPERATOR::LASTVALUE:
-        output=QObject::tr("derniers %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("les derniers %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
     case PREVISIONOPERATOR::PERCENT:
-        output=QObject::tr("%1\% derniers %2s").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("%1\% des derniers %2s").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
     case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
         output=QObject::tr("%1€ partagé").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand));
@@ -120,7 +128,9 @@ QString PCx_PrevisionItemCriteria::getCriteriaShortDescription() const
 
 bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
 {
-    QStringList items=criteriaString.split(",");
+    if(criteriaString.isEmpty())
+        return true;
+    QStringList items=criteriaString.split(",",QString::SkipEmptyParts);
     if(items.size()!=3)
     {
         qWarning()<<"Invalid criteria string : "<<criteriaString;
@@ -175,8 +185,8 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
     }
     else
     {
-        qWarning()<<"Invalid prevision operator";
-        return false;
+        qCritical()<<"Invalid prevision operator";
+        die();
     }
 
     return true;
@@ -229,8 +239,6 @@ QString PCx_PrevisionItemCriteria::serialize() const
         output=QString("fixedvalueforleaves,0,%1").arg(previsionOperand);
         break;
     }
-
-    qDebug()<<output;
     return output;
 }
 
@@ -238,28 +246,52 @@ qint64 PCx_PrevisionItemCriteria::getLastValueOf(unsigned int auditId, MODES::DF
 {
     Q_ASSERT(nodeId>0);
 
+    QSqlQuery q;
+
+    q.prepare(QString("select %1 from audit_%2_%3 where id_node=:id_node order by annee desc limit 1").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
+              .arg(MODES::modeToTableString(mode))
+              .arg(auditId));
+    q.bindValue(":id_node",nodeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next())
+    {
+        return q.value(0).toLongLong();
+    }
+    else
+    {
+        qWarning()<<"No data";
+    }
+    return -MAX_NUM;
+
 }
 
 qint64 PCx_PrevisionItemCriteria::getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
+    return 0;
 
 }
 
 qint64 PCx_PrevisionItemCriteria::getFixedValueForLeaves(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
+    return 0;
 
 }
 
 qint64 PCx_PrevisionItemCriteria::getFixedValueForNode(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
-
+    return 0;
 }
 
 qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
     QSqlQuery q;
+
     q.prepare(QString("select min(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
               .arg(MODES::modeToTableString(mode))
               .arg(auditId));
@@ -333,12 +365,14 @@ qint64 PCx_PrevisionItemCriteria::getAverageOf(unsigned int auditId, MODES::DFRF
 qint64 PCx_PrevisionItemCriteria::getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
+    return 0;
 
 }
 
 qint64 PCx_PrevisionItemCriteria::getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
+    return 0;
 
 }
 

@@ -60,7 +60,8 @@ SOURCES += main.cpp\
     pcx_prevision.cpp \
     formauditprevisions.cpp \
     formmanageprevisions.cpp \
-    pcx_previsionitemcriteria.cpp
+    pcx_previsionitemcriteria.cpp \
+    pcx_previsionitemtablemodel.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -106,7 +107,8 @@ HEADERS  += mainwindow.h \
     pcx_prevision.h \
     formauditprevisions.h \
     formmanageprevisions.h \
-    pcx_previsionitemcriteria.h
+    pcx_previsionitemcriteria.h \
+    pcx_previsionitemtablemodel.h
 
 FORMS    += mainwindow.ui \
     formdisplaytree.ui \

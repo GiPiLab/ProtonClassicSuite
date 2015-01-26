@@ -22,7 +22,8 @@ public:
         FIXEDVALUEFORNODE
     };
 
-    PCx_PrevisionItemCriteria(){}
+    PCx_PrevisionItemCriteria();
+    PCx_PrevisionItemCriteria(const QString &serializedCriteria);
     PCx_PrevisionItemCriteria(PREVISIONOPERATOR previsionOperator, PCx_Audit::ORED ored, qint64 previsionOperand=0);
     ~PCx_PrevisionItemCriteria();
 

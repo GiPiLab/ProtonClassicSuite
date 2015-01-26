@@ -4,6 +4,7 @@
 #include "pcx_auditwithtreemodel.h"
 #include "pcx_previsionitemcriteria.h"
 #include <QDateTime>
+#include <QAbstractListModel>
 
 class PCx_Prevision
 {
@@ -23,19 +24,6 @@ public:
     static bool previsionNameExists(const QString &previsionName);
     static QList<QPair<unsigned int, QString> > getListOfPrevisions();
     static bool deletePrevision(unsigned int previsionId);
-
-
-    qint64 computePrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, QList<PCx_PrevisionItemCriteria> criteriaToAdd,
-                            QList<PCx_PrevisionItemCriteria> criteriaToSubstract) const;
-
-    qint64 computePrevisionItem(unsigned int previsionItemId, MODES::DFRFDIRI mode) const;
-
-    int setPrevisionItem(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year, const QString &label,
-                          QList<PCx_PrevisionItemCriteria> criteriaToAdd, QList<PCx_PrevisionItemCriteria> criteriaToSubstract) const;
-
-    QHash<QString,QString> getPrevisionItemDescription(unsigned int nodeId, MODES::DFRFDIRI mode, unsigned int year) const;
-
-
 
 
 private:
