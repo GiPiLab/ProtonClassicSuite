@@ -15,6 +15,7 @@ public:
     unsigned int getPrevisionId()const{return previsionId;}
     QString getPrevisionName()const{return previsionName;}
     unsigned int getAttachedAuditId()const{return attachedAuditId;}
+    unsigned int getAttachedTreeId()const{return attachedTreeId;}
     QDateTime getCreationTimeLocal()const{return creationTimeLocal;}
     QDateTime getCreationTimeUTC()const{return creationTimeUTC;}
 
@@ -29,6 +30,7 @@ public:
 private:
     unsigned int previsionId;
     unsigned int attachedAuditId;
+    unsigned int attachedTreeId;
     QString previsionName;
     QDateTime creationTimeLocal;
     QDateTime creationTimeUTC;

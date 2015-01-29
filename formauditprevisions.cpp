@@ -132,6 +132,7 @@ void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
 {
     Q_UNUSED(index);
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+  //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
     updatePrevisionItemListModel();
     updateLabels();
 }
@@ -146,10 +147,12 @@ void FormAuditPrevisions::on_comboBoxOperators_activated(int index)
         case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFORNODE:
         ui->comboBoxORED->setEnabled(false);
         ui->doubleSpinBox->setEnabled(true);
+        ui->doubleSpinBox->setSuffix("€");
         break;
         case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::PERCENT:
         ui->comboBoxORED->setEnabled(true);
         ui->doubleSpinBox->setEnabled(true);
+        ui->doubleSpinBox->setSuffix("%");
         break;
     default:
         ui->comboBoxORED->setEnabled(true);

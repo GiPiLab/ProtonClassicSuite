@@ -172,6 +172,30 @@ QList<unsigned int> PCx_Tree::getLeavesId() const
     return leaves;
 }
 
+QList<unsigned int> PCx_Tree::getLeavesId(unsigned int parentNode) const
+{
+    QList<unsigned int> children;
+    QList<unsigned int> leaves;
+    if(isLeaf(parentNode))
+    {
+        leaves.append(parentNode);
+        return leaves;
+    }
+    children=getChildren(parentNode);
+    foreach(unsigned int child,children)
+    {
+        if(isLeaf(child))
+        {
+            leaves.append(child);
+        }
+        else
+        {
+            leaves.append(getLeavesId(child));
+        }
+    }
+    return leaves;
+}
+
 QSet<unsigned int> PCx_Tree::getNodesWithSharedName() const
 {
     QSqlQuery q(QString("select * from arbre_%1").arg(treeId));

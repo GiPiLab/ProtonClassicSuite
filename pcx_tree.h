@@ -114,6 +114,13 @@ public:
      */
     QList<unsigned int> getLeavesId() const;
 
+    /**
+     * @brief getLeavesId gets the identifier of the nodes that are both leaves and descendants of parentNode
+     * @param parentNode the node identifier
+     * @return a list of leaves ID
+     */
+    QList<unsigned int> getLeavesId(unsigned int parentNode) const;
+
 
     /**
      * @brief PCx_Tree::getNodesId gets ID of all the nodes

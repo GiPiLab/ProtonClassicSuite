@@ -72,6 +72,7 @@ QString PCx_PrevisionItemTableModel::getLongDescription() const
 qint64 PCx_PrevisionItemTableModel::computeTotal() const
 {
     qint64 total=0;
+
     foreach(const PCx_PrevisionItemCriteria &criteria, itemsToAdd)
     {
         total+=criteria.compute(prevision->getAttachedAuditId(),mode,nodeId);

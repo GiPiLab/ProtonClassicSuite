@@ -16,6 +16,8 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
     {
         previsionName=q.value("nom").toString();
         attachedAuditId=q.value("id_audit").toUInt();
+        PCx_Audit tmpAudit(attachedAuditId);
+        attachedTreeId=tmpAudit.getAttachedTreeId();
         creationTimeUTC=QDateTime::fromString(q.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         creationTimeUTC.setTimeSpec(Qt::UTC);
         creationTimeLocal=creationTimeUTC.toLocalTime();
