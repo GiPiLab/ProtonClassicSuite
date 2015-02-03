@@ -45,10 +45,8 @@ qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI 
         return getLastValueOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::PERCENT:
         return getPercentOf(auditId,mode,nodeId);
-    case PREVISIONOPERATOR::FIXEDVALUEFORLEAVES:
-        return getFixedValueForLeaves(auditId,mode,nodeId);
-    case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
-        return getFixedValueForNode(auditId,mode,nodeId);
+    case PREVISIONOPERATOR::FIXEDVALUE:
+        return getFixedValue(auditId,mode,nodeId);
     }
     return -MAX_NUM;
 }
@@ -78,13 +76,10 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
         output=QObject::tr("la dernière valeur des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
     case PREVISIONOPERATOR::PERCENT:
-        output=QObject::tr("%1\% de la dernière valeur des crédits %2s").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("%1\% de la dernière valeur des crédits %2s").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
-    case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
-        output=QObject::tr("%1€ à partager entre les feuilles").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand));
-        break;
-    case PREVISIONOPERATOR::FIXEDVALUEFORLEAVES:
-        output=QObject::tr("%1€ pour chaque feuille").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand));
+    case PREVISIONOPERATOR::FIXEDVALUE:
+        output=QObject::tr("Valeur fixe");
         break;
     }
     return output;
@@ -114,13 +109,10 @@ QString PCx_PrevisionItemCriteria::getCriteriaShortDescription() const
         output=QObject::tr("les derniers %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
     case PREVISIONOPERATOR::PERCENT:
-        output=QObject::tr("%1\% des derniers %2s").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("%1\% des derniers %2s").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
-    case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
-        output=QObject::tr("%1€ partagé").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand));
-        break;
-    case PREVISIONOPERATOR::FIXEDVALUEFORLEAVES:
-        output=QObject::tr("%1€ par feuille").arg(NUMBERSFORMAT::fixedPointToDouble(previsionOperand));
+    case PREVISIONOPERATOR::FIXEDVALUE:
+        output=QObject::tr("Valeur fixe");
         break;
     }
     return output;
@@ -173,14 +165,9 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
         previsionOredTarget=PCx_Audit::OREDFromTableString(items[1]);
         previsionOperand=items[2].toLongLong();
     }
-    else if(items[0]=="fixedvaluefornode")
+    else if(items[0]=="fixedvalue")
     {
-        previsionOperator=PREVISIONOPERATOR::FIXEDVALUEFORNODE;
-        previsionOperand=items[2].toLongLong();
-    }
-    else if(items[0]=="fixedvalueforleaves")
-    {
-        previsionOperator=PREVISIONOPERATOR::FIXEDVALUEFORLEAVES;
+        previsionOperator=PREVISIONOPERATOR::FIXEDVALUE;
         previsionOperand=items[2].toLongLong();
     }
     else
@@ -200,10 +187,12 @@ void PCx_PrevisionItemCriteria::fillComboBoxWithOperators(QComboBox *combo)
     combo->addItem(QObject::tr("Moyenne"),PREVISIONOPERATOR::AVERAGE);
     combo->addItem(QObject::tr("Médiane"),PREVISIONOPERATOR::MEDIAN);
     combo->addItem(QObject::tr("Tendance"),PREVISIONOPERATOR::REGLIN);
+    combo->addItem(QObject::tr("Valeur fixe"),PREVISIONOPERATOR::FIXEDVALUE);
     combo->addItem(QObject::tr("Dernière valeur"),PREVISIONOPERATOR::LASTVALUE);
     combo->addItem(QObject::tr("Pourcentage"),PREVISIONOPERATOR::PERCENT);
-    combo->addItem(QObject::tr("Valeur fixe par feuille"),PREVISIONOPERATOR::FIXEDVALUEFORLEAVES);
-    combo->addItem(QObject::tr("Valeur partagée"),PREVISIONOPERATOR::FIXEDVALUEFORNODE);
+
+
+
 }
 
 QString PCx_PrevisionItemCriteria::serialize() const
@@ -232,11 +221,8 @@ QString PCx_PrevisionItemCriteria::serialize() const
     case PREVISIONOPERATOR::PERCENT:
         output=QString("percent,%1,%2").arg(PCx_Audit::OREDtoTableString(previsionOredTarget)).arg(previsionOperand);
         break;
-    case PREVISIONOPERATOR::FIXEDVALUEFORNODE:
-        output=QString("fixedvaluefornode,0,%1").arg(previsionOperand);
-        break;
-    case PREVISIONOPERATOR::FIXEDVALUEFORLEAVES:
-        output=QString("fixedvalueforleaves,0,%1").arg(previsionOperand);
+    case PREVISIONOPERATOR::FIXEDVALUE:
+        output=QString("fixedvalue,0,%1").arg(previsionOperand);
         break;
     }
     return output;
@@ -274,17 +260,6 @@ qint64 PCx_PrevisionItemCriteria::getPercentOf(unsigned int auditId, MODES::DFRF
     Q_ASSERT(nodeId>0);
     return 0;
 
-}
-
-qint64 PCx_PrevisionItemCriteria::getFixedValueForLeaves(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
-{
-    return 0;
-
-}
-
-qint64 PCx_PrevisionItemCriteria::getFixedValueForNode(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
-{
-    return 0;
 }
 
 qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const

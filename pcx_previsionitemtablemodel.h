@@ -21,7 +21,9 @@ public:
     QString getLabel()const{return label;}
     QString getLongDescription()const;
 
-    qint64 computeTotal()const;
+    QString getNodeAndAttachedLeavesPrevisionItemHTMLTable() const;
+
+    qint64 getComputedPrevisionItemValue()const;
 
     void insertCriteriaToAdd(PCx_PrevisionItemCriteria criteria);
     void insertCriteriaToSub(PCx_PrevisionItemCriteria criteria);
@@ -31,19 +33,28 @@ public:
     int columnCount(const QModelIndex &parent) const;
     int rowCount(const QModelIndex &parent=QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
+
+    QString dataAsHTML() const;
+
+    void saveDataToDb()const;
+    void dispatchComputedValueToChildrenLeaves() const;
+
+
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 
+    void dispatchCriteriaItemsToChildrenLeaves();
 private:
     PCx_Prevision *prevision;
     MODES::DFRFDIRI mode;
     unsigned int nodeId;
     unsigned int year;
     QString label;
+    qint64 computedValue;
 
-    void saveDataToDb()const;
 
     QList<PCx_PrevisionItemCriteria> itemsToAdd,itemsToSubstract;
+    qint64 computePrevisionItemValue()const;
 };
 
 #endif // PCX_PREVISIONITEMTABLEMODEL_H

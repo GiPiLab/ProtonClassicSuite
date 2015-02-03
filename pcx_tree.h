@@ -381,7 +381,12 @@ public:
 
 
 
-
+    /**
+     * @brief getAncestorsId returns the list of ancestors id
+     * @param node the current node
+     * @return the list of ancestors
+     */
+    QList<unsigned int> getAncestorsId(unsigned int node) const;
 protected:
 
     /**

@@ -47,11 +47,16 @@ private slots:
 
     void on_pushButtonDeleteAll_clicked();
 
+    void on_pushButtonApplyToNode_clicked();
+
+    void on_pushButtonApplyToLeaves_clicked();
+
 private:
 
     PCx_Prevision *previsionModel;
     PCx_AuditWithTreeModel *auditWithTreeModel;
     PCx_PrevisionItemTableModel *previsionItemTableModel;
+
     MODES::DFRFDIRI currentMode;
     unsigned int currentNodeId;
     Ui::FormAuditPrevisions *ui;

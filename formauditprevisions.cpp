@@ -94,7 +94,7 @@ void FormAuditPrevisions::updateLabels()
 {
     ui->labelNodeName->setText(auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId));
     ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last())));
-    ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(previsionItemTableModel->computeTotal()));
+    ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(previsionItemTableModel->getComputedPrevisionItemValue()));
     ui->tableViewCriteria->resizeColumnsToContents();
 }
 
@@ -134,6 +134,8 @@ void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
   //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
     updatePrevisionItemListModel();
+
+    ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
     updateLabels();
 }
 
@@ -143,8 +145,7 @@ void FormAuditPrevisions::on_comboBoxOperators_activated(int index)
     Q_UNUSED(index);
     switch(ui->comboBoxOperators->currentData().toInt())
     {
-        case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFORLEAVES:
-        case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFORNODE:
+        case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE:
         ui->comboBoxORED->setEnabled(false);
         ui->doubleSpinBox->setEnabled(true);
         ui->doubleSpinBox->setSuffix("€");
@@ -173,6 +174,7 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToAdd_clicked()
     PCx_PrevisionItemCriteria criteria(prevop,ored,operand);
     previsionItemTableModel->insertCriteriaToAdd(criteria);
     updateLabels();
+
 }
 
 void FormAuditPrevisions::on_pushButtonAddCriteriaToSubstract_clicked()
@@ -193,9 +195,10 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToSubstract_clicked()
 void FormAuditPrevisions::on_pushButtonDelCriteria_clicked()
 {
     QItemSelectionModel *selectionModel=ui->tableViewCriteria->selectionModel();
+    if(selectionModel->selectedRows().isEmpty())
+        return;
     previsionItemTableModel->deleteCriteria(selectionModel->selectedRows());
     updateLabels();
-
 
 }
 
@@ -206,6 +209,7 @@ void FormAuditPrevisions::on_radioButtonDF_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::DF;
         updatePrevisionItemListModel();
         updateLabels();
+        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
     }
 }
 
@@ -216,6 +220,7 @@ void FormAuditPrevisions::on_radioButtonRF_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::RF;
         updatePrevisionItemListModel();
         updateLabels();
+        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
     }
 }
 
@@ -226,6 +231,7 @@ void FormAuditPrevisions::on_radioButtonDI_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::DI;
         updatePrevisionItemListModel();
         updateLabels();
+        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
     }
 }
 
@@ -236,6 +242,7 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::RI;
         updatePrevisionItemListModel();
         updateLabels();
+        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
     }
 }
 
@@ -243,4 +250,26 @@ void FormAuditPrevisions::on_pushButtonDeleteAll_clicked()
 {
     previsionItemTableModel->deleteAllCriteria();
     updateLabels();
+}
+
+void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
+{
+    if(previsionItemTableModel!=nullptr)
+    {
+        previsionItemTableModel->saveDataToDb();
+        previsionItemTableModel->dispatchComputedValueToChildrenLeaves();
+        updateLabels();
+        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+    }
+}
+
+void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
+{
+    if(previsionItemTableModel!=nullptr)
+    {
+        previsionItemTableModel->saveDataToDb();
+        previsionItemTableModel->dispatchCriteriaItemsToChildrenLeaves();
+        updateLabels();
+        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+    }
 }

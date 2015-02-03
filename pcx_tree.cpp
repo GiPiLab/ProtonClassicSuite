@@ -172,6 +172,22 @@ QList<unsigned int> PCx_Tree::getLeavesId() const
     return leaves;
 }
 
+
+QList<unsigned int> PCx_Tree::getAncestorsId(unsigned int node) const
+{
+    QList<unsigned int> ancestors;
+    if(node==1)return ancestors;
+
+    do
+    {
+        unsigned int parent=getParentId(node);
+        ancestors.append(parent);
+        node=parent;
+    }while(node>1);
+    return ancestors;
+}
+
+
 QList<unsigned int> PCx_Tree::getLeavesId(unsigned int parentNode) const
 {
     QList<unsigned int> children;

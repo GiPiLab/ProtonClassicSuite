@@ -18,8 +18,7 @@ public:
         REGLIN,
         LASTVALUE,
         PERCENT,
-        FIXEDVALUEFORLEAVES,
-        FIXEDVALUEFORNODE
+        FIXEDVALUE
     };
 
     PCx_PrevisionItemCriteria();
@@ -53,8 +52,7 @@ private:
     qint64 getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getLastValueOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
-    qint64 getFixedValueForLeaves(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
-    qint64 getFixedValueForNode(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
+    qint64 getFixedValue(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const{return previsionOperand;}
 
 
     PREVISIONOPERATOR previsionOperator;

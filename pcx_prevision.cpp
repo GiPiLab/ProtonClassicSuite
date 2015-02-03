@@ -214,7 +214,7 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
 
 
     if(!q.exec(QString("create table prevision_DF_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, unique(id_node,year) on conflict replace)").arg(uLastId)))
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer, unique(id_node,year) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -232,7 +232,7 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     }
 
     if(!q.exec(QString("create table prevision_RF_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, unique(id_node,year) on conflict replace)").arg(uLastId)))
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer,unique(id_node,year) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -251,7 +251,7 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     }
 
     if(!q.exec(QString("create table prevision_DI_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, unique(id_node,year) on conflict replace)").arg(uLastId)))
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer, unique(id_node,year) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -270,7 +270,7 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     }
 
     if(!q.exec(QString("create table prevision_RI_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, unique(id_node,year) on conflict replace)").arg(uLastId)))
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer, unique(id_node,year) on conflict replace)").arg(uLastId)))
     {
         qCritical()<<q.lastError();
         die();
