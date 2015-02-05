@@ -93,7 +93,7 @@ qint64 PCx_PrevisionItem::getSummedPrevisionItemValue() const
 
     QList<unsigned int> childrenLeaves=prevision->getAttachedTree()->getLeavesId(nodeId);
 
-
+    /* Fastest but possibly limited by the number of statements in 'IN' sql
     QStringList childrenLeavesIdString;
     foreach(unsigned int leaf,childrenLeaves)
     {
@@ -114,6 +114,23 @@ qint64 PCx_PrevisionItem::getSummedPrevisionItemValue() const
     {
         qCritical()<<q.lastError();
         die();
+    }
+*/
+    QString reqString=QString("select computedPrevision from prevision_%1_%2 where year=%3 and id_node=")
+            .arg(MODES::modeToTableString(mode))
+            .arg(prevision->getPrevisionId())
+            .arg(year);
+
+
+
+    foreach(unsigned int leaf,childrenLeaves)
+    {
+        QSqlQuery q(reqString+QString::number(leaf));
+
+        if(q.next())
+        {
+            total+=q.value(0).toLongLong();
+        }
     }
     return total;
 }
@@ -230,24 +247,21 @@ void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves() const
                 qint64 val=prevision->getAttachedAudit()->getNodeValue(descendant,mode,PCx_Audit::ORED::REALISES,lastYear);
                 if(val!=-MAX_NUM)
                 {
-                    double percent=(double)val/(double)total;
-                    qint64 newVal=computedValue*percent;
-                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE,PCx_Audit::ORED::OUVERTS,newVal);
-                    tmpItem.deleteAllCriteria();
+                    double percent=(double)val/total;
+                    double newVal=NUMBERSFORMAT::fixedPointToDouble(computedValue)*percent;
+                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE,PCx_Audit::ORED::OUVERTS,NUMBERSFORMAT::doubleToFixedPoint(newVal));
                     tmpItem.insertCriteriaToAdd(criteria);
                     tmpItem.saveDataToDb();
                 }
                 else
                 {
                     PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE,PCx_Audit::ORED::OUVERTS,0);
-                    tmpItem.deleteAllCriteria();
                     tmpItem.insertCriteriaToAdd(criteria);
                     tmpItem.saveDataToDb();
                 }
             }
             else
             {
-                tmpItem.deleteAllCriteria();
                 tmpItem.saveDataToDb();
             }
         }
@@ -257,7 +271,6 @@ void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves() const
     foreach(unsigned int ancestor,ancestors)
     {
         PCx_PrevisionItem tmpItem(prevision,mode,ancestor,year);
-        tmpItem.deleteAllCriteria();
         tmpItem.saveDataToDb();
     }
     QSqlDatabase::database().commit();

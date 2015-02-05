@@ -190,7 +190,15 @@ void FormAuditPrevisions::onAnchorClicked(QUrl url)
     }
     unsigned int nodeId=nodeString.at(1).toUInt();
 
-    qDebug()<<nodeId;
+    QModelIndexList indexOfNode=auditWithTreeModel->getAttachedTree()->getIndexOfNodeId(nodeId);
+    if(indexOfNode.count()==1)
+    {
+        const QModelIndex &index=indexOfNode.at(0);
+        ui->treeView->selectionModel()->select(index,QItemSelectionModel::ClearAndSelect);
+        ui->treeView->scrollTo(index);
+        on_treeView_clicked(index);
+    }
+
 }
 
 

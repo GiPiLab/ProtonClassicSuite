@@ -108,7 +108,12 @@ public:
     bool deleteType(unsigned int typeId);
 
 
-
+    /**
+     * @brief getIndexOfNodeId gets the QModelIndex of the nodeID
+     * @param nodeId the node ID
+     * @return the model index of this node in the treeModel
+     */
+    QModelIndexList getIndexOfNodeId(unsigned int nodeId) const;
 private:
 
     /**

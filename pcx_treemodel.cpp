@@ -141,6 +141,11 @@ QModelIndexList PCx_TreeModel::getIndexesOfNodesWithThisType(unsigned int typeId
     return match(index(0,0),PCx_TreeModel::TypeIdUserRole,QVariant(typeId),-1,Qt::MatchRecursive);
 }
 
+QModelIndexList PCx_TreeModel::getIndexOfNodeId(unsigned int nodeId) const
+{
+    return match(index(0,0),PCx_TreeModel::NodeIdUserRole,QVariant(nodeId),-1,Qt::MatchRecursive);
+}
+
 unsigned int PCx_TreeModel::addType(const QString &typeName)
 {
     unsigned int typeId=PCx_Tree::addType(typeName);
