@@ -2,6 +2,7 @@
 #define FORMAUDITPREVISIONS_H
 
 #include <QWidget>
+#include <QUrl>
 #include "pcx_prevision.h"
 #include "pcx_previsionitemtablemodel.h"
 
@@ -29,6 +30,8 @@ private slots:
     void on_comboListPrevisions_activated(int index);
     void on_comboBoxOperators_activated(int index);
 
+    void onAnchorClicked(QUrl url);
+
 
 
     void on_pushButtonAddCriteriaToAdd_clicked();
@@ -55,13 +58,14 @@ private:
 
     PCx_Prevision *previsionModel;
     PCx_AuditWithTreeModel *auditWithTreeModel;
+    PCx_PrevisionItem* currentPrevisionItem;
     PCx_PrevisionItemTableModel *previsionItemTableModel;
 
     MODES::DFRFDIRI currentMode;
     unsigned int currentNodeId;
     Ui::FormAuditPrevisions *ui;
     void updateListOfPrevisions();
-    void updatePrevisionItemListModel();
+    void updatePrevisionItemTableModel();
     void updateLabels();
 };
 

@@ -88,8 +88,8 @@ bool loadDb(const QString &databaseName)
     QSqlQuery("PRAGMA synchronous=OFF");
     QSqlQuery("PRAGMA page_size = 4096");
     QSqlQuery("PRAGMA cache_size = 16384");
-    QSqlQuery("PRAGMA temp_store = MEMORY");*/
-
+    QSqlQuery("PRAGMA temp_store = MEMORY");
+*/
     initializeNewDb();
 
     return true;

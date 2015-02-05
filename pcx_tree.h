@@ -116,10 +116,10 @@ public:
 
     /**
      * @brief getLeavesId gets the identifier of the nodes that are both leaves and descendants of parentNode
-     * @param parentNode the node identifier
-     * @return a list of leaves ID
+     * @param node the node identifier
+     * @return a list of leaves ID, the node if the node is a leaf
      */
-    QList<unsigned int> getLeavesId(unsigned int parentNode) const;
+    QList<unsigned int> getLeavesId(unsigned int node) const;
 
 
     /**
@@ -157,11 +157,20 @@ public:
     unsigned int getParentId(unsigned int nodeId) const;
 
     /**
-     * @brief getChildren gets the list of children of a node
+     * @brief getChildren gets the list of immediate children of a node
      * @param nodeId the node identifier
      * @return the list of its children identifier, sorted by node simple name
      */
     QList<unsigned int> getChildren(unsigned int nodeId=1) const;
+
+    /**
+     * @brief getDescendantsId gets the list of descendants of a node
+     * @param nodeId the node identifier
+     * @return the list of its descendants identifier
+     */
+    QList<unsigned int> getDescendantsId(unsigned int node) const;
+
+
 
     /**
      * @brief getNodeName gets the complete name of a node
@@ -387,6 +396,11 @@ public:
      * @return the list of ancestors
      */
     QList<unsigned int> getAncestorsId(unsigned int node) const;
+
+
+
+
+
 protected:
 
     /**

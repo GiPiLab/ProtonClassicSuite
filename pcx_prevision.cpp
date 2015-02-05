@@ -3,9 +3,11 @@
 #include <QSqlError>
 #include <QMessageBox>
 
+
 PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
 {
     QSqlQuery q;
+    attachedAudit=nullptr;
     if(!q.exec(QString("select * from index_previsions where id='%1'").arg(previsionId)))
     {
         qCritical()<<q.lastError();
@@ -16,8 +18,9 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
     {
         previsionName=q.value("nom").toString();
         attachedAuditId=q.value("id_audit").toUInt();
-        PCx_Audit tmpAudit(attachedAuditId);
-        attachedTreeId=tmpAudit.getAttachedTreeId();
+        attachedAudit=new PCx_Audit(attachedAuditId);
+        attachedTree=attachedAudit->getAttachedTree();
+        attachedTreeId=attachedAudit->getAttachedTreeId();
         creationTimeUTC=QDateTime::fromString(q.value("le_timestamp").toString(),"yyyy-MM-dd hh:mm:ss");
         creationTimeUTC.setTimeSpec(Qt::UTC);
         creationTimeLocal=creationTimeUTC.toLocalTime();
@@ -32,7 +35,9 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
 
 PCx_Prevision::~PCx_Prevision()
 {
-
+    attachedTree=nullptr;
+    if(attachedAudit!=nullptr)
+        delete attachedAudit;
 }
 
 

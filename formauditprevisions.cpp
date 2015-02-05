@@ -3,6 +3,7 @@
 #include "pcx_prevision.h"
 #include "utils.h"
 #include <QListWidgetItem>
+#include <QElapsedTimer>
 
 FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     QWidget(parent),
@@ -11,6 +12,7 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     previsionModel=nullptr;
     auditWithTreeModel=nullptr;
     previsionItemTableModel=nullptr;
+    currentPrevisionItem=nullptr;
     currentMode=MODES::DFRFDIRI::DF;
     currentNodeId=1;
     ui->setupUi(this);
@@ -21,6 +23,7 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES)+"s",PCx_Audit::ORED::DISPONIBLES);
 
     updateListOfPrevisions();
+    connect(ui->textBrowser,SIGNAL(anchorClicked(QUrl)),this,SLOT(onAnchorClicked(QUrl)));
 }
 
 
@@ -39,6 +42,11 @@ FormAuditPrevisions::~FormAuditPrevisions()
     {
         delete previsionItemTableModel;
     }
+    if(currentPrevisionItem!=nullptr)
+    {
+        delete currentPrevisionItem;
+    }
+
 }
 
 void FormAuditPrevisions::onListOfPrevisionsChanged()
@@ -66,7 +74,6 @@ void FormAuditPrevisions::updateListOfPrevisions()
     QList<QPair<unsigned int,QString> >listOfPrevisions=PCx_Prevision::getListOfPrevisions();
     bool nonEmpty=!listOfPrevisions.isEmpty();
     this->setEnabled(nonEmpty);
-    //doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));
 
     QPair<unsigned int, QString> p;
     foreach(p,listOfPrevisions)
@@ -77,24 +84,33 @@ void FormAuditPrevisions::updateListOfPrevisions()
     on_comboListPrevisions_activated(0);
 }
 
-void FormAuditPrevisions::updatePrevisionItemListModel()
+void FormAuditPrevisions::updatePrevisionItemTableModel()
 {
+    if(currentPrevisionItem!=nullptr)
+    {
+        delete currentPrevisionItem;
+    }
+    currentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().last()+1);
+    currentPrevisionItem->loadFromDb();
     if(previsionItemTableModel!=nullptr)
     {
-        delete previsionItemTableModel;
+        previsionItemTableModel->setPrevisionItem(currentPrevisionItem);
+    }
+    else
+    {
+        previsionItemTableModel=new PCx_PrevisionItemTableModel(currentPrevisionItem,this);
     }
     //NOTE : lastyear of the audit+1 is set here
-    previsionItemTableModel=new PCx_PrevisionItemTableModel(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().last()+1);
+
     ui->tableViewCriteria->setModel(previsionItemTableModel);
-
-
 }
 
 void FormAuditPrevisions::updateLabels()
 {
     ui->labelNodeName->setText(auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId));
     ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last())));
-    ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(previsionItemTableModel->getComputedPrevisionItemValue()));
+    ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getSummedPrevisionItemValue()));
+    ui->labelValuePrevisionItem->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getPrevisionItemValue()));
     ui->tableViewCriteria->resizeColumnsToContents();
 }
 
@@ -131,12 +147,15 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
 void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
 {
     Q_UNUSED(index);
+    QElapsedTimer t;
+    t.start();
+
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
   //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
-    updatePrevisionItemListModel();
-
-    ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+    updatePrevisionItemTableModel();
     updateLabels();
+    ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+    qDebug()<<t.elapsed();
 }
 
 
@@ -161,6 +180,19 @@ void FormAuditPrevisions::on_comboBoxOperators_activated(int index)
     }
 }
 
+void FormAuditPrevisions::onAnchorClicked(QUrl url)
+{
+    QStringList nodeString=url.toString().split("_");
+    if(nodeString.count()!=2)
+    {
+        qWarning()<<"Error parsing anchor";
+        return;
+    }
+    unsigned int nodeId=nodeString.at(1).toUInt();
+
+    qDebug()<<nodeId;
+}
+
 
 void FormAuditPrevisions::on_pushButtonAddCriteriaToAdd_clicked()
 {
@@ -172,7 +204,8 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToAdd_clicked()
         operand=NUMBERSFORMAT::doubleToFixedPoint(ui->doubleSpinBox->value());
     }
     PCx_PrevisionItemCriteria criteria(prevop,ored,operand);
-    previsionItemTableModel->insertCriteriaToAdd(criteria);
+    currentPrevisionItem->insertCriteriaToAdd(criteria);
+    previsionItemTableModel->resetModel();
     updateLabels();
 
 }
@@ -187,7 +220,8 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToSubstract_clicked()
         operand=NUMBERSFORMAT::doubleToFixedPoint(ui->doubleSpinBox->value());
     }
     PCx_PrevisionItemCriteria criteria(prevop,ored,operand);
-    previsionItemTableModel->insertCriteriaToSub(criteria);
+    currentPrevisionItem->insertCriteriaToSub(criteria);
+    previsionItemTableModel->resetModel();
     updateLabels();
 
 }
@@ -197,7 +231,8 @@ void FormAuditPrevisions::on_pushButtonDelCriteria_clicked()
     QItemSelectionModel *selectionModel=ui->tableViewCriteria->selectionModel();
     if(selectionModel->selectedRows().isEmpty())
         return;
-    previsionItemTableModel->deleteCriteria(selectionModel->selectedRows());
+    currentPrevisionItem->deleteCriteria(selectionModel->selectedRows());
+    previsionItemTableModel->resetModel();
     updateLabels();
 
 }
@@ -207,9 +242,10 @@ void FormAuditPrevisions::on_radioButtonDF_toggled(bool checked)
     if(checked)
     {
         currentMode=MODES::DFRFDIRI::DF;
-        updatePrevisionItemListModel();
+        updatePrevisionItemTableModel();
         updateLabels();
-        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+
     }
 }
 
@@ -218,9 +254,10 @@ void FormAuditPrevisions::on_radioButtonRF_toggled(bool checked)
     if(checked)
     {
         currentMode=MODES::DFRFDIRI::RF;
-        updatePrevisionItemListModel();
+        updatePrevisionItemTableModel();
         updateLabels();
-        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+
     }
 }
 
@@ -229,9 +266,10 @@ void FormAuditPrevisions::on_radioButtonDI_toggled(bool checked)
     if(checked)
     {
         currentMode=MODES::DFRFDIRI::DI;
-        updatePrevisionItemListModel();
+        updatePrevisionItemTableModel();
         updateLabels();
-        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+
     }
 }
 
@@ -240,36 +278,41 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked)
     if(checked)
     {
         currentMode=MODES::DFRFDIRI::RI;
-        updatePrevisionItemListModel();
+        updatePrevisionItemTableModel();
         updateLabels();
-        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+
     }
 }
 
 void FormAuditPrevisions::on_pushButtonDeleteAll_clicked()
 {
-    previsionItemTableModel->deleteAllCriteria();
+    currentPrevisionItem->deleteAllCriteria();
+    previsionItemTableModel->resetModel();
     updateLabels();
 }
 
 void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
 {
-    if(previsionItemTableModel!=nullptr)
+    if(currentPrevisionItem!=nullptr)
     {
-        previsionItemTableModel->saveDataToDb();
-        previsionItemTableModel->dispatchComputedValueToChildrenLeaves();
+        currentPrevisionItem->saveDataToDb();
+        currentPrevisionItem->dispatchComputedValueToChildrenLeaves();
+        previsionItemTableModel->resetModel();
         updateLabels();
-        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+
     }
 }
 
 void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
 {
-    if(previsionItemTableModel!=nullptr)
+    if(currentPrevisionItem!=nullptr)
     {
-        previsionItemTableModel->saveDataToDb();
-        previsionItemTableModel->dispatchCriteriaItemsToChildrenLeaves();
+        currentPrevisionItem->saveDataToDb();
+        currentPrevisionItem->dispatchCriteriaItemsToChildrenLeaves();
+        previsionItemTableModel->resetModel();
         updateLabels();
-        ui->textEdit->setHtml(previsionItemTableModel->getNodeAndAttachedLeavesPrevisionItemHTMLTable());
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
     }
 }

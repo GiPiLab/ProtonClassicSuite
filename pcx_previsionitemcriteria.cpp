@@ -46,7 +46,7 @@ qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI 
     case PREVISIONOPERATOR::PERCENT:
         return getPercentOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::FIXEDVALUE:
-        return getFixedValue(auditId,mode,nodeId);
+        return getFixedValue();
     }
     return -MAX_NUM;
 }
@@ -258,8 +258,11 @@ qint64 PCx_PrevisionItemCriteria::getLastValueOf(unsigned int auditId, MODES::DF
 qint64 PCx_PrevisionItemCriteria::getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
-    return 0;
+    qint64 lastValue=getLastValueOf(auditId,mode,nodeId);
 
+    double perc=NUMBERSFORMAT::fixedPointToDouble(previsionOperand);
+    perc/=100.0;
+    return lastValue*perc;
 }
 
 qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const

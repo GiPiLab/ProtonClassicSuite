@@ -18,6 +18,8 @@ public:
     unsigned int getAttachedTreeId()const{return attachedTreeId;}
     QDateTime getCreationTimeLocal()const{return creationTimeLocal;}
     QDateTime getCreationTimeUTC()const{return creationTimeUTC;}
+    PCx_Audit *getAttachedAudit()const{return attachedAudit;}
+    PCx_Tree *getAttachedTree()const{return attachedTree;}
 
     ~PCx_Prevision();
 
@@ -35,7 +37,8 @@ private:
     QDateTime creationTimeLocal;
     QDateTime creationTimeUTC;
 
-
+    PCx_Audit *attachedAudit;
+    PCx_Tree *attachedTree;
 
     PCx_Prevision(const PCx_Prevision &c);
     PCx_Prevision &operator=(const PCx_Prevision &);

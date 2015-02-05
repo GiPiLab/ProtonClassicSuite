@@ -52,7 +52,7 @@ private:
     qint64 getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getLastValueOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
-    qint64 getFixedValue(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const{return previsionOperand;}
+    qint64 getFixedValue() const{return previsionOperand;}
 
 
     PREVISIONOPERATOR previsionOperator;
