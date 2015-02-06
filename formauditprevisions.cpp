@@ -4,18 +4,25 @@
 #include "utils.h"
 #include <QListWidgetItem>
 #include <QElapsedTimer>
+#include <QMessageBox>
 
 FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormAuditPrevisions)
 {
+    changed=false;
     previsionModel=nullptr;
     auditWithTreeModel=nullptr;
     previsionItemTableModel=nullptr;
     currentPrevisionItem=nullptr;
+
     currentMode=MODES::DFRFDIRI::DF;
     currentNodeId=1;
     ui->setupUi(this);
+    if(!ui->checkBoxDisplayLeafCriteria->isChecked())
+    {
+        ui->textBrowser->setHidden(true);
+    }
     PCx_PrevisionItemCriteria::fillComboBoxWithOperators(ui->comboBoxOperators);
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS)+"s",PCx_Audit::ORED::OUVERTS);
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)+"s",PCx_Audit::ORED::REALISES);
@@ -147,15 +154,13 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
 void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
 {
     Q_UNUSED(index);
-    QElapsedTimer t;
-    t.start();
 
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
   //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
     updatePrevisionItemTableModel();
     updateLabels();
-    ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
-    qDebug()<<t.elapsed();
+    if(ui->textBrowser->isVisible())
+        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
 }
 
 
@@ -252,7 +257,8 @@ void FormAuditPrevisions::on_radioButtonDF_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::DF;
         updatePrevisionItemTableModel();
         updateLabels();
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        if(ui->textBrowser->isVisible())
+            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
 
     }
 }
@@ -264,7 +270,8 @@ void FormAuditPrevisions::on_radioButtonRF_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::RF;
         updatePrevisionItemTableModel();
         updateLabels();
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        if(ui->textBrowser->isVisible())
+            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
 
     }
 }
@@ -276,7 +283,8 @@ void FormAuditPrevisions::on_radioButtonDI_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::DI;
         updatePrevisionItemTableModel();
         updateLabels();
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        if(ui->textBrowser->isVisible())
+            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
 
     }
 }
@@ -288,13 +296,15 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked)
         currentMode=MODES::DFRFDIRI::RI;
         updatePrevisionItemTableModel();
         updateLabels();
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        if(ui->textBrowser->isVisible())
+            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
 
     }
 }
 
 void FormAuditPrevisions::on_pushButtonDeleteAll_clicked()
 {
+    changed=true;
     currentPrevisionItem->deleteAllCriteria();
     previsionItemTableModel->resetModel();
     updateLabels();
@@ -304,11 +314,13 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
 {
     if(currentPrevisionItem!=nullptr)
     {
+        changed=false;
         currentPrevisionItem->saveDataToDb();
         currentPrevisionItem->dispatchComputedValueToChildrenLeaves();
         previsionItemTableModel->resetModel();
         updateLabels();
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        if(ui->textBrowser->isVisible())
+            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
 
     }
 }
@@ -317,10 +329,36 @@ void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
 {
     if(currentPrevisionItem!=nullptr)
     {
+        changed=false;
         currentPrevisionItem->saveDataToDb();
         currentPrevisionItem->dispatchCriteriaItemsToChildrenLeaves();
         previsionItemTableModel->resetModel();
         updateLabels();
+        if(ui->textBrowser->isVisible())
+            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+    }
+}
+
+void FormAuditPrevisions::on_checkBoxDisplayLeafCriteria_toggled(bool checked)
+{
+    if(checked)
+    {
+        ui->textBrowser->setHidden(false);
         ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
     }
+    else
+    {
+        ui->textBrowser->clear();
+        ui->textBrowser->setHidden(true);
+    }
+
+}
+
+bool FormAuditPrevisions::displayChangeConfirmationMessage() const
+{
+    if(question(tr("Les critères de calcul ne seront pas enregistrés s'ils ne sont pas appliqués au noeud"
+                " courant ou à ses feuilles, en êtes-vous sûr ?"))==QMessageBox::Yes)
+        return true;
+    else
+        return false;
 }

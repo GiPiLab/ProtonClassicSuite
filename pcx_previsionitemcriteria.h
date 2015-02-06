@@ -14,7 +14,7 @@ public:
         MINIMUM,
         MAXIMUM,
         AVERAGE,
-        MEDIAN,
+//        MEDIAN,
         REGLIN,
         LASTVALUE,
         PERCENT,
@@ -48,7 +48,7 @@ private:
     qint64 getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
     qint64 getMaximumOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
     qint64 getAverageOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
-    qint64 getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
+  //  qint64 getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getLastValueOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;

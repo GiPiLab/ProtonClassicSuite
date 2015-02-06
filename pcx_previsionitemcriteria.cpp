@@ -37,8 +37,8 @@ qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI 
         return getMaximumOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::AVERAGE:
         return getAverageOf(auditId,mode,nodeId);
-    case PREVISIONOPERATOR::MEDIAN:
-        return getMedianOf(auditId,mode,nodeId);
+  /*  case PREVISIONOPERATOR::MEDIAN:
+        return getMedianOf(auditId,mode,nodeId);*/
     case PREVISIONOPERATOR::REGLIN:
         return getReglinOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::LASTVALUE:
@@ -66,9 +66,9 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
     case PREVISIONOPERATOR::AVERAGE:
         output=QObject::tr("la moyenne des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
-    case PREVISIONOPERATOR::MEDIAN:
+    /*case PREVISIONOPERATOR::MEDIAN:
         output=QObject::tr("la médiane des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
+        break;*/
     case PREVISIONOPERATOR::REGLIN:
         output=QObject::tr("la tendance linéaire des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
@@ -99,9 +99,9 @@ QString PCx_PrevisionItemCriteria::getCriteriaShortDescription() const
     case PREVISIONOPERATOR::AVERAGE:
         output=QObject::tr("moyenne %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
-    case PREVISIONOPERATOR::MEDIAN:
+    /*case PREVISIONOPERATOR::MEDIAN:
         output=QObject::tr("médiane %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
+        break;*/
     case PREVISIONOPERATOR::REGLIN:
         output=QObject::tr("tendance %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
@@ -144,11 +144,11 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
         previsionOperator=PREVISIONOPERATOR::AVERAGE;
         previsionOredTarget=PCx_Audit::OREDFromTableString(items[1]);
     }
-    else if(items[0]=="median")
+    /*else if(items[0]=="median")
     {
         previsionOperator=PREVISIONOPERATOR::MEDIAN;
         previsionOredTarget=PCx_Audit::OREDFromTableString(items[1]);
-    }
+    }*/
     else if(items[0]=="reglin")
     {
         previsionOperator=PREVISIONOPERATOR::REGLIN;
@@ -185,8 +185,8 @@ void PCx_PrevisionItemCriteria::fillComboBoxWithOperators(QComboBox *combo)
     combo->addItem(QObject::tr("Minimum"),PREVISIONOPERATOR::MINIMUM);
     combo->addItem(QObject::tr("Maximum"),PREVISIONOPERATOR::MAXIMUM);
     combo->addItem(QObject::tr("Moyenne"),PREVISIONOPERATOR::AVERAGE);
-    combo->addItem(QObject::tr("Médiane"),PREVISIONOPERATOR::MEDIAN);
-    combo->addItem(QObject::tr("Tendance"),PREVISIONOPERATOR::REGLIN);
+    //combo->addItem(QObject::tr("Médiane"),PREVISIONOPERATOR::MEDIAN);
+    combo->addItem(QObject::tr("Tendance (pas fait)"),PREVISIONOPERATOR::REGLIN);
     combo->addItem(QObject::tr("Valeur fixe"),PREVISIONOPERATOR::FIXEDVALUE);
     combo->addItem(QObject::tr("Dernière valeur"),PREVISIONOPERATOR::LASTVALUE);
     combo->addItem(QObject::tr("Pourcentage"),PREVISIONOPERATOR::PERCENT);
@@ -209,9 +209,9 @@ QString PCx_PrevisionItemCriteria::serialize() const
     case PREVISIONOPERATOR::AVERAGE:
         output=QString("average,%1,0").arg(PCx_Audit::OREDtoTableString(previsionOredTarget));
         break;
-    case PREVISIONOPERATOR::MEDIAN:
+    /*case PREVISIONOPERATOR::MEDIAN:
         output=QString("median,%1,0").arg(PCx_Audit::OREDtoTableString(previsionOredTarget));
-        break;
+        break;*/
     case PREVISIONOPERATOR::REGLIN:
         output=QString("reglin,%1,0").arg(PCx_Audit::OREDtoTableString(previsionOredTarget));
         break;
@@ -340,12 +340,12 @@ qint64 PCx_PrevisionItemCriteria::getAverageOf(unsigned int auditId, MODES::DFRF
 
 }
 
-qint64 PCx_PrevisionItemCriteria::getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
+/*qint64 PCx_PrevisionItemCriteria::getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
     return 0;
 
-}
+}*/
 
 qint64 PCx_PrevisionItemCriteria::getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {

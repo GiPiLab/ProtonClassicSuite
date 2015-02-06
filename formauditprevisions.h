@@ -54,8 +54,11 @@ private slots:
 
     void on_pushButtonApplyToLeaves_clicked();
 
+    void on_checkBoxDisplayLeafCriteria_toggled(bool checked);
+
 private:
 
+    bool changed;
     PCx_Prevision *previsionModel;
     PCx_AuditWithTreeModel *auditWithTreeModel;
     PCx_PrevisionItem* currentPrevisionItem;
@@ -64,6 +67,7 @@ private:
     MODES::DFRFDIRI currentMode;
     unsigned int currentNodeId;
     Ui::FormAuditPrevisions *ui;
+    bool displayChangeConfirmationMessage()const;
     void updateListOfPrevisions();
     void updatePrevisionItemTableModel();
     void updateLabels();
