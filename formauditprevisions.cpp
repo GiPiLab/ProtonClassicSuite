@@ -13,8 +13,12 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     changed=false;
     previsionModel=nullptr;
     auditWithTreeModel=nullptr;
-    previsionItemTableModel=nullptr;
+    currentPrevisionItemTableModel=nullptr;
     currentPrevisionItem=nullptr;
+
+    recentPrevisionItem=nullptr;
+    recentPrevisionItemTableModel=nullptr;
+
 
     currentMode=MODES::DFRFDIRI::DF;
     currentNodeId=1;
@@ -45,13 +49,22 @@ FormAuditPrevisions::~FormAuditPrevisions()
     {
         delete auditWithTreeModel;
     }
-    if(previsionItemTableModel!=nullptr)
+    if(currentPrevisionItemTableModel!=nullptr)
     {
-        delete previsionItemTableModel;
+        delete currentPrevisionItemTableModel;
     }
     if(currentPrevisionItem!=nullptr)
     {
         delete currentPrevisionItem;
+    }
+    if(recentPrevisionItemTableModel!=nullptr)
+    {
+        delete recentPrevisionItemTableModel;
+    }
+
+    if(recentPrevisionItem!=nullptr)
+    {
+        delete recentPrevisionItem;
     }
 
 }
@@ -96,20 +109,36 @@ void FormAuditPrevisions::updatePrevisionItemTableModel()
     if(currentPrevisionItem!=nullptr)
     {
         delete currentPrevisionItem;
+        currentPrevisionItem=nullptr;
     }
     currentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().last()+1);
     currentPrevisionItem->loadFromDb();
-    if(previsionItemTableModel!=nullptr)
+    if(currentPrevisionItemTableModel!=nullptr)
     {
-        previsionItemTableModel->setPrevisionItem(currentPrevisionItem);
+        currentPrevisionItemTableModel->setPrevisionItem(currentPrevisionItem);
     }
     else
     {
-        previsionItemTableModel=new PCx_PrevisionItemTableModel(currentPrevisionItem,this);
+        currentPrevisionItemTableModel=new PCx_PrevisionItemTableModel(currentPrevisionItem,this);
+        ui->tableViewCriteria->setModel(currentPrevisionItemTableModel);
     }
-    //NOTE : lastyear of the audit+1 is set here
 
-    ui->tableViewCriteria->setModel(previsionItemTableModel);
+    if(recentPrevisionItem!=nullptr)
+    {
+        recentPrevisionItem->setNodeId(currentNodeId);
+        recentPrevisionItem->setMode(currentMode);
+        if(recentPrevisionItemTableModel!=nullptr)
+            recentPrevisionItemTableModel->resetModel();
+    }
+    else
+    {
+        recentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().last()+1);
+    }
+    if(recentPrevisionItemTableModel==nullptr)
+    {
+        recentPrevisionItemTableModel=new PCx_PrevisionItemTableModel(recentPrevisionItem,this);
+        ui->tableViewRecentCriteria->setModel(recentPrevisionItemTableModel);
+    }
 }
 
 void FormAuditPrevisions::updateLabels()
@@ -117,8 +146,12 @@ void FormAuditPrevisions::updateLabels()
     ui->labelNodeName->setText(auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId));
     ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last())));
     ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getSummedPrevisionItemValue()));
-    ui->labelValuePrevisionItem->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getPrevisionItemValue()));
-    ui->tableViewCriteria->resizeColumnsToContents();
+    ui->labelValuePrevisionItem->setText(NUMBERSFORMAT::formatFixedPoint(recentPrevisionItem->getPrevisionItemValue()));
+    ui->labelValueAppliedItems->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getPrevisionItemValue()));
+    //if(ui->tableViewRecentCriteria->model()->rowCount()>0)
+     //   ui->tableViewRecentCriteria->resizeColumnsToContents();
+    //if(ui->tableViewCriteria->model()->rowCount()>0)
+       // ui->tableViewCriteria->resizeColumnsToContents();
 }
 
 
@@ -139,6 +172,20 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
         delete auditWithTreeModel;
         auditWithTreeModel=nullptr;
     }
+
+    if(recentPrevisionItemTableModel!=nullptr)
+    {
+        delete recentPrevisionItemTableModel;
+        recentPrevisionItemTableModel=nullptr;
+    }
+    if(recentPrevisionItem!=nullptr)
+    {
+        delete recentPrevisionItem;
+        recentPrevisionItem=nullptr;
+    }
+
+
+
     previsionModel=new PCx_Prevision(selectedPrevisionId);
     auditWithTreeModel=new PCx_AuditWithTreeModel(previsionModel->getAttachedAuditId());
 
@@ -217,8 +264,8 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToAdd_clicked()
         operand=NUMBERSFORMAT::doubleToFixedPoint(ui->doubleSpinBox->value());
     }
     PCx_PrevisionItemCriteria criteria(prevop,ored,operand);
-    currentPrevisionItem->insertCriteriaToAdd(criteria);
-    previsionItemTableModel->resetModel();
+    recentPrevisionItem->insertCriteriaToAdd(criteria);
+    recentPrevisionItemTableModel->resetModel();
     updateLabels();
 
 }
@@ -233,19 +280,19 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToSubstract_clicked()
         operand=NUMBERSFORMAT::doubleToFixedPoint(ui->doubleSpinBox->value());
     }
     PCx_PrevisionItemCriteria criteria(prevop,ored,operand);
-    currentPrevisionItem->insertCriteriaToSub(criteria);
-    previsionItemTableModel->resetModel();
+    recentPrevisionItem->insertCriteriaToSub(criteria);
+    recentPrevisionItemTableModel->resetModel();
     updateLabels();
 
 }
 
 void FormAuditPrevisions::on_pushButtonDelCriteria_clicked()
 {
-    QItemSelectionModel *selectionModel=ui->tableViewCriteria->selectionModel();
+    QItemSelectionModel *selectionModel=ui->tableViewRecentCriteria->selectionModel();
     if(selectionModel->selectedRows().isEmpty())
         return;
-    currentPrevisionItem->deleteCriteria(selectionModel->selectedRows());
-    previsionItemTableModel->resetModel();
+    recentPrevisionItem->deleteCriteria(selectionModel->selectedRows());
+    recentPrevisionItemTableModel->resetModel();
     updateLabels();
 
 }
@@ -305,19 +352,20 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked)
 void FormAuditPrevisions::on_pushButtonDeleteAll_clicked()
 {
     changed=true;
-    currentPrevisionItem->deleteAllCriteria();
-    previsionItemTableModel->resetModel();
+    recentPrevisionItem->deleteAllCriteria();
+    recentPrevisionItemTableModel->resetModel();
     updateLabels();
 }
 
 void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
 {
-    if(currentPrevisionItem!=nullptr)
+    if(recentPrevisionItem!=nullptr && currentPrevisionItem!=nullptr)
     {
         changed=false;
-        currentPrevisionItem->saveDataToDb();
-        currentPrevisionItem->dispatchComputedValueToChildrenLeaves();
-        previsionItemTableModel->resetModel();
+        recentPrevisionItem->saveDataToDb();
+        recentPrevisionItem->dispatchComputedValueToChildrenLeaves();
+        currentPrevisionItem->loadFromDb();
+        currentPrevisionItemTableModel->resetModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
             ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
@@ -327,12 +375,13 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
 
 void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
 {
-    if(currentPrevisionItem!=nullptr)
+    if(recentPrevisionItem!=nullptr && currentPrevisionItem!=nullptr)
     {
         changed=false;
-        currentPrevisionItem->saveDataToDb();
+        recentPrevisionItem->saveDataToDb();
+        currentPrevisionItem->loadFromDb();
         currentPrevisionItem->dispatchCriteriaItemsToChildrenLeaves();
-        previsionItemTableModel->resetModel();
+        currentPrevisionItemTableModel->resetModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
             ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());

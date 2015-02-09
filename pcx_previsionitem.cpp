@@ -19,6 +19,10 @@ void PCx_PrevisionItem::loadFromDb()
 {
     QSqlQuery q;
     computedValue=0;
+    itemsToAdd.clear();
+    itemsToSubstract.clear();
+    computedValue=0;
+    label=QString();
 
     q.prepare(QString("select * from prevision_%1_%2 where id_node=:id_node and year=:year").arg(MODES::modeToTableString(mode))
               .arg(prevision->getPrevisionId()));
@@ -249,13 +253,13 @@ void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves() const
                 {
                     double percent=(double)val/total;
                     double newVal=NUMBERSFORMAT::fixedPointToDouble(computedValue)*percent;
-                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE,PCx_Audit::ORED::OUVERTS,NUMBERSFORMAT::doubleToFixedPoint(newVal));
+                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION,PCx_Audit::ORED::OUVERTS,NUMBERSFORMAT::doubleToFixedPoint(newVal));
                     tmpItem.insertCriteriaToAdd(criteria);
                     tmpItem.saveDataToDb();
                 }
                 else
                 {
-                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE,PCx_Audit::ORED::OUVERTS,0);
+                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION,PCx_Audit::ORED::OUVERTS,0);
                     tmpItem.insertCriteriaToAdd(criteria);
                     tmpItem.saveDataToDb();
                 }

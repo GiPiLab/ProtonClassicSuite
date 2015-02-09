@@ -46,6 +46,7 @@ qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI 
     case PREVISIONOPERATOR::PERCENT:
         return getPercentOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::FIXEDVALUE:
+    case PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION:
         return getFixedValue();
     }
     return -MAX_NUM;
@@ -66,9 +67,6 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
     case PREVISIONOPERATOR::AVERAGE:
         output=QObject::tr("la moyenne des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
-    /*case PREVISIONOPERATOR::MEDIAN:
-        output=QObject::tr("la médiane des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;*/
     case PREVISIONOPERATOR::REGLIN:
         output=QObject::tr("la tendance linéaire des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
         break;
@@ -80,43 +78,13 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
         break;
     case PREVISIONOPERATOR::FIXEDVALUE:
         output=QObject::tr("Valeur fixe");
-        break;
+        break;    
+    case PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION:
+        output=QObject::tr("Distribution en fonction du poids relatif des réalisés de l'année N");
     }
     return output;
 }
 
-QString PCx_PrevisionItemCriteria::getCriteriaShortDescription() const
-{
-    QString output;
-    switch(previsionOperator)
-    {
-    case PREVISIONOPERATOR::MINIMUM:
-        output=QObject::tr("min %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
-    case PREVISIONOPERATOR::MAXIMUM:
-        output=QObject::tr("max %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
-    case PREVISIONOPERATOR::AVERAGE:
-        output=QObject::tr("moyenne %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
-    /*case PREVISIONOPERATOR::MEDIAN:
-        output=QObject::tr("médiane %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;*/
-    case PREVISIONOPERATOR::REGLIN:
-        output=QObject::tr("tendance %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
-    case PREVISIONOPERATOR::LASTVALUE:
-        output=QObject::tr("les derniers %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
-    case PREVISIONOPERATOR::PERCENT:
-        output=QObject::tr("%1\% des derniers %2s").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
-        break;
-    case PREVISIONOPERATOR::FIXEDVALUE:
-        output=QObject::tr("Valeur fixe");
-        break;
-    }
-    return output;
-}
 
 bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
 {
@@ -168,6 +136,11 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
     else if(items[0]=="fixedvalue")
     {
         previsionOperator=PREVISIONOPERATOR::FIXEDVALUE;
+        previsionOperand=items[2].toLongLong();
+    }
+    else if(items[0]=="fixedvaluefromproportionalrepartition")
+    {
+        previsionOperator=PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION;
         previsionOperand=items[2].toLongLong();
     }
     else
@@ -224,6 +197,9 @@ QString PCx_PrevisionItemCriteria::serialize() const
     case PREVISIONOPERATOR::FIXEDVALUE:
         output=QString("fixedvalue,0,%1").arg(previsionOperand);
         break;
+    case PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION:
+        output=QString("fixedvaluefromproportionalrepartition,0,%1").arg(previsionOperand);
+        break;
     }
     return output;
 }
@@ -264,6 +240,7 @@ qint64 PCx_PrevisionItemCriteria::getPercentOf(unsigned int auditId, MODES::DFRF
     perc/=100.0;
     return lastValue*perc;
 }
+
 
 qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {

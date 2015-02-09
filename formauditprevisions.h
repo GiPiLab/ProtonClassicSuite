@@ -61,8 +61,8 @@ private:
     bool changed;
     PCx_Prevision *previsionModel;
     PCx_AuditWithTreeModel *auditWithTreeModel;
-    PCx_PrevisionItem* currentPrevisionItem;
-    PCx_PrevisionItemTableModel *previsionItemTableModel;
+    PCx_PrevisionItem* currentPrevisionItem,*recentPrevisionItem;
+    PCx_PrevisionItemTableModel *currentPrevisionItemTableModel,*recentPrevisionItemTableModel;
 
     MODES::DFRFDIRI currentMode;
     unsigned int currentNodeId;
