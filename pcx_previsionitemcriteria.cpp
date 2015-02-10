@@ -37,8 +37,6 @@ qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI 
         return getMaximumOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::AVERAGE:
         return getAverageOf(auditId,mode,nodeId);
-  /*  case PREVISIONOPERATOR::MEDIAN:
-        return getMedianOf(auditId,mode,nodeId);*/
     case PREVISIONOPERATOR::REGLIN:
         return getReglinOf(auditId,mode,nodeId);
     case PREVISIONOPERATOR::LASTVALUE:
@@ -112,11 +110,6 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
         previsionOperator=PREVISIONOPERATOR::AVERAGE;
         previsionOredTarget=PCx_Audit::OREDFromTableString(items[1]);
     }
-    /*else if(items[0]=="median")
-    {
-        previsionOperator=PREVISIONOPERATOR::MEDIAN;
-        previsionOredTarget=PCx_Audit::OREDFromTableString(items[1]);
-    }*/
     else if(items[0]=="reglin")
     {
         previsionOperator=PREVISIONOPERATOR::REGLIN;
@@ -158,8 +151,7 @@ void PCx_PrevisionItemCriteria::fillComboBoxWithOperators(QComboBox *combo)
     combo->addItem(QObject::tr("Minimum"),PREVISIONOPERATOR::MINIMUM);
     combo->addItem(QObject::tr("Maximum"),PREVISIONOPERATOR::MAXIMUM);
     combo->addItem(QObject::tr("Moyenne"),PREVISIONOPERATOR::AVERAGE);
-    //combo->addItem(QObject::tr("Médiane"),PREVISIONOPERATOR::MEDIAN);
-    combo->addItem(QObject::tr("Tendance (pas fait)"),PREVISIONOPERATOR::REGLIN);
+    combo->addItem(QObject::tr("Tendance linéaire"),PREVISIONOPERATOR::REGLIN);
     combo->addItem(QObject::tr("Valeur fixe"),PREVISIONOPERATOR::FIXEDVALUE);
     combo->addItem(QObject::tr("Dernière valeur"),PREVISIONOPERATOR::LASTVALUE);
     combo->addItem(QObject::tr("Pourcentage"),PREVISIONOPERATOR::PERCENT);
@@ -182,9 +174,6 @@ QString PCx_PrevisionItemCriteria::serialize() const
     case PREVISIONOPERATOR::AVERAGE:
         output=QString("average,%1,0").arg(PCx_Audit::OREDtoTableString(previsionOredTarget));
         break;
-    /*case PREVISIONOPERATOR::MEDIAN:
-        output=QString("median,%1,0").arg(PCx_Audit::OREDtoTableString(previsionOredTarget));
-        break;*/
     case PREVISIONOPERATOR::REGLIN:
         output=QString("reglin,%1,0").arg(PCx_Audit::OREDtoTableString(previsionOredTarget));
         break;
@@ -317,18 +306,60 @@ qint64 PCx_PrevisionItemCriteria::getAverageOf(unsigned int auditId, MODES::DFRF
 
 }
 
-/*qint64 PCx_PrevisionItemCriteria::getMedianOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
-{
-    Q_ASSERT(nodeId>0);
-    return 0;
-
-}*/
 
 qint64 PCx_PrevisionItemCriteria::getReglinOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const
 {
     Q_ASSERT(nodeId>0);
-    return 0;
 
+    QSqlQuery q;
+    q.prepare(QString("select annee,%1 from audit_%2_%3 where id_node=:id_node and %1 not null order by annee")
+              .arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
+              .arg(MODES::modeToTableString(mode))
+              .arg(auditId)
+              );
+    q.bindValue(":id_node",nodeId);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    QVector<double>x,y;
+
+    while(q.next())
+    {
+        x.append((double)q.value(0).toUInt());
+        y.append(NUMBERSFORMAT::fixedPointToDouble(q.value(1).toLongLong()));
+    }
+    if(x.isEmpty()||y.isEmpty())
+        return 0;
+
+    double m_x = 0, m_y = 0, m_dx2 = 0, m_dxdy = 0;
+
+    int n=x.size();
+    int i;
+
+    for (i = 0; i < n; i++)
+    {
+        m_x += (x[i] - m_x) / (i + 1.0);
+        m_y += (y[i] - m_y) / (i + 1.0);
+    }
+
+    for (i = 0; i < n; i++)
+    {
+        const double dx = x[i] - m_x;
+        const double dy = y[i] - m_y;
+
+        m_dx2 += (dx * dx - m_dx2) / (i + 1.0);
+        m_dxdy += (dx * dy - m_dxdy) / (i + 1.0);
+    }
+
+    // In terms of y = ax + b
+    double a = m_dxdy / m_dx2;
+    double b = m_y - m_x * a;
+
+    //qDebug()<<"y=ax+b, a="<<a<<"b="<<b;
+
+    return NUMBERSFORMAT::doubleToFixedPoint(a*(x.last()+1.0)+b);
 }
 
 

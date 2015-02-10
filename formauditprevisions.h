@@ -58,7 +58,6 @@ private slots:
 
 private:
 
-    bool changed;
     PCx_Prevision *previsionModel;
     PCx_AuditWithTreeModel *auditWithTreeModel;
     PCx_PrevisionItem* currentPrevisionItem,*recentPrevisionItem;
@@ -67,7 +66,8 @@ private:
     MODES::DFRFDIRI currentMode;
     unsigned int currentNodeId;
     Ui::FormAuditPrevisions *ui;
-    bool displayChangeConfirmationMessage()const;
+    QSize sizeHint() const;
+
     void updateListOfPrevisions();
     void updatePrevisionItemTableModel();
     void updateLabels();

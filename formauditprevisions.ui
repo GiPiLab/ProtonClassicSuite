@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Elaboration du budget</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -78,17 +78,17 @@
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QGridLayout" name="gridLayout">
-       <item row="7" column="2" colspan="2">
+       <item row="8" column="2" colspan="2">
         <widget class="QPushButton" name="pushButtonDeleteAll">
          <property name="text">
           <string>Supprimer tous les critères</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="4" column="0">
         <widget class="QComboBox" name="comboBoxOperators"/>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <widget class="QLabel" name="label_3">
          <property name="text">
           <string>des</string>
@@ -98,54 +98,17 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0" colspan="2">
+       <item row="5" column="0" colspan="2">
         <widget class="QPushButton" name="pushButtonAddCriteriaToAdd">
-         <property name="palette">
-          <palette>
-           <active>
-            <colorrole role="Button">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>0</red>
-               <green>255</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </active>
-           <inactive>
-            <colorrole role="Button">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>0</red>
-               <green>255</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </inactive>
-           <disabled>
-            <colorrole role="Button">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>0</red>
-               <green>255</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </disabled>
-          </palette>
-         </property>
          <property name="text">
           <string>Ajouter ce critère comme addition</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
+       <item row="4" column="2">
         <widget class="QComboBox" name="comboBoxORED"/>
        </item>
-       <item row="3" column="3">
+       <item row="4" column="3">
         <widget class="QDoubleSpinBox" name="doubleSpinBox">
          <property name="enabled">
           <bool>false</bool>
@@ -170,85 +133,24 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2" colspan="2">
-        <widget class="QPushButton" name="pushButtonAddCriteriaToSubstract">
-         <property name="palette">
-          <palette>
-           <active>
-            <colorrole role="Button">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </active>
-           <inactive>
-            <colorrole role="Button">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </inactive>
-           <disabled>
-            <colorrole role="Button">
-             <brush brushstyle="SolidPattern">
-              <color alpha="255">
-               <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
-              </color>
-             </brush>
-            </colorrole>
-           </disabled>
-          </palette>
+       <item row="1" column="0" colspan="2">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Crédits prévus pour l'année N :</string>
          </property>
+        </widget>
+       </item>
+       <item row="5" column="2" colspan="2">
+        <widget class="QPushButton" name="pushButtonAddCriteriaToSubstract">
          <property name="text">
           <string>Ajouter ce critère comme soustraction</string>
          </property>
         </widget>
        </item>
-       <item row="11" column="0" colspan="4">
-        <widget class="QCheckBox" name="checkBoxDisplayLeafCriteria">
+       <item row="6" column="0" colspan="3">
+        <widget class="QLabel" name="label">
          <property name="text">
-          <string>Afficher les critères des feuilles associées</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Valeur des prévus N :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0" colspan="4">
-        <widget class="QTextBrowser" name="textBrowser">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>3</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>8</pointsize>
-          </font>
-         </property>
-         <property name="lineWrapMode">
-          <enum>QTextEdit::NoWrap</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="openLinks">
-          <bool>false</bool>
+          <string>Valeur totale des critères :</string>
          </property>
         </widget>
        </item>
@@ -272,14 +174,7 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="3">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Valeur totale des critères :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="3">
+       <item row="6" column="3">
         <widget class="QLabel" name="labelValuePrevisionItem">
          <property name="text">
           <string>valeur critères</string>
@@ -314,11 +209,11 @@
           </font>
          </property>
          <property name="text">
-          <string>Valeur calculée par somme des feuilles pour N+1 :</string>
+          <string>Crédits calculés pour l'année N+1 :</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="2" colspan="2">
+       <item row="9" column="2" colspan="2">
         <widget class="QPushButton" name="pushButtonApplyToLeaves">
          <property name="font">
           <font>
@@ -331,44 +226,27 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0" colspan="4">
-        <widget class="QTableView" name="tableViewCriteria">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>2</horstretch>
-           <verstretch>1</verstretch>
-          </sizepolicy>
+       <item row="8" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButtonDelCriteria">
+         <property name="text">
+          <string>Supprimer ce critère</string>
          </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="showDropIndicator" stdset="0">
-          <bool>false</bool>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::NoSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-         <property name="cornerButtonEnabled">
-          <bool>false</bool>
-         </property>
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>true</bool>
-         </attribute>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-         <attribute name="verticalHeaderDefaultSectionSize">
-          <number>21</number>
-         </attribute>
         </widget>
        </item>
-       <item row="6" column="0" colspan="4">
+       <item row="9" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButtonApplyToNode">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Appliquer ces critères au noeud</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="4">
         <widget class="QTableView" name="tableViewRecentCriteria">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -402,40 +280,111 @@
          </attribute>
         </widget>
        </item>
-       <item row="7" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButtonDelCriteria">
-         <property name="text">
-          <string>Supprimer ce critère</string>
+       <item row="11" column="0" colspan="4">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Critères appliqués</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="0" colspan="2">
+           <widget class="QTableView" name="tableViewCriteria">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="wordWrap">
+             <bool>false</bool>
+            </property>
+            <property name="cornerButtonEnabled">
+             <bool>false</bool>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="verticalHeaderDefaultSectionSize">
+             <number>21</number>
+            </attribute>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QTextBrowser" name="textBrowser">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>2</horstretch>
+              <verstretch>3</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="lineWrapMode">
+             <enum>QTextEdit::NoWrap</enum>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="openLinks">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkBoxDisplayLeafCriteria">
+            <property name="text">
+             <string>Afficher les critères des descendants</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Valeur totale des critères appliqués au noeud :</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="labelValueAppliedItems">
+            <property name="text">
+             <string>valeur critères appliqués</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0" colspan="4">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="8" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButtonApplyToNode">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Appliquer ces critères au noeud</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="3">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Valeur totale des critères appliqués au noeud :</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="3">
-        <widget class="QLabel" name="labelValueAppliedItems">
-         <property name="text">
-          <string>valeur critères appliqués</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       <item row="10" column="0" colspan="4">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>

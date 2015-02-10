@@ -62,26 +62,32 @@ QString PCx_PrevisionItem::getNodePrevisionHTMLReport() const
 
     if(!prevision->getAttachedTree()->isLeaf(nodeId))
     {
-        output=QString("Critères appliqués aux feuilles descendantes de <b>%1</b> (%2)").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
+        output=QString("Critères appliqués aux descendants de <b>%1</b> (%2)").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
                 .arg(MODES::modeToCompleteString(mode));
-        QList<unsigned int> childLeaves=prevision->getAttachedTree()->getLeavesId(nodeId);
-        foreach(unsigned int leaf,childLeaves)
+        QList<unsigned int> descendants=prevision->getAttachedTree()->getDescendantsId(nodeId);
+        foreach(unsigned int descendant,descendants)
         {
-            PCx_PrevisionItem tmpItem(prevision,mode,leaf,year);
+            PCx_PrevisionItem tmpItem(prevision,mode,descendant,year);
             tmpItem.loadFromDb();
-            output.append(QString("<p><a href='#node_%3'><b>%1 : %2€</b></a></p>").arg(prevision->getAttachedTree()->getNodeName(leaf).toHtmlEscaped())
-                          .arg(NUMBERSFORMAT::formatFixedPoint(tmpItem.getSummedPrevisionItemValue()))
-                          .arg(leaf));
-            output.append("<ul>"+tmpItem.dataAsHTML()+"</ul>");
+            if(!tmpItem.getItemsToAdd().isEmpty() || !tmpItem.getItemsToSubstract().isEmpty())
+            {
+                output.append(QString("<p><a href='#node_%3'><b>%1 : %2€</b></a></p>").arg(prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped())
+                              .arg(NUMBERSFORMAT::formatFixedPoint(tmpItem.getSummedPrevisionItemValue()))
+                              .arg(descendant));
+                output.append("<ul>"+tmpItem.dataAsHTML()+"</ul>");
+            }
         }
     }
 
     else
     {
-        output.append(QString("<p><b>%1 : %2€</b></p>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
-                      .arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
+        if(!itemsToAdd.isEmpty()||!itemsToSubstract.isEmpty())
+        {
+            output.append(QString("<p><b>%1 : %2€</b></p>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
+                          .arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
 
-        output.append("<ul>"+dataAsHTML()+"</ul>");
+            output.append("<ul>"+dataAsHTML()+"</ul>");
+        }
     }
     return output;
 }
@@ -164,8 +170,6 @@ void PCx_PrevisionItem::insertCriteriaToAdd(PCx_PrevisionItemCriteria criteria,b
 
 void PCx_PrevisionItem::dispatchCriteriaItemsToChildrenLeaves()
 {
-    QElapsedTimer timer;
-    timer.start();
     QList<unsigned int> descendantsId;
     QList<unsigned int> leavesId;
 
@@ -210,7 +214,6 @@ void PCx_PrevisionItem::dispatchCriteriaItemsToChildrenLeaves()
     }
     QSqlDatabase::database().commit();
 
-    qDebug()<<"Dispatch Criteria :"<<timer.elapsed();
 }
 
 

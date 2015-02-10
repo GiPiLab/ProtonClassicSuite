@@ -10,7 +10,6 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormAuditPrevisions)
 {
-    changed=false;
     previsionModel=nullptr;
     auditWithTreeModel=nullptr;
     currentPrevisionItemTableModel=nullptr;
@@ -143,15 +142,15 @@ void FormAuditPrevisions::updatePrevisionItemTableModel()
 
 void FormAuditPrevisions::updateLabels()
 {
-    ui->labelNodeName->setText(auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId));
-    ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last())));
+    const QString &nodeName=auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId);
+    ui->labelNodeName->setText(nodeName);
+    ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(auditWithTreeModel->getNodeValue
+                                                             (currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last())));
     ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getSummedPrevisionItemValue()));
     ui->labelValuePrevisionItem->setText(NUMBERSFORMAT::formatFixedPoint(recentPrevisionItem->getPrevisionItemValue()));
     ui->labelValueAppliedItems->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getPrevisionItemValue()));
-    //if(ui->tableViewRecentCriteria->model()->rowCount()>0)
-     //   ui->tableViewRecentCriteria->resizeColumnsToContents();
-    //if(ui->tableViewCriteria->model()->rowCount()>0)
-       // ui->tableViewCriteria->resizeColumnsToContents();
+    ui->tableViewCriteria->resizeColumnToContents(0);
+    ui->tableViewRecentCriteria->resizeColumnToContents(0);
 }
 
 
@@ -351,7 +350,6 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked)
 
 void FormAuditPrevisions::on_pushButtonDeleteAll_clicked()
 {
-    changed=true;
     recentPrevisionItem->deleteAllCriteria();
     recentPrevisionItemTableModel->resetModel();
     updateLabels();
@@ -361,7 +359,6 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
 {
     if(recentPrevisionItem!=nullptr && currentPrevisionItem!=nullptr)
     {
-        changed=false;
         recentPrevisionItem->saveDataToDb();
         recentPrevisionItem->dispatchComputedValueToChildrenLeaves();
         currentPrevisionItem->loadFromDb();
@@ -377,7 +374,6 @@ void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
 {
     if(recentPrevisionItem!=nullptr && currentPrevisionItem!=nullptr)
     {
-        changed=false;
         recentPrevisionItem->saveDataToDb();
         currentPrevisionItem->loadFromDb();
         currentPrevisionItem->dispatchCriteriaItemsToChildrenLeaves();
@@ -403,11 +399,8 @@ void FormAuditPrevisions::on_checkBoxDisplayLeafCriteria_toggled(bool checked)
 
 }
 
-bool FormAuditPrevisions::displayChangeConfirmationMessage() const
+QSize FormAuditPrevisions::sizeHint() const
 {
-    if(question(tr("Les critères de calcul ne seront pas enregistrés s'ils ne sont pas appliqués au noeud"
-                " courant ou à ses feuilles, en êtes-vous sûr ?"))==QMessageBox::Yes)
-        return true;
-    else
-        return false;
+    return QSize(850,600);
+
 }
