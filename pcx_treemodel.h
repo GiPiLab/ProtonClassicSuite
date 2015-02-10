@@ -114,6 +114,10 @@ public:
      * @return the model index of this node in the treeModel
      */
     QModelIndexList getIndexOfNodeId(unsigned int nodeId) const;
+
+
+    int guessHierarchy();
+
 private:
 
     /**

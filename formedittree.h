@@ -60,6 +60,8 @@ private slots:
 
     void on_consistencyButton_clicked();
 
+    void on_guessHierarchyButton_clicked();
+
 signals:
     void listOfTreeChanged();
 

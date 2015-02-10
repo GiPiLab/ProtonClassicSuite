@@ -76,7 +76,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="layoutWidget_1">
       <layout class="QGridLayout" name="gridLayout">
        <item row="8" column="2" colspan="2">
         <widget class="QPushButton" name="pushButtonDeleteAll">

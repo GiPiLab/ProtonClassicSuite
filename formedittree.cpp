@@ -89,6 +89,7 @@ void FormEditTree::setReadOnly(bool state)
     ui->deleteTypeButton->setDisabled(state);
     ui->finishTreeButton->setDisabled(state);
     ui->modifyNodeButton->setDisabled(state);
+    ui->guessHierarchyButton->setDisabled(state);
     ui->treeView->setDragEnabled(!state);
     ui->listTypesView->setDisabled(state);
 }
@@ -470,4 +471,24 @@ void FormEditTree::on_consistencyButton_clicked()
 QSize FormEditTree::sizeHint() const
 {
     return QSize(700,550);
+}
+
+void FormEditTree::on_guessHierarchyButton_clicked()
+{
+    if(question(tr("Tenter de deviner la hiérarchie de l'arbre à l'aide des chiffres contenus au début du nom des noeuds ? L'arbre sera modifié et cette opération ne peut pas être annulée."))==QMessageBox::Yes)
+    {
+        int count=model->guessHierarchy();
+        if(count>0)
+        {
+            ui->treeView->expandToDepth(1);
+            if(count>1)
+                QMessageBox::information(this,tr("Information"),tr("%1 noeuds réorganisés").arg(count));
+            else
+                QMessageBox::information(this,tr("Information"),tr("%1 noeud réorganisé").arg(count));
+        }
+        else
+        {
+            QMessageBox::information(this,tr("Information"),tr("Aucune nouvelle relation trouvée"));
+        }
+    }
 }

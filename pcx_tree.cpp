@@ -187,6 +187,84 @@ QList<unsigned int> PCx_Tree::getAncestorsId(unsigned int node) const
     return ancestors;
 }
 
+int PCx_Tree::guessHierarchy()
+{
+    QSqlQuery q;
+    QHash<QString,unsigned int>nameToId;
+    QHash<QString,unsigned int>prefixToId;
+    QHash<unsigned int,unsigned int> idToPid,oldIdToPid;
+    if(!q.exec(QString("select * from arbre_%1 where id>1").arg(treeId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    QRegExp numRegExp("^(\\d+)");
+    while(q.next())
+    {
+        QString nom=q.value("nom").toString();
+        unsigned int id=q.value("id").toUInt();
+        unsigned int pid=q.value("pid").toUInt();
+
+        //Do not allow duplicates, only takes the first (same name, different type)
+        if(!nameToId.contains(nom))
+        {
+            nameToId.insert(nom,id);
+            oldIdToPid.insert(id,pid);
+            int pos=numRegExp.indexIn(nom);
+            if(pos>-1)
+            {
+                prefixToId.insert(numRegExp.cap(1),id);
+            }
+        }
+    }
+    if(prefixToId.count()<=1)
+        return 0;
+
+
+    foreach(const QString &key,prefixToId.keys())
+    {
+        if(key.size()>1)
+        {
+            //TODO: multi level chop to find 701 child of 7 without 70
+            QString chopped=key;
+            chopped.chop(1);
+            if(prefixToId.contains(chopped))
+            {
+                idToPid.insert(prefixToId.value(key),prefixToId.value(chopped));
+            }
+        }
+    }
+
+    int count=0;
+    QSqlDatabase::database().transaction();
+    foreach(unsigned int id,idToPid.keys())
+    {
+        if(oldIdToPid.value(id)!=idToPid.value(id))
+        {
+            QSqlQuery q;
+            q.prepare(QString("update arbre_%1 set pid=:pid where id=:id").arg(treeId));
+            q.bindValue(":pid",idToPid.value(id));
+            q.bindValue(":id",id);
+            if(!q.exec())
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            if(q.numRowsAffected()!=1)
+            {
+                qCritical()<<q.lastError();
+                die();
+            }
+            count++;
+        }
+    }
+    QSqlDatabase::database().commit();
+
+    return count;
+
+}
+
 QList<unsigned int> PCx_Tree::getDescendantsId(unsigned int node) const
 {
     QList<unsigned int> children;
@@ -228,6 +306,7 @@ QList<unsigned int> PCx_Tree::getLeavesId(unsigned int node) const
     }
     return leaves;
 }
+
 
 QSet<unsigned int> PCx_Tree::getNodesWithSharedName() const
 {

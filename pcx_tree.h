@@ -397,9 +397,12 @@ public:
      */
     QList<unsigned int> getAncestorsId(unsigned int node) const;
 
-
-
-
+    /**
+     * @brief guessHierarchy tries to guess a hierarchy based on the name of nodes
+     * Currently uses the numbers in front of each node and build a hierarchy like 102 is child of 10 is child of 1
+     * @return The number of modified nodes, die on failure
+     */
+    virtual int guessHierarchy();
 
 protected:
 
