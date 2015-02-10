@@ -21,7 +21,6 @@ void PCx_PrevisionItem::loadFromDb()
     computedValue=0;
     itemsToAdd.clear();
     itemsToSubstract.clear();
-    computedValue=0;
     label=QString();
 
     q.prepare(QString("select * from prevision_%1_%2 where id_node=:id_node and year=:year").arg(MODES::modeToTableString(mode))
@@ -217,7 +216,7 @@ void PCx_PrevisionItem::dispatchCriteriaItemsToChildrenLeaves()
 }
 
 
-void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves() const
+void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves()
 {
     QList<unsigned int> descendantsId=prevision->getAttachedTree()->getDescendantsId(nodeId);
     QList<unsigned int> leavesId=prevision->getAttachedTree()->getLeavesId(nodeId);
@@ -231,6 +230,8 @@ void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves() const
         return;
     }
 
+
+    computedValue=getPrevisionItemValue();
 
     QSqlDatabase::database().transaction();
     if(itemsToAdd.isEmpty()&&itemsToSubstract.isEmpty())

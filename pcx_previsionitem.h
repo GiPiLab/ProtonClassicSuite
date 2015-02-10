@@ -34,7 +34,7 @@ public:
 
 
     void saveDataToDb()const;
-    void dispatchComputedValueToChildrenLeaves() const;
+    void dispatchComputedValueToChildrenLeaves();
 
     QString getNodePrevisionHTMLReport() const;
 

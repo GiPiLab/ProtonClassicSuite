@@ -126,6 +126,7 @@ void FormAuditPrevisions::updatePrevisionItemTableModel()
     {
         recentPrevisionItem->setNodeId(currentNodeId);
         recentPrevisionItem->setMode(currentMode);
+
         if(recentPrevisionItemTableModel!=nullptr)
             recentPrevisionItemTableModel->resetModel();
     }
