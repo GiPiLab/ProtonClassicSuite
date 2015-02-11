@@ -203,6 +203,16 @@ void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
     Q_UNUSED(index);
 
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    if(auditWithTreeModel->getAttachedTree()->isLeaf(currentNodeId))
+    {
+        ui->pushButtonApplyToLeaves->setText(tr("Appliquer ces critères à la feuille active"));
+        ui->pushButtonApplyToNode->setEnabled(false);
+    }
+    else
+    {
+        ui->pushButtonApplyToLeaves->setText(tr("Appliquer ces critères aux feuilles liées"));
+        ui->pushButtonApplyToNode->setEnabled(true);
+    }
   //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
     updatePrevisionItemTableModel();
     updateLabels();

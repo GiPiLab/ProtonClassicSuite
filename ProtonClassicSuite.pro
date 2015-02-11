@@ -135,8 +135,8 @@ FORMS    += mainwindow.ui \
     formmanageprevisions.ui
 
 RC_ICONS = icons/logo64_64.ico
-QMAKE_CXXFLAGS_DEBUG += -pg
-QMAKE_LFLAGS_DEBUG += -pg
+#QMAKE_CXXFLAGS_DEBUG += -pg
+#QMAKE_LFLAGS_DEBUG += -pg
 
 unix|win32: LIBS += -lgvc -lcgraph
 
