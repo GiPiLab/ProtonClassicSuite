@@ -832,7 +832,7 @@ bool PCx_Tree::validateType(const QString &newType)
     }
     else if(listOfTypeNames.contains(newType))
     {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Le type <b>%1</b> existe déjà !").arg(newType));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Le type <b>%1</b> existe déjà !").arg(newType.toHtmlEscaped()));
         return false;
     }
     return true;
@@ -1387,7 +1387,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
                     if(nodeToPid.value(node1)!=pidNode)
                     {
                         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 ne peut pas avoir plusieurs pères !")
-                                              .arg(QString(node1.first+" "+node1.second)));
+                                              .arg(QString(node1.first+" "+node1.second).toHtmlEscaped()));
                         return -1;
                     }
                     else
@@ -1450,7 +1450,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         if(nodeToPid.contains(firstLevelNode))
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 ne peut pas avoir plusieurs pères !")
-                                  .arg(QString(firstLevelNode.first+" "+firstLevelNode.second)));
+                                  .arg(QString(firstLevelNode.first+" "+firstLevelNode.second).toHtmlEscaped()));
             return -1;
         }
     }
@@ -1474,7 +1474,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         if(!nodeToPid.contains(ancestor) && !firstLevelNodesSet.contains(ancestor))
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud %1 est orphelin !")
-                                  .arg(QString(ancestor.first+" "+ancestor.second)));
+                                  .arg(QString(ancestor.first+" "+ancestor.second).toHtmlEscaped()));
             return -1;
         }
     }
@@ -1514,7 +1514,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         unsigned int oneTypeId=tree.addType(oneType);
         if(oneTypeId==0)
         {
-            QMessageBox::warning(0,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType));
+            QMessageBox::warning(0,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType.toHtmlEscaped()));
             QSqlDatabase::database().rollback();
             return -1;
         }

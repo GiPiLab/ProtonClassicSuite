@@ -578,7 +578,7 @@ void FormReportingOverview::on_pushButtonExportHTML_clicked()
     stream.flush();
     file.close();
     if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName()));
+        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
 

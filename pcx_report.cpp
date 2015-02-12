@@ -162,6 +162,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     {
         QSettings settings;
         QString imageFormat=settings.value("output/imageFormat","png").toString();
+        QString encodedRelativeImagePath=QUrl::toPercentEncoding(relativeImagePath);
+
         const char *imgFormat="png";
         int quality=-1;
         if(imageFormat=="png")
@@ -189,7 +191,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
             progressValue=progress->value();
         }
 
-        if(absoluteImagePath.isEmpty()|| relativeImagePath.isEmpty())
+        if(absoluteImagePath.isEmpty()|| encodedRelativeImagePath.isEmpty())
         {
             qWarning()<<"Please pass an absolute and relative path to store images";
             die();
@@ -232,7 +234,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
 
             QString imageName=generateUniqueFileName(suffix);
             QString imageAbsoluteName=imageName;
-            imageName.prepend(relativeImagePath+"/");
+            imageName.prepend(encodedRelativeImagePath+"/");
             imageAbsoluteName.prepend(absoluteImagePath+"/");
 
             if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
@@ -258,10 +260,13 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     }
     bool inlineImageMode=false;
 
+
+    QString encodedRelativeImagePath=QUrl::toPercentEncoding(relativeImagePath);
+
     if(document!=nullptr)
         inlineImageMode=true;
 
-    else if(absoluteImagePath.isEmpty()|| relativeImagePath.isEmpty())
+    else if(absoluteImagePath.isEmpty()|| encodedRelativeImagePath.isEmpty())
     {
         qWarning()<<"Please pass an absolute and relative path to store images";
         die();
@@ -345,7 +350,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             {
                 QString imageName=generateUniqueFileName(suffix);
                 QString imageAbsoluteName=imageName;
-                imageName.prepend(relativeImagePath+"/");
+                imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
                 if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
@@ -385,7 +390,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             {
                 QString imageName=generateUniqueFileName(suffix);
                 QString imageAbsoluteName=imageName;
-                imageName.prepend(relativeImagePath+"/");
+                imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
                 if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
@@ -423,7 +428,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             {
                 QString imageName=generateUniqueFileName(suffix);
                 QString imageAbsoluteName=imageName;
-                imageName.prepend(relativeImagePath+"/");
+                imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
                 if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
@@ -462,7 +467,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             {
                 QString imageName=generateUniqueFileName(suffix);
                 QString imageAbsoluteName=imageName;
-                imageName.prepend(relativeImagePath+"/");
+                imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
                 if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))

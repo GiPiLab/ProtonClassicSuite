@@ -125,7 +125,7 @@ void FormManagePrevisions::on_pushButtonDelete_clicked()
         return;
     }
     if(question(tr("Voulez-vous vraiment <b>supprimer</b> la prévision <b>%1</b> ? Cette action ne peut être annulée")
-                .arg(ui->comboListPrevisions->currentText()))==QMessageBox::No)
+                .arg(ui->comboListPrevisions->currentText().toHtmlEscaped()))==QMessageBox::No)
     {
         return;
     }

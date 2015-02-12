@@ -201,7 +201,7 @@ void FormEditAudit::on_randomDataButton_clicked()
         mode=MODES::DFRFDIRI::RI;
 
 
-    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
+    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
     {
         return;
     }
@@ -231,7 +231,7 @@ void FormEditAudit::on_clearDataButton_clicked()
     else if(ui->tabWidget->currentWidget()==ui->tabRI)
         mode=MODES::DFRFDIRI::RI;
 
-    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode)))==QMessageBox::No)
+    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
     {
         return;
     }
@@ -290,7 +290,7 @@ void FormEditAudit::on_pushButtonExportLeaves_clicked()
 
     if(res==true)
     {
-        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(MODES::modeToCompleteString(mode)));
+        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
     }
     else
     {
@@ -327,7 +327,7 @@ void FormEditAudit::on_pushButtonImportLeaves_clicked()
 
     if(res==true)
     {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(mode)));
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
     }
 }
 
@@ -407,7 +407,7 @@ void FormEditAudit::on_pushButtonExportHTML_clicked()
     stream.flush();
     file.close();
     if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName()));
+        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
 }

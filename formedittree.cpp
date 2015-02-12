@@ -300,7 +300,8 @@ void FormEditTree::on_deleteNodeButton_clicked()
             return;
         }
 
-        if(question(tr("Voulez-vous vraiment supprimer le noeud <b>%1</b> ainsi que tous ses descendants ?").arg(selection[0].data().toString()))==QMessageBox::No)
+        if(question(tr("Voulez-vous vraiment supprimer le noeud <b>%1</b> ainsi que tous ses descendants ?").
+                    arg(selection[0].data().toString().toHtmlEscaped()))==QMessageBox::No)
         {
             return;
         }

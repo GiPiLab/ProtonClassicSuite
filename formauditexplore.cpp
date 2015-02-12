@@ -275,6 +275,7 @@ void FormAuditExplore::on_saveButton_clicked()
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
     if(fileName.isEmpty())
         return;
+
     QFileInfo fi(fileName);
     if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
         fileName.append(".html");
@@ -363,7 +364,7 @@ void FormAuditExplore::on_saveButton_clicked()
     file.close();
     progress.setValue(maximumProgressValue);
     if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName()).arg(relativeImagePath));
+        QMessageBox::information(this,tr("Information"),tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped()).arg(relativeImagePath.toHtmlEscaped()));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
 

@@ -158,7 +158,7 @@ void FormManageAudits::on_deleteAuditButton_clicked()
     {
         return;
     }
-    if(question(tr("Voulez-vous vraiment <b>supprimer</b> l'audit <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> l'audit <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfAudits->currentText().toHtmlEscaped()))==QMessageBox::No)
     {
         return;
     }
@@ -180,7 +180,7 @@ void FormManageAudits::on_finishAuditButton_clicked()
     {
         return;
     }
-    if(question(tr("Voulez-vous vraiment <b>terminer</b> l'audit <b>%1</b> ? Celà signifie que vous ne pourrez plus en modifier les données").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    if(question(tr("Voulez-vous vraiment <b>terminer</b> l'audit <b>%1</b> ? Cela signifie que vous ne pourrez plus en modifier les données").arg(ui->comboListOfAudits->currentText().toHtmlEscaped()))==QMessageBox::No)
     {
         return;
     }
@@ -202,7 +202,7 @@ void FormManageAudits::on_unFinishAuditButton_clicked()
     {
         return;
     }
-    if(question(tr("Voulez-vous vraiment dé-terminer l'audit <b>%1</b> ? Celà signifie que vous pourrez en modifier les données, mais plus l'exploiter avant de l'avoir terminé à nouveau").arg(ui->comboListOfAudits->currentText()))==QMessageBox::No)
+    if(question(tr("Voulez-vous vraiment dé-terminer l'audit <b>%1</b> ? Celà signifie que vous pourrez en modifier les données, mais plus l'exploiter avant de l'avoir terminé à nouveau").arg(ui->comboListOfAudits->currentText().toHtmlEscaped()))==QMessageBox::No)
     {
         return;
     }
