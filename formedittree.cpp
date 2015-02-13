@@ -85,13 +85,13 @@ void FormEditTree::setReadOnly(bool state)
 {
     ui->deleteNodeButton->setDisabled(state);
     ui->addNodeButton->setDisabled(state);
-    ui->addTypeButton->setDisabled(state);
-    ui->deleteTypeButton->setDisabled(state);
+    //ui->addTypeButton->setDisabled(state);
+    //ui->deleteTypeButton->setDisabled(state);
     ui->finishTreeButton->setDisabled(state);
-    ui->modifyNodeButton->setDisabled(state);
+    //ui->modifyNodeButton->setDisabled(state);
     ui->guessHierarchyButton->setDisabled(state);
     ui->treeView->setDragEnabled(!state);
-    ui->listTypesView->setDisabled(state);
+    //ui->listTypesView->setDisabled(state);
 }
 
 void FormEditTree::on_deleteTreeButton_clicked()
@@ -313,7 +313,7 @@ void FormEditTree::on_finishTreeButton_clicked()
 {
     if(model!=nullptr)
     {
-        if(question(tr("Voulez-vous vraiment terminer cet arbre ? Une fois terminé, vous ne pourrez plus le modifier."))==QMessageBox::No)
+        if(question(tr("Voulez-vous vraiment terminer cet arbre ? Une fois terminé, vous ne pourrez plus modifier sa structure, mais vous pourrez toujours changer le nom des noeuds."))==QMessageBox::No)
         {
             return;
         }

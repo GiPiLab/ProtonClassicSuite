@@ -923,7 +923,7 @@ bool PCx_Tree::deleteType(unsigned int typeId)
         qDebug()<<"Number of nodes of type "<<typeId<<" = "<<query.value(0).toInt();
         if(query.value(0).toInt()>0)
         {
-            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord."));
+            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord, ou changez leur type."));
             return false;
         }
 
