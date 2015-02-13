@@ -1,11 +1,12 @@
 #ifndef PCX_REPORTINGTABLEOVERVIEWMODEL_H
 #define PCX_REPORTINGTABLEOVERVIEWMODEL_H
 
+#include <QAbstractTableModel>
 #include <QSqlQueryModel>
 #include "pcx_reporting.h"
 
 
-class PCx_ReportingTableOverviewModel : public QSqlQueryModel
+class PCx_ReportingTableOverviewModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -45,6 +46,8 @@ public:
     void setDateRef(int dateFromTimet);
 
 
+    int rowCount(const QModelIndex &parent) const{Q_UNUSED(parent);return queryModel.rowCount();}
+    int columnCount(const QModelIndex &parent) const{Q_UNUSED(parent);return queryModel.columnCount();}
     QVariant data(const QModelIndex &item, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
@@ -58,6 +61,7 @@ private:
     PCx_ReportingTableOverviewModel::OVERVIEWMODE mode;
     PCx_Reporting::OREDPCR colRef;
     int dateRef;
+    QSqlQueryModel queryModel;
     void updateQuery();
 
 };

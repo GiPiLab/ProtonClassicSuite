@@ -81,6 +81,7 @@ void FormReportingOverview::on_comboListReportings_activated(int index)
     selectedReporting=new PCx_ReportingWithTreeModel(selectedReportingId);
     tableOverviewModel=new PCx_ReportingTableOverviewModel(selectedReporting,1,getSelectedMode());
     proxyModel=new QSortFilterProxyModel(this);
+    proxyModel->setSortRole(Qt::EditRole);
     proxyModel->setSourceModel(tableOverviewModel);
 
     ui->tableView->setModel(proxyModel);

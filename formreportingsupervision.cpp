@@ -108,6 +108,8 @@ void FormReportingSupervision::on_comboListReportings_activated(int index)
     selectedReporting=new PCx_Reporting(selectedReportingId);
     model=new PCx_ReportingTableSupervisionModel(selectedReporting,getSelectedMode());
     proxyModel=new QSortFilterProxyModel(this);
+    //To sort numericaly when '%' is appended, instead of sorting by string
+    proxyModel->setSortRole(Qt::EditRole);
     proxyModel->setSourceModel(model);
 
     ui->tableView->setModel(proxyModel);

@@ -3,7 +3,7 @@
 #include <QSqlRecord>
 
 PCx_ReportingTableOverviewModel::PCx_ReportingTableOverviewModel(PCx_Reporting * reporting, unsigned int nodeId, PCx_ReportingTableOverviewModel::OVERVIEWMODE mode,QObject *parent):
-    QSqlQueryModel(parent),reporting(reporting),nodeId(nodeId),mode(mode)
+    QAbstractTableModel(parent),reporting(reporting),nodeId(nodeId),mode(mode)
 {
     Q_ASSERT(reporting!=nullptr&&nodeId>0);
     updateQuery();
@@ -62,26 +62,27 @@ void PCx_ReportingTableOverviewModel::setDateRef(int dateFromTimet)
 
 void PCx_ReportingTableOverviewModel::updateQuery()
 {
+    beginResetModel();
     switch(mode)
     {
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI:
-        setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF:
-        setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
+        queryModel.setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
                          "coalesce(a.realises,0)-coalesce(b.realises,0) as realises,"
                          "coalesce(a.engages,0)-coalesce(b.engages,0) as engages,"
                          "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) as disponibles,"
@@ -97,7 +98,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI:
-        setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
+        queryModel.setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
                          "coalesce(a.realises,0)-coalesce(b.realises,0) as realises,"
                          "coalesce(a.engages,0)-coalesce(b.engages,0) as engages,"
                          "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) as disponibles,"
@@ -113,7 +114,7 @@ void PCx_ReportingTableOverviewModel::updateQuery()
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI:
-        setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) + coalesce(c.ouverts,0)-coalesce(d.ouverts,0) as ouverts,"
+        queryModel.setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) + coalesce(c.ouverts,0)-coalesce(d.ouverts,0) as ouverts,"
                          "coalesce(a.realises,0)-coalesce(b.realises,0) + coalesce(c.realises,0)-coalesce(d.realises,0) as realises,"
                          "coalesce(a.engages,0)-coalesce(b.engages,0) + coalesce(c.engages,0)-coalesce(d.engages,0) as engages,"
                          "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) + coalesce(c.disponibles,0)-coalesce(d.disponibles,0) as disponibles,"
@@ -131,11 +132,12 @@ void PCx_ReportingTableOverviewModel::updateQuery()
         qWarning()<<"Unsupported case";
         break;
     }
+    endResetModel();
 }
 
 QVariant PCx_ReportingTableOverviewModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    QVariant value=QSqlQueryModel::headerData(section,orientation,role);
+    QVariant value=queryModel.headerData(section,orientation,role);
     if(value.isValid()&& role==Qt::DisplayRole && orientation==Qt::Horizontal)
     {
         QString val=value.toString();
@@ -151,13 +153,12 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
     QVariant value;
     bool percentMode=false;
 
-    if (role == Qt::TextColorRole||role==Qt::DisplayRole)
+    if (role == Qt::TextColorRole||role==Qt::DisplayRole||role==Qt::EditRole)
     {
-        value=record(item.row()).value(item.column());
-
+        value=queryModel.record(item.row()).value(item.column());
         //The date column
         if(item.column()==0)
-            return QDateTime::fromTime_t(value.toUInt()).date().toString(Qt::DefaultLocaleShortDate);
+            return QDateTime::fromTime_t(value.toUInt()).date();
 
         double computedValue=NUMBERSFORMAT::fixedPointToDouble(value.toLongLong());
         QString retVal;
@@ -165,11 +166,11 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
         if(dateRef!=-1)
         {
             qint64 valRefDate=-1;
-            for(int i=0;i<rowCount();i++)
+            for(int i=0;i<rowCount(item);i++)
             {
-                if(record(i).value("date").toInt()==dateRef)
+                if(queryModel.record(i).value("date").toInt()==dateRef)
                 {
-                    valRefDate=record(i).value(item.column()).toLongLong();
+                    valRefDate=queryModel.record(i).value(item.column()).toLongLong();
                     break;
                 }
             }
@@ -188,7 +189,7 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
 
         else if(colRef!=PCx_Reporting::OREDPCR::NONELAST)
         {
-            qint64 valRef=record(item.row()).value(PCx_Reporting::OREDPCRtoTableString(colRef)).toLongLong();
+            qint64 valRef=queryModel.record(item.row()).value(PCx_Reporting::OREDPCRtoTableString(colRef)).toLongLong();
             if(valRef!=0)
             {
                 computedValue=(double)(value.toLongLong()/(double)valRef*100);
@@ -202,6 +203,10 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
 
         if(role==Qt::DisplayRole)
             return retVal;
+
+        //For correct numeric sorting when '%' appended
+        if(role==Qt::EditRole)
+            return computedValue;
 
         if(role==Qt::TextColorRole)
         {
@@ -224,7 +229,7 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
         return Qt::AlignCenter;
     }
 
-    return QSqlQueryModel::data(item,role);
+    return QVariant();
 
 }
 

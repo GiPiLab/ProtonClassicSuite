@@ -76,7 +76,7 @@ int PCx_ReportingTableSupervisionModel::columnCount(const QModelIndex &parent) c
 
 QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int role) const
 {
-    if(role==Qt::DisplayRole||role==Qt::TextColorRole)
+    if(role==Qt::DisplayRole||role==Qt::TextColorRole||role==Qt::EditRole)
     {
         int row=index.row();
         Entry entry=entries.at(row);
@@ -88,7 +88,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
         case 0:
             return reporting->getAttachedTree()->getNodeName(entry.nodeId);
         case 1:
-            return entry.date.toString(Qt::DefaultLocaleShortDate);
+            return entry.date;
         case TABLESUPERVISIONCOLUMNS::BP:
             computedValue=entry.bp;
             break;
@@ -160,11 +160,11 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             break;
 
         case TABLESUPERVISIONCOLUMNS::ECICO:
-            return entry.dECICO.toString(Qt::DefaultLocaleShortDate);
+            return entry.dECICO;
             break;
 
         case TABLESUPERVISIONCOLUMNS::ERO2:
-            return entry.dERO2.toString(Qt::DefaultLocaleShortDate);
+            return entry.dERO2;
             break;
 
         case TABLESUPERVISIONCOLUMNS::RAC:
@@ -189,6 +189,11 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             if(percentMode==true)
                 output.append("%");
             return output;
+        }
+        //For correct QSortFilterProxyModel sorting when '%' (otherwise sorted as string, not as number)
+        else if(role==Qt::EditRole)
+        {
+            return computedValue;
         }
         else if(role==Qt::TextColorRole)
         {

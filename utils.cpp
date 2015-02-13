@@ -10,6 +10,7 @@
 #include <QDir>
 #include <QtGlobal>
 #include <QSettings>
+#include <QDateTime>
 #include <cstdio>
 #include <QDebug>
 #include <QMessageBox>
@@ -145,8 +146,20 @@ QString qTableViewToHtml(QTableView *tableView)
                 {
                     cellStyle.append("color:0;");
                 }
-                QString data = tableView->model()->data(index).toString().toHtmlEscaped();
-                out.append(QString("<td %3 style='%1'>%2</td>").arg(cellStyle).arg((!data.isEmpty()) ? data : QString("&nbsp;")).arg(align));
+                QVariant data = tableView->model()->data(index);
+                out.append("<td "+align+" style='"+cellStyle+"'>");
+                QString dataString;
+                if((QMetaType::Type)data.type()==QMetaType::QDate)
+                {
+                    dataString=data.toDate().toString(Qt::DefaultLocaleShortDate);
+                }
+                else
+                {
+                    if(data.toString().isEmpty())
+                        dataString="&nbsp;";
+                    else dataString=data.toString();
+                }
+                out.append(dataString.toHtmlEscaped()+"</td>");
             }
         }
         out.append("</tr>\n");
