@@ -2,15 +2,24 @@
 #include <QSqlQuery>
 #include <QSqlError>
 
-PCx_ReportingTableSupervisionModel::PCx_ReportingTableSupervisionModel(PCx_Reporting *reporting, MODES::DFRFDIRI mode,QObject *parent) :
+PCx_ReportingTableSupervisionModel::PCx_ReportingTableSupervisionModel(PCx_Reporting *reporting, MODES::DFRFDIRI mode,int selectedDateTimeT,QObject *parent) :
     QAbstractTableModel(parent),reporting(reporting),currentMode(mode)
 {
+    this->selectedDateTimeT=selectedDateTimeT;
     updateQuery();
 }
 
 void PCx_ReportingTableSupervisionModel::setMode(MODES::DFRFDIRI mode)
 {
     currentMode=mode;
+    beginResetModel();
+    updateQuery();
+    endResetModel();
+}
+
+void PCx_ReportingTableSupervisionModel::setDateTimeT(int dateTimeT)
+{
+    selectedDateTimeT=dateTimeT;
     beginResetModel();
     updateQuery();
     endResetModel();
@@ -245,10 +254,24 @@ void PCx_ReportingTableSupervisionModel::updateQuery()
 {
     QSqlQuery q;
     entries.clear();
-    if(!q.exec(QString("select id_node,MAX(date) as mDate,bp,ouverts,realises,engages,disponibles from reporting_%1_%2 group by id_node").arg(MODES::modeToTableString(currentMode)).arg(reporting->getReportingId())))
+
+    if(selectedDateTimeT==-1)
     {
-       qCritical()<<q.lastError();
-       die();
+        if(!q.exec(QString("select id_node,MAX(date) as mDate,bp,ouverts,realises,engages,disponibles from reporting_%1_%2 group by id_node").arg(MODES::modeToTableString(currentMode)).arg(reporting->getReportingId())))
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
+    }
+    else
+    {
+        q.prepare(QString("select id_node,date as mDate,bp,ouverts,realises,engages,disponibles from reporting_%1_%2 where date=:date order by id_node").arg(MODES::modeToTableString(currentMode)).arg(reporting->getReportingId()));
+        q.bindValue(":date",selectedDateTimeT);
+        if(!q.exec())
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
     }
     while(q.next())
     {

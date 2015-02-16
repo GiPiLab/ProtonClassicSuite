@@ -10,7 +10,7 @@ class PCx_ReportingTableSupervisionModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit PCx_ReportingTableSupervisionModel(PCx_Reporting *reporting, MODES::DFRFDIRI mode, QObject *parent = 0);
+    explicit PCx_ReportingTableSupervisionModel(PCx_Reporting *reporting, MODES::DFRFDIRI mode, int selectedDateTimeT=-1, QObject *parent = 0);
 
     enum TABLESUPERVISIONCOLUMNS
     {
@@ -38,6 +38,9 @@ public:
 
     MODES::DFRFDIRI getMode()const{return currentMode;}
     void setMode(MODES::DFRFDIRI mode);
+
+    void setDateTimeT(int dateTimeT);
+    int getSelectedDateTimeT()const{return selectedDateTimeT;}
 
     static QString getColumnName(TABLESUPERVISIONCOLUMNS column);
 
@@ -70,6 +73,7 @@ private:
     void updateQuery();
     unsigned int nbNodes;
     QList<Entry> entries;
+    int selectedDateTimeT;
 
 };
 

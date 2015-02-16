@@ -106,7 +106,9 @@ void FormReportingSupervision::on_comboListReportings_activated(int index)
     }
 
     selectedReporting=new PCx_Reporting(selectedReportingId);
+
     model=new PCx_ReportingTableSupervisionModel(selectedReporting,getSelectedMode());
+    updateDateRefCombo();
     proxyModel=new QSortFilterProxyModel(this);
     //To sort numericaly when '%' is appended, instead of sorting by string
     proxyModel->setSortRole(Qt::EditRole);
@@ -141,6 +143,7 @@ void FormReportingSupervision::on_radioButtonDF_toggled(bool checked)
     {
         model->setMode(MODES::DFRFDIRI::DF);
         ui->tableView->resizeColumnsToContents();
+        updateDateRefCombo();
     }
 
 }
@@ -151,6 +154,7 @@ void FormReportingSupervision::on_radioButtonRF_toggled(bool checked)
     {
         model->setMode(MODES::DFRFDIRI::RF);
         ui->tableView->resizeColumnsToContents();
+        updateDateRefCombo();
     }
 
 }
@@ -161,6 +165,7 @@ void FormReportingSupervision::on_radioButtonDI_toggled(bool checked)
     {
         model->setMode(MODES::DFRFDIRI::DI);
         ui->tableView->resizeColumnsToContents();
+        updateDateRefCombo();
     }
 
 }
@@ -171,6 +176,7 @@ void FormReportingSupervision::on_radioButtonRI_toggled(bool checked)
     {
         model->setMode(MODES::DFRFDIRI::RI);
         ui->tableView->resizeColumnsToContents();
+        updateDateRefCombo();
     }
 }
 
@@ -307,6 +313,46 @@ QSize FormReportingSupervision::sizeHint() const
     return QSize(1050,500);
 }
 
+void FormReportingSupervision::updateDateRefCombo()
+{
+    ui->comboBoxListDates->clear();
+    QList<QDate> listDates=selectedReporting->getDatesForNodeAndMode(1,getSelectedMode()).toList();
+    qSort(listDates.begin(),listDates.end(),qGreater<QDate>());
+
+
+    ui->comboBoxListDates->addItem("Dernière situation",-1);
+    foreach(const QDate &date,listDates)
+    {
+        ui->comboBoxListDates->addItem(date.toString(Qt::DefaultLocaleShortDate),QDateTime(date).toTime_t());
+    }
+
+    if(model!=nullptr && selectedReporting!=nullptr)
+    {
+        int currentDateTimeT=model->getSelectedDateTimeT();
+        if(currentDateTimeT!=-1)
+        {
+            if(selectedReporting->dateExistsForNodeAndMode(currentDateTimeT,1,getSelectedMode()))
+            {
+                for(int i=0;i<ui->comboBoxListDates->count();i++)
+                {
+                    if(ui->comboBoxListDates->itemData(i)==currentDateTimeT)
+                    {
+                        ui->comboBoxListDates->setCurrentIndex(i);
+                        on_comboBoxListDates_activated(i);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                ui->comboBoxListDates->setCurrentIndex(0);
+                on_comboBoxListDates_activated(0);
+            }
+        }
+    }
+
+}
+
 void FormReportingSupervision::on_pushButtonSelectNone_clicked()
 {
     ui->checkBox15NRest->setChecked(false);
@@ -349,4 +395,15 @@ void FormReportingSupervision::on_pushButtonSelectAll_clicked()
     ui->checkBoxRealises->setChecked(true);
     ui->checkBoxOuverts->setChecked(true);
     ui->checkBoxVariationBP->setChecked(true);
+}
+
+void FormReportingSupervision::on_comboBoxListDates_activated(int index)
+{
+    Q_UNUSED(index);
+    if(ui->comboBoxListDates->count()==0)
+        return;
+    int selectedDate=ui->comboBoxListDates->currentData().toInt();
+    model->setDateTimeT(selectedDate);
+
+    ui->tableView->resizeColumnsToContents();
 }

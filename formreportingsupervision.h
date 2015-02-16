@@ -73,9 +73,12 @@ private slots:
 
     void on_pushButtonSelectAll_clicked();
 
+    void on_comboBoxListDates_activated(int index);
+
 private:
     Ui::FormReportingSupervision *ui;
     QSize sizeHint()const;
+    void updateDateRefCombo();
 
     PCx_Reporting *selectedReporting;
     PCx_ReportingTableSupervisionModel *model;
