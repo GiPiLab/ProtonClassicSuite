@@ -122,7 +122,7 @@ void FormEditTree::on_deleteTreeButton_clicked()
         }
         else if(result==0)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Il existe des audits liés à cet arbre. Supprimez-les d'abord"));
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe des audits ou des reportings liés à cet arbre. Supprimez-les d'abord"));
             return;
         }
     }

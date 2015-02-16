@@ -68,6 +68,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
     QStandardItemModel tmpModel;
     tmpModel.dropMimeData(data,Qt::CopyAction,0,0,QModelIndex());
 
+    QSqlDatabase::database().transaction();
     for(int i=0;i<tmpModel.rowCount();i++)
     {
         //TODO : check for duplicates nodes under the same pid
@@ -75,6 +76,7 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         if(dragId!=1)
             updateNodePid(dragId,dropId);
     }
+    QSqlDatabase::database().commit();
 
     return QStandardItemModel::dropMimeData(data,action,row,column,parent);
 }
