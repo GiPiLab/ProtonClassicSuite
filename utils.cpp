@@ -91,6 +91,7 @@ bool loadDb(const QString &databaseName)
     QSqlQuery("PRAGMA cache_size = 16384");
     QSqlQuery("PRAGMA temp_store = MEMORY");
 */
+    QSqlQuery("PRAGMA foreign_keys=ON");
     initializeNewDb();
 
     return true;

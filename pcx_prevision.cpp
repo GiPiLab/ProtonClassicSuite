@@ -169,21 +169,11 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     Q_ASSERT(auditId>0);
     QSqlQuery q;
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
-    QPair<unsigned int, QString> anAudit;
+    PCx_Audit tmpAudit(auditId,true);
 
-    bool found=false;
-    foreach(anAudit,listOfAudits)
+    if(tmpAudit.isFinished()==false)
     {
-        if(anAudit.first==auditId)
-        {
-            found=true;
-            break;
-        }
-    }
-    if(found==false)
-    {
-        qCritical()<<QObject::tr("Audit inexistant ou non terminé !");
+        qCritical()<<QObject::tr("Audit non terminé !");
         return false;
     }
 
@@ -218,8 +208,10 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     unsigned int uLastId=lastId.toUInt();
 
 
-    if(!q.exec(QString("create table prevision_DF_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer, unique(id_node,year) on conflict replace)").arg(uLastId)))
+    if(!q.exec(QString("create table prevision_DF_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, year integer not null, label text,"
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer,"
+                       " unique(id_node,year) on conflict replace)").arg(uLastId).arg(tmpAudit.getAttachedTreeId())))
     {
         qCritical()<<q.lastError();
         die();
@@ -236,8 +228,10 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
         die();
     }
 
-    if(!q.exec(QString("create table prevision_RF_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer,unique(id_node,year) on conflict replace)").arg(uLastId)))
+    if(!q.exec(QString("create table prevision_RF_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, year integer not null, label text,"
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer,"
+                       " unique(id_node,year) on conflict replace)").arg(uLastId).arg(tmpAudit.getAttachedTreeId())))
     {
         qCritical()<<q.lastError();
         die();
@@ -255,8 +249,10 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
         die();
     }
 
-    if(!q.exec(QString("create table prevision_DI_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer, unique(id_node,year) on conflict replace)").arg(uLastId)))
+    if(!q.exec(QString("create table prevision_DI_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, year integer not null, label text,"
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer,"
+                       " unique(id_node,year) on conflict replace)").arg(uLastId).arg(tmpAudit.getAttachedTreeId())))
     {
         qCritical()<<q.lastError();
         die();
@@ -274,8 +270,10 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
         die();
     }
 
-    if(!q.exec(QString("create table prevision_RI_%1(id integer primary key autoincrement, id_node integer not null, year integer not null, label text,"
-                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer, unique(id_node,year) on conflict replace)").arg(uLastId)))
+    if(!q.exec(QString("create table prevision_RI_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, year integer not null, label text,"
+                   "prevision_operators_to_add text, prevision_operators_to_substract text, computedPrevision integer,"
+                       " unique(id_node,year) on conflict replace)").arg(uLastId).arg(tmpAudit.getAttachedTreeId())))
     {
         qCritical()<<q.lastError();
         die();

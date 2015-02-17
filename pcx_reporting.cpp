@@ -1371,10 +1371,11 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
     }
     unsigned int uLastId=lastId.toUInt();
 
-    if(!q.exec(QString("create table reporting_DF_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
+    if(!q.exec(QString("create table reporting_DF_%1(id integer primary key autoincrement,"
+                       " id_node integer not null references arbre_%2(id) on delete restrict, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1392,10 +1393,11 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
         die();
     }
 
-    if(!q.exec(QString("create table reporting_RF_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
+    if(!q.exec(QString("create table reporting_RF_%1(id integer primary key autoincrement,"
+                       " id_node integer not null references arbre_%2(id) on delete restrict, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1413,10 +1415,11 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
         die();
     }
 
-    if(!q.exec(QString("create table reporting_DI_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
+    if(!q.exec(QString("create table reporting_DI_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1433,10 +1436,11 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
         die();
     }
 
-    if(!q.exec(QString("create table reporting_RI_%1(id integer primary key autoincrement, id_node integer not null, date integer not null, "
+    if(!q.exec(QString("create table reporting_RI_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, date integer not null, "
                        "ouverts integer, realises integer, engages integer, disponibles integer, "
                        "bp integer, reports integer, ocdm integer, vcdm integer, budgetvote integer, "
-                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId)))
+                       "vcinterne integer, rattachenmoins1 integer, unique(id_node,date) on conflict replace)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();

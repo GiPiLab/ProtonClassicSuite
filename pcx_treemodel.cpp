@@ -83,7 +83,8 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
 bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
 {
-    QSqlQuery query(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
+    QSqlQuery query;
+    query.exec(QString("select * from arbre_%1 where pid=%2 order by nom").arg(treeId).arg(nodeId));
     if(!query.isActive())
     {
         qCritical()<<query.lastError();

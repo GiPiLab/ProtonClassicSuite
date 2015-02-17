@@ -1188,7 +1188,10 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
     unsigned int uLastId=lastId.toUInt();
 
     //Data are integer for fixed points arithmetics, stored with 3 decimals
-    if(!q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
+    if(!q.exec(QString("create table audit_DF_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, "
+                       "annee integer not null, ouverts integer, realises integer, engages integer, "
+                       "disponibles integer)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1205,8 +1208,10 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         qCritical()<<q.lastError();
         die();
     }
-
-    if(!q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
+    if(!q.exec(QString("create table audit_RF_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, "
+                       "annee integer not null, ouverts integer, realises integer, engages integer, "
+                       "disponibles integer)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1224,7 +1229,10 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         die();
     }
 
-    if(!q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
+    if(!q.exec(QString("create table audit_DI_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, "
+                       "annee integer not null, ouverts integer, realises integer, engages integer, "
+                       "disponibles integer)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();
@@ -1241,7 +1249,10 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
         die();
     }
 
-    if(!q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, id_node integer not null, annee integer not null, ouverts integer, realises integer, engages integer, disponibles integer)").arg(uLastId)))
+    if(!q.exec(QString("create table audit_RI_%1(id integer primary key autoincrement, "
+                       "id_node integer not null references arbre_%2(id) on delete restrict, "
+                       "annee integer not null, ouverts integer, realises integer, engages integer, "
+                       "disponibles integer)").arg(uLastId).arg(attachedTreeId)))
     {
         qCritical()<<q.lastError();
         die();

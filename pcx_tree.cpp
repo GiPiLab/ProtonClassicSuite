@@ -775,7 +775,9 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
     }
     int treeId=lastId.toInt();
 
-    if(!query.exec(QString("create table arbre_%1(id integer primary key autoincrement, nom text not null, pid integer not null, type integer not null)").arg(treeId)))
+    if(!query.exec(QString("create table arbre_%1(id integer primary key autoincrement, "
+                           "nom text not null, pid integer not null,"
+                           " type integer references types_%1(id) on delete restrict)").arg(treeId)))
     {
         qCritical()<<query.lastError();
         die();
@@ -807,7 +809,7 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
 
     if(createRoot)
     {
-        if(!query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,0)").arg(treeId)))
+        if(!query.exec(QString("insert into arbre_%1 (nom,pid,type) values ('Racine',0,NULL)").arg(treeId)))
         {
             qCritical()<<query.lastError();
             die();
@@ -1063,6 +1065,7 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
 
     unsigned int maxNumType=getListOfDefaultTypes().size();
 
+    QSqlDatabase::database().transaction();
     for(unsigned int i=1;i<nbNodes;i++)
     {
         QSqlQuery q;
@@ -1082,6 +1085,7 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
             die();
         }
     }
+    QSqlDatabase::database().commit();
 
     return lastId;
 }
@@ -1099,7 +1103,11 @@ int PCx_Tree::addTree(const QString &name)
 
     QSqlDatabase::database().transaction();
     int treeId=_internalAddTree(name,true);
-    Q_ASSERT(treeId>0);
+    if(treeId<=0)
+    {
+        qCritical()<<"Error";
+        die();
+    }
 
     QStringList listOfTypes=getListOfDefaultTypes();
     foreach(QString oneType,listOfTypes)
