@@ -2,6 +2,7 @@
 #define PCX_PREVISIONITEM_H
 
 #include "pcx_prevision.h"
+#include <QTextDocument>
 
 class PCx_PrevisionItem
 {
@@ -28,22 +29,24 @@ public:
     bool deleteCriteria(QModelIndexList selectedIndexes,bool compute=true);
     void deleteAllCriteria();
 
-    QString dataAsHTML() const;
     void loadFromDb();
-    void dispatchCriteriaItemsToChildrenLeaves();
-
-
     void saveDataToDb()const;
+
+
+    void dispatchCriteriaItemsToChildrenLeaves();
     void dispatchComputedValueToChildrenLeaves();
 
-    QString getNodePrevisionHTMLReport() const;
+    QString getPrevisionItemAsHTML() const;
+    QString getPrevisionItemsOfDescendantsAsHTML() const;
 
     qint64 getSummedPrevisionItemValue()const;
     qint64 getPrevisionItemValue()const;
 
-
-
     ~PCx_PrevisionItem();
+
+    QString displayPrevisionItemReportInQTextDocument(QTextDocument *document) const;
+
+    bool savePrevisionItemReport(const QString &fileName, bool showDescendants) const;
 
 
 private:

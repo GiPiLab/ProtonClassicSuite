@@ -266,7 +266,7 @@ void DialogOptions::on_pushButtonColorReqMinMax_clicked()
 void DialogOptions::on_pushButtonColorPen1_clicked()
 {
     QColor oldcolor=PCx_Graphics::getColorPen1();
-    QColor color = QColorDialog::getColor(oldcolor, this);
+    QColor color = QColorDialog::getColor(oldcolor,this);
     if (color.isValid())
     {
         colorPen1=color;

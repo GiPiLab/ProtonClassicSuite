@@ -2,7 +2,11 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QElapsedTimer>
-
+#include <QMessageBox>
+#include <QFileInfo>
+#include <QProgressDialog>
+#include <QFile>
+#include "pcx_report.h"
 
 PCx_PrevisionItem::PCx_PrevisionItem(PCx_Prevision *prevision, MODES::DFRFDIRI mode, unsigned int nodeId, unsigned int year)
     :prevision(prevision),mode(mode),nodeId(nodeId),year(year)
@@ -55,13 +59,188 @@ void PCx_PrevisionItem::loadFromDb()
     }
 }
 
-QString PCx_PrevisionItem::getNodePrevisionHTMLReport() const
+
+QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocument *document) const
+{
+    QString out;
+    PCx_Report report(prevision->getAttachedAudit());
+    QSettings settings;
+    report.getGraphics().setGraphicsWidth(settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt());
+    report.getGraphics().setGraphicsHeight(settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt());
+    report.getGraphics().setScale(1.0);
+    out=prevision->generateHTMLHeader();
+    out.append(prevision->generateHTMLPrevisionTitle());
+    out.append("<h4>"+MODES::modeToCompleteString(mode).toHtmlEscaped()+"</h4>");
+    QList<PCx_Tables::PCATABLES> tables={PCx_Tables::PCARAWDATA};
+    QList<PCx_Graphics::PCAGRAPHICS> graphics={PCx_Graphics::PCAGRAPHICS::PCAHISTORY,PCx_Graphics::PCAG1,PCx_Graphics::PCAG2};
+
+    out.append("<h2>"+prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped()+"</h2>");
+    out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").arg(year).arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
+    out.append(getPrevisionItemAsHTML());
+    out.append("<p align='center'><b>Données historiques et prévision</b></p>");
+    out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,document,"","",nullptr,this));
+    out.append("</body></html>");
+    document->setHtml(out);
+    return out;
+}
+
+
+
+bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool showDescendants) const
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+        return false;
+    }
+    //Will reopen after computation
+    file.close();
+    file.remove();
+    QFileInfo fi(fileName);
+
+    QString relativeImagePath=fi.fileName()+"_files";
+    QString absoluteImagePath=fi.absoluteFilePath()+"_files";
+
+    QFileInfo imageDirInfo(absoluteImagePath);
+
+    if(!imageDirInfo.exists())
+    {
+        if(!fi.absoluteDir().mkdir(relativeImagePath))
+        {
+            QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Création du dossier des images impossible"));
+            return false;
+        }
+    }
+    else
+    {
+        if(!imageDirInfo.isWritable())
+        {
+            QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Ecriture impossible dans le dossier des images"));
+            return false;
+        }
+    }
+
+
+    PCx_Report report(prevision->getAttachedAudit());
+    QSettings settings;
+    report.getGraphics().setGraphicsWidth(settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt());
+    report.getGraphics().setGraphicsHeight(settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt());
+    report.getGraphics().setScale(settings.value("graphics/scale",PCx_Graphics::DEFAULTSCALE).toDouble());
+    QString out=prevision->generateHTMLHeader();
+    out.append(prevision->generateHTMLPrevisionTitle());
+    QList<unsigned int>descendants;
+
+    out.append("<h4>"+MODES::modeToCompleteString(mode).toHtmlEscaped()+"</h4>");
+
+    if(showDescendants)
+    {
+        descendants=prevision->getAttachedTree()->getDescendantsId(nodeId);
+        QList<unsigned int> dPlusMe=descendants;
+        dPlusMe.prepend(nodeId);
+        out.append(report.generateHTMLTOC(dPlusMe));
+    }
+
+    QList<PCx_Tables::PCATABLES> tables={PCx_Tables::PCARAWDATA};
+    QList<PCx_Graphics::PCAGRAPHICS> graphics={PCx_Graphics::PCAGRAPHICS::PCAHISTORY,PCx_Graphics::PCAG1,PCx_Graphics::PCAG2};
+
+    out.append(QString("<h2 id='node%1'>"+prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped()+"</h2>").arg(nodeId));
+    out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").arg(year).arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
+    out.append(getPrevisionItemAsHTML());
+    double prevNode=getSummedPrevisionItemValue();
+    out.append("<p align='center'><b>Données historiques et prévision</b></p>");
+
+    out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,
+                                                     nullptr,absoluteImagePath,relativeImagePath,nullptr,this));
+    if(showDescendants)
+    {
+        int maximumProgressValue=(descendants.count())*(graphics.size());
+        QProgressDialog progress(QObject::tr("Enregistrement en cours..."),QObject::tr("Annuler"),0,maximumProgressValue);
+        progress.setMinimumDuration(10);
+
+        progress.setWindowModality(Qt::ApplicationModal);
+
+        progress.setValue(0);
+        foreach(unsigned int descendant,descendants)
+        {
+            out.append(QString("<h2 id='node%1'>"+prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped()+"</h2>").arg(descendant));
+
+            PCx_PrevisionItem tmpItem(prevision,mode,descendant,year);
+            tmpItem.loadFromDb();
+            prevNode=tmpItem.getSummedPrevisionItemValue();
+            out.append("<p align='center'><b>Données historiques et prévision</b></p>");
+            out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").
+                       arg(year).arg(NUMBERSFORMAT::formatFixedPoint(prevNode)));
+
+            out.append(tmpItem.getPrevisionItemAsHTML());
+            out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,descendant,mode,
+                                                             nullptr,absoluteImagePath,relativeImagePath,&progress,&tmpItem));
+            if(progress.wasCanceled())
+            {
+                QDir dir(absoluteImagePath);
+                dir.removeRecursively();
+                return false;
+            }
+        }
+    }
+
+    out.append("</body></html>");
+
+
+    QString settingStyle=settings.value("output/style","CSS").toString();
+    if(settingStyle=="INLINE")
+    {
+        //Pass HTML through a temp QTextDocument to reinject css into tags (more compatible with text editors)
+        QTextDocument formattedOut;
+        formattedOut.setHtml(out);
+        out=formattedOut.toHtml("utf-8");
+
+        //Cleanup the output a bit
+        out.replace(" -qt-block-indent:0;","");
+    }
+
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+        QDir dir(absoluteImagePath);
+        dir.removeRecursively();
+        return false;
+    }
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+    stream<<out;
+    stream.flush();
+    file.close();
+    //progress.setValue(maximumProgressValue);
+    if(stream.status()==QTextStream::Ok)
+        QMessageBox::information(0,QObject::tr("Information"),QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped()).arg(relativeImagePath.toHtmlEscaped()));
+    else
+    {
+        QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Le document n'a pas pu être enregistré !"));
+        return false;
+    }
+
+    return true;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+QString PCx_PrevisionItem::getPrevisionItemsOfDescendantsAsHTML() const
 {
     QString output;
 
     if(!prevision->getAttachedTree()->isLeaf(nodeId))
     {
-        output=QString("Critères appliqués aux descendants de <b>%1</b> (%2)").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
+        output=QString("<h3>Critères appliqués aux descendants de <b>%1</b> (%2)</h3>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
                 .arg(MODES::modeToCompleteString(mode));
         QList<unsigned int> descendants=prevision->getAttachedTree()->getDescendantsId(nodeId);
         foreach(unsigned int descendant,descendants)
@@ -73,7 +252,7 @@ QString PCx_PrevisionItem::getNodePrevisionHTMLReport() const
                 output.append(QString("<p><a href='#node_%3'><b>%1 : %2€</b></a></p>").arg(prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped())
                               .arg(NUMBERSFORMAT::formatFixedPoint(tmpItem.getSummedPrevisionItemValue()))
                               .arg(descendant));
-                output.append("<ul>"+tmpItem.dataAsHTML()+"</ul>");
+                output.append(tmpItem.getPrevisionItemAsHTML());
             }
         }
     }
@@ -85,7 +264,7 @@ QString PCx_PrevisionItem::getNodePrevisionHTMLReport() const
             output.append(QString("<p><b>%1 : %2€</b></p>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
                           .arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
 
-            output.append("<ul>"+dataAsHTML()+"</ul>");
+            output.append(getPrevisionItemAsHTML());
         }
     }
     return output;
@@ -327,23 +506,42 @@ void PCx_PrevisionItem::deleteAllCriteria()
 
 
 
-QString PCx_PrevisionItem::dataAsHTML() const
+QString PCx_PrevisionItem::getPrevisionItemAsHTML() const
 {
     QString output;
+    bool toAdd=false,toSub=false;
+
+    if(itemsToAdd.count()>0)
+    {
+        toAdd=true;
+        output.append("<p><i>Critères à ajouter :</i></p><ul>");
+    }
+
     unsigned int auditId=prevision->getAttachedAuditId();
 
     foreach(const PCx_PrevisionItemCriteria &criteria,itemsToAdd)
     {
-        output.append(QString("<li style='background-color:lightgreen'>%1 : %2€</li>")
+        output.append(QString("<li style='color:darkgreen'>%1 : %2€</li>")
                       .arg(criteria.getCriteriaLongDescription().toHtmlEscaped())
                       .arg(NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId,mode,nodeId))));
     }
+    if(toAdd)
+        output.append("</ul>");
+
+    if(itemsToSubstract.count()>0)
+    {
+        toSub=true;
+        output.append("<p><i>Critères à soustraire :</i></p><ul>");
+    }
+
     foreach(const PCx_PrevisionItemCriteria &criteria,itemsToSubstract)
     {
-        output.append(QString("<li style='background-color:red'>%1 : %2€</li>")
+        output.append(QString("<li style='color:darkred'>%1 : %2€</li>")
                       .arg(criteria.getCriteriaLongDescription().toHtmlEscaped())
                       .arg(NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId,mode,nodeId))));
     }
+    if(toSub)
+        output.append("</ul>");
     return output;
 
 }

@@ -5,6 +5,10 @@
 #include <QListWidgetItem>
 #include <QElapsedTimer>
 #include <QMessageBox>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include "pcx_graphics.h"
+#include "formdisplayprevisionreport.h"
 
 FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     QWidget(parent),
@@ -14,6 +18,7 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     auditWithTreeModel=nullptr;
     currentPrevisionItemTableModel=nullptr;
     currentPrevisionItem=nullptr;
+    graphics=nullptr;
 
     recentPrevisionItem=nullptr;
     recentPrevisionItemTableModel=nullptr;
@@ -64,6 +69,10 @@ FormAuditPrevisions::~FormAuditPrevisions()
     if(recentPrevisionItem!=nullptr)
     {
         delete recentPrevisionItem;
+    }
+    if(graphics!=nullptr)
+    {
+        delete graphics;
     }
 
 }
@@ -152,6 +161,15 @@ void FormAuditPrevisions::updateLabels()
     ui->labelValueAppliedItems->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getPrevisionItemValue()));
     ui->tableViewCriteria->resizeColumnToContents(0);
     ui->tableViewRecentCriteria->resizeColumnToContents(0);
+
+
+    ui->plot->clearGraphs();
+    ui->plot->clearItems();
+    ui->plot->clearPlottables();
+
+    graphics->getPCAHistory(currentNodeId,currentMode,{PCx_Audit::ORED::OUVERTS,PCx_Audit::ORED::REALISES},currentPrevisionItem,true);
+
+
 }
 
 
@@ -184,10 +202,15 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
         recentPrevisionItem=nullptr;
     }
 
-
+    if(graphics!=nullptr)
+    {
+        delete graphics;
+        graphics=nullptr;
+    }
 
     previsionModel=new PCx_Prevision(selectedPrevisionId);
     auditWithTreeModel=new PCx_AuditWithTreeModel(previsionModel->getAttachedAuditId());
+    graphics=new PCx_Graphics(previsionModel->getAttachedAudit(),ui->plot);
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
     ui->treeView->setModel(auditWithTreeModel->getAttachedTree());
@@ -217,7 +240,7 @@ void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
     updatePrevisionItemTableModel();
     updateLabels();
     if(ui->textBrowser->isVisible())
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
 }
 
 
@@ -315,7 +338,7 @@ void FormAuditPrevisions::on_radioButtonDF_toggled(bool checked)
         updatePrevisionItemTableModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
-            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+            ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
 
     }
 }
@@ -328,7 +351,7 @@ void FormAuditPrevisions::on_radioButtonRF_toggled(bool checked)
         updatePrevisionItemTableModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
-            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+            ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
 
     }
 }
@@ -341,7 +364,7 @@ void FormAuditPrevisions::on_radioButtonDI_toggled(bool checked)
         updatePrevisionItemTableModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
-            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+            ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
 
     }
 }
@@ -354,7 +377,7 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked)
         updatePrevisionItemTableModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
-            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+            ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
 
     }
 }
@@ -376,7 +399,7 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
         currentPrevisionItemTableModel->resetModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
-            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+            ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
 
     }
 }
@@ -391,7 +414,7 @@ void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
         currentPrevisionItemTableModel->resetModel();
         updateLabels();
         if(ui->textBrowser->isVisible())
-            ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+            ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
     }
 }
 
@@ -400,18 +423,41 @@ void FormAuditPrevisions::on_checkBoxDisplayLeafCriteria_toggled(bool checked)
     if(checked)
     {
         ui->textBrowser->setHidden(false);
-        ui->textBrowser->setHtml(currentPrevisionItem->getNodePrevisionHTMLReport());
+        ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
     }
     else
     {
         ui->textBrowser->clear();
         ui->textBrowser->setHidden(true);
     }
-
 }
 
 QSize FormAuditPrevisions::sizeHint() const
 {
     return QSize(850,600);
+}
 
+void FormAuditPrevisions::on_pushButtonDisplayReport_clicked()
+{
+    FormDisplayPrevisionReport *form=new FormDisplayPrevisionReport(currentPrevisionItem,this);
+    form->setAttribute(Qt::WA_DeleteOnClose);
+    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    QMdiArea *mdiArea=mdiSubWin->mdiArea();
+    QMdiSubWindow *subWin=mdiArea->addSubWindow(form);
+    //subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
+    form->show();
+}
+
+void FormAuditPrevisions::on_pushButtonSaveBigReport_clicked()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "",tr("Fichiers HTML (*.html *.htm)"));
+    if(fileName.isEmpty())
+        return;
+
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
+        fileName.append(".html");
+    currentPrevisionItem->savePrevisionItemReport(fileName,true);
 }

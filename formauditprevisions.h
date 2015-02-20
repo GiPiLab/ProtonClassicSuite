@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QUrl>
+#include "pcx_graphics.h"
 #include "pcx_prevision.h"
 #include "pcx_previsionitemtablemodel.h"
 
@@ -56,6 +57,10 @@ private slots:
 
     void on_checkBoxDisplayLeafCriteria_toggled(bool checked);
 
+    void on_pushButtonDisplayReport_clicked();
+
+    void on_pushButtonSaveBigReport_clicked();
+
 private:
 
     PCx_Prevision *previsionModel;
@@ -67,6 +72,7 @@ private:
     unsigned int currentNodeId;
     Ui::FormAuditPrevisions *ui;
     QSize sizeHint() const;
+    PCx_Graphics *graphics;
 
     void updateListOfPrevisions();
     void updatePrevisionItemTableModel();

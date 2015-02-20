@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QObject>
 
+
 using namespace NUMBERSFORMAT;
 
 PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):auditModel(model)
@@ -26,6 +27,7 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
         ownPlot=false;
     }
 }
+
 
 PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight, double scale):reportingModel(reportingModel)
 {
@@ -55,7 +57,7 @@ PCx_Graphics::~PCx_Graphics()
 }
 
 
-QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule) const
+QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule, const PCx_PrevisionItem *prevItem) const
 {
     Q_ASSERT(node>0 && plot!=nullptr);
     if(auditModel==nullptr)
@@ -102,6 +104,18 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
             dataNode.insert(annee,data);
         }
     }
+
+    if(prevItem!=nullptr)
+    {
+        unsigned int year=prevItem->getYear();
+        dataNode.insert(year,prevItem->getSummedPrevisionItemValue());
+        PCx_PrevisionItem tmpPrevRootItem=PCx_PrevisionItem(prevItem->getPrevision(),mode,1,year);
+        tmpPrevRootItem.loadFromDb();
+        dataRoot.insert(year,tmpPrevRootItem.getSummedPrevisionItemValue());
+        //dataRoot.insert(year,)
+    }
+
+
 
     //dataRoot and dataNode must have the same keys
     Q_ASSERT(dataRoot.keys()==dataNode.keys());
@@ -476,6 +490,177 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
 
 }
 
+QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED,const PCx_PrevisionItem *prevItem,bool miniMode) const
+{
+    if(auditModel==nullptr)
+    {
+        qWarning()<<"Model error";
+        return QString();
+    }
+
+    plot->clearItems();
+    plot->clearGraphs();
+    plot->clearPlottables();
+
+
+    QString plotTitle;
+
+    //Colors for each graph
+    QColor PENCOLORS[4]=
+    {
+        Qt::darkCyan,
+        Qt::gray,
+        Qt::blue,
+        Qt::red
+    };
+
+    if(miniMode==true)
+    {
+        if(selectedORED.count()==2)
+            plotTitle=QObject::tr("Crédits %1s (bleu) et %2s (gris)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0)))
+                    .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(1)));
+
+        QCPPlotTitle * title;
+        if(plot->plotLayout()->elementCount()==1)
+        {
+            plot->plotLayout()->insertRow(0);
+            title=new QCPPlotTitle(plot,plotTitle);
+            title->setFont(QFont(QFont().family(),8));
+            plot->plotLayout()->addElement(0,0,title);
+        }
+        else
+        {
+            title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+            title->setText(plotTitle);
+        }
+    }
+    /*else
+    {
+        plotTitle=QString("Données historiques et prévision pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped())
+                .arg(MODES::modeToCompleteString(mode));
+    }*/
+    if(selectedORED.isEmpty())
+    {
+        plot->replot();
+        return QString();
+    }
+
+    QSqlQuery q;
+
+    q.prepare(QString("select * from audit_%1_%2 where id_node=:id order by annee").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId()));
+    q.bindValue(":id",selectedNodeId);
+    q.exec();
+
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    QVector<double> dataX,dataY[4];
+
+    while(q.next())
+    {
+        unsigned int date=q.value("annee").toUInt();
+        dataX.append((double)date);
+
+        //WARNING : ORED fixed size here
+        for(int i=PCx_Audit::ORED::OUVERTS;i<4;i++)
+        {
+            if(selectedORED.contains((PCx_Audit::ORED)i))
+            {
+                qint64 data=q.value(PCx_Audit::OREDtoTableString((PCx_Audit::ORED)i)).toLongLong();
+                dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
+            }
+        }
+    }
+
+    if(dataX.isEmpty())
+    {
+        plot->replot();
+        return QString();
+    }
+
+    if(prevItem!=nullptr)
+    {
+        dataX.append((double)prevItem->getYear());
+        qint64 summedPrev=prevItem->getSummedPrevisionItemValue();
+       // if(summedPrev!=0)
+            dataY[0].append(NUMBERSFORMAT::fixedPointToDouble(summedPrev));
+
+    }
+
+    bool first=true;
+    //WARNING : ORED fixed size here
+    for(int i=PCx_Audit::ORED::OUVERTS;i<4;i++)
+    {
+        if(selectedORED.contains((PCx_Audit::ORED)i))
+        {
+            plot->addGraph();
+            plot->graph()->setData(dataX,dataY[i]);
+            plot->graph()->setName(PCx_Audit::OREDtoCompleteString((PCx_Audit::ORED)i));
+            plot->graph()->setPen(QPen(PENCOLORS[i]));
+            plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
+            plot->graph()->rescaleAxes(!first);
+            first=false;
+        }
+    }
+
+    QCPRange range;
+
+    range=plot->yAxis->range();
+    range.lower-=(range.lower*20.0/100.0);
+    range.upper+=(range.upper*10.0/100.0);
+    plot->yAxis->setRange(range);
+
+    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
+    if(miniMode==false)
+    {
+        plot->legend->setVisible(true);
+        plot->legend->setFont(QFont(QFont().family(),7));
+        //plot->legend->setRowSpacing(-8);
+        plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignRight);
+    }
+
+
+    plot->xAxis->setAutoTicks(true);
+    plot->xAxis->setAutoTickLabels(true);
+    plot->xAxis->setAutoTickStep(false);
+    plot->xAxis->setAutoSubTicks(false);
+    plot->xAxis->setTickLength(0,4);
+    plot->xAxis->setTickStep(1);
+    plot->xAxis->setSubTickCount(0);
+    if(miniMode==true)
+    {
+        plot->xAxis->setTickLabelRotation(45);
+        plot->yAxis->setTickLabelFont(QFont(QFont().family(),7));
+        plot->xAxis->setTickLabelFont(QFont(QFont().family(),7));
+    }
+
+    //plot->yAxis->setVisible(false);
+    plot->yAxis->setAutoTicks(true);
+    plot->yAxis->setAutoTickCount(4);
+    plot->yAxis->setAutoTickLabels(true);
+    plot->yAxis->setAutoSubTicks(false);
+    plot->yAxis->setSubTickCount(0);
+    plot->yAxis->setNumberFormat("gbc");
+
+
+    plot->xAxis->setRange(dataX.first()-0.8,dataX.last()+0.8);
+    plot->xAxis->grid()->setVisible(false);
+
+  //  plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
+
+    // plot->xAxis->setAutoTickStep(false);
+   // plot->xAxis->setTickStep(3600*24*15);
+
+
+    plot->replot();
+    return plotTitle;
+}
+
+
+
 QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR) const
 {
     if(reportingModel==nullptr)
@@ -787,6 +972,7 @@ QColor PCx_Graphics::getColorPen1()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/pen1",PCx_Graphics::DEFAULTPENCOLOR1).toUInt();
+    qDebug()<<oldcolor;
     return QColor(oldcolor);
 }
 

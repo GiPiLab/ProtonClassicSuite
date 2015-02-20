@@ -29,6 +29,8 @@ public:
     static bool deletePrevision(unsigned int previsionId);
 
 
+    QString generateHTMLHeader() const;
+    QString generateHTMLPrevisionTitle() const;
 private:
     unsigned int previsionId;
     unsigned int attachedAuditId;

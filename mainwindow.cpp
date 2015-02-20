@@ -454,6 +454,10 @@ void MainWindow::on_actionOptions_triggered()
         {
             formManageReportings->updateRandomVisibility();
         }
+        if(formAuditPrevisions!=nullptr)
+        {
+            formAuditPrevisions->onSettingsChanged();
+        }
         foreach(FormQueries *q, listOfFormQueries)
         {
             q->onColorChanged();
