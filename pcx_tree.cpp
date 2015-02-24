@@ -156,7 +156,7 @@ QStringList PCx_Tree::getListOfCompleteNodeNames() const
 }
 
 
-QList<unsigned int> PCx_Tree::getLeavesId() const
+QList<unsigned int> PCx_Tree::getLeavesId()
 {
     QList<unsigned int> leaves;
     QList<unsigned int> nodes;
@@ -265,7 +265,7 @@ int PCx_Tree::guessHierarchy()
 
 }
 
-QList<unsigned int> PCx_Tree::getDescendantsId(unsigned int node) const
+QList<unsigned int> PCx_Tree::getDescendantsId(unsigned int node)
 {
     QList<unsigned int> children;
     QList<unsigned int> descendants;
@@ -283,7 +283,7 @@ QList<unsigned int> PCx_Tree::getDescendantsId(unsigned int node) const
 }
 
 
-QList<unsigned int> PCx_Tree::getLeavesId(unsigned int node) const
+QList<unsigned int> PCx_Tree::getLeavesId(unsigned int node)
 {
     QList<unsigned int> children;
     QList<unsigned int> leaves;
@@ -337,22 +337,39 @@ QSet<unsigned int> PCx_Tree::getNodesWithSharedName() const
     return nodes;
 }
 
-bool PCx_Tree::isLeaf(unsigned int nodeId) const
+bool PCx_Tree::isLeaf(unsigned int nodeId)
 {
     Q_ASSERT(nodeId>0);
-    QSqlQuery q;
-    q.prepare(QString("select count(*) from arbre_%1 where pid=:nodeid").arg(treeId));
-    q.bindValue(":nodeid",nodeId);
-    if(!q.exec())
+    if(finished && nodeIsALeaf.contains(nodeId))
     {
-        qCritical()<<q.lastError();
-        die();
+        return nodeIsALeaf.value(nodeId);
     }
-    if(q.next())
+
+    else
     {
-        if(q.value(0).toInt()==0)
-            return true;
-        else return false;
+        QSqlQuery q;
+        q.prepare(QString("select count(*) from arbre_%1 where pid=:nodeid").arg(treeId));
+        q.bindValue(":nodeid",nodeId);
+        if(!q.exec())
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
+        if(q.next())
+        {
+            if(q.value(0).toInt()==0)
+            {
+                if(finished)
+                    nodeIsALeaf.insert(nodeId,true);
+                return true;
+            }
+            else
+            {
+                if(finished)
+                    nodeIsALeaf.insert(nodeId,false);
+                return false;
+            }
+        }
     }
     return false;
 }

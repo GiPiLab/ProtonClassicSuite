@@ -7,7 +7,6 @@
 #include <QHash>
 #include <QDebug>
 
-
 /**
  * @brief The PCx_Tree class represents an existing tree in the database
  *
@@ -112,14 +111,14 @@ public:
      * @brief getLeavesId gets the identifier of the nodes that are leaves
      * @return a list of leaves ID
      */
-    QList<unsigned int> getLeavesId() const;
+    QList<unsigned int> getLeavesId();
 
     /**
      * @brief getLeavesId gets the identifier of the nodes that are both leaves and descendants of parentNode
      * @param node the node identifier
      * @return a list of leaves ID, the node if the node is a leaf
      */
-    QList<unsigned int> getLeavesId(unsigned int node) const;
+    QList<unsigned int> getLeavesId(unsigned int node);
 
 
     /**
@@ -146,7 +145,7 @@ public:
      * @param nodeId the node identifier
      * @return true if the node is a leaf, false otherwise
      */
-    bool isLeaf(unsigned int nodeId) const;
+    bool isLeaf(unsigned int nodeId);
 
 
     /**
@@ -168,7 +167,7 @@ public:
      * @param nodeId the node identifier
      * @return the list of its descendants identifier
      */
-    QList<unsigned int> getDescendantsId(unsigned int node) const;
+    QList<unsigned int> getDescendantsId(unsigned int node);
 
 
 
@@ -466,8 +465,15 @@ protected:
      */
     static int _internalAddTree(const QString &name,bool createRoot=true);
 
+    //Cache to speedup isLeaf, only consistant with finished trees
+    QHash<unsigned int,bool>nodeIsALeaf;
+
+
+
     PCx_Tree(const PCx_Tree &c);
     PCx_Tree &operator=(const PCx_Tree &);
+
+
 
 
 };

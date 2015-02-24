@@ -344,9 +344,6 @@ protected:
 
     void updateParent(const QString &tableName, unsigned int annee, unsigned int nodeId);
 
-    QHash<unsigned int,unsigned int> idToPid;
-    QHash<unsigned int,QList<unsigned int> >idToChildren;
-    QHash<unsigned int,QString> idToChildrenString;
 
 private:
     /**
@@ -356,6 +353,11 @@ private:
      *
      */
     PCx_Tree *attachedTree;
+
+    //Caches to speedup updateParent. DO NOT put them as static local variables of updateParent, it does not work
+    QHash<unsigned int,unsigned int> idToPid;
+    QHash<unsigned int,QList<unsigned int> >idToChildren;
+    QHash<unsigned int,QString> idToChildrenString;
 
     PCx_Audit(const PCx_Audit &c);
     PCx_Audit &operator=(const PCx_Audit &);

@@ -972,7 +972,7 @@ QColor PCx_Graphics::getColorPen1()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/pen1",PCx_Graphics::DEFAULTPENCOLOR1).toUInt();
-    qDebug()<<oldcolor;
+  //  qDebug()<<oldcolor;
     return QColor(oldcolor);
 }
 

@@ -86,6 +86,9 @@ PCx_Audit::~PCx_Audit()
 {
     if(attachedTree!=nullptr)
         delete attachedTree;
+    /*idToChildren.clear();
+    idToChildrenString.clear();
+    idToPid.clear();*/
 }
 
 void PCx_Audit::finishAudit()
