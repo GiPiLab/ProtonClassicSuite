@@ -259,6 +259,7 @@ void MainWindow::on_actionManageAudits_triggered()
         if(formManagePrevisions!=nullptr)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManagePrevisions,&FormManagePrevisions::onListOfAuditsChanged);
+            connect(formManagePrevisions,&FormManagePrevisions::listOfAuditsChanged,formManageAudits,&FormManageAudits::onListOfAuditsChanged);
         }
 
 
@@ -304,6 +305,10 @@ void MainWindow::on_actionEditAudit_triggered()
         if(formManageReportings!=nullptr)
         {
             connect(formManageReportings,&FormManageReportings::auditDataUpdated,formEditAudit,&FormEditAudit::onAuditDataUpdated);
+        }
+        if(formManagePrevisions!=nullptr)
+        {
+            connect(formManagePrevisions,&FormManagePrevisions::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
         }
     }
     else
@@ -733,7 +738,7 @@ void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
         formAuditPrevisions=new FormAuditPrevisions(this);
         formAuditPrevisions->setAttribute(Qt::WA_DeleteOnClose);
         QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formAuditPrevisions);
-        //subWin->setWindowIcon(QIcon(":/icons/icons/reportingReport.png"));
+        subWin->setWindowIcon(QIcon(":/icons/icons/editPrevisions.png"));
         formAuditPrevisions->show();
         connect(formAuditPrevisions,&QObject::destroyed,this,&MainWindow::onFormAuditPrevisionsWindowsDestroyed);
 
@@ -764,14 +769,20 @@ void MainWindow::on_actionGestion_des_pr_visions_triggered()
         formManagePrevisions=new FormManagePrevisions(this);
         formManagePrevisions->setAttribute(Qt::WA_DeleteOnClose);
         QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(formManagePrevisions);
-        //subWin->setWindowIcon(QIcon(":/icons/icons/reportingReport.png"));
+        subWin->setWindowIcon(QIcon(":/icons/icons/previsionManage.png"));
         formManagePrevisions->show();
         connect(formManagePrevisions,&QObject::destroyed,this,&MainWindow::onFormManagePrevisionsWindowsDestroyed);
 
         if(formManageAudits!=nullptr)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManagePrevisions,&FormManagePrevisions::onListOfAuditsChanged);
+            connect(formManagePrevisions,&FormManagePrevisions::listOfAuditsChanged,formManageAudits,&FormManageAudits::onListOfAuditsChanged);
         }
+        if(formEditAudit!=nullptr)
+        {
+            connect(formManagePrevisions,&FormManagePrevisions::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
+        }
+
         if(formAuditPrevisions!=nullptr)
         {
             connect(formManagePrevisions,&FormManagePrevisions::listOfPrevisionsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfPrevisionsChanged);

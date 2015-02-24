@@ -26,10 +26,16 @@
      <property name="text">
       <string>Enregistrer en HTML</string>
      </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Images.qrc"/>
+ </resources>
  <connections/>
 </ui>

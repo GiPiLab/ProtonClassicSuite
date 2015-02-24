@@ -111,6 +111,9 @@
    <addaction name="actionAuditReport"/>
    <addaction name="actionQueries"/>
    <addaction name="separator"/>
+   <addaction name="actionGestion_des_pr_visions"/>
+   <addaction name="actionElaboration_budg_taire_PCB"/>
+   <addaction name="separator"/>
    <addaction name="actionGestion_des_reportings"/>
    <addaction name="actionReportingOverview"/>
    <addaction name="actionGraphiques"/>
@@ -223,6 +226,10 @@
    </property>
   </action>
   <action name="actionElaboration_budg_taire_PCB">
+   <property name="icon">
+    <iconset resource="Images.qrc">
+     <normaloff>:/icons/icons/editPrevisions.png</normaloff>:/icons/icons/editPrevisions.png</iconset>
+   </property>
    <property name="text">
     <string>Elaboration du budget</string>
    </property>
@@ -292,6 +299,10 @@
    </property>
   </action>
   <action name="actionGestion_des_pr_visions">
+   <property name="icon">
+    <iconset resource="Images.qrc">
+     <normaloff>:/icons/icons/previsionManage.png</normaloff>:/icons/icons/previsionManage.png</iconset>
+   </property>
    <property name="text">
     <string>Gestion des prévisions</string>
    </property>

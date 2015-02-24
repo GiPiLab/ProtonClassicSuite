@@ -17,6 +17,7 @@ public slots:
 
 signals:
     void listOfPrevisionsChanged();
+    void listOfAuditsChanged();
 
 
 public:
@@ -28,6 +29,8 @@ private slots:
 
     void on_pushButtonAddPrevision_clicked();
     void on_pushButtonDelete_clicked();
+
+    void on_pushButtonToAudit_clicked();
 
 private:
     Ui::FormManagePrevisions *ui;

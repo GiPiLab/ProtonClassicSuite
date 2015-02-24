@@ -50,6 +50,11 @@ void FormManageAudits::onLOTchanged()
     updateListOfTrees();
 }
 
+void FormManageAudits::onListOfAuditsChanged()
+{
+    updateListOfAudits();
+}
+
 void FormManageAudits::updateListOfTrees()
 {
     ui->comboListOfTrees->clear();

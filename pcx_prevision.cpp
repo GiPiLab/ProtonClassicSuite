@@ -1,4 +1,5 @@
 #include "pcx_prevision.h"
+#include "pcx_previsionitem.h"
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QMessageBox>
@@ -31,6 +32,43 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
         die();
     }
 
+}
+
+int PCx_Prevision::toPrevisionalExtendedAudit(const QString &newAuditName)
+{
+    if(PCx_Audit::auditNameExists(newAuditName))
+    {
+        qWarning()<<QObject::tr("Il existe déjà un audit portant ce nom");
+        return -1;
+    }
+    QList<unsigned int> years=attachedAudit->getYears();
+    qSort(years);
+    int lastYear=years.last()+1;
+    years.append(lastYear);
+
+    int res=attachedAudit->duplicateAudit(newAuditName,years,true,true,true,true);
+    if(res<0)
+        return res;
+
+    PCx_Audit dupAudit(res);
+
+    QList<unsigned int> leaves=attachedTree->getLeavesId();
+    QList<MODES::DFRFDIRI> modes={MODES::DF,MODES::RF,MODES::DI,MODES::RI};
+    QHash<PCx_Audit::ORED,double> values;
+    QSqlDatabase::database().transaction();
+    foreach(unsigned int leaf,leaves)
+    {
+        foreach(MODES::DFRFDIRI unMode,modes)
+        {
+            PCx_PrevisionItem prevItem(this,unMode,leaf,lastYear);
+            prevItem.loadFromDb();
+            values.clear();
+            values.insert(PCx_Audit::OUVERTS,NUMBERSFORMAT::fixedPointToDouble(prevItem.getSummedPrevisionItemValue()));
+            dupAudit.setLeafValues(leaf,unMode,lastYear,values,true);
+        }
+    }
+    QSqlDatabase::database().commit();
+    return res;
 }
 
 PCx_Prevision::~PCx_Prevision()

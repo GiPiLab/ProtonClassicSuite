@@ -61,6 +61,9 @@ private slots:
 
     void on_pushButtonSaveBigReport_clicked();
 
+
+    void on_groupBox_2_toggled(bool arg1);
+
 private:
 
     PCx_Prevision *previsionModel;

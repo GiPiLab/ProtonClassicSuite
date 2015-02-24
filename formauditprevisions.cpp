@@ -444,7 +444,7 @@ void FormAuditPrevisions::on_pushButtonDisplayReport_clicked()
     QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     QMdiSubWindow *subWin=mdiArea->addSubWindow(form);
-    //subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
+    subWin->setWindowIcon(QIcon(":/icons/icons/editPrevisions.png"));
     form->show();
 }
 
@@ -460,4 +460,24 @@ void FormAuditPrevisions::on_pushButtonSaveBigReport_clicked()
     if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
         fileName.append(".html");
     currentPrevisionItem->savePrevisionItemReport(fileName,true);
+}
+
+
+
+void FormAuditPrevisions::on_groupBox_2_toggled(bool arg1)
+{
+    QObjectList children=ui->groupBox_2->children();
+
+        for(int i=0;i<children.count();i++)
+        {
+            QWidget *widget=static_cast<QWidget *>(children.at(i));
+            if(arg1==true)
+            {
+                widget->setHidden(false);
+            }
+            else
+            {
+                widget->setHidden(true);
+            }
+        }
 }

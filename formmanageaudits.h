@@ -18,6 +18,7 @@ public:
 
 public slots:
     void onLOTchanged();
+    void onListOfAuditsChanged();
 
 
 private slots:

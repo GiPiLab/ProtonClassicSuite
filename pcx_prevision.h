@@ -21,6 +21,10 @@ public:
     PCx_Audit *getAttachedAudit()const{return attachedAudit;}
     PCx_Tree *getAttachedTree()const{return attachedTree;}
 
+    int toPrevisionalExtendedAudit(const QString &newAuditName);
+
+
+
     ~PCx_Prevision();
 
     static bool addNewPrevision(unsigned int auditId, const QString &name);
