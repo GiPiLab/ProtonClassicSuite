@@ -777,7 +777,6 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
     {
         foreach(unsigned int leaf,leaves)
         {
-            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
             QSqlQuery q;
             q.prepare(QString("select ouverts,realises,engages from reporting_DF_%1 where date=:date and id_node=:node").arg(reportingId));
             q.bindValue(":date",QDateTime(dateDF).toTime_t());
@@ -815,7 +814,6 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
     {
         foreach(unsigned int leaf,leaves)
         {
-            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
             QSqlQuery q;
             q.prepare(QString("select ouverts,realises,engages from reporting_RF_%1 where date=:date and id_node=:node").arg(reportingId));
             q.bindValue(":date",QDateTime(dateRF).toTime_t());
@@ -855,7 +853,6 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
     {
         foreach(unsigned int leaf,leaves)
         {
-            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
             QSqlQuery q;
             q.prepare(QString("select ouverts,realises,engages from reporting_DI_%1 where date=:date and id_node=:node").arg(reportingId));
             q.bindValue(":date",QDateTime(dateDI).toTime_t());
@@ -895,7 +892,6 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
     {
         foreach(unsigned int leaf,leaves)
         {
-            //NOTE : More specific but fast version than using getNodeValue and OREDTOTableString
             QSqlQuery q;
             q.prepare(QString("select ouverts,realises,engages from reporting_RI_%1 where date=:date and id_node=:node").arg(reportingId));
             q.bindValue(":date",QDateTime(dateRI).toTime_t());

@@ -12,13 +12,12 @@ public:
     MODES::DFRFDIRI getMode()const{return mode;}
     unsigned int getNodeId()const{return nodeId;}
 
-    //FIXME : Apply a previsionItem to a node, refactor
     void setNodeId(unsigned int nodeId){this->nodeId=nodeId;}
     void setMode(MODES::DFRFDIRI mode){this->mode=mode;}
     void setYear(unsigned int year){this->year=year;}
 
     unsigned int getYear()const{return year;}
-    //FIXME label not used yet
+    //TODO label not used yet
     QString getLabel()const{return label;}
     QString getLongDescription()const;
     QList<PCx_PrevisionItemCriteria> getItemsToAdd()const{return itemsToAdd;}

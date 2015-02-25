@@ -154,3 +154,5 @@ win32:DEPENDPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
 RESOURCES += \
     Images.qrc
 
+DISTFILES +=
+

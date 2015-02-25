@@ -472,7 +472,7 @@ void PCx_PrevisionItem::insertCriteriaToSub(PCx_PrevisionItemCriteria criteria,b
 
 bool PCx_PrevisionItem::deleteCriteria(QModelIndexList selectedIndexes,bool compute)
 {
-    //TODO : only single selection supported
+    //WARNING : only single selection supported
     if(selectedIndexes.isEmpty())
         return true;
     if(selectedIndexes.size()>1)

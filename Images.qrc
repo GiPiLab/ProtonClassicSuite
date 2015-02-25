@@ -30,4 +30,7 @@
     <qresource prefix="/Pictures">
         <file>icons/logo.png</file>
     </qresource>
+    <qresource prefix="/EULA">
+        <file>EULA.txt</file>
+    </qresource>
 </RCC>

@@ -556,7 +556,6 @@ void MainWindow::on_actionGestion_des_reportings_triggered()
             connect(formManageReportings,&FormManageReportings::listOfReportingsChanged,dlg,&FormReportingExplore::onListOfReportingsChanged);
             connect(formManageReportings,&FormManageReportings::reportingDataUpdated,dlg,&FormReportingExplore::onReportingDataChanged);
         }
-        //FIXME : connect !
     }
     else
     {

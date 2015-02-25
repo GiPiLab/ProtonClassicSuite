@@ -156,7 +156,7 @@ void FormAuditReports::on_comboListAudits_activated(int index)
 
 void FormAuditReports::on_saveButton_clicked()
 {
-    //TODO for V2 : Order tables and graphics
+    //TODO : Order tables and graphics
     QItemSelectionModel *sel=ui->treeView->selectionModel();
     QModelIndexList selIndexes=sel->selectedIndexes();
 
