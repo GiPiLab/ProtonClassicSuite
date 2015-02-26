@@ -36,9 +36,9 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)+"s",PCx_Audit::ORED::REALISES);
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES)+"s",PCx_Audit::ORED::ENGAGES);
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES)+"s",PCx_Audit::ORED::DISPONIBLES);
+    connect(ui->textBrowser,SIGNAL(anchorClicked(QUrl)),this,SLOT(onAnchorClicked(QUrl)));
 
     updateListOfPrevisions();
-    connect(ui->textBrowser,SIGNAL(anchorClicked(QUrl)),this,SLOT(onAnchorClicked(QUrl)));
 }
 
 
@@ -223,8 +223,6 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
 
 void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
 {
-    Q_UNUSED(index);
-
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
     if(auditWithTreeModel->getAttachedTree()->isLeaf(currentNodeId))
     {
@@ -239,8 +237,10 @@ void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
   //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
     updatePrevisionItemTableModel();
     updateLabels();
-    if(ui->textBrowser->isVisible())
+    if(ui->checkBoxDisplayLeafCriteria->isChecked())
+    {
         ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
 }
 
 
@@ -434,7 +434,7 @@ void FormAuditPrevisions::on_checkBoxDisplayLeafCriteria_toggled(bool checked)
 
 QSize FormAuditPrevisions::sizeHint() const
 {
-    return QSize(850,600);
+    return QSize(850,500);
 }
 
 void FormAuditPrevisions::on_pushButtonDisplayReport_clicked()
