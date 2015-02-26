@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1006</width>
-    <height>446</height>
+    <width>1075</width>
+    <height>565</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -92,6 +92,15 @@
           <string>Mode</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <property name="spacing">
+           <number>4</number>
+          </property>
           <item row="0" column="2">
            <widget class="QRadioButton" name="radioButtonDI">
             <property name="text">
@@ -205,6 +214,9 @@
       <string>Colonnes</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>5</number>
+      </property>
       <item>
        <widget class="QCheckBox" name="checkBoxOuverts">
         <property name="text">

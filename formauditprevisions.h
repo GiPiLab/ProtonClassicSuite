@@ -61,8 +61,11 @@ private slots:
 
     void on_pushButtonSaveBigReport_clicked();
 
+    void on_checkBoxShowCriteriaToApply_toggled(bool checked);
 
-    void on_groupBox_2_toggled(bool arg1);
+    void on_pushButtonExpandAll_clicked();
+
+    void on_pushButtonCollapseAll_clicked();
 
 private:
 

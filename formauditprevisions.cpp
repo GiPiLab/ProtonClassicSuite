@@ -463,21 +463,18 @@ void FormAuditPrevisions::on_pushButtonSaveBigReport_clicked()
 }
 
 
-
-void FormAuditPrevisions::on_groupBox_2_toggled(bool arg1)
+void FormAuditPrevisions::on_checkBoxShowCriteriaToApply_toggled(bool checked)
 {
-    QObjectList children=ui->groupBox_2->children();
+    ui->frame->setVisible(checked);
+}
 
-        for(int i=0;i<children.count();i++)
-        {
-            QWidget *widget=static_cast<QWidget *>(children.at(i));
-            if(arg1==true)
-            {
-                widget->setHidden(false);
-            }
-            else
-            {
-                widget->setHidden(true);
-            }
-        }
+void FormAuditPrevisions::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
+}
+
+void FormAuditPrevisions::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(0);
 }

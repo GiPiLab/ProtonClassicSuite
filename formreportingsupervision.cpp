@@ -310,7 +310,7 @@ void FormReportingSupervision::on_pushButtonExportHTML_clicked()
 
 QSize FormReportingSupervision::sizeHint() const
 {
-    return QSize(1050,500);
+    return QSize(900,500);
 }
 
 void FormReportingSupervision::updateDateRefCombo()
