@@ -10,7 +10,6 @@ FormReportingReports::FormReportingReports(QWidget *parent) :
     model=nullptr;
     plot=new QCustomPlot();
     updateListOfReportings();
-    updateTooltips();
 }
 
 FormReportingReports::~FormReportingReports()

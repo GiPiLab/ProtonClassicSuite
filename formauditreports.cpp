@@ -11,9 +11,7 @@ FormAuditReports::FormAuditReports(QWidget *parent) :
     ui->splitter->setStretchFactor(1,1);
     model=nullptr;
     plot=new QCustomPlot();
-    updateListOfAudits();
-    populateLists();
-
+    updateListOfAudits();    
 }
 
 FormAuditReports::~FormAuditReports()
