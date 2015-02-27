@@ -9,7 +9,7 @@
 #include "pcx_report.h"
 
 PCx_PrevisionItem::PCx_PrevisionItem(PCx_Prevision *prevision, MODES::DFRFDIRI mode, unsigned int nodeId, unsigned int year)
-    :prevision(prevision),mode(mode),nodeId(nodeId),year(year)
+    :prevision(prevision),mode(mode),nodeId(nodeId),year(year),computedValue(0)
 {
 
 }
