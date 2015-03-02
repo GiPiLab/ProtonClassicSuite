@@ -36,7 +36,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
 
     if(PCx_Audit::auditNameExists(newName))
     {
-        QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom"));
+        QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom, choisissez un autre nom"));
         return;
     }
 

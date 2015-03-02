@@ -45,6 +45,16 @@ FormManagePrevisions::~FormManagePrevisions()
         delete selectedPrevision;
 }
 
+
+
+void FormManagePrevisions::onSelectedPrevisionUpdated()
+{
+    if(selectedPrevision!=nullptr)
+        ui->pushButtonToAudit->setEnabled(!selectedPrevision->isPrevisionEmpty());
+}
+
+
+
 void FormManagePrevisions::on_comboListPrevisions_activated(int index)
 {
     if(index==-1 || ui->comboListPrevisions->count()==0)return;
@@ -56,7 +66,9 @@ void FormManagePrevisions::on_comboListPrevisions_activated(int index)
         selectedPrevision=nullptr;
     }
 
+
     selectedPrevision=new PCx_Prevision(selectedPrevisionId);
+    onSelectedPrevisionUpdated();
     PCx_Audit selectedAttachedAudit(selectedPrevision->getAttachedAuditId());
 
    // qDebug()<<"Selected audit = "<<selectedAuditId<< " "<<ui->comboListOfAudits->currentText();
@@ -101,6 +113,7 @@ void FormManagePrevisions::on_pushButtonAddPrevision_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouvelle prévision"), tr("Nom de la nouvelle prévision à ajouter : "),QLineEdit::Normal,"",&ok).simplified();
@@ -109,11 +122,16 @@ void FormManagePrevisions::on_pushButtonAddPrevision_clicked()
 
     if(ok)
     {
+        if(PCx_Prevision::previsionNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une prévision portant ce nom !"));
+            goto redo;
+        }
         if(PCx_Prevision::addNewPrevision(selectedAudit,text))
         {
             updateListOfPrevisions();
             emit(listOfPrevisionsChanged());
-            QMessageBox::information(this,tr("Information"),tr("Nouvelle prévision ajoutée !"));
+            QMessageBox::information(this,tr("Information"),tr("Nouvelle prévision ajoutée ! Utilisez la fenêtre <b>élaboration du budget</b> afin de fixer des critères de prévision pour l'année N+1"));
         }
     }
 }
@@ -155,6 +173,7 @@ void FormManagePrevisions::on_pushButtonToAudit_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouvel audit"), tr("Nom de l'audit étendu (l'audit actuel est \"%1\")").arg(selectedPrevision->getAttachedAudit()->getAuditName().toHtmlEscaped()),QLineEdit::Normal,"",&ok).simplified();
@@ -163,6 +182,11 @@ void FormManagePrevisions::on_pushButtonToAudit_clicked()
 
     if(ok)
     {
+        if(PCx_Audit::auditNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom !"));
+            goto redo;
+        }
         int res=selectedPrevision->toPrevisionalExtendedAudit(text);
 
         if(res>0)

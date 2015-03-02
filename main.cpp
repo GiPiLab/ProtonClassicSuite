@@ -44,14 +44,18 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     //Avoid multiple application instances
+
+
     QSharedMemory sharedMemory;
     sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
-    sharedMemory.attach(QSharedMemory::ReadWrite);
+    sharedMemory.attach();
 
     if (!sharedMemory.create(1)) {
+        qDebug()<<sharedMemory.errorString();
         QMessageBox::information(nullptr,"Attention","Une seule instance de ProtonClassicSuite est autorisée à la fois");
         return EXIT_FAILURE;
     }
+
 
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(),
@@ -86,8 +90,6 @@ int main(int argc, char *argv[])
   //  splash.finish(&w);
 
     retval=a.exec();
-    QSqlQuery q;
-    q.exec("vacuum");
 
     QSqlDatabase::database().close();
     sharedMemory.detach();

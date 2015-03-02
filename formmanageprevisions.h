@@ -15,6 +15,7 @@ class FormManagePrevisions : public QWidget
 public slots:
     void onListOfAuditsChanged();
 
+    void onSelectedPrevisionUpdated();
 signals:
     void listOfPrevisionsChanged();
     void listOfAuditsChanged();

@@ -87,7 +87,7 @@
       <item row="8" column="0">
        <widget class="QPushButton" name="pushButtonSaveReqRank">
         <property name="text">
-         <string>Enregistrer</string>
+         <string>Mémoriser</string>
         </property>
        </widget>
       </item>
@@ -149,14 +149,14 @@
      <item>
       <widget class="QPushButton" name="pushButtonExecFromList">
        <property name="text">
-        <string>Exécuter</string>
+        <string>Exécuter les requêtes sélectionnées</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButtonDelete">
        <property name="text">
-        <string>Supprimer</string>
+        <string>Supprimer les requêtes sélectionnées</string>
        </property>
       </widget>
      </item>
@@ -170,7 +170,7 @@
      <item row="1" column="1">
       <widget class="QPushButton" name="pushButtonSave">
        <property name="text">
-        <string>Enregistrer HTML</string>
+        <string>Enregistrer les résultats dans un fichier HTML</string>
        </property>
        <property name="icon">
         <iconset resource="Images.qrc">
@@ -181,7 +181,7 @@
      <item row="1" column="0">
       <widget class="QPushButton" name="pushButtonSaveXLSX">
        <property name="text">
-        <string>Enregistrer XLSX</string>
+        <string>Enregistrer les résultats dans un classeur XLSX</string>
        </property>
        <property name="icon">
         <iconset resource="Images.qrc">
@@ -255,7 +255,7 @@
       <item row="13" column="0">
        <widget class="QPushButton" name="pushButtonSaveReq3">
         <property name="text">
-         <string>Enregistrer</string>
+         <string>Mémoriser</string>
         </property>
        </widget>
       </item>
@@ -421,7 +421,7 @@
       <item row="9" column="0">
        <widget class="QPushButton" name="pushButtonSaveReqVariation">
         <property name="text">
-         <string>Enregistrer</string>
+         <string>Mémoriser</string>
         </property>
        </widget>
       </item>

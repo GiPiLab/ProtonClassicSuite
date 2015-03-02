@@ -397,6 +397,7 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
         recentPrevisionItem->dispatchComputedValueToChildrenLeaves();
         currentPrevisionItem->loadFromDb();
         currentPrevisionItemTableModel->resetModel();
+        emit previsionUpdated(previsionModel->getPrevisionId());
         updateLabels();
         if(ui->textBrowser->isVisible())
             ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
@@ -412,6 +413,7 @@ void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked()
         currentPrevisionItem->loadFromDb();
         currentPrevisionItem->dispatchCriteriaItemsToChildrenLeaves();
         currentPrevisionItemTableModel->resetModel();
+        emit previsionUpdated(previsionModel->getPrevisionId());
         updateLabels();
         if(ui->textBrowser->isVisible())
             ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());

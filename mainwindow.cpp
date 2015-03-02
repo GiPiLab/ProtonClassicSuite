@@ -744,6 +744,7 @@ void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
         if(formManagePrevisions!=nullptr)
         {
             connect(formManagePrevisions,&FormManagePrevisions::listOfPrevisionsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfPrevisionsChanged);
+            connect(formAuditPrevisions,&FormAuditPrevisions::previsionUpdated,formManagePrevisions,&FormManagePrevisions::onSelectedPrevisionUpdated);
         }
     }
     else
@@ -785,6 +786,7 @@ void MainWindow::on_actionGestion_des_pr_visions_triggered()
         if(formAuditPrevisions!=nullptr)
         {
             connect(formManagePrevisions,&FormManagePrevisions::listOfPrevisionsChanged,formAuditPrevisions,&FormAuditPrevisions::onListOfPrevisionsChanged);
+            connect(formAuditPrevisions,&FormAuditPrevisions::previsionUpdated,formManagePrevisions,&FormManagePrevisions::onSelectedPrevisionUpdated);
         }
 
 

@@ -23,6 +23,8 @@ public:
 
     int toPrevisionalExtendedAudit(const QString &newAuditName);
 
+    bool isPrevisionEmpty()const;
+
 
 
     ~PCx_Prevision();
@@ -31,6 +33,8 @@ public:
     static bool previsionNameExists(const QString &previsionName);
     static QList<QPair<unsigned int, QString> > getListOfPrevisions();
     static bool deletePrevision(unsigned int previsionId);
+
+
 
 
     QString generateHTMLHeader() const;

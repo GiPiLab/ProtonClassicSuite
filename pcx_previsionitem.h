@@ -29,7 +29,7 @@ public:
     void deleteAllCriteria();
 
     void loadFromDb();
-    void saveDataToDb()const;
+    void saveDataToDb();
 
 
     void dispatchCriteriaItemsToChildrenLeaves();

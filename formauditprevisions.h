@@ -23,6 +23,8 @@ public slots:
     void onListOfPrevisionsChanged();
     void onSettingsChanged();
 
+signals:
+    void previsionUpdated(unsigned int previsionId);
 
 private slots:
     void on_treeView_clicked(const QModelIndex &index);

@@ -56,7 +56,7 @@ unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QStr
 
     if(nodeExists(name,typeId))
     {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom dans l'arbre' !"));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom dans l'arbre !"));
         return 0;
     }
 
@@ -109,7 +109,7 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
 
     if(nodeExists(newName,newType))
     {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom !"));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom ! Choisissez un autre nom"));
         return false;
     }
 

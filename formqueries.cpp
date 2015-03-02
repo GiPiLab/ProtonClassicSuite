@@ -93,6 +93,7 @@ FormQueries::~FormQueries()
     }
     if(queriesModel!=nullptr)
         delete queriesModel;
+    doc->clear();
     delete doc;
     if(xlsDoc!=nullptr)
         delete xlsDoc;
@@ -296,6 +297,7 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok).simplified();
@@ -321,7 +323,7 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
         if(!qv.canSave(text))
         {
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
-            return;
+            goto redo;
         }
         if(!qv.save(text))
         {
@@ -508,6 +510,7 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok).simplified();
@@ -532,7 +535,7 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
         if(!qr.canSave(text))
         {
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
-            return;
+            goto redo;
         }
         if(!qr.save(text))
         {
@@ -577,6 +580,7 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouvelle requête"), tr("Nom de la requête : "),QLineEdit::Normal,"",&ok).simplified();
@@ -601,7 +605,7 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
         if(!qr.canSave(text))
         {
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
-            return;
+            goto redo;
         }
         if(!qr.save(text))
         {

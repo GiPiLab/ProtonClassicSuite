@@ -42,6 +42,7 @@ void FormEditTree::on_addTypeButton_clicked()
         bool ok;
         QString text;
 
+        redo:
         do
         {
             text=QInputDialog::getText(this,tr("Nouveau type"), tr("Nom du type à ajouter : "),QLineEdit::Normal,"",&ok).simplified();
@@ -50,6 +51,12 @@ void FormEditTree::on_addTypeButton_clicked()
 
         if(ok)
         {
+            if(model->getTypeNames().contains(text))
+            {
+                    QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("Le type <b>%1</b> existe déjà !").arg(text.toHtmlEscaped()));
+                    goto redo;
+            }
+
             model->addType(text);
         }
     }
@@ -140,6 +147,7 @@ void FormEditTree::on_newTreeButton_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this->parentWidget(),tr("Nouvel arbre"), tr("Nom du nouvel arbre : "),QLineEdit::Normal,"",&ok).simplified();
@@ -148,6 +156,11 @@ void FormEditTree::on_newTreeButton_clicked()
 
     if(ok)
     {
+        if(PCx_Tree::treeNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
+            goto redo;
+        }
        if(PCx_Tree::addTree(text)!=-1)
        {
            emit(listOfTreeChanged());
@@ -160,6 +173,11 @@ void FormEditTree::on_deleteTypeButton_clicked()
 {
     if(model!=nullptr)
     {
+        if(question(tr("Voulez-vous supprimer ce type ?"))==QMessageBox::No)
+        {
+            return;
+        }
+
         if(ui->listTypesView->model()->rowCount()==1)
         {
             QMessageBox::warning(this,tr("Attention"),tr("Les noeuds doivent tous être typés"));
@@ -200,6 +218,7 @@ void FormEditTree::on_addNodeButton_clicked()
         bool ok;
         QString text;
 
+        redo:
         do
         {
             text=QInputDialog::getText(this,tr("Nouveau noeud"), tr("Donnez un nom au nouveau noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,"",&ok).simplified();
@@ -208,6 +227,11 @@ void FormEditTree::on_addNodeButton_clicked()
 
         if(ok)
         {
+            if(model->nodeExists(text,selectedTypeId))
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type avec ce nom !"));
+                goto redo;
+            }
             model->addNode(selectedTypeId,text,selection[0]);
         }
 
@@ -256,6 +280,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
         bool ok;
         QString text;
 
+        redo:
         do
         {
             text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom du noeud, son type sera <b>%1</b> : ").arg(indexType.data().toString()),QLineEdit::Normal,typeAndNodeName.second,&ok).simplified();
@@ -265,7 +290,14 @@ void FormEditTree::on_modifyNodeButton_clicked()
         if(ok)
         {
             if(selectedTypeId!=oldTypeId || text!=typeAndNodeName.second)
+            {
+                if(model->nodeExists(text,selectedTypeId))
+                {
+                    QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type portant ce nom dans l'arbre !"));
+                    goto redo;
+                }
                 model->updateNode(selection[0],text,selectedTypeId);
+            }
         }
     }
     else
@@ -374,6 +406,7 @@ void FormEditTree::on_duplicateTreeButton_clicked()
         bool ok;
         QString text;
 
+        redo:
         do
         {
             text=QInputDialog::getText(this,tr("Dupliquer arbre"), tr("Nom de l'arbre dupliqué : "),QLineEdit::Normal,"",&ok).simplified();
@@ -382,6 +415,11 @@ void FormEditTree::on_duplicateTreeButton_clicked()
 
         if(ok)
         {
+            if(PCx_Tree::treeNameExists(text))
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
+                goto redo;
+            }
             model->duplicateTree(text);
             updateListOfTree();
         }
@@ -394,21 +432,28 @@ void FormEditTree::on_randomTreeButton_clicked()
     QString text;
     unsigned int nbNodes;
 
-    do
-    {
-        text=QInputDialog::getText(this,tr("Nouvel arbre aléatoire"), tr("Nom de l'arbre aléatoire : "),QLineEdit::Normal,"",&ok).simplified();
-
-    }while(ok && text.isEmpty());
-
-    if(!ok)
-        return;
-
     nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,PCx_Tree::MAXNODES,1,&ok);
 
     if(ok)
     {
-        PCx_Tree::createRandomTree(text,nbNodes);
-        updateListOfTree();
+        redo:
+        do
+        {
+            text=QInputDialog::getText(this,tr("Nouvel arbre aléatoire"), tr("Nom de l'arbre aléatoire : "),QLineEdit::Normal,"",&ok).simplified();
+
+        }while(ok && text.isEmpty());
+
+        if(ok)
+        {
+            if(model->treeNameExists(text))
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
+                goto redo;
+            }
+
+            PCx_Tree::createRandomTree(text,nbNodes);
+            updateListOfTree();
+        }
     }
 }
 
@@ -437,6 +482,7 @@ void FormEditTree::on_importTreeButton_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Importer arbre"), tr("Donnez un nom à cet arbre : "),QLineEdit::Normal,"",&ok).simplified();
@@ -448,7 +494,7 @@ void FormEditTree::on_importTreeButton_clicked()
     if(PCx_Tree::treeNameExists(text))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
-        return;
+        goto redo;
     }
 
     if(PCx_Tree::importTreeFromXLSX(fileName,text)>0)

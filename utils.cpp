@@ -21,10 +21,6 @@ void die(int retcode)
 {
     QSqlDatabase::database().rollback();
     QSqlDatabase::database().close();
-    QSharedMemory sharedMemory;
-    sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
-    if(sharedMemory.isAttached())
-        sharedMemory.detach();
     QApplication::instance()->exit(retcode);
     exit(retcode);
 }

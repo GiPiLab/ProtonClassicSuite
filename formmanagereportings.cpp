@@ -97,6 +97,7 @@ void FormManageReportings::on_pushButtonAddReporting_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouveau reporting"), tr("Nom du reporting à ajouter : "),QLineEdit::Normal,"",&ok).simplified();
@@ -105,8 +106,14 @@ void FormManageReportings::on_pushButtonAddReporting_clicked()
 
     if(ok)
     {
+        if(PCx_Reporting::reportingNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un reporting portant ce nom !"));
+            goto redo;
+        }
         if(PCx_Reporting::addNewReporting(text,selectedTree)>0)
         {
+            QMessageBox::information(this,tr("Succès"),tr("Nouveau reporting ajouté. Utilisez les boutons ci-dessus pour y ajouter des données."));
             updateListOfReportings();
             emit(listOfReportingsChanged());
         }

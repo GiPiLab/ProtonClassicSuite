@@ -72,6 +72,9 @@
    </item>
    <item row="6" column="2">
     <widget class="QPushButton" name="pushButtonSaveBigReport">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistrer la fiche prévisionnelle du noeud actif et de tous ses descendants pour le mode actif. L'opération peut prendre du temps en fonction de la taille de l'arbre&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>Enregistrer la fiche de la branche</string>
      </property>
@@ -196,6 +199,9 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus au noeud actif. Afin de garantir la cohérence des sommes :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les feuilles attachées au noeud actif se verront dotées d'un critère &amp;quot;valeur fixe&amp;quot; calculé sur la base d'une &lt;/span&gt;répartition proportionnelle au taux de réalisé de l'année N dans la branche du noeud ;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux descendants du noeud actif qui ne sont pas des feuilles seront supprimés ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux ancêtres du noeud actif seront supprimés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Appliquer ces critères au noeud actif</string>
         </property>
@@ -303,6 +309,9 @@
           <weight>75</weight>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus &lt;/span&gt;aux feuilles liées au noeud actif&lt;span style=&quot; font-weight:400;&quot;&gt;. Afin de garantir la cohérence des sommes, les critères appliqués aux ancêtres des feuilles attachées au noeud actif seront supprimés, en remontant la branche jusqu'à la racine. Cela inclut notamment le noeud actif, mais pas les noeuds qui appartiendraient à une autre branche&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Appliquer ces critères aux feuilles liées</string>

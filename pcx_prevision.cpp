@@ -71,6 +71,50 @@ int PCx_Prevision::toPrevisionalExtendedAudit(const QString &newAuditName)
     return res;
 }
 
+bool PCx_Prevision::isPrevisionEmpty() const
+{
+    QSqlQuery q;
+
+    q.exec(QString("select count(*) from prevision_DF_%1 where prevision_operators_to_add is not null or prevision_operators_to_substract is not null").arg(previsionId));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next() && q.value(0).toInt()>0)
+        return false;
+
+    q.exec(QString("select count(*) from prevision_RF_%1 where prevision_operators_to_add is not null or prevision_operators_to_substract is not null").arg(previsionId));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next() && q.value(0).toInt()>0)
+        return false;
+
+    q.exec(QString("select count(*) from prevision_DI_%1 where prevision_operators_to_add is not null or prevision_operators_to_substract is not null").arg(previsionId));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next() && q.value(0).toInt()>0)
+        return false;
+
+    q.exec(QString("select count(*) from prevision_RI_%1 where prevision_operators_to_add is not null or prevision_operators_to_substract is not null").arg(previsionId));
+    if(!q.isActive())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next() && q.value(0).toInt()>0)
+        return false;
+
+
+    return true;
+}
+
 PCx_Prevision::~PCx_Prevision()
 {
     attachedTree=nullptr;

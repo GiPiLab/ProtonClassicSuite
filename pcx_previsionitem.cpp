@@ -548,7 +548,7 @@ QString PCx_PrevisionItem::getPrevisionItemAsHTML() const
 
 
 
-void PCx_PrevisionItem::saveDataToDb() const
+void PCx_PrevisionItem::saveDataToDb()
 {
     QSqlQuery q;
     QStringList items;
@@ -563,6 +563,9 @@ void PCx_PrevisionItem::saveDataToDb() const
         items.append(criteria.serialize());
     }
     QString subString=items.join(';');
+
+    //FIXME : Ensure computedValue consistency
+    computedValue=getPrevisionItemValue();
 
     q.prepare(QString("insert into prevision_%1_%2 (id_node,year,prevision_operators_to_add, prevision_operators_to_substract,computedPrevision) values (:idnode,:year,:prevopadd,:prevopsub,:computed)")
               .arg(MODES::modeToTableString(mode))

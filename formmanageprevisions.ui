@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>228</width>
+    <width>251</width>
     <height>326</height>
    </rect>
   </property>
@@ -117,6 +117,9 @@
       </item>
       <item row="7" column="1">
        <widget class="QPushButton" name="pushButtonToAudit">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un audit prévisionnel indépendant qui contiendra les données de l'audit existant sur lesquelles sont adossées les prévisions &lt;span style=&quot; font-weight:600;&quot;&gt;ainsi que les valeurs calculées par les critères de prévision pour l'année N+1.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Vers audit</string>
         </property>

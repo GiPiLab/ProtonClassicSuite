@@ -1145,7 +1145,7 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
 
     if(auditNameExists(name))
     {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un audit portant ce nom !"));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un audit portant ce nom ! Choisissez un autre nom"));
         return 0;
     }
 
@@ -1373,7 +1373,7 @@ bool PCx_Audit::deleteAudit(unsigned int auditId)
     {
         if(q.value(0).toInt()>0)
         {
-            qWarning()<<QObject::tr("Il existe des prévisions attachées à cet audit, supprimez-les d'abord");
+            QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Il existe des prévisions attachées à cet audit, supprimez-les d'abord"));
             return false;
         }
     }

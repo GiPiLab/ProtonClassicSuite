@@ -108,6 +108,7 @@ void FormManageAudits::on_addAuditButton_clicked()
     bool ok;
     QString text;
 
+    redo:
     do
     {
         text=QInputDialog::getText(this,tr("Nouvel audit"), tr("Nom de l'audit à ajouter : "),QLineEdit::Normal,"",&ok).simplified();
@@ -116,6 +117,11 @@ void FormManageAudits::on_addAuditButton_clicked()
 
     if(ok)
     {
+        if(PCx_Audit::auditNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom !"));
+            goto redo;
+        }
         //qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
         if(PCx_Audit::addNewAudit(text,years,selectedTree)>0)
         {
@@ -170,7 +176,8 @@ void FormManageAudits::on_deleteAuditButton_clicked()
         return;
     }
     if(PCx_Audit::deleteAudit(ui->comboListOfAudits->currentData().toUInt())==false)
-        die();
+        return;
+
     if(selectedAudit!=nullptr)
     {
         delete selectedAudit;
