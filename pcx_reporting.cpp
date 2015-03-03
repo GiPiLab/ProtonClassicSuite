@@ -490,9 +490,9 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         double dblVInternes=vcinternes.toDouble();
         double dblRattachesNMoins1=rattachesnmoins1.toDouble();
 
-        if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM||dblBP>=MAX_NUM||dblReports>=MAX_NUM
-                ||dblOCDM>=MAX_NUM||dblVCDM>=MAX_NUM||dblBudgetVote>=MAX_NUM||dblVInternes>=MAX_NUM
-                ||dblRattachesNMoins1>=MAX_NUM)
+        if(dblOuv>MAX_NUM||dblReal>MAX_NUM||dblEng>MAX_NUM||dblBP>MAX_NUM||dblReports>MAX_NUM
+                ||dblOCDM>MAX_NUM||dblVCDM>MAX_NUM||dblBudgetVote>MAX_NUM||dblVInternes>MAX_NUM
+                ||dblRattachesNMoins1>MAX_NUM)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
             return false;

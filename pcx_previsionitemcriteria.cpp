@@ -78,7 +78,7 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
         output=QObject::tr("Valeur fixe");
         break;    
     case PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION:
-        output=QObject::tr("Distribution en fonction du poids relatif des réalisés de l'année N");
+        output=QObject::tr("Distribution en fonction du poids relatif des %1s de l'année N").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
     }
     return output;
 }
@@ -134,6 +134,7 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
     else if(items[0]=="fixedvaluefromproportionalrepartition")
     {
         previsionOperator=PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION;
+        previsionOredTarget=PCx_Audit::OREDFromTableString(items[1]);
         previsionOperand=items[2].toLongLong();
     }
     else
@@ -187,7 +188,7 @@ QString PCx_PrevisionItemCriteria::serialize() const
         output=QString("fixedvalue,0,%1").arg(previsionOperand);
         break;
     case PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION:
-        output=QString("fixedvaluefromproportionalrepartition,0,%1").arg(previsionOperand);
+        output=QString("fixedvaluefromproportionalrepartition,%1,%2").arg(PCx_Audit::OREDtoTableString(previsionOredTarget)).arg(previsionOperand);
         break;
     }
     return output;

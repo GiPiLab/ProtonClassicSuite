@@ -36,6 +36,14 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)+"s",PCx_Audit::ORED::REALISES);
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES)+"s",PCx_Audit::ORED::ENGAGES);
     ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES)+"s",PCx_Audit::ORED::DISPONIBLES);
+
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS)+"s",PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)+"s",PCx_Audit::ORED::REALISES);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES)+"s",PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES)+"s",PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxOREDDispatchRef->setCurrentText(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)+"s");
+
+
     connect(ui->textBrowser,SIGNAL(anchorClicked(QUrl)),this,SLOT(onAnchorClicked(QUrl)));
 
     updateListOfPrevisions();
@@ -226,13 +234,15 @@ void FormAuditPrevisions::on_treeView_clicked(const QModelIndex &index)
     currentNodeId=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
     if(auditWithTreeModel->getAttachedTree()->isLeaf(currentNodeId))
     {
-        ui->pushButtonApplyToLeaves->setText(tr("Appliquer ces critères à la feuille active"));
+        ui->pushButtonApplyToLeaves->setText(tr("Appliquer à la feuille active"));
         ui->pushButtonApplyToNode->setEnabled(false);
+        ui->comboBoxOREDDispatchRef->setEnabled(false);
     }
     else
     {
-        ui->pushButtonApplyToLeaves->setText(tr("Appliquer ces critères aux feuilles liées"));
+        ui->pushButtonApplyToLeaves->setText(tr("Appliquer aux feuilles liées"));
         ui->pushButtonApplyToNode->setEnabled(true);
+        ui->comboBoxOREDDispatchRef->setEnabled(true);
     }
   //  qDebug()<<auditWithTreeModel->getAttachedTree()->getLeavesId(currentNodeId);
     updatePrevisionItemTableModel();
@@ -393,8 +403,13 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked()
 {
     if(recentPrevisionItem!=nullptr && currentPrevisionItem!=nullptr)
     {
+        PCx_Audit::ORED oredDispatchRef=(PCx_Audit::ORED)ui->comboBoxOREDDispatchRef->currentData().toUInt();
+
+        if(recentPrevisionItem->dispatchComputedValueToChildrenLeaves(oredDispatchRef)==false)
+        {
+            return;
+        }
         recentPrevisionItem->saveDataToDb();
-        recentPrevisionItem->dispatchComputedValueToChildrenLeaves();
         currentPrevisionItem->loadFromDb();
         currentPrevisionItemTableModel->resetModel();
         emit previsionUpdated(previsionModel->getPrevisionId());

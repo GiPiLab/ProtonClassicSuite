@@ -152,13 +152,11 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
     {
         ui->labelFinished->setText(tr("oui"));
         ui->finishAuditButton->setEnabled(false);
-        ui->unFinishAuditButton->setEnabled(true);
     }
     else
     {
         ui->labelFinished->setText(tr("non"));
         ui->finishAuditButton->setEnabled(true);
-        ui->unFinishAuditButton->setEnabled(false);
     }
     ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(selectedAudit->getAttachedTreeName()).arg(selectedAudit->getAttachedTree()->getNumberOfNodes()));
     ui->labelYears->setText(selectedAudit->getYearsString());
@@ -210,29 +208,6 @@ void FormManageAudits::on_finishAuditButton_clicked()
     emit(listOfAuditsChanged());
 }
 
-void FormManageAudits::on_unFinishAuditButton_clicked()
-{
-    if(ui->comboListOfAudits->currentIndex()==-1)
-    {
-        return;
-    }
-    if(question(tr("Voulez-vous vraiment dé-terminer l'audit <b>%1</b> ? Celà signifie que vous pourrez en modifier les données, mais plus l'exploiter avant de l'avoir terminé à nouveau").arg(ui->comboListOfAudits->currentText().toHtmlEscaped()))==QMessageBox::No)
-    {
-        return;
-    }
-    if(selectedAudit!=nullptr)
-    {
-        selectedAudit->unFinishAudit();
-    }
-    else
-    {
-        qWarning()<<"Invalid audit selected !";
-    }
-
-    updateListOfAudits();
-    emit(listOfAuditsChanged());
-
-}
 
 void FormManageAudits::on_cloneAuditButton_clicked()
 {

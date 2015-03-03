@@ -9,7 +9,7 @@
 
 #define FIXEDPOINTCOEFF 1000 ///< Currencies are stored as fixed point, multiplied with this coeff
 #define DEFAULTNUMDECIMALS 2 ///< The default number of decimals to display. Must not be greater than log10(FIXEDPOINTCOEFF)
-#define MAX_NUM 4294967295u ///< Maximum acceptable number. Will be stored multiplied by FIXEDPOINTCOEFF into an int64. Must be < MAX_DBL to fit in QDoubleSpinBox
+#define MAX_NUM Q_INT64_C(4294967295) ///< Maximum acceptable number. Will be stored multiplied by FIXEDPOINTCOEFF into an int64. Must be < MAX_DBL to fit in QDoubleSpinBox
 
 //For mingw
 #ifndef INT64_MAX

@@ -395,22 +395,25 @@ void PCx_PrevisionItem::dispatchCriteriaItemsToChildrenLeaves()
 }
 
 
-void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves()
+bool PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves(PCx_Audit::ORED oredReference)
 {
     QList<unsigned int> descendantsId=prevision->getAttachedTree()->getDescendantsId(nodeId);
     QList<unsigned int> leavesId=prevision->getAttachedTree()->getLeavesId(nodeId);
 
 
     unsigned int lastYear=prevision->getAttachedAudit()->getYears().last();
-    qint64 total=prevision->getAttachedAudit()->getNodeValue(nodeId,mode,PCx_Audit::ORED::REALISES,lastYear);
-    if(total==0)
+    qint64 total=prevision->getAttachedAudit()->getNodeValue(nodeId,mode,oredReference,lastYear);
+
+    computedValue=getPrevisionItemValue();
+
+
+    if(computedValue!=0 && (total==0 || total==-MAX_NUM))
     {
-        qWarning()<<QObject::tr("Ne peut pas répartir sur la base d'un réalisé nul en %1 !").arg(lastYear);
-        return;
+        QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Je ne peux pas répartir cette somme sur la base d'un %2 nul pour %1 !").arg(lastYear).arg(PCx_Audit::OREDtoCompleteString(oredReference)));
+        return false;
     }
 
 
-    computedValue=getPrevisionItemValue();
 
     QSqlDatabase::database().transaction();
     if(itemsToAdd.isEmpty()&&itemsToSubstract.isEmpty())
@@ -431,18 +434,18 @@ void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves()
 
             if(leavesId.contains(descendant))
             {
-                qint64 val=prevision->getAttachedAudit()->getNodeValue(descendant,mode,PCx_Audit::ORED::REALISES,lastYear);
+                qint64 val=prevision->getAttachedAudit()->getNodeValue(descendant,mode,oredReference,lastYear);
                 if(val!=-MAX_NUM)
                 {
                     double percent=(double)val/total;
                     double newVal=NUMBERSFORMAT::fixedPointToDouble(computedValue)*percent;
-                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION,PCx_Audit::ORED::OUVERTS,NUMBERSFORMAT::doubleToFixedPoint(newVal));
+                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION,oredReference,NUMBERSFORMAT::doubleToFixedPoint(newVal));
                     tmpItem.insertCriteriaToAdd(criteria);
                     tmpItem.saveDataToDb();
                 }
                 else
                 {
-                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION,PCx_Audit::ORED::OUVERTS,0);
+                    PCx_PrevisionItemCriteria criteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION,oredReference,0);
                     tmpItem.insertCriteriaToAdd(criteria);
                     tmpItem.saveDataToDb();
                 }
@@ -461,6 +464,7 @@ void PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves()
         tmpItem.saveDataToDb();
     }
     QSqlDatabase::database().commit();
+    return true;
 }
 
 void PCx_PrevisionItem::insertCriteriaToSub(PCx_PrevisionItemCriteria criteria,bool compute)

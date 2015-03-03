@@ -799,7 +799,7 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
         double dblEng=engages.toDouble();
 
 
-        if(dblOuv>=MAX_NUM||dblReal>=MAX_NUM||dblEng>=MAX_NUM)
+        if(dblOuv>MAX_NUM||dblReal>MAX_NUM||dblEng>=MAX_NUM)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
             return false;

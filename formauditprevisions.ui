@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>858</width>
+    <width>883</width>
     <height>624</height>
    </rect>
   </property>
@@ -191,19 +191,13 @@
       <property name="spacing">
        <number>4</number>
       </property>
-      <item row="4" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonApplyToNode">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pushButtonAddCriteriaToSubstract">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus au noeud actif. Afin de garantir la cohérence des sommes :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les feuilles attachées au noeud actif se verront dotées d'un critère &amp;quot;valeur fixe&amp;quot; calculé sur la base d'une &lt;/span&gt;répartition proportionnelle au taux de réalisé de l'année N dans la branche du noeud ;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux descendants du noeud actif qui ne sont pas des feuilles seront supprimés ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux ancêtres du noeud actif seront supprimés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter ce critère comme soustraction&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Appliquer ces critères au noeud actif</string>
+         <string>-</string>
         </property>
        </widget>
       </item>
@@ -216,22 +210,6 @@
          <string>+</string>
         </property>
        </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QComboBox" name="comboBoxOperators"/>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>des</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QComboBox" name="comboBoxORED"/>
       </item>
       <item row="0" column="3">
        <widget class="QDoubleSpinBox" name="doubleSpinBox">
@@ -258,15 +236,43 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="pushButtonAddCriteriaToSubstract">
+      <item row="4" column="4" colspan="2">
+       <widget class="QPushButton" name="pushButtonApplyToLeaves">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter ce critère comme soustraction&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus &lt;/span&gt;aux feuilles liées au noeud actif&lt;span style=&quot; font-weight:400;&quot;&gt;. Afin de garantir la cohérence des sommes, les critères appliqués aux ancêtres des feuilles attachées au noeud actif seront supprimés, en remontant la branche jusqu'à la racine. Cela inclut notamment le noeud actif, mais pas les noeuds qui appartiendraient à une autre branche&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>-</string>
+         <string>Appliquer aux feuilles liées</string>
         </property>
        </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QPushButton" name="pushButtonApplyToNode">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus au noeud actif. Afin de garantir la cohérence des sommes :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les feuilles attachées au noeud actif se verront dotées d'un critère &amp;quot;valeur fixe&amp;quot; calculé sur la base d'une &lt;/span&gt;répartition proportionnelle au taux de [ &lt;span style=&quot; font-style:italic;&quot;&gt;choisir dans le menu déroulant à droite&lt;/span&gt;  ] de l'année N dans la branche du noeud ;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux descendants du noeud actif qui ne sont pas des feuilles seront supprimés ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux ancêtres du noeud actif seront supprimés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Appliquer au noeud actif, répartition :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QComboBox" name="comboBoxOperators"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QComboBox" name="comboBoxORED"/>
       </item>
       <item row="1" column="0" colspan="6">
        <widget class="QTableView" name="tableViewRecentCriteria">
@@ -302,35 +308,24 @@
         </attribute>
        </widget>
       </item>
-      <item row="4" column="3" colspan="3">
-       <widget class="QPushButton" name="pushButtonApplyToLeaves">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
+      <item row="4" column="3">
+       <widget class="QComboBox" name="comboBoxOREDDispatchRef">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus &lt;/span&gt;aux feuilles liées au noeud actif&lt;span style=&quot; font-weight:400;&quot;&gt;. Afin de garantir la cohérence des sommes, les critères appliqués aux ancêtres des feuilles attachées au noeud actif seront supprimés, en remontant la branche jusqu'à la racine. Cela inclut notamment le noeud actif, mais pas les noeuds qui appartiendraient à une autre branche&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Appliquer ces critères aux feuilles liées</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne utilisée pour répartir la sommes voulue entre les feuilles liées au noeud actif (voir l'infobulle du bouton &amp;quot;Appliquer au noeud actif&amp;quot;). Seules les dernières valeurs connues seront prises en compte lors du calcul.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="3">
-       <widget class="QLabel" name="label">
-        <property name="font">
-         <font>
-          <italic>true</italic>
-         </font>
-        </property>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Valeur totale des critères potentiels :</string>
+         <string>des</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
-      <item row="3" column="3" colspan="3">
+      <item row="3" column="4" colspan="2">
        <widget class="QLabel" name="labelValuePrevisionItem">
         <property name="font">
          <font>
@@ -345,17 +340,29 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="3">
-       <widget class="QPushButton" name="pushButtonDelCriteria">
-        <property name="text">
-         <string>Supprimer ce critère</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3" colspan="3">
+      <item row="2" column="4" colspan="2">
        <widget class="QPushButton" name="pushButtonDeleteAll">
         <property name="text">
          <string>Supprimer tous les critères</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="4">
+       <widget class="QPushButton" name="pushButtonDelCriteria">
+        <property name="text">
+         <string>Supprimer le critère sélectionné</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="4">
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="text">
+         <string>Valeur totale des critères potentiels :</string>
         </property>
        </widget>
       </item>

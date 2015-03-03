@@ -33,7 +33,7 @@ public:
 
 
     void dispatchCriteriaItemsToChildrenLeaves();
-    void dispatchComputedValueToChildrenLeaves();
+    bool dispatchComputedValueToChildrenLeaves(PCx_Audit::ORED oredReference=PCx_Audit::ORED::REALISES);
 
     QString getPrevisionItemAsHTML() const;
     QString getPrevisionItemsOfDescendantsAsHTML() const;

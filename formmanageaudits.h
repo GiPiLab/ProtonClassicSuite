@@ -30,8 +30,6 @@ private slots:
 
     void on_finishAuditButton_clicked();
 
-    void on_unFinishAuditButton_clicked();
-
     void on_cloneAuditButton_clicked();
 
     void on_pushButtonDisplayTree_clicked();

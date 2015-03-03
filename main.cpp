@@ -51,7 +51,6 @@ int main(int argc, char *argv[])
     sharedMemory.attach();
 
     if (!sharedMemory.create(1)) {
-        qDebug()<<sharedMemory.errorString();
         QMessageBox::information(nullptr,"Attention","Une seule instance de ProtonClassicSuite est autorisée à la fois");
         return EXIT_FAILURE;
     }
