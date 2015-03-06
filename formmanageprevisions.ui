@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Gestion des prévisions</string>
   </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette fenêtre permet de gérer les prévisions. Une prévision est un scénario qui calcule les valeurs des crédits alloués pour l'année à venir en utilisant des critères (fixés par l'utilisateur) sur les données historiques. Une prévision est attachée à un audit terminé, il peut y avoir plusieurs prévisions attachées à un même audit.&lt;/p&gt;&lt;p&gt;Les valeurs calculées par une prévision peuvent être utilisées pour fabriquer un audit étendu, c'est à dire un audit qui reprend les données de l'audit sur lequel est adossé la prévision et ajoute les valeur prévues calculées pour l'année à venir. Du point de vue du logiciel un audit étendu est un audit indépendant, il n'est pas lié à une prévision.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QGroupBox" name="groupBoxPrevisions">
@@ -84,7 +87,7 @@
       <item row="5" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>Années :</string>
+         <string>Années de l'audit :</string>
         </property>
        </widget>
       </item>
@@ -111,7 +114,7 @@
       <item row="7" column="0">
        <widget class="QPushButton" name="pushButtonDelete">
         <property name="text">
-         <string>Supprimer</string>
+         <string>&amp;Supprimer</string>
         </property>
        </widget>
       </item>
@@ -121,7 +124,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un audit prévisionnel indépendant qui contiendra les données de l'audit existant sur lesquelles sont adossées les prévisions &lt;span style=&quot; font-weight:600;&quot;&gt;ainsi que les valeurs calculées par les critères de prévision pour l'année N+1.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Vers audit</string>
+         <string>Vers &amp;audit</string>
         </property>
        </widget>
       </item>
@@ -130,6 +133,9 @@
    </item>
    <item>
     <widget class="QGroupBox" name="groupBox_2">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="title">
       <string>Nouvelle prévision</string>
      </property>
@@ -147,7 +153,7 @@
       <item>
        <widget class="QPushButton" name="pushButtonAddPrevision">
         <property name="text">
-         <string>Créer une nouvelle prévision</string>
+         <string>Créer une &amp;nouvelle prévision</string>
         </property>
        </widget>
       </item>
@@ -156,6 +162,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListAudits</tabstop>
+  <tabstop>pushButtonAddPrevision</tabstop>
+  <tabstop>comboListPrevisions</tabstop>
+  <tabstop>pushButtonToAudit</tabstop>
+  <tabstop>pushButtonDelete</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

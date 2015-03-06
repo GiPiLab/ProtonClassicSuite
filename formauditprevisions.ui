@@ -13,12 +13,18 @@
   <property name="windowTitle">
    <string>Elaboration du budget</string>
   </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette fenêtre permet de fixer les critères de prévision pour l'année N+1. Elle s'articule principalement autour de deux stratégies :&lt;/p&gt;&lt;p&gt;- Appliquer des critères de prévision au noeud actif, et distribuer le total aux descendants du noeud ;&lt;/p&gt;&lt;p&gt;- Appliquer des critères de prévision aux descendants du noeud actif, et sommer les valeurs des descendants pour trouver la somme allouée au noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout_5">
    <property name="verticalSpacing">
     <number>4</number>
    </property>
    <item row="1" column="2">
     <widget class="QLabel" name="labelValueN">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dernière valeur connue des crédits prévus pour le noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="text">
       <string>valeur N</string>
      </property>
@@ -47,6 +53,9 @@
        <weight>75</weight>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Valeur totale calculée pour le noeud actif pour l'année N+1, issue de la somme des valeurs calculées des descendants du noeud ou de la somme des critères appliqués au noeud.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>valeur N+1</string>
@@ -196,6 +205,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter ce critère comme soustraction&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter un critère comme soustraction. La valeur calculée à l'aide de ce critère sera &lt;span style=&quot; font-weight:600;&quot;&gt;soustraite&lt;/span&gt; au total.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>-</string>
         </property>
@@ -205,6 +217,9 @@
        <widget class="QPushButton" name="pushButtonAddCriteriaToAdd">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter ce critère comme addition&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter un critère comme addition. La valeur calculée à l'aide de se critère sera &lt;span style=&quot; font-weight:600;&quot;&gt;ajoutée&lt;/span&gt; au total.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>+</string>
@@ -245,7 +260,10 @@
          </font>
         </property>
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus &lt;/span&gt;aux feuilles liées au noeud actif&lt;span style=&quot; font-weight:400;&quot;&gt;. Afin de garantir la cohérence des sommes, les critères appliqués aux ancêtres des feuilles attachées au noeud actif seront supprimés, en remontant la branche jusqu'à la racine. Cela inclut notamment le noeud actif, mais pas les noeuds qui appartiendraient à une autre branche&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus &lt;/span&gt;aux feuilles liées au noeud actif&lt;span style=&quot; font-weight:400;&quot;&gt;, en garantissant la cohérence des sommes dans l'arbre.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus aux feuilles liées au noeud actif. Afin de garantir la cohérence des sommes, les critères appliqués aux ancêtres des feuilles attachées au noeud actif seront supprimés, en remontant la branche jusqu'à la racine. Cela inclut notamment le noeud actif, mais pas les noeuds qui appartiendraient à une autre branche.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Appliquer aux feuilles liées</string>
@@ -261,6 +279,9 @@
          </font>
         </property>
         <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus au noeud actif, en garantissant la cohérence des sommes dans l'arbre.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Appliquer les critères ci-dessus au noeud actif. Afin de garantir la cohérence des sommes :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les feuilles attachées au noeud actif se verront dotées d'un critère &amp;quot;valeur fixe&amp;quot; calculé sur la base d'une &lt;/span&gt;répartition proportionnelle au taux de [ &lt;span style=&quot; font-style:italic;&quot;&gt;choisir dans le menu déroulant à droite&lt;/span&gt;  ] de l'année N dans la branche du noeud ;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux descendants du noeud actif qui ne sont pas des feuilles seront supprimés ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;- les critères appliqués aux ancêtres du noeud actif seront supprimés.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
@@ -281,6 +302,9 @@
           <horstretch>2</horstretch>
           <verstretch>1</verstretch>
          </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des critères à appliquer au noeud ou aux feuilles. Cette zone n'indique &lt;span style=&quot; font-weight:600;&quot;&gt;pas&lt;/span&gt; les critères &lt;span style=&quot; font-weight:600;&quot;&gt;effectivement appliqués.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -313,6 +337,9 @@
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne utilisée pour répartir la sommes voulue entre les feuilles liées au noeud actif (voir l'infobulle du bouton &amp;quot;Appliquer au noeud actif&amp;quot;). Seules les dernières valeurs connues seront prises en compte lors du calcul.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne utilisée pour répartir la sommes voulue entre les feuilles liées au noeud actif (bouton &amp;quot;Appliquer au noeud actif&amp;quot;). Seules les dernières valeurs connues seront prises en compte lors du calcul, et chaque feuille se verra dotée d'un montant proportionnel à son taux de [prévu/réalisé/engagé/disponible] dans la branche active.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
        </widget>
       </item>
       <item row="0" column="1">
@@ -342,6 +369,9 @@
       </item>
       <item row="2" column="4" colspan="2">
        <widget class="QPushButton" name="pushButtonDeleteAll">
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer tous les critères de la liste des critères à appliquer. Ne supprime pas ce critère du noeud actif, pour cela utiliser les boutons &amp;quot;Appliquer au...&amp;quot; ci-dessous. Appliquer une liste vide au noeud actif revient à supprimer tous ses critères.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Supprimer tous les critères</string>
         </property>
@@ -349,6 +379,9 @@
       </item>
       <item row="2" column="0" colspan="4">
        <widget class="QPushButton" name="pushButtonDelCriteria">
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer le critère sélectionné de la liste des critères à appliquer. Ne supprime pas ce critère du noeud actif, pour cela utiliser les boutons &amp;quot;Appliquer au...&amp;quot; ci-dessous.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Supprimer le critère sélectionné</string>
         </property>
@@ -415,6 +448,9 @@
           <bold>true</bold>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Valeur totale des critères appliqués au noeud actif, sans tenir compte des sommes calculées des descendants.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>valeur critères appliqués</string>
         </property>
@@ -446,6 +482,9 @@
           <pointsize>8</pointsize>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Critères appliqués au descendants (feuilles ou non) du noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="lineWrapMode">
          <enum>QTextEdit::NoWrap</enum>
         </property>
@@ -464,6 +503,12 @@
           <horstretch>2</horstretch>
           <verstretch>1</verstretch>
          </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des critères effectivement appliqués au noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des critères effectivement appliqués au noeud actif. Pour modifier cette liste, préparez les critères dans la zone ci-dessus et appliquez-les. Pour supprimer tous les critères, appliquez une liste de critères vide.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="editTriggers">
          <set>QAbstractItemView::NoEditTriggers</set>
@@ -507,6 +552,33 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboBoxOperators</tabstop>
+  <tabstop>comboBoxORED</tabstop>
+  <tabstop>doubleSpinBox</tabstop>
+  <tabstop>pushButtonAddCriteriaToAdd</tabstop>
+  <tabstop>pushButtonAddCriteriaToSubstract</tabstop>
+  <tabstop>tableViewRecentCriteria</tabstop>
+  <tabstop>pushButtonDelCriteria</tabstop>
+  <tabstop>pushButtonDeleteAll</tabstop>
+  <tabstop>pushButtonApplyToNode</tabstop>
+  <tabstop>comboBoxOREDDispatchRef</tabstop>
+  <tabstop>pushButtonApplyToLeaves</tabstop>
+  <tabstop>checkBoxDisplayLeafCriteria</tabstop>
+  <tabstop>pushButtonDisplayReport</tabstop>
+  <tabstop>pushButtonSaveBigReport</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>radioButtonDF</tabstop>
+  <tabstop>radioButtonRF</tabstop>
+  <tabstop>radioButtonDI</tabstop>
+  <tabstop>radioButtonRI</tabstop>
+  <tabstop>tableViewCriteria</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>comboListPrevisions</tabstop>
+  <tabstop>checkBoxShowCriteriaToApply</tabstop>
+  <tabstop>textBrowser</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

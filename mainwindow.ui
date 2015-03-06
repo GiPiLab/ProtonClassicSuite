@@ -47,16 +47,11 @@
      <string>A&amp;udits</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
     <addaction name="actionEditAudit"/>
-    <addaction name="separator"/>
     <addaction name="actionExploreAudits"/>
     <addaction name="actionAuditReport"/>
     <addaction name="actionQueries"/>
-    <addaction name="separator"/>
-    <addaction name="actionGestion_des_pr_visions"/>
-    <addaction name="actionElaboration_budg_taire_PCB"/>
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">
@@ -70,18 +65,31 @@
     <property name="title">
      <string>&amp;Reportings</string>
     </property>
-    <addaction name="actionManageTree"/>
     <addaction name="actionGestion_des_reportings"/>
-    <addaction name="separator"/>
     <addaction name="actionReportingOverview"/>
     <addaction name="actionGraphiques"/>
     <addaction name="actionSurveillance_des_reportings"/>
     <addaction name="actionExploreReportings"/>
     <addaction name="actionReportingGenerateur_de_rapports"/>
    </widget>
+   <widget class="QMenu" name="menuBudgets">
+    <property name="title">
+     <string>&amp;Budgets</string>
+    </property>
+    <addaction name="actionGestion_des_pr_visions"/>
+    <addaction name="actionElaboration_budg_taire_PCB"/>
+   </widget>
+   <widget class="QMenu" name="menuArbres">
+    <property name="title">
+     <string>&amp;Arbres</string>
+    </property>
+    <addaction name="actionManageTree"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuArbres"/>
    <addaction name="menuDataInput"/>
    <addaction name="menuReporting"/>
+   <addaction name="menuBudgets"/>
    <addaction name="menuA_propos"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
@@ -111,15 +119,15 @@
    <addaction name="actionAuditReport"/>
    <addaction name="actionQueries"/>
    <addaction name="separator"/>
-   <addaction name="actionGestion_des_pr_visions"/>
-   <addaction name="actionElaboration_budg_taire_PCB"/>
-   <addaction name="separator"/>
    <addaction name="actionGestion_des_reportings"/>
    <addaction name="actionReportingOverview"/>
    <addaction name="actionGraphiques"/>
    <addaction name="actionSurveillance_des_reportings"/>
    <addaction name="actionExploreReportings"/>
    <addaction name="actionReportingGenerateur_de_rapports"/>
+   <addaction name="separator"/>
+   <addaction name="actionGestion_des_pr_visions"/>
+   <addaction name="actionElaboration_budg_taire_PCB"/>
    <addaction name="separator"/>
    <addaction name="actionA_propos"/>
   </widget>

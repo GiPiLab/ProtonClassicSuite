@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogabout.h"
+#include <QWhatsThis>
 
 using namespace NUMBERSFORMAT;
 
@@ -18,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     formReportingReports=nullptr;
     formAuditPrevisions=nullptr;
     formManagePrevisions=nullptr;
+    QAction *whatThisAction=QWhatsThis::createAction();
+    ui->toolBar->insertAction(0,whatThisAction);
 
     restoreSettings();
     updateTitle();
