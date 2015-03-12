@@ -165,7 +165,6 @@ QString qTableViewToHtml(QTableView *tableView)
     return out;
 }
 
-
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
 {
     Q_ASSERT(!outputFileName.isEmpty());
@@ -311,6 +310,10 @@ QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits)
     QLocale locale;
     QString out;
 
+    if(num==-MAX_NUM)
+    {
+        return QString();
+    }
     if(forcedUnits==false)
     {
         switch(currentFormatMode)

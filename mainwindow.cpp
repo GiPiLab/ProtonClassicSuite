@@ -152,6 +152,8 @@ void MainWindow::closeEvent(QCloseEvent * event)
 {
     if(question(tr("Voulez-vous vraiment quitter ?"))==QMessageBox::Yes)
     {
+        //To avoid segfault with removeAt
+        ui->mdiArea->closeAllSubWindows();
         event->accept();
     }
     else
@@ -215,7 +217,8 @@ void MainWindow::onFormReportingReportsWindowsDestroyed()
 
 void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
 {
-    listOfFormAuditExplore.removeAt(listOfFormAuditExplore.indexOf(static_cast<FormAuditExplore *>(obj)));
+    int index=listOfFormAuditExplore.indexOf(static_cast<FormAuditExplore *>(obj));
+    listOfFormAuditExplore.removeAt(index);
 }
 
 void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
@@ -244,6 +247,7 @@ void MainWindow::on_actionManageAudits_triggered()
         if(formEditAudit!=nullptr)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
+            connect(formManageAudits,&FormManageAudits::auditDataUpdated,formEditAudit,&FormEditAudit::onAuditDataUpdated);
         }
 
         if(formAuditReports!=nullptr)
@@ -304,6 +308,7 @@ void MainWindow::on_actionEditAudit_triggered()
         if(formManageAudits!=nullptr)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formEditAudit,&FormEditAudit::onListOfAuditsChanged);
+            connect(formManageAudits,&FormManageAudits::auditDataUpdated,formEditAudit,&FormEditAudit::onAuditDataUpdated);
         }
         if(formManageReportings!=nullptr)
         {
@@ -454,9 +459,9 @@ void MainWindow::on_actionOptions_triggered()
         {
             formEditTreeWin->updateRandomButtonVisibility();
         }
-        if(formEditAudit!=nullptr)
+        if(formManageAudits!=nullptr)
         {
-            formEditAudit->updateRandomButtonVisibility();
+            formManageAudits->updateRandomButtonVisibility();
         }
         if(formManageReportings!=nullptr)
         {
@@ -489,7 +494,17 @@ void MainWindow::on_actionQueries_triggered()
     QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
     subWin->setWindowIcon(QIcon(":/icons/icons/queries.png"));
     dlg->show();
+
+    foreach(const FormQueries *f,listOfFormQueries)
+    {
+        connect(dlg,&FormQueries::listOfQueriesChanged,f,&FormQueries::onListOfQueriesChanged);
+        connect(f,&FormQueries::listOfQueriesChanged,dlg,&FormQueries::onListOfQueriesChanged);
+    }
+
     listOfFormQueries.append(dlg);
+
+
+
 
     connect(dlg,&QObject::destroyed,this,&MainWindow::onFormQueriesWindowsDestroyed);
 

@@ -13,6 +13,8 @@ FormManagePrevisions::FormManagePrevisions(QWidget *parent) :
     selectedPrevision=nullptr;
     updateListOfPrevisions();
     updateListOfAudits();
+
+    //TODO : Import/export des prévisions
 }
 
 
@@ -86,6 +88,14 @@ void FormManagePrevisions::updateListOfAudits()
 
     QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
     QPair<unsigned int,QString> p;
+    if(listOfAudits.count()==0)
+    {
+        ui->groupBox_2->setEnabled(false);
+    }
+    else
+    {
+        ui->groupBox_2->setEnabled(true);
+    }
     foreach(p,listOfAudits)
     {
         ui->comboListAudits->insertItem(0,p.second,p.first);
@@ -127,6 +137,13 @@ void FormManagePrevisions::on_pushButtonAddPrevision_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une prévision portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
+
+
         if(PCx_Prevision::addNewPrevision(selectedAudit,text))
         {
             updateListOfPrevisions();
@@ -187,11 +204,16 @@ void FormManagePrevisions::on_pushButtonToAudit_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
         int res=selectedPrevision->toPrevisionalExtendedAudit(text);
 
         if(res>0)
         {
-            QMessageBox::information(this,tr("Information"),tr("Audit étendu ajouté, utilisez les fenêtres usuelles de gestion des audits pour le terminer et l'exploiter"));
+            QMessageBox::information(this,tr("Information"),tr("Audit étendu ajouté, utilisez les fenêtres usuelles sur les audits pour le terminer et l'exploiter"));
             //NOTE : not needed because the new audit is not finished
             updateListOfAudits();
             //To notify formManageAudits and formEditAudit

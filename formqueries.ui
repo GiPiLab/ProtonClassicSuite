@@ -26,6 +26,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requêtes de type &amp;quot;rang&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -36,10 +39,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <property name="verticalSpacing">
+       <number>5</number>
+      </property>
       <item row="2" column="0">
        <widget class="QLabel" name="label_10">
         <property name="text">
          <string>des</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxDFRFDIRI_2</cstring>
         </property>
        </widget>
       </item>
@@ -48,59 +57,80 @@
         <property name="text">
          <string>sont parmis les</string>
         </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>entre</string>
+        <property name="buddy">
+         <cstring>spinBoxNumRank</cstring>
         </property>
        </widget>
       </item>
       <item row="7" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>entre</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxYear1_2</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
        <widget class="QLabel" name="label_13">
         <property name="text">
          <string>et</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxYear2_2</cstring>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="3">
        <widget class="QComboBox" name="comboBoxDFRFDIRI_2"/>
       </item>
-      <item row="7" column="2">
-       <widget class="QComboBox" name="comboBoxYear2_2"/>
+      <item row="9" column="1" colspan="2">
+       <widget class="QPushButton" name="pushButtonExecReqRank">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exécuter la requête et afficher le résultat&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Exécuter</string>
+        </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
          <string>dont les crédits</string>
         </property>
-       </widget>
-      </item>
-      <item row="8" column="1" colspan="2">
-       <widget class="QPushButton" name="pushButtonExecReqRank">
-        <property name="text">
-         <string>Exécuter</string>
+        <property name="buddy">
+         <cstring>comboBoxORED_2</cstring>
         </property>
        </widget>
       </item>
-      <item row="8" column="0">
+      <item row="8" column="2">
+       <widget class="QComboBox" name="comboBoxYear2_2"/>
+      </item>
+      <item row="9" column="0">
        <widget class="QPushButton" name="pushButtonSaveReqRank">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mémoriser la requête dans l'audit pour pouvoir l'exécuter ultérieurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Mémoriser</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="2">
+      <item row="7" column="2">
        <widget class="QComboBox" name="comboBoxYear1_2"/>
       </item>
       <item row="0" column="0" colspan="3">
        <widget class="QComboBox" name="comboBoxTypes_2"/>
       </item>
-      <item row="5" column="2">
-       <widget class="QComboBox" name="comboBoxBiggerSmaller"/>
+      <item row="1" column="1" colspan="2">
+       <widget class="QComboBox" name="comboBoxORED_2"/>
       </item>
-      <item row="5" column="0">
+      <item row="5" column="0" colspan="3">
        <widget class="QSpinBox" name="spinBoxNumRank">
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -119,8 +149,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QComboBox" name="comboBoxORED_2"/>
+      <item row="6" column="0" colspan="3">
+       <widget class="QComboBox" name="comboBoxBiggerSmaller"/>
       </item>
      </layout>
     </widget>
@@ -134,6 +164,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des requêtes mémorisées pour cet audit. La couleur d'arrière plan correspond au type de la requête. Vous pouvez sélectionner plusieurs requêtes mémoriser afin de les exécuter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
@@ -150,6 +183,9 @@
       <widget class="QPushButton" name="pushButtonExecFromList">
        <property name="text">
         <string>Exécuter les requêtes sélectionnées</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -169,6 +205,9 @@
     <layout class="QGridLayout" name="gridLayout_5">
      <item row="1" column="1">
       <widget class="QPushButton" name="pushButtonSave">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistre le contenu de la fenêtre ci-dessus dans un fichier HTML&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Enregistrer les résultats dans un fichier HTML</string>
        </property>
@@ -180,6 +219,9 @@
      </item>
      <item row="1" column="0">
       <widget class="QPushButton" name="pushButtonSaveXLSX">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Transfère les résultats des requêtes affichées dans un fichier tableur qui contiendra une feuille par requête&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Enregistrer les résultats dans un classeur XLSX</string>
        </property>
@@ -196,6 +238,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Résultats de l'exécution de la ou des requêtes. Vous pouvez transférer cet affichage dans un fichier HTML, ou alors transférer les données dans un fichier tableur qui contiendra une feuille par requête.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="undoRedoEnabled">
         <bool>false</bool>
@@ -215,6 +260,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requêtes de type &amp;quot;min/max&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -225,10 +273,16 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
+      <property name="verticalSpacing">
+       <number>5</number>
+      </property>
       <item row="1" column="0">
        <widget class="QLabel" name="label_16">
         <property name="text">
          <string>dont les crédits</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxORED_3</cstring>
         </property>
        </widget>
       </item>
@@ -240,12 +294,18 @@
         <property name="text">
          <string>sont entre</string>
         </property>
+        <property name="buddy">
+         <cstring>doubleSpinBox_2</cstring>
+        </property>
        </widget>
       </item>
       <item row="8" column="0">
        <widget class="QLabel" name="label_19">
         <property name="text">
          <string>et</string>
+        </property>
+        <property name="buddy">
+         <cstring>doubleSpinBox_3</cstring>
         </property>
        </widget>
       </item>
@@ -254,6 +314,9 @@
       </item>
       <item row="13" column="0">
        <widget class="QPushButton" name="pushButtonSaveReq3">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mémoriser la requête dans l'audit pour pouvoir l'exécuter ultérieurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Mémoriser</string>
         </property>
@@ -264,6 +327,9 @@
         <property name="text">
          <string>et</string>
         </property>
+        <property name="buddy">
+         <cstring>comboBoxYear2_3</cstring>
+        </property>
        </widget>
       </item>
       <item row="11" column="0">
@@ -271,12 +337,18 @@
         <property name="text">
          <string>entre</string>
         </property>
+        <property name="buddy">
+         <cstring>comboBoxYear1_3</cstring>
+        </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_15">
         <property name="text">
          <string>des</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxDFRFDIRI_3</cstring>
         </property>
        </widget>
       </item>
@@ -291,13 +363,19 @@
       </item>
       <item row="13" column="1">
        <widget class="QPushButton" name="pushButtonExecReq3">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exécuter la requête et afficher le résultat&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Exécuter</string>
         </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
-      <item row="8" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+      <item row="7" column="0" colspan="2">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
@@ -315,8 +393,8 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
-       <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+      <item row="9" column="0" colspan="2">
+       <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
@@ -345,6 +423,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requêtes du type &amp;quot;variation&amp;quot;. Attention au sens des opérateurs. Dans le cas d'une &amp;quot;augmentation&amp;quot; ou d'une &amp;quot;diminution&amp;quot; les valeurs retournées sont toujours positives.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -355,13 +436,25 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
+      <property name="verticalSpacing">
+       <number>5</number>
+      </property>
+      <item row="7" column="0" colspan="4">
+       <widget class="QComboBox" name="comboBoxPercentEuro"/>
+      </item>
       <item row="4" column="1" colspan="3">
        <widget class="QComboBox" name="comboBoxAugDim"/>
       </item>
-      <item row="9" column="1" colspan="3">
+      <item row="10" column="1" colspan="3">
        <widget class="QPushButton" name="pushButtonExecReqVariation">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exécuter la requête et afficher le résultat&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Exécuter</string>
+        </property>
+        <property name="default">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -370,9 +463,12 @@
         <property name="text">
          <string>ont connu une</string>
         </property>
+        <property name="buddy">
+         <cstring>comboBoxAugDim</cstring>
+        </property>
        </widget>
       </item>
-      <item row="7" column="1" colspan="3">
+      <item row="8" column="1" colspan="3">
        <widget class="QComboBox" name="comboBoxYear1"/>
       </item>
       <item row="1" column="0">
@@ -380,46 +476,58 @@
         <property name="text">
          <string>dont les crédits</string>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="3">
-       <widget class="QComboBox" name="comboBoxORED"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>des</string>
+        <property name="buddy">
+         <cstring>comboBoxORED</cstring>
         </property>
        </widget>
       </item>
       <item row="3" column="0" colspan="4">
        <widget class="QComboBox" name="comboBoxDFRFDIRI"/>
       </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>des</string>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxDFRFDIRI</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="3">
+       <widget class="QComboBox" name="comboBoxORED"/>
+      </item>
       <item row="5" column="0" colspan="4">
        <widget class="QComboBox" name="comboBoxOperator"/>
       </item>
-      <item row="8" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="label_7">
         <property name="text">
          <string>et</string>
         </property>
+        <property name="buddy">
+         <cstring>comboBoxYear2</cstring>
+        </property>
        </widget>
       </item>
-      <item row="8" column="1" colspan="3">
+      <item row="9" column="1" colspan="3">
        <widget class="QComboBox" name="comboBoxYear2"/>
       </item>
-      <item row="6" column="2" colspan="2">
-       <widget class="QComboBox" name="comboBoxPercentEuro"/>
-      </item>
-      <item row="7" column="0">
+      <item row="8" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
          <string>entre</string>
         </property>
+        <property name="buddy">
+         <cstring>comboBoxYear1</cstring>
+        </property>
        </widget>
       </item>
-      <item row="9" column="0">
+      <item row="10" column="0">
        <widget class="QPushButton" name="pushButtonSaveReqVariation">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Mémoriser la requête dans l'audit pour pouvoir l'exécuter ultérieurement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Mémoriser</string>
         </property>
@@ -428,7 +536,7 @@
       <item row="0" column="0" colspan="4">
        <widget class="QComboBox" name="comboBoxTypes"/>
       </item>
-      <item row="6" column="0" colspan="2">
+      <item row="6" column="0" colspan="4">
        <widget class="QDoubleSpinBox" name="doubleSpinBox">
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -452,6 +560,44 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBoxListAudits</tabstop>
+  <tabstop>comboBoxTypes</tabstop>
+  <tabstop>comboBoxORED</tabstop>
+  <tabstop>comboBoxDFRFDIRI</tabstop>
+  <tabstop>comboBoxAugDim</tabstop>
+  <tabstop>comboBoxOperator</tabstop>
+  <tabstop>doubleSpinBox</tabstop>
+  <tabstop>comboBoxPercentEuro</tabstop>
+  <tabstop>comboBoxYear1</tabstop>
+  <tabstop>comboBoxYear2</tabstop>
+  <tabstop>pushButtonSaveReqVariation</tabstop>
+  <tabstop>pushButtonExecReqVariation</tabstop>
+  <tabstop>comboBoxTypes_2</tabstop>
+  <tabstop>comboBoxORED_2</tabstop>
+  <tabstop>comboBoxDFRFDIRI_2</tabstop>
+  <tabstop>spinBoxNumRank</tabstop>
+  <tabstop>comboBoxBiggerSmaller</tabstop>
+  <tabstop>comboBoxYear1_2</tabstop>
+  <tabstop>comboBoxYear2_2</tabstop>
+  <tabstop>pushButtonSaveReqRank</tabstop>
+  <tabstop>pushButtonExecReqRank</tabstop>
+  <tabstop>comboBoxTypes_3</tabstop>
+  <tabstop>comboBoxORED_3</tabstop>
+  <tabstop>comboBoxDFRFDIRI_3</tabstop>
+  <tabstop>doubleSpinBox_2</tabstop>
+  <tabstop>doubleSpinBox_3</tabstop>
+  <tabstop>comboBoxYear1_3</tabstop>
+  <tabstop>comboBoxYear2_3</tabstop>
+  <tabstop>pushButtonSaveReq3</tabstop>
+  <tabstop>pushButtonExecReq3</tabstop>
+  <tabstop>listView</tabstop>
+  <tabstop>pushButtonExecFromList</tabstop>
+  <tabstop>pushButtonDelete</tabstop>
+  <tabstop>pushButtonSaveXLSX</tabstop>
+  <tabstop>pushButtonSave</tabstop>
+  <tabstop>textEdit</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

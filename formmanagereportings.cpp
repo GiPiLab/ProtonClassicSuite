@@ -111,6 +111,11 @@ void FormManageReportings::on_pushButtonAddReporting_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un reporting portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
         if(PCx_Reporting::addNewReporting(text,selectedTree)>0)
         {
             QMessageBox::information(this,tr("Succès"),tr("Nouveau reporting ajouté. Utilisez les boutons ci-dessus pour y ajouter des données."));
@@ -138,6 +143,8 @@ void FormManageReportings::updateListOfReportings()
 void FormManageReportings::updateListOfPotentialAudits()
 {
     ui->comboListOfAudits->clear();
+    if(selectedReporting==nullptr)
+        return;
 
     QList<QPair<unsigned int,QString> > listOfAuditsWithThisTree=PCx_Audit::getListOfAuditsAttachedWithThisTree(selectedReporting->getAttachedTreeId());
     ui->pushButtonFillAudit->setEnabled(!listOfAuditsWithThisTree.isEmpty());

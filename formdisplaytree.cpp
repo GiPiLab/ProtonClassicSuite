@@ -79,12 +79,38 @@ void FormDisplayTree::on_exportButton_clicked()
         fileName.append(".pdf");
     fi=QFileInfo(fileName);
 
-    //Process dot graph
+    //Process dot graph        
     if(dotToPdf(dot.toUtf8(),fileName)==false)
     {
+        QMessageBox::warning(this,tr("Echec"),tr("Enregistrement du PDF impossible"));
         return;
     }
     QMessageBox::information(this,tr("Succès"),tr("Arbre enregistré au format PDF"));
+
+    if(question(tr("Enregistrer aussi la source au format GraphViz ?"))==QMessageBox::Yes)
+    {
+        QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer la source de l'arbre au format DOT"), "",tr("Fichiers Graphviz (*.dot)"));
+        if(fileName.isEmpty())
+            return;
+
+        QFileInfo fi(fileName);
+        if(fi.suffix().compare("dot",Qt::CaseInsensitive)!=0)
+            fileName.append(".dot");
+        fi=QFileInfo(fileName);
+
+        QFile file(fileName);
+        if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+        {
+            QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+            return;
+        }
+        QTextStream stream(&file);
+        stream.setCodec("UTF-8");
+        stream<<dot;
+        file.close();
+        QMessageBox::information(this,tr("Succès"),tr("Source de l'arbre enregistrée au format DOT"));
+    }
+
 }
 
 

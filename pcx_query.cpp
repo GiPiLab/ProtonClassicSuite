@@ -81,7 +81,10 @@ QString PCx_Query::getCSS()
 
 bool PCx_Query::deleteQuery(unsigned int auditId,unsigned int queryId)
 {
-    Q_ASSERT(queryId>0 && auditId>0);
+    if(queryId==0 || auditId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
     q.prepare(QString("delete from audit_queries_%1 where id=:id").arg(auditId));
     q.bindValue(":id",queryId);

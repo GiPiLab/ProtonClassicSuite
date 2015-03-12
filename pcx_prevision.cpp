@@ -147,7 +147,10 @@ bool PCx_Prevision::previsionNameExists(const QString &previsionName)
 
 bool PCx_Prevision::deletePrevision(unsigned int previsionId)
 {
-    Q_ASSERT(previsionId>0);
+    if(previsionId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q(QString("select count(*) from index_previsions where id='%1'").arg(previsionId));
     if(!q.exec())
     {
@@ -248,7 +251,10 @@ QList<QPair<unsigned int, QString> > PCx_Prevision::getListOfPrevisions()
 
 bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
 {
-    Q_ASSERT(auditId>0);
+    if(auditId==0||name.isEmpty()||previsionNameExists(name)||name.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
 
     PCx_Audit tmpAudit(auditId,true);
@@ -256,12 +262,6 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     if(tmpAudit.isFinished()==false)
     {
         qCritical()<<QObject::tr("Audit non terminé !");
-        return false;
-    }
-
-    if(previsionNameExists(name))
-    {
-        QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Il existe déjà une prévision portant ce nom !"));
         return false;
     }
 

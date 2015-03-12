@@ -23,11 +23,9 @@ PCx_Tables::PCx_Tables(PCx_Reporting *reportingModel):reportingModel(reportingMo
 
 QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -79,11 +77,9 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -180,13 +176,10 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
-
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
@@ -288,13 +281,10 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
-
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
@@ -358,11 +348,9 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -429,11 +417,9 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -474,7 +460,10 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
         qint64 ouverts=q.value("ouverts").toLongLong();
         qint64 realises=q.value("realises").toLongLong();
         unsigned int annee=q.value("annee").toUInt();
-        Q_ASSERT(annee>0);
+        if(annee==0)
+        {
+            qFatal("Assertion failed");
+        }
 
         double percentOuvertsRoot=0.0,percentRealisesRoot=0.0;
 
@@ -499,11 +488,9 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -633,11 +620,9 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -720,11 +705,9 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -778,11 +761,9 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -835,11 +816,9 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
@@ -893,13 +872,10 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
 
 QString PCx_Tables::getPCAT10(unsigned int node) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
-
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
@@ -965,11 +941,9 @@ QString PCx_Tables::getPCAT10(unsigned int node) const
 
 QString PCx_Tables::getPCAT11(unsigned int node) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
@@ -1037,11 +1011,9 @@ QString PCx_Tables::getPCAT11(unsigned int node) const
 
 QString PCx_Tables::getPCAT12(unsigned int node) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
@@ -1587,11 +1559,9 @@ QString PCx_Tables::getCSS()
 
 QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
 {
-    Q_ASSERT(node>0);
-    if(auditModel==nullptr)
+    if(node==0||auditModel==nullptr)
     {
-        qWarning()<<"Invalid model usage";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());

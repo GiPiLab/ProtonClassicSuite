@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>251</width>
+    <width>292</width>
     <height>326</height>
    </rect>
   </property>
@@ -124,7 +124,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un audit prévisionnel indépendant qui contiendra les données de l'audit existant sur lesquelles sont adossées les prévisions &lt;span style=&quot; font-weight:600;&quot;&gt;ainsi que les valeurs calculées par les critères de prévision pour l'année N+1.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>Vers &amp;audit</string>
+         <string>Vers &amp;audit étendu</string>
         </property>
        </widget>
       </item>
@@ -163,11 +163,11 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>comboListPrevisions</tabstop>
+  <tabstop>pushButtonDelete</tabstop>
+  <tabstop>pushButtonToAudit</tabstop>
   <tabstop>comboListAudits</tabstop>
   <tabstop>pushButtonAddPrevision</tabstop>
-  <tabstop>comboListPrevisions</tabstop>
-  <tabstop>pushButtonToAudit</tabstop>
-  <tabstop>pushButtonDelete</tabstop>
  </tabstops>
  <resources/>
  <connections/>

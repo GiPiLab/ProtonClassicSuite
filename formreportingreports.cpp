@@ -76,7 +76,10 @@ void FormReportingReports::on_comboListReportings_activated(int index)
     ui->comboListTypes->clear();
 
     QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTree()->getAllTypes();
-    Q_ASSERT(!listOfTypes.isEmpty());
+    if(listOfTypes.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     QPair<unsigned int, QString> p;
     foreach(p,listOfTypes)
     {

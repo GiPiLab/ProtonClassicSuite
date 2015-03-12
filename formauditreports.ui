@@ -66,6 +66,9 @@
        </item>
        <item row="4" column="0">
         <widget class="QPushButton" name="pushButtonSelectType">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sélection par type&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Sélectionner les :</string>
          </property>
@@ -131,6 +134,9 @@
            <verstretch>3</verstretch>
           </sizepolicy>
          </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des tableaux pouvant être incorporés dans le rapport. Seul les éléments sélectionnés seront pris en compte.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -153,6 +159,9 @@
            <verstretch>2</verstretch>
           </sizepolicy>
          </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des graphiques pouvant être incorporés dans le rapport. Seul les éléments sélectionnés seront pris en compte.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -169,6 +178,9 @@
        </item>
        <item row="6" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste de préselections de tableaux et de graphiques. Un clic sur un des boutons ajoute la préselection à la sélection de tableaux et de graphiques actuelle.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="title">
           <string>Présélections</string>
          </property>
@@ -264,6 +276,9 @@
    </item>
    <item row="2" column="0">
     <widget class="QGroupBox" name="groupBoxTraversal">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ordre dans lequel les noeuds seront présentés à l'intérieur du rapport.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="title">
       <string>Ordre d'affichage des noeuds</string>
      </property>
@@ -321,10 +336,40 @@
       <iconset resource="Images.qrc">
        <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
      </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListAudits</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>pushButtonSelectAllNodes</tabstop>
+  <tabstop>pushButtonUnSelectAllNodes</tabstop>
+  <tabstop>pushButtonSelectType</tabstop>
+  <tabstop>comboListTypes</tabstop>
+  <tabstop>radioButtonDFS</tabstop>
+  <tabstop>radioButtonBFS</tabstop>
+  <tabstop>checkBoxDF</tabstop>
+  <tabstop>checkBoxRF</tabstop>
+  <tabstop>checkBoxDI</tabstop>
+  <tabstop>checkBoxRI</tabstop>
+  <tabstop>listTables</tabstop>
+  <tabstop>listGraphics</tabstop>
+  <tabstop>pushButtonPoidsRelatifs</tabstop>
+  <tabstop>pushButtonEvolution</tabstop>
+  <tabstop>pushButtonBase100</tabstop>
+  <tabstop>pushButtonSelectAll</tabstop>
+  <tabstop>pushButtonJoursAct</tabstop>
+  <tabstop>pushButtonEvolutionCumul</tabstop>
+  <tabstop>pushButtonResultats</tabstop>
+  <tabstop>pushButtonSelectNone</tabstop>
+  <tabstop>saveButton</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

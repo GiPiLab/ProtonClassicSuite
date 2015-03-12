@@ -29,6 +29,7 @@
     </qresource>
     <qresource prefix="/Pictures">
         <file>icons/logo.png</file>
+        <file>icons/sample_tree.png</file>
     </qresource>
     <qresource prefix="/EULA">
         <file>EULA.txt</file>

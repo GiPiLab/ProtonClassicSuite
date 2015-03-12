@@ -192,10 +192,22 @@
          <property name="text">
           <string>Copier</string>
          </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item row="3" column="0" colspan="2">
-        <widget class="QTextEdit" name="textEdit"/>
+        <widget class="QTextEdit" name="textEdit">
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Astuce : redimensionner la fenêtre est plus rapide lorsque cette zone est vide&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item row="4" column="1">
         <widget class="QPushButton" name="pushButtonClear">
@@ -346,6 +358,39 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListReportings</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>radioButtonDF</tabstop>
+  <tabstop>radioButtonRF</tabstop>
+  <tabstop>radioButtonDI</tabstop>
+  <tabstop>radioButtonRI</tabstop>
+  <tabstop>comboBoxRefColumn</tabstop>
+  <tabstop>radioButtonRFDF</tabstop>
+  <tabstop>radioButtonRIDI</tabstop>
+  <tabstop>radioButtonRFDFRIDI</tabstop>
+  <tabstop>comboBoxRefDate</tabstop>
+  <tabstop>checkBoxOuverts</tabstop>
+  <tabstop>checkBoxRealises</tabstop>
+  <tabstop>checkBoxEngages</tabstop>
+  <tabstop>checkBoxDisponibles</tabstop>
+  <tabstop>checkBoxBP</tabstop>
+  <tabstop>checkBoxReports</tabstop>
+  <tabstop>checkBoxOCDM</tabstop>
+  <tabstop>checkBoxVCDM</tabstop>
+  <tabstop>checkBoxBudgetVote</tabstop>
+  <tabstop>checkBoxVCInternes</tabstop>
+  <tabstop>checkBoxRattaches</tabstop>
+  <tabstop>pushButtonSelectAll</tabstop>
+  <tabstop>pushButtonSelectNone</tabstop>
+  <tabstop>tableView</tabstop>
+  <tabstop>pushButtonCopyToDocument</tabstop>
+  <tabstop>textEdit</tabstop>
+  <tabstop>pushButtonExportHTML</tabstop>
+  <tabstop>pushButtonClear</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

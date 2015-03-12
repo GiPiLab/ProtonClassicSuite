@@ -147,7 +147,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     out.append(QString("<h2 id='node%1'>"+prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped()+"</h2>").arg(nodeId));
     out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").arg(year).arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
     out.append(getPrevisionItemAsHTML());
-    double prevNode=getSummedPrevisionItemValue();
+    double prevNode;
     out.append("<p align='center'><b>Données historiques et prévision</b></p>");
 
     out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,

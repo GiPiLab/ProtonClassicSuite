@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>490</height>
+    <width>454</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,11 +23,14 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="groupBoxAudits">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette zone concerne les audits existants dans la base de données active. Elle permet notamment de charger et d'exporter les données de l'audit actif à partir d'un fichier Excel, de dupliquer l'audit et de le terminer.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="title">
       <string>Audits existants</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="0" colspan="2">
+      <item row="1" column="0" colspan="4">
        <layout class="QFormLayout" name="formLayout">
         <property name="fieldGrowthPolicy">
          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -125,34 +128,326 @@
         </item>
        </layout>
       </item>
-      <item row="7" column="0">
+      <item row="3" column="1">
+       <widget class="QPushButton" name="pushButtonLoadRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel. Le fichier doit contenir uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Vous pouvez utiliser le bouton &amp;quot;Générer un squelette&amp;quot; pour fabriquer un fichier qui contiendra les noms des feuilles pour toutes les années de l'audit.&lt;/p&gt;&lt;p&gt;L'ordre des lignes n'a pas d'influence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Charger RF</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="pushButtonClearDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Effacer toutes les dépenses de fonctionnement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Efface toutes les données contenues dans l'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Vider DF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" colspan="4">
+       <widget class="QComboBox" name="comboListOfAudits"/>
+      </item>
+      <item row="5" column="1">
+       <widget class="QPushButton" name="pushButtonClearRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Effacer toutes les recettes de fonctionnement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Efface toutes les données contenues dans l'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Vider RF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QPushButton" name="pushButtonRandomDF">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplir l'audit de données aléatoires en écrasant toutes les valeurs existantes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplace les données contenues dans l'audit par des valeurs générées aléatoirement, afin de pouvoir rapidement tester les tableaux et graphiques proposés par ProtonClassicSuite sans nécessairement avoir à disposition un jeu de données complet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Aléatoire DF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QPushButton" name="pushButtonClearDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Effacer toutes les dépenses d'investissement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Efface toutes les données contenues dans l'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Vider DI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QPushButton" name="pushButtonClearRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Effacer toutes les recettes d'investissement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Efface toutes les données contenues dans l'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Vider RI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="2" colspan="2">
+       <widget class="QPushButton" name="finishAuditButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Terminer l'audit sélectionné. Un audit terminé ne peut plus être modifié&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Terminer l'audit sélectionné. Un audit terminé ne peut plus être modifié autrement qu'en le dupliquant, mais il est indispensable de le terminer avant de pouvoir l'exploiter (exploration, rapports, requêtes, prévisions)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Terminer audit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QPushButton" name="pushButtonRandomDI">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplir l'audit de données aléatoires en écrasant toutes les valeurs existantes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplace les données contenues dans l'audit par des valeurs générées aléatoirement, afin de pouvoir rapidement tester les tableaux et graphiques proposés par ProtonClassicSuite sans nécessairement avoir à disposition un jeu de données complet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Aléatoire DI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QPushButton" name="pushButtonRandomRI">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplir l'audit de données aléatoires en écrasant toutes les valeurs existantes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplace les données contenues dans l'audit par des valeurs générées aléatoirement, afin de pouvoir rapidement tester les tableaux et graphiques proposés par ProtonClassicSuite sans nécessairement avoir à disposition un jeu de données complet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Aléatoire RI</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="pushButtonLoadDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel. Le fichier doit contenir uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Vous pouvez utiliser le bouton &amp;quot;Générer un squelette&amp;quot; pour fabriquer un fichier qui contiendra les noms des feuilles pour toutes les années de l'audit.&lt;/p&gt;&lt;p&gt;L'ordre des lignes n'a pas d'influence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Charger DF</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="pushButtonLoadRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel. Le fichier doit contenir uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Vous pouvez utiliser le bouton &amp;quot;Générer un squelette&amp;quot; pour fabriquer un fichier qui contiendra les noms des feuilles pour toutes les années de l'audit.&lt;/p&gt;&lt;p&gt;L'ordre des lignes n'a pas d'influence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Charger RI</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="2" colspan="2">
+       <widget class="QPushButton" name="cloneAuditButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dupliquer un audit afin d'en étendre (ou restreindre) les années d'application. L'audit nouvellement crée sera dans l'état &amp;quot;non terminé&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dupliquer un audit afin d'en étendre (ou restreindre) les années d'application. L'audit nouvellement crée sera dans l'état &amp;quot;non terminé&amp;quot;. L'audit nouvellement dupliqué est totalement indépendant de l'audit d'origine, c'est-à-dire que les modifications apportées sur l'un ne se répercutent pas sur l'autre.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Dupliquer audit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QPushButton" name="pushButtonLoadDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit à partir d'un fichier Excel. Le fichier doit contenir uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;Vous pouvez utiliser le bouton &amp;quot;Générer un squelette&amp;quot; pour fabriquer un fichier qui contiendra les noms des feuilles pour toutes les années de l'audit.&lt;/p&gt;&lt;p&gt;L'ordre des lignes n'a pas d'influence.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Charger DI</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QPushButton" name="pushButtonExportDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données des feuilles dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données d'un audit dans un fichier Excel. Le fichier contiendra uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Exporter DI</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="pushButtonExportRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données des feuilles dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données d'un audit dans un fichier Excel. Le fichier contiendra uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Exporter RF</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="pushButtonExportDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données des feuilles dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données d'un audit dans un fichier Excel. Le fichier contiendra uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Exporter DF</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QPushButton" name="pushButtonExportRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données des feuilles dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données d'un audit dans un fichier Excel. Le fichier contiendra uniquement les valeurs des &lt;span style=&quot; font-weight:600;&quot;&gt;feuilles&lt;/span&gt; de l'arbre, les valeurs des noeuds étant obtenues par aggrégation des feuilles. Le fichier est sur six colonnes avec une feuille par ligne et par année, par exemple :&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Année&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Prévu&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Réalisé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Engagé&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2010&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;100000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;97000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;Maire adjoint&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Pierre&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;2011&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;120000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;110000&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Exporter RI</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0" colspan="2">
+       <widget class="QPushButton" name="statisticsAuditButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Statistiques de saisie pour l'audit actif&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Statistiques de saisie</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0" colspan="2">
        <widget class="QPushButton" name="deleteAuditButton">
         <property name="text">
          <string>Supprimer audit</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QComboBox" name="comboListOfAudits"/>
-      </item>
-      <item row="7" column="1">
-       <widget class="QPushButton" name="cloneAuditButton">
+      <item row="6" column="1">
+       <widget class="QPushButton" name="pushButtonRandomRF">
+        <property name="font">
+         <font>
+          <italic>true</italic>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplir l'audit de données aléatoires en écrasant toutes les valeurs existantes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remplace les données contenues dans l'audit par des valeurs générées aléatoirement, afin de pouvoir rapidement tester les tableaux et graphiques proposés par ProtonClassicSuite sans nécessairement avoir à disposition un jeu de données complet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>Dupliquer audit</string>
+         <string>Aléatoire RF</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="finishAuditButton">
-        <property name="text">
-         <string>Terminer audit</string>
+      <item row="2" column="0" colspan="4">
+       <widget class="QPushButton" name="pushButtonSkel">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Génère le fichier squelette à remplir pour l'audit sélectionné&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="statisticsAuditButton">
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Génère un fichier squelette contenant les feuilles à remplir pour cet audit. Une fois complété ce fichier pourra être chargé à l'aide des boutons ci-dessous.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>Statistiques de saisie</string>
+         <string>Générer le fichier squelette</string>
+        </property>
+        <property name="icon">
+         <iconset resource="Images.qrc">
+          <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
         </property>
        </widget>
       </item>
@@ -167,6 +462,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette zone permet de déclarer un nouvel audit. Un audit ne peut être déclaré qu'à partir d'un arbre terminé. Une fois créé, utilisez la fenêtre &amp;quot;saisie des données&amp;quot; pour le remplir manuellement, ou alors les boutons &amp;quot;Générer le fichier squelette&amp;quot; puis &amp;quot;Charger ...&amp;quot; pour utiliser un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="title">
       <string>Nouvel audit</string>
      </property>
@@ -179,13 +477,22 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un nouvel audit. Une fois créé, utilisez la fenêtre &amp;quot;saisie des données&amp;quot; pour le remplir manuellement, ou alors les boutons &amp;quot;Générer le fichier squelette&amp;quot; puis &amp;quot;Charger ...&amp;quot; pour utiliser un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Créer un nouvel audit</string>
+        </property>
+        <property name="default">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item row="5" column="1">
        <widget class="QSpinBox" name="spinBoxTo">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Année de fin de l'audit (inclus)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
@@ -205,6 +512,9 @@
         <property name="text">
          <string>à :</string>
         </property>
+        <property name="buddy">
+         <cstring>spinBoxTo</cstring>
+        </property>
        </widget>
       </item>
       <item row="0" column="0">
@@ -221,8 +531,21 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>De :</string>
+        </property>
+        <property name="buddy">
+         <cstring>spinBoxFrom</cstring>
+        </property>
+       </widget>
+      </item>
       <item row="4" column="1">
        <widget class="QSpinBox" name="spinBoxFrom">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Année de début de l'audit (inclus)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
@@ -237,10 +560,13 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label">
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pushButtonDisplayTree">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Afficher un instantané de l'arbre associé&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>De :</string>
+         <string>Afficher</string>
         </property>
        </widget>
       </item>
@@ -252,12 +578,8 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pushButtonDisplayTree">
-        <property name="text">
-         <string>Afficher</string>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sélectionner l'arbre terminé sur lequel portera l'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -267,10 +589,33 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>comboListOfTrees</tabstop>
   <tabstop>comboListOfAudits</tabstop>
-  <tabstop>deleteAuditButton</tabstop>
+  <tabstop>pushButtonSkel</tabstop>
+  <tabstop>pushButtonLoadDF</tabstop>
+  <tabstop>pushButtonLoadRF</tabstop>
+  <tabstop>pushButtonLoadDI</tabstop>
+  <tabstop>pushButtonLoadRI</tabstop>
+  <tabstop>pushButtonExportDF</tabstop>
+  <tabstop>pushButtonExportRF</tabstop>
+  <tabstop>pushButtonExportDI</tabstop>
+  <tabstop>pushButtonExportRI</tabstop>
+  <tabstop>pushButtonClearDF</tabstop>
+  <tabstop>pushButtonClearRF</tabstop>
+  <tabstop>pushButtonClearDI</tabstop>
+  <tabstop>pushButtonClearRI</tabstop>
+  <tabstop>pushButtonRandomDF</tabstop>
+  <tabstop>pushButtonRandomRF</tabstop>
+  <tabstop>pushButtonRandomDI</tabstop>
+  <tabstop>pushButtonRandomRI</tabstop>
+  <tabstop>statisticsAuditButton</tabstop>
   <tabstop>cloneAuditButton</tabstop>
+  <tabstop>deleteAuditButton</tabstop>
+  <tabstop>finishAuditButton</tabstop>
+  <tabstop>comboListOfTrees</tabstop>
+  <tabstop>pushButtonDisplayTree</tabstop>
+  <tabstop>spinBoxFrom</tabstop>
+  <tabstop>spinBoxTo</tabstop>
+  <tabstop>addAuditButton</tabstop>
  </tabstops>
  <resources>
   <include location="Images.qrc"/>

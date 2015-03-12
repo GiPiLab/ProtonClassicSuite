@@ -5,6 +5,7 @@
 #include <QTextDocument>
 #include <QMessageBox>
 
+
 FormReportingSupervision::FormReportingSupervision(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormReportingSupervision)
@@ -13,7 +14,7 @@ FormReportingSupervision::FormReportingSupervision(QWidget *parent) :
     selectedReporting=nullptr;
     model=nullptr;
     proxyModel=nullptr;
-    updateListOfReportings();
+    updateListOfReportings();    
 }
 
 void FormReportingSupervision::setColumnVisibility()
@@ -79,9 +80,11 @@ void FormReportingSupervision::onReportingDataChanged(unsigned int reportingId)
 {
     if(selectedReporting->getReportingId()==reportingId)
     {
-        model->setMode(getSelectedMode());
+        updateDateRefCombo();
+        model->setMode(getSelectedMode());        
     }
 }
+
 void FormReportingSupervision::on_comboListReportings_activated(int index)
 {
     if(index==-1 || ui->comboListReportings->count()==0)return;
@@ -271,7 +274,7 @@ void FormReportingSupervision::on_pushButtonExportHTML_clicked()
 
     out.append(QString("<p>%1</p>").arg(MODES::modeToCompleteString(getSelectedMode())));
 
-    out.append(qTableViewToHtml(ui->tableView));
+    out.append(ui->textEdit->toHtml());
 
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
@@ -290,6 +293,7 @@ void FormReportingSupervision::on_pushButtonExportHTML_clicked()
         QMessageBox::critical(this,tr("Attention"),tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
         return;
     }
+
 
     QTextDocument doc;
     doc.setHtml(out);
@@ -353,6 +357,8 @@ void FormReportingSupervision::updateDateRefCombo()
 
 }
 
+
+
 void FormReportingSupervision::on_pushButtonSelectNone_clicked()
 {
     ui->checkBox15NRest->setChecked(false);
@@ -406,4 +412,15 @@ void FormReportingSupervision::on_comboBoxListDates_activated(int index)
     model->setDateTimeT(selectedDate);
 
     ui->tableView->resizeColumnsToContents();
+}
+
+void FormReportingSupervision::on_pushButtonCopy_clicked()
+{
+    QTextCursor cursor=ui->textEdit->textCursor();
+    cursor.insertHtml(qTableViewToHtml(ui->tableView)+"<br>");
+}
+
+void FormReportingSupervision::on_pushButtonClear_clicked()
+{
+    ui->textEdit->clear();
 }

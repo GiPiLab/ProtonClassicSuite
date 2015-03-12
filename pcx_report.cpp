@@ -4,7 +4,10 @@
 
 PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):auditModel(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
-    Q_ASSERT(model!=nullptr);
+    if(model==nullptr)
+    {
+        qFatal("Assertion failed");
+    }
     reportingModel=nullptr;
 }
 
@@ -17,11 +20,9 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
                                                    unsigned int selectedNode, MODES::DFRFDIRI mode, QTextDocument *document, const QString &absoluteImagePath,
                                                    const QString &relativeImagePath, QProgressDialog *progress,const PCx_PrevisionItem *prevItem) const
 {
-    Q_ASSERT(selectedNode>0);
-    if(auditModel==nullptr)
+    if(selectedNode==0 || auditModel==nullptr)
     {
-        qCritical()<<"Invalid null audit model";
-        return QString();
+        qFatal("Assertion failed");
     }
 
     QString output;

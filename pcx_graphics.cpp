@@ -10,7 +10,10 @@ using namespace NUMBERSFORMAT;
 
 PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):auditModel(model)
 {
-    Q_ASSERT(model!=nullptr);
+    if(model==nullptr)
+    {
+        qFatal("Assertion failed");
+    }
     reportingModel=nullptr;
     setGraphicsWidth(graphicsWidth);
     setGraphicsHeight(graphicsHeight);
@@ -31,7 +34,10 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
 
 PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight, double scale):reportingModel(reportingModel)
 {
-    Q_ASSERT(reportingModel!=nullptr);
+    if(reportingModel==nullptr)
+    {
+        qFatal("Assertion failed");
+    }
     auditModel=nullptr;
     setGraphicsWidth(graphicsWidth);
     setGraphicsHeight(graphicsHeight);
@@ -59,12 +65,11 @@ PCx_Graphics::~PCx_Graphics()
 
 QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule, const PCx_PrevisionItem *prevItem) const
 {
-    Q_ASSERT(node>0 && plot!=nullptr);
-    if(auditModel==nullptr)
+    if(node==0 || plot==nullptr || auditModel==nullptr)
     {
-        qWarning()<<"Model error";
-        return QString();
+        qFatal("Assertion failed");
     }
+
     QString tableName=MODES::modeToTableString(mode);
     QString oredName=PCx_Audit::OREDtoTableString(modeORED);
 
@@ -118,7 +123,10 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
 
     //dataRoot and dataNode must have the same keys
-    Q_ASSERT(dataRoot.keys()==dataNode.keys());
+    if(dataRoot.keys()!=dataNode.keys())
+    {
+        qFatal("Assertion failed");
+    }
 
     qint64 firstYearDataRoot=dataRoot.value(firstYear);
     qint64 firstYearDataNode=dataNode.value(firstYear);
@@ -201,7 +209,10 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     plot->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
 
     //Add value labels to points
-    Q_ASSERT(dataPlotRoot.keys()==dataPlotNode.keys());
+    if(dataPlotRoot.keys()!=dataPlotNode.keys())
+    {
+        qFatal("Assertion failed");
+    }
     int i=0;
 
     foreach(double key,dataPlotRoot.keys())
@@ -316,13 +327,10 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
 QString PCx_Graphics::getPCAG9(unsigned int node) const
 {
-    Q_ASSERT(node>0 && plot!=nullptr);
-    if(auditModel==nullptr)
+    if(node==0 || plot==nullptr|| auditModel==nullptr)
     {
-        qWarning()<<"Model error";
-        return QString();
+        qFatal("Assertion failed");
     }
-
 
     QString plotTitle;
 

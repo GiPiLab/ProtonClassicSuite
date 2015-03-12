@@ -102,6 +102,9 @@
           </item>
           <item row="0" column="0" colspan="2">
            <widget class="QRadioButton" name="radioButtonGlobal">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Résultats combinant les dépenses et les recettes de fonctionnement et d'investissement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Résultats globaux</string>
             </property>
@@ -122,6 +125,9 @@
        </item>
        <item row="5" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxTables">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des tableaux à afficher&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="title">
           <string>Tableaux</string>
          </property>
@@ -220,6 +226,9 @@
        </item>
        <item row="6" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxGraphics">
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des graphiques à afficher&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="title">
           <string>Graphiques</string>
          </property>
@@ -400,6 +409,9 @@
           <iconset resource="Images.qrc">
            <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
          </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -408,6 +420,34 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListAudits</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>radioButtonGlobal</tabstop>
+  <tabstop>radioButtonDF</tabstop>
+  <tabstop>radioButtonDI</tabstop>
+  <tabstop>radioButtonRF</tabstop>
+  <tabstop>radioButtonRI</tabstop>
+  <tabstop>checkBoxResults</tabstop>
+  <tabstop>checkBoxPoidsRelatif</tabstop>
+  <tabstop>checkBoxEvolution</tabstop>
+  <tabstop>checkBoxBase100</tabstop>
+  <tabstop>checkBoxEvolutionCumul</tabstop>
+  <tabstop>checkBoxJoursAct</tabstop>
+  <tabstop>checkBoxRecapGraph</tabstop>
+  <tabstop>checkBoxPrevu</tabstop>
+  <tabstop>checkBoxEngage</tabstop>
+  <tabstop>checkBoxPrevuCumul</tabstop>
+  <tabstop>checkBoxEngageCumul</tabstop>
+  <tabstop>checkBoxRealise</tabstop>
+  <tabstop>checkBoxDisponible</tabstop>
+  <tabstop>checkBoxRealiseCumul</tabstop>
+  <tabstop>checkBoxDisponibleCumul</tabstop>
+  <tabstop>textEdit</tabstop>
+  <tabstop>saveButton</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

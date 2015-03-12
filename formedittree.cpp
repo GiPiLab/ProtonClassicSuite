@@ -19,6 +19,7 @@ FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEd
     ui->setupUi(this);
     model=nullptr;
     updateListOfTree();    
+    updateRandomButtonVisibility();
 }
 
 FormEditTree::~FormEditTree()
@@ -56,6 +57,11 @@ void FormEditTree::on_addTypeButton_clicked()
                     QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("Le type <b>%1</b> existe déjà !").arg(text.toHtmlEscaped()));
                     goto redo;
             }
+            if(text.size()>MAXOBJECTNAMELENGTH)
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+                goto redo;
+            }
 
             model->addType(text);
         }
@@ -86,19 +92,31 @@ void FormEditTree::updateListOfTree()
         ui->comboBox->setCurrentIndex(0);
         on_comboBox_activated(0);
     }
+    else
+    {
+        ui->deleteNodeButton->setDisabled(true);
+        ui->addNodeButton->setDisabled(true);
+        ui->addTypeButton->setDisabled(true);
+        ui->deleteTypeButton->setDisabled(true);
+        ui->finishTreeButton->setDisabled(true);
+        ui->modifyNodeButton->setDisabled(true);
+        ui->guessHierarchyButton->setDisabled(true);
+        ui->treeView->setDragEnabled(false);
+        ui->listTypesView->setDisabled(true);
+    }
 }
 
 void FormEditTree::setReadOnly(bool state)
 {
     ui->deleteNodeButton->setDisabled(state);
-    ui->addNodeButton->setDisabled(state);
-    //ui->addTypeButton->setDisabled(state);
-    //ui->deleteTypeButton->setDisabled(state);
+    ui->addNodeButton->setDisabled(state);    
+    ui->addTypeButton->setDisabled(false);
+    ui->deleteTypeButton->setDisabled(false);
     ui->finishTreeButton->setDisabled(state);
-    //ui->modifyNodeButton->setDisabled(state);
+    ui->modifyNodeButton->setDisabled(false);
     ui->guessHierarchyButton->setDisabled(state);
     ui->treeView->setDragEnabled(!state);
-    //ui->listTypesView->setDisabled(state);
+    ui->listTypesView->setDisabled(false);
 }
 
 void FormEditTree::on_deleteTreeButton_clicked()
@@ -161,6 +179,11 @@ void FormEditTree::on_newTreeButton_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
        if(PCx_Tree::addTree(text)!=-1)
        {
            emit(listOfTreeChanged());
@@ -173,20 +196,20 @@ void FormEditTree::on_deleteTypeButton_clicked()
 {
     if(model!=nullptr)
     {
-        if(question(tr("Voulez-vous supprimer ce type ?"))==QMessageBox::No)
-        {
-            return;
-        }
-
-        if(ui->listTypesView->model()->rowCount()==1)
-        {
-            QMessageBox::warning(this,tr("Attention"),tr("Les noeuds doivent tous être typés"));
-            return;
-        }
         QModelIndex index=ui->listTypesView->currentIndex();
-        //qDebug()<<"Selected index = "<<index;
         if(index.row()>-1)
         {
+            if(question(tr("Voulez-vous supprimer ce type ?"))==QMessageBox::No)
+            {
+                return;
+            }
+
+            if(ui->listTypesView->model()->rowCount()==1)
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Les noeuds doivent tous être typés"));
+                return;
+            }
+
             model->deleteType(model->getTypesTableModel()->record(index.row()).field("id").value().toInt());
         }
     }
@@ -201,13 +224,20 @@ void FormEditTree::on_addNodeButton_clicked()
     {
         if(selection.count()>1)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Pas de sélection multiple pour ajouter un noeud !"));
+            QMessageBox::information(this,tr("Information"),tr("Pas de sélection multiple pour ajouter un noeud !"));
             return;
         }
+
+        if(model->getNumberOfNodes()>=PCx_Tree::MAXNODES)
+        {
+            QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("Nombre maximum de noeuds dans l'arbre atteint !"));
+            return;
+        }
+
         QModelIndex indexType=ui->listTypesView->currentIndex();
         if(indexType.row()<0)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez le type de l'élément à ajouter dans la zone de droite"));
+            QMessageBox::information(this,tr("Information"),tr("Sélectionnez le type de l'élément à ajouter dans la zone de droite"));
             return;
         }
 
@@ -232,13 +262,18 @@ void FormEditTree::on_addNodeButton_clicked()
                 QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type avec ce nom !"));
                 goto redo;
             }
+            if(text.size()>PCx_Tree::MAXNODENAMELENGTH)
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+                goto redo;
+            }
             model->addNode(selectedTypeId,text,selection[0]);
         }
 
     }
     else
     {
-        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez d'abord le noeud père dans l'arbre"));
+        QMessageBox::information(this,tr("Information"),tr("Sélectionnez d'abord le noeud père dans l'arbre"));
         return;
     }
 }
@@ -253,7 +288,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
     {
         if(selection.count()>1)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Pas de sélection multiple !"));
+            QMessageBox::information(this,tr("Information"),tr("Pas de sélection multiple pour modifier un noeud !"));
             return;
         }
         unsigned int selectedId=selection[0].data(PCx_TreeModel::NodeIdUserRole).toUInt();
@@ -271,7 +306,7 @@ void FormEditTree::on_modifyNodeButton_clicked()
         QModelIndex indexType=ui->listTypesView->currentIndex();
         if(indexType.row()<0)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez le nouveau type du noeud à modifier dans la zone de droite"));
+            QMessageBox::information(this,tr("Information"),tr("Sélectionnez le nouveau type du noeud à modifier dans la zone de droite"));
             return;
         }
 
@@ -296,13 +331,18 @@ void FormEditTree::on_modifyNodeButton_clicked()
                     QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type portant ce nom dans l'arbre !"));
                     goto redo;
                 }
+                if(text.size()>MAXOBJECTNAMELENGTH)
+                {
+                    QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+                    goto redo;
+                }
                 model->updateNode(selection[0],text,selectedTypeId);
             }
         }
     }
     else
     {
-        QMessageBox::warning(this,tr("Attention"),tr("Sélectionnez le noeud à modifier"));
+        QMessageBox::information(this,tr("Information"),tr("Sélectionnez le noeud à modifier"));
         return;
     }
 }
@@ -318,7 +358,7 @@ void FormEditTree::on_deleteNodeButton_clicked()
     {
         if(selection.count()>1)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Pas de sélection multiple !"));
+            QMessageBox::information(this,tr("Information"),tr("Pas de sélection multiple pour supprimer un noeud !"));
             return;
         }
         //Assume only single selection
@@ -338,6 +378,10 @@ void FormEditTree::on_deleteNodeButton_clicked()
             return;
         }
         model->deleteNode(selection[0]);
+    }
+    else
+    {
+        QMessageBox::information(this,tr("Information"),tr("Sélectionner le noeud à supprimer. Tous ses descendants seront également supprimés"));
     }
 }
 
@@ -389,7 +433,10 @@ void FormEditTree::on_comboBox_activated(int index)
     ui->treeView->expandToDepth(1);
 
     m=ui->listTypesView->selectionModel();
-    Q_ASSERT(model->getTypesTableModel()!=nullptr);
+    if(model->getTypesTableModel()==nullptr)
+    {
+        qFatal("Assertion failed");
+    }
     ui->listTypesView->setModel(model->getTypesTableModel());
     ui->listTypesView->setModelColumn(1);
     delete m;
@@ -420,6 +467,11 @@ void FormEditTree::on_duplicateTreeButton_clicked()
                 QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
                 goto redo;
             }
+            if(text.size()>MAXOBJECTNAMELENGTH)
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+                goto redo;
+            }
             model->duplicateTree(text);
             updateListOfTree();
         }
@@ -448,6 +500,11 @@ void FormEditTree::on_randomTreeButton_clicked()
             if(model->treeNameExists(text))
             {
                 QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
+                goto redo;
+            }
+            if(text.size()>MAXOBJECTNAMELENGTH)
+            {
+                QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
                 goto redo;
             }
 
@@ -494,6 +551,11 @@ void FormEditTree::on_importTreeButton_clicked()
     if(PCx_Tree::treeNameExists(text))
     {
         QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un arbre portant ce nom !"));
+        goto redo;
+    }
+    if(text.size()>MAXOBJECTNAMELENGTH)
+    {
+        QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
         goto redo;
     }
 

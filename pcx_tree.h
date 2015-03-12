@@ -30,8 +30,12 @@ public:
     /**
      * @brief MAXNODES is the maximum allowed number of nodes for a tree
      */
-    static const unsigned int MAXNODES=1700;
+    static const int MAXNODES=1700;
 
+    /**
+     * @brief MAXNODENAMELENGTH is the maximum allowed length of a node or type name
+     */
+    static const int MAXNODENAMELENGTH=512;
 
     /**
      * @brief PCx_Tree is a Tree

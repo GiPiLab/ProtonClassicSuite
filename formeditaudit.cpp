@@ -40,8 +40,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) :
     ui->tableViewDI->setItemDelegate(delegateDI);
     ui->tableViewRI->setItemDelegate(delegateRI);
 
-    updateListOfAudits();
-    updateRandomButtonVisibility();
+    updateListOfAudits();    
 }
 
 FormEditAudit::~FormEditAudit()
@@ -62,12 +61,6 @@ void FormEditAudit::onListOfAuditsChanged()
     updateListOfAudits();
 }
 
-void FormEditAudit::updateRandomButtonVisibility()
-{
-    QSettings settings;
-    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
-    ui->randomDataButton->setEnabled(randomAllowed);
-}
 
 void FormEditAudit::updateListOfAudits()
 {
@@ -142,23 +135,16 @@ void FormEditAudit::on_comboListAudits_activated(int index)
 
     QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);
     ui->treeView->setCurrentIndex(rootIndex);
-    on_treeView_clicked(rootIndex);
-
-
-    bool notFinished=!auditModel->isFinished();
-    ui->pushButtonImportLeaves->setEnabled(notFinished);
-    ui->clearDataButton->setEnabled(notFinished);
-    if(notFinished)
-        updateRandomButtonVisibility();
-    else
-        ui->randomDataButton->setEnabled(false);
-
+    on_treeView_clicked(rootIndex);          
 }
 
 void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
 {
     selectedNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
-    Q_ASSERT(selectedNode>0);
+    if(selectedNode==0)
+    {
+        qFatal("Assertion failed");
+    }
 
     auditModel->getTableModelDF()->setFilter(QString("id_node=%1").arg(selectedNode));
     auditModel->getTableModelRF()->setFilter(QString("id_node=%1").arg(selectedNode));
@@ -188,56 +174,6 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
     ui->label->setText(index.data().toString());
 }
 
-void FormEditAudit::on_randomDataButton_clicked()
-{
-    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
-    if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=MODES::DFRFDIRI::DF;
-    else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=MODES::DFRFDIRI::RF;
-    else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=MODES::DFRFDIRI::DI;
-    else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=MODES::DFRFDIRI::RI;
-
-
-    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
-    {
-        return;
-    }
-
-    //QElapsedTimer timer;
-    //timer.start();
-
-    auditModel->fillWithRandomData(mode);
-    QSqlTableModel *tblModel=auditModel->getTableModel(mode);
-    if(tblModel!=nullptr)
-        tblModel->select();
-
-    //qDebug()<<"Done in "<<timer.elapsed()<<"ms";
-}
-
-void FormEditAudit::on_clearDataButton_clicked()
-{
-
-    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
-
-    if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=MODES::DFRFDIRI::DF;
-    else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=MODES::DFRFDIRI::RF;
-    else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=MODES::DFRFDIRI::DI;
-    else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=MODES::DFRFDIRI::RI;
-
-    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
-    {
-        return;
-    }
-
-    auditModel->clearAllData(mode);
-}
 
 void FormEditAudit::on_pushButtonCollapseAll_clicked()
 {
@@ -260,76 +196,6 @@ void FormEditAudit::on_statsButton_clicked()
     infos->show();
 }
 
-void FormEditAudit::on_pushButtonExportLeaves_clicked()
-{
-    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
-
-
-    if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=MODES::DFRFDIRI::DF;
-    else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=MODES::DFRFDIRI::RF;
-    else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=MODES::DFRFDIRI::DI;
-    else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=MODES::DFRFDIRI::RI;
-
-
-    QFileDialog fileDialog;
-    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
-    if(fileName.isEmpty())
-        return;
-
-    QFileInfo fi(fileName);
-    if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
-        fileName.append(".xlsx");
-    fi=QFileInfo(fileName);
-
-    bool res=auditModel->exportLeavesDataXLSX(mode,fileName);
-
-    if(res==true)
-    {
-        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
-    }
-    else
-    {
-        QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
-    }
-
-}
-
-void FormEditAudit::on_pushButtonImportLeaves_clicked()
-{
-    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
-
-
-    if(ui->tabWidget->currentWidget()==ui->tabDF)
-        mode=MODES::DFRFDIRI::DF;
-    else if(ui->tabWidget->currentWidget()==ui->tabRF)
-        mode=MODES::DFRFDIRI::RF;
-    else if(ui->tabWidget->currentWidget()==ui->tabDI)
-        mode=MODES::DFRFDIRI::DI;
-    else if(ui->tabWidget->currentWidget()==ui->tabRI)
-        mode=MODES::DFRFDIRI::RI;
-
-
-    QFileDialog fileDialog;
-    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
-    if(fileName.isEmpty())
-        return;
-
-    bool res=auditModel->importDataFromXLSX(fileName,mode);
-    QSqlTableModel *tblModel=auditModel->getTableModel(mode);
-    if(tblModel!=nullptr)
-        tblModel->select();
-
-    if(res==true)
-    {
-        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
-    }
-}
 
 void FormEditAudit::onAuditDataUpdated(unsigned int auditId)
 {

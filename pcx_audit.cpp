@@ -20,9 +20,11 @@ using namespace NUMBERSFORMAT;
 PCx_Audit::PCx_Audit(unsigned int auditId,bool _noLoadAttachedTree) :
     auditId(auditId)
 {
-    Q_ASSERT(auditId>0);
+    if(auditId==0)
+    {
+        qFatal("Assertion failed");
+    }
 
-    this->auditId=auditId;
     QSqlQuery q;
     if(!q.exec(QString("select * from index_audits where id='%1'").arg(auditId)))
     {
@@ -266,9 +268,13 @@ void PCx_Audit::clearAllData(MODES::DFRFDIRI mode)
     }
 }
 
-int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI) const
+int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years, bool copyDF, bool copyRF, bool copyDI, bool copyRI,bool copyQueries) const
 {
-    Q_ASSERT(!newName.isEmpty());
+    if(newName.isEmpty()||newName.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
+
     if(PCx_Audit::auditNameExists(newName))
     {
         qWarning()<<"Audit name already exists !";
@@ -299,7 +305,10 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
 
     unsigned int newAuditId=PCx_Audit::addNewAudit(newName,years,attachedTreeId);
 
-    Q_ASSERT(newAuditId>0);
+    if(newAuditId==0)
+    {
+        qFatal("Assertion failed");
+    }
 
     qSort(years);
     progress.setValue(1);
@@ -408,13 +417,17 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
     }
 
     progress.setValue(progress.maximum());
-    q.exec(QString("insert into audit_queries_%1 select * from audit_queries_%2").arg(newAuditId).arg(auditId));
-    if(q.numRowsAffected()<0)
+
+    if(copyQueries)
     {
-        QSqlDatabase::database().rollback();
-        PCx_Audit::deleteAudit(newAuditId);
-        qCritical()<<q.lastError();
-        die();
+        q.exec(QString("insert into audit_queries_%1 select * from audit_queries_%2").arg(newAuditId).arg(auditId));
+        if(q.numRowsAffected()<0)
+        {
+            QSqlDatabase::database().rollback();
+            PCx_Audit::deleteAudit(newAuditId);
+            qCritical()<<q.lastError();
+            die();
+        }
     }
 
     QSqlDatabase::database().commit();
@@ -642,7 +655,10 @@ QString PCx_Audit::getHTMLAuditStatistics() const
 QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(MODES::DFRFDIRI mode,unsigned int year) const
 {
     QString tableMode=MODES::modeToTableString(mode);
-    Q_ASSERT(year>=years.first()&& year<=years.last());
+    if(!(year>=years.first()&& year<=years.last()))
+    {
+        qFatal("Assertion failed");
+    }
     QList<unsigned int> nodes;
     QStringList oredStrings;
     oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS)
@@ -670,7 +686,10 @@ QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(MODES::DFRFDIRI mode,un
 QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(MODES::DFRFDIRI mode,unsigned int year) const
 {
     QString tableMode=MODES::modeToTableString(mode);
-    Q_ASSERT(year>=years.first()&& year<=years.last());
+    if(!(year>=years.first()&& year<=years.last()))
+    {
+        qFatal("Assertion failed");
+    }
     QList<unsigned int> nodes;
     QStringList oredStrings;
     oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS)
@@ -697,7 +716,10 @@ QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(MODES::DFRFDIRI mode,un
 QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(MODES::DFRFDIRI mode, unsigned int year) const
 {
     QString tableMode=MODES::modeToTableString(mode);
-    Q_ASSERT(year>=years.first()&& year<=years.last());
+    if(!(year>=years.first()&& year<=years.last()))
+    {
+        qFatal("Assertion failed");
+    }
     QList<unsigned int> nodes;
     QStringList oredStrings;
     oredStrings<<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS)<<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES)
@@ -724,7 +746,10 @@ QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(MODES::DFRFDIRI mode, u
 
 bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode)
 {
-    Q_ASSERT(!fileName.isEmpty());
+    if(fileName.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     //QElapsedTimer timer;
     //timer.start();
 
@@ -784,9 +809,15 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
         typeAndNode.second=nodeName.toString().simplified();
         if(typeAndNode.first.isEmpty() || typeAndNode.second.isEmpty())
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud ne peuvent pas être vides (ni composés d'espaces)").arg(row));
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud ne peuvent pas être vides (ni composés uniquement d'espaces)").arg(row));
             return false;
 
+        }
+
+        if(typeAndNode.first.size()>PCx_Tree::MAXNODENAMELENGTH || typeAndNode.second.size()>PCx_Tree::MAXNODENAMELENGTH)
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud sont trop longs").arg(row));
+            return false;
         }
 
         if(!years.contains(year.toUInt()))
@@ -1117,7 +1148,10 @@ PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &oredString)
 
 unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId)
 {
-    Q_ASSERT(!years.isEmpty() && !name.isEmpty() && attachedTreeId>0);
+    if(years.isEmpty() || name.isEmpty() || attachedTreeId==0 || name.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
 
     //Removes duplicates and sort years
     QSet<unsigned int> yearsSet=years.toSet();
@@ -1348,7 +1382,10 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, QList<unsigned int> yea
 
 bool PCx_Audit::deleteAudit(unsigned int auditId)
 {
-    Q_ASSERT(auditId>0);
+    if(auditId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q(QString("select count(*) from index_audits where id='%1'").arg(auditId));
     if(!q.exec())
     {
@@ -1512,9 +1549,12 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode m
 
 QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisTree(unsigned int treeId, PCx_Audit::ListAuditsMode mode)
 {
+    if(treeId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QList<QPair<unsigned int,QString> > listOfAudits;
     QDateTime dt;
-    Q_ASSERT(treeId>0);
 
     QSqlQuery query;
     query.prepare("select * from index_audits where id_arbre=:idarbre order by datetime(le_timestamp)");
@@ -1555,4 +1595,33 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisT
     return listOfAudits;
 }
 
+bool PCx_Audit::exportLeavesSkeleton(const QString &fileName) const
+{
+    QXlsx::Document xlsx;
+    QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
+    xlsx.write(1,1,"Type noeud");
+    xlsx.write(1,2,"Nom noeud");
+    xlsx.write(1,3,"Année");
+    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(ORED::OUVERTS));
+    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(ORED::REALISES));
+    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(ORED::ENGAGES));
+
+    int row=2;
+    foreach(unsigned int year, years)
+    {
+        foreach(unsigned int leaf, leavesId)
+        {
+            QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leaf);
+            xlsx.write(row,1,typeAndNodeName.first);
+            xlsx.write(row,2,typeAndNodeName.second);
+            xlsx.write(row,3,year);
+            xlsx.write(row,4,0);
+            xlsx.write(row,5,0);
+            xlsx.write(row,6,0);
+            row++;
+        }
+    }
+
+    return xlsx.saveAs(fileName);
+}
 

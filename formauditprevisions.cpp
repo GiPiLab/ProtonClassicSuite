@@ -92,6 +92,8 @@ void FormAuditPrevisions::onListOfPrevisionsChanged()
 
 void FormAuditPrevisions::onSettingsChanged()
 {
+    if(auditWithTreeModel==nullptr)
+        return;
     if(ui->treeView->currentIndex().isValid())
     {
         on_treeView_clicked(ui->treeView->currentIndex());
@@ -162,8 +164,8 @@ void FormAuditPrevisions::updateLabels()
 {
     const QString &nodeName=auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId);
     ui->labelNodeName->setText(nodeName);
-    ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(auditWithTreeModel->getNodeValue
-                                                             (currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last())));
+    qint64 lastValueN=auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last());
+    ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(lastValueN));
     ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getSummedPrevisionItemValue()));
     ui->labelValuePrevisionItem->setText(NUMBERSFORMAT::formatFixedPoint(recentPrevisionItem->getPrevisionItemValue()));
     ui->labelValueAppliedItems->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getPrevisionItemValue()));
@@ -185,7 +187,10 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
 {
     if(index==-1||ui->comboListPrevisions->count()==0)return;
     unsigned int selectedPrevisionId=ui->comboListPrevisions->currentData().toUInt();
-    Q_ASSERT(selectedPrevisionId>0);
+    if(!(selectedPrevisionId>0))
+    {
+        qFatal("Assertion failed");
+    }
     //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(previsionModel!=nullptr)

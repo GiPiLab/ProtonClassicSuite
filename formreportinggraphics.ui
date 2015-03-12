@@ -212,7 +212,10 @@
        <item>
         <widget class="QPushButton" name="pushButtonExportPlot">
          <property name="text">
-          <string>Enregistrer</string>
+          <string>Enregistrer l'image</string>
+         </property>
+         <property name="default">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -230,6 +233,28 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>comboListOfReportings</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>radioButtonDF</tabstop>
+  <tabstop>radioButtonRF</tabstop>
+  <tabstop>radioButtonDI</tabstop>
+  <tabstop>radioButtonRI</tabstop>
+  <tabstop>checkBoxBP</tabstop>
+  <tabstop>checkBoxReports</tabstop>
+  <tabstop>checkBoxOCDM</tabstop>
+  <tabstop>checkBoxVCDM</tabstop>
+  <tabstop>checkBoxBudgetVote</tabstop>
+  <tabstop>checkBoxPrevus</tabstop>
+  <tabstop>checkBoxRealises</tabstop>
+  <tabstop>checkBoxEngages</tabstop>
+  <tabstop>checkBoxDisponibles</tabstop>
+  <tabstop>checkBoxVInternes</tabstop>
+  <tabstop>checkBoxRattachesN1</tabstop>
+  <tabstop>pushButtonExportPlot</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

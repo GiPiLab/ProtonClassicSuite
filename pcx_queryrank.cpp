@@ -20,7 +20,10 @@ PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::O
 
 bool PCx_QueryRank::save(const QString &name) const
 {
-    Q_ASSERT(!name.isEmpty());
+    if(name.isEmpty()|| name.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
 
     QSqlQuery q;
     q.prepare(QString("insert into audit_queries_%1 (name,query_mode,target_type,ored,dfrfdiri,"
@@ -47,7 +50,10 @@ bool PCx_QueryRank::save(const QString &name) const
 
 QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
 {
-    Q_ASSERT(year1>0 && year2>0 && year1<=year2 && year1<3000 && year2>1900);
+    if(!(year1>0 && year2>0 && year1<=year2))
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
 
     QString oredString=PCx_Audit::OREDtoTableString(ored);

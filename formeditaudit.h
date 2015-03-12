@@ -19,7 +19,6 @@ public:
 
 public slots:
     void onListOfAuditsChanged();
-    void updateRandomButtonVisibility();
     void onAuditDataUpdated(unsigned int auditId);
 
 private slots:
@@ -27,19 +26,11 @@ private slots:
 
     void on_treeView_clicked(const QModelIndex &index);
 
-    void on_randomDataButton_clicked();
-
-    void on_clearDataButton_clicked();
-
     void on_pushButtonCollapseAll_clicked();
 
     void on_pushButtonExpandAll_clicked();
 
     void on_statsButton_clicked();
-
-    void on_pushButtonExportLeaves_clicked();
-
-    void on_pushButtonImportLeaves_clicked();
 
     void on_pushButtonExportHTML_clicked();
 

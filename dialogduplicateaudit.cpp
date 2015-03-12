@@ -14,9 +14,10 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     ui->labelOldYears->setText(oldAudit->getYearsString());
     ui->spinBoxYear1->setValue(oldAudit->getYears().first());
     ui->spinBoxYear2->setValue(oldAudit->getYears().last());
-    QDate date=QDate::currentDate();
-    ui->spinBoxYear1->setMaximum(date.year());
-    ui->spinBoxYear2->setMaximum(date.year()+1);
+   //Remove date constraints
+    // QDate date=QDate::currentDate();
+   // ui->spinBoxYear1->setMaximum(date.year());
+   // ui->spinBoxYear2->setMaximum(date.year()+1);
 }
 
 DialogDuplicateAudit::~DialogDuplicateAudit()
@@ -58,7 +59,7 @@ void DialogDuplicateAudit::on_pushButton_clicked()
     {
 
         int res=oldAudit->duplicateAudit(newName,years,ui->checkBoxDF->isChecked(),ui->checkBoxRF->isChecked(),
-                                         ui->checkBoxDI->isChecked(),ui->checkBoxRI->isChecked());
+                                         ui->checkBoxDI->isChecked(),ui->checkBoxRI->isChecked(),ui->checkBoxQueries->isChecked());
 
         if(res>0)
         {

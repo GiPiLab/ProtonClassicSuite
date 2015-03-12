@@ -315,6 +315,9 @@
         <property name="text">
          <string>Créer un nouveau reporting</string>
         </property>
+        <property name="default">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="0" colspan="2">
@@ -329,6 +332,32 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListOfReportings</tabstop>
+  <tabstop>pushButtonExportLeaves</tabstop>
+  <tabstop>pushButtonLoadDF</tabstop>
+  <tabstop>pushButtonLoadRF</tabstop>
+  <tabstop>pushButtonLoadDI</tabstop>
+  <tabstop>pushButtonLoadRI</tabstop>
+  <tabstop>pushButtonExportDF</tabstop>
+  <tabstop>pushButtonExportRF</tabstop>
+  <tabstop>pushButtonExportDI</tabstop>
+  <tabstop>pushButtonExportRI</tabstop>
+  <tabstop>pushButtonRandomDF</tabstop>
+  <tabstop>pushButtonRandomRF</tabstop>
+  <tabstop>pushButtonRandomDI</tabstop>
+  <tabstop>pushButtonRandomRI</tabstop>
+  <tabstop>pushButtonClearDF</tabstop>
+  <tabstop>pushButtonClearRF</tabstop>
+  <tabstop>pushButtonClearDI</tabstop>
+  <tabstop>pushButtonClearRI</tabstop>
+  <tabstop>pushButtonDeleteReporting</tabstop>
+  <tabstop>pushButtonFillAudit</tabstop>
+  <tabstop>comboListOfAudits</tabstop>
+  <tabstop>comboListOfTrees</tabstop>
+  <tabstop>pushButtonDisplayTree</tabstop>
+  <tabstop>pushButtonAddReporting</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

@@ -19,6 +19,8 @@ public:
 public slots:
     void onLOTchanged();
     void onListOfAuditsChanged();
+    void updateRandomButtonVisibility();
+
 
 
 private slots:
@@ -36,14 +38,52 @@ private slots:
 
     void on_statisticsAuditButton_clicked();
 
+    void on_pushButtonRandomDF_clicked();
+
+    void on_pushButtonRandomRF_clicked();
+
+    void on_pushButtonRandomDI_clicked();
+
+    void on_pushButtonRandomRI_clicked();
+
+    void on_pushButtonClearDF_clicked();
+
+    void on_pushButtonClearRF_clicked();
+
+    void on_pushButtonClearDI_clicked();
+
+    void on_pushButtonClearRI_clicked();
+
+    void on_pushButtonLoadDF_clicked();
+
+    void on_pushButtonLoadRF_clicked();
+
+    void on_pushButtonLoadDI_clicked();
+
+    void on_pushButtonLoadRI_clicked();
+
+    void on_pushButtonExportDF_clicked();
+
+    void on_pushButtonExportRF_clicked();
+
+    void on_pushButtonExportDI_clicked();
+
+    void on_pushButtonExportRI_clicked();
+
+    void on_pushButtonSkel_clicked();
+
 signals:
     void listOfAuditsChanged();
+    void auditDataUpdated(unsigned int auditId);
 
 private:
     Ui::FormManageAudits *ui;
     void updateListOfTrees();
     void updateListOfAudits();
     PCx_Audit *selectedAudit;
+    bool exportLeaves(MODES::DFRFDIRI mode);
+    bool importLeaves(MODES::DFRFDIRI mode);
+    void updateButtonsVisibility();
 };
 
 #endif // FORMMANAGEAUDITS_H

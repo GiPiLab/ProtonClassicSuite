@@ -55,6 +55,8 @@ void FormReportingExplore::onReportingDataChanged(unsigned int reportingId)
 
 void FormReportingExplore::onSettingsChanged()
 {
+    if(selectedReporting==nullptr)
+        return;
     if(ui->treeView->currentIndex().isValid())
     {
         on_treeView_clicked(ui->treeView->currentIndex());

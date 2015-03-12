@@ -122,7 +122,10 @@ void FormAuditReports::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
-    Q_ASSERT(selectedAuditId>0);
+    if(!(selectedAuditId>0))
+    {
+        qFatal("Assertion failed");
+    }
     //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=nullptr)
@@ -142,7 +145,10 @@ void FormAuditReports::on_comboListAudits_activated(int index)
     ui->comboListTypes->clear();
 
     QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTree()->getAllTypes();
-    Q_ASSERT(!listOfTypes.isEmpty());
+    if(listOfTypes.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     QPair<unsigned int, QString> p;
     foreach(p,listOfTypes)
     {

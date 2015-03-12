@@ -23,12 +23,18 @@
      <property name="text">
       <string>Statistiques</string>
      </property>
+     <property name="buddy">
+      <cstring>tableWidget</cstring>
+     </property>
     </widget>
    </item>
    <item row="1" column="1">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>Même nom, type différent</string>
+     </property>
+     <property name="buddy">
+      <cstring>similarityNodeNotTypeListWidget</cstring>
      </property>
     </widget>
    </item>
@@ -39,6 +45,9 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Nombre de noeuds par type&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
@@ -99,6 +108,9 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Noeuds partageant le même nom mais de types différents&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
@@ -106,10 +118,16 @@
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Similarités des noeuds (1.0 = identiques sauf la casse, distance de &lt;a href=&quot;http://fr.wikipedia.org/wiki/Distance_de_Jaro-Winkler&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Jaro-Winkler&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
+     <property name="buddy">
+      <cstring>similarityTableView</cstring>
+     </property>
     </widget>
    </item>
    <item row="4" column="0" colspan="2">
     <widget class="QTableView" name="similarityTableView">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Similarité entre les noms des noeuds, sans tenir compte des différences entre majuscule et minuscule. La mesure de distance est celle de Jaro-Winkler. Plus la valeur de similarité entre deux noeuds est grande mais différente de 1.0, plus les noeuds &amp;quot;se ressemblent&amp;quot; et plus grande est la probabilité que cela soit du à une coquille ou une variation orthographique non désirée.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>

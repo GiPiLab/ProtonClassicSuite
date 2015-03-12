@@ -13,7 +13,10 @@
 
 PCx_Tree::PCx_Tree(unsigned int treeId):treeId(treeId)
 {
-    Q_ASSERT(treeId>0);
+    if(treeId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery query;
 
     query.prepare("SELECT nom,termine,le_timestamp from index_arbres where id=:id");
@@ -41,24 +44,13 @@ PCx_Tree::PCx_Tree(unsigned int treeId):treeId(treeId)
 
 unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QString &name)
 {
-    Q_ASSERT(!name.isNull());
-    Q_ASSERT(!name.isEmpty());
-    Q_ASSERT(pid>0);
-    Q_ASSERT(typeId>0);
-
-    if(getNumberOfNodes()>=MAXNODES)
+    if(pid==0||typeId==0||name.isEmpty()||name.size()>MAXNODENAMELENGTH ||
+            nodeExists(name,typeId) || getNumberOfNodes()>MAXNODES)
     {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Nombre maximum de noeuds atteint !"));
-        return 0;
+        qFatal("Assertion failed");
     }
 
     QSqlQuery q;
-
-    if(nodeExists(name,typeId))
-    {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom dans l'arbre !"));
-        return 0;
-    }
 
     q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(treeId));
     q.bindValue(":nom",name);
@@ -101,23 +93,14 @@ unsigned int PCx_Tree::getTypeId(unsigned int nodeId) const
 
 bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned int newType)
 {
-    Q_ASSERT(!newName.isNull());
-    Q_ASSERT(!newName.isEmpty());
-    Q_ASSERT(newType>0);
+    if(newName.isEmpty()||nodeId==0||newType==0||
+            newName.size()>MAXNODENAMELENGTH||
+            nodeExists(newName,newType)||!isTypeIdValid(newType))
+    {
+        qFatal("Assertion failed");
+    }
 
     QSqlQuery q;
-
-    if(nodeExists(newName,newType))
-    {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un noeud portant ce nom ! Choisissez un autre nom"));
-        return false;
-    }
-
-    if(!isTypeIdValid(newType))
-    {
-        qCritical()<<"Invalid type !";
-        return false;
-    }
 
     q.prepare(QString("update arbre_%1 set nom=:nom, type=:type where id=:id").arg(treeId));
     q.bindValue(":nom",newName);
@@ -338,7 +321,10 @@ QSet<unsigned int> PCx_Tree::getNodesWithSharedName() const
 
 bool PCx_Tree::isLeaf(unsigned int nodeId)
 {
-    Q_ASSERT(nodeId>0);
+    if(nodeId==0)
+    {
+        qFatal("Assertion failed");
+    }
     if(finished && nodeIsALeaf.contains(nodeId))
     {
         return nodeIsALeaf.value(nodeId);
@@ -376,7 +362,10 @@ bool PCx_Tree::isLeaf(unsigned int nodeId)
 
 unsigned int PCx_Tree::getNumberOfNodesWithThisType(unsigned int typeId) const
 {
-    Q_ASSERT(typeId>0);
+    if(typeId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
     q.prepare(QString("select count(*) from arbre_%1 where type=:typeId").arg(treeId));
     q.bindValue(":typeId",typeId);
@@ -463,7 +452,10 @@ QList<unsigned int> PCx_Tree::getChildren(unsigned int nodeId) const
 
 void PCx_Tree::updateNodePid(unsigned int nodeId, unsigned int newPid)
 {
-    Q_ASSERT(nodeId>1 && newPid > 0);
+    if(nodeId<=1 || newPid == 0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
 
     q.prepare(QString("update arbre_%1 set pid=:pid where id=:id").arg(treeId));
@@ -484,7 +476,6 @@ void PCx_Tree::updateNodePid(unsigned int nodeId, unsigned int newPid)
 
 bool PCx_Tree::finishTree()
 {
-    Q_ASSERT(treeId>0);
     if(this->finished==false)
     {
         QSqlQuery q;
@@ -561,7 +552,10 @@ int PCx_Tree::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAn
 
 QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
 {
-    Q_ASSERT(node>0);
+    if(node==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
     q.prepare(QString("select type,nom from arbre_%1 where id=:id").arg(treeId));
     q.bindValue(":id",node);
@@ -600,7 +594,10 @@ QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
 
 QString PCx_Tree::getNodeName(unsigned int node) const
 {
-    Q_ASSERT(node>0);
+    if(node==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q;
     q.prepare(QString("select type,nom from arbre_%1 where id=:id").arg(treeId));
     q.bindValue(":id",node);
@@ -633,7 +630,10 @@ QString PCx_Tree::getNodeName(unsigned int node) const
 
 bool PCx_Tree::deleteNode(unsigned int nodeId)
 {
-    Q_ASSERT(nodeId>0);
+    if(nodeId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QList<unsigned int> listOfChildrens;
     QSqlQuery q;
     q.prepare(QString("select id from arbre_%1 where pid=:pid").arg(treeId));
@@ -707,7 +707,10 @@ QString PCx_Tree::toDot() const
 
 bool PCx_Tree::toXLSX(const QString &fileName) const
 {
-    Q_ASSERT(!fileName.isEmpty());
+    if(fileName.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     QList<unsigned int> nodes=getNodesId();
 
     QXlsx::Document xlsx;
@@ -843,6 +846,12 @@ int PCx_Tree::_internalAddTree(const QString &name,bool createRoot)
 bool PCx_Tree::validateType(const QString &newType)
 {
    // qDebug()<<"Type to validate = "<<newType;
+    if(newType.size()>MAXNODENAMELENGTH)
+    {
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Nom trop long !"));
+        return false;
+    }
+
     if(newType.isEmpty())
     {
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Vous ne pouvez pas utiliser un type vide !"));
@@ -858,7 +867,10 @@ bool PCx_Tree::validateType(const QString &newType)
 
 int PCx_Tree::nameToIdType(const QString &typeName) const
 {
-    Q_ASSERT(!typeName.isNull() && !typeName.isEmpty());
+    if(typeName.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     QString typeNameSpl=typeName.simplified();
     if(listOfTypeNames.contains(typeNameSpl))
         return idTypesToNames.key(typeNameSpl);
@@ -918,7 +930,10 @@ unsigned int PCx_Tree::addType(const QString &typeName)
 
 bool PCx_Tree::deleteType(unsigned int typeId)
 {
-    Q_ASSERT(typeId>0);
+    if(typeId==0)
+    {
+        qFatal("Assertion failed");
+    }
 
     QSqlQuery query;
 
@@ -938,7 +953,7 @@ bool PCx_Tree::deleteType(unsigned int typeId)
 
     if(query.next())
     {
-        qDebug()<<"Number of nodes of type "<<typeId<<" = "<<query.value(0).toInt();
+        //qDebug()<<"Number of nodes of type "<<typeId<<" = "<<query.value(0).toInt();
         if(query.value(0).toInt()>0)
         {
             QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe des noeuds de ce type dans l'arbre. Supprimez-les d'abord, ou changez leur type."));
@@ -983,7 +998,6 @@ unsigned int PCx_Tree::getNumberOfNodes() const
 
 QList<unsigned int> PCx_Tree::getNodesId() const
 {
-    Q_ASSERT(treeId>0);
     QSqlQuery q;
     QList<unsigned int> nodeIds;
     if(!q.exec(QString("select id from arbre_%1").arg(treeId)))
@@ -1000,18 +1014,18 @@ QList<unsigned int> PCx_Tree::getNodesId() const
 
 int PCx_Tree::duplicateTree(const QString &newName)
 {
-    Q_ASSERT(!newName.isEmpty());
-    QSqlQuery q;
-
-    if(treeNameExists(newName))
+    if(newName.isEmpty()||treeNameExists(newName)||newName.size()>MAXOBJECTNAMELENGTH)
     {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-        return -1;
+        qFatal("Assertion failed");
     }
+    QSqlQuery q;
 
     QSqlDatabase::database().transaction();
     int newTreeId=_internalAddTree(newName,false);
-    Q_ASSERT(newTreeId>0);
+    if(newTreeId<=0)
+    {
+        qFatal("Assertion failed");
+    }
 
     if(!q.exec(QString("insert into types_%1 select * from types_%2").arg(newTreeId).arg(treeId)))
     {
@@ -1047,36 +1061,17 @@ QStringList PCx_Tree::getListOfDefaultTypes()
 
 int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
 {
-    Q_ASSERT(!name.isNull() && !name.isEmpty() && nbNodes>0 && nbNodes<=PCx_Tree::MAXNODES);
-    QSqlQuery query;
-
-    query.prepare("select count(*) from index_arbres where nom=:name");
-    query.bindValue(":name",name);
-    if(!query.exec())
+    if(name.isEmpty() || nbNodes==0 || nbNodes>PCx_Tree::MAXNODES
+            || name.size()>MAXOBJECTNAMELENGTH || treeNameExists(name))
     {
-        qCritical()<<query.lastError();
-        die();
-    }
-
-    if(query.next())
-    {
-        if(query.value(0).toInt()>0)
-        {
-            QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-            return -1;
-        }
-    }
-    else
-    {
-        qCritical()<<query.lastError();
-        die();
+        qFatal("Assertion failed");
     }
 
     int lastId=addTree(name);
 
     if(lastId<=0)
     {
-        die();
+        qFatal("Assertion failed");
     }
 
     unsigned int maxNumType=getListOfDefaultTypes().size();
@@ -1215,7 +1210,10 @@ QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
 
 bool PCx_Tree::treeNameExists(const QString &name)
 {
-    Q_ASSERT(!name.isEmpty());
+    if(name.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery query;
 
     query.prepare("select count(*) from index_arbres where nom=:name");
@@ -1238,7 +1236,10 @@ bool PCx_Tree::treeNameExists(const QString &name)
 
 int PCx_Tree::deleteTree(unsigned int treeId)
 {
-    Q_ASSERT(treeId>0);
+    if(treeId==0)
+    {
+        qFatal("Assertion failed");
+    }
 
     QSqlQuery query;
 
@@ -1329,7 +1330,10 @@ int PCx_Tree::deleteTree(unsigned int treeId)
 
 int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeName)
 {
-    Q_ASSERT(!fileName.isEmpty() && !treeName.isEmpty());
+    if(fileName.isEmpty() || treeName.isEmpty() || treeNameExists(treeName) || treeName.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
     QFileInfo fi(fileName);
     if(!fi.isReadable()||!fi.isFile())
     {
@@ -1384,9 +1388,21 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         node1.first=i1.toString().simplified();
         node1.second=i2.toString().simplified();
 
+        if(node1.first.size()>MAXNODENAMELENGTH)
+        {
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Type du noeud trop long ligne %1 colonne 1 !").arg(i));
+            return -1;
+        }
+
         if(node1.first.isEmpty())
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type du noeud manquant ou invalide ligne %1 colonne 1 !").arg(i));
+            return -1;
+        }
+
+        if(node1.second.size()>MAXNODENAMELENGTH)
+        {
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Nom du noeud trop long ligne %1 colonne 2 !").arg(i));
             return -1;
         }
 
@@ -1426,11 +1442,25 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
             }
             else
             {
+                if(pidNode.first.size()>MAXNODENAMELENGTH)
+                {
+                    QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Type du noeud père trop long ligne %1 colonne 3 !").arg(i));
+                    return -1;
+                }
+
+
                 if(pidNode.first.isEmpty())
                 {
                     QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type du noeud père manquant ligne %1 colonne 3 !").arg(i));
                     return -1;
                 }
+
+                if(pidNode.second.size()>MAXNODENAMELENGTH)
+                {
+                    QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Nom du noeud père trop long ligne %1 colonne 4 !").arg(i));
+                    return -1;
+                }
+
 
                 if(pidNode.second.isEmpty())
                 {
@@ -1444,7 +1474,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
             firstLevelNodes.append(node1);
         }
         i++;
-        if(i>(int)PCx_Tree::MAXNODES+1)
+        if(i>PCx_Tree::MAXNODES)
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre (%1) !").arg(PCx_Tree::MAXNODES));
             return -1;
@@ -1519,16 +1549,13 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         k++;
     }
 
-    if(treeNameExists(treeName))
-    {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un arbre portant ce nom !"));
-        return -1;
-    }
-
     QSqlDatabase::database().transaction();
 
     int treeId=_internalAddTree(treeName,true);
-    Q_ASSERT(treeId>0);
+    if(treeId<=0)
+    {
+        qFatal("Assertion failed");
+    }
 
     PCx_Tree tree(treeId);
 

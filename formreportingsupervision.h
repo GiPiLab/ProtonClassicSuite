@@ -5,6 +5,7 @@
 #include "pcx_reportingtablesupervisionmodel.h"
 #include <QSortFilterProxyModel>
 #include <QWidget>
+#include <QTimer>
 
 namespace Ui {
 class FormReportingSupervision;
@@ -74,6 +75,12 @@ private slots:
     void on_pushButtonSelectAll_clicked();
 
     void on_comboBoxListDates_activated(int index);
+
+    void on_pushButtonCopy_clicked();
+
+    void on_pushButtonClear_clicked();
+
+
 
 private:
     Ui::FormReportingSupervision *ui;

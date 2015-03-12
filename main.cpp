@@ -13,26 +13,25 @@
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QString message=QString("(%5) %1 (%2:%3 [%4])\n").arg(msg).arg(context.file).arg(context.line)
-            .arg(context.function).arg(QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss"));
+    QString message=QString("%1 (%2:%3)\n").arg(msg).arg(context.file).arg(context.line);
 
     switch (type) {
     case QtDebugMsg:
-        message.prepend("[Debug]");
+        message.prepend("[D]");
         std::cerr<<qPrintable(message);
         break;
     case QtWarningMsg:
-        message.prepend("[Warning]");
+        message.prepend("[W]");
         QMessageBox::warning(0,"Attention",message);
         std::cerr<<qPrintable(message);
         break;
     case QtCriticalMsg:
-        message.prepend("[Critical]");
+        message.prepend("[C]");
         QMessageBox::critical(0,"Erreur critique",message);
         std::cerr<<qPrintable(message);
         break;
     case QtFatalMsg:
-        message.prepend("[Fatal]");
+        message.prepend("[F]");
         QMessageBox::critical(0,"Erreur fatale",message);
         std::cerr<<qPrintable(message);
         die();

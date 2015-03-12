@@ -13,9 +13,6 @@
   <property name="windowTitle">
    <string>Elaboration du budget</string>
   </property>
-  <property name="whatsThis">
-   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette fenêtre permet de fixer les critères de prévision pour l'année N+1. Elle s'articule principalement autour de deux stratégies :&lt;/p&gt;&lt;p&gt;- Appliquer des critères de prévision au noeud actif, et distribuer le total aux descendants du noeud ;&lt;/p&gt;&lt;p&gt;- Appliquer des critères de prévision aux descendants du noeud actif, et sommer les valeurs des descendants pour trouver la somme allouée au noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-  </property>
   <layout class="QGridLayout" name="gridLayout_5">
    <property name="verticalSpacing">
     <number>4</number>
@@ -76,6 +73,9 @@
     <widget class="QPushButton" name="pushButtonDisplayReport">
      <property name="text">
       <string>Afficher la fiche prévisionnelle du noeud</string>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -187,6 +187,9 @@
    </item>
    <item row="4" column="1" colspan="2">
     <widget class="QFrame" name="frame">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette zone permet de fixer les critères de prévision pour l'année N+1. Elle s'articule principalement autour de deux stratégies :&lt;/p&gt;&lt;p&gt;- Appliquer des critères de prévision au noeud actif, et distribuer le total aux descendants du noeud ;&lt;/p&gt;&lt;p&gt;- Appliquer des critères de prévision aux descendants du noeud actif, et sommer les valeurs des descendants pour trouver la somme allouée au noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -349,6 +352,9 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>comboBoxORED</cstring>
         </property>
        </widget>
       </item>
@@ -553,6 +559,15 @@
   </customwidget>
  </customwidgets>
  <tabstops>
+  <tabstop>comboListPrevisions</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>radioButtonDF</tabstop>
+  <tabstop>radioButtonRF</tabstop>
+  <tabstop>radioButtonDI</tabstop>
+  <tabstop>radioButtonRI</tabstop>
+  <tabstop>checkBoxShowCriteriaToApply</tabstop>
   <tabstop>comboBoxOperators</tabstop>
   <tabstop>comboBoxORED</tabstop>
   <tabstop>doubleSpinBox</tabstop>
@@ -564,20 +579,11 @@
   <tabstop>pushButtonApplyToNode</tabstop>
   <tabstop>comboBoxOREDDispatchRef</tabstop>
   <tabstop>pushButtonApplyToLeaves</tabstop>
+  <tabstop>tableViewCriteria</tabstop>
   <tabstop>checkBoxDisplayLeafCriteria</tabstop>
+  <tabstop>textBrowser</tabstop>
   <tabstop>pushButtonDisplayReport</tabstop>
   <tabstop>pushButtonSaveBigReport</tabstop>
-  <tabstop>pushButtonExpandAll</tabstop>
-  <tabstop>pushButtonCollapseAll</tabstop>
-  <tabstop>radioButtonDF</tabstop>
-  <tabstop>radioButtonRF</tabstop>
-  <tabstop>radioButtonDI</tabstop>
-  <tabstop>radioButtonRI</tabstop>
-  <tabstop>tableViewCriteria</tabstop>
-  <tabstop>treeView</tabstop>
-  <tabstop>comboListPrevisions</tabstop>
-  <tabstop>checkBoxShowCriteriaToApply</tabstop>
-  <tabstop>textBrowser</tabstop>
  </tabstops>
  <resources>
   <include location="Images.qrc"/>

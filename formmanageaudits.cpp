@@ -10,6 +10,9 @@
 #include "formauditinfos.h"
 #include <QMdiSubWindow>
 #include <QMdiArea>
+#include <QSettings>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 FormManageAudits::FormManageAudits(QWidget *parent):
     QWidget(parent),
@@ -19,9 +22,12 @@ FormManageAudits::FormManageAudits(QWidget *parent):
     ui->setupUi(this);
     updateListOfTrees();
     updateListOfAudits();
-    QDate date=QDate::currentDate();
-    ui->spinBoxFrom->setMaximum(date.year());
-    ui->spinBoxTo->setMaximum(date.year()+1);
+    //Remove date constraints
+    //QDate date=QDate::currentDate();
+    //ui->spinBoxFrom->setMaximum(date.year());
+    //ui->spinBoxTo->setMaximum(date.year()+1);
+    updateRandomButtonVisibility();
+
 }
 
 FormManageAudits::~FormManageAudits()
@@ -31,6 +37,53 @@ FormManageAudits::~FormManageAudits()
     delete ui;
 }
 
+void FormManageAudits::updateButtonsVisibility()
+{
+    if(selectedAudit==nullptr)
+        return;
+    bool finished=selectedAudit->isFinished();
+    ui->pushButtonClearDF->setEnabled(!finished);
+    ui->pushButtonClearRF->setEnabled(!finished);
+    ui->pushButtonClearDI->setEnabled(!finished);
+    ui->pushButtonClearRI->setEnabled(!finished);
+    ui->pushButtonLoadDF->setEnabled(!finished);
+    ui->pushButtonLoadRF->setEnabled(!finished);
+    ui->pushButtonLoadDI->setEnabled(!finished);
+    ui->pushButtonLoadRI->setEnabled(!finished);
+    ui->pushButtonRandomDF->setEnabled(!finished);
+    ui->pushButtonRandomRF->setEnabled(!finished);
+    ui->pushButtonRandomDI->setEnabled(!finished);
+    ui->pushButtonRandomRI->setEnabled(!finished);
+}
+
+
+void FormManageAudits::updateRandomButtonVisibility()
+{
+    QSettings settings;
+    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    bool finished=false;
+    if(selectedAudit!=nullptr)
+    {
+        finished=selectedAudit->isFinished();
+    }
+
+    if(!finished)
+        ui->pushButtonRandomDF->setEnabled(randomAllowed);
+    else
+        ui->pushButtonRandomDF->setEnabled(false);
+    if(!finished)
+        ui->pushButtonRandomRF->setEnabled(randomAllowed);
+    else
+        ui->pushButtonRandomRF->setEnabled(false);
+    if(!finished)
+        ui->pushButtonRandomDI->setEnabled(randomAllowed);
+    else
+        ui->pushButtonRandomDI->setEnabled(false);
+    if(!finished)
+        ui->pushButtonRandomRI->setEnabled(randomAllowed);
+    else
+        ui->pushButtonRandomRI->setEnabled(false);
+}
 
 void FormManageAudits::updateListOfAudits()
 {
@@ -122,13 +175,20 @@ void FormManageAudits::on_addAuditButton_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un audit portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
+
         //qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
         if(PCx_Audit::addNewAudit(text,years,selectedTree)>0)
         {
             updateListOfAudits();
             emit(listOfAuditsChanged());
-            QMessageBox::information(this,tr("Information"),tr("Nouvel audit ajouté, ouvrez la fenêtre 'saisie des données' pour le compléter"));
+            QMessageBox::information(this,tr("Information"),tr("Nouvel audit ajouté, utilisez la fenêtre \"saisie des données\" pour le remplir manuellement, ou alors les boutons ci-dessus pour utiliser un fichier Excel"));
         }
+
     }
 }
 
@@ -161,6 +221,7 @@ void FormManageAudits::on_comboListOfAudits_activated(int index)
     ui->labelTree->setText(QString("%1 (%2 noeuds)").arg(selectedAudit->getAttachedTreeName()).arg(selectedAudit->getAttachedTree()->getNumberOfNodes()));
     ui->labelYears->setText(selectedAudit->getYearsString());
     ui->labelName->setText(selectedAudit->getAuditName());
+    updateButtonsVisibility();
 }
 
 void FormManageAudits::on_deleteAuditButton_clicked()
@@ -253,4 +314,294 @@ void FormManageAudits::on_statisticsAuditButton_clicked()
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     mdiArea->addSubWindow(infos);
     infos->show();
+}
+
+void FormManageAudits::on_pushButtonRandomDF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
+
+    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    //QElapsedTimer timer;
+    //timer.start();
+
+    selectedAudit->fillWithRandomData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+    //qDebug()<<"Done in "<<timer.elapsed()<<"ms";
+}
+
+void FormManageAudits::on_pushButtonRandomRF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::RF;
+
+    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    //QElapsedTimer timer;
+    //timer.start();
+
+    selectedAudit->fillWithRandomData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+    //qDebug()<<"Done in "<<timer.elapsed()<<"ms";
+
+}
+
+void FormManageAudits::on_pushButtonRandomDI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DI;
+
+    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    //QElapsedTimer timer;
+    //timer.start();
+
+    selectedAudit->fillWithRandomData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+    //qDebug()<<"Done in "<<timer.elapsed()<<"ms";
+
+}
+
+void FormManageAudits::on_pushButtonRandomRI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::RI;
+
+    if(question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    //QElapsedTimer timer;
+    //timer.start();
+
+    selectedAudit->fillWithRandomData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+    //qDebug()<<"Done in "<<timer.elapsed()<<"ms";
+
+}
+
+void FormManageAudits::on_pushButtonClearDF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DF;
+
+    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    selectedAudit->clearAllData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+}
+
+void FormManageAudits::on_pushButtonClearRF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::RF;
+
+    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    selectedAudit->clearAllData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+
+}
+
+void FormManageAudits::on_pushButtonClearDI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::DI;
+
+    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    selectedAudit->clearAllData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+
+}
+
+void FormManageAudits::on_pushButtonClearRI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    MODES::DFRFDIRI mode=MODES::DFRFDIRI::RI;
+
+    if(question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()))==QMessageBox::No)
+    {
+        return;
+    }
+
+    selectedAudit->clearAllData(mode);
+    emit auditDataUpdated(selectedAudit->getAuditId());
+
+}
+
+void FormManageAudits::on_pushButtonLoadDF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    if(importLeaves(MODES::DFRFDIRI::DF))
+    {
+        emit auditDataUpdated(selectedAudit->getAuditId());
+    }
+}
+
+void FormManageAudits::on_pushButtonLoadRF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    if(importLeaves(MODES::DFRFDIRI::RF))
+    {
+        emit auditDataUpdated(selectedAudit->getAuditId());
+    }
+}
+
+void FormManageAudits::on_pushButtonLoadDI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    if(importLeaves(MODES::DFRFDIRI::DI))
+    {
+        emit auditDataUpdated(selectedAudit->getAuditId());
+    }
+}
+
+void FormManageAudits::on_pushButtonLoadRI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    if(importLeaves(MODES::DFRFDIRI::RI))
+    {
+        emit auditDataUpdated(selectedAudit->getAuditId());
+    }
+}
+
+
+bool FormManageAudits::importLeaves(MODES::DFRFDIRI mode)
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return false;
+
+    bool res=selectedAudit->importDataFromXLSX(fileName,mode);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
+    }
+    else
+    {
+        QMessageBox::critical(this,tr("Erreur"),tr("%1 non chargées !").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
+    }
+    return res;
+}
+
+
+bool FormManageAudits::exportLeaves(MODES::DFRFDIRI mode)
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer les données des feuilles"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return false;
+
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+        fileName.append(".xlsx");
+    fi=QFileInfo(fileName);
+
+    bool res=selectedAudit->exportLeavesDataXLSX(mode,fileName);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("<b>%1</b> enregistrées.").arg(MODES::modeToCompleteString(mode).toHtmlEscaped()));
+    }
+    else
+    {
+        QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+    }
+    return res;
+}
+
+
+void FormManageAudits::on_pushButtonExportDF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    exportLeaves(MODES::DFRFDIRI::DF);
+}
+
+void FormManageAudits::on_pushButtonExportRF_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    exportLeaves(MODES::DFRFDIRI::RF);
+
+}
+
+void FormManageAudits::on_pushButtonExportDI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    exportLeaves(MODES::DFRFDIRI::DI);
+
+}
+
+void FormManageAudits::on_pushButtonExportRI_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+    exportLeaves(MODES::DFRFDIRI::RI);
+}
+
+void FormManageAudits::on_pushButtonSkel_clicked()
+{
+    if(selectedAudit==nullptr)
+        return;
+
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le squelette de reporting"),"",tr("Fichiers XLSX (*.xlsx)"));
+    if(fileName.isEmpty())
+        return;
+
+    QFileInfo fi(fileName);
+    if(fi.suffix().compare("xlsx",Qt::CaseInsensitive)!=0)
+        fileName.append(".xlsx");
+    fi=QFileInfo(fileName);
+
+    bool res=selectedAudit->exportLeavesSkeleton(fileName);
+
+    if(res==true)
+    {
+        QMessageBox::information(this,tr("Succès"),tr("Squelette de l'audit enregistré !"));
+    }
+    else
+    {
+        QMessageBox::critical(this,tr("Erreur"),tr("Enregistrement échoué"));
+    }
 }

@@ -168,10 +168,11 @@ public:
      * @param copyRF if true copy nodes data for RF mode
      * @param copyDI if true copy nodes data for DI mode
      * @param copyRI if true copy nodes data for RI mode
+     * @param copyQueries if true copy attached queries
      * @return -1 if the newName exists, the new audit identifier on success
      */
-    int duplicateAudit(const QString &newName,QList<unsigned int> years,
-                                bool copyDF=true,bool copyRF=true, bool copyDI=true, bool copyRI=true) const;
+    int duplicateAudit(const QString &newName, QList<unsigned int> years,
+                                bool copyDF=true, bool copyRF=true, bool copyDI=true, bool copyRI=true, bool copyQueries=false) const;
 
     /**
      * @brief getNodesWithNonNullValues gets the nodes that contains at least one value
@@ -324,6 +325,12 @@ public:
      */
     static QList<QPair<unsigned int, QString> > getListOfAuditsAttachedWithThisTree(unsigned int treeId,ListAuditsMode mode=ListAuditsMode::UnFinishedAuditsOnly);
 
+    /**
+     * @brief exportLeavesSkeleton exports a skeleton file in XLSX
+     * @param fileName the name of the file
+     * @return true on success
+     */
+    bool exportLeavesSkeleton(const QString &fileName) const;
 protected:
 
     unsigned int auditId;

@@ -20,6 +20,9 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0">
     <widget class="QTreeView" name="treeView">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Un arbre dans ProtonClassicSuite correspond à une organisation hiérarchique de la collectivité sur une période donnée.&lt;/p&gt;&lt;p&gt;Un arbre est composé de noeuds. Chaque noeud possède un type et un libellé. Un type est un attribut qui peut être utilisé pour caractériser une famille de noeuds, par exemple les noeuds de type &amp;quot;service&amp;quot; ou ceux de type &amp;quot;division&amp;quot;. Un arbre &lt;span style=&quot; font-weight:600;&quot;&gt;ne peut pas posséder deux noeuds qui ont à la fois le même type et le même libellé&lt;/span&gt;. En revanche, deux noeuds ayant un libellé identique mais des types différents sont autorisés (par exemple &amp;quot;service A&amp;quot; et &amp;quot;division A&amp;quot;).&lt;/p&gt;&lt;p&gt;L'élaboration d'un arbre nécessite deux étapes : la déclaration, en lui donnant un nom unique, et la fabrication, correspondant à la définition des noeuds et des liens entre ceux-ci.&lt;/p&gt;&lt;p&gt;Une fois que vous estimez l'arbre achevé, il est indispensable de le &lt;span style=&quot; font-weight:600;&quot;&gt;terminer&lt;/span&gt;. Un arbre terminé peut être affiché mais sa structure ne peut plus être modifiée (cependant les libellés des noeuds peuvent être changés). Il est destiné à être utilisé pour un audit ou un reporting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
@@ -47,6 +50,12 @@
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des types disponibles pour l'arbre actif&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des types pour l'arbre actif. Un type est un attribut qui caractérise un ensemble de noeuds.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
@@ -76,6 +85,12 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QPushButton" name="newTreeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un nouvel arbre&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un nouvel arbre vide. Pour importer un arbre à partir d'un fichier excel, utilisez plutôt le bouton &amp;quot;importer arbre&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Ajouter &amp;arbre</string>
         </property>
@@ -83,6 +98,12 @@
       </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="duplicateTreeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dupliquer l'arbre actif (permet de modifier un arbre terminé)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un nouvel arbre à partir de l'arbre actif. Si l'arbre actif est dans l'état &amp;quot;terminé&amp;quot;, l'arbre dupliqué sera dans l'état &amp;quot;non-terminé&amp;quot; afin de pouvoir être modifié.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>&amp;Dupliquer arbre</string>
         </property>
@@ -90,6 +111,12 @@
       </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="importTreeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer un arbre à partir d'un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer un arbre à partir d'un fichier XLSX. La structure attendue dans le fichier est sur quatre colonnes, et chaque ligne représente un noeud de l'arbre. Les deux premières colonnes servent à décrire les noeuds de l'arbre, en indiquant pour chaque noeud son type et son libellé. Les deux dernières colonnes suivent le même schéma mais indiquent le &lt;span style=&quot; font-weight:600;&quot;&gt;père&lt;/span&gt; du noeud. Si elles sont vides, cela signifie que le noeud est attaché à la racine de l'arbre. Ainsi,&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Type noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Nom noeud&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Type père&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Nom père&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;/&gt;&lt;td style=&quot; vertical-align:middle;&quot;/&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;/&gt;&lt;td style=&quot; vertical-align:middle;&quot;/&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;/&gt;&lt;td style=&quot; vertical-align:middle;&quot;/&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Service&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;S1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M1&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Service&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;S2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Service&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;S3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M2&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Service&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;S4&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;Maire adjoint&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:middle;&quot;&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:'Calibri';&quot;&gt;M3&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;p&gt;représentera l'arbre suivant :&lt;/p&gt;&lt;p&gt;&lt;img src=&quot;:/Pictures/icons/sample_tree.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>&amp;Importer arbre</string>
         </property>
@@ -101,6 +128,9 @@
       </item>
       <item row="1" column="0">
        <widget class="QPushButton" name="deleteTreeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer l'arbre actif&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>&amp;Supprimer arbre</string>
         </property>
@@ -108,6 +138,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="finishTreeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Terminer l'arbre actif afin de pouvoir l'utiliser dans un audit ou un reporting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Indiquer de manière irrévocable que l'arbre est dans l'état &amp;quot;terminé&amp;quot;. La structure d'un arbre terminé ne peut plus être modifiée, les libellés de ses noeuds peuvent être corrigés. Il est indispensable de terminer un arbre avant de l'utiliser dans un audit ou un reporting.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>&amp;Terminer arbre</string>
         </property>
@@ -120,22 +156,53 @@
           <italic>true</italic>
          </font>
         </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un arbre aléatoire à des fins de test&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:normal;&quot;&gt;Création d'un arbre à la structure et aux libellés aléatoires à des fins de test. Vous devez spécifier la taille de l'arbre.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Arbre aléatoire</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
+      <item row="2" column="2">
+       <widget class="QPushButton" name="guessHierarchyButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Deviner la hiérarchie contenue dans les libellés des noeuds&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tente de deviner la structure de l'arbre actif à l'aide des libellés des noeuds. L'arbre sera modifié si des relations hiérarchiques sont trouvées. Actuellement les relations sont devinées en recherchant la présence de numéros au début du nom des noeuds. Par exemple 1-Pierre serait le père de 10-Paul qui serait le père de 100-Jacques.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Deviner la hiérarchie</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QPushButton" name="viewTreeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Prendre un instantané de l'arbre actif&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Affiche un instantané de l'arbre actif, c'est à dire l'arbre tel qu'il est à un instant T. Les modifications ultérieures de l'arbre ne se répercuteront pas dans l'instantané.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Afficher, im&amp;primer, exporter</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="guessHierarchyButton">
+      <item row="2" column="1">
+       <widget class="QPushButton" name="consistencyButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calculer des statistiques sur les noeuds et leur libellés&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Calcule des statistiques sur la structure de l'arbre actif et analyse les similarités entre les libellés de ses noeuds, afin de permettre à l'utilisateur de détecter d'éventuelles coquilles ou doublons.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>Deviner la hiérarchie</string>
+         <string>Statistiques et s&amp;imilarités</string>
         </property>
        </widget>
       </item>
@@ -150,6 +217,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QPushButton" name="addNodeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter un noeud ayant le type sélectionné comme fils du noeud actif&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>&amp;Ajouter noeud</string>
         </property>
@@ -157,6 +227,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="modifyNodeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Modifier le type et le libellé du noeud sélectionné&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Modifie simultanément le type et le libellé du noeud actif. Sélectionnez un noeud et le type désiré. Vous serez invité à spécifier le nouveau libellé du noeud. Si vous ne souhaitez pas changer son type, vous devez sélectionner le type actuel dans la liste.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>&amp;Modifier noeud</string>
         </property>
@@ -164,15 +240,14 @@
       </item>
       <item>
        <widget class="QPushButton" name="deleteNodeButton">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer le noeud actif ainsi que tous ses descendants&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer le noeud actif ainsi que tous ses descendants. Si vous désirez supprimer uniquement le noeud actif et pas ses descendants, vous pouvez utiliser le glisser/déplacer pour rattacher les noeuds descendants à un autre noeud ou à la racine de l'arbre.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>S&amp;upprimer noeud</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="consistencyButton">
-        <property name="text">
-         <string>Statistiques et s&amp;imilarités</string>
         </property>
        </widget>
       </item>
@@ -202,6 +277,12 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer le type sélectionné&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="whatsThis">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer le type sélectionné. Si des noeuds possèdes ce type la suppression est impossible, les noeuds doivent être supprimés d'abord.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>Supprimer type</string>
        </property>
@@ -218,7 +299,23 @@
  <tabstops>
   <tabstop>comboBox</tabstop>
   <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>newTreeButton</tabstop>
+  <tabstop>duplicateTreeButton</tabstop>
+  <tabstop>importTreeButton</tabstop>
+  <tabstop>deleteTreeButton</tabstop>
+  <tabstop>finishTreeButton</tabstop>
+  <tabstop>randomTreeButton</tabstop>
+  <tabstop>viewTreeButton</tabstop>
+  <tabstop>consistencyButton</tabstop>
+  <tabstop>guessHierarchyButton</tabstop>
+  <tabstop>addNodeButton</tabstop>
+  <tabstop>modifyNodeButton</tabstop>
+  <tabstop>deleteNodeButton</tabstop>
   <tabstop>listTypesView</tabstop>
+  <tabstop>addTypeButton</tabstop>
+  <tabstop>deleteTypeButton</tabstop>
  </tabstops>
  <resources>
   <include location="Images.qrc"/>

@@ -162,7 +162,8 @@ void FormReportingOverview::updateComboRefDate(QComboBox *combo)
     }
 
     QList<QDate> listDatesForNode=datesForNode.toList();
-    qSort(listDatesForNode);
+    qSort(listDatesForNode.begin(),listDatesForNode.end(),qGreater<QDate>());
+
 
     foreach(QDate date,listDatesForNode)
     {

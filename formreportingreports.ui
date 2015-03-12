@@ -209,6 +209,9 @@
       <iconset resource="Images.qrc">
        <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
      </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="1" column="1">
@@ -257,6 +260,31 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListReportings</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>pushButtonSelectAllNodes</tabstop>
+  <tabstop>pushButtonUnSelectAllNodes</tabstop>
+  <tabstop>pushButtonSelectType</tabstop>
+  <tabstop>comboListTypes</tabstop>
+  <tabstop>checkBoxS</tabstop>
+  <tabstop>checkBoxA</tabstop>
+  <tabstop>checkBoxB</tabstop>
+  <tabstop>checkBoxC</tabstop>
+  <tabstop>checkBoxD</tabstop>
+  <tabstop>checkBoxIncludeGraphics</tabstop>
+  <tabstop>pushButtonSelectAll</tabstop>
+  <tabstop>pushButtonSelectNone</tabstop>
+  <tabstop>checkBoxDF</tabstop>
+  <tabstop>checkBoxRF</tabstop>
+  <tabstop>checkBoxDI</tabstop>
+  <tabstop>checkBoxRI</tabstop>
+  <tabstop>radioButtonBFS</tabstop>
+  <tabstop>radioButtonDFS</tabstop>
+  <tabstop>saveButton</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

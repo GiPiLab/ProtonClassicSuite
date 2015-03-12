@@ -20,7 +20,10 @@ using namespace NUMBERSFORMAT;
 PCx_Reporting::PCx_Reporting(unsigned int reportingId,bool _noLoadAttachedTree) :
     reportingId(reportingId)
 {
-    Q_ASSERT(reportingId>0);
+    if(reportingId==0)
+    {
+        qFatal("Assertion failed");
+    }
 
     this->reportingId=reportingId;
     QSqlQuery q;
@@ -401,7 +404,10 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
 
 bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode)
 {
-    Q_ASSERT(!fileName.isEmpty());
+    if(fileName.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     //QElapsedTimer timer;
     //timer.start();
 
@@ -478,6 +484,14 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
             return false;
 
         }
+        if(typeAndNode.first.size()>PCx_Tree::MAXNODENAMELENGTH || typeAndNode.second.size()>PCx_Tree::MAXNODENAMELENGTH)
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud sont trop longs").arg(row));
+            return false;
+        }
+
+
+
 
         double dblOuv=ouverts.toDouble();
         double dblReal=realises.toDouble();
@@ -1312,19 +1326,21 @@ PCx_Reporting::OREDPCR PCx_Reporting::OREDPCRFromTableString(const QString &ored
 
 unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int attachedTreeId)
 {
-    Q_ASSERT(!name.isEmpty() && attachedTreeId>0);
+    if(name.isEmpty() || attachedTreeId==0|| name.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
 
     QList<unsigned int> treeIds=PCx_Tree::getListOfTreesId(true);
     if(!treeIds.contains(attachedTreeId))
-    {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Impossible de construire un reporting sur un arbre non existant ou non terminé"));
-        return 0;
+    {        
+        qFatal("Assertion failed");
     }
 
+    //Must be checked in UI
     if(reportingNameExists(name))
-    {
-        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Il existe déjà un reporting portant ce nom !"));
-        return 0;
+    {        
+        qFatal("Assertion failed");
     }
 
     QSqlQuery q;
@@ -1460,7 +1476,10 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
 
 bool PCx_Reporting::deleteReporting(unsigned int reportingId)
 {
-    Q_ASSERT(reportingId>0);
+    if(reportingId==0)
+    {
+        qFatal("Assertion failed");
+    }
     QSqlQuery q(QString("select count(*) from index_reportings where id='%1'").arg(reportingId));
     if(!q.exec())
     {

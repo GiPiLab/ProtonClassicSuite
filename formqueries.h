@@ -18,6 +18,9 @@ class FormQueries : public QWidget
 {
     Q_OBJECT
 
+signals:
+    void listOfQueriesChanged(unsigned int auditId);
+
 public:
     explicit FormQueries(QWidget *parent = 0);
     ~FormQueries();
@@ -25,6 +28,7 @@ public:
 public slots:
     void onListOfAuditsChanged();
     void onColorChanged();
+    void onListOfQueriesChanged(unsigned int auditId);
 
 private slots:
     void on_comboBoxListAudits_activated(int index);

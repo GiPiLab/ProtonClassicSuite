@@ -65,7 +65,20 @@
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0" colspan="3">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="statsButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Statistiques de saisie</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
         <widget class="QTabWidget" name="tabWidget">
          <property name="tabShape">
           <enum>QTabWidget::Triangular</enum>
@@ -80,6 +93,9 @@
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QTableView" name="tableViewDF">
+             <property name="whatsThis">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette zone affiche les données pour le noeud actif et le mode sélectionné. Si le noeud actif est une feuille, il est possible de modifier les valeurs des prévu/réalisé/engagé. Elles seront automatiquement répercutées dans les noeuds parents.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;La valeur du disponible n'est pas modifiable : elle est calculée automatiquement selon la formule disponible=prévu-(réalisé + engagé) une fois que tous les champs de l'année sont remplis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="editTriggers">
               <set>QAbstractItemView::AllEditTriggers</set>
              </property>
@@ -194,74 +210,14 @@
          </widget>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButtonImportLeaves">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Importer les données d'un audit &lt;span style=&quot; font-weight:600;&quot;&gt;pour le mode (&lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;dépenses ou recettes de fonctionnement ou d'investissement&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;) actif&lt;/span&gt;.&lt;/p&gt;&lt;p&gt;Le fichier doit être au format XLSX et contenir les données des feuilles pour l'arbre et le mode concernés. Vous pouvez générer un squelette pré-rempli de ce fichier à l'aide du bouton &amp;quot;Exporter données&amp;quot; puis le compléter à l'aide d'un tableur.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Importer les feuilles</string>
-         </property>
-         <property name="icon">
-          <iconset resource="Images.qrc">
-           <normaloff>:/icons/icons/excel_imports.png</normaloff>:/icons/icons/excel_imports.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="pushButtonExportLeaves">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données actuelles &lt;span style=&quot; font-weight:600;&quot;&gt;du mode sélectionné (&lt;/span&gt;&lt;span style=&quot; font-weight:600; font-style:italic;&quot;&gt;dépenses ou recettes de fonctionnement ou d'investissement&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;)&lt;/span&gt; dans un fichier tableur.&lt;/p&gt;&lt;p&gt;Seules les données des feuilles de l'arbre sont exportées, les noeuds de plus haut niveau dans l'arbre étant calculés automatiquement. Le fichier obtenu peut être modifié ou complété à l'aide d'un tableur.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="text">
-          <string>Exporter les feuilles</string>
-         </property>
-         <property name="icon">
-          <iconset resource="Images.qrc">
-           <normaloff>:/icons/icons/excel_exports.png</normaloff>:/icons/icons/excel_exports.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="clearDataButton">
-         <property name="text">
-          <string>Vider données</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="randomDataButton">
-         <property name="font">
-          <font>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="text">
-          <string>Données aléatoires</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
+       <item row="0" column="0" colspan="2">
         <widget class="QLabel" name="label">
          <property name="text">
           <string/>
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
-        <widget class="QPushButton" name="statsButton">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Statistiques de saisie</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
+       <item row="2" column="1">
         <widget class="QPushButton" name="pushButtonExportHTML">
          <property name="text">
           <string>Enregistrer en HTML</string>
@@ -278,6 +234,19 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboListAudits</tabstop>
+  <tabstop>treeView</tabstop>
+  <tabstop>pushButtonExpandAll</tabstop>
+  <tabstop>pushButtonCollapseAll</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>tableViewDF</tabstop>
+  <tabstop>statsButton</tabstop>
+  <tabstop>pushButtonExportHTML</tabstop>
+  <tabstop>tableViewRF</tabstop>
+  <tabstop>tableViewDI</tabstop>
+  <tabstop>tableViewRI</tabstop>
+ </tabstops>
  <resources>
   <include location="Images.qrc"/>
  </resources>

@@ -59,7 +59,10 @@ bool PCx_QueryVariation::load(unsigned int queryId)
 
 bool PCx_QueryVariation::save(const QString &name) const
 {
-    Q_ASSERT(!name.isEmpty());
+    if(name.isEmpty()||name.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
 
     QSqlQuery q;
     q.prepare(QString("insert into audit_queries_%1 (name,query_mode,target_type,ored,dfrfdiri,oper,percent_or_point,"
@@ -123,7 +126,10 @@ QString PCx_QueryVariation::getDescription() const
 
 QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 {
-    Q_ASSERT(year1>0 && year2>0 && year1<year2 && year1<3000 && year2>1900);
+    if(!(year1>0 && year2>0 && year1<year2))
+    {
+        qFatal("Assertion failed");
+    }
     //QElapsedTimer timer;
     //timer.start();
     QMap<unsigned int,qint64> valuesForYear1,valuesForYear2;
@@ -182,7 +188,10 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
         }
     }
 
-    Q_ASSERT(valuesForYear1.keys()==valuesForYear2.keys());
+    if(valuesForYear1.keys()!=valuesForYear2.keys())
+    {
+        qFatal("Assertion failed");
+    }
 
     QMapIterator<unsigned int,qint64> i(valuesForYear1);
     while(i.hasNext())
@@ -456,7 +465,10 @@ const QString PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::PER
 void PCx_QueryVariation::setYears(unsigned int year1, unsigned int year2)
 {
     //This query needs at least two years, this is checked in ui
-    Q_ASSERT(year1!=year2);
+    if(year1==year2)
+    {
+        qFatal("Assertion failed");
+    }
     PCx_Query::setYears(year1,year2);
 }
 

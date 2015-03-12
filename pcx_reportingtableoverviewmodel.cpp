@@ -5,7 +5,10 @@
 PCx_ReportingTableOverviewModel::PCx_ReportingTableOverviewModel(PCx_Reporting * reporting, unsigned int nodeId, PCx_ReportingTableOverviewModel::OVERVIEWMODE mode,QObject *parent):
     QAbstractTableModel(parent),reporting(reporting),nodeId(nodeId),mode(mode)
 {
-    Q_ASSERT(reporting!=nullptr&&nodeId>0);
+    if(reporting==nullptr||nodeId==0)
+    {
+        qFatal("Assertion failed");
+    }
     updateQuery();
     colRef=PCx_Reporting::OREDPCR::NONELAST;
     dateRef=-1;

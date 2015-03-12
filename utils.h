@@ -6,6 +6,8 @@
 
 #define VERSION __DATE__
 
+#define MAXOBJECTNAMELENGTH 64 ///< Maximum length of audits, reportings, trees, queries and previsions names
+
 
 #define FIXEDPOINTCOEFF 1000 ///< Currencies are stored as fixed point, multiplied with this coeff
 #define DEFAULTNUMDECIMALS 2 ///< The default number of decimals to display. Must not be greater than log10(FIXEDPOINTCOEFF)

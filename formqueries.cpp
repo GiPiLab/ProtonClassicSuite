@@ -112,6 +112,17 @@ void FormQueries::onColorChanged()
     ui->frame_3->setStyleSheet(QString("background-color:"+PCx_QueryMinMax::getColor().name()));
 }
 
+void FormQueries::onListOfQueriesChanged(unsigned int auditId)
+{
+    if(model==nullptr)
+        return;
+
+    if(model->getAuditId()==auditId)
+    {
+        queriesModel->update();
+    }
+}
+
 
 void FormQueries::updateListOfAudits()
 {
@@ -137,7 +148,10 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
 {
     if(index==-1||ui->comboBoxListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboBoxListAudits->currentData().toUInt();
-    Q_ASSERT(selectedAuditId>0);
+    if(selectedAuditId==0)
+    {
+        qFatal("Assertion failed");
+    }
     //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=nullptr)
@@ -151,7 +165,7 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
 
     model=new PCx_Audit(selectedAuditId);
     report=new PCx_Report(model);
-    queriesModel=new PCx_QueriesModel(selectedAuditId,this);
+    queriesModel=new PCx_QueriesModel(model,this);
 
     ui->listView->setModel(queriesModel);
 
@@ -159,7 +173,10 @@ void FormQueries::on_comboBoxListAudits_activated(int index)
     ui->comboBoxTypes_2->clear();
     ui->comboBoxTypes_3->clear();
     QList<QPair<unsigned int,QString> >listOfTypes=model->getAttachedTree()->getAllTypes();
-    Q_ASSERT(!listOfTypes.isEmpty());
+    if(listOfTypes.isEmpty())
+    {
+        qFatal("Assertion failed");
+    }
     QPair<unsigned int, QString> p;
     foreach(p,listOfTypes)
     {
@@ -325,12 +342,18 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
         if(!qv.save(text))
         {
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;
         }
         queriesModel->update();
+        emit listOfQueriesChanged(model->getAuditId());
     }
 }
 
@@ -349,6 +372,7 @@ void FormQueries::on_pushButtonDelete_clicked()
         unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
         PCx_Query::deleteQuery(model->getAuditId(),selectedQueryId);
     }
+    emit listOfQueriesChanged(model->getAuditId());
     queriesModel->update();
 }
 
@@ -537,12 +561,18 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
         if(!qr.save(text))
         {
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;
         }
         queriesModel->update();
+        emit listOfQueriesChanged(model->getAuditId());
     }
 }
 
@@ -607,12 +637,18 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une requête de ce type portant ce nom !"));
             goto redo;
         }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
         if(!qr.save(text))
         {
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;
         }
         queriesModel->update();
+        emit listOfQueriesChanged(model->getAuditId());
     }
 }
 

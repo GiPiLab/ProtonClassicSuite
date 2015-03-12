@@ -27,14 +27,13 @@ FormAuditExplore::FormAuditExplore(QWidget *parent) :
 
 FormAuditExplore::~FormAuditExplore()
 {
-    delete ui;
     delete doc;
-    //delete interface;
     if(model!=nullptr)
     {
         delete model;
         delete report;
     }
+    delete ui;
 }
 
 void FormAuditExplore::onListOfAuditsChanged()
@@ -44,6 +43,8 @@ void FormAuditExplore::onListOfAuditsChanged()
 
 void FormAuditExplore::onSettingsChanged()
 {
+    if(model==nullptr)
+        return;
     if(ui->treeView->currentIndex().isValid())
     {
         on_treeView_clicked(ui->treeView->currentIndex());
@@ -193,7 +194,10 @@ void FormAuditExplore::on_comboListAudits_activated(int index)
 {
     if(index==-1||ui->comboListAudits->count()==0)return;
     unsigned int selectedAuditId=ui->comboListAudits->currentData().toUInt();
-    Q_ASSERT(selectedAuditId>0);
+    if(!(selectedAuditId>0))
+    {
+        qFatal("Assertion failed");
+    }
     //qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
     if(model!=nullptr)

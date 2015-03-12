@@ -33,7 +33,10 @@ void PCx_QueryMinMax::setVals(QPair<qint64, qint64> vals)
 
 bool PCx_QueryMinMax::save(const QString &name) const
 {
-    Q_ASSERT(!name.isEmpty());
+    if(name.isEmpty()||name.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed");
+    }
 
     QSqlQuery q;
     q.prepare(QString("insert into audit_queries_%1 (name,query_mode,target_type,ored,dfrfdiri,"
