@@ -277,7 +277,7 @@
       <item row="14" column="0">
        <widget class="QPushButton" name="pushButtonFillAudit">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Ajouter les données de la dernière situation du reporting actif à l'audit sélectionné. Pour que cette fonction puisse être utilisée les conditions suivantes doivent être toutes vérifiées :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- l'audit doit être associé au même arbre que le reporting ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- l'audit ne doit pas être terminé ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- les années sur lesquelles portent l'audit doivent inclure celle de la date de la dernière situation renseignée dans le reporting.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Les éventuelles données contenues dans l'audit pour l'année de la dernière situation du reporting seront écrasées.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Ajouter les données de la dernière situation du reporting actif à l'audit sélectionné. Les éventuelles données contenues dans l'audit pour l'année de la dernière situation du reporting seront écrasées.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Vers l'audit :</string>
@@ -287,6 +287,9 @@
       <item row="14" column="1" colspan="3">
        <widget class="QComboBox" name="comboListOfAudits">
         <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Ajouter les données de la dernière situation du reporting actif à l'audit sélectionné. Les éventuelles données contenues dans l'audit pour l'année de la dernière situation du reporting seront écrasées.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="whatsThis">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Ajouter les données de la dernière situation du reporting actif à l'audit sélectionné. Pour que cette fonction puisse être utilisée les conditions suivantes doivent être toutes vérifiées :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- l'audit doit être associé au même arbre que le reporting ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- l'audit ne doit pas être terminé ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- les années sur lesquelles portent l'audit doivent inclure celle de la date de la dernière situation renseignée dans le reporting.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Les éventuelles données contenues dans l'audit pour l'année de la dernière situation du reporting seront écrasées.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>

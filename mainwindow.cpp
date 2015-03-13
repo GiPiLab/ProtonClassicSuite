@@ -87,6 +87,8 @@ void MainWindow::setMenusState()
         ui->actionSurveillance_des_reportings->setEnabled(false);
         ui->actionGestion_des_pr_visions->setEnabled(false);
         ui->actionElaboration_budg_taire_PCB->setEnabled(false);
+        ui->menuArbres->setEnabled(false);
+        ui->menuBudgets->setEnabled(false);
     }
     else
     {
@@ -109,6 +111,8 @@ void MainWindow::setMenusState()
         ui->actionSurveillance_des_reportings->setEnabled(true);
         ui->actionGestion_des_pr_visions->setEnabled(true);
         ui->actionElaboration_budg_taire_PCB->setEnabled(true);
+        ui->menuArbres->setEnabled(true);
+        ui->menuBudgets->setEnabled(true);
     }
 }
 
