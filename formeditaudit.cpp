@@ -199,6 +199,8 @@ void FormEditAudit::on_statsButton_clicked()
 
 void FormEditAudit::onAuditDataUpdated(unsigned int auditId)
 {
+    if(auditModel==nullptr)
+        return;
     if(auditModel->getAuditId()==auditId)
     {
         if(ui->treeView->currentIndex().isValid())

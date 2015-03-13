@@ -78,7 +78,7 @@ void FormReportingSupervision::onListOfReportingsChanged()
 
 void FormReportingSupervision::onReportingDataChanged(unsigned int reportingId)
 {
-    if(selectedReporting->getReportingId()==reportingId)
+    if(selectedReporting!=nullptr && selectedReporting->getReportingId()==reportingId)
     {
         updateDateRefCombo();
         model->setMode(getSelectedMode());        

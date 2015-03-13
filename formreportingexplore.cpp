@@ -39,7 +39,7 @@ void FormReportingExplore::onListOfReportingsChanged()
 
 void FormReportingExplore::onReportingDataChanged(unsigned int reportingId)
 {
-    if(selectedReporting->getReportingId()==reportingId)
+    if(selectedReporting!=nullptr && selectedReporting->getReportingId()==reportingId)
     {
         if(ui->treeView->currentIndex().isValid())
         {

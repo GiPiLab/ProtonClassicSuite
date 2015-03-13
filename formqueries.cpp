@@ -114,7 +114,7 @@ void FormQueries::onColorChanged()
 
 void FormQueries::onListOfQueriesChanged(unsigned int auditId)
 {
-    if(model==nullptr)
+    if(model==nullptr || queriesModel==nullptr)
         return;
 
     if(model->getAuditId()==auditId)
