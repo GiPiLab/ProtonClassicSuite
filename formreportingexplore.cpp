@@ -338,3 +338,14 @@ void FormReportingExplore::on_pushButtonExport_clicked()
     else
         QMessageBox::critical(this,tr("Attention"),tr("Le document n'a pas pu être enregistré !"));
 }
+
+void FormReportingExplore::on_pushButtonCollapseAll_clicked()
+{
+    ui->treeView->collapseAll();
+    ui->treeView->expandToDepth(1);
+}
+
+void FormReportingExplore::on_pushButtonExpandAll_clicked()
+{
+    ui->treeView->expandAll();
+}

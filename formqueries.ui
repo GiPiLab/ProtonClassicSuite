@@ -101,7 +101,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>dont les crédits</string>
+         <string>dont les</string>
         </property>
         <property name="buddy">
          <cstring>comboBoxORED_2</cstring>
@@ -166,7 +166,7 @@
         </sizepolicy>
        </property>
        <property name="whatsThis">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des requêtes mémorisées pour cet audit. La couleur d'arrière plan correspond au type de la requête. Vous pouvez sélectionner plusieurs requêtes mémoriser afin de les exécuter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des requêtes mémorisées pour cet audit. La couleur d'arrière plan correspond au type de la requête. Vous pouvez sélectionner plusieurs requêtes mémorisées afin de les exécuter. Les descriptions des requêtes sont accessibles dans les infobulles de cette zone.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
@@ -279,7 +279,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_16">
         <property name="text">
-         <string>dont les crédits</string>
+         <string>dont les</string>
         </property>
         <property name="buddy">
          <cstring>comboBoxORED_3</cstring>
@@ -474,7 +474,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>dont les crédits</string>
+         <string>dont les</string>
         </property>
         <property name="buddy">
          <cstring>comboBoxORED</cstring>

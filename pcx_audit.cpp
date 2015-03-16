@@ -960,9 +960,9 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileN
     xlsx.write(1,1,"Type noeud");
     xlsx.write(1,2,"Nom noeud");
     xlsx.write(1,3,"Année");
-    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
-    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES));
-    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
+    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true));
+    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true));
+    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true));
 
     QSqlQuery q;
     int row=2;
@@ -1094,22 +1094,42 @@ QString PCx_Audit::generateHTMLAuditTitle() const
 
 
 
-QString PCx_Audit::OREDtoCompleteString(ORED ored)
+QString PCx_Audit::OREDtoCompleteString(ORED ored, bool plural)
 {
-    switch(ored)
+    QString out;
+    if(plural==false)
     {
-    case ORED::OUVERTS:
-        return QObject::tr("prévu");
-    case ORED::REALISES:
-        return QObject::tr("réalisé");
-    case ORED::ENGAGES:
-        return QObject::tr("engagé");
-    case ORED::DISPONIBLES:
-        return QObject::tr("disponible");
-    default:
-        qWarning()<<"Invalid ORED specified !";
+        switch(ored)
+        {
+        case ORED::OUVERTS:
+            return QObject::tr("crédits ouverts");
+        case ORED::REALISES:
+            return QObject::tr("réalisé");
+        case ORED::ENGAGES:
+            return QObject::tr("engagé");
+        case ORED::DISPONIBLES:
+            return QObject::tr("disponible");
+        default:
+            qWarning()<<"Invalid ORED specified !";
+        }
     }
-    return QString();
+    else
+    {
+        switch(ored)
+        {
+        case ORED::OUVERTS:
+            return QObject::tr("crédits ouverts");
+        case ORED::REALISES:
+            return QObject::tr("réalisés");
+        case ORED::ENGAGES:
+            return QObject::tr("engagés");
+        case ORED::DISPONIBLES:
+            return QObject::tr("disponibles");
+        default:
+            qWarning()<<"Invalid ORED specified !";
+        }
+    }
+    return out;
 }
 
 QString PCx_Audit::OREDtoTableString(ORED ored)
@@ -1602,9 +1622,9 @@ bool PCx_Audit::exportLeavesSkeleton(const QString &fileName) const
     xlsx.write(1,1,"Type noeud");
     xlsx.write(1,2,"Nom noeud");
     xlsx.write(1,3,"Année");
-    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(ORED::OUVERTS));
-    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(ORED::REALISES));
-    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(ORED::ENGAGES));
+    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(ORED::OUVERTS,true));
+    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(ORED::REALISES,true));
+    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(ORED::ENGAGES,true));
 
     int row=2;
     foreach(unsigned int year, years)

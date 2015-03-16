@@ -141,7 +141,7 @@ QList<PCx_Reporting::OREDPCR> FormReportingGraphics::getSelectedOREDPCR() const
         selection.append(PCx_Reporting::OREDPCR::BUDGETVOTE);
     if(ui->checkBoxRattachesN1->isChecked())
         selection.append(PCx_Reporting::OREDPCR::RATTACHENMOINS1);
-    if(ui->checkBoxPrevus->isChecked())
+    if(ui->checkBoxOuverts->isChecked())
         selection.append(PCx_Reporting::OREDPCR::OUVERTS);
     if(ui->checkBoxRealises->isChecked())
         selection.append(PCx_Reporting::OREDPCR::REALISES);
@@ -227,7 +227,7 @@ void FormReportingGraphics::on_checkBoxRattachesN1_toggled(bool checked)
     updatePlot();
 }
 
-void FormReportingGraphics::on_checkBoxPrevus_toggled(bool checked)
+void FormReportingGraphics::on_checkBoxOuverts_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updatePlot();

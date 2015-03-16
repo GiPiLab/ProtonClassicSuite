@@ -26,8 +26,8 @@ public:
         REALISESPREDITS, //Realises prédits à ce rythme
         DIFFREALISESPREDITSOUVERTS, //Difference REALISESPREDITS-OUVERTS
         TAUXECART,
-        ECICO, //Date estimee de consommation integrale des credits
-        ERO2, //Date estimee du realise = ouverts/2
+        DECICP, //Date estimee de consommation integrale des credits
+        DERPSUR2, //Date estimee du realise = ouverts/2
         NB15NRESTANTES, //Nombre de 15N restant dans l'année
         RAC, //Reste à consommer
         CPP15NR //Consommé prévisionnel par 15N restante

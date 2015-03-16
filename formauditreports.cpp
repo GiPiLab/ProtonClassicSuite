@@ -75,9 +75,9 @@ void FormAuditReports::populateLists()
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT12);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT12(nodeId)+"</span>");
 
-    item=new QListWidgetItem(tr("Évolution comparée du prévu de la collectivité et de [...]"),ui->listGraphics);
+    item=new QListWidgetItem(tr("Évolution comparée des crédits ouverts de la collectivité et de [...]"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG1);
-    item=new QListWidgetItem(tr("Évolution comparée du cumulé du prévu de la collectivité et de [...]"),ui->listGraphics);
+    item=new QListWidgetItem(tr("Évolution comparée du cumulé des crédits ouverts de la collectivité et de [...]"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG2);
     item=new QListWidgetItem(tr("Évolution comparée du réalisé de la collectivité et de [...]"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG3);

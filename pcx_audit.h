@@ -269,9 +269,10 @@ public:
     /**
      * @brief OREDtoCompleteString converts an ORED item to its textual representation
      * @param ored the ORED item
+     * @param plural if true outputs in plural
      * @return the QString representation of the ORED
      */
-    static QString OREDtoCompleteString(ORED ored);
+    static QString OREDtoCompleteString(ORED ored,bool plural=false);
 
     /**
      * @brief OREDtoTableString converts an ORED item to its database column name

@@ -39,9 +39,9 @@ private slots:
     void on_saveButton_clicked();
     void on_checkBoxResults_toggled(bool checked);
     void on_checkBoxRecapGraph_toggled(bool checked);
-    void on_checkBoxPrevu_toggled(bool checked);
+    void on_checkBoxOuvert_toggled(bool checked);
     void on_checkBoxEngage_toggled(bool checked);
-    void on_checkBoxPrevuCumul_toggled(bool checked);
+    void on_checkBoxOuvertCumul_toggled(bool checked);
     void on_checkBoxEngageCumul_toggled(bool checked);
     void on_checkBoxRealise_toggled(bool checked);
     void on_checkBoxDisponible_toggled(bool checked);

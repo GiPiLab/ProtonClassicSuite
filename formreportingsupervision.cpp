@@ -33,8 +33,8 @@ void FormReportingSupervision::setColumnVisibility()
     ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!ui->checkBoxTauxReal->isChecked());
     ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!ui->checkBox15NRest->isChecked());
     ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!ui->checkBoxDifference->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ECICO,!ui->checkBoxDECICO->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ERO2,!ui->checkBoxERO2->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DECICP,!ui->checkBoxDECICO->isChecked());
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DERPSUR2,!ui->checkBoxERO2->isChecked());
     ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!ui->checkBoxRealisePredit->isChecked());
 }
 
@@ -245,12 +245,12 @@ void FormReportingSupervision::on_checkBoxDifference_toggled(bool checked)
 
 void FormReportingSupervision::on_checkBoxDECICO_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ECICO,!checked);
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DECICP,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxERO2_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ERO2,!checked);
+    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DERPSUR2,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxRAC_toggled(bool checked)
@@ -417,6 +417,7 @@ void FormReportingSupervision::on_comboBoxListDates_activated(int index)
 void FormReportingSupervision::on_pushButtonCopy_clicked()
 {
     QTextCursor cursor=ui->textEdit->textCursor();
+    cursor.insertHtml("<p>"+MODES::modeToCompleteString(getSelectedMode())+"</p>");
     cursor.insertHtml(qTableViewToHtml(ui->tableView)+"<br>");
 }
 

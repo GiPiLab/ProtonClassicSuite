@@ -262,18 +262,12 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     QString plotTitle;
     if(cumule==false)
     {
-        if(modeORED!=PCx_Audit::ORED::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
-        else
-            plotTitle=QObject::tr("&Eacute;volution comparée de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée des %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED,true)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
     }
 
     else
     {
-        if(modeORED!=PCx_Audit::ORED::ENGAGES)
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé du %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
-        else
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé de l'%1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé des %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED,true)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
     }
 
     /*
@@ -525,8 +519,8 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     if(miniMode==true)
     {
         if(selectedORED.count()==2)
-            plotTitle=QObject::tr("Crédits %1s (bleu) et %2s (gris)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0)))
-                    .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(1)));
+            plotTitle=QObject::tr("%1 (bleu) et %2 (gris)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true))
+                    .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(1),true));
 
         QCPPlotTitle * title;
         if(plot->plotLayout()->elementCount()==1)

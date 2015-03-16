@@ -20,7 +20,7 @@
    <item row="1" column="2">
     <widget class="QLabel" name="labelValueN">
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dernière valeur connue des crédits prévus pour le noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dernière valeur connue des crédits ouverts pour le noeud actif.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>valeur N</string>
@@ -65,7 +65,7 @@
    <item row="1" column="1">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Crédits prévus pour l'année N :</string>
+      <string>Crédits ouverts pour l'année N :</string>
      </property>
     </widget>
    </item>
@@ -341,7 +341,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne utilisée pour répartir la sommes voulue entre les feuilles liées au noeud actif (voir l'infobulle du bouton &amp;quot;Appliquer au noeud actif&amp;quot;). Seules les dernières valeurs connues seront prises en compte lors du calcul.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="whatsThis">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne utilisée pour répartir la sommes voulue entre les feuilles liées au noeud actif (bouton &amp;quot;Appliquer au noeud actif&amp;quot;). Seules les dernières valeurs connues seront prises en compte lors du calcul, et chaque feuille se verra dotée d'un montant proportionnel à son taux de [prévu/réalisé/engagé/disponible] dans la branche active.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne utilisée pour répartir la sommes voulue entre les feuilles liées au noeud actif (bouton &amp;quot;Appliquer au noeud actif&amp;quot;). Seules les dernières valeurs connues seront prises en compte lors du calcul, et chaque feuille se verra dotée d'un montant proportionnel à son taux de [crédits ouverts/réalisé/engagé/disponible] dans la branche active.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>

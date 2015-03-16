@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>395</width>
+    <width>441</width>
     <height>530</height>
    </rect>
   </property>
@@ -111,9 +111,9 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QCheckBox" name="checkBoxPrevus">
+           <widget class="QCheckBox" name="checkBoxOuverts">
             <property name="text">
-             <string>Prévus</string>
+             <string>Crédits ouverts</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -247,7 +247,7 @@
   <tabstop>checkBoxOCDM</tabstop>
   <tabstop>checkBoxVCDM</tabstop>
   <tabstop>checkBoxBudgetVote</tabstop>
-  <tabstop>checkBoxPrevus</tabstop>
+  <tabstop>checkBoxOuverts</tabstop>
   <tabstop>checkBoxRealises</tabstop>
   <tabstop>checkBoxEngages</tabstop>
   <tabstop>checkBoxDisponibles</tabstop>

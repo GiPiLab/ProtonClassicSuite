@@ -1195,7 +1195,7 @@ QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored,bool capitalizeFirst
         switch(ored)
         {
         case OREDPCR::OUVERTS:
-            return QObject::tr("prévu");
+            return QObject::tr("crédits ouverts");
         case OREDPCR::REALISES:
             return QObject::tr("réalisé");
         case OREDPCR::ENGAGES:
@@ -1230,7 +1230,7 @@ QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored,bool capitalizeFirst
         switch(ored)
         {
         case OREDPCR::OUVERTS:
-            return QObject::tr("Prévu");
+            return QObject::tr("Crédits ouverts");
         case OREDPCR::REALISES:
             return QObject::tr("Réalisé");
         case OREDPCR::ENGAGES:

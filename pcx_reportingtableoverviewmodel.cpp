@@ -69,27 +69,28 @@ void PCx_ReportingTableOverviewModel::updateQuery()
     switch(mode)
     {
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF:
-        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,bp,ouverts,realises,engages,disponibles,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF:
-        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,bp,ouverts,realises,engages,disponibles,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RF_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI:
-        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,bp,ouverts,realises,engages,disponibles,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_DI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI:
-        queryModel.setQuery(QString("select date,ouverts,realises,engages,disponibles,bp,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
+        queryModel.setQuery(QString("select date,bp,ouverts,realises,engages,disponibles,reports,ocdm,vcdm,budgetvote,vcinterne,rattachenmoins1 from reporting_RI_%1 where id_node=%2 order by date desc").arg(reporting->getReportingId()).arg(nodeId));
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF:
-        queryModel.setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
+        queryModel.setQuery(QString("select a.date,"
+                                    "coalesce(a.bp,0)-coalesce(b.bp,0) as bp,"
+                                    "coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
                          "coalesce(a.realises,0)-coalesce(b.realises,0) as realises,"
                          "coalesce(a.engages,0)-coalesce(b.engages,0) as engages,"
-                         "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) as disponibles,"
-                         "coalesce(a.bp,0)-coalesce(b.bp,0) as bp,"
+                         "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) as disponibles,"                         
                          "coalesce(a.reports,0)-coalesce(b.reports,0) as reports,"
                          "coalesce(a.ocdm,0)-coalesce(b.ocdm,0) as ocdm,"
                          "coalesce(a.vcdm,0)-coalesce(b.vcdm,0) as vcdm,"
@@ -101,12 +102,13 @@ void PCx_ReportingTableOverviewModel::updateQuery()
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI:
-        queryModel.setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
+        queryModel.setQuery(QString("select a.date,"
+                                    "coalesce(a.bp,0)-coalesce(b.bp,0) as bp,"
+                                    "coalesce(a.ouverts,0)-coalesce(b.ouverts,0) as ouverts,"
                          "coalesce(a.realises,0)-coalesce(b.realises,0) as realises,"
                          "coalesce(a.engages,0)-coalesce(b.engages,0) as engages,"
                          "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) as disponibles,"
-                         "coalesce(a.bp,0)-coalesce(b.bp,0) as bp,"
-                         "coalesce(a.reports,0)-coalesce(b.reports,0) as reports,"
+                                    "coalesce(a.reports,0)-coalesce(b.reports,0) as reports,"
                          "coalesce(a.ocdm,0)-coalesce(b.ocdm,0) as ocdm,"
                          "coalesce(a.vcdm,0)-coalesce(b.vcdm,0) as vcdm,"
                          "coalesce(a.budgetvote,0)-coalesce(b.budgetvote,0) as budgetvote,"
@@ -117,12 +119,13 @@ void PCx_ReportingTableOverviewModel::updateQuery()
         break;
 
     case PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI:
-        queryModel.setQuery(QString("select a.date,coalesce(a.ouverts,0)-coalesce(b.ouverts,0) + coalesce(c.ouverts,0)-coalesce(d.ouverts,0) as ouverts,"
+        queryModel.setQuery(QString("select a.date,"
+                                    "coalesce(a.bp,0)-coalesce(b.bp,0) + coalesce(c.bp,0)-coalesce(d.bp,0) as bp,"
+                                    "coalesce(a.ouverts,0)-coalesce(b.ouverts,0) + coalesce(c.ouverts,0)-coalesce(d.ouverts,0) as ouverts,"
                          "coalesce(a.realises,0)-coalesce(b.realises,0) + coalesce(c.realises,0)-coalesce(d.realises,0) as realises,"
                          "coalesce(a.engages,0)-coalesce(b.engages,0) + coalesce(c.engages,0)-coalesce(d.engages,0) as engages,"
                          "coalesce(a.disponibles,0)-coalesce(b.disponibles,0) + coalesce(c.disponibles,0)-coalesce(d.disponibles,0) as disponibles,"
-                         "coalesce(a.bp,0)-coalesce(b.bp,0) + coalesce(c.bp,0)-coalesce(d.bp,0) as bp,"
-                         "coalesce(a.reports,0)-coalesce(b.reports,0) + coalesce(c.reports,0)-coalesce(d.reports,0) as reports,"
+                                    "coalesce(a.reports,0)-coalesce(b.reports,0) + coalesce(c.reports,0)-coalesce(d.reports,0) as reports,"
                          "coalesce(a.ocdm,0)-coalesce(b.ocdm,0) + coalesce(c.ocdm,0)-coalesce(d.ocdm,0) as ocdm,"
                          "coalesce(a.vcdm,0)-coalesce(b.vcdm,0) + coalesce(c.vcdm,0)-coalesce(d.vcdm,0) as vcdm,"
                          "coalesce(a.budgetvote,0)-coalesce(b.budgetvote,0) + coalesce(c.budgetvote,0)-coalesce(d.budgetvote,0) as budgetvote,"

@@ -155,10 +155,10 @@ void FormAuditExplore::getSelections()
         if(ui->checkBoxJoursAct->isChecked())
             selectedTabs.append(PCx_Tables::PCADAYOFWORK);
 
-        if(ui->checkBoxPrevu->isChecked())
+        if(ui->checkBoxOuvert->isChecked())
             selectedGraphics.append(PCx_Graphics::PCAG1);
 
-        if(ui->checkBoxPrevuCumul->isChecked())
+        if(ui->checkBoxOuvertCumul->isChecked())
             selectedGraphics.append(PCx_Graphics::PCAG2);
 
         if(ui->checkBoxRealise->isChecked())
@@ -240,8 +240,8 @@ void FormAuditExplore::on_radioButtonGlobal_toggled(bool checked)
         ui->checkBoxJoursAct->setEnabled(false);
         ui->checkBoxResults->setEnabled(true);
 
-        ui->checkBoxPrevu->setEnabled(false);
-        ui->checkBoxPrevuCumul->setEnabled(false);
+        ui->checkBoxOuvert->setEnabled(false);
+        ui->checkBoxOuvertCumul->setEnabled(false);
         ui->checkBoxRealise->setEnabled(false);
         ui->checkBoxRealiseCumul->setEnabled(false);
         ui->checkBoxEngage->setEnabled(false);
@@ -259,8 +259,8 @@ void FormAuditExplore::on_radioButtonGlobal_toggled(bool checked)
         ui->checkBoxJoursAct->setEnabled(true);
         ui->checkBoxResults->setEnabled(false);
 
-        ui->checkBoxPrevu->setEnabled(true);
-        ui->checkBoxPrevuCumul->setEnabled(true);
+        ui->checkBoxOuvert->setEnabled(true);
+        ui->checkBoxOuvertCumul->setEnabled(true);
         ui->checkBoxRealise->setEnabled(true);
         ui->checkBoxRealiseCumul->setEnabled(true);
         ui->checkBoxEngage->setEnabled(true);
@@ -386,7 +386,7 @@ void FormAuditExplore::on_checkBoxRecapGraph_toggled(bool checked)
     updateTextBrowser();
 }
 
-void FormAuditExplore::on_checkBoxPrevu_toggled(bool checked)
+void FormAuditExplore::on_checkBoxOuvert_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();
@@ -398,7 +398,7 @@ void FormAuditExplore::on_checkBoxEngage_toggled(bool checked)
     updateTextBrowser();
 }
 
-void FormAuditExplore::on_checkBoxPrevuCumul_toggled(bool checked)
+void FormAuditExplore::on_checkBoxOuvertCumul_toggled(bool checked)
 {
     Q_UNUSED(checked);
     updateTextBrowser();

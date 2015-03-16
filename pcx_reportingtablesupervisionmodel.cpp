@@ -53,9 +53,9 @@ QString PCx_ReportingTableSupervisionModel::getColumnName(PCx_ReportingTableSupe
         return tr("Réalises prédits");
     case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
         return tr("Diff. estimée");
-    case TABLESUPERVISIONCOLUMNS::ECICO:
+    case TABLESUPERVISIONCOLUMNS::DECICP:
         return tr("DECICP");
-    case TABLESUPERVISIONCOLUMNS::ERO2:
+    case TABLESUPERVISIONCOLUMNS::DERPSUR2:
         return tr("DER=P/2");
     case TABLESUPERVISIONCOLUMNS::RAC:
         return tr("RAC");
@@ -85,6 +85,64 @@ int PCx_ReportingTableSupervisionModel::columnCount(const QModelIndex &parent) c
 
 QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int role) const
 {
+    if(role==Qt::ToolTipRole)
+    {
+        QString out;
+        switch(index.column())
+        {
+        case 0:
+            out=tr("Liste des noeuds de l'arbre actif");
+            break;
+
+        case TABLESUPERVISIONCOLUMNS::PERCENTBP:
+            out=tr("Pourcentage du BP par rapport aux crédits ouverts");
+            break;
+        case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
+            out=tr("Pourcentage des réalisés par rapport aux crédits ouverts. En <span style='color:red'><b>rouge</b></span> lorsque cette valeur"
+                   " est strictement supérieure à 100%, en <span style='color:darkgreen'><b>vert</b></span> sinon");
+            break;
+        case TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
+            out=tr("Pourcentage des engagés par rapport aux crédits ouverts");
+            break;
+        case TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
+            out=tr("Pourcentage des disponibles par rapport aux crédits ouverts");
+            break;
+        case TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
+            out=tr("Quantité de réalisés qui seront consommés"
+                   " à la fin de l'année en suivant le rythme actuel\n(= réalisés / nombre_de_jours_depuis_le_début_d'année * 365)");
+            break;
+        case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+            out=tr("Différence estimée entre les réalisés prédits pour la fin de l'année et les crédits ouverts au rythme de consommation actuel."
+                   "\nEn rouge si les crédits ouverts seront insuffisants,"
+                   " en vert sinon");
+            break;
+        case TABLESUPERVISIONCOLUMNS::TAUXECART:
+            out=tr("Taux d'écart entre les crédits ouverts et le réalisé prévisionnel de fin d'exercice.\n"
+                   "Taux d'écart = (réalisé_prévisonnel - crédits_ouverts)/crédits_ouverts * 100\n"
+                   "avec réalisé_prévisionnel = réalisés / nombre_de_jours_depuis_le_début_d'année * 365\n\n"
+                   " En rouge si les crédits ouverts seront insuffisants, en "
+                   "vert sinon");
+            break;
+        case TABLESUPERVISIONCOLUMNS::DECICP:
+            out=tr("Date estimée de consommation intégrale des crédits ouverts au rythme actuel");
+            break;
+        case TABLESUPERVISIONCOLUMNS::DERPSUR2:
+            out=tr("Date estimée à laquelle les réalisés atteindront la moitié des crédits ouverts au rythme actuel");
+            break;
+        case TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
+            out=tr("Nombre de quinzaines avant la fin de l'année");
+            break;
+        case TABLESUPERVISIONCOLUMNS::RAC:
+            out=tr("Crédits restant à consommer (=crédits ouverts-réalisés)");
+            break;
+        case TABLESUPERVISIONCOLUMNS::CPP15NR:
+            out=tr("Consommé Prévu Par Quinzaine Restante (=reste à consommer / quinzaines restantes)");
+            break;
+        }
+        return out;
+    }
+
+
     if(role==Qt::DisplayRole||role==Qt::TextColorRole||role==Qt::EditRole)
     {
         int row=index.row();
@@ -168,11 +226,11 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             computedValue=entry.diffRealisesPreditsOuverts;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::ECICO:
+        case TABLESUPERVISIONCOLUMNS::DECICP:
             return entry.dECICO;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::ERO2:
+        case TABLESUPERVISIONCOLUMNS::DERPSUR2:
             return entry.dERO2;
             break;
 

@@ -48,7 +48,7 @@ private slots:
 
     void on_checkBoxRattachesN1_toggled(bool checked);
 
-    void on_checkBoxPrevus_toggled(bool checked);
+    void on_checkBoxOuverts_toggled(bool checked);
 
     void on_checkBoxRealises_toggled(bool checked);
 

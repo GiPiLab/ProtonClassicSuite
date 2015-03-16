@@ -198,8 +198,8 @@ QString PCx_QueryRank::getDescription() const
     else
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
-    out.append(QObject::tr(" dont les crédits %1s des %2 sont parmi les [%3] %4 entre %5 et %6")
-            .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
+    out.append(QObject::tr(" dont les %1 des %2 sont parmi les [%3] %4 entre %5 et %6")
+            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped())
             .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(number).arg(greaterSmallerToString(grSm).toHtmlEscaped())
             .arg(year1).arg(year2));

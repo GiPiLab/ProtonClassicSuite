@@ -262,12 +262,12 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QCheckBox" name="checkBoxPrevu">
+           <widget class="QCheckBox" name="checkBoxOuvert">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Prévu</string>
+             <string>Crédits ouverts</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -285,7 +285,7 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBoxPrevuCumul">
+           <widget class="QCheckBox" name="checkBoxOuvertCumul">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -437,9 +437,9 @@
   <tabstop>checkBoxEvolutionCumul</tabstop>
   <tabstop>checkBoxJoursAct</tabstop>
   <tabstop>checkBoxRecapGraph</tabstop>
-  <tabstop>checkBoxPrevu</tabstop>
+  <tabstop>checkBoxOuvert</tabstop>
   <tabstop>checkBoxEngage</tabstop>
-  <tabstop>checkBoxPrevuCumul</tabstop>
+  <tabstop>checkBoxOuvertCumul</tabstop>
   <tabstop>checkBoxEngageCumul</tabstop>
   <tabstop>checkBoxRealise</tabstop>
   <tabstop>checkBoxDisponible</tabstop>

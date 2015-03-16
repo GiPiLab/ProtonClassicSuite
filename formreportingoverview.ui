@@ -66,6 +66,9 @@
            <pointsize>8</pointsize>
           </font>
          </property>
+         <property name="whatsThis">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Listes des valeurs et/ou des pourcentages pour le noeud actif :&lt;/p&gt;&lt;p&gt;&lt;br/&gt;- En &lt;span style=&quot; font-weight:600;&quot;&gt;noir&lt;/span&gt; les valeurs positives ou nulles, ou les pourcentages égaux à 100% ;&lt;/p&gt;&lt;p&gt;- En &lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;rouge&lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt; les valeurs ou les pourcentages négatifs ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- En &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#0000ff;&quot;&gt;bleu&lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt; les pourcentages compris entre 0% et 100% (exclus) ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- En &lt;/span&gt;&lt;span style=&quot; font-weight:600; color:#00ff00;&quot;&gt;vert&lt;/span&gt;&lt;span style=&quot; color:#000000;&quot;&gt; les pourcentages strictement supérieurs à 100%&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -109,7 +112,14 @@
            </widget>
           </item>
           <item row="0" column="5">
-           <widget class="QComboBox" name="comboBoxRefColumn"/>
+           <widget class="QComboBox" name="comboBoxRefColumn">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne fixée à 100%&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colonne fixée à 100%. Les valeurs pour les autres colonnes seront exprimées en pourcentage des valeurs de la colonne sélectionnée.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
           </item>
           <item row="0" column="0">
            <widget class="QRadioButton" name="radioButtonDF">
@@ -171,7 +181,14 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <widget class="QComboBox" name="comboBoxRefDate"/>
+           <widget class="QComboBox" name="comboBoxRefDate">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date fixée à 100%&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date fixée à 100%. Les valeurs pour les autres dates seront exprimées en pourcentage des valeurs de la date sélectionnée.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -189,6 +206,9 @@
        </item>
        <item row="2" column="0" colspan="2">
         <widget class="QPushButton" name="pushButtonCopyToDocument">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copier le tableau dans la zone de texte à l'emplacement du curseur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Copier</string>
          </property>
@@ -232,7 +252,7 @@
       <item>
        <widget class="QCheckBox" name="checkBoxOuverts">
         <property name="text">
-         <string>Prévu</string>
+         <string>Crédits ouverts</string>
         </property>
         <property name="checked">
          <bool>true</bool>

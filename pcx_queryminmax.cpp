@@ -113,7 +113,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
         xlsDoc->write(4,2,"Type");
         xlsDoc->write(4,3,"Noeud");
         xlsDoc->write(4,4,"Année");
-        xlsDoc->write(4,5,PCx_Audit::OREDtoCompleteString(ored));
+        xlsDoc->write(4,5,PCx_Audit::OREDtoCompleteString(ored,true));
     }
 
 
@@ -208,8 +208,8 @@ QString PCx_QueryMinMax::getDescription() const
     else
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
-    out.append(QObject::tr(" dont les crédits %1s des %2 sont compris entre %3€ et %4€ entre %5 et %6")
-            .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
+    out.append(QObject::tr(" dont les %1 des %2 sont compris entre %3€ et %4€ entre %5 et %6")
+            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped())
             .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(formatFixedPoint(val1)).arg(formatFixedPoint(val2))
             .arg(year1).arg(year2));

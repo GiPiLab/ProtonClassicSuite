@@ -24,11 +24,22 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QWidget" name="layoutWidget1">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QComboBox" name="comboListReportings"/>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="pushButtonExpandAll">
+         <property name="text">
+          <string>&amp;Déplier tout</string>
+         </property>
+        </widget>
        </item>
-       <item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="pushButtonCollapseAll">
+         <property name="text">
+          <string>&amp;Replier tout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
         <widget class="QTreeView" name="treeView">
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
@@ -38,7 +49,10 @@
          </property>
         </widget>
        </item>
-       <item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="comboListReportings"/>
+       </item>
+       <item row="3" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxMode">
          <property name="title">
           <string>Mode</string>
@@ -78,7 +92,7 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item row="4" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBoxFields">
          <property name="title">
           <string>Crédits</string>

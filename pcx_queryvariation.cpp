@@ -115,8 +115,8 @@ QString PCx_QueryVariation::getDescription() const
     else
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
-    out.append(QObject::tr(" dont les crédits %1s des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
-            .arg(PCx_Audit::OREDtoCompleteString(ored).toHtmlEscaped())
+    out.append(QObject::tr(" dont les %1 des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
+            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped())
             .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
             .arg(formatFixedPoint(val,-1,true)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())

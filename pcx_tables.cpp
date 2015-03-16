@@ -32,9 +32,9 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString output=QString("\n<table align='center' width='98%' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
-                           "<th>R&eacute;alis&eacute;</th><th>%/pr&eacute;vu</th>"
-                           "<th>Engag&eacute;</th><th>%/pr&eacute;vu</th><th>Disponible</th><th>%/pr&eacute;vu</th></tr>")
+                           "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th>"
+                           "<th>R&eacute;alis&eacute;</th><th>%/crédits ouverts</th>"
+                           "<th>Engag&eacute;</th><th>%/crédits ouverts</th><th>Disponible</th><th>%/crédits ouverts</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
@@ -87,7 +87,7 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+                           "<tr class='t2entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
@@ -188,7 +188,7 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+                           "<tr class='t3entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
 
@@ -293,7 +293,7 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t2entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+                           "<tr class='t2entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
@@ -358,7 +358,7 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t3entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+                           "<tr class='t3entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
@@ -426,7 +426,7 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
     QString output=QString("\n<table align='center' width='65%' cellpadding='5'>"
                            "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>au sein de la Collectivit&eacute; "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t4entete'><th>Exercice</th><th>Pour le pr&eacute;vu</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
+                           "<tr class='t4entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
     QHash<unsigned int,qint64> ouvertsRoot,realisesRoot;
@@ -499,7 +499,7 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t5entete'><td colspan=6 align='center'>"
                            "<b>Analyse en base 100 du compte administratif de la Collectivit&eacute; "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t5entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Pr&eacute;vu</th>"
+                           "<tr class='t5entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Crédits ouverts</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t5entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
@@ -631,7 +631,7 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t6entete'><td colspan=6 align='center'>"
                            "<b>Analyse en base 100 du compte administratif de [ %1 ]"
                            "<br>(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t6entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Pr&eacute;vu</th>"
+                           "<tr class='t6entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Crédits ouverts</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t6entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
@@ -717,7 +717,7 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
                            "<b>Transcription en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>"
                            "[ %1 ] (<span style='color:#7c0000'>%2</span>)<br><u>sur la base d'une &eacute;quivalence de"
                            " 365/365<sup>&egrave;me</sup> entre le r&eacute;alis&eacute; budg&eacute;taire et l'ann&eacute;e</u></b>"
-                           "<tr class='t7entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th>"
+                           "<tr class='t7entete'><th>Exercice</th><th>Crédits ouverts</th><th>R&eacute;alis&eacute;</th>"
                            "<th>Engag&eacute;</th><th>Disponible</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 
@@ -880,7 +880,7 @@ QString PCx_Tables::getPCAT10(unsigned int node) const
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
-                           "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
+                           "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
@@ -950,7 +950,7 @@ QString PCx_Tables::getPCAT11(unsigned int node) const
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS d'INVESTISSEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
-                           "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
+                           "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
@@ -1020,7 +1020,7 @@ QString PCx_Tables::getPCAT12(unsigned int node) const
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS BUDG&Eacute;TAIRES de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
-                           "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
+                           "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th><th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
 
     QSqlQuery q;
@@ -1568,7 +1568,7 @@ QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString output=QString("\n<table align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=5><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
-                           "<tr class='t1entete'><th>Exercice</th><th>Pr&eacute;vu</th>"
+                           "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th>"
                            "<th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th><th>Disponible</th></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
 

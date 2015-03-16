@@ -94,7 +94,7 @@
            <item>
             <widget class="QTableView" name="tableViewDF">
              <property name="whatsThis">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette zone affiche les données pour le noeud actif et le mode sélectionné. Si le noeud actif est une feuille, il est possible de modifier les valeurs des prévu/réalisé/engagé. Elles seront automatiquement répercutées dans les noeuds parents.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;La valeur du disponible n'est pas modifiable : elle est calculée automatiquement selon la formule disponible=prévu-(réalisé + engagé) une fois que tous les champs de l'année sont remplis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette zone affiche les données pour le noeud actif et le mode sélectionné. Si le noeud actif est une feuille, il est possible de modifier les valeurs des crédits ouverts/réalisés/engagés. Elles seront automatiquement répercutées dans les noeuds parents.&lt;/p&gt;&lt;p&gt;La valeur du disponible n'est pas modifiable : elle est calculée automatiquement selon la formule disponible=crédits ouverts-(réalisé + engagé) une fois que tous les champs de l'année sont remplis.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="editTriggers">
               <set>QAbstractItemView::AllEditTriggers</set>

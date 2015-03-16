@@ -60,28 +60,28 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
     switch(previsionOperator)
     {
     case PREVISIONOPERATOR::MINIMUM:
-        output=QObject::tr("le minimum des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("le minimum des %1").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::MAXIMUM:
-        output=QObject::tr("le maximum des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("le maximum des %1").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::AVERAGE:
-        output=QObject::tr("la moyenne des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("la moyenne des %1").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::REGLIN:
-        output=QObject::tr("la tendance linéaire des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("la tendance linéaire des %1").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::LASTVALUE:
-        output=QObject::tr("la dernière valeur des crédits %1s").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("la dernière valeur des %1").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::PERCENT:
-        output=QObject::tr("%1\% de la dernière valeur des crédits %2s").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("%1\% de la dernière valeur %2").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::FIXEDVALUE:
         output=QObject::tr("Valeur fixe");
         break;    
     case PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION:
-        output=QObject::tr("Distribution en fonction du poids relatif des %1s de l'année N").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget));
+        output=QObject::tr("Distribution en fonction du poids relatif des %1 de l'année N").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
     }
     return output;
 }

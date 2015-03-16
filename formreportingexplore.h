@@ -49,6 +49,10 @@ private slots:
 
     void on_pushButtonExport_clicked();
 
+    void on_pushButtonCollapseAll_clicked();
+
+    void on_pushButtonExpandAll_clicked();
+
 private:
     Ui::FormReportingExplore *ui;
     PCx_ReportingWithTreeModel *selectedReporting;

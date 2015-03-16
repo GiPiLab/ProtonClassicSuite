@@ -409,7 +409,7 @@ bool PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves(PCx_Audit::ORED or
 
     if(computedValue!=0 && (total==0 || total==-MAX_NUM))
     {
-        QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Je ne peux pas répartir cette somme sur la base d'un %2 nul pour %1 !").arg(lastYear).arg(PCx_Audit::OREDtoCompleteString(oredReference)));
+        QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Je ne peux pas répartir cette somme sur la base de %2 nuls pour %1 !").arg(lastYear).arg(PCx_Audit::OREDtoCompleteString(oredReference,true)));
         return false;
     }
 

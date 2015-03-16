@@ -25,6 +25,9 @@
        <pointsize>8</pointsize>
       </font>
      </property>
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Listes des valeurs et/ou des pourcentages pour tous les noeuds de l'arbre actif. Les colonnes peuvent être triées. Les codes couleurs sont expliqués dans les infobulles des colonnes concernées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
@@ -203,7 +206,7 @@
       <item row="15" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxRAC">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Crédits restant à consommer (=prévus-réalisés)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Crédits restant à consommer (=crédits ouverts-réalisés)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Reste à consommer</string>
@@ -229,7 +232,7 @@
       <item row="13" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxERO2">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée à laquelle les réalisés atteindront la moitié des crédits prévus au rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée à laquelle les réalisés atteindront la moitié des crédits ouverts au rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Date ER=P/2</string>
@@ -242,7 +245,7 @@
       <item row="12" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxDECICO">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée de consommation intégrale des crédits prévus au rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Date estimée de consommation intégrale des crédits ouverts au rythme actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Date ECICP</string>
@@ -255,7 +258,7 @@
       <item row="11" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxTauxEcart">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Taux d'écart entre les crédits prévus et le réalisé prévisionnel de fin d'exercice.&lt;/p&gt;&lt;p&gt;Taux d'écart = (réalisé_prévisonnel - crédits_prévus)/crédits_prévus * 100&lt;/p&gt;&lt;p&gt;avec réalisé_prévisionnel = réalisés / nombre_de_jours_depuis_le_début_d'année * 365&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Taux d'écart entre les crédits ouverts et le réalisé prévisionnel de fin d'exercice.&lt;/p&gt;&lt;p&gt;Taux d'écart = (réalisé_prévisonnel - crédits_ouverts)/crédits_ouverts * 100&lt;/p&gt;&lt;p&gt;avec réalisé_prévisionnel = réalisés / nombre_de_jours_depuis_le_début_d'année * 365&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Taux d'écart</string>
@@ -268,7 +271,7 @@
       <item row="10" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxDifference">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Différence estimée entre les réalisés prédits pour la fin de l'année et les crédits prévus au rythme de consommation actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Différence estimée entre les réalisés prédits pour la fin de l'année et les crédits ouverts au rythme de consommation actuel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Différence estimée</string>
@@ -294,7 +297,7 @@
       <item row="8" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxTauxDisponible">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage des disponibles par rapport aux prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage des disponibles par rapport aux crédits ouverrts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>% Disponibles</string>
@@ -307,7 +310,7 @@
       <item row="7" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxTauxEngage">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage des engagés par rapport aux prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage des engagés par rapport aux crédits ouverts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>% Engagés</string>
@@ -320,7 +323,7 @@
       <item row="6" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxVariationBP">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage du BP par rapport aux prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage du BP par rapport aux crédits ouverts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>% BP</string>
@@ -333,7 +336,7 @@
       <item row="5" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxTauxReal">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage des réalisés par rapport aux prévus&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pourcentage des réalisés par rapport aux crédits ouverts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>% Réalisés</string>
@@ -370,7 +373,7 @@
       <item row="1" column="0" colspan="2">
        <widget class="QCheckBox" name="checkBoxOuverts">
         <property name="text">
-         <string>Prévus</string>
+         <string>Crédits ouverts</string>
         </property>
         <property name="checked">
          <bool>true</bool>
