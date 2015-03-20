@@ -18,6 +18,8 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+QMAKE_CXXFLAGS+=-Og --coverage
+QMAKE_LFLAGS+=--coverage
 
 SOURCES += tst_unittests.cpp \
 

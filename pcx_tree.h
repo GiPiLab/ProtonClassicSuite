@@ -407,6 +407,14 @@ public:
      */
     virtual int guessHierarchy();
 
+    /**
+     * @brief updateNodePid change the parent identifier of a node. Used for D&D
+     * @param nodeId the node to change
+     * @param newPid the new parent identifier
+     */
+    void updateNodePid(unsigned int nodeId, unsigned int newPid);
+
+
 protected:
 
     /**
@@ -436,12 +444,6 @@ protected:
      */
     bool validateType(const QString &newType);
 
-    /**
-     * @brief updateNodePid change the parent identifier of a node. Used for D&D
-     * @param nodeId the node to change
-     * @param newPid the new parent identifier
-     */
-    void updateNodePid(unsigned int nodeId, unsigned int newPid);
 
 
     /**

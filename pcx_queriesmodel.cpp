@@ -57,21 +57,22 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const
         }
         case PCx_Query::RANK:
         {
-                PCx_QueryRank q(auditModel,queryId);
-                return q.getDescription().toHtmlEscaped();
-                break;
+            PCx_QueryRank q(auditModel,queryId);
+            return q.getDescription().toHtmlEscaped();
+            break;
         }
 
 
         case PCx_Query::MINMAX:
         {
-                PCx_QueryMinMax q(auditModel,queryId);
-                return q.getDescription().toHtmlEscaped();
-                break;
+            PCx_QueryMinMax q(auditModel,queryId);
+            return q.getDescription().toHtmlEscaped();
+            break;
         }
-
+        default:
+            qDebug()<<"Unsupported query type";
+            return QVariant();
         }
-
     }
     else
         return QSqlQueryModel::data(item,role);
