@@ -20,6 +20,7 @@ private Q_SLOTS:
     void testCaseForTreeNodes();
     void testCaseForTreeNodesOrder();
     void testCaseForTreeImportExport();
+    void testCaseForTreeToDot();
 };
 
 UnitTests::UnitTests()
@@ -39,7 +40,6 @@ void UnitTests::cleanupTestCase()
 {
     QSqlDatabase::database().close();
 }
-
 
 void UnitTests::testCaseForTreeNodes()
 {
@@ -100,7 +100,7 @@ void UnitTests::testCaseForTreeNodes()
 
 void UnitTests::testCaseForTreeImportExport()
 {
-    unsigned int randomTreeId=PCx_Tree::createRandomTree("RANDOMTREEIMPORTEXPORT",500);
+    unsigned int randomTreeId=PCx_Tree::createRandomTree("RANDOMTREEIMPORTEXPORT",100);
     PCx_Tree randomTree(randomTreeId);
     QList<unsigned int> nodeIds=randomTree.getNodesId();
     QList<unsigned int> randomNodesSortedDFS=randomTree.sortNodesDFS(nodeIds);
@@ -140,6 +140,70 @@ void UnitTests::testCaseForTreeImportExport()
     fi.remove();
 }
 
+void UnitTests::testCaseForTreeToDot()
+{
+    unsigned int treeId=PCx_Tree::addTree("TESTTODOT");
+    PCx_Tree tree(treeId);
+
+    /*
+     * ROOT
+     * |_NODE1
+     *      |_NODE3
+     *          |_NODE5
+     *      |_NODE4
+     *
+     * |_NODE2
+     *      |_NODE6
+     *          |_NODE7
+     * */
+
+    unsigned int node1=tree.addNode(1,1,"1_NODE1");
+    unsigned int node2=tree.addNode(1,1,"2_NODE2");
+    unsigned int node3=tree.addNode(node1,1,"10_NODE3");
+    unsigned int node4leaf=tree.addNode(node1,1,"11_NODE4");
+    unsigned int node5leaf=tree.addNode(node3,1,"100_NODE5");
+    unsigned int node6=tree.addNode(node2,1,"20_NODE6");
+    unsigned int node7leaf=tree.addNode(node6,1,"200_NODE7");
+
+    //Verify tree structure
+    QVERIFY(tree.isLeaf(node4leaf));
+    QVERIFY(tree.isLeaf(node5leaf));
+    QVERIFY(tree.isLeaf(node7leaf));
+    QVERIFY(!tree.isLeaf(node1));
+    QVERIFY(!tree.isLeaf(node2));
+    QVERIFY(!tree.isLeaf(node3));
+    QVERIFY(!tree.isLeaf(node6));
+    QCOMPARE(tree.getParentId(node1),(unsigned)1);
+    QCOMPARE(tree.getParentId(node2),(unsigned)1);
+    QCOMPARE(tree.getParentId(node3),node1);
+    QCOMPARE(tree.getParentId(node4leaf),node1);
+    QCOMPARE(tree.getParentId(node5leaf),node3);
+    QCOMPARE(tree.getParentId(node6),node2);
+    QCOMPARE(tree.getParentId(node7leaf),node6);
+
+    QString dot=tree.toDot();
+
+    QString attendedDot="graph g{\n"
+                        "rankdir=LR;\n"
+            "1 [label=\"Racine\"];\n"
+    "2 [label=\"Maire adjoint 1_NODE1\"];\n"
+    "3 [label=\"Maire adjoint 2_NODE2\"];\n"
+    "4 [label=\"Maire adjoint 10_NODE3\"];\n"
+    "5 [label=\"Maire adjoint 11_NODE4\"];\n"
+    "7 [label=\"Maire adjoint 20_NODE6\"];\n"
+    "6 [label=\"Maire adjoint 100_NODE5\"];\n"
+    "8 [label=\"Maire adjoint 200_NODE7\"];\n"
+        "\t1--2;\n"
+        "\t1--3;\n"
+        "\t2--4;\n"
+        "\t2--5;\n"
+        "\t3--7;\n"
+        "\t4--6;\n"
+        "\t7--8;\n}\n";
+
+    QCOMPARE(dot,attendedDot);
+    PCx_Tree::deleteTree(treeId);
+}
 
 void UnitTests::testCaseForTreeNodesOrder()
 {
