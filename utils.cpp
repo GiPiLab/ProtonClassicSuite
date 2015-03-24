@@ -375,7 +375,10 @@ QString formatDouble(double num, int decimals, bool forcedUnits)
 
 qint64 doubleToFixedPoint(double num)
 {
-    return (qint64)((num+0.0005)*FIXEDPOINTCOEFF);
+    if(num>=0.0)
+        return (qint64)((num+0.0005)*FIXEDPOINTCOEFF);
+    else
+        return (qint64)((num-0.0005)*FIXEDPOINTCOEFF);
 }
 
 double fixedPointToDouble(qint64 num)

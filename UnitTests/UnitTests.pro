@@ -21,6 +21,12 @@ TEMPLATE = app
 QMAKE_CXXFLAGS+=-Og --coverage
 QMAKE_LFLAGS+=--coverage
 
-SOURCES += tst_unittests.cpp \
+SOURCES += \
+    tst_protonclassicsuiteunittests_main.cpp \
+    tst_protonclassicsuiteunittests_tree.cpp \
+    tst_protonclassicsuiteunittests_audit.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+HEADERS += \
+    tst_protonclassicsuiteunittests.h

@@ -110,6 +110,7 @@ void PCx_Audit::finishAudit()
         qCritical()<<q.lastError();
         die();
     }
+    finishedString=QObject::tr("oui");
 }
 
 void PCx_Audit::unFinishAudit()
@@ -129,6 +130,7 @@ void PCx_Audit::unFinishAudit()
         qCritical()<<q.lastError();
         die();
     }
+    finishedString=QObject::tr("non");
 }
 
 bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED,double> vals, bool fastMode)
@@ -294,10 +296,10 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
 
 
     QProgressDialog progress(QObject::tr("Données en cours de recopie..."),0,0,modes.size()*4+1);
-    progress.setMinimumDuration(0);
+    //progress.setMinimumDuration(0);
 
     progress.setWindowModality(Qt::ApplicationModal);
-    progress.show();
+    //progress.show();
 
     int progval=1;
     progress.setValue(0);
@@ -1595,7 +1597,7 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisT
         if(query.value("termine").toBool()==true)
         {
             //Finished audit
-            item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
             if(mode!=UnFinishedAuditsOnly)
             {
                 p.first=query.value("id").toUInt();

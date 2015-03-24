@@ -1,47 +1,12 @@
 #include <QString>
-#include <QtTest>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include "utils.h"
 #include "pcx_tree.h"
+#include "tst_protonclassicsuiteunittests.h"
 
 
-class UnitTests : public QObject
-{
-    Q_OBJECT
-
-public:
-    UnitTests();
-
-private Q_SLOTS:
-    void initTestCase();
-    void cleanupTestCase();
-    void testCaseForTreeManagement();
-    void testCaseForTreeNodes();
-    void testCaseForTreeNodesOrder();
-    void testCaseForTreeImportExport();
-    void testCaseForTreeToDot();
-};
-
-UnitTests::UnitTests()
-{
-}
-
-void UnitTests::initTestCase()
-{
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(":memory:");
-    db.open();
-    QSqlQuery("PRAGMA foreign_keys=ON");
-    initializeNewDb();
-}
-
-void UnitTests::cleanupTestCase()
-{
-    QSqlDatabase::database().close();
-}
-
-void UnitTests::testCaseForTreeNodes()
+void ProtonClassicSuiteUnitTests::testCaseForTreeNodes()
 {
     unsigned int treeId=PCx_Tree::addTree("TESTTREENODE");
     PCx_Tree tree(treeId);
@@ -98,7 +63,7 @@ void UnitTests::testCaseForTreeNodes()
     PCx_Tree::deleteTree(treeId);
 }
 
-void UnitTests::testCaseForTreeImportExport()
+void ProtonClassicSuiteUnitTests::testCaseForTreeImportExport()
 {
     unsigned int randomTreeId=PCx_Tree::createRandomTree("RANDOMTREEIMPORTEXPORT",100);
     PCx_Tree randomTree(randomTreeId);
@@ -140,7 +105,7 @@ void UnitTests::testCaseForTreeImportExport()
     fi.remove();
 }
 
-void UnitTests::testCaseForTreeToDot()
+void ProtonClassicSuiteUnitTests::testCaseForTreeToDot()
 {
     unsigned int treeId=PCx_Tree::addTree("TESTTODOT");
     PCx_Tree tree(treeId);
@@ -205,7 +170,8 @@ void UnitTests::testCaseForTreeToDot()
     PCx_Tree::deleteTree(treeId);
 }
 
-void UnitTests::testCaseForTreeNodesOrder()
+
+void ProtonClassicSuiteUnitTests::testCaseForTreeNodesOrder()
 {
     unsigned int treeId=PCx_Tree::addTree("TESTTREENODE");
     PCx_Tree tree(treeId);
@@ -287,18 +253,14 @@ void UnitTests::testCaseForTreeNodesOrder()
     QCOMPARE(sortedBFS,requiredBFS);
     QCOMPARE(sortedDFS,requiredDFS);
 
-
     PCx_Tree::deleteTree(treeId);
 }
-
-
-
 
 
 /**
  * @brief UnitTests::testCaseForTreeManagement tests for tree management without taking nodes into account
  */
-void UnitTests::testCaseForTreeManagement()
+void ProtonClassicSuiteUnitTests::testCaseForTreeManagement()
 {
     //Add a tree
     unsigned int treeId=PCx_Tree::addTree("TESTTREE");
@@ -369,6 +331,23 @@ void UnitTests::testCaseForTreeManagement()
     QCOMPARE(PCx_Tree::getListOfTreesId().size(),0);
 }
 
-QTEST_APPLESS_MAIN(UnitTests)
+void ProtonClassicSuiteUnitTests::testCaseForTreeDuplication()
+{
+    unsigned int treeId=PCx_Tree::createRandomTree("RANDOMTREE",50);
+    PCx_Tree tree(treeId);
+    unsigned int dupTreeId=tree.duplicateTree("DUPLICATEDTREE");
+    PCx_Tree dupTree(dupTreeId);
+    QCOMPARE(tree.getNumberOfNodes(),dupTree.getNumberOfNodes());
 
-#include "tst_unittests.moc"
+    QList<unsigned int> idNodes1=tree.getNodesId();
+    foreach(unsigned int node,idNodes1)
+    {
+        QCOMPARE(tree.getNodeName(node),dupTree.getNodeName(node));
+        QCOMPARE(tree.getParentId(node),dupTree.getParentId(node));
+        QCOMPARE(tree.getTypeId(node),dupTree.getTypeId(node));
+        QCOMPARE(tree.getChildren(node),dupTree.getChildren(node));
+    }
+
+    PCx_Tree::deleteTree(treeId);
+    PCx_Tree::deleteTree(dupTreeId);
+}
