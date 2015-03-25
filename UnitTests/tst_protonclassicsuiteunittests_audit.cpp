@@ -187,6 +187,23 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2011)),0.0);
 
 
+    QString stats=audit.getHTMLAuditStatistics();
+    //Removes the first three lines as they contains dynamic creation date/time
+    QStringList statsSplitted=stats.split("\n");
+    statsSplitted.removeFirst();
+    statsSplitted.removeFirst();
+    statsSplitted.removeFirst();
+    stats=statsSplitted.join("\n");
+
+    QString expectedStats=QString("\n<br><table cellpadding='5' border='1' align='center'>\n"
+    "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>\n"
+    "<tr><th colspan='5'>2010</th></tr>\n"
+    "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>5</td><td align='right'>0</td><td  align='right'>0</td><td  align='right'>0</td></tr><tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>0</td><td align='right'>0</td><td align='right'>0</td><td align='right'>0</td></tr><tr><td>Noeuds non remplis</td><td align='right'>15</td><td align='right'>20</td><td align='right'>20</td><td align='right'>20</td></tr>\n"
+    "<tr><th colspan='5'>2011</th></tr>\n"
+    "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>5</td><td align='right'>0</td><td  align='right'>0</td><td  align='right'>0</td></tr><tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>1</td><td align='right'>0</td><td align='right'>0</td><td align='right'>0</td></tr><tr><td></td><td><ul><li>Racine</li></ul></td><td></td><td></td><td></td></tr><tr><td>Noeuds non remplis</td><td align='right'>15</td><td align='right'>20</td><td align='right'>20</td><td align='right'>20</td></tr></table>\n");
+
+    QCOMPARE(stats,expectedStats);
+
     audit.clearAllData(MODES::DFRFDIRI::DF);
     audit.clearAllData(MODES::DFRFDIRI::RF);
     audit.clearAllData(MODES::DFRFDIRI::DI);
@@ -289,6 +306,15 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditImportExport()
 
     PCx_Audit audit(auditId);
     PCx_Audit importedAudit(importedAuditId);
+
+
+    QString tmpFileNameSkel1=QStandardPaths::writableLocation(QStandardPaths::TempLocation)+"/"+generateUniqueFileName(".xlsx");
+    audit.exportLeavesSkeleton(tmpFileNameSkel1);
+    importedAudit.importDataFromXLSX(tmpFileNameSkel1,MODES::DFRFDIRI::DF);
+    QCOMPARE(importedAudit.getNodesWithAllZeroValues(MODES::DFRFDIRI::DF,2010).count(),30);
+    QCOMPARE(importedAudit.getNodesWithAllZeroValues(MODES::DFRFDIRI::DF,2011).count(),30);
+    QFile::remove(tmpFileNameSkel1);
+    importedAudit.clearAllData(MODES::DFRFDIRI::DF);
 
     audit.fillWithRandomData(MODES::DFRFDIRI::DF);
     audit.fillWithRandomData(MODES::DFRFDIRI::RF);
