@@ -23,8 +23,9 @@ QMAKE_LFLAGS+=--coverage
 
 SOURCES += \
     tst_protonclassicsuiteunittests_main.cpp \
-    tst_protonclassicsuiteunittests_tree.cpp \
-    tst_protonclassicsuiteunittests_audit.cpp
+    tst_protonclassicsuiteunittests_pcx_audit.cpp \
+    tst_protonclassicsuiteunittests_pcx_tree.cpp \
+    tst_protonclassicsuiteunittests_pcx_tablesandgraphics.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

@@ -238,6 +238,7 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
 
 void ProtonClassicSuiteUnitTests::testCaseForAuditDuplication()
 {
+    //QSKIP("Skipped");
     unsigned int treeId=PCx_Tree::createRandomTree("RANDOMTREE",20);
     PCx_Tree tree(treeId);
     tree.finishTree();
@@ -298,6 +299,7 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditDuplication()
 
 void ProtonClassicSuiteUnitTests::testCaseForAuditImportExport()
 {
+    //QSKIP("Skipped");
     unsigned int treeId=PCx_Tree::createRandomTree("RANDOMTREE",30);
     PCx_Tree tree(treeId);
     tree.finishTree();
