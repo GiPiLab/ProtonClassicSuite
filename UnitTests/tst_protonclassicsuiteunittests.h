@@ -11,12 +11,15 @@ class ProtonClassicSuiteUnitTests : public QObject
 
     void fillTestAudit(PCx_Audit *audit);
 
+    QByteArray hashString(const QString &str);
+
 public:
     ProtonClassicSuiteUnitTests();
 
 
 
 private Q_SLOTS:
+    void cleanup();
     void initTestCase();
     void cleanupTestCase();
     void testCaseForTreeManagement();

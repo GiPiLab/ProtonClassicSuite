@@ -137,8 +137,13 @@ void ProtonClassicSuiteUnitTests::testCaseForNumbersConversion()
 
 void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
 {
-    unsigned int treeId=PCx_Tree::createRandomTree("RANDOMTREE",20);
+    unsigned int treeId=PCx_Tree::addTree("TREEFORTEST");
     PCx_Tree tree(treeId);
+    unsigned int nodeA=tree.addNode(1,1,"nodeA");
+    unsigned int nodeB=tree.addNode(nodeA,1,"nodeB");
+    tree.addNode(nodeA,1,"nodeC");
+    tree.addNode(1,1,"nodeD");
+    tree.addNode(nodeB,1,"nodeE");
     tree.finishTree();
     unsigned int auditId=PCx_Audit::addNewAudit("RANDOMAUDIT",QList<unsigned int>{2010,2011},treeId);
 
@@ -147,7 +152,7 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     {
         for(int j=2010;j<=2011;j++)
         {
-            QCOMPARE(audit.getNodesWithAllNullValues((MODES::DFRFDIRI)i,j).count(),20);
+            QCOMPARE(audit.getNodesWithAllNullValues((MODES::DFRFDIRI)i,j).count(),6);
             QCOMPARE(audit.getNodesWithAllZeroValues((MODES::DFRFDIRI)i,j).count(),0);
             QCOMPARE(audit.getNodesWithNonNullValues((MODES::DFRFDIRI)i,j).count(),0);
         }
@@ -169,9 +174,12 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2010)),100.4);
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2010)),50.3);
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2010)),10.0);
-
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2011)),(double)MAX_NUM);
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2011)),(double)-MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2011)),(double)MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2011)),(double)-MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2011)),(double)MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2011)),(double)-MAX_NUM);
 
     //Test disponible computation
     QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2010)),100.4-(50.3+10.0));
@@ -193,16 +201,15 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     statsSplitted.removeFirst();
     statsSplitted.removeFirst();
     statsSplitted.removeFirst();
+
     stats=statsSplitted.join("\n");
+    stats=stats.simplified();
 
-    QString expectedStats=QString("\n<br><table cellpadding='5' border='1' align='center'>\n"
-    "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>\n"
-    "<tr><th colspan='5'>2010</th></tr>\n"
-    "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>5</td><td align='right'>0</td><td  align='right'>0</td><td  align='right'>0</td></tr><tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>0</td><td align='right'>0</td><td align='right'>0</td><td align='right'>0</td></tr><tr><td>Noeuds non remplis</td><td align='right'>15</td><td align='right'>20</td><td align='right'>20</td><td align='right'>20</td></tr>\n"
-    "<tr><th colspan='5'>2011</th></tr>\n"
-    "<tr><td>Noeuds contenant au moins une valeur (même zéro)</td><td align='right'>5</td><td align='right'>0</td><td  align='right'>0</td><td  align='right'>0</td></tr><tr><td>Noeuds dont les valeurs sont toutes à zéro</td><td align='right'>1</td><td align='right'>0</td><td align='right'>0</td><td align='right'>0</td></tr><tr><td></td><td><ul><li>Racine</li></ul></td><td></td><td></td><td></td></tr><tr><td>Noeuds non remplis</td><td align='right'>15</td><td align='right'>20</td><td align='right'>20</td><td align='right'>20</td></tr></table>\n");
+    QByteArray expectedStats="abd2f7c381fce2c3cbec728bf1b9eed4c2d406e3fcc10197843d3e3690f72882";
+    QByteArray hash=hashString(stats);
 
-    QCOMPARE(stats,expectedStats);
+    QCOMPARE(hash.toHex(),expectedStats);
+
 
     audit.clearAllData(MODES::DFRFDIRI::DF);
     audit.clearAllData(MODES::DFRFDIRI::RF);
@@ -212,7 +219,7 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     {
         for(int j=2010;j<=2011;j++)
         {
-            QCOMPARE(audit.getNodesWithAllNullValues((MODES::DFRFDIRI)i,j).count(),20);
+            QCOMPARE(audit.getNodesWithAllNullValues((MODES::DFRFDIRI)i,j).count(),6);
             QCOMPARE(audit.getNodesWithAllZeroValues((MODES::DFRFDIRI)i,j).count(),0);
             QCOMPARE(audit.getNodesWithNonNullValues((MODES::DFRFDIRI)i,j).count(),0);
         }
@@ -228,7 +235,7 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
         {
             QCOMPARE(audit.getNodesWithAllNullValues((MODES::DFRFDIRI)i,j).count(),0);
             QCOMPARE(audit.getNodesWithAllZeroValues((MODES::DFRFDIRI)i,j).count(),0);
-            QCOMPARE(audit.getNodesWithNonNullValues((MODES::DFRFDIRI)i,j).count(),20);
+            QCOMPARE(audit.getNodesWithNonNullValues((MODES::DFRFDIRI)i,j).count(),6);
         }
     }
 
