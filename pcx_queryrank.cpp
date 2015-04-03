@@ -18,7 +18,7 @@ PCx_QueryRank::PCx_QueryRank(PCx_Audit *model, unsigned int typeId, PCx_Audit::O
 {
 }
 
-bool PCx_QueryRank::save(const QString &name) const
+unsigned int PCx_QueryRank::save(const QString &name) const
 {
     if(name.isEmpty()|| name.size()>MAXOBJECTNAMELENGTH)
     {
@@ -43,9 +43,9 @@ bool PCx_QueryRank::save(const QString &name) const
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        return false;
+        return 0;
     }
-    return true;
+    return q.lastInsertId().toUInt();
 }
 
 QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const

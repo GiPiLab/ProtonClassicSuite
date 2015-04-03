@@ -19,6 +19,8 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditManagement()
     unsigned int treeId=PCx_Tree::createRandomTree("RANDOMTREE",20);
     PCx_Tree tree(treeId);
     tree.finishTree();
+
+    QCOMPARE(PCx_Audit::auditIdExists(21412),false);
     QVERIFY(PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits).isEmpty());
     QVERIFY(PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly).isEmpty());
     QVERIFY(PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly).isEmpty());
@@ -31,6 +33,7 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditManagement()
 
     QList<unsigned int> years={2010,2011,2012,2013};
     unsigned int auditId=PCx_Audit::addNewAudit("TESTAUDIT",years,treeId);
+    QCOMPARE(PCx_Audit::auditIdExists(auditId),true);
     QVERIFY(!PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits).isEmpty());
     QVERIFY(PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly).isEmpty());
     QVERIFY(!PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly).isEmpty());

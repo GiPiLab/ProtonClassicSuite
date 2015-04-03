@@ -1527,6 +1527,24 @@ bool PCx_Audit::auditNameExists(const QString &auditName)
     return false;
 }
 
+bool PCx_Audit::auditIdExists(unsigned int auditId)
+{
+    QSqlQuery q;
+    if(!q.exec(QString("select count(*) from index_audits where id=%1").arg(auditId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.value(0).toInt()==0)
+        return false;
+    else return true;
+}
+
 QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode mode)
 {
     QList<QPair<unsigned int,QString> > listOfAudits;

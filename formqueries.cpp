@@ -347,7 +347,7 @@ void FormQueries::on_pushButtonSaveReqVariation_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
             goto redo;
         }
-        if(!qv.save(text))
+        if(qv.save(text)==0)
         {
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;
@@ -566,7 +566,7 @@ void FormQueries::on_pushButtonSaveReqRank_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
             goto redo;
         }
-        if(!qr.save(text))
+        if(qr.save(text)==0)
         {
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;
@@ -642,7 +642,7 @@ void FormQueries::on_pushButtonSaveReq3_clicked()
             QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
             goto redo;
         }
-        if(!qr.save(text))
+        if(qr.save(text)==0)
         {
             QMessageBox::critical(this,tr("Attention"),tr("Impossible d'enregistrer la requête !"));
             return;

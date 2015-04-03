@@ -57,7 +57,7 @@ bool PCx_QueryVariation::load(unsigned int queryId)
     return true;
 }
 
-bool PCx_QueryVariation::save(const QString &name) const
+unsigned int PCx_QueryVariation::save(const QString &name) const
 {
     if(name.isEmpty()||name.size()>MAXOBJECTNAMELENGTH)
     {
@@ -84,10 +84,10 @@ bool PCx_QueryVariation::save(const QString &name) const
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        return false;
+        return 0;
     }
 
-    return true;
+    return q.lastInsertId().toUInt();
 }
 
 bool PCx_QueryVariation::canSave(const QString &name) const

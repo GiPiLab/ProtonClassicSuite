@@ -312,6 +312,13 @@ public:
     static bool auditNameExists(const QString &auditName);
 
     /**
+     * @brief auditIdExists quickly checks if an audit ID exists
+     * @param auditId the audit to check
+     * @return true if the audit ID exists, false othewise
+     */
+    static bool auditIdExists(unsigned int auditId);
+
+    /**
      * @brief getListOfAudits gets a list of audits to fill a QComboBox
      * @param mode filter the audits not finished, finished or both
      * @return a list of auditID, audit description

@@ -43,7 +43,7 @@ public:
 
     bool load(unsigned int queryId);
 
-    bool save(const QString &name) const;
+    unsigned int save(const QString &name) const;
 
     bool canSave(const QString &name) const;
 

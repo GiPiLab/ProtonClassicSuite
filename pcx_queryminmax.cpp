@@ -31,7 +31,7 @@ void PCx_QueryMinMax::setVals(QPair<qint64, qint64> vals)
     val2=vals.second;
 }
 
-bool PCx_QueryMinMax::save(const QString &name) const
+unsigned int PCx_QueryMinMax::save(const QString &name) const
 {
     if(name.isEmpty()||name.size()>MAXOBJECTNAMELENGTH)
     {
@@ -56,9 +56,9 @@ bool PCx_QueryMinMax::save(const QString &name) const
     if(q.numRowsAffected()!=1)
     {
         qCritical()<<q.lastError();
-        return false;
+        return 0;
     }
-    return true;
+    return q.lastInsertId().toInt();
 }
 
 QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const

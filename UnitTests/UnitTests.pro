@@ -25,7 +25,8 @@ SOURCES += utils.cpp \
     tst_protonclassicsuiteunittests_main.cpp \
     tst_protonclassicsuiteunittests_pcx_audit.cpp \
     tst_protonclassicsuiteunittests_pcx_tree.cpp \
-    tst_protonclassicsuiteunittests_pcx_tablesandgraphics.cpp
+    tst_protonclassicsuiteunittests_pcx_tablesandgraphics.cpp \
+    tst_protonclassicsuiteunittests_pcx_queries.cpp
 
 #DEFINES += SRCDIR=\\\"$$PWD/\\\"
 

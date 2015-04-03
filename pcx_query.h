@@ -48,7 +48,7 @@ public:
 
     bool remove(unsigned int queryId);
 
-    virtual bool save(const QString &name) const =0;
+    virtual unsigned int save(const QString &name) const =0;
     virtual bool canSave(const QString &name) const =0;
     virtual bool load(unsigned int queryId)=0;
     static bool deleteQuery(unsigned int auditId,unsigned int queryId);
@@ -60,6 +60,9 @@ public:
     static void createTableQueries(unsigned int auditId);
 
     static QString getCSS();
+
+    static QList<unsigned int>getListOfQueriesId(unsigned int auditId, QUERIESTYPES type);
+    static QList<unsigned int>getListOfQueriesId(unsigned int auditId);
 
 
 protected:

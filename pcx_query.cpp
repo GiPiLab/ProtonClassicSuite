@@ -79,6 +79,55 @@ QString PCx_Query::getCSS()
     return css;
 }
 
+
+QList<unsigned int> PCx_Query::getListOfQueriesId(unsigned int auditId,QUERIESTYPES type)
+{
+    if(!PCx_Audit::auditIdExists(auditId))
+    {
+        qCritical()<<"Non existant audit ID";
+        die();
+    }
+    QList<unsigned int> listOfQueries;
+
+    QSqlQuery query;
+
+    if(!query.exec(QString("select id from audit_queries_%1 where query_mode=%2").arg(auditId).arg((unsigned int)type)))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    while(query.next())
+    {
+        listOfQueries.append(query.value("id").toUInt());
+    }
+    return listOfQueries;
+}
+
+QList<unsigned int> PCx_Query::getListOfQueriesId(unsigned int auditId)
+{
+    if(!PCx_Audit::auditIdExists(auditId))
+    {
+        qCritical()<<"Non existant audit ID";
+        die();
+    }
+    QList<unsigned int> listOfQueries;
+
+    QSqlQuery query;
+
+    if(!query.exec(QString("select id from audit_queries_%1").arg(auditId)))
+    {
+        qCritical()<<query.lastError();
+        die();
+    }
+
+    while(query.next())
+    {
+        listOfQueries.append(query.value("id").toUInt());
+    }
+    return listOfQueries;
+}
+
 bool PCx_Query::deleteQuery(unsigned int auditId,unsigned int queryId)
 {
     if(queryId==0 || auditId==0)

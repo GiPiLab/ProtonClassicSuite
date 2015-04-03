@@ -28,7 +28,7 @@ public:
     void setNumber(unsigned int num){number=num;}
     void setGreaterOrSmaller(GREATERSMALLER grsm){grSm=grsm;}
 
-    bool save(const QString &name) const;
+    unsigned int save(const QString &name) const;
     QString exec(QXlsx::Document *xlsDoc=nullptr) const;
     bool load(unsigned int queryId);
     bool canSave(const QString &name) const;

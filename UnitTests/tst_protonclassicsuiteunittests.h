@@ -36,9 +36,10 @@ private Q_SLOTS:
     void testCaseForAuditDuplication();
     void testCaseForAuditImportExport();
 
-
     void testCaseForPCATables();
     void testCaseForPCAGraphics();
+
+    void testCaseForPCAQueries();
 };
 
 
