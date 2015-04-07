@@ -38,8 +38,11 @@ private Q_SLOTS:
 
     void testCaseForPCATables();
     void testCaseForPCAGraphics();
-
     void testCaseForPCAQueries();
+
+    void testCaseForPCBPrevision();
+    void testCaseForPCBPrevisionItemCriteria();
+
 };
 
 

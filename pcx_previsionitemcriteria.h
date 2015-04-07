@@ -39,11 +39,7 @@ public:
 
     static void fillComboBoxWithOperators(QComboBox *combo);
 
-
-
 private:
-
-
     qint64 getMinimumOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
     qint64 getMaximumOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
     qint64 getAverageOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
@@ -51,7 +47,6 @@ private:
     qint64 getLastValueOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode,unsigned int nodeId) const;
     qint64 getFixedValue() const{return previsionOperand;}
-
 
     PREVISIONOPERATOR previsionOperator;
     PCx_Audit::ORED previsionOredTarget;
