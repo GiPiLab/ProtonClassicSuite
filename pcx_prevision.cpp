@@ -28,7 +28,7 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId):previsionId(previsionId)
     }
     else
     {
-        qCritical()<<"Invalid audit ID !";
+        qCritical()<<"Invalid prevision ID !";
         die();
     }
 
@@ -249,7 +249,7 @@ QList<QPair<unsigned int, QString> > PCx_Prevision::getListOfPrevisions()
     return listOfPrevisions;
 }
 
-bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
+unsigned int PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
 {
     if(auditId==0||name.isEmpty()||previsionNameExists(name)||name.size()>MAXOBJECTNAMELENGTH)
     {
@@ -262,7 +262,7 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
     if(tmpAudit.isFinished()==false)
     {
         qCritical()<<QObject::tr("Audit non terminé !");
-        return false;
+        return 0;
     }
 
     QSqlDatabase::database().transaction();
@@ -372,7 +372,7 @@ bool PCx_Prevision::addNewPrevision(unsigned int auditId, const QString &name)
         die();
     }
     QSqlDatabase::database().commit();
-    return true;
+    return uLastId;
 }
 
 QString PCx_Prevision::generateHTMLHeader() const

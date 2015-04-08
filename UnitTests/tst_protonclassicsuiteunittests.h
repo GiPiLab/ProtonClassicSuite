@@ -42,7 +42,8 @@ private Q_SLOTS:
 
     void testCaseForPCBPrevision();
     void testCaseForPCBPrevisionItemCriteria();
-
+    void testCaseForPCBPrevisionItem();
+    void testCaseForPCBPrevisionItemDispatch();
 };
 
 

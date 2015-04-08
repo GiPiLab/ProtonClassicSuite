@@ -29,7 +29,7 @@ public:
 
     ~PCx_Prevision();
 
-    static bool addNewPrevision(unsigned int auditId, const QString &name);
+    static unsigned int addNewPrevision(unsigned int auditId, const QString &name);
     static bool previsionNameExists(const QString &previsionName);
     static QList<QPair<unsigned int, QString> > getListOfPrevisions();
     static bool deletePrevision(unsigned int previsionId);

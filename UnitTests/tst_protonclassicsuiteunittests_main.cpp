@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "pcx_tree.h"
 #include <iostream>
+#include "pcx_prevision.h"
 #include <QDataStream>
 #include "pcx_audit.h"
 #include "tst_protonclassicsuiteunittests.h"
@@ -16,6 +17,13 @@ ProtonClassicSuiteUnitTests::ProtonClassicSuiteUnitTests()
 
 void ProtonClassicSuiteUnitTests::cleanup()
 {
+    QList<QPair<unsigned int,QString>> listOfPrev=PCx_Prevision::getListOfPrevisions();
+    QPair<unsigned int,QString> prevision;
+    foreach(prevision,listOfPrev)
+    {
+        PCx_Prevision::deletePrevision(prevision.first);
+    }
+
     QList<QPair<unsigned int,QString>> listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits);
     QPair<unsigned int,QString> audit;
     foreach(audit,listOfAudits)
