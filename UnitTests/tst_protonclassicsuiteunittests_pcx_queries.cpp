@@ -36,6 +36,15 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAQueries()
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::VARIATION).contains(queryId));
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::MINMAX).contains(queryId));
     QVERIFY(!qr.canSave("TITI"));
+    PCx_QueryRank qrLoad(&audit,queryId);
+    QCOMPARE(qrLoad.getName(),QString("TITI"));
+    QCOMPARE(qrLoad.getDFRFDIRI(),MODES::DFRFDIRI::DF);
+    QCOMPARE(qrLoad.getORED(),PCx_Audit::ORED::OUVERTS);
+    QCOMPARE(qrLoad.getGreaterOrSmaller(),PCx_QueryRank::GREATERSMALLER::GREATER);
+    QCOMPARE(qrLoad.getNumber(),(unsigned)2);
+    QPair<unsigned int,unsigned int> years={2010,2012};
+    QCOMPARE(qrLoad.getYears(),years);
+
     PCx_Query::deleteQuery(auditId,queryId);
     QVERIFY(qr.canSave("TITI"));
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId).contains(queryId));
@@ -57,6 +66,16 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAQueries()
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::RANK).contains(queryId));
     QVERIFY(PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::VARIATION).contains(queryId));
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::MINMAX).contains(queryId));
+    PCx_QueryVariation qvLoad(&audit,queryId);
+    QCOMPARE(qvLoad.getName(),QString("TOTO"));
+    QCOMPARE(qvLoad.getDFRFDIRI(),MODES::DFRFDIRI::DF);
+    QCOMPARE(qvLoad.getIncDec(),PCx_QueryVariation::INCREASEDECREASE::VARIATION);
+    QCOMPARE(qvLoad.getOperator(),PCx_QueryVariation::OPERATORS::NOTEQUAL);
+    QCOMPARE(qvLoad.getORED(),PCx_Audit::ORED::OUVERTS);
+    QCOMPARE(qvLoad.getYears(),years);
+    QCOMPARE(qvLoad.getPercentOrPoints(),PCx_QueryVariation::PERCENTORPOINTS::PERCENT);
+    QCOMPARE(qvLoad.getValue(),(qint64)0);
+
     QVERIFY(!qv.canSave("TOTO"));
     PCx_Query::deleteQuery(auditId,queryId);
     QVERIFY(qv.canSave("TOTO"));
@@ -80,6 +99,16 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAQueries()
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::VARIATION).contains(queryId));
     QVERIFY(PCx_Query::getListOfQueriesId(auditId,PCx_Query::QUERIESTYPES::MINMAX).contains(queryId));
     QVERIFY(!qm.canSave("TUTU"));
+    PCx_QueryMinMax qmLoad(&audit,queryId);
+    QCOMPARE(qmLoad.getName(),QString("TUTU"));
+    QCOMPARE(qmLoad.getDFRFDIRI(),MODES::DFRFDIRI::DF);
+    QCOMPARE(qmLoad.getORED(),PCx_Audit::ORED::OUVERTS);
+    QCOMPARE(qmLoad.getYears(),years);
+    QPair<qint64,qint64> expectedVals={0,NUMBERSFORMAT::doubleToFixedPoint(300000.0)};
+
+    QCOMPARE(qmLoad.getVals(),expectedVals);
+
+
     PCx_Query::deleteQuery(auditId,queryId);
     QVERIFY(qm.canSave("TUTU"));
     QVERIFY(!PCx_Query::getListOfQueriesId(auditId).contains(queryId));
