@@ -497,7 +497,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="minimum">
-         <number>2003</number>
+         <number>2001</number>
         </property>
         <property name="maximum">
          <number>2051</number>
@@ -550,7 +550,7 @@
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="minimum">
-         <number>2002</number>
+         <number>2000</number>
         </property>
         <property name="maximum">
          <number>2050</number>

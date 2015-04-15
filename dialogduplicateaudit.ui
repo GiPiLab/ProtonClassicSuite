@@ -219,7 +219,7 @@
          <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
         </property>
         <property name="minimum">
-         <number>2002</number>
+         <number>2000</number>
         </property>
         <property name="maximum">
          <number>2050</number>
@@ -238,7 +238,7 @@
          <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
         </property>
         <property name="minimum">
-         <number>2002</number>
+         <number>2001</number>
         </property>
         <property name="maximum">
          <number>2050</number>
