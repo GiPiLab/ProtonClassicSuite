@@ -89,6 +89,7 @@ void MainWindow::setMenusState()
         ui->actionElaboration_budg_taire_PCB->setEnabled(false);
         ui->menuArbres->setEnabled(false);
         ui->menuBudgets->setEnabled(false);
+        ui->actionTreemap->setEnabled(false);
     }
     else
     {
@@ -101,6 +102,7 @@ void MainWindow::setMenusState()
         ui->actionQueries->setEnabled(true);
         ui->actionAuditReport->setEnabled(true);
         ui->actionExploreAudits->setEnabled(true);
+        ui->actionTreemap->setEnabled(true);
 
         ui->actionElaboration_budg_taire_PCB->setEnabled(true);
         ui->actionExploreReportings->setEnabled(true);
@@ -219,10 +221,16 @@ void MainWindow::onFormReportingReportsWindowsDestroyed()
 }
 
 
-void MainWindow::onFormTablesWindowsDestroyed(QObject *obj)
+void MainWindow::onFormAuditExploreWindowsDestroyed(QObject *obj)
 {
     int index=listOfFormAuditExplore.indexOf(static_cast<FormAuditExplore *>(obj));
     listOfFormAuditExplore.removeAt(index);
+}
+
+void MainWindow::onFormAuditTreemapWindowsDestroyed(QObject *obj)
+{
+    int index=listOfFormAuditTreemap.indexOf(static_cast<FormAuditTreemap *>(obj));
+    listOfFormAuditTreemap.removeAt(index);
 }
 
 void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj)
@@ -272,8 +280,6 @@ void MainWindow::on_actionManageAudits_triggered()
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,formManagePrevisions,&FormManagePrevisions::onListOfAuditsChanged);
             connect(formManagePrevisions,&FormManagePrevisions::listOfAuditsChanged,formManageAudits,&FormManageAudits::onListOfAuditsChanged);
         }
-
-
         foreach(FormAuditExplore *dlg,listOfFormAuditExplore)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditExplore::onListOfAuditsChanged);
@@ -281,6 +287,10 @@ void MainWindow::on_actionManageAudits_triggered()
         foreach(FormQueries *dlg,listOfFormQueries)
         {
             connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormQueries::onListOfAuditsChanged);
+        }
+        foreach(FormAuditTreemap *dlg,listOfFormAuditTreemap)
+        {
+            connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditTreemap::onListOfAuditsChanged);
         }
     }
     else
@@ -734,7 +744,7 @@ void MainWindow::on_actionExploreAudits_triggered()
     dlg->show();
     listOfFormAuditExplore.append(dlg);
 
-    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormTablesWindowsDestroyed);
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormAuditExploreWindowsDestroyed);
 
     if(formManageAudits!=nullptr)
     {
@@ -824,6 +834,26 @@ void MainWindow::on_actionGestion_des_pr_visions_triggered()
                 break;
             }
         }
+    }
+
+}
+
+void MainWindow::on_actionTreemap_triggered()
+{
+    FormAuditTreemap *dlg=new FormAuditTreemap(this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+    QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+    //subWin->setWindowIcon(QIcon(":/icons/icons/exploreAudit.png"));
+
+    dlg->show();
+    listOfFormAuditTreemap.append(dlg);
+
+    connect(dlg,&QObject::destroyed,this,&MainWindow::onFormAuditTreemapWindowsDestroyed);
+
+    if(formManageAudits!=nullptr)
+    {
+        connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditTreemap::onListOfAuditsChanged);
     }
 
 }

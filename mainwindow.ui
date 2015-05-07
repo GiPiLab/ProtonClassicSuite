@@ -52,6 +52,7 @@
     <addaction name="actionExploreAudits"/>
     <addaction name="actionAuditReport"/>
     <addaction name="actionQueries"/>
+    <addaction name="actionTreemap"/>
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">
@@ -313,6 +314,11 @@
    </property>
    <property name="text">
     <string>Gestion des prévisions</string>
+   </property>
+  </action>
+  <action name="actionTreemap">
+   <property name="text">
+    <string>Treemap</string>
    </property>
   </action>
  </widget>

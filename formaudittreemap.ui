@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormAuditTreemap</class>
+ <widget class="QWidget" name="FormAuditTreemap">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>655</width>
+    <height>383</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Treemap</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <widget class="QComboBox" name="comboBoxMode"/>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="comboBoxORED"/>
+   </item>
+   <item row="2" column="2">
+    <widget class="QComboBox" name="comboBoxYear"/>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QComboBox" name="comboListAudits"/>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="TreeMapWidget" name="treeMapWidget" native="true"/>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLabel" name="labelNodeValue">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="labelNodeName">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QPushButton" name="pushButtonPrevious">
+     <property name="text">
+      <string>Noeud précédent</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="pushButtonSave">
+     <property name="text">
+      <string>Enregistrer l'image</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TreeMapWidget</class>
+   <extends>QWidget</extends>
+   <header>treemapwidget.h</header>
+   <container>1</container>
+   <slots>
+    <signal>clicked(QString,int,int,double)</signal>
+    <signal>highlighted(QString,int,int,double)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
