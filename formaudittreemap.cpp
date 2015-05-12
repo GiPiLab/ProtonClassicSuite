@@ -4,14 +4,12 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QStandardPaths>
+#include <QPainter>
 
-const QString FormAuditTreemap::TOUT=QString("tout");
 
 FormAuditTreemap::FormAuditTreemap(QWidget *parent):QWidget(parent),ui(new Ui::FormAuditTreemap)
 {
-    selectedYear=0;
-    previousSelectedNodes.push(0);
-    selectedNode=0;
+    selectedNode=1;
     selectedMode=MODES::DF;
     selectedORED=PCx_Audit::ORED::OUVERTS;
     selectedAudit=nullptr;
@@ -47,9 +45,6 @@ void FormAuditTreemap::onListOfAuditsChanged()
 void FormAuditTreemap::updateListOfAudits()
 {
     ui->comboListAudits->clear();
-    previousSelectedNodes.clear();
-    previousSelectedNodes.push(0);
-    selectedNode=0;
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
@@ -68,8 +63,25 @@ void FormAuditTreemap::updateTreeMapWidget()
 {    
     if(selectedAudit!=nullptr)
     {
-        ui->treeMapWidget->setData(selectedAudit,selectedMode,selectedORED,selectedYear,selectedNode);
+        ui->labelSelectedNodeName->setText(selectedAudit->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped());
+        if(ui->radioButtonGroupByMode->isChecked())
+        {
+            ui->treeMapWidget->setDataGroupByModes(selectedAudit,selectedORED,selectedYear,selectedNode);
+        }
+        else if(ui->radioButtonGroupByORED->isChecked())
+        {
+            ui->treeMapWidget->setDataGroupByORED(selectedAudit,selectedMode,selectedYear,selectedNode);
+        }
+        else if(ui->radioButtonGroupByYear->isChecked())
+        {
+            ui->treeMapWidget->setDataGroupByYears(selectedAudit,selectedMode,selectedORED,selectedNode);
+        }
+        else
+        {
+            ui->treeMapWidget->setDataGroupByNode(selectedAudit,selectedMode,selectedORED,selectedYear,selectedNode);
+        }
     }
+
 }
 
 QSize FormAuditTreemap::sizeHint() const
@@ -90,11 +102,11 @@ void FormAuditTreemap::on_comboListAudits_activated(int index)
         delete selectedAudit;
 
     selectedAudit=new PCx_Audit(selectedAuditId);
+    selectedNode=1;
 
     ui->comboBoxYear->clear();
-    ui->comboBoxYear->addItem(TOUT);
 
-    QStringList yearsStringList=selectedAudit->getYearsStringList();    
+    QStringList yearsStringList=selectedAudit->getYearsStringList();
     ui->comboBoxYear->addItems(yearsStringList);
     ui->comboBoxYear->setCurrentIndex(0);
     on_comboBoxYear_activated(0);
@@ -119,69 +131,64 @@ void FormAuditTreemap::on_comboBoxORED_activated(int index)
 void FormAuditTreemap::on_comboBoxYear_activated(int index)
 {    
     if(index==-1||ui->comboBoxYear->count()==0)return;
-    if(ui->comboBoxYear->currentText()==TOUT)
-    {
-        selectedYear=0;
-        previousSelectedNodes.push(selectedNode);
-        selectedNode=0;
-    }
-    else
-    {
-        selectedYear=ui->comboBoxYear->currentText().toUInt();
-        if(selectedNode==0)
-        {
-            previousSelectedNodes.push(0);
-            selectedNode=1;
-        }
-    }
+
+    selectedYear=ui->comboBoxYear->currentText().toUInt();
+
     if(selectedAudit!=nullptr)
         updateTreeMapWidget();
 }
 
 void FormAuditTreemap::on_treeMapWidget_clicked(const QString &name, int id, int year, double value)
-{
+{   
+    Q_UNUSED(name);
+    Q_UNUSED(year);
+    Q_UNUSED(value);
     if(selectedAudit==nullptr)
-        return;
-    if(id!=selectedNode && !selectedAudit->getAttachedTree()->isLeaf(id))
-        previousSelectedNodes.push(selectedNode);
-    selectedNode=id;
-    selectedYear=year;
-    if(year!=0)
-        ui->comboBoxYear->setCurrentText(QString::number(year));
-    else
-        ui->comboBoxYear->setCurrentText(TOUT);
+        return;    
+    selectedNode=id;    
     updateTreeMapWidget();
 }
 
 void FormAuditTreemap::on_treeMapWidget_highlighted(const QString &name, int id, int year, double value)
 {
+    Q_UNUSED(id);
     ui->labelNodeName->setText(name.toHtmlEscaped());
     ui->labelNodeValue->setText(QString(NUMBERSFORMAT::formatDouble(value)+"€ en %1").arg(year));
 }
 
-void FormAuditTreemap::on_pushButtonPrevious_clicked()
+void FormAuditTreemap::on_pushButtonGoToPid_clicked()
 {
     if(selectedAudit==nullptr)
         return;
-    if(!previousSelectedNodes.isEmpty())
-    {
-        selectedNode=previousSelectedNodes.pop();
-        if(selectedNode==0)
-        {
-            ui->comboBoxYear->setCurrentText(TOUT);
-        }
-        updateTreeMapWidget();
-        if(previousSelectedNodes.isEmpty())
-        {
-            previousSelectedNodes.push(0);
-        }
-    }
+
+    if(selectedNode>1)
+        selectedNode=selectedAudit->getAttachedTree()->getParentId(selectedNode);
+
+    updateTreeMapWidget();
 }
 
 void FormAuditTreemap::on_pushButtonSave_clicked()
 {
     if(selectedAudit==nullptr)
         return;
+
+    QString caption=selectedAudit->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()+"\n";
+    QStringList items;
+    if(!ui->radioButtonGroupByMode->isChecked())
+    {
+        items.append(MODES::modeToCompleteString(selectedMode).toHtmlEscaped());
+    }
+    if(!ui->radioButtonGroupByORED->isChecked())
+    {
+        items.append(PCx_Audit::OREDtoCompleteString(selectedORED).toHtmlEscaped());
+    }
+    if(!ui->radioButtonGroupByYear->isChecked())
+    {
+        items.append(QString::number(selectedYear));
+    }
+
+    caption.append(items.join(", "));
+
     QFileDialog fileDialog;
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "",tr("Images PNG (*.png)"));
@@ -201,8 +208,68 @@ void FormAuditTreemap::on_pushButtonSave_clicked()
     }
     file.close();
 
-    if(ui->treeMapWidget->grab().save(fileName))
+
+    QPixmap pixmap=ui->treeMapWidget->grab();
+    QPixmap withLegend(pixmap.width(),pixmap.height()+40);
+    withLegend.fill(Qt::white);
+    QPainter p(&withLegend);
+    p.drawPixmap(0,0,pixmap);
+    QRect rect(0,pixmap.height(),pixmap.width(),40);
+
+    p.drawText(rect,Qt::AlignCenter,caption);
+
+    p.end();
+
+
+
+
+    if(withLegend.save(fileName))
         QMessageBox::information(this,tr("Information"),tr("Image enregistrée"));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Image non enregistrée !"));
+}
+
+void FormAuditTreemap::on_radioButtonGroupByMode_toggled(bool checked)
+{
+    if(checked)
+    {
+        updateTreeMapWidget();
+        ui->comboBoxYear->setEnabled(true);
+        ui->comboBoxMode->setEnabled(false);
+        ui->comboBoxORED->setEnabled(true);
+    }
+}
+
+void FormAuditTreemap::on_radioButtonGroupByORED_toggled(bool checked)
+{
+    if(checked)
+    {
+        ui->comboBoxYear->setEnabled(true);
+        ui->comboBoxMode->setEnabled(true);
+        ui->comboBoxORED->setEnabled(false);
+        updateTreeMapWidget();
+    }
+}
+
+void FormAuditTreemap::on_radioButtonGroupByYear_toggled(bool checked)
+{
+    if(checked)
+    {
+        ui->comboBoxYear->setEnabled(false);
+        ui->comboBoxMode->setEnabled(true);
+        ui->comboBoxORED->setEnabled(true);
+        updateTreeMapWidget();
+    }
+}
+
+void FormAuditTreemap::on_radioButtonGroupByNode_toggled(bool checked)
+{
+    if(checked)
+    {
+        ui->comboBoxYear->setEnabled(true);
+        ui->comboBoxMode->setEnabled(true);
+        ui->comboBoxORED->setEnabled(true);
+        updateTreeMapWidget();
+    }
+
 }

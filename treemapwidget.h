@@ -12,8 +12,10 @@ public:
     explicit TreeMapWidget(QWidget *parent = 0);
     ~TreeMapWidget();
 
-    void setData(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year=0, unsigned int nodeId=1);
-
+    void setDataGroupByNode(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year, unsigned int nodeId=1);
+    void setDataGroupByYears(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int nodeId);
+    void setDataGroupByModes(PCx_Audit *audit, PCx_Audit::ORED ored, unsigned int year, unsigned int nodeId);
+    void setDataGroupByORED(PCx_Audit *audit, MODES::DFRFDIRI mode, unsigned int year, unsigned int nodeId);
 signals:
     void clicked(const QString &name, int id, int year, double value);
     void highlighted(const QString &name, int id, int year, double value);

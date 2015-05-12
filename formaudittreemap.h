@@ -33,12 +33,20 @@ private slots:
 
     void on_treeMapWidget_highlighted(const QString &name, int id, int year, double value);
 
-    void on_pushButtonPrevious_clicked();
+    void on_pushButtonGoToPid_clicked();
 
     void on_pushButtonSave_clicked();
 
+    void on_radioButtonGroupByMode_toggled(bool checked);
+
+    void on_radioButtonGroupByORED_toggled(bool checked);
+
+    void on_radioButtonGroupByYear_toggled(bool checked);
+
+    void on_radioButtonGroupByNode_toggled(bool checked);
+
 private:
-    static const QString TOUT;
+
     void updateListOfAudits();
     void updateTreeMapWidget();
 
@@ -48,7 +56,6 @@ private:
     PCx_Audit *selectedAudit;
     int selectedYear;
     int selectedNode;
-    QStack<int> previousSelectedNodes;
 
     MODES::DFRFDIRI selectedMode;
     PCx_Audit::ORED selectedORED;

@@ -844,7 +844,7 @@ void MainWindow::on_actionTreemap_triggered()
     dlg->setAttribute(Qt::WA_DeleteOnClose);
 
     QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
-    //subWin->setWindowIcon(QIcon(":/icons/icons/exploreAudit.png"));
+    subWin->setWindowIcon(QIcon(":/icons/icons/treemap.png"));
 
     dlg->show();
     listOfFormAuditTreemap.append(dlg);

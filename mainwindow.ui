@@ -50,9 +50,9 @@
     <addaction name="actionManageAudits"/>
     <addaction name="actionEditAudit"/>
     <addaction name="actionExploreAudits"/>
+    <addaction name="actionTreemap"/>
     <addaction name="actionAuditReport"/>
     <addaction name="actionQueries"/>
-    <addaction name="actionTreemap"/>
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">
@@ -117,6 +117,7 @@
    <addaction name="actionManageAudits"/>
    <addaction name="actionEditAudit"/>
    <addaction name="actionExploreAudits"/>
+   <addaction name="actionTreemap"/>
    <addaction name="actionAuditReport"/>
    <addaction name="actionQueries"/>
    <addaction name="separator"/>
@@ -317,8 +318,15 @@
    </property>
   </action>
   <action name="actionTreemap">
+   <property name="icon">
+    <iconset resource="Images.qrc">
+     <normaloff>:/icons/icons/treemap.png</normaloff>:/icons/icons/treemap.png</iconset>
+   </property>
    <property name="text">
-    <string>Treemap</string>
+    <string>Visualisation en &amp;Treemap</string>
+   </property>
+   <property name="toolTip">
+    <string>Visualisation en Treemap</string>
    </property>
   </action>
  </widget>
