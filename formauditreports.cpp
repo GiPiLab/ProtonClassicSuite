@@ -33,66 +33,66 @@ void FormAuditReports::populateLists()
     unsigned int nodeId=leaves.at(qrand()%leaves.count());
     QListWidgetItem *item;
     item=new QListWidgetItem(tr("Récapitulatif"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT1);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT1);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT1(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT2);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT2);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT2BIS);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT2BIS);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2bis(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT3);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT3);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT3(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution du compte administratif de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT3BIS);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT3BIS);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT3bis(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT4);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT4);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT4(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT5);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT5);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT5(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT6);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT6);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT6(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Transcription en \"jours/activité\" de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT7);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT7);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT7(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Moyennes budgétaires de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT8);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT8);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT8(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Equivalences moyennes en \"jours activité\" de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT9);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT9);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT9(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Résultats de fonctionnement de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT10);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT10);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT10(nodeId)+"</span>");
     item=new QListWidgetItem(tr("Résultats d'investissement de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT11);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT11);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT11(nodeId)+"</span>");
     item=new QListWidgetItem(tr("Résultats budgétaire de [...]"),ui->listTables);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Tables::PCAT12);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT12);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT12(nodeId)+"</span>");
 
     item=new QListWidgetItem(tr("Évolution comparée des crédits ouverts de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG1);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG1);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé des crédits ouverts de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG2);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG2);
     item=new QListWidgetItem(tr("Évolution comparée du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG3);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG3);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du réalisé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG4);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG4);
     item=new QListWidgetItem(tr("Évolution comparée de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG5);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG5);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé de l'engagé de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG6);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG6);
     item=new QListWidgetItem(tr("Évolution comparée du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG7);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG7);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé du disponible de la collectivité et de [...]"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG8);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
-    item->setData(PCx_TreeModel::NodeIdUserRole,PCx_Graphics::PCAG9);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG9);
 
 }
 
@@ -106,7 +106,7 @@ void FormAuditReports::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;
@@ -218,25 +218,25 @@ void FormAuditReports::on_saveButton_clicked()
     QList<PCx_Graphics::PCAGRAPHICS> modeIndependantGraphics;
 
     //Isolate mode-independant tables and graphics
-    if(selectedTables.contains(PCx_Tables::PCAT10))
+    if(selectedTables.contains(PCx_Tables::PCATABLES::PCAT10))
     {
-        modeIndependantTables.append(PCx_Tables::PCAT10);
-        selectedTables.removeAll(PCx_Tables::PCAT10);
+        modeIndependantTables.append(PCx_Tables::PCATABLES::PCAT10);
+        selectedTables.removeAll(PCx_Tables::PCATABLES::PCAT10);
     }
-    if(selectedTables.contains(PCx_Tables::PCAT11))
+    if(selectedTables.contains(PCx_Tables::PCATABLES::PCAT11))
     {
-        modeIndependantTables.append(PCx_Tables::PCAT11);
-        selectedTables.removeAll(PCx_Tables::PCAT11);
+        modeIndependantTables.append(PCx_Tables::PCATABLES::PCAT11);
+        selectedTables.removeAll(PCx_Tables::PCATABLES::PCAT11);
     }
-    if(selectedTables.contains(PCx_Tables::PCAT12))
+    if(selectedTables.contains(PCx_Tables::PCATABLES::PCAT12))
     {
-        modeIndependantTables.append(PCx_Tables::PCAT12);
-        selectedTables.removeAll(PCx_Tables::PCAT12);
+        modeIndependantTables.append(PCx_Tables::PCATABLES::PCAT12);
+        selectedTables.removeAll(PCx_Tables::PCATABLES::PCAT12);
     }
-    if(selectedGraphics.contains(PCx_Graphics::PCAG9))
+    if(selectedGraphics.contains(PCx_Graphics::PCAGRAPHICS::PCAG9))
     {
-        modeIndependantGraphics.append(PCx_Graphics::PCAG9);
-        selectedGraphics.removeAll(PCx_Graphics::PCAG9);
+        modeIndependantGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG9);
+        selectedGraphics.removeAll(PCx_Graphics::PCAGRAPHICS::PCAG9);
     }
 
 

@@ -19,7 +19,7 @@ public:
     /**
      * @brief The SIMILARITYMETRIC enum represents the distance metrics that are implemented
      */
-    enum SIMILARITYMETRIC
+    enum class SIMILARITYMETRIC
     {
         NORMALIZEDLEVENSHTEIN, ///< is Levenshtein, normalized
         NORMALIZEDLEVENSHTEINCI, ///< is Levenshtein, normalized, case insensitive
@@ -33,7 +33,7 @@ public:
      * @param str2 the second string
      * @param similarityMode the metric used to compute the similarity
      */
-    PCx_StringDistance(const QString &str1, const QString &str2, SIMILARITYMETRIC similarityMode=JAROWINKLERCI);
+    PCx_StringDistance(const QString &str1, const QString &str2, SIMILARITYMETRIC similarityMode=SIMILARITYMETRIC::JAROWINKLERCI);
 
     const QString &getStr1() const {return str1;}
     const QString &getStr2() const {return str2;}

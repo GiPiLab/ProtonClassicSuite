@@ -19,23 +19,23 @@ FormReportingSupervision::FormReportingSupervision(QWidget *parent) :
 
 void FormReportingSupervision::setColumnVisibility()
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,!ui->checkBoxBP->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,!ui->checkBoxOuverts->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,!ui->checkBoxRealises->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,!ui->checkBoxEngages->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,!ui->checkBoxDisponibles->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR,!ui->checkBoxCPP15N->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC,!ui->checkBoxRAC->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART,!ui->checkBoxTauxEcart->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP,!ui->checkBoxVariationBP->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES,!ui->checkBoxTauxDisponible->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES,!ui->checkBoxTauxEngage->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!ui->checkBoxTauxReal->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!ui->checkBox15NRest->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!ui->checkBoxDifference->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DECICP,!ui->checkBoxDECICO->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DERPSUR2,!ui->checkBoxERO2->isChecked());
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!ui->checkBoxRealisePredit->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,!ui->checkBoxBP->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,!ui->checkBoxOuverts->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,!ui->checkBoxRealises->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,!ui->checkBoxEngages->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,!ui->checkBoxDisponibles->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR,!ui->checkBoxCPP15N->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC,!ui->checkBoxRAC->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART,!ui->checkBoxTauxEcart->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP,!ui->checkBoxVariationBP->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES,!ui->checkBoxTauxDisponible->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES,!ui->checkBoxTauxEngage->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!ui->checkBoxTauxReal->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!ui->checkBox15NRest->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!ui->checkBoxDifference->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DECICP,!ui->checkBoxDECICO->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DERPSUR2,!ui->checkBoxERO2->isChecked());
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!ui->checkBoxRealisePredit->isChecked());
 }
 
 FormReportingSupervision::~FormReportingSupervision()
@@ -185,87 +185,87 @@ void FormReportingSupervision::on_radioButtonRI_toggled(bool checked)
 
 void FormReportingSupervision::on_checkBoxBP_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::BP,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxOuverts_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::OUVERTS,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxRealises_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxEngages_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::ENGAGES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxDisponibles_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DISPONIBLES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxReal_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTREALISES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxEcart_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::TAUXECART,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxVariationBP_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTBP,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxEngage_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTENGAGES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxTauxDisponible_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxRealisePredit_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::REALISESPREDITS,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxDifference_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxDECICO_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DECICP,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DECICP,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxERO2_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DERPSUR2,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::DERPSUR2,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxRAC_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::RAC,!checked);
 }
 
 void FormReportingSupervision::on_checkBox15NRest_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::NB15NRESTANTES,!checked);
 }
 
 void FormReportingSupervision::on_checkBoxCPP15N_toggled(bool checked)
 {
-    ui->tableView->setColumnHidden(PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR,!checked);
+    ui->tableView->setColumnHidden((int)PCx_ReportingTableSupervisionModel::TABLESUPERVISIONCOLUMNS::CPP15NR,!checked);
 }
 
 void FormReportingSupervision::on_pushButtonExportHTML_clicked()

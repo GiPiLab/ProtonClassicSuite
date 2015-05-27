@@ -126,38 +126,38 @@ void FormReportingOverview::updateComboRefDate(QComboBox *combo)
 
     if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
     {
-       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DF);
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::DF);
     }
     else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF)
     {
-       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RF);
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::RF);
     }
     else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI)
     {
-       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DI);
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::DI);
     }
     else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI)
     {
-       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RI);
+       datesForNode=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::RI);
     }
     else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF)
     {
-        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DF);
-        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RF);
+        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::DF);
+        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::RF);
         datesForNode=dates1.intersect(dates2);
     }
     else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI)
     {
-        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DI);
-        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RI);
+        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::DI);
+        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::RI);
         datesForNode=dates1.intersect(dates2);
     }
     else if(selectedMode==PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
     {
-        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DF);
-        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RF);
-        QSet<QDate> dates3=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DI);
-        QSet<QDate> dates4=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::RI);
+        QSet<QDate> dates1=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::DF);
+        QSet<QDate> dates2=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::RF);
+        QSet<QDate> dates3=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::DI);
+        QSet<QDate> dates4=selectedReporting->getDatesForNodeAndMode(selectedNodeId,MODES::DFRFDIRI::RI);
         datesForNode=dates1.intersect(dates2).intersect(dates3).intersect(dates4);
     }
 

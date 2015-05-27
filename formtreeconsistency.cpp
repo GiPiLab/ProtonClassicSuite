@@ -24,7 +24,7 @@ FormTreeConsistency::FormTreeConsistency(unsigned int treeId,QWidget *parent) :
     PCx_NodeSimilarityTableModel *distanceModelWithTypes;
     QSortFilterProxyModel *distanceSortModelWithTypes;
 
-    distanceModelWithTypes=new PCx_NodeSimilarityTableModel(completeNodeNames,PCx_StringDistance::JAROWINKLERCI,this);
+    distanceModelWithTypes=new PCx_NodeSimilarityTableModel(completeNodeNames,PCx_StringDistance::SIMILARITYMETRIC::JAROWINKLERCI,this);
     distanceSortModelWithTypes=new QSortFilterProxyModel(this);
     distanceSortModelWithTypes->setSourceModel(distanceModelWithTypes);
     distanceSortModelWithTypes->sort(1,Qt::DescendingOrder);

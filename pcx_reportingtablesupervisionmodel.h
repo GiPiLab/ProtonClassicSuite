@@ -12,7 +12,7 @@ class PCx_ReportingTableSupervisionModel : public QAbstractTableModel
 public:
     explicit PCx_ReportingTableSupervisionModel(PCx_Reporting *reporting, MODES::DFRFDIRI mode, int selectedDateTimeT=-1, QObject *parent = 0);
 
-    enum TABLESUPERVISIONCOLUMNS
+    enum class TABLESUPERVISIONCOLUMNS
     {
         BP=2,
         OUVERTS,

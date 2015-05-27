@@ -133,7 +133,7 @@ void PCx_Audit::unFinishAudit()
     finishedString=QObject::tr("non");
 }
 
-bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED,double> vals, bool fastMode)
+bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<PCx_Audit::ORED,double> vals, bool fastMode)
 {
     if(!fastMode)
     {
@@ -913,7 +913,7 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
         int nodeId;
         nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
 
-        QHash<PCx_Audit::ORED,double> vals;
+        QMap<PCx_Audit::ORED,double> vals;
         if(ouverts.isValid())
         {
             double valDbl=ouverts.toDouble();
@@ -1016,7 +1016,7 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
 {
     QList<unsigned int> leaves=getAttachedTree()->getLeavesId();
 
-    QHash<PCx_Audit::ORED,double> data;
+    QMap<PCx_Audit::ORED,double> data;
 
     int maxVal=leaves.size();
 
@@ -1568,14 +1568,14 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode m
         {
             //Finished audit
             item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-            if(mode!=UnFinishedAuditsOnly)
+            if(mode!=PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly)
             {
                 p.first=query.value("id").toUInt();
                 p.second=item;
                 listOfAudits.append(p);
             }
         }
-        else if(mode!=FinishedAuditsOnly)
+        else if(mode!=PCx_Audit::ListAuditsMode::FinishedAuditsOnly)
         {
             //Unfinished audit
             item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
@@ -1616,14 +1616,14 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisT
         {
             //Finished audit
             item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
-            if(mode!=UnFinishedAuditsOnly)
+            if(mode!=PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly)
             {
                 p.first=query.value("id").toUInt();
                 p.second=item;
                 listOfAudits.append(p);
             }
         }
-        else if(mode!=FinishedAuditsOnly)
+        else if(mode!=PCx_Audit::ListAuditsMode::FinishedAuditsOnly)
         {
             //Unfinished audit
             item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));

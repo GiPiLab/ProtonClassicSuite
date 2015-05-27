@@ -235,7 +235,7 @@ void FormReportingReports::on_saveButton_clicked()
         if(selectedPresets.contains(PCx_Report::PCRPRESETS::PCRPRESET_S))
         {
             QList<PCx_Report::PCRPRESETS> tmpPreset={PCx_Report::PCRPRESETS::PCRPRESET_S};
-            output.append(report->generateHTMLReportingReportForNode(tmpPreset,selectedNode,MODES::GLOBAL,ui->checkBoxIncludeGraphics->isChecked(),nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLReportingReportForNode(tmpPreset,selectedNode,MODES::DFRFDIRI::GLOBAL,ui->checkBoxIncludeGraphics->isChecked(),nullptr,absoluteImagePath,relativeImagePath,nullptr));
         }
         foreach(MODES::DFRFDIRI mode,listModes)
         {

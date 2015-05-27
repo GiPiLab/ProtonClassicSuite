@@ -4,16 +4,16 @@ PCx_StringDistance::PCx_StringDistance(const QString &str1, const QString &str2,
 {
     switch(similarityMode)
     {
-    case JAROWINKLER:
+    case SIMILARITYMETRIC::JAROWINKLER:
         normalizedSimilarity=jaroWinklerDistance(str1,str2,false);
         break;
-    case NORMALIZEDLEVENSHTEIN:
+    case SIMILARITYMETRIC::NORMALIZEDLEVENSHTEIN:
         normalizedSimilarity=1-normalizedLevenshteinDistance(str1,str2,false);
         break;
-    case JAROWINKLERCI:
+    case SIMILARITYMETRIC::JAROWINKLERCI:
         normalizedSimilarity=jaroWinklerDistance(str1,str2,true);
         break;
-    case NORMALIZEDLEVENSHTEINCI:
+    case SIMILARITYMETRIC::NORMALIZEDLEVENSHTEINCI:
         normalizedSimilarity=1-normalizedLevenshteinDistance(str1,str2,true);
         break;
     }

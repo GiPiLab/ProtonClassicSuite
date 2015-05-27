@@ -9,7 +9,7 @@ class PCx_PrevisionItemCriteria
 {
 public:
 
-    enum PREVISIONOPERATOR
+    enum class PREVISIONOPERATOR
     {
         MINIMUM,
         MAXIMUM,

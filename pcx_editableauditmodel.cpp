@@ -10,41 +10,41 @@ PCx_EditableAuditModel::PCx_EditableAuditModel(unsigned int auditId,QObject *par
     modelRF=nullptr;
     modelDF=new QSqlTableModel();
     modelDF->setTable(QString("audit_DF_%1").arg(auditId));
-    modelDF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-    modelDF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
-    modelDF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
-    modelDF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
-    modelDF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
+    modelDF->setHeaderData((int)COLINDEXES::COL_ANNEE,Qt::Horizontal,"");
+    modelDF->setHeaderData((int)COLINDEXES::COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
+    modelDF->setHeaderData((int)COLINDEXES::COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
+    modelDF->setHeaderData((int)COLINDEXES::COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
+    modelDF->setHeaderData((int)COLINDEXES::COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
     modelDF->setEditStrategy(QSqlTableModel::OnFieldChange);
     modelDF->select();
 
     modelDI=new QSqlTableModel();
     modelDI->setTable(QString("audit_DI_%1").arg(auditId));
-    modelDI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-    modelDI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
-    modelDI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
-    modelDI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
-    modelDI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
+    modelDI->setHeaderData((int)COLINDEXES::COL_ANNEE,Qt::Horizontal,"");
+    modelDI->setHeaderData((int)COLINDEXES::COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
+    modelDI->setHeaderData((int)COLINDEXES::COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
+    modelDI->setHeaderData((int)COLINDEXES::COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
+    modelDI->setHeaderData((int)COLINDEXES::COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
     modelDI->setEditStrategy(QSqlTableModel::OnFieldChange);
     modelDI->select();
 
     modelRI=new QSqlTableModel();
     modelRI->setTable(QString("audit_RI_%1").arg(auditId));
-    modelRI->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-    modelRI->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
-    modelRI->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
-    modelRI->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
-    modelRI->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
+    modelRI->setHeaderData((int)COLINDEXES::COL_ANNEE,Qt::Horizontal,"");
+    modelRI->setHeaderData((int)COLINDEXES::COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
+    modelRI->setHeaderData((int)COLINDEXES::COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
+    modelRI->setHeaderData((int)COLINDEXES::COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
+    modelRI->setHeaderData((int)COLINDEXES::COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
     modelRI->setEditStrategy(QSqlTableModel::OnFieldChange);
     modelRI->select();
 
     modelRF=new QSqlTableModel();
     modelRF->setTable(QString("audit_RF_%1").arg(auditId));
-    modelRF->setHeaderData(COL_ANNEE,Qt::Horizontal,"");
-    modelRF->setHeaderData(COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
-    modelRF->setHeaderData(COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
-    modelRF->setHeaderData(COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
-    modelRF->setHeaderData(COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
+    modelRF->setHeaderData((int)COLINDEXES::COL_ANNEE,Qt::Horizontal,"");
+    modelRF->setHeaderData((int)COLINDEXES::COL_OUVERTS,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::OUVERTS));
+    modelRF->setHeaderData((int)COLINDEXES::COL_REALISES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::REALISES));
+    modelRF->setHeaderData((int)COLINDEXES::COL_ENGAGES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::ENGAGES));
+    modelRF->setHeaderData((int)COLINDEXES::COL_DISPONIBLES,Qt::Horizontal,OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES));
     modelRF->setEditStrategy(QSqlTableModel::OnFieldChange);
     modelRF->select();
 
@@ -89,9 +89,9 @@ void PCx_EditableAuditModel::onModelDataChanged(const QModelIndex &topLeft, cons
     //qDebug()<<"Model dirty : "<<model->isDirty();
     int row=topLeft.row();
 
-    QVariant vOuverts=model->index(row,COL_OUVERTS).data();
-    QVariant vRealises=model->index(row,COL_REALISES).data();
-    QVariant vEngages=model->index(row,COL_ENGAGES).data();
+    QVariant vOuverts=model->index(row,(int)COLINDEXES::COL_OUVERTS).data();
+    QVariant vRealises=model->index(row,(int)COLINDEXES::COL_REALISES).data();
+    QVariant vEngages=model->index(row,(int)COLINDEXES::COL_ENGAGES).data();
 
     //qDebug()<<"VOUVERTS = "<<vOuverts;
 
@@ -102,7 +102,7 @@ void PCx_EditableAuditModel::onModelDataChanged(const QModelIndex &topLeft, cons
     if(!vRealises.isNull() && !vOuverts.isNull() && !vEngages.isNull())
     {
         QVariant disponibles=ouverts-(realises+engages);
-        QModelIndex indexDispo=model->index(row,COL_DISPONIBLES);
+        QModelIndex indexDispo=model->index(row,(int)COLINDEXES::COL_DISPONIBLES);
         model->setData(indexDispo,disponibles);
     }
 
@@ -118,8 +118,8 @@ void PCx_EditableAuditModel::propagateToAncestors(const QModelIndex &node)
 {
     QSqlTableModel *model=(QSqlTableModel *)node.model();
     int row=node.row();
-    unsigned int nodeId=model->index(row,COL_IDNODE).data().toUInt();
-    unsigned int annee=model->index(row,COL_ANNEE).data().toUInt();
+    unsigned int nodeId=model->index(row,(int)COLINDEXES::COL_IDNODE).data().toUInt();
+    unsigned int annee=model->index(row,(int)COLINDEXES::COL_ANNEE).data().toUInt();
     QString tableName=model->tableName();
     //qDebug()<<"Propagate from node "<<nodeId<<" in "<<annee<<" on "<<tableName;
 
@@ -163,7 +163,7 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(MODES::DFRFDIRI mode) cons
     return nullptr;
 }
 
-bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode)
+bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<PCx_Audit::ORED, double> vals, bool fastMode)
 {
     if(PCx_Audit::setLeafValues(leafId,mode,year,vals,fastMode)==false)
         return false;

@@ -37,7 +37,7 @@ bool PCx_QueryVariation::load(unsigned int queryId)
     }
     else
     {
-        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::VARIATION)
+        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::QUERIESTYPES::VARIATION)
         {
             qCritical()<<"Invalid PCx_query mode !";
             return false;
@@ -69,13 +69,13 @@ unsigned int PCx_QueryVariation::save(const QString &name) const
                       "increase_decrease,val1,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,:oper,:pop,"
                       ":incdec,:val1,:y1,:y2)").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::VARIATION);
+    q.bindValue(":qmode",(int)PCx_Query::QUERIESTYPES::VARIATION);
     q.bindValue(":type",typeId);
-    q.bindValue(":ored",ored);
-    q.bindValue(":dfrfdiri",dfrfdiri);
-    q.bindValue(":oper",op);
-    q.bindValue(":pop",percentOrPoints);
-    q.bindValue(":incdec",incDec);
+    q.bindValue(":ored",(int)ored);
+    q.bindValue(":dfrfdiri",(int)dfrfdiri);
+    q.bindValue(":oper",(int)op);
+    q.bindValue(":pop",(int)percentOrPoints);
+    q.bindValue(":incdec",(int)incDec);
     q.bindValue(":val1",val);
     q.bindValue(":y1",year1);
     q.bindValue(":y2",year2);
@@ -98,7 +98,7 @@ bool PCx_QueryVariation::canSave(const QString &name) const
     QSqlQuery q;
     q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::VARIATION);
+    q.bindValue(":qmode",(int)PCx_Query::QUERIESTYPES::VARIATION);
     q.exec();
 
     if(q.next())
@@ -204,7 +204,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 
         if(val1!=0)
         {
-            if(percentOrPoints==PERCENT)
+            if(percentOrPoints==PERCENTORPOINTS::PERCENT)
             {
                 //Convert to fixed point percents with two decimals
                 variation=10000*(((double)val2-val1)/val1);
@@ -231,12 +231,12 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
         j.next();
         qint64 nodeVariation=j.value();
 
-        if(incDec==INCREASE)
+        if(incDec==INCREASEDECREASE::INCREASE)
         {
             if(nodeVariation<0)
                 continue;
         }
-        else if(incDec==DECREASE)
+        else if(incDec==INCREASEDECREASE::DECREASE)
         {
             if(nodeVariation>0)
                continue;
@@ -245,7 +245,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 
         qint64 trueVal=val;
 
-        if(percentOrPoints==PERCENT)
+        if(percentOrPoints==PERCENTORPOINTS::PERCENT)
         {
             //Only compare with two decimals
             if(FIXEDPOINTCOEFF!=100)
@@ -256,32 +256,32 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 
         switch(trueOp)
         {
-        case LOWERTHAN:
+        case OPERATORS::LOWERTHAN:
             if(nodeVariation<trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
-        case GREATERTHAN:
+        case OPERATORS::GREATERTHAN:
             if(nodeVariation>trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
-        case LOWEROREQUAL:
+        case OPERATORS::LOWEROREQUAL:
             if(nodeVariation<=trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
-        case GREATEROREQUAL:
+        case OPERATORS::GREATEROREQUAL:
             if(nodeVariation>=trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
-        case EQUAL:
+        case OPERATORS::EQUAL:
             if(nodeVariation==trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
 
-        case NOTEQUAL:
+        case OPERATORS::NOTEQUAL:
             if(nodeVariation!=trueVal)
                 matchingNodes.insert(j.key(),j.value());
             break;
@@ -320,11 +320,11 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
         unsigned int node=matchIter.key();
         qint64 val=matchIter.value();
 
-        if(percentOrPoints==PERCENT)
+        if(percentOrPoints==PERCENTORPOINTS::PERCENT)
             //Add the last decimal to fit FIXEDPOINTCOEFF
             val=val*10;
 
-        if(incDec!=VARIATION)val=qAbs(val);
+        if(incDec!=INCREASEDECREASE::VARIATION)val=qAbs(val);
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4 %5</td></tr>")
                 .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                 .arg(formatFixedPoint(valuesForYear1.value(node)))
@@ -380,22 +380,22 @@ const QString PCx_QueryVariation::operatorToString(OPERATORS op)
     QString output;
     switch(op)
     {
-    case LOWERTHAN:
+    case OPERATORS::LOWERTHAN:
         output=QObject::tr("strictement inférieure à");
         break;
-    case LOWEROREQUAL:
+    case OPERATORS::LOWEROREQUAL:
         output=QObject::tr("inférieure ou égale à");
         break;
-    case EQUAL:
+    case OPERATORS::EQUAL:
         output=QObject::tr("égale à");
         break;
-    case NOTEQUAL:
+    case OPERATORS::NOTEQUAL:
         output=QObject::tr("différente de");
         break;
-    case GREATEROREQUAL:
+    case OPERATORS::GREATEROREQUAL:
         output=QObject::tr("supérieure ou égale à");
         break;
-    case GREATERTHAN:
+    case OPERATORS::GREATERTHAN:
         output=QObject::tr("strictement supérieure à");
         break;
     default:
@@ -404,38 +404,20 @@ const QString PCx_QueryVariation::operatorToString(OPERATORS op)
     return output;
 }
 
-/*
-PCx_QueryVariation::OPERATORS PCx_QueryVariation::stringToOperator(const QString &s)
-{
-    if(s=="<")
-        return LOWERTHAN;
-    else if(s=="<=")
-        return LOWEROREQUAL;
-    else if(s=="=")
-        return EQUAL;
-    else if(s=="!=")
-        return NOTEQUAL;
-    else if(s==">=")
-        return GREATEROREQUAL;
-    else if(s==">")
-        return GREATERTHAN;
 
-    qWarning()<<"Invalid operator string, defaulting to EQUAL";
-    return EQUAL;
-}*/
 
 const QString PCx_QueryVariation::incDecToString(INCREASEDECREASE incDec)
 {
     QString output;
     switch(incDec)
     {
-    case INCREASE:
+    case INCREASEDECREASE::INCREASE:
         output=QObject::tr("augmentation");
         break;
-    case DECREASE:
+    case INCREASEDECREASE::DECREASE:
         output=QObject::tr("diminution");
         break;
-    case VARIATION:
+    case INCREASEDECREASE::VARIATION:
         output=QObject::tr("variation");
         break;
     default:
@@ -449,11 +431,11 @@ const QString PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::PER
     QString out;
     switch(pop)
     {
-    case PERCENT:
+    case PERCENTORPOINTS::PERCENT:
         out=QObject::tr("%");
         break;
 
-    case POINTS:
+    case PERCENTORPOINTS::POINTS:
         out=QObject::tr("€");
         break;
     default:

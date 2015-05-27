@@ -61,7 +61,7 @@ void FormAuditExplore::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
@@ -141,52 +141,52 @@ void FormAuditExplore::getSelections()
     if(selectedMode!=MODES::DFRFDIRI::GLOBAL)
     {
         if(ui->checkBoxPoidsRelatif->isChecked())
-            selectedTabs.append(PCx_Tables::PCAOVERVIEW);
+            selectedTabs.append(PCx_Tables::PCAPRESETS::PCAOVERVIEW);
 
         if(ui->checkBoxEvolution->isChecked())
-            selectedTabs.append(PCx_Tables::PCAEVOLUTION);
+            selectedTabs.append(PCx_Tables::PCAPRESETS::PCAEVOLUTION);
 
         if(ui->checkBoxEvolutionCumul->isChecked())
-            selectedTabs.append(PCx_Tables::PCAEVOLUTIONCUMUL);
+            selectedTabs.append(PCx_Tables::PCAPRESETS::PCAEVOLUTIONCUMUL);
 
         if(ui->checkBoxBase100->isChecked())
-            selectedTabs.append(PCx_Tables::PCABASE100);
+            selectedTabs.append(PCx_Tables::PCAPRESETS::PCABASE100);
 
         if(ui->checkBoxJoursAct->isChecked())
-            selectedTabs.append(PCx_Tables::PCADAYOFWORK);
+            selectedTabs.append(PCx_Tables::PCAPRESETS::PCADAYOFWORK);
 
         if(ui->checkBoxOuvert->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG1);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG1);
 
         if(ui->checkBoxOuvertCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG2);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG2);
 
         if(ui->checkBoxRealise->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG3);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG3);
 
         if(ui->checkBoxRealiseCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG4);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG4);
 
         if(ui->checkBoxEngage->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG5);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG5);
 
         if(ui->checkBoxEngageCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG6);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG6);
 
         if(ui->checkBoxDisponible->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG7);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG7);
 
         if(ui->checkBoxDisponibleCumul->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG8);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG8);
     }
 
     else
     {
         if(ui->checkBoxResults->isChecked())
-            selectedTabs.append(PCx_Tables::PCARESULTS);
+            selectedTabs.append(PCx_Tables::PCAPRESETS::PCARESULTS);
 
         if(ui->checkBoxRecapGraph->isChecked())
-            selectedGraphics.append(PCx_Graphics::PCAG9);
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG9);
     }
 }
 

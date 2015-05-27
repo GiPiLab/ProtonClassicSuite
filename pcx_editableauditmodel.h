@@ -17,7 +17,7 @@ public:
     /**
      * @brief The COLINDEXES enum describes the structure of a DFRFDIRI table
      */
-    enum COLINDEXES
+    enum class COLINDEXES
     {
         COL_ID=0,///<the identifier of the entry
         COL_IDNODE,///<the node identifier
@@ -83,7 +83,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode=false);
+    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<ORED, double> vals, bool fastMode=false);
 
 
 

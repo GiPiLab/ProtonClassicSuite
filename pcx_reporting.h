@@ -24,7 +24,7 @@ public:
     /**
      * @brief The OREDPCR enum describes the available data columns in each table of a reporting
      */
-    enum OREDPCR
+    enum class OREDPCR
     {
         OUVERTS=0, ///<the amount of available money at the beginning of the year
         REALISES, ///<the amount of used money
@@ -111,7 +111,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QHash<PCx_Reporting::OREDPCR, double> vals, bool fastMode=false);
+    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QMap<OREDPCR, double> vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the reporting value of a node

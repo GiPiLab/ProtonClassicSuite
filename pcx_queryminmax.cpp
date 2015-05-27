@@ -43,10 +43,10 @@ unsigned int PCx_QueryMinMax::save(const QString &name) const
                       "val1,val2,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,"
                       ":val1,:val2,:y1,:y2)").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::MINMAX);
+    q.bindValue(":qmode",(int)PCx_Query::QUERIESTYPES::MINMAX);
     q.bindValue(":type",typeId);
-    q.bindValue(":ored",ored);
-    q.bindValue(":dfrfdiri",dfrfdiri);
+    q.bindValue(":ored",(int)ored);
+    q.bindValue(":dfrfdiri",(int)dfrfdiri);
     q.bindValue(":val1",val1);
     q.bindValue(":val2",val2);
     q.bindValue(":y1",year1);
@@ -166,7 +166,7 @@ bool PCx_QueryMinMax::load(unsigned int queryId)
     }
     else
     {
-        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::MINMAX)
+        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::QUERIESTYPES::MINMAX)
         {
             qCritical()<<"Invalid PCx_query mode !";
             return false;
@@ -191,7 +191,7 @@ bool PCx_QueryMinMax::canSave(const QString &name) const
     QSqlQuery q;
     q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::MINMAX);
+    q.bindValue(":qmode",(int)PCx_Query::QUERIESTYPES::MINMAX);
     q.exec();
 
     if(q.next())

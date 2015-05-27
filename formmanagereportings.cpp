@@ -244,11 +244,11 @@ void FormManageReportings::on_pushButtonLoadDF_clicked()
         if(fileName.isEmpty())
             return;
 
-        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DF);
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DFRFDIRI::DF);
 
         if(res==true)
         {
-            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DF).toHtmlEscaped()));
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toHtmlEscaped()));
             updateReportingInfos();
         }
     }
@@ -266,11 +266,11 @@ void FormManageReportings::on_pushButtonLoadRF_clicked()
         if(fileName.isEmpty())
             return;
 
-        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RF);
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DFRFDIRI::RF);
 
         if(res==true)
         {
-            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RF).toHtmlEscaped()));
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toHtmlEscaped()));
             updateReportingInfos();
         }
     }
@@ -286,11 +286,11 @@ void FormManageReportings::on_pushButtonLoadDI_clicked()
         if(fileName.isEmpty())
             return;
 
-        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DI);
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DFRFDIRI::DI);
 
         if(res==true)
         {
-            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DI).toHtmlEscaped()));
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toHtmlEscaped()));
             updateReportingInfos();
         }
     }
@@ -306,11 +306,11 @@ void FormManageReportings::on_pushButtonLoadRI_clicked()
         if(fileName.isEmpty())
             return;
 
-        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::RI);
+        bool res=selectedReporting->importDataFromXLSX(fileName,MODES::DFRFDIRI::RI);
 
         if(res==true)
         {
-            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::RI).toHtmlEscaped()));
+            QMessageBox::information(this,tr("Succès"),tr("%1 chargées !").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toHtmlEscaped()));
             updateReportingInfos();
         }
     }
@@ -405,10 +405,10 @@ void FormManageReportings::updateReportingInfos()
     if(selectedReporting!=nullptr)
     {
         ui->labelTreeName->setText(QString("%1 (%2 noeuds)").arg(selectedReporting->getAttachedTreeName()).arg(selectedReporting->getAttachedTree()->getNumberOfNodes()));
-        ui->labelLastDF->setText(selectedReporting->getLastReportingDate(MODES::DF).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastRF->setText(selectedReporting->getLastReportingDate(MODES::RF).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastDI->setText(selectedReporting->getLastReportingDate(MODES::DI).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastRI->setText(selectedReporting->getLastReportingDate(MODES::RI).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastDF->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DF).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRF->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RF).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastDI->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DI).toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRI->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RI).toString(Qt::DefaultLocaleShortDate));
         emit(reportingDataUpdated(selectedReporting->getReportingId()));
     }
 }
@@ -444,72 +444,72 @@ void FormManageReportings::on_pushButtonExportRI_clicked()
 
 void FormManageReportings::on_pushButtonClearDF_clicked()
 {
-    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DF).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->clearAllData(MODES::DF);
+        selectedReporting->clearAllData(MODES::DFRFDIRI::DF);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonClearRF_clicked()
 {
-    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::RF).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->clearAllData(MODES::RF);
+        selectedReporting->clearAllData(MODES::DFRFDIRI::RF);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonClearDI_clicked()
 {
-    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DI).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->clearAllData(MODES::DI);
+        selectedReporting->clearAllData(MODES::DFRFDIRI::DI);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonClearRI_clicked()
 {
-    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::RI).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Voulez-vous vraiment <b>supprimer</b> toutes les données de %2 du reporting <b>%1</b> ? Cette action ne peut être annulée").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->clearAllData(MODES::RI);
+        selectedReporting->clearAllData(MODES::DFRFDIRI::RI);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonRandomDF_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DF).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->addRandomDataForNext15(MODES::DF);
+        selectedReporting->addRandomDataForNext15(MODES::DFRFDIRI::DF);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonRandomRF_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::RF).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->addRandomDataForNext15(MODES::RF);
+        selectedReporting->addRandomDataForNext15(MODES::DFRFDIRI::RF);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonRandomDI_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DI).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->addRandomDataForNext15(MODES::DI);
+        selectedReporting->addRandomDataForNext15(MODES::DFRFDIRI::DI);
         updateReportingInfos();
     }
 }
 
 void FormManageReportings::on_pushButtonRandomRI_clicked()
 {
-    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::RI).toHtmlEscaped()))==QMessageBox::Yes)
+    if(question(tr("Ajouter des données aléatoires pour les %2 15 jours après la dernière situation du reporting <b>%1</b> ?").arg(ui->comboListOfReportings->currentText().toHtmlEscaped()).arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toHtmlEscaped()))==QMessageBox::Yes)
     {
-        selectedReporting->addRandomDataForNext15(MODES::RI);
+        selectedReporting->addRandomDataForNext15(MODES::DFRFDIRI::RI);
         updateReportingInfos();
     }
 }

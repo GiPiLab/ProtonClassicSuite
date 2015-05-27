@@ -11,7 +11,7 @@ public:
 
     static const unsigned int DEFAULTCOlOR=0xffaabb;
 
-    enum OPERATORS
+    enum class OPERATORS
     {
         LOWERTHAN,
         LOWEROREQUAL,
@@ -21,13 +21,13 @@ public:
         GREATERTHAN
     };
 
-    enum PERCENTORPOINTS
+    enum class PERCENTORPOINTS
     {
         PERCENT,
         POINTS
     };
 
-    enum INCREASEDECREASE
+    enum class INCREASEDECREASE
     {
         INCREASE,
         DECREASE,

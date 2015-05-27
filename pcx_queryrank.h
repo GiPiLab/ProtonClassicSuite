@@ -10,7 +10,7 @@ public:
     static const unsigned int DEFAULTCOlOR=0xaaffbb;
 
 
-    enum GREATERSMALLER
+    enum class GREATERSMALLER
     {
         SMALLER,
         GREATER

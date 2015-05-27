@@ -8,7 +8,7 @@ class PCx_Tables
 {
 public:
 
-    enum PCAPRESETS{
+    enum class PCAPRESETS{
         PCARESULTS,
         PCAOVERVIEW,
         PCAEVOLUTION,
@@ -17,7 +17,7 @@ public:
         PCADAYOFWORK
     };
 
-    enum PCATABLES{
+    enum class PCATABLES{
         PCARAWDATA,
         PCAT1,
         PCAT2,
@@ -35,7 +35,7 @@ public:
         PCAT12
     };
 
-    enum PCRTABLES{
+    enum class PCRTABLES{
         PCRRATIOPARENTS,
         PCRPROVENANCE,
         PCRVARIATION,

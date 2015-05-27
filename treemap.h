@@ -8,10 +8,10 @@
 class TreeMap
 {
 public:
-    TreeMap(TreeMap *parent = nullptr, const QString &name = "", unsigned int id=0, unsigned int year=0, double value = 0.0);
+    TreeMap(TreeMap *parent = nullptr, const QString &name = "", unsigned int id=0, int year=0, double value = 0.0);
     virtual ~TreeMap();
 
-    TreeMap *insert(const QString &name, unsigned int id=0, unsigned int year=0, double value=0.0);
+    TreeMap *insert(const QString &name, unsigned int id=0, int year=0, double value=0.0);
     TreeMap *findAt(const QPoint &pos) const;
 
     void clear(void);

@@ -294,13 +294,13 @@ QString modeToTableString(DFRFDIRI mode)
 
 namespace NUMBERSFORMAT
 {
-FORMATMODE currentFormatMode=FORMATMODENORMAL;
+FORMATMODE currentFormatMode=FORMATMODE::FORMATMODENORMAL;
 unsigned int currentNumDecimals=DEFAULTNUMDECIMALS;
 
 void updateFormatModeAndDecimals()
 {
     QSettings settings;
-    currentFormatMode=(FORMATMODE)settings.value("format/formatMode",FORMATMODENORMAL).toUInt();
+    currentFormatMode=(FORMATMODE)settings.value("format/formatMode",(int)FORMATMODE::FORMATMODENORMAL).toUInt();
     currentNumDecimals=settings.value("format/numdecimals",DEFAULTNUMDECIMALS).toUInt();
 }
 
@@ -318,13 +318,13 @@ QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits)
     {
         switch(currentFormatMode)
         {
-        case FORMATMODENORMAL:
+        case FORMATMODE::FORMATMODENORMAL:
             break;
-        case FORMATMODETHOUSANDS:
+        case FORMATMODE::FORMATMODETHOUSANDS:
             out="k";
             num/=1000;
             break;
-        case FORMATMODEMILLIONS:
+        case FORMATMODE::FORMATMODEMILLIONS:
             out="M";
             num/=1000000;
         }
@@ -351,13 +351,13 @@ QString formatDouble(double num, int decimals, bool forcedUnits)
     {
         switch(currentFormatMode)
         {
-        case FORMATMODENORMAL:
+        case FORMATMODE::FORMATMODENORMAL:
             break;
-        case FORMATMODETHOUSANDS:
+        case FORMATMODE::FORMATMODETHOUSANDS:
             out="k";
             num/=1000;
             break;
-        case FORMATMODEMILLIONS:
+        case FORMATMODE::FORMATMODEMILLIONS:
             out="M";
             num/=1000000;
         }

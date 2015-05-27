@@ -42,10 +42,10 @@ void ProtonClassicSuiteUnitTests::testCaseForPCBPrevisionItemCriteria()
     unsigned int auditId=PCx_Audit::addNewAudit("AUDITTEST",QList<unsigned int>{2010,2011,2012,2013},treeId);
 
     PCx_Audit audit(auditId);
-    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2010,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,10.0},{PCx_Audit::ORED::REALISES,8.0}});
-    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2011,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,15.0},{PCx_Audit::ORED::REALISES,14.0}});
-    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2012,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,16.0},{PCx_Audit::ORED::REALISES,17.0}});
-    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2013,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,20.0},{PCx_Audit::ORED::REALISES,19.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2010,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,10.0},{PCx_Audit::ORED::REALISES,8.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2011,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,15.0},{PCx_Audit::ORED::REALISES,14.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2012,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,16.0},{PCx_Audit::ORED::REALISES,17.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::DF,2013,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,20.0},{PCx_Audit::ORED::REALISES,19.0}});
 
 
     qint64 val;
@@ -132,10 +132,10 @@ void ProtonClassicSuiteUnitTests::testCaseForPCBPrevisionItemCriteria()
 
 
     //The same with large values
-    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2010,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,-MAX_NUM},{PCx_Audit::ORED::REALISES,8.0}});
-    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2011,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,0.0},{PCx_Audit::ORED::REALISES,14.0}});
-    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2012,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,10.0},{PCx_Audit::ORED::REALISES,17.0}});
-    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2013,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,MAX_NUM},{PCx_Audit::ORED::REALISES,19.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2010,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,-MAX_NUM},{PCx_Audit::ORED::REALISES,8.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2011,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,0.0},{PCx_Audit::ORED::REALISES,14.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2012,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,10.0},{PCx_Audit::ORED::REALISES,17.0}});
+    audit.setLeafValues(node1,MODES::DFRFDIRI::RF,2013,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,MAX_NUM},{PCx_Audit::ORED::REALISES,19.0}});
 
     //MINIMUM
     criteria=PCx_PrevisionItemCriteria(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MINIMUM,PCx_Audit::ORED::OUVERTS);
@@ -224,8 +224,8 @@ void ProtonClassicSuiteUnitTests::testCaseForPCBPrevisionItemDispatch()
     PCx_PrevisionItem prevItemLeaf2(&prevision,MODES::DFRFDIRI::DF,leaf2,2014);
     PCx_PrevisionItem prevRoot(&prevision,MODES::DFRFDIRI::DF,1,2014);
 
-    PCx_PrevisionItemCriteria criteriaMIN(PCx_PrevisionItemCriteria::MINIMUM,PCx_Audit::ORED::OUVERTS);
-    PCx_PrevisionItemCriteria criteriaMAX(PCx_PrevisionItemCriteria::MAXIMUM,PCx_Audit::ORED::OUVERTS);
+    PCx_PrevisionItemCriteria criteriaMIN(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MINIMUM,PCx_Audit::ORED::OUVERTS);
+    PCx_PrevisionItemCriteria criteriaMAX(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MAXIMUM,PCx_Audit::ORED::OUVERTS);
 
     prevItemNode1.insertCriteriaToAdd(criteriaMIN);
     prevItemNode1.insertCriteriaToAdd(criteriaMAX);
@@ -265,7 +265,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCBPrevisionItemDispatch()
     QCOMPARE(prevItemLeaf1.getItemsToAdd().count(),1);
     QCOMPARE(prevItemLeaf1.getItemsToSubstract().count(),0);
     PCx_PrevisionItemCriteria criteria=prevItemLeaf1.getItemsToAdd().at(0);
-    QCOMPARE(criteria.getOperator(),PCx_PrevisionItemCriteria::FIXEDVALUEFROMPROPORTIONALREPARTITION);
+    QCOMPARE(criteria.getOperator(),PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUEFROMPROPORTIONALREPARTITION);
     QCOMPARE(prevItemLeaf1.getPrevisionItemValue(),(qint64)156761134);
     QCOMPARE(prevItemLeaf1.getSummedPrevisionItemValue(),(qint64)156761134);
     QCOMPARE(prevItemNode1.getPrevisionItemValue(),(qint64)578754000);
@@ -283,10 +283,10 @@ void ProtonClassicSuiteUnitTests::testCaseForPCBPrevisionItemDispatch()
     prevItemLeaf1b.loadFromDb();
     QCOMPARE(prevItemLeaf1.getItemsToAdd().count(),2);
     criteria=prevItemLeaf1.getItemsToAdd().at(0);
-    QCOMPARE(criteria.getOperator(),PCx_PrevisionItemCriteria::MINIMUM);
+    QCOMPARE(criteria.getOperator(),PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MINIMUM);
     QCOMPARE(prevItemLeaf1b.getItemsToAdd().count(),2);
     criteria=prevItemLeaf1b.getItemsToAdd().at(1);
-    QCOMPARE(criteria.getOperator(),PCx_PrevisionItemCriteria::MAXIMUM);
+    QCOMPARE(criteria.getOperator(),PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MAXIMUM);
     QCOMPARE(prevItemLeaf1.getItemsToSubstract().count(),0);
     QCOMPARE(prevItemLeaf1.getPrevisionItemValue(),prevItemLeaf1.getSummedPrevisionItemValue());
     prevRoot.loadFromDb();
@@ -343,8 +343,8 @@ void ProtonClassicSuiteUnitTests::testCaseForPCBPrevisionItem()
     QVERIFY(prevItemNode1.getItemsToSubstract().isEmpty());
     QCOMPARE(prevItemNode1.getPrevisionItemValue(),(qint64)0);
     QCOMPARE(prevItemNode1.getSummedPrevisionItemValue(),(qint64)0);
-    PCx_PrevisionItemCriteria criteriaMIN(PCx_PrevisionItemCriteria::MINIMUM,PCx_Audit::ORED::OUVERTS);
-    PCx_PrevisionItemCriteria criteriaMAX(PCx_PrevisionItemCriteria::MAXIMUM,PCx_Audit::ORED::OUVERTS);
+    PCx_PrevisionItemCriteria criteriaMIN(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MINIMUM,PCx_Audit::ORED::OUVERTS);
+    PCx_PrevisionItemCriteria criteriaMAX(PCx_PrevisionItemCriteria::PREVISIONOPERATOR::MAXIMUM,PCx_Audit::ORED::OUVERTS);
     prevItemNode1.insertCriteriaToAdd(criteriaMIN);
     prevItemNode1.insertCriteriaToAdd(criteriaMAX);
     QCOMPARE(prevItemNode1.getPrevisionItemValue(),(qint64)578754000);

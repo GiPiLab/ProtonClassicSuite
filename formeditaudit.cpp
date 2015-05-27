@@ -67,7 +67,7 @@ void FormEditAudit::updateListOfAudits()
     ui->comboListAudits->clear();
 
     //QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::UnFinishedAuditsOnly);
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::AllAudits);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits);
     bool nonEmpty=!listOfAudits.isEmpty();
     ui->splitter->setEnabled(nonEmpty);
 
@@ -127,10 +127,10 @@ void FormEditAudit::on_comboListAudits_activated(int index)
     ui->tableViewDI->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableViewRI->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    ui->tableViewDF->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewRF->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewDI->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
-    ui->tableViewRI->horizontalHeader()->setSectionResizeMode(PCx_EditableAuditModel::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDF->horizontalHeader()->setSectionResizeMode((int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRF->horizontalHeader()->setSectionResizeMode((int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewDI->horizontalHeader()->setSectionResizeMode((int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE,QHeaderView::Fixed);
+    ui->tableViewRI->horizontalHeader()->setSectionResizeMode((int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE,QHeaderView::Fixed);
 
 
     QModelIndex rootIndex=auditModel->getAttachedTree()->index(0,0);

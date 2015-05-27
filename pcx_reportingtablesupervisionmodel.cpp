@@ -94,48 +94,48 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             out=tr("Liste des noeuds de l'arbre actif");
             break;
 
-        case TABLESUPERVISIONCOLUMNS::PERCENTBP:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTBP:
             out=tr("Pourcentage du BP par rapport aux crédits ouverts");
             break;
-        case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
             out=tr("Pourcentage des réalisés par rapport aux crédits ouverts. En <span style='color:red'><b>rouge</b></span> lorsque cette valeur"
                    " est strictement supérieure à 100%, en <span style='color:darkgreen'><b>vert</b></span> sinon");
             break;
-        case TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
             out=tr("Pourcentage des engagés par rapport aux crédits ouverts");
             break;
-        case TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
             out=tr("Pourcentage des disponibles par rapport aux crédits ouverts");
             break;
-        case TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
+        case (int)TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
             out=tr("Quantité de réalisés qui seront consommés"
                    " à la fin de l'année en suivant le rythme actuel\n(= réalisés / nombre_de_jours_depuis_le_début_d'année * 365)");
             break;
-        case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+        case (int)TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
             out=tr("Différence estimée entre les réalisés prédits pour la fin de l'année et les crédits ouverts au rythme de consommation actuel."
                    "\nEn rouge si les crédits ouverts seront insuffisants,"
                    " en vert sinon");
             break;
-        case TABLESUPERVISIONCOLUMNS::TAUXECART:
+        case (int)TABLESUPERVISIONCOLUMNS::TAUXECART:
             out=tr("Taux d'écart entre les crédits ouverts et le réalisé prévisionnel de fin d'exercice.\n"
                    "Taux d'écart = (réalisé_prévisonnel - crédits_ouverts)/crédits_ouverts * 100\n"
                    "avec réalisé_prévisionnel = réalisés / nombre_de_jours_depuis_le_début_d'année * 365\n\n"
                    " En rouge si les crédits ouverts seront insuffisants, en "
                    "vert sinon");
             break;
-        case TABLESUPERVISIONCOLUMNS::DECICP:
+        case (int)TABLESUPERVISIONCOLUMNS::DECICP:
             out=tr("Date estimée de consommation intégrale des crédits ouverts au rythme actuel");
             break;
-        case TABLESUPERVISIONCOLUMNS::DERPSUR2:
+        case (int)TABLESUPERVISIONCOLUMNS::DERPSUR2:
             out=tr("Date estimée à laquelle les réalisés atteindront la moitié des crédits ouverts au rythme actuel");
             break;
-        case TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
+        case (int)TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
             out=tr("Nombre de quinzaines avant la fin de l'année");
             break;
-        case TABLESUPERVISIONCOLUMNS::RAC:
+        case (int)TABLESUPERVISIONCOLUMNS::RAC:
             out=tr("Crédits restant à consommer (=crédits ouverts-réalisés)");
             break;
-        case TABLESUPERVISIONCOLUMNS::CPP15NR:
+        case (int)TABLESUPERVISIONCOLUMNS::CPP15NR:
             out=tr("Consommé Prévu Par Quinzaine Restante (=reste à consommer / quinzaines restantes)");
             break;
         }
@@ -156,22 +156,22 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             return reporting->getAttachedTree()->getNodeName(entry.nodeId);
         case 1:
             return entry.date;
-        case TABLESUPERVISIONCOLUMNS::BP:
+        case (int)TABLESUPERVISIONCOLUMNS::BP:
             computedValue=entry.bp;
             break;
-        case TABLESUPERVISIONCOLUMNS::OUVERTS:
+        case (int)TABLESUPERVISIONCOLUMNS::OUVERTS:
             computedValue=entry.ouverts;
             break;
-        case TABLESUPERVISIONCOLUMNS::REALISES:
+        case (int)TABLESUPERVISIONCOLUMNS::REALISES:
             computedValue=entry.realises;
             break;
-        case TABLESUPERVISIONCOLUMNS::ENGAGES:
+        case (int)TABLESUPERVISIONCOLUMNS::ENGAGES:
             computedValue=entry.engages;
             break;
-        case TABLESUPERVISIONCOLUMNS::DISPONIBLES:
+        case (int)TABLESUPERVISIONCOLUMNS::DISPONIBLES:
             computedValue=entry.disponibles;
             break;
-        case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
             if(!qIsNaN(entry.percentReal))
             {
                 percentMode=true;
@@ -180,7 +180,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             else
                 return("DIV0");
             break;
-        case TABLESUPERVISIONCOLUMNS::TAUXECART:
+        case (int)TABLESUPERVISIONCOLUMNS::TAUXECART:
             if(!qIsNaN(entry.tauxEcart))
             {
                 percentMode=true;
@@ -189,7 +189,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             else
                 return("DIV0");
             break;
-        case TABLESUPERVISIONCOLUMNS::PERCENTBP:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTBP:
             if(!qIsNaN(entry.percentBP))
             {
                 percentMode=true;
@@ -198,7 +198,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
             else
                 return("DIV0");
             break;
-        case TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTENGAGES:
             if(!qIsNaN(entry.percentEngage))
             {
                 percentMode=true;
@@ -208,7 +208,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
                 return("DIV0");
             break;
 
-        case TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
+        case (int)TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES:
             if(!qIsNaN(entry.percentDisponible))
             {
                 percentMode=true;
@@ -218,31 +218,31 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
                 return("DIV0");
             break;
 
-        case TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
+        case (int)TABLESUPERVISIONCOLUMNS::REALISESPREDITS:
             computedValue=entry.realisesPredits;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+        case (int)TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
             computedValue=entry.diffRealisesPreditsOuverts;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::DECICP:
+        case (int)TABLESUPERVISIONCOLUMNS::DECICP:
             return entry.dECICO;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::DERPSUR2:
+        case (int)TABLESUPERVISIONCOLUMNS::DERPSUR2:
             return entry.dERO2;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::RAC:
+        case (int)TABLESUPERVISIONCOLUMNS::RAC:
             computedValue=entry.resteAConsommer;
             break;
 
-        case TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
+        case (int)TABLESUPERVISIONCOLUMNS::NB15NRESTANTES:
             return(entry.nb15NRestantes);
             break;
 
-        case TABLESUPERVISIONCOLUMNS::CPP15NR:
+        case (int)TABLESUPERVISIONCOLUMNS::CPP15NR:
             computedValue=entry.consommePrevPar15N;
             break;
         }
@@ -266,8 +266,8 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
         {
             switch(index.column())
             {
-            case TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
-            case TABLESUPERVISIONCOLUMNS::TAUXECART:
+            case (int)TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS:
+            case (int)TABLESUPERVISIONCOLUMNS::TAUXECART:
             {
                 if(computedValue>0.0)
                     return QVariant::fromValue(QColor(Qt::red));
@@ -275,7 +275,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
                     return QVariant::fromValue(QColor(Qt::darkGreen));
             }
                 break;
-            case TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
+            case (int)TABLESUPERVISIONCOLUMNS::PERCENTREALISES:
             {
                 if(computedValue>100.0)
                     return QVariant::fromValue(QColor(Qt::red));

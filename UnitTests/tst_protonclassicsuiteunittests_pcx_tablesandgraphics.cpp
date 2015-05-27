@@ -34,7 +34,7 @@ void ProtonClassicSuiteUnitTests::fillTestAudit(PCx_Audit *audit)
             foreach(unsigned int leaf,leaves)
             {
 
-                audit->setLeafValues(leaf,(MODES::DFRFDIRI)mode,year,QHash<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,values.at(count)},
+                audit->setLeafValues(leaf,(MODES::DFRFDIRI)mode,year,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,values.at(count)},
                                                                                                    {PCx_Audit::ORED::REALISES,values.at(count+1)},
                                                                                                    {PCx_Audit::ORED::ENGAGES,values.at(count+2)}});
 
@@ -281,7 +281,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
 
     ba.clear();
     buffer.open(QIODevice::WriteOnly);
-    graphics.getPCAHistory(nodeA,MODES::DFRFDIRI::DF,QList<PCx_Audit::ORED>{PCx_Audit::OUVERTS,PCx_Audit::REALISES,PCx_Audit::ENGAGES,PCx_Audit::DISPONIBLES});
+    graphics.getPCAHistory(nodeA,MODES::DFRFDIRI::DF,QList<PCx_Audit::ORED>{PCx_Audit::ORED::OUVERTS,PCx_Audit::ORED::REALISES,PCx_Audit::ORED::ENGAGES,PCx_Audit::ORED::DISPONIBLES});
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);

@@ -89,7 +89,7 @@ void FormManageAudits::updateListOfAudits()
 {
     ui->comboListOfAudits->clear();
 
-    QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::AllAudits);
+    QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits);
     ui->groupBoxAudits->setEnabled(!listOfAudits.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfAudits)

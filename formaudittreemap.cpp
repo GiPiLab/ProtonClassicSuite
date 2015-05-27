@@ -10,20 +10,20 @@
 FormAuditTreemap::FormAuditTreemap(QWidget *parent):QWidget(parent),ui(new Ui::FormAuditTreemap)
 {
     selectedNode=1;
-    selectedMode=MODES::DF;
+    selectedMode=MODES::DFRFDIRI::DF;
     selectedORED=PCx_Audit::ORED::OUVERTS;
     selectedAudit=nullptr;
     ui->setupUi(this);
 
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),PCx_Audit::ORED::OUVERTS);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),PCx_Audit::ORED::REALISES);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),PCx_Audit::ORED::ENGAGES);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),(int)PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),(int)PCx_Audit::ORED::REALISES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),(int)PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),(int)PCx_Audit::ORED::DISPONIBLES);
 
-    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),MODES::DFRFDIRI::DF);
-    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),MODES::DFRFDIRI::RF);
-    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),MODES::DFRFDIRI::DI);
-    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),MODES::DFRFDIRI::RI);
+    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),(int)MODES::DFRFDIRI::DF);
+    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),(int)MODES::DFRFDIRI::RF);
+    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),(int)MODES::DFRFDIRI::DI);
+    ui->comboBoxMode->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),(int)MODES::DFRFDIRI::RI);
     updateListOfAudits();
 
 }
@@ -46,7 +46,7 @@ void FormAuditTreemap::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
 

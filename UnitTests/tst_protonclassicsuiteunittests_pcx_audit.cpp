@@ -163,39 +163,39 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     unsigned int firstLeaf=audit.getAttachedTree()->getLeavesId().first();
     unsigned int lastLeaf=audit.getAttachedTree()->getLeavesId().last();
 
-    audit.setLeafValues(firstLeaf,MODES::DFRFDIRI::DF,2010,QHash<PCx_Audit::ORED,double>{{PCx_Audit::OUVERTS,100.4},
-                                                                                         {PCx_Audit::REALISES,50.3},{PCx_Audit::ENGAGES,10.0}});
-    audit.setLeafValues(lastLeaf,MODES::DFRFDIRI::DF,2010,QHash<PCx_Audit::ORED,double>{{PCx_Audit::OUVERTS,200.6},
-                                                                                        {PCx_Audit::REALISES,60.2},{PCx_Audit::ENGAGES,20.0}});
+    audit.setLeafValues(firstLeaf,MODES::DFRFDIRI::DF,2010,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,100.4},
+                                                                                         {PCx_Audit::ORED::REALISES,50.3},{PCx_Audit::ORED::ENGAGES,10.0}});
+    audit.setLeafValues(lastLeaf,MODES::DFRFDIRI::DF,2010,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,200.6},
+                                                                                        {PCx_Audit::ORED::REALISES,60.2},{PCx_Audit::ORED::ENGAGES,20.0}});
 
-    audit.setLeafValues(firstLeaf,MODES::DFRFDIRI::DF,2011,QHash<PCx_Audit::ORED,double>{{PCx_Audit::OUVERTS,(double)MAX_NUM},
-                                                                                        {PCx_Audit::REALISES,(double)MAX_NUM},{PCx_Audit::ENGAGES,(double)MAX_NUM}});
-    audit.setLeafValues(lastLeaf,MODES::DFRFDIRI::DF,2011,QHash<PCx_Audit::ORED,double>{{PCx_Audit::OUVERTS,(double)-MAX_NUM},
-                                                                                        {PCx_Audit::REALISES,(double)-MAX_NUM},{PCx_Audit::ENGAGES,(double)-MAX_NUM}});
+    audit.setLeafValues(firstLeaf,MODES::DFRFDIRI::DF,2011,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,(double)MAX_NUM},
+                                                                                        {PCx_Audit::ORED::REALISES,(double)MAX_NUM},{PCx_Audit::ORED::ENGAGES,(double)MAX_NUM}});
+    audit.setLeafValues(lastLeaf,MODES::DFRFDIRI::DF,2011,QMap<PCx_Audit::ORED,double>{{PCx_Audit::ORED::OUVERTS,(double)-MAX_NUM},
+                                                                                        {PCx_Audit::ORED::REALISES,(double)-MAX_NUM},{PCx_Audit::ORED::ENGAGES,(double)-MAX_NUM}});
 
     //Test correct set and get
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2010)),100.4);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2010)),50.3);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2010)),10.0);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2011)),(double)MAX_NUM);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2011)),(double)-MAX_NUM);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2011)),(double)MAX_NUM);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2011)),(double)-MAX_NUM);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2011)),(double)MAX_NUM);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2011)),(double)-MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::OUVERTS,2010)),100.4);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::REALISES,2010)),50.3);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::ENGAGES,2010)),10.0);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::OUVERTS,2011)),(double)MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::OUVERTS,2011)),(double)-MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::REALISES,2011)),(double)MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::REALISES,2011)),(double)-MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::ENGAGES,2011)),(double)MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::ENGAGES,2011)),(double)-MAX_NUM);
 
     //Test disponible computation
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2010)),100.4-(50.3+10.0));
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2011)),(double)-MAX_NUM);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2011)),(double)MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::DISPONIBLES,2010)),100.4-(50.3+10.0));
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(firstLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::DISPONIBLES,2011)),(double)-MAX_NUM);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(lastLeaf,MODES::DFRFDIRI::DF,PCx_Audit::ORED::DISPONIBLES,2011)),(double)MAX_NUM);
     //Test propagation to the root
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2010)),100.4+200.6);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::REALISES,2010)),50.3+60.2);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ENGAGES,2010)),30.0);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2010)),160.5);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ORED::OUVERTS,2010)),100.4+200.6);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ORED::REALISES,2010)),50.3+60.2);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ORED::ENGAGES,2010)),30.0);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ORED::DISPONIBLES,2010)),160.5);
 
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::OUVERTS,2011)),0.0);
-    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::DISPONIBLES,2011)),0.0);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ORED::OUVERTS,2011)),0.0);
+    QCOMPARE(NUMBERSFORMAT::fixedPointToDouble(audit.getNodeValue(1,MODES::DFRFDIRI::DF,PCx_Audit::ORED::DISPONIBLES,2011)),0.0);
 
 
     QString stats=audit.getHTMLAuditStatistics();

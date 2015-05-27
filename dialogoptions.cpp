@@ -101,16 +101,16 @@ DialogOptions::DialogOptions(QWidget *parent) :
     ui->pushButtonColorPen1->setStyleSheet("background-color:"+colorPen1.name());
     ui->pushButtonColorPen2->setStyleSheet("background-color:"+colorPen2.name());
 
-    FORMATMODE formatMode=(FORMATMODE)settings.value("format/formatMode",FORMATMODENORMAL).toUInt();
+    FORMATMODE formatMode=(FORMATMODE)settings.value("format/formatMode",(int)FORMATMODE::FORMATMODENORMAL).toUInt();
     switch(formatMode)
     {
-    case FORMATMODENORMAL:
+    case FORMATMODE::FORMATMODENORMAL:
         ui->radioButtonUnits->setChecked(true);
         break;
-    case FORMATMODETHOUSANDS:
+    case FORMATMODE::FORMATMODETHOUSANDS:
         ui->radioButtonThousands->setChecked(true);
         break;
-    case FORMATMODEMILLIONS:
+    case FORMATMODE::FORMATMODEMILLIONS:
         ui->radioButtonMillions->setChecked(true);
         break;
     }
@@ -152,15 +152,15 @@ void DialogOptions::on_pushButtonOk_clicked()
 
     if(ui->radioButtonUnits->isChecked())
     {
-        settings.setValue("format/formatMode",FORMATMODENORMAL);
+        settings.setValue("format/formatMode",(int)FORMATMODE::FORMATMODENORMAL);
     }
     else if(ui->radioButtonThousands->isChecked())
     {
-        settings.setValue("format/formatMode",FORMATMODETHOUSANDS);
+        settings.setValue("format/formatMode",(int)FORMATMODE::FORMATMODETHOUSANDS);
     }
     else if(ui->radioButtonMillions->isChecked())
     {
-        settings.setValue("format/formatMode",FORMATMODEMILLIONS);
+        settings.setValue("format/formatMode",(int)FORMATMODE::FORMATMODEMILLIONS);
     }
 
     settings.setValue("graphics/width",ui->spinBoxWidth->value());

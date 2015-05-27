@@ -32,15 +32,15 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
         ui->textBrowser->setHidden(true);
     }
     PCx_PrevisionItemCriteria::fillComboBoxWithOperators(ui->comboBoxOperators);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),PCx_Audit::ORED::OUVERTS);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),PCx_Audit::ORED::REALISES);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),PCx_Audit::ORED::ENGAGES);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),(int)PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),(int)PCx_Audit::ORED::REALISES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),(int)PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),(int)PCx_Audit::ORED::DISPONIBLES);
 
-    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),PCx_Audit::ORED::OUVERTS);
-    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),PCx_Audit::ORED::REALISES);
-    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),PCx_Audit::ORED::ENGAGES);
-    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),(int)PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),(int)PCx_Audit::ORED::REALISES);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),(int)PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxOREDDispatchRef->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),(int)PCx_Audit::ORED::DISPONIBLES);
     ui->comboBoxOREDDispatchRef->setCurrentText(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true));
 
 
@@ -264,12 +264,12 @@ void FormAuditPrevisions::on_comboBoxOperators_activated(int index)
     Q_UNUSED(index);
     switch(ui->comboBoxOperators->currentData().toInt())
     {
-        case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE:
+        case (int)PCx_PrevisionItemCriteria::PREVISIONOPERATOR::FIXEDVALUE:
         ui->comboBoxORED->setEnabled(false);
         ui->doubleSpinBox->setEnabled(true);
         ui->doubleSpinBox->setSuffix("€");
         break;
-        case PCx_PrevisionItemCriteria::PREVISIONOPERATOR::PERCENT:
+        case (int)PCx_PrevisionItemCriteria::PREVISIONOPERATOR::PERCENT:
         ui->comboBoxORED->setEnabled(true);
         ui->doubleSpinBox->setEnabled(true);
         ui->doubleSpinBox->setSuffix("%");

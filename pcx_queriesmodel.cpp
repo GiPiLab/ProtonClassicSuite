@@ -31,11 +31,11 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const
 
         switch(queryType)
         {
-        case PCx_Query::VARIATION:
+        case PCx_Query::QUERIESTYPES::VARIATION:
             return QVariant(QBrush(PCx_QueryVariation::getColor()));
-        case PCx_Query::RANK:
+        case PCx_Query::QUERIESTYPES::RANK:
             return QVariant(QBrush(PCx_QueryRank::getColor()));
-        case PCx_Query::MINMAX:
+        case PCx_Query::QUERIESTYPES::MINMAX:
             return QVariant(QBrush(PCx_QueryMinMax::getColor()));
         default:
             Q_UNREACHABLE();
@@ -49,13 +49,13 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const
 
         switch(queryType)
         {
-        case PCx_Query::VARIATION:
+        case PCx_Query::QUERIESTYPES::VARIATION:
         {
             PCx_QueryVariation q(auditModel,queryId);
             return q.getDescription().toHtmlEscaped();
             break;
         }
-        case PCx_Query::RANK:
+        case PCx_Query::QUERIESTYPES::RANK:
         {
             PCx_QueryRank q(auditModel,queryId);
             return q.getDescription().toHtmlEscaped();
@@ -63,7 +63,7 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const
         }
 
 
-        case PCx_Query::MINMAX:
+        case PCx_Query::QUERIESTYPES::MINMAX:
         {
             PCx_QueryMinMax q(auditModel,queryId);
             return q.getDescription().toHtmlEscaped();

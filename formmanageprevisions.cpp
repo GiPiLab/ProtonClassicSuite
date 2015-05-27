@@ -86,7 +86,7 @@ void FormManagePrevisions::updateListOfAudits()
 {
     ui->comboListAudits->clear();
 
-    QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
     QPair<unsigned int,QString> p;
     if(listOfAudits.count()==0)
     {

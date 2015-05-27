@@ -30,11 +30,11 @@ unsigned int PCx_QueryRank::save(const QString &name) const
                       "increase_decrease,val1,year1,year2) values (:name,:qmode,:type,:ored,:dfrfdiri,"
                       ":incdec,:val1,:y1,:y2)").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::RANK);
+    q.bindValue(":qmode",(int)PCx_Query::QUERIESTYPES::RANK);
     q.bindValue(":type",typeId);
-    q.bindValue(":ored",ored);
-    q.bindValue(":dfrfdiri",dfrfdiri);
-    q.bindValue(":incdec",grSm);
+    q.bindValue(":ored",(int)ored);
+    q.bindValue(":dfrfdiri",(int)dfrfdiri);
+    q.bindValue(":incdec",(int)grSm);
     q.bindValue(":val1",number);
     q.bindValue(":y1",year1);
     q.bindValue(":y2",year2);
@@ -59,7 +59,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
     QString oredString=PCx_Audit::OREDtoTableString(ored);
     QString order="asc";
 
-    if(grSm==GREATER)
+    if(grSm==GREATERSMALLER::GREATER)
         order="desc";
 
     if(typeId!=ALLTYPES)
@@ -155,7 +155,7 @@ bool PCx_QueryRank::load(unsigned int queryId)
     }
     else
     {
-        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::RANK)
+        if((PCx_Query::QUERIESTYPES)q.value("query_mode").toUInt()!=PCx_Query::QUERIESTYPES::RANK)
         {
             qCritical()<<"Invalid PCx_query mode !";
             return false;
@@ -181,7 +181,7 @@ bool PCx_QueryRank::canSave(const QString &name) const
     QSqlQuery q;
     q.prepare(QString("select * from audit_queries_%1 where name=:name and query_mode=:qmode").arg(model->getAuditId()));
     q.bindValue(":name",name);
-    q.bindValue(":qmode",PCx_Query::RANK);
+    q.bindValue(":qmode",(int)PCx_Query::QUERIESTYPES::RANK);
     q.exec();
 
     if(q.next())
@@ -212,10 +212,10 @@ QString PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATERSMALLER grSm
 {
     switch(grSm)
     {
-    case GREATER:
+    case GREATERSMALLER::GREATER:
         return QObject::tr("plus grands");
         break;
-    case SMALLER:
+    case GREATERSMALLER::SMALLER:
         return QObject::tr("plus petits");
         break;
     default:

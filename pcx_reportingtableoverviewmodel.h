@@ -11,7 +11,7 @@ class PCx_ReportingTableOverviewModel : public QAbstractTableModel
     Q_OBJECT
 public:
 
-    enum OVERVIEWMODE
+    enum class OVERVIEWMODE
     {
         DF,
         RF,

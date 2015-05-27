@@ -85,7 +85,7 @@ namespace MODES
  * Each mode corresponds to a table in the database. Each of them contains data about nodes and years,
  * and columns are described by the ORED enum.
  */
-enum DFRFDIRI
+enum class DFRFDIRI
 {
     DF, ///<dépenses de fonctionnement (spendings)
     RF, ///<recettes de fonctionnement (receipts)
@@ -120,7 +120,7 @@ namespace NUMBERSFORMAT
 /**
  * @brief The FORMATMODE enum represents the display mode of numbers
  */
-enum FORMATMODE
+enum class FORMATMODE
 {
     FORMATMODENORMAL, ///< numbers are displayed in units
     FORMATMODETHOUSANDS, ///< numbers are divided by 1000 before beeing displayed

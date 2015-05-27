@@ -15,7 +15,7 @@ public:
     /**
      * @brief The QUERIESTYPES enum represents available queries
      */
-    enum QUERIESTYPES
+    enum class QUERIESTYPES
     {
         VARIATION, ///< the query "give me nodes that increase or decrease
         MINMAX,

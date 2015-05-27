@@ -84,7 +84,7 @@ unsigned int PCx_Reporting::getAttachedTreeId(unsigned int reportingId)
 
 
 
-bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QHash<PCx_Reporting::OREDPCR,double> vals, bool fastMode)
+bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QMap<PCx_Reporting::OREDPCR,double> vals, bool fastMode)
 {
     if(!fastMode)
     {
@@ -490,9 +490,6 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
             return false;
         }
 
-
-
-
         double dblOuv=ouverts.toDouble();
         double dblReal=realises.toDouble();
         double dblEng=engages.toDouble();
@@ -595,7 +592,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         int nodeId;
         nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
 
-        QHash<PCx_Reporting::OREDPCR,double> vals;
+        QMap<PCx_Reporting::OREDPCR,double> vals;
         if(ouverts.isValid())
         {
             double valDbl=ouverts.toDouble();
@@ -802,7 +799,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
             }
             if(q.next())
             {
-                QHash<PCx_Audit::ORED,double> vals;
+                QMap<PCx_Audit::ORED,double> vals;
                 vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
                 vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
                 vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
@@ -839,7 +836,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
             }
             if(q.next())
             {
-                QHash<PCx_Audit::ORED,double> vals;
+                QMap<PCx_Audit::ORED,double> vals;
                 vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
                 vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
                 vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
@@ -878,7 +875,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
             }
             if(q.next())
             {
-                QHash<PCx_Audit::ORED,double> vals;
+                QMap<PCx_Audit::ORED,double> vals;
                 vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
                 vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
                 vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
@@ -917,7 +914,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
             }
             if(q.next())
             {
-                QHash<PCx_Audit::ORED,double> vals;
+                QMap<PCx_Audit::ORED,double> vals;
                 vals.insert(PCx_Audit::ORED::OUVERTS,fixedPointToDouble(q.value("ouverts").toLongLong()));
                 vals.insert(PCx_Audit::ORED::REALISES,fixedPointToDouble(q.value("realises").toLongLong()));
                 vals.insert(PCx_Audit::ORED::ENGAGES,fixedPointToDouble(q.value("engages").toLongLong()));
@@ -1101,7 +1098,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
 {
     QList<unsigned int> leaves=getAttachedTree()->getLeavesId();
 
-    QHash<PCx_Reporting::OREDPCR,double> data;
+    QMap<PCx_Reporting::OREDPCR,double> data;
 
     int maxVal=leaves.size();
 
@@ -1130,13 +1127,13 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
     {
             data.clear();
 
-            for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONELAST;i++)
+            for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
             {
-                if(i==PCx_Reporting::OREDPCR::DISPONIBLES)
+                if(i==(int)PCx_Reporting::OREDPCR::DISPONIBLES)
                     continue;
                 randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
 
-                data.insert(PCx_Reporting::OREDPCR(i),randval);
+                data.insert((PCx_Reporting::OREDPCR)(i),randval);
             }
 
             //the transaction will be rollback in setLeafValues=>die
@@ -1184,7 +1181,7 @@ void PCx_Reporting::OREDPCRToComboBox(QComboBox *combo)
 {
     combo->clear();
     for(int i=(int)OREDPCR::OUVERTS;i<=(int)OREDPCR::NONELAST;i++)
-        combo->addItem(OREDPCRtoCompleteString((OREDPCR)i),(OREDPCR)i);
+        combo->addItem(OREDPCRtoCompleteString((OREDPCR)i),i);
 }
 
 

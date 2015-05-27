@@ -23,52 +23,52 @@ FormQueries::FormQueries(QWidget *parent) :
 
     onColorChanged();
 
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),PCx_Audit::ORED::OUVERTS);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),PCx_Audit::ORED::REALISES);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),PCx_Audit::ORED::ENGAGES);
-    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),(int)PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),(int)PCx_Audit::ORED::REALISES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),(int)PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxORED->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),(int)PCx_Audit::ORED::DISPONIBLES);
 
-    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),MODES::DFRFDIRI::DF);
-    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),MODES::DFRFDIRI::RF);
-    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),MODES::DFRFDIRI::DI);
-    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),MODES::DFRFDIRI::RI);
+    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),(int)MODES::DFRFDIRI::DF);
+    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),(int)MODES::DFRFDIRI::RF);
+    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),(int)MODES::DFRFDIRI::DI);
+    ui->comboBoxDFRFDIRI->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),(int)MODES::DFRFDIRI::RI);
 
-    ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::INCREASE),PCx_QueryVariation::INCREASE);
-    ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::DECREASE),PCx_QueryVariation::DECREASE);
-    ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::VARIATION),PCx_QueryVariation::VARIATION);
+    ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::INCREASEDECREASE::INCREASE),(int)PCx_QueryVariation::INCREASEDECREASE::INCREASE);
+    ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::INCREASEDECREASE::DECREASE),(int)PCx_QueryVariation::INCREASEDECREASE::DECREASE);
+    ui->comboBoxAugDim->addItem(PCx_QueryVariation::incDecToString(PCx_QueryVariation::INCREASEDECREASE::VARIATION),(int)PCx_QueryVariation::INCREASEDECREASE::VARIATION);
 
-    ui->comboBoxPercentEuro->addItem(PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::PERCENT),PCx_QueryVariation::PERCENT);
-    ui->comboBoxPercentEuro->addItem(PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::POINTS),PCx_QueryVariation::POINTS);
+    ui->comboBoxPercentEuro->addItem(PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::PERCENTORPOINTS::PERCENT),(int)PCx_QueryVariation::PERCENTORPOINTS::PERCENT);
+    ui->comboBoxPercentEuro->addItem(PCx_QueryVariation::percentOrPointToString(PCx_QueryVariation::PERCENTORPOINTS::POINTS),(int)PCx_QueryVariation::PERCENTORPOINTS::POINTS);
 
-    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::LOWERTHAN),PCx_QueryVariation::LOWERTHAN);
-    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::LOWEROREQUAL),PCx_QueryVariation::LOWEROREQUAL);
-    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::EQUAL),PCx_QueryVariation::EQUAL);
-    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::NOTEQUAL),PCx_QueryVariation::NOTEQUAL);
-    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::GREATEROREQUAL),PCx_QueryVariation::GREATEROREQUAL);
-    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::GREATERTHAN),PCx_QueryVariation::GREATERTHAN);
+    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::OPERATORS::LOWERTHAN),(int)PCx_QueryVariation::OPERATORS::LOWERTHAN);
+    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::OPERATORS::LOWEROREQUAL),(int)PCx_QueryVariation::OPERATORS::LOWEROREQUAL);
+    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::OPERATORS::EQUAL),(int)PCx_QueryVariation::OPERATORS::EQUAL);
+    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::OPERATORS::NOTEQUAL),(int)PCx_QueryVariation::OPERATORS::NOTEQUAL);
+    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::OPERATORS::GREATEROREQUAL),(int)PCx_QueryVariation::OPERATORS::GREATEROREQUAL);
+    ui->comboBoxOperator->addItem(PCx_QueryVariation::operatorToString(PCx_QueryVariation::OPERATORS::GREATERTHAN),(int)PCx_QueryVariation::OPERATORS::GREATERTHAN);
 
-    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),PCx_Audit::ORED::OUVERTS);
-    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),PCx_Audit::ORED::REALISES);
-    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),PCx_Audit::ORED::ENGAGES);
-    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),(int)PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),(int)PCx_Audit::ORED::REALISES);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),(int)PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxORED_2->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),(int)PCx_Audit::ORED::DISPONIBLES);
 
-    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),MODES::DFRFDIRI::DF);
-    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),MODES::DFRFDIRI::RF);
-    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),MODES::DFRFDIRI::DI);
-    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),MODES::DFRFDIRI::RI);
+    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),(int)MODES::DFRFDIRI::DF);
+    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),(int)MODES::DFRFDIRI::RF);
+    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),(int)MODES::DFRFDIRI::DI);
+    ui->comboBoxDFRFDIRI_2->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),(int)MODES::DFRFDIRI::RI);
 
-    ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATER),PCx_QueryRank::GREATER);
-    ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::SMALLER),PCx_QueryRank::SMALLER);
+    ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATERSMALLER::GREATER),(int)PCx_QueryRank::GREATERSMALLER::GREATER);
+    ui->comboBoxBiggerSmaller->addItem(PCx_QueryRank::greaterSmallerToString(PCx_QueryRank::GREATERSMALLER::SMALLER),(int)PCx_QueryRank::GREATERSMALLER::SMALLER);
 
-    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),PCx_Audit::ORED::OUVERTS);
-    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),PCx_Audit::ORED::REALISES);
-    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),PCx_Audit::ORED::ENGAGES);
-    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),PCx_Audit::ORED::DISPONIBLES);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true),(int)PCx_Audit::ORED::OUVERTS);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true),(int)PCx_Audit::ORED::REALISES);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true),(int)PCx_Audit::ORED::ENGAGES);
+    ui->comboBoxORED_3->addItem(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES,true),(int)PCx_Audit::ORED::DISPONIBLES);
 
-    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),MODES::DFRFDIRI::DF);
-    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),MODES::DFRFDIRI::RF);
-    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),MODES::DFRFDIRI::DI);
-    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),MODES::DFRFDIRI::RI);
+    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF).toLower(),(int)MODES::DFRFDIRI::DF);
+    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF).toLower(),(int)MODES::DFRFDIRI::RF);
+    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI).toLower(),(int)MODES::DFRFDIRI::DI);
+    ui->comboBoxDFRFDIRI_3->addItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI).toLower(),(int)MODES::DFRFDIRI::RI);
 
     ui->doubleSpinBox->setMaximum(INT64_MAX/FIXEDPOINTCOEFF);
     ui->doubleSpinBox_2->setRange(-INT64_MAX/FIXEDPOINTCOEFF,INT64_MAX/FIXEDPOINTCOEFF);
@@ -128,7 +128,7 @@ void FormQueries::updateListOfAudits()
 {
     ui->comboBoxListAudits->clear();
 
-    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::FinishedAuditsOnly);
+    QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
@@ -299,7 +299,7 @@ void FormQueries::on_pushButtonExecReqVariation_clicked()
 void FormQueries::on_comboBoxAugDim_activated(int index)
 {
     Q_UNUSED(index);
-    if((PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toInt()==PCx_QueryVariation::VARIATION)
+    if((PCx_QueryVariation::INCREASEDECREASE)ui->comboBoxAugDim->currentData().toInt()==PCx_QueryVariation::INCREASEDECREASE::VARIATION)
     {
         ui->doubleSpinBox->setMinimum(-INT64_MAX/FIXEDPOINTCOEFF);
     }
@@ -395,21 +395,21 @@ QString FormQueries::execQueries(QModelIndexList items, QXlsx::Document *xlsDocu
 
         switch(selectedQueryType)
         {
-        case PCx_Query::VARIATION:
+        case PCx_Query::QUERIESTYPES::VARIATION:
         {
             PCx_QueryVariation pqv(model,selectedQueryId);
             output.append(pqv.exec(xlsDocument));
             break;
         }
 
-        case PCx_Query::RANK:
+        case PCx_Query::QUERIESTYPES::RANK:
         {
             PCx_QueryRank pqr(model,selectedQueryId);
             output.append(pqr.exec(xlsDocument));
             break;
         }
 
-        case PCx_Query::MINMAX:
+        case PCx_Query::QUERIESTYPES::MINMAX:
         {
             PCx_QueryMinMax pqmm(model,selectedQueryId);
             output.append(pqmm.exec(xlsDocument));

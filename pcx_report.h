@@ -11,7 +11,7 @@ class PCx_Report
 public:
 
     //Presets for PCR Reports, each of them except the last one contains tables and graphics
-    enum PCRPRESETS
+    enum class PCRPRESETS
     {
         PCRPRESET_A,
         PCRPRESET_B,

@@ -24,8 +24,8 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
     rect.setLeft(rect.left()+5);
     painter->save();
 
-    if(!index.data().isNull() && (index.column()==PCx_EditableAuditModel::COL_OUVERTS||index.column()==PCx_EditableAuditModel::COL_REALISES||
-                                  index.column()==PCx_EditableAuditModel::COL_ENGAGES||index.column()==PCx_EditableAuditModel::COL_DISPONIBLES))
+    if(!index.data().isNull() && (index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_OUVERTS||index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_REALISES||
+                                  index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_ENGAGES||index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_DISPONIBLES))
     {
         qint64 data=index.data().toLongLong();
         if(data<0)
@@ -35,7 +35,7 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
         QString formattedNum=formatFixedPoint(data);
         painter->drawText(rect,formattedNum,QTextOption(Qt::AlignRight|Qt::AlignVCenter));
     }
-    else if(index.column()==PCx_EditableAuditModel::COL_ANNEE || index.column()==PCx_EditableAuditModel::COL_ID)
+    else if(index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE || index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_ID)
     {
         painter->drawText(rect,index.data().toString(),QTextOption(Qt::AlignLeft|Qt::AlignVCenter));
     }
@@ -64,7 +64,7 @@ QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionView
 {
     Q_UNUSED(option);
 
-    if(index.column()==PCx_EditableAuditModel::COL_DISPONIBLES || index.column()==PCx_EditableAuditModel::COL_ANNEE)
+    if(index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_DISPONIBLES || index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE)
     {
         return 0;
     }

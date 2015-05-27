@@ -30,7 +30,7 @@ public:
 
     static const int DEFAULTALPHA=70;
 
-    enum PCAGRAPHICS
+    enum class PCAGRAPHICS
     {
         PCAG1,
         PCAG2,
@@ -45,7 +45,7 @@ public:
     };
 
 
-    enum PCRGRAPHICS
+    enum class PCRGRAPHICS
     {
         PCRHISTORY,
         PCRGPROVENANCE,

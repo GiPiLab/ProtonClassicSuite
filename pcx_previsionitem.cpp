@@ -71,8 +71,8 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
     out=prevision->generateHTMLHeader();
     out.append(prevision->generateHTMLPrevisionTitle());
     out.append("<h4>"+MODES::modeToCompleteString(mode).toHtmlEscaped()+"</h4>");
-    QList<PCx_Tables::PCATABLES> tables={PCx_Tables::PCARAWDATA};
-    QList<PCx_Graphics::PCAGRAPHICS> graphics={PCx_Graphics::PCAGRAPHICS::PCAHISTORY,PCx_Graphics::PCAG1,PCx_Graphics::PCAG2};
+    QList<PCx_Tables::PCATABLES> tables={PCx_Tables::PCATABLES::PCARAWDATA};
+    QList<PCx_Graphics::PCAGRAPHICS> graphics={PCx_Graphics::PCAGRAPHICS::PCAHISTORY,PCx_Graphics::PCAGRAPHICS::PCAG1,PCx_Graphics::PCAGRAPHICS::PCAG2};
 
     out.append("<h2>"+prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped()+"</h2>");
     out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").arg(year).arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
@@ -141,8 +141,8 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
         out.append(report.generateHTMLTOC(dPlusMe));
     }
 
-    QList<PCx_Tables::PCATABLES> tables={PCx_Tables::PCARAWDATA};
-    QList<PCx_Graphics::PCAGRAPHICS> graphics={PCx_Graphics::PCAGRAPHICS::PCAHISTORY,PCx_Graphics::PCAG1,PCx_Graphics::PCAG2};
+    QList<PCx_Tables::PCATABLES> tables={PCx_Tables::PCATABLES::PCARAWDATA};
+    QList<PCx_Graphics::PCAGRAPHICS> graphics={PCx_Graphics::PCAGRAPHICS::PCAHISTORY,PCx_Graphics::PCAGRAPHICS::PCAG1,PCx_Graphics::PCAGRAPHICS::PCAG2};
 
     out.append(QString("<h2 id='node%1'>"+prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped()+"</h2>").arg(nodeId));
     out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").arg(year).arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));

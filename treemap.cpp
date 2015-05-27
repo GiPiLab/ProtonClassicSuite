@@ -1,7 +1,7 @@
 #include "treemap.h"
 
 
-TreeMap::TreeMap(TreeMap *parent, const QString &name, unsigned int id, unsigned int year, double value):parent(parent),name(name),id(id),year(year),value(value)
+TreeMap::TreeMap(TreeMap *parent, const QString &name, unsigned int id, int year, double value):parent(parent),name(name),id(id),year(year),value(value)
 {
 }
 
@@ -10,7 +10,7 @@ TreeMap::~TreeMap()
     clear();
 }
 
-TreeMap *TreeMap::insert(const QString &name, unsigned int id, unsigned int year, double value)
+TreeMap *TreeMap::insert(const QString &name, unsigned int id, int year, double value)
 {
     this->value += value;
     for (TreeMap *p = parent; p != nullptr; p = p->parent) p->value += value;

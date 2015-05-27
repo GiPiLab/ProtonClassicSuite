@@ -566,7 +566,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         dataX.append((double)date);
 
         //WARNING : ORED fixed size here
-        for(int i=PCx_Audit::ORED::OUVERTS;i<4;i++)
+        for(int i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
         {
             if(selectedORED.contains((PCx_Audit::ORED)i))
             {
@@ -593,7 +593,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
     bool first=true;
     //WARNING : ORED fixed size here
-    for(int i=PCx_Audit::ORED::OUVERTS;i<4;i++)
+    for(int i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
     {
         if(selectedORED.contains((PCx_Audit::ORED)i))
         {
@@ -698,7 +698,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
 
     //Colors for each graph
-    Qt::GlobalColor PENCOLORS[PCx_Reporting::OREDPCR::NONELAST]=
+    Qt::GlobalColor PENCOLORS[(int)PCx_Reporting::OREDPCR::NONELAST]=
     {
         Qt::blue,
         Qt::red,
@@ -725,14 +725,14 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         qCritical()<<q.lastError();
         die();
     }
-    QVector<double> dataX,dataY[PCx_Reporting::OREDPCR::NONELAST];
+    QVector<double> dataX,dataY[(int)PCx_Reporting::OREDPCR::NONELAST];
 
     while(q.next())
     {
         unsigned int date=q.value("date").toUInt();
         dataX.append((double)date);
 
-        for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONELAST;i++)
+        for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
         {
             if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
             {
@@ -749,7 +749,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
 
     bool first=true;
-    for(int i=PCx_Reporting::OREDPCR::OUVERTS;i<PCx_Reporting::OREDPCR::NONELAST;i++)
+    for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
     {
         if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
         {
@@ -807,11 +807,11 @@ QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode
     QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName=MODES::modeToCompleteString(mode);
 
-    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::BP,
-                                                PCx_Reporting::REPORTS,
-                                                PCx_Reporting::OCDM,
-                                                PCx_Reporting::VCDM,
-                                                PCx_Reporting::VIREMENTSINTERNES
+    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::OREDPCR::BP,
+                                                PCx_Reporting::OREDPCR::REPORTS,
+                                                PCx_Reporting::OREDPCR::OCDM,
+                                                PCx_Reporting::OREDPCR::VCDM,
+                                                PCx_Reporting::OREDPCR::VIREMENTSINTERNES
                                                };
     return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorDFBar());
 }
@@ -821,9 +821,9 @@ QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode)
     QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName=MODES::modeToCompleteString(mode);
 
-    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::OCDM,
-                                                PCx_Reporting::VCDM,
-                                                PCx_Reporting::VIREMENTSINTERNES
+    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::OREDPCR::OCDM,
+                                                PCx_Reporting::OREDPCR::VCDM,
+                                                PCx_Reporting::OREDPCR::VIREMENTSINTERNES
                                                };
     return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorRFBar());
 }
@@ -832,9 +832,9 @@ QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mod
 {
     QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName=MODES::modeToCompleteString(mode);
-    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::REALISES,
-                                                PCx_Reporting::ENGAGES,
-                                                PCx_Reporting::DISPONIBLES
+    QList<PCx_Reporting::OREDPCR> selectedORED={PCx_Reporting::OREDPCR::REALISES,
+                                                PCx_Reporting::OREDPCR::ENGAGES,
+                                                PCx_Reporting::OREDPCR::DISPONIBLES
                                                };
     return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorDIBar());
 }

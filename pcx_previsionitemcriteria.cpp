@@ -152,16 +152,13 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString & criteriaString)
 void PCx_PrevisionItemCriteria::fillComboBoxWithOperators(QComboBox *combo)
 {
     combo->clear();
-    combo->addItem(QObject::tr("Minimum"),PREVISIONOPERATOR::MINIMUM);
-    combo->addItem(QObject::tr("Maximum"),PREVISIONOPERATOR::MAXIMUM);
-    combo->addItem(QObject::tr("Moyenne"),PREVISIONOPERATOR::AVERAGE);
-    combo->addItem(QObject::tr("Tendance linéaire"),PREVISIONOPERATOR::REGLIN);
-    combo->addItem(QObject::tr("Valeur fixe"),PREVISIONOPERATOR::FIXEDVALUE);
-    combo->addItem(QObject::tr("Dernière valeur"),PREVISIONOPERATOR::LASTVALUE);
-    combo->addItem(QObject::tr("Pourcentage"),PREVISIONOPERATOR::PERCENT);
-
-
-
+    combo->addItem(QObject::tr("Minimum"),(int)PREVISIONOPERATOR::MINIMUM);
+    combo->addItem(QObject::tr("Maximum"),(int)PREVISIONOPERATOR::MAXIMUM);
+    combo->addItem(QObject::tr("Moyenne"),(int)PREVISIONOPERATOR::AVERAGE);
+    combo->addItem(QObject::tr("Tendance linéaire"),(int)PREVISIONOPERATOR::REGLIN);
+    combo->addItem(QObject::tr("Valeur fixe"),(int)PREVISIONOPERATOR::FIXEDVALUE);
+    combo->addItem(QObject::tr("Dernière valeur"),(int)PREVISIONOPERATOR::LASTVALUE);
+    combo->addItem(QObject::tr("Pourcentage"),(int)PREVISIONOPERATOR::PERCENT);
 }
 
 QString PCx_PrevisionItemCriteria::serialize() const

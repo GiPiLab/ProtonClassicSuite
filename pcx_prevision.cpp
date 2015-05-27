@@ -53,8 +53,8 @@ int PCx_Prevision::toPrevisionalExtendedAudit(const QString &newAuditName)
     PCx_Audit dupAudit(res);
 
     QList<unsigned int> leaves=attachedTree->getLeavesId();
-    QList<MODES::DFRFDIRI> modes={MODES::DF,MODES::RF,MODES::DI,MODES::RI};
-    QHash<PCx_Audit::ORED,double> values;
+    QList<MODES::DFRFDIRI> modes{MODES::DFRFDIRI::DF,MODES::DFRFDIRI::RF,MODES::DFRFDIRI::DI,MODES::DFRFDIRI::RI};
+    QMap<PCx_Audit::ORED,double> values;
     QSqlDatabase::database().transaction();
     foreach(unsigned int leaf,leaves)
     {
@@ -63,7 +63,7 @@ int PCx_Prevision::toPrevisionalExtendedAudit(const QString &newAuditName)
             PCx_PrevisionItem prevItem(this,unMode,leaf,lastYear);
             prevItem.loadFromDb();
             values.clear();
-            values.insert(PCx_Audit::OUVERTS,NUMBERSFORMAT::fixedPointToDouble(prevItem.getSummedPrevisionItemValue()));
+            values.insert(PCx_Audit::ORED::OUVERTS,NUMBERSFORMAT::fixedPointToDouble(prevItem.getSummedPrevisionItemValue()));
             dupAudit.setLeafValues(leaf,unMode,lastYear,values,true);
         }
     }

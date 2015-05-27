@@ -22,7 +22,7 @@ public:
     /**
      * @brief The ORED enum describes the available data columns in each table of an audit
      */
-    enum ORED
+    enum class ORED
     {
         OUVERTS, ///<the amount of available money at the beginning of the year
         REALISES, ///<the amount of used money
@@ -30,10 +30,11 @@ public:
         DISPONIBLES ///<OUVERTS-(REALISES+ENGAGES)
     };
 
+
     /**
      * @brief The ListAuditsMode enum describes which audit will be shown in combobox
      */
-    enum ListAuditsMode
+    enum class ListAuditsMode
     {
         FinishedAuditsOnly,
         UnFinishedAuditsOnly,
@@ -142,7 +143,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QHash<PCx_Audit::ORED, double> vals, bool fastMode=false);
+    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<ORED, double> vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the audit value of a node
@@ -379,5 +380,6 @@ private:
 
 
 };
+
 
 #endif // PCX_AUDIT_H
