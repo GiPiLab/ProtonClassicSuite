@@ -1,4 +1,6 @@
 #include "treemap.h"
+#include <QDebug>
+#include <QtMath>
 
 
 TreeMap::TreeMap(TreeMap *parent, const QString &name, unsigned int id, int year, double value):parent(parent),name(name),id(id),year(year),value(value)
@@ -134,32 +136,35 @@ double TreeMap::aspect(double _big, double _small, double a, double b) const
 double TreeMap::normAspect(double _big, double _small, double a, double b) const
 {
     double x=aspect(_big,_small,a,b);
-    if (x<1) return 1/x;
+    if (x<1.0) return 1.0/x;
     return x;
 }
 
 void TreeMap::slicelayout(QList<TreeMap *> items, int start, int end, const QRect &bounds)
 {
     double total=0, accumulator=0;
-    for(int i= start; i<= end && i<items.count(); i++) total += items[i]->value;
+    for(int i= start; i<= end && i<items.count(); i++)
+        total += items[i]->value;
+
     Qt::Orientation orientation = (bounds.width() > bounds.height()) ? Qt::Horizontal : Qt::Vertical;
 
     for (int i=start; i<=end && i<items.count(); i++)
     {
         double factor=items[i]->value/total;
+
         if (orientation == Qt::Vertical)
         {
-            items[i]->rect.setX(bounds.x());
-            items[i]->rect.setWidth(bounds.width());
-            items[i]->rect.setY(bounds.y()+bounds.height()*(1-accumulator-factor));
-            items[i]->rect.setHeight(bounds.height()*factor);
+            items[i]->rect.setX(bounds.x()+1);
+            items[i]->rect.setWidth(bounds.width()-1);
+            items[i]->rect.setY(1+qRound((double)(bounds.y())+(double)(bounds.height())*(1.0-accumulator-factor)));
+            items[i]->rect.setHeight(qRound((double)(bounds.height())*factor)-1);
         }
         else
         {
-            items[i]->rect.setX(bounds.x()+bounds.width()*(1-accumulator-factor));
-            items[i]->rect.setWidth(bounds.width()*factor);
-            items[i]->rect.setY(bounds.y());
-            items[i]->rect.setHeight(bounds.height());
+            items[i]->rect.setX(1+qRound((double)(bounds.x())+(double)(bounds.width())*(1.0-accumulator-factor)));
+            items[i]->rect.setWidth(qRound((double)(bounds.width())*factor)-1);
+            items[i]->rect.setY(1+bounds.y());
+            items[i]->rect.setHeight(bounds.height()-1);
         }
         accumulator += factor;
     }

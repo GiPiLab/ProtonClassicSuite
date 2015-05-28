@@ -303,29 +303,18 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent)
     QFont font;
 
     QPainter painter(this);
-    QColor color(0,0,0,0);
+    QColor color(127,127,127,50);
     QPen pen(color);
-    pen.setWidth(10);
     QBrush brush(color);
     painter.setBrush(brush);
-    painter.setPen(pen);
-
-    QRect rootRect=root->getRect();
-    painter.drawRect(rootRect.x()+4,
-                     rootRect.y()+4,
-                     rootRect.width()-8,
-                     rootRect.height()-8);
-
-    pen.setWidth(5);
-    pen.setColor(color);
-    painter.setPen(pen);
+    painter.setPen(Qt::NoPen);
 
     int n=1;
     QColor cHSV, cRGB;
-    double factor = double(1) / double(root->getChildren().count());
+    double factor = 1.0/ (double)(root->getChildren().count());
     foreach (TreeMap *first, root->getChildren())
     {
-        cHSV.setHsv((double)255 / (factor*n++), 255, 150);
+        cHSV.setHsv((double)255 / (factor*n++), 255, 190);
         cRGB = cHSV.convertTo(QColor::Rgb);
         brush.setColor(cRGB);
         painter.setBrush(brush);
@@ -351,15 +340,14 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent)
         {
             if (second == highlight) painter.setBrush(hbrush);
             else painter.setBrush(brush);
-
             painter.setPen(Qt::NoPen);
             QRect secondRect=second->getRect();
-            painter.drawRect(secondRect.x()+2,
-                             secondRect.y()+2,
-                             secondRect.width()-4,
-                             secondRect.height()-4);
+            painter.drawRect(secondRect.x(),
+                             secondRect.y(),
+                             secondRect.width(),
+                             secondRect.height());
 
-            textRect.setRect(secondRect.x()+2, secondRect.y()+2,secondRect.width()-4, secondRect.height()-4 );
+            textRect.setRect(secondRect.x()+5, secondRect.y()+5,secondRect.width()-10, secondRect.height()-10);
             font.setPointSize(10);
             painter.setFont(font);
             painter.setPen(textPen);
@@ -375,7 +363,7 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent)
                     painter.setFont(font);
                 }
             }
-            painter.drawText(textRect, Qt::AlignTop|Qt::AlignLeft|Qt::TextWordWrap, second->getName());
+            painter.drawText(textRect, Qt::AlignTop|Qt::AlignLeft|Qt::TextWordWrap, second->getName());      
         }
     }
 
@@ -394,5 +382,5 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent)
 void TreeMapWidget::resizeEvent(QResizeEvent *resizeEvent)
 {
     Q_UNUSED(resizeEvent);
-    if (root) root->layout(QRect(9,9,geometry().width()-18, geometry().height()-18));
+    if (root) root->layout(QRect(0,0,geometry().width(), geometry().height()));
 }
