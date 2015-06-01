@@ -143,7 +143,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<ORED, double> vals, bool fastMode=false);
+    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<ORED, double> vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the audit value of a node
@@ -159,7 +159,7 @@ public:
      * @brief clearAllData erases all audit data for a specific mode
      * @param mode the mode to clear
      */
-    virtual void clearAllData(MODES::DFRFDIRI mode);
+    void clearAllData(MODES::DFRFDIRI mode);
 
     /**
      * @brief duplicateAudit duplicates an audit

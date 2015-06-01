@@ -156,6 +156,12 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigne
 
     QString reqString;
 
+    if(vals.contains(PCx_Audit::ORED::DISPONIBLES))
+    {
+        qDebug()<<"DISPONIBLES will be recomputed and overwritten";
+    }
+
+
     if(vals.contains(PCx_Audit::ORED::OUVERTS))
     {
         if(!reqString.isEmpty())

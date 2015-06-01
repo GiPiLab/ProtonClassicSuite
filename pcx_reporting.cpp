@@ -67,18 +67,18 @@ PCx_Reporting::~PCx_Reporting()
 
 unsigned int PCx_Reporting::getAttachedTreeId(unsigned int reportingId)
 {
-        QSqlQuery q;
-        if(!q.exec(QString("select id_arbre from index_reportings where id=%1").arg(reportingId)))
-        {
-            qCritical()<<q.lastError();
-            die();
-        }
-        if(!q.next())
-        {
-            qWarning()<<"Invalid reporting ID !";
-            return 0;
-        }
-        return q.value(0).toUInt();
+    QSqlQuery q;
+    if(!q.exec(QString("select id_arbre from index_reportings where id=%1").arg(reportingId)))
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(!q.next())
+    {
+        qWarning()<<"Invalid reporting ID !";
+        return 0;
+    }
+    return q.value(0).toUInt();
 }
 
 
@@ -97,27 +97,38 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
 
     QString reqSet="id_node,date,";
     QString reqBind=":id_node,:date,";
-    QStringList reqSetList,bindSetList;
+    QString reqUpdateSet;
+
+    QStringList reqSetList,bindSetList,reqUpdateSetList;
     foreach(PCx_Reporting::OREDPCR ored,vals.keys())
     {
         QString tblString=OREDPCRtoTableString(ored);
         reqSetList.append(tblString);
         bindSetList.append(":v"+tblString);
+        reqUpdateSetList.append(tblString+"=:v"+tblString);
     }
     reqSetList.sort();
     bindSetList.sort();
+    reqUpdateSetList.sort();
     reqSet.append(reqSetList.join(","));
     reqBind.append(bindSetList.join(","));
+    reqUpdateSet=reqUpdateSetList.join(",");
 
     QSqlQuery q;
     QString tableName=QString("reporting_%1_%2").arg(MODES::modeToTableString(mode)).arg(reportingId);
 
-    q.prepare(QString("insert into %1 (%2) values (%3)")
+    //UPSERT simulation: INSERT the row if not existing, UPDATE if the row exists
+    q.prepare(QString("insert or ignore into %1 (%2) values (%3)")
               .arg(tableName).arg(reqSet).arg(reqBind));
+
 
     foreach(PCx_Reporting::OREDPCR ored,vals.keys())
     {
         QString tblString=OREDPCRtoTableString(ored);
+        if(ored==PCx_Reporting::OREDPCR::DISPONIBLES)
+        {
+            qDebug()<<"DISPONIBLES will be recomputed and overwritten";
+        }
         q.bindValue(":v"+tblString,doubleToFixedPoint(vals.value(ored)));
     }
 
@@ -134,10 +145,33 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
         die();
     }
 
-    if(q.numRowsAffected()!=1)
+    //INSERT has failed, row already exists so UPDATE the row
+    if(q.numRowsAffected()<1)
     {
-        qCritical()<<q.lastError();
-        die();
+        q.prepare(QString("update %1 set %2 where id_node=:id_node and date=:date").arg(tableName).arg(reqUpdateSet));
+        foreach(PCx_Reporting::OREDPCR ored,vals.keys())
+        {
+            QString tblString=OREDPCRtoTableString(ored);
+            if(ored==PCx_Reporting::OREDPCR::DISPONIBLES)
+            {
+                qDebug()<<"DISPONIBLES will be recomputed and overwritten";
+            }
+            q.bindValue(":v"+tblString,doubleToFixedPoint(vals.value(ored)));
+        }
+
+        q.bindValue(":id_node",leafId);
+        q.bindValue(":date",sSinceEpoch);
+        if(!q.exec())
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
+
+        if(q.numRowsAffected()!=1)
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
     }
 
     q.prepare(QString("update %1 set disponibles=ouverts-(realises+engages) where id_node=:id_node and date=:date").arg(tableName));
@@ -172,11 +206,12 @@ qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OR
     }
     if(!q.next())
     {
-        qWarning()<<"No value for node"<<nodeId;
+        qDebug()<<"No value for node"<<nodeId;
         return -MAX_NUM;
     }
     if(q.value(OREDPCRtoTableString(ored)).isNull())
     {
+        qDebug()<<"No value for node"<<nodeId;
         return -MAX_NUM;
     }
     return q.value(OREDPCRtoTableString(ored)).toLongLong();
@@ -694,7 +729,7 @@ bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
         QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leaf);
         xlsx.write(row,1,typeAndNodeName.first);
         xlsx.write(row,2,typeAndNodeName.second);
-//        xlsx.write(row,3,QDate(2002,05,13));
+        //        xlsx.write(row,3,QDate(2002,05,13));
         row++;
     }
 
@@ -966,80 +1001,80 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & f
     foreach(unsigned int leafId,leavesId)
     {
         QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leafId);
-            q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date").
-                      arg(MODES::modeToTableString(mode)).arg(reportingId));
+        q.prepare(QString("select * from reporting_%1_%2 where id_node=:idnode order by date").
+                  arg(MODES::modeToTableString(mode)).arg(reportingId));
 
-            q.bindValue(":idnode",leafId);
-            if(!q.exec())
+        q.bindValue(":idnode",leafId);
+        if(!q.exec())
+        {
+            qCritical()<<q.lastError();
+            die();
+        }
+        while(q.next())
+        {
+            QVariant valOuverts=q.value("ouverts");
+            QVariant valRealises=q.value("realises");
+            QVariant valEngages=q.value("engages");
+            QVariant valBp=q.value("bp");
+            QVariant valReports=q.value("reports");
+            QVariant valOCDM=q.value("ocdm");
+            QVariant valVCDM=q.value("vcdm");
+            QVariant valBudgetVote=q.value("budgetvote");
+            QVariant valVCInternes=q.value("vcinterne");
+            QVariant valRattaches=q.value("rattachenmoins1");
+
+            xlsx.write(row,1,typeAndNodeName.first);
+            xlsx.write(row,2,typeAndNodeName.second);
+            xlsx.write(row,3,QDateTime::fromTime_t(q.value("date").toUInt()).date());
+
+            if(!valBp.isNull())
             {
-                qCritical()<<q.lastError();
-                die();
+                xlsx.write(row,4,fixedPointToDouble(valBp.toLongLong()));
             }
-            while(q.next())
+            if(!valReports.isNull())
             {
-                QVariant valOuverts=q.value("ouverts");
-                QVariant valRealises=q.value("realises");
-                QVariant valEngages=q.value("engages");
-                QVariant valBp=q.value("bp");
-                QVariant valReports=q.value("reports");
-                QVariant valOCDM=q.value("ocdm");
-                QVariant valVCDM=q.value("vcdm");
-                QVariant valBudgetVote=q.value("budgetvote");
-                QVariant valVCInternes=q.value("vcinterne");
-                QVariant valRattaches=q.value("rattachenmoins1");
-
-                xlsx.write(row,1,typeAndNodeName.first);
-                xlsx.write(row,2,typeAndNodeName.second);
-                xlsx.write(row,3,QDateTime::fromTime_t(q.value("date").toUInt()).date());
-
-                if(!valBp.isNull())
-                {
-                    xlsx.write(row,4,fixedPointToDouble(valBp.toLongLong()));
-                }
-                if(!valReports.isNull())
-                {
-                    xlsx.write(row,5,fixedPointToDouble(valReports.toLongLong()));
-                }
-                if(!valOCDM.isNull())
-                {
-                    xlsx.write(row,6,fixedPointToDouble(valOCDM.toLongLong()));
-                }
-                if(!valVCDM.isNull())
-                {
-                    xlsx.write(row,7,fixedPointToDouble(valVCDM.toLongLong()));
-                }
-                if(!valBudgetVote.isNull())
-                {
-                    xlsx.write(row,8,fixedPointToDouble(valBudgetVote.toLongLong()));
-                }
-                if(!valVCInternes.isNull())
-                {
-                    xlsx.write(row,9,fixedPointToDouble(valVCInternes.toLongLong()));
-                }
-
-                if(!valOuverts.isNull())
-                {
-                    xlsx.write(row,10,fixedPointToDouble(valOuverts.toLongLong()));
-                }
-
-                if(!valRealises.isNull())
-                {
-                    xlsx.write(row,11,fixedPointToDouble(valRealises.toLongLong()));
-                }
-
-                if(!valEngages.isNull())
-                {
-                    xlsx.write(row,12,fixedPointToDouble(valEngages.toLongLong()));
-                }
-
-
-                if(!valRattaches.isNull())
-                {
-                    xlsx.write(row,13,fixedPointToDouble(valRattaches.toLongLong()));
-                }
-
-                row++;
+                xlsx.write(row,5,fixedPointToDouble(valReports.toLongLong()));
             }
+            if(!valOCDM.isNull())
+            {
+                xlsx.write(row,6,fixedPointToDouble(valOCDM.toLongLong()));
+            }
+            if(!valVCDM.isNull())
+            {
+                xlsx.write(row,7,fixedPointToDouble(valVCDM.toLongLong()));
+            }
+            if(!valBudgetVote.isNull())
+            {
+                xlsx.write(row,8,fixedPointToDouble(valBudgetVote.toLongLong()));
+            }
+            if(!valVCInternes.isNull())
+            {
+                xlsx.write(row,9,fixedPointToDouble(valVCInternes.toLongLong()));
+            }
+
+            if(!valOuverts.isNull())
+            {
+                xlsx.write(row,10,fixedPointToDouble(valOuverts.toLongLong()));
+            }
+
+            if(!valRealises.isNull())
+            {
+                xlsx.write(row,11,fixedPointToDouble(valRealises.toLongLong()));
+            }
+
+            if(!valEngages.isNull())
+            {
+                xlsx.write(row,12,fixedPointToDouble(valEngages.toLongLong()));
+            }
+
+
+            if(!valRattaches.isNull())
+            {
+                xlsx.write(row,13,fixedPointToDouble(valRattaches.toLongLong()));
+            }
+
+            row++;
+        }
     }
 
     return xlsx.saveAs(fileName);
@@ -1049,9 +1084,9 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & f
 QString PCx_Reporting::getCSS()
 {
     QString css="\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
-            "\nh1{color:#A00;}"
-            "\nh2{color:navy;}"
-            "\nh3{color:green;font-size:larger}";
+                "\nh1{color:#A00;}"
+                "\nh2{color:navy;}"
+                "\nh3{color:green;font-size:larger}";
 
     css.append(PCx_Query::getCSS());
     css.append(PCx_Tables::getCSS());
@@ -1125,19 +1160,19 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
 
     foreach(unsigned int leaf,leaves)
     {
-            data.clear();
+        data.clear();
 
-            for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
-            {
-                if(i==(int)PCx_Reporting::OREDPCR::DISPONIBLES)
-                    continue;
-                randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+        for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
+        {
+            if(i==(int)PCx_Reporting::OREDPCR::DISPONIBLES)
+                continue;
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
 
-                data.insert((PCx_Reporting::OREDPCR)(i),randval);
-            }
+            data.insert((PCx_Reporting::OREDPCR)(i),randval);
+        }
 
-            //the transaction will be rollback in setLeafValues=>die
-            setLeafValues(leaf,mode,nextDate,data,true);
+        //the transaction will be rollback in setLeafValues=>die
+        setLeafValues(leaf,mode,nextDate,data,true);
 
         nbNode++;
         if(!progress.wasCanceled())
@@ -1330,13 +1365,13 @@ unsigned int PCx_Reporting::addNewReporting(const QString &name, unsigned int at
 
     QList<unsigned int> treeIds=PCx_Tree::getListOfTreesId(true);
     if(!treeIds.contains(attachedTreeId))
-    {        
+    {
         qFatal("Assertion failed");
     }
 
     //Must be checked in UI
     if(reportingNameExists(name))
-    {        
+    {
         qFatal("Assertion failed");
     }
 

@@ -111,7 +111,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    virtual bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QMap<OREDPCR, double> vals, bool fastMode=false);
+    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QMap<OREDPCR, double> vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the reporting value of a node
@@ -123,22 +123,11 @@ public:
      */
     qint64 getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Reporting::OREDPCR ored, QDate date) const;
 
-
-    /**
-     * @brief getNodeValues convenience method to gets all value fields of a node for a mode and a year
-     * @param nodeId the node identifier
-     * @param mode the mode to read
-     * @param year the year to read
-     * @return node values for each field in qint64 format
-     */
-    //QHash<PCx_Reporting::OREDPCR,qint64> getNodeValues(unsigned int nodeId, MODES::DFRFDIRI mode, QDate date) const;
-
-
     /**
      * @brief clearAllData erases all reporting data for a specific mode
      * @param mode the mode to clear
      */
-    virtual void clearAllData(MODES::DFRFDIRI mode);
+    void clearAllData(MODES::DFRFDIRI mode);
 
     /**
      * @brief importDataFromXLSX imports reporting data from an XLSX file

@@ -10,7 +10,7 @@ class TreeMapWidget : public QWidget
     Q_OBJECT
 public:
     explicit TreeMapWidget(QWidget *parent = 0);
-    ~TreeMapWidget();
+    virtual ~TreeMapWidget();
 
     void setDataGroupByNode(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year, unsigned int nodeId=1);
     void setDataGroupByYears(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int nodeId);

@@ -17,7 +17,6 @@ public:
     ProtonClassicSuiteUnitTests();
 
 
-
 private Q_SLOTS:
     void cleanup();
     void initTestCase();
@@ -35,10 +34,12 @@ private Q_SLOTS:
     void testCaseForAuditNodes();
     void testCaseForAuditDuplication();
     void testCaseForAuditImportExport();
-
     void testCaseForPCATables();
     void testCaseForPCAGraphics();
     void testCaseForPCAQueries();
+
+    void testCaseForReportingManagement();
+    void testCaseForReportingNodes();
 
     void testCaseForPCBPrevision();
     void testCaseForPCBPrevisionItemCriteria();
