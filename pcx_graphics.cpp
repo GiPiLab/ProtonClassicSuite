@@ -511,15 +511,15 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     QColor PENCOLORS[4]=
     {
         Qt::darkCyan,
+        Qt::red,
         Qt::gray,
-        Qt::blue,
-        Qt::red
+        Qt::yellow
     };
 
     if(miniMode==true)
     {
         if(selectedORED.count()==2)
-            plotTitle=QObject::tr("%1 (bleu) et %2 (gris)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true))
+            plotTitle=QObject::tr("%1 (bleu) et %2 (rouge)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true))
                     .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(1),true));
 
         QCPPlotTitle * title;
@@ -536,11 +536,19 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
             title->setText(plotTitle);
         }
     }
-    /*else
+    else
     {
+        if(prevItem!=nullptr)
+        {
         plotTitle=QString("Données historiques et prévision pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped())
                 .arg(MODES::modeToCompleteString(mode));
-    }*/
+        }
+        else
+        {
+            plotTitle=QString("Données historiques pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped())
+                    .arg(MODES::modeToCompleteString(mode));
+        }
+    }
     if(selectedORED.isEmpty())
     {
         plot->replot();
@@ -613,6 +621,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     range.lower-=(range.lower*20.0/100.0);
     range.upper+=(range.upper*10.0/100.0);
     plot->yAxis->setRange(range);
+    plot->yAxis->setLabel("");
 
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
@@ -621,7 +630,8 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         plot->legend->setVisible(true);
         plot->legend->setFont(QFont(QFont().family(),7));
         //plot->legend->setRowSpacing(-8);
-        plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignRight);
+        //plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignRight);
+        plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignCenter);
     }
 
 
@@ -630,6 +640,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->xAxis->setAutoTickStep(false);
     plot->xAxis->setAutoSubTicks(false);
     plot->xAxis->setTickLength(0,4);
+    plot->xAxis->setTickLabelRotation(0);
     plot->xAxis->setTickStep(1);
     plot->xAxis->setSubTickCount(0);
     if(miniMode==true)

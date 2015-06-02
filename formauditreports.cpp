@@ -75,6 +75,7 @@ void FormAuditReports::populateLists()
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT12);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT12(nodeId)+"</span>");
 
+
     item=new QListWidgetItem(tr("Évolution comparée des crédits ouverts de la collectivité et de [...]"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG1);
     item=new QListWidgetItem(tr("Évolution comparée du cumulé des crédits ouverts de la collectivité et de [...]"),ui->listGraphics);
@@ -93,6 +94,8 @@ void FormAuditReports::populateLists()
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG8);
     item=new QListWidgetItem(tr("Décomposition par année"),ui->listGraphics);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAG9);
+    item=new QListWidgetItem(tr("Données historiques de [...]"),ui->listGraphics);
+    item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Graphics::PCAGRAPHICS::PCAHISTORY);
 
 }
 
@@ -408,6 +411,7 @@ void FormAuditReports::on_pushButtonPoidsRelatifs_clicked()
     ui->listTables->item(0)->setSelected(true);
     ui->listTables->item(5)->setSelected(true);
     ui->listTables->item(9)->setSelected(true);
+    ui->listGraphics->item(9)->setSelected(true);
 }
 
 void FormAuditReports::on_pushButtonBase100_clicked()

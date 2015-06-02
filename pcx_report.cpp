@@ -124,7 +124,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
             switch(graph)
             {
             case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
-                output.append("<div align='center' class='g'><b>"+graphics.getPCAHistory(selectedNode,mode,{PCx_Audit::ORED::OUVERTS,PCx_Audit::ORED::REALISES},prevItem,false)+"</b><br>");
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAHistory(selectedNode,mode,{PCx_Audit::ORED::OUVERTS,PCx_Audit::ORED::REALISES,PCx_Audit::ORED::ENGAGES},prevItem,false)+"</b><br>");
                 break;
 
             case PCx_Graphics::PCAGRAPHICS::PCAG1:
@@ -207,7 +207,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
             switch(graph)
             {
             case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
-                output.append("<div align='center' class='g'><b>"+graphics.getPCAHistory(selectedNode,mode,{PCx_Audit::ORED::OUVERTS,PCx_Audit::ORED::REALISES},prevItem,false)+"</b><br>");
+                output.append("<div align='center' class='g'><b>"+graphics.getPCAHistory(selectedNode,mode,{PCx_Audit::ORED::OUVERTS,PCx_Audit::ORED::REALISES,PCx_Audit::ORED::ENGAGES},prevItem,false)+"</b><br>");
                 break;
 
             case PCx_Graphics::PCAGRAPHICS::PCAG1:

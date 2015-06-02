@@ -155,6 +155,9 @@ void FormAuditExplore::getSelections()
         if(ui->checkBoxJoursAct->isChecked())
             selectedTabs.append(PCx_Tables::PCAPRESETS::PCADAYOFWORK);
 
+        if(ui->checkBoxRawHistoryData->isChecked())
+            selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAHISTORY);
+
         if(ui->checkBoxOuvert->isChecked())
             selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG1);
 
@@ -178,6 +181,7 @@ void FormAuditExplore::getSelections()
 
         if(ui->checkBoxDisponibleCumul->isChecked())
             selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG8);
+
     }
 
     else
@@ -240,6 +244,7 @@ void FormAuditExplore::on_radioButtonGlobal_toggled(bool checked)
         ui->checkBoxJoursAct->setEnabled(false);
         ui->checkBoxResults->setEnabled(true);
 
+        ui->checkBoxRawHistoryData->setEnabled(false);
         ui->checkBoxOuvert->setEnabled(false);
         ui->checkBoxOuvertCumul->setEnabled(false);
         ui->checkBoxRealise->setEnabled(false);
@@ -259,6 +264,7 @@ void FormAuditExplore::on_radioButtonGlobal_toggled(bool checked)
         ui->checkBoxJoursAct->setEnabled(true);
         ui->checkBoxResults->setEnabled(false);
 
+        ui->checkBoxRawHistoryData->setEnabled(true);
         ui->checkBoxOuvert->setEnabled(true);
         ui->checkBoxOuvertCumul->setEnabled(true);
         ui->checkBoxRealise->setEnabled(true);
@@ -506,4 +512,10 @@ void FormAuditExplore::on_pushButtonCollapseAll_clicked()
 void FormAuditExplore::on_pushButtonExpandAll_clicked()
 {
     ui->treeView->expandAll();
+}
+
+void FormAuditExplore::on_checkBoxRawHistoryData_toggled(bool checked)
+{
+    Q_UNUSED(checked);
+    updateTextBrowser();
 }

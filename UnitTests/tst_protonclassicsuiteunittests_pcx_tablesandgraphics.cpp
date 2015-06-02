@@ -185,7 +185,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     QByteArray expectedG7="b25f5a201d27db6e6c7d6a2327ce4170d63afd0ccd083847092f2ca2a068786b";
     QByteArray expectedG8="3d81ba9f3acb38f9e71af8fade6a94b1bed3c16c3e6dd7d39916d2634f4342c6";
     QByteArray expectedG9="7235f9764d5e15639a0bcb263b8c0dff669d7ac76730611f4c810ac965df5952";
-    QByteArray expectedGHist="a1ec519c95090aeceb10c06b2565357a0c1d3c9cc3e7a60dbb9d1618c7129bdd";
+    QByteArray expectedGHist="8ece265dbc16d2ae2bf67794fed582e1b06b6ae19daf326dd8fcb4fa2064b246";
 #elif defined(Q_OS_WIN32)
     QByteArray expectedG1="018707e0534e68d317b0b5d483c7e319bf958131e2a6c36807e61b540c1eb947";
     QByteArray expectedG2="7a06df9077ba4114473922cf0face339ba039673aaebbc3e4dd00624311f9740";

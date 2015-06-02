@@ -52,6 +52,10 @@ private slots:
 
     void on_pushButtonExpandAll_clicked();
 
+
+
+    void on_checkBoxRawHistoryData_toggled(bool checked);
+
 private:
     Ui::FormAuditExplore *ui;
     void updateListOfAudits();

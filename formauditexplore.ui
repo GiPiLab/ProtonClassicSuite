@@ -261,7 +261,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QCheckBox" name="checkBoxOuvert">
             <property name="enabled">
              <bool>false</bool>
@@ -274,7 +274,7 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QCheckBox" name="checkBoxEngage">
             <property name="enabled">
              <bool>false</bool>
@@ -284,7 +284,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="3" column="0">
            <widget class="QCheckBox" name="checkBoxOuvertCumul">
             <property name="enabled">
              <bool>false</bool>
@@ -299,7 +299,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
+          <item row="4" column="0">
            <widget class="QCheckBox" name="checkBoxRealise">
             <property name="enabled">
              <bool>false</bool>
@@ -309,7 +309,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="0">
            <widget class="QCheckBox" name="checkBoxRealiseCumul">
             <property name="enabled">
              <bool>false</bool>
@@ -324,7 +324,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="3" column="1">
            <widget class="QCheckBox" name="checkBoxEngageCumul">
             <property name="enabled">
              <bool>false</bool>
@@ -339,7 +339,7 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="1">
+          <item row="4" column="1">
            <widget class="QCheckBox" name="checkBoxDisponible">
             <property name="enabled">
              <bool>false</bool>
@@ -349,7 +349,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="5" column="1">
            <widget class="QCheckBox" name="checkBoxDisponibleCumul">
             <property name="enabled">
              <bool>false</bool>
@@ -361,6 +361,19 @@
             </property>
             <property name="text">
              <string>--&gt; cumulé</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkBoxRawHistoryData">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Données historiques</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
