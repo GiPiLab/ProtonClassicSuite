@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>454</width>
-    <height>500</height>
+    <width>469</width>
+    <height>532</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <property name="windowIcon">
    <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/reportingManage.png</normaloff>:/icons/icons/reportingManage.png</iconset>
+  </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette fenêtre permet de créer, supprimer et compléter un reporting&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -26,6 +29,9 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="11" column="0">
        <widget class="QPushButton" name="pushButtonRandomDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter une situation 15 jours après la dernière situation connue, et la remplir de données aléatoires&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Aléatoire DF</string>
         </property>
@@ -33,6 +39,9 @@
       </item>
       <item row="9" column="2">
        <widget class="QPushButton" name="pushButtonExportDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données du reporting courant dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Exporter DI</string>
         </property>
@@ -44,6 +53,9 @@
       </item>
       <item row="8" column="1">
        <widget class="QPushButton" name="pushButtonLoadRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Charger des données à partir d'un fichier Excel. Les données existantes non mentionnées dans le fichier seront conservées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Charger RF</string>
         </property>
@@ -62,6 +74,9 @@
       </item>
       <item row="8" column="0">
        <widget class="QPushButton" name="pushButtonLoadDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Charger des données à partir d'un fichier Excel. Les données existantes non mentionnées dans le fichier seront conservées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Charger DF</string>
         </property>
@@ -78,8 +93,14 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="0" colspan="4">
+       <widget class="QComboBox" name="comboListOfReportings"/>
+      </item>
       <item row="6" column="0" colspan="4">
        <widget class="QPushButton" name="pushButtonExportLeaves">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fabrique un fichier Excel contenant les feuilles à remplir pour chaque situation du reporting actif. Ce fichier une fois complété pourra être chargé à l'aide des boutons ci-dessous&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Générer le fichier squelette</string>
         </property>
@@ -89,8 +110,21 @@
         </property>
        </widget>
       </item>
+      <item row="12" column="1">
+       <widget class="QPushButton" name="pushButtonClearRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer toutes les données&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Vider RF</string>
+        </property>
+       </widget>
+      </item>
       <item row="9" column="3">
        <widget class="QPushButton" name="pushButtonExportRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données du reporting courant dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Exporter RI</string>
         </property>
@@ -100,13 +134,23 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0" colspan="4">
-       <widget class="QComboBox" name="comboListOfReportings"/>
-      </item>
-      <item row="12" column="1">
-       <widget class="QPushButton" name="pushButtonClearRF">
+      <item row="11" column="1">
+       <widget class="QPushButton" name="pushButtonRandomRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter une situation 15 jours après la dernière situation connue, et la remplir de données aléatoires&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>Vider RF</string>
+         <string>Aléatoire RF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="3">
+       <widget class="QPushButton" name="pushButtonRandomRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter une situation 15 jours après la dernière situation connue, et la remplir de données aléatoires&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Aléatoire RI</string>
         </property>
        </widget>
       </item>
@@ -120,20 +164,6 @@
         </property>
        </widget>
       </item>
-      <item row="11" column="1">
-       <widget class="QPushButton" name="pushButtonRandomRF">
-        <property name="text">
-         <string>Aléatoire RF</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="3">
-       <widget class="QPushButton" name="pushButtonRandomRI">
-        <property name="text">
-         <string>Aléatoire RI</string>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="0" colspan="2">
        <widget class="QLabel" name="label_5">
         <property name="text">
@@ -141,22 +171,31 @@
         </property>
        </widget>
       </item>
-      <item row="11" column="2">
-       <widget class="QPushButton" name="pushButtonRandomDI">
-        <property name="text">
-         <string>Aléatoire DI</string>
-        </property>
-       </widget>
-      </item>
       <item row="12" column="3">
        <widget class="QPushButton" name="pushButtonClearRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer toutes les données&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Vider RI</string>
         </property>
        </widget>
       </item>
+      <item row="11" column="2">
+       <widget class="QPushButton" name="pushButtonRandomDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ajouter une situation 15 jours après la dernière situation connue, et la remplir de données aléatoires&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Aléatoire DI</string>
+        </property>
+       </widget>
+      </item>
       <item row="12" column="2">
        <widget class="QPushButton" name="pushButtonClearDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer toutes les données&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Vider DI</string>
         </property>
@@ -164,6 +203,9 @@
       </item>
       <item row="8" column="3">
        <widget class="QPushButton" name="pushButtonLoadRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Charger des données à partir d'un fichier Excel. Les données existantes non mentionnées dans le fichier seront conservées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Charger RI</string>
         </property>
@@ -175,6 +217,9 @@
       </item>
       <item row="9" column="0">
        <widget class="QPushButton" name="pushButtonExportDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données du reporting courant dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Exporter DF</string>
         </property>
@@ -186,6 +231,9 @@
       </item>
       <item row="8" column="2">
        <widget class="QPushButton" name="pushButtonLoadDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Charger des données à partir d'un fichier Excel. Les données existantes non mentionnées dans le fichier seront conservées.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Charger DI</string>
         </property>
@@ -197,6 +245,9 @@
       </item>
       <item row="9" column="1">
        <widget class="QPushButton" name="pushButtonExportRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Exporter les données du reporting courant dans un fichier Excel&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Exporter RF</string>
         </property>
@@ -208,6 +259,9 @@
       </item>
       <item row="12" column="0">
        <widget class="QPushButton" name="pushButtonClearDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer toutes les données&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Vider DF</string>
         </property>
@@ -220,26 +274,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2" colspan="2">
-       <widget class="QLabel" name="labelLastDF">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2" colspan="2">
-       <widget class="QLabel" name="labelLastRF">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0" colspan="2">
        <widget class="QLabel" name="label_3">
         <property name="text">
@@ -247,30 +281,10 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="2" colspan="2">
-       <widget class="QLabel" name="labelLastDI">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="0" colspan="2">
        <widget class="QLabel" name="label_4">
         <property name="text">
          <string>Dernière situation DI :</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2" colspan="2">
-       <widget class="QLabel" name="labelLastRI">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -291,6 +305,86 @@
         </property>
         <property name="whatsThis">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Ajouter les données de la dernière situation du reporting actif à l'audit sélectionné. Pour que cette fonction puisse être utilisée les conditions suivantes doivent être toutes vérifiées :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- l'audit doit être associé au même arbre que le reporting ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- l'audit ne doit pas être terminé ;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;- les années sur lesquelles portent l'audit doivent inclure celle de la date de la dernière situation renseignée dans le reporting.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; color:#000000;&quot;&gt;Les éventuelles données contenues dans l'audit pour l'année de la dernière situation du reporting seront écrasées.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="labelLastDF">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="pushButtonDeleteLastDF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer la dernière situation des dépenses de fonctionnement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Supprimer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="labelLastRF">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QPushButton" name="pushButtonDeleteLastRF">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer la dernière situation des recettes de fonctionnement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Supprimer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLabel" name="labelLastDI">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QPushButton" name="pushButtonDeleteLastDI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer la dernière situation des dépenses d'investissement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Supprimer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QLabel" name="labelLastRI">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QPushButton" name="pushButtonDeleteLastRI">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Supprimer la dernière situation des recettes d'investissement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Supprimer</string>
         </property>
        </widget>
       </item>
@@ -315,6 +409,9 @@
       </item>
       <item row="3" column="0" colspan="2">
        <widget class="QPushButton" name="pushButtonAddReporting">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un nouveau reporting à partir de l'arbre sélectionné. Le bouton &amp;quot;Générer un fichier squelette&amp;quot; permet ensuite de fabriquer le modèle de fichier Excel à compléter pour chaque situation&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Créer un nouveau reporting</string>
         </property>

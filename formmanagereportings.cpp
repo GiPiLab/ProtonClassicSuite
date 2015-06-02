@@ -405,10 +405,32 @@ void FormManageReportings::updateReportingInfos()
     if(selectedReporting!=nullptr)
     {
         ui->labelTreeName->setText(QString("%1 (%2 noeuds)").arg(selectedReporting->getAttachedTreeName()).arg(selectedReporting->getAttachedTree()->getNumberOfNodes()));
-        ui->labelLastDF->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DF).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastRF->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RF).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastDI->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DI).toString(Qt::DefaultLocaleShortDate));
-        ui->labelLastRI->setText(selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RI).toString(Qt::DefaultLocaleShortDate));
+        QDate dateDF,dateRF,dateDI,dateRI;
+        dateDF=selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DF);
+        dateRF=selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RF);
+        dateDI=selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DI);
+        dateRI=selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RI);
+        ui->labelLastDF->setText(dateDF.toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRF->setText(dateRF.toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastDI->setText(dateDI.toString(Qt::DefaultLocaleShortDate));
+        ui->labelLastRI->setText(dateRI.toString(Qt::DefaultLocaleShortDate));
+        if(!dateDF.isValid())
+            ui->pushButtonDeleteLastDF->setEnabled(false);
+        else
+            ui->pushButtonDeleteLastDF->setEnabled(true);
+        if(!dateRF.isValid())
+            ui->pushButtonDeleteLastRF->setEnabled(false);
+        else
+            ui->pushButtonDeleteLastRF->setEnabled(true);
+        if(!dateDI.isValid())
+            ui->pushButtonDeleteLastDI->setEnabled(false);
+        else
+            ui->pushButtonDeleteLastDI->setEnabled(true);
+        if(!dateRI.isValid())
+            ui->pushButtonDeleteLastRI->setEnabled(false);
+        else
+            ui->pushButtonDeleteLastRI->setEnabled(true);
+
         emit(reportingDataUpdated(selectedReporting->getReportingId()));
     }
 }
@@ -526,5 +548,41 @@ void FormManageReportings::on_pushButtonFillAudit_clicked()
             emit(auditDataUpdated(selectedAuditId));
             QMessageBox::information(nullptr,tr("Succès !"),tr("Données ajoutées à l'audit !"));
         }
+    }
+}
+
+void FormManageReportings::on_pushButtonDeleteLastDF_clicked()
+{
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF))))
+    {
+        selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::DF);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonDeleteLastRF_clicked()
+{
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF))))
+    {
+        selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::RF);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonDeleteLastDI_clicked()
+{
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI))))
+    {
+        selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::DI);
+        updateReportingInfos();
+    }
+}
+
+void FormManageReportings::on_pushButtonDeleteLastRI_clicked()
+{
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI))))
+    {
+        selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::RI);
+        updateReportingInfos();
     }
 }

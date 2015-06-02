@@ -491,6 +491,11 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         nodeType=xlsx.read(row,1);
         nodeName=xlsx.read(row,2);
         //Do not use read for date, always assume "1900" mode to ensure libreoffice compatibility
+        if(xlsx.read(row,3).isNull())
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, spécifiez une date").arg(row));
+            return false;
+        }
         date=xlsx.cellAt(row,3)->value();
         bp=xlsx.read(row,4);
         reports=xlsx.read(row,5);
@@ -751,6 +756,24 @@ QDate PCx_Reporting::getLastReportingDate(MODES::DFRFDIRI mode,unsigned int node
 
     return QDateTime::fromTime_t(q.value(0).toUInt()).date();
 }
+
+bool PCx_Reporting::deleteLastReportingDate(MODES::DFRFDIRI mode)
+{
+    QSqlQuery q;
+    QDate date=getLastReportingDate(mode);
+    q.prepare(QString("delete from reporting_%1_%2 where date=:date").arg(MODES::modeToTableString(mode)).arg(reportingId));
+    q.bindValue(":date",QDateTime(date).toTime_t());
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.numRowsAffected()<1)
+        return false;
+
+    return true;
+}
+
 
 bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
 {

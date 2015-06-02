@@ -72,6 +72,14 @@ private slots:
 
     void on_pushButtonFillAudit_clicked();
 
+    void on_pushButtonDeleteLastDF_clicked();
+
+    void on_pushButtonDeleteLastRF_clicked();
+
+    void on_pushButtonDeleteLastDI_clicked();
+
+    void on_pushButtonDeleteLastRI_clicked();
+
 private:
     Ui::FormManageReportings *ui;
     void updateListOfTrees();

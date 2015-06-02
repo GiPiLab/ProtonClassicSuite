@@ -107,7 +107,7 @@ public:
      * @param leafId the identifier of the leaf
      * @param mode the mode to set
      * @param date the date to set
-     * @param vals the values of the node for the mode and the year
+     * @param vals the values of the node for the mode and the year. Non specified values are not updated
      * @param fastMode if true, skip few checks (is the node a leaf) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
@@ -253,6 +253,13 @@ public:
      * @return the last date
      */
     QDate getLastReportingDate(MODES::DFRFDIRI mode, unsigned int node=1) const;
+
+    /**
+     * @brief deleteLastReportingDate deletes data for the last reporting situation
+     * @param mode the mode
+     * @return true on success, false if no nodes deleted
+     */
+    bool deleteLastReportingDate(MODES::DFRFDIRI mode);
 
     /**
      * @brief addLastReportingDateToExistingAudit imports the last reporting date in an audit
