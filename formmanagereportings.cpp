@@ -553,7 +553,7 @@ void FormManageReportings::on_pushButtonFillAudit_clicked()
 
 void FormManageReportings::on_pushButtonDeleteLastDF_clicked()
 {
-    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF))))
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF)))==QMessageBox::Yes)
     {
         selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::DF);
         updateReportingInfos();
@@ -562,7 +562,7 @@ void FormManageReportings::on_pushButtonDeleteLastDF_clicked()
 
 void FormManageReportings::on_pushButtonDeleteLastRF_clicked()
 {
-    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF))))
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF)))==QMessageBox::Yes)
     {
         selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::RF);
         updateReportingInfos();
@@ -571,7 +571,7 @@ void FormManageReportings::on_pushButtonDeleteLastRF_clicked()
 
 void FormManageReportings::on_pushButtonDeleteLastDI_clicked()
 {
-    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI))))
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI)))==QMessageBox::Yes)
     {
         selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::DI);
         updateReportingInfos();
@@ -580,7 +580,7 @@ void FormManageReportings::on_pushButtonDeleteLastDI_clicked()
 
 void FormManageReportings::on_pushButtonDeleteLastRI_clicked()
 {
-    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI))))
+    if(question(tr("Supprimer les valeurs de la dernière situation pour les %1 ?").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI)))==QMessageBox::Yes)
     {
         selectedReporting->deleteLastReportingDate(MODES::DFRFDIRI::RI);
         updateReportingInfos();
