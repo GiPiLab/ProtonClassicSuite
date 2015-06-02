@@ -788,6 +788,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->xAxis->setTickLabelRotation(0);
 
     plot->yAxis->setAutoTicks(true);
+    plot->yAxis->setLabel("");
     plot->yAxis->setAutoTickLabels(true);
     plot->yAxis->setAutoTickLabels(true);
 
