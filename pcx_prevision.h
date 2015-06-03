@@ -11,6 +11,7 @@ class PCx_Prevision
 public:
 
     PCx_Prevision(unsigned int previsionId);
+    virtual ~PCx_Prevision();
 
     unsigned int getPrevisionId()const{return previsionId;}
     QString getPrevisionName()const{return previsionName;}
@@ -24,21 +25,16 @@ public:
     int toPrevisionalExtendedAudit(const QString &newAuditName);
 
     bool isPrevisionEmpty()const;
-
-
-
-    ~PCx_Prevision();
+    int duplicatePrevision(const QString &newName) const;
 
     static unsigned int addNewPrevision(unsigned int auditId, const QString &name);
     static bool previsionNameExists(const QString &previsionName);
     static QList<QPair<unsigned int, QString> > getListOfPrevisions();
     static bool deletePrevision(unsigned int previsionId);
 
-
-
-
     QString generateHTMLHeader() const;
     QString generateHTMLPrevisionTitle() const;
+
 private:
     unsigned int previsionId;
     unsigned int attachedAuditId;
@@ -52,10 +48,6 @@ private:
 
     PCx_Prevision(const PCx_Prevision &c);
     PCx_Prevision &operator=(const PCx_Prevision &);
-
-
 };
-
-
 
 #endif // PCX_PREVISION_H

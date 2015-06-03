@@ -33,6 +33,8 @@ private slots:
 
     void on_pushButtonToAudit_clicked();
 
+    void on_pushButtonDuplicate_clicked();
+
 private:
     Ui::FormManagePrevisions *ui;
     void updateListOfPrevisions();

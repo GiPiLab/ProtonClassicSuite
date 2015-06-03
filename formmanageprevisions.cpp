@@ -223,3 +223,38 @@ void FormManagePrevisions::on_pushButtonToAudit_clicked()
     }
 
 }
+
+void FormManagePrevisions::on_pushButtonDuplicate_clicked()
+{
+    bool ok;
+    QString text;
+
+    redo:
+    do
+    {
+        text=QInputDialog::getText(this,tr("Nouvel prévision"), tr("Nom de la prévision dupliquée"),QLineEdit::Normal,"",&ok).simplified();
+
+    }while(ok && text.isEmpty());
+
+    if(ok)
+    {
+        if(PCx_Prevision::previsionNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà une prévision portant ce nom !"));
+            goto redo;
+        }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
+        int res=selectedPrevision->duplicatePrevision(text);
+
+        if(res>0)
+        {
+            QMessageBox::information(this,tr("Information"),tr("Prévision dupliquée !"));
+            updateListOfPrevisions();
+            emit(listOfPrevisionsChanged());
+        }
+    }
+}

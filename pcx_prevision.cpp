@@ -115,6 +115,57 @@ bool PCx_Prevision::isPrevisionEmpty() const
     return true;
 }
 
+int PCx_Prevision::duplicatePrevision(const QString &newName) const
+{
+    if(newName.isEmpty()||newName.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed, name out-of-bound");
+    }
+    int newPrevId=addNewPrevision(attachedAuditId,newName);
+    if(newPrevId<=0)
+    {
+        return newPrevId;
+    }
+
+    QSqlDatabase::database().transaction();
+    QSqlQuery q;
+    q.exec(QString("insert into prevision_DF_%1 select * from prevision_DF_%2").arg(newPrevId).arg(previsionId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Prevision::deletePrevision(newPrevId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    q.exec(QString("insert into prevision_RF_%1 select * from prevision_RF_%2").arg(newPrevId).arg(previsionId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Prevision::deletePrevision(newPrevId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    q.exec(QString("insert into prevision_DI_%1 select * from prevision_DI_%2").arg(newPrevId).arg(previsionId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Prevision::deletePrevision(newPrevId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    q.exec(QString("insert into prevision_RI_%1 select * from prevision_RI_%2").arg(newPrevId).arg(previsionId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Prevision::deletePrevision(newPrevId);
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    QSqlDatabase::database().commit();
+    return newPrevId;
+}
+
 PCx_Prevision::~PCx_Prevision()
 {
     attachedTree=nullptr;

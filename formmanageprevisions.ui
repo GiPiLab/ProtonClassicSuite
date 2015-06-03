@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>292</width>
-    <height>326</height>
+    <height>354</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -111,14 +111,24 @@
         </property>
        </widget>
       </item>
-      <item row="7" column="0">
+      <item row="6" column="0">
+       <widget class="QPushButton" name="pushButtonDuplicate">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Dupliquer la prévision active&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>&amp;Dupliquer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
        <widget class="QPushButton" name="pushButtonDelete">
         <property name="text">
          <string>&amp;Supprimer</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="1">
+      <item row="7" column="0" colspan="2">
        <widget class="QPushButton" name="pushButtonToAudit">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer un audit prévisionnel indépendant qui contiendra les données de l'audit existant sur lesquelles sont adossées les prévisions &lt;span style=&quot; font-weight:600;&quot;&gt;ainsi que les valeurs calculées par les critères de prévision pour l'année N+1.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -149,6 +159,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="pushButtonAddPrevision">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Créer une nouvelle prévision associée à l'audit sélectionné&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
          <string>Créer une &amp;nouvelle prévision</string>
         </property>
@@ -161,7 +174,6 @@
  </widget>
  <tabstops>
   <tabstop>comboListPrevisions</tabstop>
-  <tabstop>pushButtonDelete</tabstop>
   <tabstop>pushButtonToAudit</tabstop>
   <tabstop>comboListAudits</tabstop>
   <tabstop>pushButtonAddPrevision</tabstop>
