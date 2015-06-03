@@ -271,6 +271,13 @@ public:
      */
     bool addLastReportingDateToExistingAudit(PCx_Audit *audit) const;
 
+    /**
+     * @brief duplicateReporting duplicates a reporting
+     * @param newName the new name of the reporting
+     * @return the duplicated reporting id
+     */
+    int duplicateReporting(const QString &newName) const;
+
 
 
 protected:

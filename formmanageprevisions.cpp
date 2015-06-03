@@ -232,7 +232,7 @@ void FormManagePrevisions::on_pushButtonDuplicate_clicked()
     redo:
     do
     {
-        text=QInputDialog::getText(this,tr("Nouvel prévision"), tr("Nom de la prévision dupliquée"),QLineEdit::Normal,"",&ok).simplified();
+        text=QInputDialog::getText(this,tr("Dupliquer prévision"), tr("Nom de la prévision dupliquée"),QLineEdit::Normal,"",&ok).simplified();
 
     }while(ok && text.isEmpty());
 

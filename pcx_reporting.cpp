@@ -1001,6 +1001,56 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
     return true;
 }
 
+int PCx_Reporting::duplicateReporting(const QString &newName) const
+{
+    if(newName.isEmpty()||newName.size()>MAXOBJECTNAMELENGTH)
+    {
+        qFatal("Assertion failed, name out-of-bound");
+    }
+    int newReportingId=addNewReporting(newName,attachedTreeId);
+    if(newReportingId<=0)
+    {
+        return newReportingId;
+    }
+
+    QSqlDatabase::database().transaction();
+    QSqlQuery q;
+    q.exec(QString("insert into reporting_DF_%1 select * from reporting_DF_%2").arg(newReportingId).arg(reportingId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Reporting::deleteReporting(newReportingId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    q.exec(QString("insert into reporting_RF_%1 select * from reporting_RF_%2").arg(newReportingId).arg(reportingId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Reporting::deleteReporting(newReportingId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    q.exec(QString("insert into reporting_DI_%1 select * from reporting_DI_%2").arg(newReportingId).arg(reportingId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Reporting::deleteReporting(newReportingId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    q.exec(QString("insert into reporting_RI_%1 select * from reporting_RI_%2").arg(newReportingId).arg(reportingId));
+    if(q.numRowsAffected()<0)
+    {
+        QSqlDatabase::database().rollback();
+        PCx_Reporting::deleteReporting(newReportingId);
+        qCritical()<<q.lastError();
+        die();
+    }
+    QSqlDatabase::database().commit();
+    return newReportingId;
+}
+
 bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileName) const
 {
     QXlsx::Document xlsx;

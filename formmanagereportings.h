@@ -80,6 +80,8 @@ private slots:
 
     void on_pushButtonDeleteLastRI_clicked();
 
+    void on_pushButtonDuplicateReporting_clicked();
+
 private:
     Ui::FormManageReportings *ui;
     void updateListOfTrees();

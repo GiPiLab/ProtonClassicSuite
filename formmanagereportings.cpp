@@ -586,3 +586,38 @@ void FormManageReportings::on_pushButtonDeleteLastRI_clicked()
         updateReportingInfos();
     }
 }
+
+void FormManageReportings::on_pushButtonDuplicateReporting_clicked()
+{
+    bool ok;
+    QString text;
+
+    redo:
+    do
+    {
+        text=QInputDialog::getText(this,tr("Dupliquer reporting"), tr("Nom du reporting dupliqué"),QLineEdit::Normal,"",&ok).simplified();
+
+    }while(ok && text.isEmpty());
+
+    if(ok)
+    {
+        if(PCx_Reporting::reportingNameExists(text))
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un reporting portant ce nom !"));
+            goto redo;
+        }
+        if(text.size()>MAXOBJECTNAMELENGTH)
+        {
+            QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+            goto redo;
+        }
+        int res=selectedReporting->duplicateReporting(text);
+
+        if(res>0)
+        {
+            QMessageBox::information(this,tr("Information"),tr("Reporting dupliqué !"));
+            updateListOfReportings();
+            emit(listOfReportingsChanged());
+        }
+    }
+}
