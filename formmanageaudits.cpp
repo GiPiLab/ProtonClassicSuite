@@ -54,6 +54,7 @@ void FormManageAudits::updateButtonsVisibility()
     ui->pushButtonRandomRF->setEnabled(!finished);
     ui->pushButtonRandomDI->setEnabled(!finished);
     ui->pushButtonRandomRI->setEnabled(!finished);
+    updateRandomButtonVisibility();
 }
 
 
