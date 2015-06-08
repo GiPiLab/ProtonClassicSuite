@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     formReportingReports=nullptr;
     formAuditPrevisions=nullptr;
     formManagePrevisions=nullptr;
+    formTutorial=nullptr;
     QAction *whatThisAction=QWhatsThis::createAction();
     ui->toolBar->insertAction(0,whatThisAction);
 
@@ -87,7 +88,6 @@ void MainWindow::setMenusState()
         ui->actionSurveillance_des_reportings->setEnabled(false);
         ui->actionGestion_des_pr_visions->setEnabled(false);
         ui->actionElaboration_budg_taire_PCB->setEnabled(false);
-        ui->menuArbres->setEnabled(false);
         ui->menuBudgets->setEnabled(false);
         ui->actionTreemap->setEnabled(false);
     }
@@ -113,7 +113,6 @@ void MainWindow::setMenusState()
         ui->actionSurveillance_des_reportings->setEnabled(true);
         ui->actionGestion_des_pr_visions->setEnabled(true);
         ui->actionElaboration_budg_taire_PCB->setEnabled(true);
-        ui->menuArbres->setEnabled(true);
         ui->menuBudgets->setEnabled(true);
     }
 }
@@ -189,6 +188,11 @@ void MainWindow::onFormManageAuditsWindowsDestroyed()
 void MainWindow::onFormManagePrevisionsWindowsDestroyed()
 {
     formManagePrevisions=nullptr;
+}
+
+void MainWindow::onFormTutorialWindowsDestroyed()
+{
+    formTutorial=nullptr;
 }
 
 void MainWindow::onFormManageReportingsWindowsDestroyed()
@@ -835,7 +839,6 @@ void MainWindow::on_actionGestion_des_pr_visions_triggered()
             }
         }
     }
-
 }
 
 void MainWindow::on_actionTreemap_triggered()
@@ -856,4 +859,21 @@ void MainWindow::on_actionTreemap_triggered()
         connect(formManageAudits,&FormManageAudits::listOfAuditsChanged,dlg,&FormAuditTreemap::onListOfAuditsChanged);
     }
 
+}
+
+void MainWindow::on_actionTutoriels_triggered()
+{
+    if(formTutorial==nullptr)
+    {
+        FormTutorial *dlg=new FormTutorial(this);
+        dlg->setAttribute(Qt::WA_DeleteOnClose);
+
+        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
+        subWin->setWindowIcon(QIcon(":/icons/icons/movies.png"));
+
+        dlg->show();
+        formTutorial=dlg;
+
+        connect(dlg,&QObject::destroyed,this,&MainWindow::onFormTutorialWindowsDestroyed);
+    }
 }

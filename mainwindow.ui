@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>612</height>
+    <width>916</width>
+    <height>541</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>916</width>
      <height>19</height>
     </rect>
    </property>
@@ -47,6 +47,7 @@
      <string>A&amp;udits</string>
     </property>
     <addaction name="separator"/>
+    <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
     <addaction name="actionEditAudit"/>
     <addaction name="actionExploreAudits"/>
@@ -61,11 +62,13 @@
     <addaction name="actionA_propos"/>
     <addaction name="actionCascade"/>
     <addaction name="actionCloseAllSubwin"/>
+    <addaction name="actionTutoriels"/>
    </widget>
    <widget class="QMenu" name="menuReporting">
     <property name="title">
      <string>&amp;Reportings</string>
     </property>
+    <addaction name="actionManageTree"/>
     <addaction name="actionGestion_des_reportings"/>
     <addaction name="actionReportingOverview"/>
     <addaction name="actionGraphiques"/>
@@ -80,14 +83,7 @@
     <addaction name="actionGestion_des_pr_visions"/>
     <addaction name="actionElaboration_budg_taire_PCB"/>
    </widget>
-   <widget class="QMenu" name="menuArbres">
-    <property name="title">
-     <string>&amp;Arbres</string>
-    </property>
-    <addaction name="actionManageTree"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuArbres"/>
    <addaction name="menuDataInput"/>
    <addaction name="menuReporting"/>
    <addaction name="menuBudgets"/>
@@ -112,8 +108,8 @@
    <addaction name="actionNewDb"/>
    <addaction name="actionOpenDb"/>
    <addaction name="actionOptions"/>
-   <addaction name="separator"/>
    <addaction name="actionManageTree"/>
+   <addaction name="separator"/>
    <addaction name="actionManageAudits"/>
    <addaction name="actionEditAudit"/>
    <addaction name="actionExploreAudits"/>
@@ -131,6 +127,7 @@
    <addaction name="actionGestion_des_pr_visions"/>
    <addaction name="actionElaboration_budg_taire_PCB"/>
    <addaction name="separator"/>
+   <addaction name="actionTutoriels"/>
    <addaction name="actionA_propos"/>
   </widget>
   <action name="actionManageTree">
@@ -327,6 +324,15 @@
    </property>
    <property name="toolTip">
     <string>Visualisation en Treemap</string>
+   </property>
+  </action>
+  <action name="actionTutoriels">
+   <property name="icon">
+    <iconset resource="Images.qrc">
+     <normaloff>:/icons/icons/movies.png</normaloff>:/icons/icons/movies.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Tutoriels</string>
    </property>
   </action>
  </widget>

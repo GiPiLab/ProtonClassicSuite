@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql printsupport
+QT       += core gui sql printsupport multimedia multimediawidgets
 
 CONFIG += c++11
 
@@ -66,7 +66,8 @@ SOURCES += main.cpp\
     formdisplayprevisionreport.cpp \
     treemap.cpp \
     treemapwidget.cpp \
-    formaudittreemap.cpp
+    formaudittreemap.cpp \
+    formtutorial.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -118,7 +119,8 @@ HEADERS  += mainwindow.h \
     formdisplayprevisionreport.h \
     treemap.h \
     treemapwidget.h \
-    formaudittreemap.h
+    formaudittreemap.h \
+    formtutorial.h
 
 FORMS    += mainwindow.ui \
     formdisplaytree.ui \
@@ -142,7 +144,8 @@ FORMS    += mainwindow.ui \
     formauditprevisions.ui \
     formmanageprevisions.ui \
     formdisplayprevisionreport.ui \
-    formaudittreemap.ui
+    formaudittreemap.ui \
+    formtutorial.ui
 
 RC_ICONS = icons/logo64_64.ico
 #QMAKE_CXXFLAGS_DEBUG += -pg
