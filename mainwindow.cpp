@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     formReportingReports=nullptr;
     formAuditPrevisions=nullptr;
     formManagePrevisions=nullptr;
-    formTutorial=nullptr;
     QAction *whatThisAction=QWhatsThis::createAction();
     ui->toolBar->insertAction(0,whatThisAction);
 
@@ -190,10 +189,6 @@ void MainWindow::onFormManagePrevisionsWindowsDestroyed()
     formManagePrevisions=nullptr;
 }
 
-void MainWindow::onFormTutorialWindowsDestroyed()
-{
-    formTutorial=nullptr;
-}
 
 void MainWindow::onFormManageReportingsWindowsDestroyed()
 {
@@ -861,19 +856,4 @@ void MainWindow::on_actionTreemap_triggered()
 
 }
 
-void MainWindow::on_actionTutoriels_triggered()
-{
-    if(formTutorial==nullptr)
-    {
-        FormTutorial *dlg=new FormTutorial(this);
-        dlg->setAttribute(Qt::WA_DeleteOnClose);
 
-        QMdiSubWindow *subWin=ui->mdiArea->addSubWindow(dlg);
-        subWin->setWindowIcon(QIcon(":/icons/icons/movies.png"));
-
-        dlg->show();
-        formTutorial=dlg;
-
-        connect(dlg,&QObject::destroyed,this,&MainWindow::onFormTutorialWindowsDestroyed);
-    }
-}

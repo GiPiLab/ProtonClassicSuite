@@ -21,7 +21,7 @@
 #include "formqueries.h"
 #include "formaudittreemap.h"
 #include "utils.h"
-#include "formtutorial.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -73,11 +73,9 @@ private slots:
     void on_actionElaboration_budg_taire_PCB_triggered();
     void on_actionGestion_des_pr_visions_triggered();
     void onFormManagePrevisionsWindowsDestroyed();
-    void onFormTutorialWindowsDestroyed();
     void on_actionTreemap_triggered();
     void onFormAuditTreemapWindowsDestroyed(QObject *obj);
 
-    void on_actionTutoriels_triggered();
 
 private:
 
@@ -92,7 +90,7 @@ private:
     FormManageReportings *formManageReportings;
     FormAuditPrevisions *formAuditPrevisions;
     FormManagePrevisions *formManagePrevisions;
-    FormTutorial *formTutorial;
+
 
 
     //Multiple "tables" dialogs are allowed
