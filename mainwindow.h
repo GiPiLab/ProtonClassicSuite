@@ -77,6 +77,8 @@ private slots:
     void onFormAuditTreemapWindowsDestroyed(QObject *obj);
 
 
+    void on_action_Tutoriels_triggered();
+
 private:
 
     Ui::MainWindow *ui;

@@ -62,6 +62,7 @@
     <addaction name="actionA_propos"/>
     <addaction name="actionCascade"/>
     <addaction name="actionCloseAllSubwin"/>
+    <addaction name="action_Tutoriels"/>
    </widget>
    <widget class="QMenu" name="menuReporting">
     <property name="title">
@@ -127,6 +128,7 @@
    <addaction name="actionElaboration_budg_taire_PCB"/>
    <addaction name="separator"/>
    <addaction name="actionA_propos"/>
+   <addaction name="action_Tutoriels"/>
   </widget>
   <action name="actionManageTree">
    <property name="icon">
@@ -322,6 +324,15 @@
    </property>
    <property name="toolTip">
     <string>Visualisation en Treemap</string>
+   </property>
+  </action>
+  <action name="action_Tutoriels">
+   <property name="icon">
+    <iconset resource="Images.qrc">
+     <normaloff>:/icons/icons/movies.png</normaloff>:/icons/icons/movies.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Tutoriels</string>
    </property>
   </action>
  </widget>

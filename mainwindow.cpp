@@ -857,3 +857,8 @@ void MainWindow::on_actionTreemap_triggered()
 }
 
 
+
+void MainWindow::on_action_Tutoriels_triggered()
+{
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()+"/screencasts/tutoriels.html"));
+}
