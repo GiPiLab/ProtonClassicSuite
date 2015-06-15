@@ -228,10 +228,10 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
         }
     }
 
-    audit.fillWithRandomData(MODES::DFRFDIRI::DF);
-    audit.fillWithRandomData(MODES::DFRFDIRI::RF);
-    audit.fillWithRandomData(MODES::DFRFDIRI::DI);
-    audit.fillWithRandomData(MODES::DFRFDIRI::RI);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DI,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RI,false);
     for(unsigned int i=MODES::DFRFDIRI::DF;i<sizeof(MODES::DFRFDIRI);i++)
     {
         for(int j=2010;j<=2011;j++)
@@ -256,10 +256,10 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditDuplication()
 
     PCx_Audit audit(auditId);
 
-    audit.fillWithRandomData(MODES::DFRFDIRI::DF);
-    audit.fillWithRandomData(MODES::DFRFDIRI::RF);
-    audit.fillWithRandomData(MODES::DFRFDIRI::DI);
-    audit.fillWithRandomData(MODES::DFRFDIRI::RI);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DI,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RI,false);
 
     unsigned int dupAuditId=audit.duplicateAudit("DUPAUDIT",QList<unsigned int>{2009,2010,2011,2012});
     PCx_Audit dupAudit(dupAuditId);
@@ -328,10 +328,10 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditImportExport()
     QFile::remove(tmpFileNameSkel1);
     importedAudit.clearAllData(MODES::DFRFDIRI::DF);
 
-    audit.fillWithRandomData(MODES::DFRFDIRI::DF);
-    audit.fillWithRandomData(MODES::DFRFDIRI::RF);
-    audit.fillWithRandomData(MODES::DFRFDIRI::DI);
-    audit.fillWithRandomData(MODES::DFRFDIRI::RI);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DI,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RI,false);
 
     QString tmpFileNameDF=QStandardPaths::writableLocation(QStandardPaths::TempLocation)+"/"+generateUniqueFileName(".xlsx");
     QString tmpFileNameRF=QStandardPaths::writableLocation(QStandardPaths::TempLocation)+"/"+generateUniqueFileName(".xlsx");

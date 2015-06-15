@@ -6,6 +6,7 @@
 #include "utils.h"
 #include "pcx_tables.h"
 #include "pcx_graphics.h"
+#include "pcx_report.h"
 #include "tst_protonclassicsuiteunittests.h"
 
 void ProtonClassicSuiteUnitTests::fillTestAudit(PCx_Audit *audit)
@@ -151,6 +152,59 @@ void ProtonClassicSuiteUnitTests::testCaseForPCATables()
     PCx_Tree::deleteTree(treeId);
 }
 
+void ProtonClassicSuiteUnitTests::benchmarkReport()
+{
+    unsigned int treeId=PCx_Tree::createRandomTree("RANDOM",10);
+    PCx_Tree tree(treeId);
+    tree.finishTree();
+    QTextDocument doc;
+
+    unsigned int auditId=PCx_Audit::addNewAudit("RANDOMAUDIT",QList<unsigned int>{2000,2001,2002,2003,2004,2005},treeId);
+    PCx_Audit audit(auditId);
+
+    audit.fillWithRandomData(MODES::DFRFDIRI::DF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RF,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::DI,false);
+    audit.fillWithRandomData(MODES::DFRFDIRI::RI,false);
+    audit.finishAudit();
+
+    PCx_Report report(&audit);
+
+
+    QBENCHMARK(
+    report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>{},QList<PCx_Tables::PCATABLES>{
+                                              PCx_Tables::PCATABLES::PCAT1,
+                                              PCx_Tables::PCATABLES::PCAT2,
+                                              PCx_Tables::PCATABLES::PCAT3,
+                                              PCx_Tables::PCATABLES::PCAT4,
+                                              PCx_Tables::PCATABLES::PCAT5,
+                                              PCx_Tables::PCATABLES::PCAT6,
+                                              PCx_Tables::PCATABLES::PCAT7,
+                                              PCx_Tables::PCATABLES::PCAT8,
+                                              PCx_Tables::PCATABLES::PCAT9,
+                                              PCx_Tables::PCATABLES::PCAT10,
+                                              PCx_Tables::PCATABLES::PCAT11,
+                                              PCx_Tables::PCATABLES::PCAT12},
+                                          QList<PCx_Graphics::PCAGRAPHICS>{
+                                              PCx_Graphics::PCAGRAPHICS::PCAG1,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG2,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG3,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG4,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG5,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG6,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG7,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG8,
+                                              PCx_Graphics::PCAGRAPHICS::PCAG9,
+                                              PCx_Graphics::PCAGRAPHICS::PCAHISTORY
+                                          },(qrand()%10)+1,MODES::DFRFDIRI::DF,&doc,nullptr,nullptr,nullptr,nullptr));
+
+
+    PCx_Audit::deleteAudit(auditId);
+    PCx_Tree::deleteTree(treeId);
+
+
+}
+
 
 void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
 {
@@ -287,7 +341,6 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
     //qDebug()<<"GHist"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedGHist);
-
 
     PCx_Audit::deleteAudit(auditId);
     PCx_Tree::deleteTree(treeId);

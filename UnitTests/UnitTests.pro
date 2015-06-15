@@ -6,7 +6,7 @@
 
 QT       += testlib
 
-
+DEFINES *= QT_USE_QSTRINGBUILDER
 
 include(../ProtonClassicSuite_forUnitTests.pri)
 

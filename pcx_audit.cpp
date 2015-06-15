@@ -1018,7 +1018,7 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileN
     return xlsx.saveAs(fileName);
 }
 
-void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
+void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode,bool progressBar)
 {
     QList<unsigned int> leaves=getAttachedTree()->getLeavesId();
 
@@ -1028,10 +1028,13 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
 
     QProgressDialog progress(QObject::tr("Génération des données aléatoires..."),QObject::tr("Annuler"),0,maxVal);
 
-    progress.setWindowModality(Qt::ApplicationModal);
+    if(progressBar==true)
+    {
+        progress.setWindowModality(Qt::ApplicationModal);
 
-    progress.setMinimumDuration(300);
-    progress.setValue(0);
+        progress.setMinimumDuration(300);
+        progress.setValue(0);
+    }
 
     QSqlDatabase::database().transaction();
 
@@ -1050,10 +1053,10 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
             randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
 
             data.insert(PCx_Audit::ORED::OUVERTS,randval);
-            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1500);
 
             data.insert(PCx_Audit::ORED::REALISES,randval);
-            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*1000);
+            randval=qrand()/(double)(RAND_MAX/(double)MAX_NUM*5000);
 
             data.insert(PCx_Audit::ORED::ENGAGES,randval);
 
@@ -1061,14 +1064,17 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
             setLeafValues(leaf,mode,year,data,true);
         }
         nbNode++;
-        if(!progress.wasCanceled())
+        if(progressBar==true)
         {
-            progress.setValue(nbNode);
-        }
-        else
-        {
-            QSqlDatabase::database().rollback();
-            return;
+            if(!progress.wasCanceled())
+            {
+                progress.setValue(nbNode);
+            }
+            else
+            {
+                QSqlDatabase::database().rollback();
+                return;
+            }
         }
     }
     QSqlDatabase::database().commit();

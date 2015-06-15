@@ -7,6 +7,8 @@
 QT       += core gui sql printsupport
 
 CONFIG += c++11
+DEFINES *= QT_USE_QSTRINGBUILDER
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

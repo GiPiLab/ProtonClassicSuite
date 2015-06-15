@@ -344,7 +344,7 @@ void FormAuditReports::on_saveButton_clicked()
             output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
-            output.append("<br><br><br>");
+            output.append(QStringLiteral("<br><br><br>"));
         }
         if(!progress.wasCanceled())
             progress.setValue(++i);
@@ -355,9 +355,9 @@ void FormAuditReports::on_saveButton_clicked()
             dir.removeRecursively();
             return;
         }
-        output.append("<br><br><br><br>");
+        output.append(QStringLiteral("<br><br><br><br>"));
     }
-    output.append("</body></html>");
+    output.append(QStringLiteral("</body></html>"));
 
     QString settingStyle=settings.value("output/style","CSS").toString();
     if(settingStyle=="INLINE")

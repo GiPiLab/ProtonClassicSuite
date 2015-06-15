@@ -10,6 +10,32 @@
 #include <QElapsedTimer>
 #include <QFileInfo>
 
+QStringList PCx_Tree::firstNameList={"Aaron","Abdonie","Abdonise","Abel","Abélard","Abélarde","Abel-François","Abélie","Abelin","Abeline","Abella","Abelle","Abigaelle","Abigaïl","Abraham","Achille","Adalbert","Adam","Adel","Adélaïde","Adèle","Adélia","Adélie","Adeline","Adelphe","Adelphine","Adémar","Adolph","Adolphe","Adrien","Adrienne","Agathe","Aglaé","Agnès","Agrippin","Aimé","Aimée","Alain","Alban","Albane","Albéric","Albert","Alberte","Albertin","Albertine","Albin","Alcée",
+                                     "Alde","Aldric","Alexandra","Alexandre","Alexandrine","Alexia","Alexis","Alfred","Alice","Alicia","Alida","Aliénor","Aline","Aliptien","Alison","Alma","Almaric","Aloïs","Aloïse","Aloïsse","Aloys","Aloysa","Aloyse","Aloysia","Alphonse","Alphonsine","Alvare","Amace","Amadou","Amadour","Amalric","Amance","Amand","Amanda","Amande","Amandine","Amandio","Amans","Amant","Amante","Amanthe","Amantine","Amaury","Ambre","Ambroise","Amédée","Amel","Amélie","Ameline","Améline","Amerigo","Anabelle","Anaëlle","Anaïs","Anastasie","Anatole","André","Andréa","Andréanne","Andrée","Andy","Ange","Angèle","Angeline","Angélique","Anicet",
+                                     "Anita","Anna","Annah","Anne","Anne-Charlotte","Anne-Laure","Anneli","Anne-Marie","Anne-Sophie","Annette","Annick","Annie","Anny","Anselme","Anthelme","Anthony","Antigone","Antoine","Antoinette","Antoni","Antonia","Antonin","Antonio","Aphélie","Apollinaire","Apolline","Apollonie","Arcadi","Archibald","Archibaldine","Argine","Ariane","Ariel","Ariste","Aristide","Arlette","Armael","Armaela","Armand","Armande","Armel","Armele","Armelin","Armeline","Armelle","Armilla","Arnaud","Arnaude","Arnold","Arsène","Artémise","Arthur","Arzaela","Arzel","Arzela","Arzhel","Astrid","Astride","Astruc","Athanagor","Athanagore",
+                                     "Athanase","Atika","Aubin","Aubry","Aude","Audrey","Audry","Auger","Auguste","Augustin","Augustina","Augustine","Aumérine","Aure","Aurel","Auréle","Aurélia","Aurélian","Auréliane","Aurélianne","Aurélie","Aurélien","Auriane","Aurore","Austin","Axel","Axelle","Aymeric","Babacar","Bali","Balthazar","Baptistette","Barbara","Barbe","Barbon","Barnabé","Barthélémy","Basile","Bastien","Bastienne","Baudouin","Bawer","Béa","Béatrice","Béatrix","Bébert","Bélinda","Bénédicte","Bénigne","Benito","Benjamin","Benoit","Benoît","Bérangère","Bérenger","Bérengère","Bérénice","Bernadette","Bernard","Bernardin","Berthe","Bertrand",
+                                     "Beyhan","Bianca","Bibiane","Blaisette","Blanche","Blandine","Boniface","Boris","Boson","Boutros","Bovick","Brian","Brice","Brigitte","Bruce","Bruno","Bryan","Caïn","Calvin","Camélia","Candice","Caprais","Carin","Carina","Carine","Carl","Carla","Carlos","Carmen","Carolane","Carole","Carole Anne","Caroline","Casarie","Casimir","Cassandre","Cassien","Castor","Catherine","Cathy","Cécile","Cécilia","Céciliane","Cédric","Céleste","Célestin","Célestine","Célia","Celian","Célian","Celiane","Céliane","Céline","Césaire","César","Césarion","Chadrack","Chantal",
+                                     "Chantale","Charlène","Charles","Charline","Charlotte","Childéric","Chloé","Christelle","Christian","Christiane","Christine","Christophe","Claire","Clairon","Clara","Clarisse","Claudette","Claudia","Claudie","Claudine","Cléa","Cléandre","Clélia","Clélie","Clémence","Clément","Clémentine","Cléopâtre","Cléry","Clio","Cloclo","Clodette","Clotaire","Clothilde","Clotilde","Clovis","Colas","Colette","Colin","Coline","Collart","Collin","Colotte","Côme","Conchita","Conrad","Constant","Constantin","Constantine","Cora","Coralie","Corentin","Corentine","Corinne","Corneille","Cornélie","Cosette","Cosme","Crépin","Cunégonde","Cynthia","Cyr","Cyran","Cyril","Cyrille","Dahlia","Dalhia","Dalila","Damia","Damian",
+                                     "Damiana","Damiane","Damiano","Damien","Damienne","Damiette","Daniel","Daniela","Danièle","Daniella","Danielle","Danny","Dany","Daphné","Daphnée","David","Débora","Déborah","Delotte","Delphin","Delphine","Demenge","Denis","Denise","Dennis","Denys","Désiré",
+                                     "Désirée","Deslotte","Diamonika","Diane","Didier","Didière","Dimitri","Dodo","Dominic","Domitille","Donald","Donat","Donatien","Dorène","Dorian","Dorine","Doris","Dvora","Dylan","Edgar","Edgard","Édith","Edmond","Edmonde","Edona","Édouard","Edvige","Edwige","Éléonore","Elfi","Éliacin","Eliana","Éliana","Éliane","Élie","Élisa","Élisabeth","Élise","Élisée","Élissande","Élodie","Éloi","Éloïse","Elphie","Elsa","Émeline","Émeric","Émerine","Émérine","Émile","Émilie","Émilien","Éminé","Emma","Emmanuel","Emmanuelle","Émy","Enoha","Enora","Énora","Enrique","Enzo","Éphémie","Éphrem","Epnon","Epvre","Êrane","Éric","Érik","Ermel","Ernest",
+                                     "Ernestine","Ervan","Erwan","Erza","Estelle","Estève","Esther","Estienne","Ethan","Éthan","Étienne","Eugène","Eugénie","Eulalie","Euphrosyne","Eusèbe","Eustache","Eutrope","Éva","Évariste","Ève","Évelyne","Ezequiel","Fabien","Fabienne","Fabrice","Fanchette","Fanchon","Fanny","Fatima","Fatimata","Fatoumata","Fébronie","Félicien","Félicité","Félix","Féodor","Ferdinand","Ferdinande","Fernand","Fernande","Fidèle","Fiona","Firmin","Flavie","Flavien","Fleur","Flora","Flore","Florence","Florent","Florentin","Florian","Floriane","Foucault","Fraimbault","France","Francelin","Franceline","Francette","Francine","Francis","Franck","François",
+                                     "Françoise","Frank","Fred","Frédégonde","Frédéric","Frédérique","Fulbert","Gabriel","Gabrièle","Gabrielle","Gaël","Gaëla","Gaëlane","Gaële","Gaëlic","Gaëlig","Gaëlla","Gaëllane","Gaëlle","Gaétan","Gaëtan","Gaétane","Gaëtane","Garance","Gaspard","Gaston","Gastonne","Gaultier","Gauthier","Gautier","Gauvain","Gaylord","Gégé","Gélase","Genès","Genest","Genet","Geneviève","Gengoul","Gengoult","Genis","Geoffroy","Georges","Georgette","Georgie","Georgine","Gérald","Géralda","Géralde","Géraldine","Géraldo","Géraldy","Gérard","Géraud","Germain","Germaine","Gertrude","Gervais","Gervaise","Ghislain","Ghislaine","Gilbert","Gilberte","Gilberthe","Gildas","Ginette","Gisèle","Giselle","Gislaine",
+                                     "Godefroy","Gontran","Gontrand","Gonzague","Goropius","Gratien","Graziella","Greg","Grégoire","Grégory","Gudule","Guénaël","Guénaèle","Guénaële","Guénaëlle","Guerin","Guilaine","Guilhem","Guillain","Guillaume","Guillaumette","Guillemette","Guislain","Guislaine","Günther","Guoqing","Gustave","Guy","Guylain","Guylaine","Gwenaël","Gwenaëla","Gwenaële","Gwenaëlla","Gwenaëlle","Gwendolen","Gwendoline","Gwendolyne","Gwennaëlle","Habib","Hanne","Harlem","Haroun","Hébert","Hector","Hedwige",
+                                     "Hégésippe","Hélène","Helga","Hélie","Hélion","Héloïse","Henri","Henriette","Héraclite","Herbert","Hercule","Héritier","Hermel","Hermelin","Hermeline","Herménégild","Hermione","Hervé","Hilaire","Hilda","Hildegarde","Hippolyte","Homère","Honoré","Honorine","Hortense","Hrant","Hubert","Hugo","Hugues","Huguette","Humbert","Hyacinthe","Hydulphe","Ida","Ignace","Igor","Ilan","Inès","Ingrid","Inna","Irène","Iris","Isa","Isaac","Isabelle","Isaïe","Isaline","Iseult","Iseut","Isidore","Isolde","Issa","Ivan","Ivo","Jac","Jacinthe","Jackson","Jacob","Jacqueline","Jacques","Jacquette","Jacquot","Jade","James","Jamet","Jamette","Jammes","Jason",
+                                     "Jean","Jean-Baptiste","Jean-Charles","Jean-Christian","Jean-Christophe","Jean-Claude","Jean-François","Jean-Guy","Jean-Jacques","Jean-Joël","Jean-Louis","Jean-Loup","Jean-Luc","Jean-Marc","Jean-Marie","Jean-Michel","Jeanne","Jeannette","Jeannine","Jean-Noël","Jeannon","Jeannot","Jean-Pascal","Jean-Paul","Jean-Philippe","Jean-Pierre","Jean-Yves","Jefferson","Jehan","Jehanne","Jenique","Jennifer","Jérémie","Jérémy","Jérôme","Jéromine","Jéronime","Jessica","Jésus","Jihu","Ji-hu","Jihun","Ji-hun","Jinping","Joachim","Joanne","Joannie","Joceline","Jocelyn","Jocelyne","Joé","Joël","Joëlle","Johanna","Johanne","Jonas","Jonathan","Jordan","Jordana","Jordane","Jordann","Jordanna","Jordanne",
+                                     "Jordany","Jordi","José","Josée","Joseph","Josette","Josiane","Joslin","Josse","Josselin","Josselyne","Josué","Josy","Jourdain","Jourdan","Judas","Jude","Judith","Jules","Julia","Julian","Juliana","Julie","Julien","Julienne","Juliette","Juline","Julius","Junine","Just","Juste","Justin","Justine","Karen","Karin","Karina","Karine","Katia","Katya","Kenji","Kenkichi","Kevin","Kévin","Komachi","Ksenia","Kurdy","Kymie","Ladislas","Ladislaw","Ladislawa","Laeticia","Laetitia","Lala","Lambert","Lambertine","Lambrecht","Lamia","Lara","Larissa","Laszlo","Laura","Laurane","Lauranne","Laure","Laurea","Laureen","Laureline","Laurelle","Lauren","Laurena","Laurence","Laurène","Laurent","Lauretta",
+                                     "Laurette","Lauria","Lauriane","Laurianne","Laurice","Laurie","Laurine","Laury","Lauryn","Lauryne","Layla","Lazare","Léa","Léana","Léane","Léanne","Lédy","Léger","Leila","Lena","Léo","Léon","Léonard","Leonarda","Léonid","Léonidas","Léonie","Léonine","Léonore","Léopold","Lesia","Lesya","Lev","Lévi","Lexane","Lia","Libert","Lila","Lili","Lilia","Liliane","Lilliane","Lilou","Lina","Lincoln","Linda","Line","Linus","Lionel","Lisa","Lise","Liselotte","Liseron","Lisette","Livia","Lizier","Loana","Loïc","Lola","Lora","Loréa","Lorelie","Lorella","Lorena","Lorène","Lorenza","Lorenzo","Loretta",
+                                     "Lorette","Loria","Loriane","Lorie","Lorine","Lorraine","Lory","Lothaire","Louis","Louise","Louisette","Louis-Philippe","Louiza","Loulou","Louna","Loup","Luc","Luca","Lucas","Luce","Luciano","Lucie","Lucien","Lucienne","Lucile","Lucille","Lucrèce","Ludovic","Ludovine","Luitvin","Lycaon","Lydia","Lydie","Macaire","Maclou","Madeleine","Madelon","Maëlle","Maëlys","Maeva","Maéva","Maèva","Maëva","Magali","Magalie","Magaly","Magdaléna","Maguelone","Maguelonne","Mahamadou","Mahé","Maheva","Mahmoud","Mai","Maïa","Maialen","Mailis","Maïssa","Maïté","Maïtena","Maleaume","Malika","Malo","Mamadou","Manami","Manon","Manuel","Manuela","Manuella","Mara","Marc","Marcel","Marcelin","Marceline","Marcelle",
+                                     "Marcellin","Marcien","Margaret","Margarita","Margault","Margot","Margoton","Marguerite","Mari","Maria","Mariana","Marianne","Marie","Marie-Ange","Marie-Chantal","Marie-Christine","Marie-Claire","Marie-Claude","Marie-Élise","Marie-Ève","Marie-France","Marie-Françoise","Marie-Gisèle","Marie-Hélène","Marie-José","Marie-Laure","Marielle","Marie-Madeleine","Marie-Noëlle","Marie-Paule","Marie-Pier","Marie-Pierre","Marie-Thérèse","Marietta","Mariette","Marina","Marine","Marinette","Mario","Marion","Marius","Marjolain","Marjolaine","Marlaine","Marlène","Marlenne","Marleyne","Marthe","Martial","Martin","Martine","Martinien","Marty","Marye","Maryne","Maryvette","Maryvonne","Matéo","Mathéo",
+                                     "Mathias","Mathieu","Mathilde","Mathis","Mathurin","Mathurine","Mathys","Matisse","Matthias","Matthieu","Matthis","Maud","Maude","Maurice","Mauricette","Max","Maxim","Maximilien","Maximin","Maxine","Mayeul","Mayeule","Maÿlice","Mayline","Maylis","Maÿliss","Mayssa","Maÿssa","Médard","Megan","Mégane","Mehdi","Melaine","Mélanie","Mélany","Melchior","Mélina","Méline","Mélinée","Mélissa","Mélodie","Mélodine","Mélody","Melvin","Melvine","Melvyn","Melvyne","Melvynn","Mélyne","Melyssa","Mercedes","Mercédès","Merlin","Merline","Méthode","Micaël","Michael","Michaël","Michaeli","Michaelis","Michel","Michèle","Micheline","Michelle","Michka","Mickael","Mickaël","Mikaël","Mikhael","Mikhaylov","Milène",
+                                     "Milo","Mimile","Minjun","Min-jun","Minseo","Min-seo","Mira","Mireille","Miriam","Miroslav","Miroslava","Miryam","Mitch","Mitchell","Mithridate","Modestine","Moïra","Momo","Monika","Monique","Morgane","Morvan","Muriel","Murielle","Myriam","Nabil","Nabor","Nacer","Nadège","Nadia","Nadine","Nahel","Nana","Nanard","Naomi","Naomie","Narcisse","Natacha","Natasha","Nathalie","Nathan","Nathanaël","Nathanaèle","Nathanaëlle","Nathaniel","Nathanielle","Nazaire","Nestor","Nicaise","Nicéphore","Nico","Nicodème","Nicolas","Nicole","Nicolette","Nicomède","Nina","Ninon","Noam","Noël","Noëlle","Noémia","Noémie","Norbert","Océane","Octave","Octavie","Octavien","Odet","Odette","Odile","Odon","Ogier","Oleg",
+                                     "Olga","Olive","Olivia","Olivier","Olympe","Omar","Ombeline","Ombline",
+                                     "Omer","Omérine","Ondine","Onésime","Ophélia","Ophélie","Oriana","Oriane","Orianne","Ornella","Oscar","Oswald","Othon","Pablo","Paco","Pacôme","Paola","Paolo","Parker","Pascal","Pascale","Pascaline","Patrice","Patricia","Patrick","Paul","Paula","Paule","Paulette","Paulin","Paulina","Pauline","Paulo","Paul-Olivier","Pavel","Pavlina","Peggy","Peio","Pélage","Pénélope","Périne","Périnne","Pernelle","Peronnelle","Péronnelle","Perrette","Perrin","Perrine","Perryne","Persian","Peter","Pétra","Pétronille","Philibert","Philiberte","Philippe","Philippine","Philippon","Philippoté","Philippotée","Philomène","Pierre","Pierre-Louis","Pierre-Marie","Pierre-Olivier","Pierrette","Pierre-Yves","Pierrot",
+                                     "Priscille","Priscillia","Procope","Prosper","Prudence","Prune","Quentin","Rachel","Rachelle","Rachida","Radegonde","Rafael","Rafaela","Rafaèla","Rafaele","Rafaèle","Rafaëlla","Rafaëlle","Raoul","Raphaël","Raphaèla","Raphaèle","Raphaëlla","Raphaëlle","Raymond","Raymonde","Réal","Rebecca","Rébecca","Régina","Régine","Régis","Reine","Réjane","Réjeanne","Rémy","Renan","Renaud","René","Renée","Reuel","Reynald","Ricardo","Richard","Rita","Robert","Roberta","Roberte","Robin","Roch","Rodolphe","Rodrigue","Roger","Roland","Rolande","Romain","Romaine","Roman","Romane","Roméo","Romuald","Romualde","Ronan","Rosa","Rosalie","Rosange","Rose","Roseline","Roselyne","Rose-Marie","Rosette","Rosine","Roxane",
+                                     "Roxanne","Roy","Ruben","Ruth","Sabin","Sabina","Sabine","Sabrina","Sabrine","Sacha","Sam","Samantha","Sami","Sammy","Samson","Samuel","Sandra","Sandrine","Sarah","Satomi","Saturnin","Sauvan","Sauvane","Savinien","Sébastien","Ségolaine","Ségolène","Selma","Sémion","Sémione","Seohyeon","Seoyeon","Séphora","Séraphin","Séraphine","Serge","Sergueï","Servais","Sever","Séverin","Séverine","Shinji","Sid","Sidoine","Sidonie","Sigismond","Sigolène","Sigurdur","Silva","Silvain","Silvaine","Silvère","Simon","Simona","Simone","Soheil","Solange","Solène","Solenn","Solenna","Solenne","Soline","Solveig","Sonia","Soohyun","Sophie","Sören","Søren","Souleymane","Stanislas","Stefani","Stéphanie","Steve","Steven",
+                                     "Suzan","Suzanne","Sylvain","Sylvaine","Sylvane","Sylvanie","Sylvestre","Sylvia","Sylviane","Sylvie","Symphorien","Tancrède","Tanguy","Tania","Tanya","Tariq","Tatiana","Thaddée","Thadée","Thaïs","Théa","Thècle","Théo","Théodora","Théodose","Théodule","Théophile","Théophraste","Thérèse","Thibault","Thiébaud","Thierry","Thimoté","Thimothé","Thomas","Tiffany","Tilio","Timothé","Tino","Tiphaine","Tite","Titien","Tobie","Tognon","Tom","Tomoko","Tony","Toto","Totor","Toussaint","Trémeur","Trésorine","Tristan","Tristane","Trond","Trudon","Tugdual","Typhaine","Ulysse","Urbain","Urbaine","Ursula","Ursule","Vaast","Valburge","Valentin","Valentine","Valère","Valérie","Valérien","Valéry","Vallier","Vanessa",
+                                     "Venceslas","Véran","Véro","Véronique","Victoire","Victor","Victoria","Victorien","Vidal","Vincent","Vinciane","Violaine","Violette","Virgile","Virginie","Viviane","Vivien","Vladimir","Vladislas","Vladislav","Walter","Walther","Warner","Washington","Wenceslas","Wilfrid","Wilfried","William","Wilson","Wladislav","Xavier","Xavière","Xénie","Yann","Yoann","Yolande","Yolène","Yseult","Yuna","Yves","Yvette","Yvon","Yvonne","Zacchée","Zacharie","Zachary","Zachée","Zazie","Zoé","Zoltan"};
+
 
 PCx_Tree::PCx_Tree(unsigned int treeId):treeId(treeId)
 {
@@ -416,7 +442,7 @@ unsigned int PCx_Tree::getParentId(unsigned int nodeId) const
 {
     QSqlQuery q;
     q.prepare(QString("select pid from arbre_%1 where id=:nodeid").arg(treeId));
-    q.bindValue(":nodeid",nodeId);
+    q.bindValue(QStringLiteral(":nodeid"),nodeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -434,7 +460,7 @@ QList<unsigned int> PCx_Tree::getChildren(unsigned int nodeId) const
     QList<unsigned int> listOfChildren;
     QSqlQuery q;
     q.prepare(QString("select id from arbre_%1 where pid=:nodeid order by nom").arg(treeId));
-    q.bindValue(":nodeid",nodeId);
+    q.bindValue(QStringLiteral(":nodeid"),nodeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -459,8 +485,8 @@ void PCx_Tree::updateNodePid(unsigned int nodeId, unsigned int newPid)
     QSqlQuery q;
 
     q.prepare(QString("update arbre_%1 set pid=:pid where id=:id").arg(treeId));
-    q.bindValue(":pid",newPid);
-    q.bindValue(":id",nodeId);
+    q.bindValue(QStringLiteral(":pid"),newPid);
+    q.bindValue(QStringLiteral(":id"),nodeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -505,8 +531,8 @@ bool PCx_Tree::nodeExists(const QString &name, unsigned int typeId) const
     QSqlQuery q;
 
     q.prepare(QString("select count(*) from arbre_%1 where nom=:nom and type=:type").arg(treeId));
-    q.bindValue(":nom",name);
-    q.bindValue(":type",typeId);
+    q.bindValue(QStringLiteral(":nom"),name);
+    q.bindValue(QStringLiteral(":type"),typeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -534,8 +560,8 @@ int PCx_Tree::getNodeIdFromTypeAndNodeName(const QPair<QString, QString> &typeAn
     QSqlQuery q;
     QString nodeNameSpl=typeAndNodeName.second.simplified();
     q.prepare(QString("select id from arbre_%1 where nom=:nameId and type=:typeId").arg(treeId));
-    q.bindValue(":nameId",nodeNameSpl);
-    q.bindValue(":typeId",typeId);
+    q.bindValue(QStringLiteral(":nameId"),nodeNameSpl);
+    q.bindValue(QStringLiteral(":typeId"),typeId);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -558,7 +584,7 @@ QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
     }
     QSqlQuery q;
     q.prepare(QString("select type,nom from arbre_%1 where id=:id").arg(treeId));
-    q.bindValue(":id",node);
+    q.bindValue(QStringLiteral(":id"),node);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -571,15 +597,15 @@ QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
     {
         if(node>1)
         {
-            QString typeName=idTypeToName(q.value("type").toUInt());
+            QString typeName=idTypeToName(q.value(0).toUInt());
             typeNameAndNodeName.first=typeName;
-            typeNameAndNodeName.second=q.value("nom").toString();
+            typeNameAndNodeName.second=q.value(1).toString();
         }
         //Root does not has type
         else
         {
             typeNameAndNodeName.first=QString();
-            typeNameAndNodeName.second=q.value("nom").toString();
+            typeNameAndNodeName.second=q.value(1).toString();
         }
         return typeNameAndNodeName;
     }
@@ -600,7 +626,7 @@ QString PCx_Tree::getNodeName(unsigned int node) const
     }
     QSqlQuery q;
     q.prepare(QString("select type,nom from arbre_%1 where id=:id").arg(treeId));
-    q.bindValue(":id",node);
+    q.bindValue(QStringLiteral(":id"),node);
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -611,13 +637,13 @@ QString PCx_Tree::getNodeName(unsigned int node) const
     {
         if(node>1)
         {
-            QString typeName=idTypeToName(q.value("type").toUInt());
-            return QString("%1 %2").arg(typeName).arg(q.value("nom").toString());
+            QString typeName=idTypeToName(q.value(0).toUInt());
+            return QString("%1 %2").arg(typeName).arg(q.value(1).toString());
         }
         //Root does not has type
         else
         {
-            return q.value("nom").toString();
+            return q.value(1).toString();
         }
     }
     else
@@ -684,7 +710,7 @@ QString PCx_Tree::toDot() const
 {
     QList<unsigned int> nodes=getNodesId();
 
-    QString out="graph g{\nrankdir=LR;\n";
+    QString out=QStringLiteral("graph g{\nrankdir=LR;\n");
 
     foreach(unsigned int node,nodes)
     {
@@ -701,7 +727,7 @@ QString PCx_Tree::toDot() const
             out.append(QString("\t%1--%2;\n").arg(pid).arg(node));
         }
     }
-    out.append("}\n");
+    out.append(QStringLiteral("}\n"));
     return out;
 }
 
@@ -1074,19 +1100,28 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
         qFatal("Assertion failed");
     }
 
+    qsrand(time(NULL));
     unsigned int maxNumType=getListOfDefaultTypes().size();
 
+    QStringList usedFirstNames;
     QSqlDatabase::database().transaction();
+    int firstNameListSize=firstNameList.size();
     for(unsigned int i=1;i<nbNodes;i++)
     {
         QSqlQuery q;
         unsigned int type=(qrand()%maxNumType)+1;
         unsigned int pid=(qrand()%i)+1;
-        QString name=QUuid::createUuid().toString();
+        //QString name=QUuid::createUuid().toString();
+        QString name=firstNameList.at(qrand()%firstNameListSize);
+        while(usedFirstNames.contains(name))
+        {
+            name=firstNameList.at(qrand()%firstNameListSize);
+        }
+        usedFirstNames.append(name);
         q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(lastId));
-        q.bindValue(":nom",name);
-        q.bindValue(":pid",pid);
-        q.bindValue(":type",type);
+        q.bindValue(QStringLiteral(":nom"),name);
+        q.bindValue(QStringLiteral(":pid"),pid);
+        q.bindValue(QStringLiteral(":type"),type);
         q.exec();
 
         if(q.numRowsAffected()!=1)
@@ -1096,8 +1131,52 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
             die();
         }
     }
-    QSqlDatabase::database().commit();
 
+    //Reorder types
+
+    PCx_Tree tree(lastId);
+    QList<unsigned int>nodes;
+
+    bool changed;
+    do
+    {
+        nodes=tree.getNodesId();
+        changed=false;
+        foreach(unsigned int node, nodes)
+        {
+            if(node>1)
+            {
+                unsigned int type1=tree.getTypeId(node);
+                unsigned int pid=tree.getParentId(node);
+                unsigned int pidType=tree.getTypeId(pid);
+                if(pidType>type1)
+                {
+                    changed=true;
+                    QSqlQuery q;
+                    q.prepare(QString("update arbre_%1 set type=:type where id=:id").arg(lastId));
+                    q.bindValue(QStringLiteral(":type"),pidType);
+                    q.bindValue(QStringLiteral(":id"),node);
+                    q.exec();
+                    if(q.numRowsAffected()!=1)
+                    {
+                        qCritical()<<q.lastError();
+                        deleteTree(lastId);
+                        die();
+                    }
+                    q.bindValue(QStringLiteral(":type"),type1);
+                    q.bindValue(QStringLiteral(":id"),pid);
+                    q.exec();
+                    if(q.numRowsAffected()!=1)
+                    {
+                        qCritical()<<q.lastError();
+                        deleteTree(lastId);
+                        die();
+                    }
+                }
+            }
+        }
+    }while(changed==true);
+    QSqlDatabase::database().commit();
     return lastId;
 }
 

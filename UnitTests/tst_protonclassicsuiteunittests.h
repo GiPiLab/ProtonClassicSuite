@@ -37,6 +37,7 @@ private Q_SLOTS:
     void testCaseForPCATables();
     void testCaseForPCAGraphics();
     void testCaseForPCAQueries();
+    void benchmarkReport();
 
     void testCaseForReportingManagement();
     void testCaseForReportingNodes();

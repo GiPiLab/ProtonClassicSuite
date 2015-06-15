@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <QDebug>
 
+
 using namespace NUMBERSFORMAT;
 
 
@@ -50,10 +51,10 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        qint64 engages=q.value("engages").toLongLong();
-        qint64 disponibles=q.value("disponibles").toLongLong();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        qint64 engages=q.value(QStringLiteral("engages")).toLongLong();
+        qint64 disponibles=q.value(QStringLiteral("disponibles")).toLongLong();
 
         double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
 
@@ -71,7 +72,7 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
                       .arg(formatFixedPoint(disponibles)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
     }
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -105,10 +106,10 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
     bool doneFirstForRoot=false;
     while(q.next())
     {
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        ouvertsRoot.insert(q.value("annee").toUInt(),ouverts);
-        realisesRoot.insert(q.value("annee").toUInt(),realises);
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        ouvertsRoot.insert(q.value(QStringLiteral("annee")).toUInt(),ouverts);
+        realisesRoot.insert(q.value(QStringLiteral("annee")).toUInt(),realises);
         if(doneFirstForRoot==false)
         {
             firstYearOuvertsRoot=ouverts;
@@ -137,9 +138,9 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
         qint64 diffRootNodeOuverts=0,diffRootNodeRealises=0;
         qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
 
         if(doneFirstForNode==false)
         {
@@ -170,7 +171,7 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
 
         }
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -206,10 +207,10 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
     bool doneFirstForRoot=false;
     while(q.next())
     {
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        ouvertsRoot.insert(q.value("annee").toUInt(),ouverts);
-        realisesRoot.insert(q.value("annee").toUInt(),realises);
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        ouvertsRoot.insert(q.value(QStringLiteral("annee")).toUInt(),ouverts);
+        realisesRoot.insert(q.value(QStringLiteral("annee")).toUInt(),realises);
         if(doneFirstForRoot==false)
         {
             firstYearOuvertsRoot=ouverts;
@@ -238,9 +239,9 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
         qint64 diffRootNodeOuverts=0,diffRootNodeRealises=0;
         qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -275,7 +276,7 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
             diffFirstYearRootNodeRealises=diffRootNodeRealises;
         }
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -314,9 +315,9 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
     {
         qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -342,7 +343,7 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
 
         }
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -379,9 +380,9 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
     {
         qint64 diffCurrentYearFirstYearOuverts=0,diffCurrentYearFirstYearRealises=0;
 
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -411,7 +412,7 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
 
         }
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -441,8 +442,8 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        ouvertsRoot.insert(q.value("annee").toUInt(),q.value("ouverts").toLongLong());
-        realisesRoot.insert(q.value("annee").toUInt(),q.value("realises").toLongLong());
+        ouvertsRoot.insert(q.value(QStringLiteral("annee")).toUInt(),q.value(QStringLiteral("ouverts")).toLongLong());
+        realisesRoot.insert(q.value(QStringLiteral("annee")).toUInt(),q.value(QStringLiteral("realises")).toLongLong());
     }
 
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -457,9 +458,9 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        unsigned int annee=q.value("annee").toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
         if(annee==0)
         {
             qFatal("Assertion failed");
@@ -481,7 +482,7 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 
     }
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -518,11 +519,11 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
     bool doneFirstForRoot=false;
     while(q.next())
     {
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        qint64 engages=q.value("engages").toLongLong();
-        qint64 disponibles=q.value("disponibles").toLongLong();
-        unsigned int annee=q.value("annee").toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        qint64 engages=q.value(QStringLiteral("engages")).toLongLong();
+        qint64 disponibles=q.value(QStringLiteral("disponibles")).toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
         ouvertsRoot.insert(annee,ouverts);
         realisesRoot.insert(annee,realises);
         engagesRoot.insert(annee,engages);
@@ -557,11 +558,11 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
     {
         qint64 diffRootNodeOuverts=0,diffRootNodeRealises=0,diffRootNodeEngages=0,diffRootNodeDisponibles=0,diffRootNodeNC=0;
 
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        qint64 engages=q.value("engages").toLongLong();
-        qint64 disponibles=q.value("disponibles").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        qint64 engages=q.value(QStringLiteral("engages")).toLongLong();
+        qint64 disponibles=q.value(QStringLiteral("disponibles")).toLongLong();
         if(doneFirstForNode==false)
         {
             firstYearOuvertsNode=ouverts;
@@ -614,7 +615,7 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
                           .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
         }
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -653,11 +654,11 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        qint64 engages=q.value("engages").toLongLong();
-        qint64 disponibles=q.value("disponibles").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        qint64 engages=q.value(QStringLiteral("engages")).toLongLong();
+        qint64 disponibles=q.value(QStringLiteral("disponibles")).toLongLong();
         qint64 nc=engages+disponibles;
         if(doneFirstForNode==false)
         {
@@ -699,7 +700,7 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
                           .arg(formatDouble(percentDisponibles,0,true)));
         }
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -735,11 +736,11 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        qint64 engages=q.value("engages").toLongLong();
-        qint64 disponibles=q.value("disponibles").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        qint64 engages=q.value(QStringLiteral("engages")).toLongLong();
+        qint64 disponibles=q.value(QStringLiteral("disponibles")).toLongLong();
         double percentOuverts=0.0,percentRealises=0.0,percentEngages=0.0,percentDisponibles=0.0;
 
         if(realises!=0)
@@ -755,7 +756,7 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
                       .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true))
                       .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
     }
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -788,10 +789,10 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toLongLong();
-        sumRealises+=q.value("realises").toLongLong();
-        sumEngages+=q.value("engages").toLongLong();
-        sumDisponibles+=q.value("disponibles").toLongLong();
+        sumOuverts+=q.value(QStringLiteral("ouverts")).toLongLong();
+        sumRealises+=q.value(QStringLiteral("realises")).toLongLong();
+        sumEngages+=q.value(QStringLiteral("engages")).toLongLong();
+        sumDisponibles+=q.value(QStringLiteral("disponibles")).toLongLong();
     }
 
     double percentRealisesOuverts=0.0,percentEngagesOuverts=0.0,percentDisponiblesOuverts=0.0;
@@ -810,7 +811,7 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
                   .arg(formatDouble(percentRealisesOuverts,-1,true)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts,-1,true))
                   .arg(formatDouble(percentEngagesOuverts,-1,true)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -845,10 +846,10 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        sumOuverts+=q.value("ouverts").toLongLong();
-        sumRealises+=q.value("realises").toLongLong();
-        sumEngages+=q.value("engages").toLongLong();
-        sumDisponibles+=q.value("disponibles").toLongLong();
+        sumOuverts+=q.value(QStringLiteral("ouverts")).toLongLong();
+        sumRealises+=q.value(QStringLiteral("realises")).toLongLong();
+        sumEngages+=q.value(QStringLiteral("engages")).toLongLong();
+        sumDisponibles+=q.value(QStringLiteral("disponibles")).toLongLong();
     }
     if(sumRealises!=0)
     {
@@ -864,7 +865,7 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
                           "<tr><td class='t9annee'><i>dont disponible</i></td><td class='t9pourcent' align='right' valign='middle'><i>%4 jours</i></td></tr>")
                   .arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentNC,0,true))
                   .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -900,42 +901,42 @@ QString PCx_Tables::getPCAT10(unsigned int node) const
 
     while(q.next())
     {
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 diff_ouverts=q.value("diff_ouverts").toLongLong();
-        qint64 diff_realises=q.value("diff_realises").toLongLong();
-        qint64 diff_engages=q.value("diff_engages").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 diff_ouverts=q.value(QStringLiteral("diff_ouverts")).toLongLong();
+        qint64 diff_realises=q.value(QStringLiteral("diff_realises")).toLongLong();
+        qint64 diff_engages=q.value(QStringLiteral("diff_engages")).toLongLong();
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
         if(diff_ouverts==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_ouverts>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
         if(diff_realises==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_realises>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
         if(diff_engages==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_engages>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
     }
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -970,42 +971,42 @@ QString PCx_Tables::getPCAT11(unsigned int node) const
 
     while(q.next())
     {
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 diff_ouverts=q.value("diff_ouverts").toLongLong();
-        qint64 diff_realises=q.value("diff_realises").toLongLong();
-        qint64 diff_engages=q.value("diff_engages").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 diff_ouverts=q.value(QStringLiteral("diff_ouverts")).toLongLong();
+        qint64 diff_realises=q.value(QStringLiteral("diff_realises")).toLongLong();
+        qint64 diff_engages=q.value(QStringLiteral("diff_engages")).toLongLong();
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
         if(diff_ouverts==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_ouverts>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
         if(diff_realises==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_realises>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
         if(diff_engages==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_engages>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
     }
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -1045,42 +1046,42 @@ QString PCx_Tables::getPCAT12(unsigned int node) const
 
     while(q.next())
     {
-        unsigned int annee=q.value("annee").toUInt();
-        qint64 diff_ouverts=q.value("diff_ouverts").toLongLong();
-        qint64 diff_realises=q.value("diff_realises").toLongLong();
-        qint64 diff_engages=q.value("diff_engages").toLongLong();
+        unsigned int annee=q.value(QStringLiteral("annee")).toUInt();
+        qint64 diff_ouverts=q.value(QStringLiteral("diff_ouverts")).toLongLong();
+        qint64 diff_realises=q.value(QStringLiteral("diff_realises")).toLongLong();
+        qint64 diff_engages=q.value(QStringLiteral("diff_engages")).toLongLong();
 
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>").arg(annee));
         if(diff_ouverts==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_ouverts>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
         if(diff_realises==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_realises>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
         if(diff_engages==0)
-            output.append("<span style='color:black'>");
+            output.append(QStringLiteral("<span style='color:black'>"));
         else if(diff_engages>0)
-            output.append("<span style='color:#008000'>");
+            output.append(QStringLiteral("<span style='color:#008000'>"));
         else
-            output.append("<span style='color:#7c0000'>");
+            output.append(QStringLiteral("<span style='color:#7c0000'>"));
 
         output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
     }
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 
@@ -1104,7 +1105,7 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
             .arg(NUMBERSFORMAT::formatFixedPoint(nodeVal))
             .arg(node!=1?"représentant : ":"");
 
-    out.append("<ul>");
+    out.append(QStringLiteral("<ul>"));
     unsigned int pid;
     unsigned int tmpNode=node;
 
@@ -1120,7 +1121,7 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
         }
         tmpNode=pid;
     }
-    out.append("</ul>");
+    out.append(QStringLiteral("</ul>"));
 
     return out;
 }
@@ -1220,7 +1221,7 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
 
         qint64 sum=ocdm+vcdm+vInt;
 
-        QString out=QString("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Variation en \% du BP</th></tr>");
+        QString out=QStringLiteral("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Variation en \% du BP</th></tr>");
 
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
@@ -1286,11 +1287,11 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
 
         //First table
-        QString outGlob="<table align='center' cellspacing='5'><tr><td>";
+        QString outGlob(QLatin1String("<table align='center' cellspacing='5'><tr><td>"));
 
-        QString out=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
+        QString out("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
 
-        out.append("<tr><td colspan='3' class='t1annee'>UTILISÉ</td></tr>");
+        out.append(QStringLiteral("<tr><td colspan='3' class='t1annee'>UTILISÉ</td></tr>"));
 
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(realises))
@@ -1307,11 +1308,11 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
                 .arg(NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
 
         outGlob.append(out);
-        outGlob.append("</td><td>");
+        outGlob.append(QStringLiteral("</td><td>"));
 
 
 
-        QString out2=QString("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
+        QString out2("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
         out2.append(QString("<tr><td class='t1annee'>UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(utilise))
                 .arg(NUMBERSFORMAT::formatDouble(percentUtilise,-1,true)));
@@ -1324,14 +1325,14 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
         //out2.append("<tr><td colspan='3'>&nbsp;</td></tr>");
 
 
-        out2.append("<tr><td colspan='3' class='t1annee'>NON&nbsp;UTILISÉ</td></tr>");
+        out2.append(QStringLiteral("<tr><td colspan='3' class='t1annee'>NON&nbsp;UTILISÉ</td></tr>"));
 
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
                 .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
                 .arg(NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
 
         outGlob.append(out2);
-        outGlob.append("</td></tr></table>");
+        outGlob.append(QStringLiteral("</td></tr></table>"));
 
         return outGlob;
     }
@@ -1488,8 +1489,8 @@ QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const
                        .arg(laDate.toString(Qt::DefaultLocaleShortDate))
                        .arg(NUMBERSFORMAT::formatDouble((journReal*365-ouverts)/ouverts*100)));
 
-            out.append("<p>Le taux d'écart signale, s'il est négatif, un cycle à venir, s'il est positif, un cycle en cours ou passé."
-                       " En l'absence de cycle, le taux d'écart anticipe, s'il est positif, une insuffisance de crédits, s'il est négatif un excédent de crédits.</p>");
+            out.append(QStringLiteral("<p>Le taux d'écart signale, s'il est négatif, un cycle à venir, s'il est positif, un cycle en cours ou passé."
+                       " En l'absence de cycle, le taux d'écart anticipe, s'il est positif, une insuffisance de crédits, s'il est négatif un excédent de crédits.</p>"));
         }
 
         return out;
@@ -1536,7 +1537,7 @@ QString PCx_Tables::getPCAPresetResults(unsigned int node) const
 
 QString PCx_Tables::getCSS()
 {
-    return "\ntable{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
+    return QStringLiteral("\ntable{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
     "\ntd.t1annee,td.t3annee{background-color:#b3b3b3;}"
     "\ntd.t1pourcent{background-color:#b3b3b3;color:#FFF;}"
     "\ntd.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee{background-color:#e6e6e6;}"
@@ -1554,7 +1555,7 @@ QString PCx_Tables::getCSS()
     "\ntr.t2entete,td.t8annee{background-color:#b3b3b3;color:green;text-align:center;}"
     "\ntr.t4entete,tr.t5entete,tr.t7entete,tr.t9entete{background-color:#e6e6e6;text-align:center;}"
     "\ntr.t6entete{background-color:#e6e6e6;color:green;text-align:center;}"
-           "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n";
+           "\ntr.t8entete{background-color:#e6e6e6;text-align:center;color:green;}\n");
 }
 
 QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
@@ -1585,17 +1586,17 @@ QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
 
     while(q.next())
     {
-        qint64 ouverts=q.value("ouverts").toLongLong();
-        qint64 realises=q.value("realises").toLongLong();
-        qint64 engages=q.value("engages").toLongLong();
-        qint64 disponibles=q.value("disponibles").toLongLong();
+        qint64 ouverts=q.value(QStringLiteral("ouverts")).toLongLong();
+        qint64 realises=q.value(QStringLiteral("realises")).toLongLong();
+        qint64 engages=q.value(QStringLiteral("engages")).toLongLong();
+        qint64 disponibles=q.value(QStringLiteral("disponibles")).toLongLong();
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
                               "<td align='right' class='t1valeur'>%4</td><td align='right' class='t1valeur'>%5</td></tr>").arg(q.value("annee").toUInt())
                       .arg(formatFixedPoint(ouverts)).arg(formatFixedPoint(realises)).arg(formatFixedPoint(engages)).arg(formatFixedPoint(disponibles)));
     }
 
-    output.append("</table>");
+    output.append(QStringLiteral("</table>"));
     return output;
 }
 

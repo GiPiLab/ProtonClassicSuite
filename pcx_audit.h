@@ -237,8 +237,9 @@ public:
     /**
      * @brief fillWithRandomData fills an audit with random data
      * @param mode the mode to fill. All previous data will be erased
+     * @param progressBar displays a progress dialog
      */
-    void fillWithRandomData(MODES::DFRFDIRI mode);
+    void fillWithRandomData(MODES::DFRFDIRI mode, bool progressBar=true);
 
     /**
      * @brief getCSS gets the css to display an audit in HTML

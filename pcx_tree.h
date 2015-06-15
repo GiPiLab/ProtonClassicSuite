@@ -30,7 +30,7 @@ public:
     /**
      * @brief MAXNODES is the maximum allowed number of nodes for a tree
      */
-    static const int MAXNODES=1700;
+    static const int MAXNODES=1500;
 
     /**
      * @brief MAXNODENAMELENGTH is the maximum allowed length of a node or type name
@@ -413,6 +413,8 @@ public:
      * @param newPid the new parent identifier
      */
     void updateNodePid(unsigned int nodeId, unsigned int newPid);
+
+    static QStringList firstNameList;
 
 
 protected:

@@ -56,14 +56,14 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
     if(!parent.isValid())
     {
-        qDebug()<<"Dropping outside of the root";
+       // qDebug()<<"Dropping outside of the root";
         return false;
     }
 
     unsigned int dropId;
 
     dropId=parent.data(PCx_TreeModel::NodeIdUserRole).toUInt();
-    qDebug()<<"DROPID="<<dropId;
+   // qDebug()<<"DROPID="<<dropId;
 
     QStandardItemModel tmpModel;
     tmpModel.dropMimeData(data,Qt::CopyAction,0,0,QModelIndex());

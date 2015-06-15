@@ -17,6 +17,8 @@
 
 #include <graphviz/gvc.h>
 
+
+
 void die(int retcode)
 {
     QSqlDatabase::database().rollback();
