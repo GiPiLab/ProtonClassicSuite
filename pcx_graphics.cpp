@@ -485,7 +485,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     plot->xAxis->setTickVectorLabels(labels);
     plot->xAxis->setSubTickCount(0);
     plot->xAxis->setRange(0,tickCounter);
-    plot->yAxis->setRange(0,150);
+    plot->yAxis->setRange(0,160);
 
     plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
     return plotTitle;

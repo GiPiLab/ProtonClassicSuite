@@ -124,7 +124,8 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
         return false;
 
     QStandardItem *item=this->itemFromIndex(nodeIndex);
-    item->setText(QString("%1 %2").arg(idTypeToName(newType)).arg(newName));
+    //item->setText(QString("%1 %2").arg(idTypeToName(newType)).arg(newName));
+    item->setText(getNodeName(nodeId));
     item->setData(newType,PCx_TreeModel::TypeIdUserRole);
 
     return true;
