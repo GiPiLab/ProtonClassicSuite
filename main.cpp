@@ -16,6 +16,12 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     QString message=QString("%1 (%2:%3)\n").arg(msg).arg(context.file).arg(context.line);
 
     switch (type) {
+
+    case QtInfoMsg:
+        message.prepend("[I]");
+        std::cerr<<qPrintable(message);
+        break;
+
     case QtDebugMsg:
         message.prepend("[D]");
         std::cerr<<qPrintable(message);

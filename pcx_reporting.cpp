@@ -461,7 +461,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
          xlsx.read(1,7).isValid() && xlsx.read(1,8).isValid() &&
          xlsx.read(1,9).isValid() && xlsx.read(1,10).isValid() &&
          xlsx.read(1,11).isValid() && xlsx.read(1,12).isValid() &&
-         xlsx.read(1,13).isValid()))
+         xlsx.read(1,13).isValid() && xlsx.read(1,14).isValid()))
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
         return false;
@@ -487,31 +487,32 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
     do
     {
-        QVariant nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
-        nodeType=xlsx.read(row,1);
-        nodeName=xlsx.read(row,2);
+        QVariant cellNodeId,nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
+        cellNodeId=xlsx.read(row,1);
+        nodeType=xlsx.read(row,2);
+        nodeName=xlsx.read(row,3);
         //Do not use read for date, always assume "1900" mode to ensure libreoffice compatibility
-        if(xlsx.read(row,3).isNull())
+        if(xlsx.read(row,4).isNull())
         {
             QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, spécifiez une date").arg(row));
             return false;
         }
-        date=xlsx.cellAt(row,3)->value();
-        bp=xlsx.read(row,4);
-        reports=xlsx.read(row,5);
-        ocdm=xlsx.read(row,6);
-        vcdm=xlsx.read(row,7);
-        budgetvote=xlsx.read(row,8);
-        vcinternes=xlsx.read(row,9);
-        ouverts=xlsx.read(row,10);
-        realises=xlsx.read(row,11);
-        engages=xlsx.read(row,12);
-        rattachesnmoins1=xlsx.read(row,13);
+        date=xlsx.cellAt(row,4)->value();
+        bp=xlsx.read(row,5);
+        reports=xlsx.read(row,6);
+        ocdm=xlsx.read(row,7);
+        vcdm=xlsx.read(row,8);
+        budgetvote=xlsx.read(row,9);
+        vcinternes=xlsx.read(row,10);
+        ouverts=xlsx.read(row,11);
+        realises=xlsx.read(row,12);
+        engages=xlsx.read(row,13);
+        rattachesnmoins1=xlsx.read(row,14);
 
 
-        if(!(nodeType.isValid() && nodeName.isValid() && date.isValid()))
+        if(!(cellNodeId.isValid() && nodeType.isValid() && nodeName.isValid() && date.isValid()))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez le type et le nom du noeud ainsi que la date d'application").arg(row));
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez l'identifiant, le type et le nom du noeud ainsi que la date d'application").arg(row));
             return false;
         }
 
@@ -565,11 +566,16 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
             return false;
         }
 
-        int nodeId;
-        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
-        if(nodeId<=0)
+        unsigned int nodeId=cellNodeId.toUInt();
+        if(nodeId==0)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Noeud introuvable ligne %1").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 est invalide").arg(row));
+            return false;
+        }
+        //nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
+        if(!getAttachedTree()->checkIdToTypeAndName(nodeId,typeAndNode.first,typeAndNode.second))
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 ne correspond pas aux type et nom indiqués sur la même ligne").arg(row));
             return false;
         }
 
@@ -608,29 +614,32 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
     do
     {
-        QVariant nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
-        nodeType=xlsx.read(row,1);
-        nodeName=xlsx.read(row,2);
+        QVariant cellNodeId,nodeType,nodeName,date,ouverts,realises,engages,bp,reports,ocdm,vcdm,budgetvote,vcinternes,rattachesnmoins1;
+        cellNodeId=xlsx.read(row,1);
+        nodeType=xlsx.read(row,2);
+        nodeName=xlsx.read(row,3);
         //Do not use read for date, always assume "1900" mode to ensure libreoffice compatibility
-        date=xlsx.cellAt(row,3)->value();
-        bp=xlsx.read(row,4);
-        reports=xlsx.read(row,5);
-        ocdm=xlsx.read(row,6);
-        vcdm=xlsx.read(row,7);
-        budgetvote=xlsx.read(row,8);
-        vcinternes=xlsx.read(row,9);
-        ouverts=xlsx.read(row,10);
-        realises=xlsx.read(row,11);
-        engages=xlsx.read(row,12);
-        rattachesnmoins1=xlsx.read(row,13);
+        date=xlsx.cellAt(row,4)->value();
+        bp=xlsx.read(row,5);
+        reports=xlsx.read(row,6);
+        ocdm=xlsx.read(row,7);
+        vcdm=xlsx.read(row,8);
+        budgetvote=xlsx.read(row,9);
+        vcinternes=xlsx.read(row,10);
+        ouverts=xlsx.read(row,11);
+        realises=xlsx.read(row,12);
+        engages=xlsx.read(row,13);
+        rattachesnmoins1=xlsx.read(row,14);
 
         QDate laDate=QXlsx::datetimeFromNumber(date.toDouble()).date();
 
-        QPair<QString,QString> typeAndNode;
-        typeAndNode.first=nodeType.toString().simplified();
-        typeAndNode.second=nodeName.toString().simplified();
-        int nodeId;
-        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
+        unsigned int nodeId=cellNodeId.toUInt();
+        if(nodeId==0)
+        {
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 est invalide").arg(row));
+            return false;
+        }
+
 
         QMap<PCx_Reporting::OREDPCR,double> vals;
         if(ouverts.isValid())
@@ -714,26 +723,28 @@ bool PCx_Reporting::exportLeavesSkeleton(const QString &fileName) const
 {
     QXlsx::Document xlsx;
     QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
-    xlsx.write(1,1,"Type noeud");
-    xlsx.write(1,2,"Nom noeud");
-    xlsx.write(1,3,"Date");
-    xlsx.write(1,4,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP));
-    xlsx.write(1,5,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS));
-    xlsx.write(1,6,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM));
-    xlsx.write(1,7,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM));
-    xlsx.write(1,8,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BUDGETVOTE));
-    xlsx.write(1,9,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES));
-    xlsx.write(1,10,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OUVERTS));
-    xlsx.write(1,11,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REALISES));
-    xlsx.write(1,12,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::ENGAGES));
-    xlsx.write(1,13,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::RATTACHENMOINS1));
+    xlsx.write(1,1,"Identifiant noeud");
+    xlsx.write(1,2,"Type noeud");
+    xlsx.write(1,3,"Nom noeud");
+    xlsx.write(1,4,"Date");
+    xlsx.write(1,5,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP));
+    xlsx.write(1,6,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS));
+    xlsx.write(1,7,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM));
+    xlsx.write(1,8,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM));
+    xlsx.write(1,9,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BUDGETVOTE));
+    xlsx.write(1,10,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES));
+    xlsx.write(1,11,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OUVERTS));
+    xlsx.write(1,12,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REALISES));
+    xlsx.write(1,13,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::ENGAGES));
+    xlsx.write(1,14,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::RATTACHENMOINS1));
 
     int row=2;
     foreach(unsigned int leaf, leavesId)
     {
         QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leaf);
-        xlsx.write(row,1,typeAndNodeName.first);
-        xlsx.write(row,2,typeAndNodeName.second);
+        xlsx.write(row,1,leaf);
+        xlsx.write(row,2,typeAndNodeName.first);
+        xlsx.write(row,3,typeAndNodeName.second);
         //        xlsx.write(row,3,QDate(2002,05,13));
         row++;
     }
@@ -1055,19 +1066,20 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & f
 {
     QXlsx::Document xlsx;
     QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
-    xlsx.write(1,1,"Type noeud");
-    xlsx.write(1,2,"Nom noeud");
-    xlsx.write(1,3,"Date");
-    xlsx.write(1,4,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP));
-    xlsx.write(1,5,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS));
-    xlsx.write(1,6,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM));
-    xlsx.write(1,7,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM));
-    xlsx.write(1,8,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BUDGETVOTE));
-    xlsx.write(1,9,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES));
-    xlsx.write(1,10,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OUVERTS));
-    xlsx.write(1,11,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REALISES));
-    xlsx.write(1,12,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::ENGAGES));
-    xlsx.write(1,13,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::RATTACHENMOINS1));
+    xlsx.write(1,1,"Identifiant noeud");
+    xlsx.write(1,2,"Type noeud");
+    xlsx.write(1,3,"Nom noeud");
+    xlsx.write(1,4,"Date");
+    xlsx.write(1,5,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP));
+    xlsx.write(1,6,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS));
+    xlsx.write(1,7,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM));
+    xlsx.write(1,8,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM));
+    xlsx.write(1,9,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BUDGETVOTE));
+    xlsx.write(1,10,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES));
+    xlsx.write(1,11,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OUVERTS));
+    xlsx.write(1,12,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REALISES));
+    xlsx.write(1,13,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::ENGAGES));
+    xlsx.write(1,14,PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::RATTACHENMOINS1));
 
     QSqlQuery q;
     int row=2;
@@ -1096,54 +1108,55 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & f
             QVariant valVCInternes=q.value("vcinterne");
             QVariant valRattaches=q.value("rattachenmoins1");
 
-            xlsx.write(row,1,typeAndNodeName.first);
-            xlsx.write(row,2,typeAndNodeName.second);
-            xlsx.write(row,3,QDateTime::fromTime_t(q.value("date").toUInt()).date());
+            xlsx.write(row,1,leafId);
+            xlsx.write(row,2,typeAndNodeName.first);
+            xlsx.write(row,3,typeAndNodeName.second);
+            xlsx.write(row,4,QDateTime::fromTime_t(q.value("date").toUInt()).date());
 
             if(!valBp.isNull())
             {
-                xlsx.write(row,4,fixedPointToDouble(valBp.toLongLong()));
+                xlsx.write(row,5,fixedPointToDouble(valBp.toLongLong()));
             }
             if(!valReports.isNull())
             {
-                xlsx.write(row,5,fixedPointToDouble(valReports.toLongLong()));
+                xlsx.write(row,6,fixedPointToDouble(valReports.toLongLong()));
             }
             if(!valOCDM.isNull())
             {
-                xlsx.write(row,6,fixedPointToDouble(valOCDM.toLongLong()));
+                xlsx.write(row,7,fixedPointToDouble(valOCDM.toLongLong()));
             }
             if(!valVCDM.isNull())
             {
-                xlsx.write(row,7,fixedPointToDouble(valVCDM.toLongLong()));
+                xlsx.write(row,8,fixedPointToDouble(valVCDM.toLongLong()));
             }
             if(!valBudgetVote.isNull())
             {
-                xlsx.write(row,8,fixedPointToDouble(valBudgetVote.toLongLong()));
+                xlsx.write(row,9,fixedPointToDouble(valBudgetVote.toLongLong()));
             }
             if(!valVCInternes.isNull())
             {
-                xlsx.write(row,9,fixedPointToDouble(valVCInternes.toLongLong()));
+                xlsx.write(row,10,fixedPointToDouble(valVCInternes.toLongLong()));
             }
 
             if(!valOuverts.isNull())
             {
-                xlsx.write(row,10,fixedPointToDouble(valOuverts.toLongLong()));
+                xlsx.write(row,11,fixedPointToDouble(valOuverts.toLongLong()));
             }
 
             if(!valRealises.isNull())
             {
-                xlsx.write(row,11,fixedPointToDouble(valRealises.toLongLong()));
+                xlsx.write(row,12,fixedPointToDouble(valRealises.toLongLong()));
             }
 
             if(!valEngages.isNull())
             {
-                xlsx.write(row,12,fixedPointToDouble(valEngages.toLongLong()));
+                xlsx.write(row,13,fixedPointToDouble(valEngages.toLongLong()));
             }
 
 
             if(!valRattaches.isNull())
             {
-                xlsx.write(row,13,fixedPointToDouble(valRattaches.toLongLong()));
+                xlsx.write(row,14,fixedPointToDouble(valRattaches.toLongLong()));
             }
 
             row++;

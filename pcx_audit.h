@@ -220,13 +220,14 @@ public:
     /**
      * @brief exportLeavesDataXLSX exports leaf data in an XSLX file
      *
-     * The file will contains data in 6 columns, each row represents a leaf and a year:
-     * COLUMN 1 is the type name of the leaf
-     * COLUMN 2 is the name of the leaf
-     * COLUMN 3 is the year
-     * COLUMN 4 is the OUVERTS value, in double
-     * COLUMN 5 is the REALISES value, in double
-     * COLUMN 6 is the ENGAGES value, in double
+     * The file will contains data in 7 columns, each row represents a leaf and a year:
+     * COLUMN 1 is the leaf identifier
+     * COLUMN 2 is the type name of the leaf
+     * COLUMN 3 is the name of the leaf
+     * COLUMN 4 is the year
+     * COLUMN 5 is the OUVERTS value, in double
+     * COLUMN 6 is the REALISES value, in double
+     * COLUMN 7 is the ENGAGES value, in double
      *
      * @param mode the mode to export
      * @param fileName the name of the file were data will be saved

@@ -77,9 +77,10 @@ public:
      * @param pid the ID of the parent node (PID)
      * @param type the ID of the type for the node to insert
      * @param name the name of the node to insert
+     * @param forcedNodeId the ID of the node to insert
      * @return the ID of the inserted node, or 0 if the node exists
      */
-    unsigned int addNode(unsigned int pid, unsigned int type, const QString &name);
+    unsigned int addNode(unsigned int pid, unsigned int type, const QString &name,unsigned int forcedNodeId=0);
 
     /**
      * @brief getTypeId gets the type identifier of the node
@@ -415,6 +416,16 @@ public:
     void updateNodePid(unsigned int nodeId, unsigned int newPid);
 
     static QStringList firstNameList;
+
+
+    /**
+     * @brief checkIdToTypeAndName check if the node ID has the type name and node name (useful for error checking in data import)
+     * @param id the node ID to examine
+     * @param typeName the expected type name of the node
+     * @param nodeName the expected node name
+     * @return true if it matches, false otherwise
+     */
+    bool checkIdToTypeAndName(unsigned int id, const QString &typeName, const QString &nodeName) const;
 
 
 protected:

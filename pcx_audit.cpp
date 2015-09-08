@@ -772,7 +772,7 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
 
     if(!(xlsx.read(1,1).isValid() && xlsx.read(1,2).isValid() &&
          xlsx.read(1,3).isValid() && xlsx.read(1,4).isValid() &&
-         xlsx.read(1,5).isValid() && xlsx.read(1,6).isValid()))
+         xlsx.read(1,5).isValid() && xlsx.read(1,6).isValid() && xlsx.read(1,7).isValid()))
     {
         QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier pré-rempli à l'aide du bouton exporter dans la fenêtre de saisie des données."));
         return false;
@@ -798,17 +798,18 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
 
     do
     {
-        QVariant nodeType,nodeName,year,ouverts,realises,engages;
-        nodeType=xlsx.read(row,1);
-        nodeName=xlsx.read(row,2);
-        year=xlsx.read(row,3);
-        ouverts=xlsx.read(row,4);
-        realises=xlsx.read(row,5);
-        engages=xlsx.read(row,6);
+        QVariant cellNodeId,nodeType,nodeName,year,ouverts,realises,engages;
+        cellNodeId=xlsx.read(row,1);
+        nodeType=xlsx.read(row,2);
+        nodeName=xlsx.read(row,3);
+        year=xlsx.read(row,4);
+        ouverts=xlsx.read(row,5);
+        realises=xlsx.read(row,6);
+        engages=xlsx.read(row,7);
 
-        if(!(nodeType.isValid() && nodeName.isValid() && year.isValid()))
+        if(!(cellNodeId.isValid() && nodeType.isValid() && nodeName.isValid() && year.isValid()))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez le type et le nom du noeud ainsi que l'année d'application").arg(row));
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez l'identifiant, le type et le nom du noeud ainsi que l'année d'application").arg(row));
             return false;
         }
 
@@ -856,11 +857,16 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
             return false;
         }
 
-        int nodeId;
-        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
-        if(nodeId<=0)
+        unsigned int nodeId=cellNodeId.toUInt();
+        if(nodeId==0)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Noeud introuvable ligne %1").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 est invalide").arg(row));
+            return false;
+        }
+        //nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
+        if(!getAttachedTree()->checkIdToTypeAndName(nodeId,typeAndNode.first,typeAndNode.second))
+        {
+            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 ne correspond pas aux type et nom indiqués sur la même ligne").arg(row));
             return false;
         }
 
@@ -904,20 +910,21 @@ bool PCx_Audit::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI mode
 
     do
     {
-        QVariant nodeType,nodeName,year,ouverts,realises,engages;
-        nodeType=xlsx.read(row,1);
-        nodeName=xlsx.read(row,2);
-        year=xlsx.read(row,3);
-        ouverts=xlsx.read(row,4);
-        realises=xlsx.read(row,5);
-        engages=xlsx.read(row,6);
+        QVariant cellNodeId,nodeType,nodeName,year,ouverts,realises,engages;
+        cellNodeId=xlsx.read(row,1);
+        nodeType=xlsx.read(row,2);
+        nodeName=xlsx.read(row,3);
+        year=xlsx.read(row,4);
+        ouverts=xlsx.read(row,5);
+        realises=xlsx.read(row,6);
+        engages=xlsx.read(row,7);
 
         //Here year and node are found and correct
         QPair<QString,QString> typeAndNode;
         typeAndNode.first=nodeType.toString().simplified();
         typeAndNode.second=nodeName.toString().simplified();
-        int nodeId;
-        nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
+        unsigned int nodeId;
+        nodeId=cellNodeId.toUInt();
 
         QMap<PCx_Audit::ORED,double> vals;
         if(ouverts.isValid())
@@ -965,12 +972,13 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileN
 {
     QXlsx::Document xlsx;
     QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
-    xlsx.write(1,1,"Type noeud");
-    xlsx.write(1,2,"Nom noeud");
-    xlsx.write(1,3,"Année");
-    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true));
-    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true));
-    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true));
+    xlsx.write(1,1,"Identifiant noeud");
+    xlsx.write(1,2,"Type noeud");
+    xlsx.write(1,3,"Nom noeud");
+    xlsx.write(1,4,"Année");
+    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS,true));
+    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true));
+    xlsx.write(1,7,PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES,true));
 
     QSqlQuery q;
     int row=2;
@@ -992,24 +1000,25 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString & fileN
                 QVariant valRealises=q.value("realises");
                 QVariant valEngages=q.value("engages");
 
-                xlsx.write(row,1,typeAndNodeName.first);
-                xlsx.write(row,2,typeAndNodeName.second);
-                xlsx.write(row,3,q.value("annee").toUInt());
+                xlsx.write(row,1,leafId);
+                xlsx.write(row,2,typeAndNodeName.first);
+                xlsx.write(row,3,typeAndNodeName.second);
+                xlsx.write(row,4,q.value("annee").toUInt());
 
                 if(!valOuverts.isNull())
                 {
                     //QString vOuverts=formatDouble((double)valOuverts.toLongLong()/FIXEDPOINTCOEFF,2,true);
-                    xlsx.write(row,4,fixedPointToDouble(valOuverts.toLongLong()));
+                    xlsx.write(row,5,fixedPointToDouble(valOuverts.toLongLong()));
                 }
 
                 if(!valRealises.isNull())
                 {
-                    xlsx.write(row,5,fixedPointToDouble(valRealises.toLongLong()));
+                    xlsx.write(row,6,fixedPointToDouble(valRealises.toLongLong()));
                 }
 
                 if(!valEngages.isNull())
                 {
-                    xlsx.write(row,6,fixedPointToDouble(valEngages.toLongLong()));
+                    xlsx.write(row,7,fixedPointToDouble(valEngages.toLongLong()));
                 }
                 row++;
             }
@@ -1651,12 +1660,13 @@ bool PCx_Audit::exportLeavesSkeleton(const QString &fileName) const
 {
     QXlsx::Document xlsx;
     QList<unsigned int> leavesId=getAttachedTree()->getLeavesId();
-    xlsx.write(1,1,"Type noeud");
-    xlsx.write(1,2,"Nom noeud");
-    xlsx.write(1,3,"Année");
-    xlsx.write(1,4,PCx_Audit::OREDtoCompleteString(ORED::OUVERTS,true));
-    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(ORED::REALISES,true));
-    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(ORED::ENGAGES,true));
+    xlsx.write(1,1,"Identifiant noeud");
+    xlsx.write(1,2,"Type noeud");
+    xlsx.write(1,3,"Nom noeud");
+    xlsx.write(1,4,"Année");
+    xlsx.write(1,5,PCx_Audit::OREDtoCompleteString(ORED::OUVERTS,true));
+    xlsx.write(1,6,PCx_Audit::OREDtoCompleteString(ORED::REALISES,true));
+    xlsx.write(1,7,PCx_Audit::OREDtoCompleteString(ORED::ENGAGES,true));
 
     int row=2;
     foreach(unsigned int year, years)
@@ -1664,12 +1674,13 @@ bool PCx_Audit::exportLeavesSkeleton(const QString &fileName) const
         foreach(unsigned int leaf, leavesId)
         {
             QPair<QString,QString> typeAndNodeName=getAttachedTree()->getTypeNameAndNodeName(leaf);
-            xlsx.write(row,1,typeAndNodeName.first);
-            xlsx.write(row,2,typeAndNodeName.second);
-            xlsx.write(row,3,year);
-            xlsx.write(row,4,0);
+            xlsx.write(row,1,leaf);
+            xlsx.write(row,2,typeAndNodeName.first);
+            xlsx.write(row,3,typeAndNodeName.second);
+            xlsx.write(row,4,year);
             xlsx.write(row,5,0);
             xlsx.write(row,6,0);
+            xlsx.write(row,7,0);
             row++;
         }
     }

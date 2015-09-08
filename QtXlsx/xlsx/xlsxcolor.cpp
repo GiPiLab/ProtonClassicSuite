@@ -139,22 +139,22 @@ QString XlsxColor::toARGBString(const QColor &c)
 QDataStream &operator<<(QDataStream &s, const XlsxColor &color)
 {
     if (color.isInvalid())
-        s<<0;
+        s<<QVariant::fromValue(0);
     else if (color.isRgbColor())
-        s<<1<<color.rgbColor();
+        s<<QVariant::fromValue(1)<<color.rgbColor();
     else if (color.isIndexedColor())
-        s<<2<<color.indexedColor();
+        s<<QVariant::fromValue(2)<<QVariant::fromValue(color.indexedColor());
     else if (color.isThemeColor())
-        s<<3<<color.themeColor();
+        s<<QVariant::fromValue(3)<<color.themeColor();
     else
-        s<<4;
+        s<<QVariant::fromValue(4);
 
     return s;
 }
 
 QDataStream &operator>>(QDataStream &s, XlsxColor &color)
 {
-    int marker(4);
+    QVariant marker(4);
     s>>marker;
     if (marker == 0) {
         color = XlsxColor();
@@ -163,13 +163,15 @@ QDataStream &operator>>(QDataStream &s, XlsxColor &color)
         s>>c;
         color = XlsxColor(c);
     } else if (marker == 2) {
-        int indexed;
+        QVariant indexed;
         s>>indexed;
-        color = XlsxColor(indexed);
+        color = XlsxColor(indexed.toInt());
     } else if (marker == 3) {
         QStringList list;
-        s>>list;
-        color = XlsxColor(list[0], list[1]);
+        //HACK TO COMPILE
+        //s>>list;
+        //color = XlsxColor(list[0], list[1]);
+        color = XlsxColor("","");
     }
 
     return s;

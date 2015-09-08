@@ -257,11 +257,12 @@ void FormEditTree::on_addNodeButton_clicked()
 
         if(ok)
         {
-            if(model->nodeExists(text,selectedTypeId))
+            //NOTE : allow duplicates
+            /*if(model->nodeExists(text,selectedTypeId))
             {
                 QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type avec ce nom !"));
                 goto redo;
-            }
+            }*/
             if(text.size()>PCx_Tree::MAXNODENAMELENGTH)
             {
                 QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
@@ -326,11 +327,13 @@ void FormEditTree::on_modifyNodeButton_clicked()
         {
             if(selectedTypeId!=oldTypeId || text!=typeAndNodeName.second)
             {
+                //NOTE : allow duplicates
+                /*
                 if(model->nodeExists(text,selectedTypeId))
                 {
                     QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type portant ce nom dans l'arbre !"));
                     goto redo;
-                }
+                }*/
                 if(text.size()>MAXOBJECTNAMELENGTH)
                 {
                     QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));

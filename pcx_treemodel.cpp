@@ -33,7 +33,7 @@ unsigned int PCx_TreeModel::addNode(unsigned int typeId, const QString &name, co
     if(pidNodeIndex.isValid() && newId>0)
     {
         QStandardItem *pidItem=this->itemFromIndex(pidNodeIndex);
-        QStandardItem *newitem=createItem(idTypeToName(typeId),name,typeId,newId);
+        QStandardItem *newitem=createItem(typeId,newId);
         pidItem->appendRow(newitem);
     }
     return newId;
@@ -94,7 +94,7 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
     {
         unsigned int typeId=query.value(3).toUInt();
         unsigned int nodeId=query.value(0).toUInt();
-        QStandardItem *newitem=createItem(idTypeToName(typeId),query.value(1).toString(),typeId,nodeId);
+        QStandardItem *newitem=createItem(typeId,nodeId);
         item->appendRow(newitem);
         createChildrenItems(newitem,nodeId);
     }
@@ -102,10 +102,9 @@ bool PCx_TreeModel::createChildrenItems(QStandardItem *item,unsigned int nodeId)
 
 }
 
-QStandardItem *PCx_TreeModel::createItem(const QString &typeName, const QString &nodeName, unsigned int typeId, unsigned int nodeId)
+QStandardItem *PCx_TreeModel::createItem(unsigned int typeId, unsigned int nodeId)
 {
-    Q_ASSERT(!nodeName.isEmpty());
-    QStandardItem *newitem=new QStandardItem(typeName+" "+nodeName);
+    QStandardItem *newitem=new QStandardItem(getNodeName(nodeId));
     newitem->setData(nodeId,PCx_TreeModel::NodeIdUserRole);
     newitem->setData(typeId,PCx_TreeModel::TypeIdUserRole);
 //    newitem->setIcon(QIcon::fromTheme());

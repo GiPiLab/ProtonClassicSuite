@@ -130,13 +130,11 @@ private:
 
     /**
      * @brief createItem creates a tree item in the model
-     * @param typeName the name of the type, to speed up tree construction
-     * @param nodeName the name of the node, to speed up tree construction
      * @param typeId the type identifier, stored in TypeIdUserRole role
      * @param nodeId the node identifier, stored in NodeIdUserRole role
      * @return the newly created item
      */
-    QStandardItem *createItem(const QString &typeName, const QString &nodeName, unsigned int typeId, unsigned int nodeId);
+    QStandardItem *createItem(unsigned int typeId, unsigned int nodeId);
 
     /**
      * @brief typesTableModel the QSqlTableModel associated with the table types_[treeId]
