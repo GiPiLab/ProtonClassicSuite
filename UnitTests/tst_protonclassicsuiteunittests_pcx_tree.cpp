@@ -40,7 +40,7 @@ void ProtonClassicSuiteUnitTests::testCaseForTreeNodes()
     //Check the correct type
     QCOMPARE(tree.getTypeId(nodeId),(unsigned)1);
     //Check the correct node name (the type name + TESTNODE)
-    QCOMPARE(tree.getNodeName(nodeId),QString(tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODE"));
+    QCOMPARE(tree.getNodeName(nodeId),QString(QString::number(nodeId)+". "+tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODE"));
     QVERIFY(tree.getListOfCompleteNodeNames().contains(tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODE"));
 
     //Check if we can retrieve the id from the type and node names
@@ -48,7 +48,7 @@ void ProtonClassicSuiteUnitTests::testCaseForTreeNodes()
 
     //Update a node
     tree.updateNode(nodeId,"TESTNODENEW",2);
-    QCOMPARE(tree.getNodeName(nodeId),QString(tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODENEW"));
+    QCOMPARE(tree.getNodeName(nodeId),QString(QString::number(nodeId)+". "+tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODENEW"));
 
     //Nodes with shared name
     unsigned int newNodeId=tree.addNode(1,1,"TESTNODENEW");
@@ -147,24 +147,7 @@ void ProtonClassicSuiteUnitTests::testCaseForTreeToDot()
     QCOMPARE(tree.getParentId(node7leaf),node6);
 
     QString dot=tree.toDot();
-
-    QString attendedDot="graph g{\n"
-                        "rankdir=LR;\n"
-            "1 [label=\"Racine\"];\n"
-    "2 [label=\"Maire adjoint 1_NODE1\"];\n"
-    "3 [label=\"Maire adjoint 2_NODE2\"];\n"
-    "4 [label=\"Maire adjoint 10_NODE3\"];\n"
-    "5 [label=\"Maire adjoint 11_NODE4\"];\n"
-    "7 [label=\"Maire adjoint 20_NODE6\"];\n"
-    "6 [label=\"Maire adjoint 100_NODE5\"];\n"
-    "8 [label=\"Maire adjoint 200_NODE7\"];\n"
-        "\t1--2;\n"
-        "\t1--3;\n"
-        "\t2--4;\n"
-        "\t2--5;\n"
-        "\t3--7;\n"
-        "\t4--6;\n"
-        "\t7--8;\n}\n";
+    QString attendedDot="graph g{\nrankdir=LR;\n1 [label=\"1. Racine\"];\n2 [label=\"2. Maire adjoint 1_NODE1\"];\n3 [label=\"3. Maire adjoint 2_NODE2\"];\n4 [label=\"4. Maire adjoint 10_NODE3\"];\n5 [label=\"5. Maire adjoint 11_NODE4\"];\n7 [label=\"7. Maire adjoint 20_NODE6\"];\n6 [label=\"6. Maire adjoint 100_NODE5\"];\n8 [label=\"8. Maire adjoint 200_NODE7\"];\n\t1--2;\n\t1--3;\n\t2--4;\n\t2--5;\n\t3--7;\n\t4--6;\n\t7--8;\n}\n";
 
     QCOMPARE(dot,attendedDot);
     PCx_Tree::deleteTree(treeId);

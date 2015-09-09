@@ -56,6 +56,9 @@ private slots:
 
     void on_checkBoxRawHistoryData_toggled(bool checked);
 
+
+    void on_treeView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::FormAuditExplore *ui;
     void updateListOfAudits();
@@ -69,6 +72,7 @@ private:
     QList<PCx_Tables::PCAPRESETS> selectedTabs;
     QList<PCx_Graphics::PCAGRAPHICS> selectedGraphics;
     MODES::DFRFDIRI selectedMode;
+    unsigned int referenceNode;
 
     bool ready;
 };

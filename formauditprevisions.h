@@ -69,6 +69,8 @@ private slots:
 
     void on_pushButtonCollapseAll_clicked();
 
+    void on_treeView_doubleClicked(const QModelIndex &index);
+
 private:
 
     PCx_Prevision *previsionModel;
@@ -81,6 +83,8 @@ private:
     Ui::FormAuditPrevisions *ui;
     QSize sizeHint() const;
     PCx_Graphics *graphics;
+
+    unsigned int referenceNode;
 
     void updateListOfPrevisions();
     void updatePrevisionItemTableModel();

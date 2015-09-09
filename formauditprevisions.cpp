@@ -20,6 +20,8 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     currentPrevisionItem=nullptr;
     graphics=nullptr;
 
+    referenceNode=1;
+
     recentPrevisionItem=nullptr;
     recentPrevisionItemTableModel=nullptr;
 
@@ -192,6 +194,8 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index)
         qFatal("Assertion failed");
     }
     //qDebug()<<"Selected audit ID = "<<selectedAuditId;
+
+    referenceNode=1;
 
     if(previsionModel!=nullptr)
     {
@@ -461,7 +465,7 @@ QSize FormAuditPrevisions::sizeHint() const
 
 void FormAuditPrevisions::on_pushButtonDisplayReport_clicked()
 {
-    FormDisplayPrevisionReport *form=new FormDisplayPrevisionReport(currentPrevisionItem,this);
+    FormDisplayPrevisionReport *form=new FormDisplayPrevisionReport(currentPrevisionItem,referenceNode,this);
     form->setAttribute(Qt::WA_DeleteOnClose);
     QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
@@ -481,7 +485,7 @@ void FormAuditPrevisions::on_pushButtonSaveBigReport_clicked()
     QFileInfo fi(fileName);
     if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
         fileName.append(".html");
-    currentPrevisionItem->savePrevisionItemReport(fileName,true);
+    currentPrevisionItem->savePrevisionItemReport(fileName,true,referenceNode);
 }
 
 
@@ -499,4 +503,10 @@ void FormAuditPrevisions::on_pushButtonCollapseAll_clicked()
 {
     ui->treeView->collapseAll();
     ui->treeView->expandToDepth(0);
+}
+
+void FormAuditPrevisions::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    referenceNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    QMessageBox::information(this,"Information",tr("Nouveau noeud de référence pour les calculs : %1").arg(previsionModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
 }

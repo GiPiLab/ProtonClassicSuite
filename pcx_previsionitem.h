@@ -43,9 +43,9 @@ public:
 
     ~PCx_PrevisionItem();
 
-    QString displayPrevisionItemReportInQTextDocument(QTextDocument *document) const;
+    QString displayPrevisionItemReportInQTextDocument(QTextDocument *document,unsigned int referenceNode=1) const;
 
-    bool savePrevisionItemReport(const QString &fileName, bool showDescendants) const;
+    bool savePrevisionItemReport(const QString &fileName, bool showDescendants,unsigned int referenceNode=1) const;
 
 
 private:

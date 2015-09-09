@@ -60,7 +60,7 @@ void PCx_PrevisionItem::loadFromDb()
 }
 
 
-QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocument *document) const
+QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocument *document, unsigned int referenceNode) const
 {
     QString out;
     PCx_Report report(prevision->getAttachedAudit());
@@ -78,7 +78,7 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
     out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 : <b>%2€</b></p>").arg(year).arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
     out.append(getPrevisionItemAsHTML());
     out.append("<p align='center'><b>Données historiques et prévision</b></p>");
-    out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,document,"","",nullptr,this));
+    out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,referenceNode,document,"","",nullptr,this));
     out.append("</body></html>");
     document->setHtml(out);
     return out;
@@ -86,7 +86,7 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
 
 
 
-bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool showDescendants) const
+bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool showDescendants, unsigned int referenceNode) const
 {
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
@@ -150,7 +150,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     double prevNode;
     out.append("<p align='center'><b>Données historiques et prévision</b></p>");
 
-    out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,
+    out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,nodeId,mode,referenceNode,
                                                      nullptr,absoluteImagePath,relativeImagePath,nullptr,this));
     if(showDescendants)
     {
@@ -173,7 +173,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
                        arg(year).arg(NUMBERSFORMAT::formatFixedPoint(prevNode)));
 
             out.append(tmpItem.getPrevisionItemAsHTML());
-            out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,descendant,mode,
+            out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),tables,graphics,descendant,mode,referenceNode,
                                                              nullptr,absoluteImagePath,relativeImagePath,&progress,&tmpItem));
             if(progress.wasCanceled())
             {

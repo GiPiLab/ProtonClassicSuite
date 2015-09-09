@@ -111,10 +111,16 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clic pour sélectionner le noeud sur lequel portera la prévision, double clic pour sélectionner le noeud de référence pour les calculs dans la fiche prévisionnelle.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
          <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="expandsOnDoubleClick">
           <bool>false</bool>
          </property>
          <attribute name="headerVisible">

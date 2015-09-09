@@ -51,10 +51,13 @@ private slots:
 
     void on_pushButtonUnSelectAllNodes_clicked();
 
+    void on_treeView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::FormAuditReports *ui;
     QSize sizeHint()const;
     void updateListOfAudits();
+    unsigned int referenceNode;
     PCx_AuditWithTreeModel *model;
     PCx_Report *report;
     void populateLists();

@@ -139,7 +139,7 @@ unsigned int PCx_Tree::getTypeId(unsigned int nodeId) const
 
 bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned int newType)
 {
-    if(newName.isEmpty()||nodeId==0||newType==0||
+    if(newName.isEmpty()||nodeId==0||
             newName.size()>MAXNODENAMELENGTH||
             !isTypeIdValid(newType))
     {
@@ -148,10 +148,22 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
 
     QSqlQuery q;
 
-    q.prepare(QString("update arbre_%1 set nom=:nom, type=:type where id=:id").arg(treeId));
-    q.bindValue(":nom",newName);
-    q.bindValue(":type",newType);
-    q.bindValue(":id",nodeId);
+    //Special consideration for root does not update the type
+    if(nodeId==1)
+    {
+        q.prepare(QString("update arbre_%1 set nom=:nom where id=:id").arg(treeId));
+        q.bindValue(":nom",newName);
+        q.bindValue(":id",nodeId);
+    }
+
+    else
+    {
+        q.prepare(QString("update arbre_%1 set nom=:nom, type=:type where id=:id").arg(treeId));
+        q.bindValue(":nom",newName);
+        q.bindValue(":type",newType);
+        q.bindValue(":id",nodeId);
+    }
+
     if(!q.exec())
     {
         qCritical()<<q.lastError();
@@ -167,18 +179,26 @@ bool PCx_Tree::updateNode(unsigned int nodeId, const QString &newName, unsigned 
     return true;
 }
 
+
+
+
+
 QStringList PCx_Tree::getListOfCompleteNodeNames() const
 {
     QStringList nodeNames;
     QSqlQuery q;
-    if(!q.exec(QString("select nom,type from arbre_%1 where id>1").arg(treeId)))
+    if(!q.exec(QString("select id,nom,type from arbre_%1").arg(treeId)))
     {
         qCritical()<<q.lastError();
         die();
     }
     while(q.next())
     {
-        nodeNames.append(QString("%1 %2").arg(idTypeToName(q.value("type").toUInt())).arg(q.value("nom").toString()));
+        nodeNames.append(QString("%3. %1 %2")
+                         .arg(idTypeToName(q.value("type").toUInt()))
+                         .arg(q.value("nom").toString())
+                         .arg(q.value("id").toUInt()));
+
     }
     return nodeNames;
 }

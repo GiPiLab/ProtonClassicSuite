@@ -76,9 +76,9 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const
 {
-    if(node==0||auditModel==nullptr)
+    if(node==0||auditModel==nullptr || referenceNode==0)
     {
         qFatal("Assertion failed");
     }
@@ -86,17 +86,20 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
     QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
-                           "<b>&Eacute;volution cumul&eacute;e du compte administratif de la Collectivit&eacute; "
+                           "<b>&Eacute;volution cumul&eacute;e du compte administratif de [ %3 ] "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
-
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+            .arg(MODES::modeToCompleteString(mode))
+            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
     qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0;
 
     QSqlQuery q;
-    q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
+    q.prepare(QString("select * from %1 where id_node=:refnode order by annee").arg(tableName));
+    q.bindValue(":refnode",referenceNode);
+    q.exec();
     if(!q.isActive())
     {
         qCritical()<<q.lastError();
@@ -175,9 +178,9 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const
 {
-    if(node==0||auditModel==nullptr)
+    if(node==0||auditModel==nullptr|| referenceNode==0)
     {
         qFatal("Assertion failed");
     }
@@ -187,17 +190,22 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const
     //The classes "t3xxx" are not a mistake
     QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
-                           "<b>&Eacute;volution du compte administratif de la Collectivit&eacute; "
+                           "<b>&Eacute;volution du compte administratif de [ %3 ] "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+            .arg(MODES::modeToCompleteString(mode))
+            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
     qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0;
 
     QSqlQuery q;
-    q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
+    q.prepare(QString("select * from %1 where id_node=:refnode order by annee").arg(tableName));
+    q.bindValue(":refnode",referenceNode);
+    q.exec();
+
     if(!q.isActive())
     {
         qCritical()<<q.lastError();
@@ -416,24 +424,28 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode,unsigned int referenceNode) const
 {
-    if(node==0||auditModel==nullptr)
+    if(node==0||auditModel==nullptr||referenceNode==0)
     {
         qFatal("Assertion failed");
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
     QString output=QString("\n<table align='center' width='65%' cellpadding='5'>"
-                           "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>au sein de la Collectivit&eacute; "
+                           "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>par rapport à [ %3 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t4entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+            .arg(MODES::modeToCompleteString(mode))
+            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
     QHash<unsigned int,qint64> ouvertsRoot,realisesRoot;
 
     QSqlQuery q;
-    q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
+    q.prepare(QString("select * from %1 where id_node=:refnode order by annee").arg(tableName));
+    q.bindValue(":refnode",referenceNode);
+    q.exec();
     if(!q.isActive())
     {
         qCritical()<<q.lastError();
@@ -487,9 +499,9 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const
 }
 
 
-QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode,unsigned int referenceNode) const
 {
-    if(node==0||auditModel==nullptr)
+    if(node==0||auditModel==nullptr||referenceNode==0)
     {
         qFatal("Assertion failed");
     }
@@ -498,18 +510,23 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
                            "<tr class='t5entete'><td colspan=6 align='center'>"
-                           "<b>Analyse en base 100 du compte administratif de la Collectivit&eacute; "
+                           "<b>Analyse en base 100 du compte administratif de [ %3 ] "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t5entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Crédits ouverts</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t5entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+            .arg(MODES::modeToCompleteString(mode))
+            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot,engagesRoot,disponiblesRoot;
     qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0,firstYearEngagesRoot=0,firstYearDisponiblesRoot=0;
 
     QSqlQuery q;
-    q.exec(QString("select * from %1 where id_node=1 order by annee").arg(tableName));
+    q.prepare(QString("select * from %1 where id_node=:refnode order by annee").arg(tableName));
+    q.bindValue(":refnode",referenceNode);
+    q.exec();
+
     if(!q.isActive())
     {
         qCritical()<<q.lastError();
@@ -1523,9 +1540,9 @@ QString PCx_Tables::getPCRRFDFRIDI(unsigned int node) const
     return qTableViewToHtml(&view);
 }
 
-QString PCx_Tables::getPCAPresetOverview(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetOverview(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const
 {
-    QString out=getPCAT1(node,mode)+"<br>\n"+getPCAT4(node,mode)+"<br>\n"+getPCAT8(node,mode)+"<br>\n";
+    QString out=getPCAT1(node,mode)+"<br>\n"+getPCAT4(node,mode,referenceNode)+"<br>\n"+getPCAT8(node,mode)+"<br>\n";
     return out;
 }
 
@@ -1600,23 +1617,23 @@ QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
     return output;
 }
 
-QString PCx_Tables::getPCAPresetEvolution(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetEvolution(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const
 {
-    QString out=getPCAT2bis(node,mode)+"<br>\n"+getPCAT3bis(node,mode)+"<br>\n";
+    QString out=getPCAT2bis(node,mode,referenceNode)+"<br>\n"+getPCAT3bis(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getPCAPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const
 {
-    QString out=getPCAT2(node,mode)+"<br>\n"+getPCAT3(node,mode)+"<br>\n";
+    QString out=getPCAT2(node,mode,referenceNode)+"<br>\n"+getPCAT3(node,mode)+"<br>\n";
     return out;
 }
 
 
-QString PCx_Tables::getPCAPresetBase100(unsigned int node, MODES::DFRFDIRI mode) const
+QString PCx_Tables::getPCAPresetBase100(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const
 {
-    QString out=getPCAT5(node,mode)+"<br>\n"+getPCAT6(node,mode)+"<br>\n";
+    QString out=getPCAT5(node,mode,referenceNode)+"<br>\n"+getPCAT6(node,mode)+"<br>\n";
     return out;
 }
 

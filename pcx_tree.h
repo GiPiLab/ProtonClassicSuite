@@ -4,6 +4,7 @@
 
 #include <QStringList>
 #include <QPair>
+#include <QComboBox>
 #include <QHash>
 #include <QDebug>
 
@@ -285,7 +286,7 @@ public:
      * @param id the type identifier
      * @return true if the type identifier exists, false otherwise
      */
-    bool isTypeIdValid(unsigned int id) const{return idTypesToNames.contains(id);}
+    bool isTypeIdValid(unsigned int id) const{if(id==0)return true;else return idTypesToNames.contains(id);}
 
     /**
      * @brief getAllTypes gets a list of all the types name and identifier
@@ -426,6 +427,8 @@ public:
      * @return true if it matches, false otherwise
      */
     bool checkIdToTypeAndName(unsigned int id, const QString &typeName, const QString &nodeName) const;
+
+
 
 
 protected:

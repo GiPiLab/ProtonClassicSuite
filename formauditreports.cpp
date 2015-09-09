@@ -11,6 +11,7 @@ FormAuditReports::FormAuditReports(QWidget *parent) :
     ui->splitter->setStretchFactor(1,1);
     model=nullptr;
     plot=new QCustomPlot();
+    referenceNode=1;
     updateListOfAudits();    
 }
 
@@ -37,10 +38,10 @@ void FormAuditReports::populateLists()
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT1(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT2);
-    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2(nodeId,MODES::DFRFDIRI::DF,referenceNode)+"</span>");
     item=new QListWidgetItem(tr("Évolution du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT2BIS);
-    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2bis(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT2bis(nodeId,MODES::DFRFDIRI::DF,referenceNode)+"</span>");
     item=new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT3);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT3(nodeId,MODES::DFRFDIRI::DF)+"</span>");
@@ -49,10 +50,10 @@ void FormAuditReports::populateLists()
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT3bis(nodeId,MODES::DFRFDIRI::DF)+"</span>");
     item=new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT4);
-    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT4(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT4(nodeId,MODES::DFRFDIRI::DF,referenceNode)+"</span>");
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT5);
-    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT5(nodeId,MODES::DFRFDIRI::DF)+"</span>");
+    item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT5(nodeId,MODES::DFRFDIRI::DF,referenceNode)+"</span>");
     item=new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"),ui->listTables);
     item->setData(PCx_TreeModel::NodeIdUserRole,(int)PCx_Tables::PCATABLES::PCAT6);
     item->setToolTip("<span style='font-size:8pt'>"+report->getTables().getPCAT6(nodeId,MODES::DFRFDIRI::DF)+"</span>");
@@ -136,6 +137,7 @@ void FormAuditReports::on_comboListAudits_activated(int index)
         delete model;
         delete report;
     }
+    referenceNode=1;
     model=new PCx_AuditWithTreeModel(selectedAuditId);
     report=new PCx_Report(model);
     QItemSelectionModel *m=ui->treeView->selectionModel();
@@ -337,11 +339,11 @@ void FormAuditReports::on_saveButton_clicked()
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
             //Mode-independant
-            output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,MODES::DFRFDIRI::DF,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),modeIndependantTables,modeIndependantGraphics,selectedNode,MODES::DFRFDIRI::DF,referenceNode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
         }
         foreach(MODES::DFRFDIRI mode,listModes)
         {
-            output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
+            output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,referenceNode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
             output.append(QStringLiteral("<br><br><br>"));
@@ -515,4 +517,11 @@ void FormAuditReports::on_pushButtonUnSelectAllNodes_clicked()
 QSize FormAuditReports::sizeHint() const
 {
     return QSize(900,600);
+}
+
+void FormAuditReports::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    referenceNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    QMessageBox::information(this,"Information",tr("Nouveau noeud de référence pour les calculs : %1").arg(model->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
+    populateLists();
 }

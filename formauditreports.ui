@@ -43,6 +43,9 @@
        </item>
        <item row="1" column="0" colspan="2">
         <widget class="QTreeView" name="treeView">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clics gauches pour sélectionner les noeuds à inclure dans le rapport, double clic pour sélectionner le noeud de référence pour les comparaisons de certains tableaux et graphiques.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
          </property>
@@ -51,6 +54,9 @@
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <property name="expandsOnDoubleClick">
+          <bool>false</bool>
          </property>
          <attribute name="headerVisible">
           <bool>false</bool>

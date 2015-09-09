@@ -300,7 +300,36 @@ void FormEditTree::on_modifyNodeButton_clicked()
         //No modification for the root
         if(selectedId==1)
         {
-            QMessageBox::warning(this,tr("Attention"),tr("Vous ne pouvez pas modifier la racine de l'arbre"));
+            bool ok;
+            QString text;
+
+            redoRoot:
+            do
+            {
+                text=QInputDialog::getText(this,tr("Modifier noeud"), tr("Nouveau nom de la racine : "),QLineEdit::Normal,typeAndNodeName.second,&ok).simplified();
+
+            }while(ok && text.isEmpty());
+
+            if(ok)
+            {
+                if(text!=typeAndNodeName.second)
+                {
+                    //NOTE : allow duplicates
+                    /*
+                    if(model->nodeExists(text,selectedTypeId))
+                    {
+                        QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud de ce type portant ce nom dans l'arbre !"));
+                        goto redo;
+                    }*/
+                    if(text.size()>MAXOBJECTNAMELENGTH)
+                    {
+                        QMessageBox::warning(this,tr("Attention"),tr("Nom trop long !"));
+                        goto redoRoot;
+                    }
+                    model->updateNode(selection[0],text,0);
+                }
+            }
+            //QMessageBox::warning(this,tr("Attention"),tr("Vous ne pouvez pas modifier la racine de l'arbre"));
             return;
         }
 

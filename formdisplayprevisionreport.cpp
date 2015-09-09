@@ -4,12 +4,13 @@
 #include <QFileInfo>
 #include <QStandardPaths>
 
-FormDisplayPrevisionReport::FormDisplayPrevisionReport(PCx_PrevisionItem *previsionItem, QWidget *parent) :
+FormDisplayPrevisionReport::FormDisplayPrevisionReport(PCx_PrevisionItem *previsionItem, unsigned int referenceNode, QWidget *parent) :
     QWidget(parent),ui(new Ui::FormDisplayPrevisionReport),previsionItem(previsionItem)
 {
     ui->setupUi(this);
+    this->referenceNode=referenceNode;
     doc=new QTextDocument();
-    previsionItem->displayPrevisionItemReportInQTextDocument(doc);
+    previsionItem->displayPrevisionItemReportInQTextDocument(doc,referenceNode);
     ui->textBrowser->setDocument(doc);
 }
 
@@ -30,7 +31,7 @@ void FormDisplayPrevisionReport::on_pushButtonSaveHTML_clicked()
     QFileInfo fi(fileName);
     if(fi.suffix().compare("html",Qt::CaseInsensitive)!=0 && fi.suffix().compare("htm",Qt::CaseInsensitive)!=0)
         fileName.append(".html");
-    previsionItem->savePrevisionItemReport(fileName,false);
+    previsionItem->savePrevisionItemReport(fileName,false,referenceNode);
 }
 
 QSize FormDisplayPrevisionReport::sizeHint() const

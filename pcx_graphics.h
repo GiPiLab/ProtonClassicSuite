@@ -59,15 +59,15 @@ public:
     virtual ~PCx_Graphics();
 
 
-    QString getPCAG1(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false,prevItem);}
-    QString getPCAG3(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,false,prevItem);}
-    QString getPCAG5(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,false,prevItem);}
-    QString getPCAG7(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,false,prevItem);}
+    QString getPCAG1(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false,prevItem,referenceNode);}
+    QString getPCAG3(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,false,prevItem,referenceNode);}
+    QString getPCAG5(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,false,prevItem,referenceNode);}
+    QString getPCAG7(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,false,prevItem,referenceNode);}
 
-    QString getPCAG2(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,true,prevItem);}
-    QString getPCAG4(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,true,prevItem);}
-    QString getPCAG6(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,true,prevItem);}
-    QString getPCAG8(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true,prevItem);}
+    QString getPCAG2(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,true,prevItem,referenceNode);}
+    QString getPCAG4(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,true,prevItem,referenceNode);}
+    QString getPCAG6(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,true,prevItem,referenceNode);}
+    QString getPCAG8(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true,prevItem,referenceNode);}
 
     QString getPCAG9(unsigned int node) const;
 
@@ -110,7 +110,7 @@ private:
     PCx_Reporting *reportingModel;
 
     //Returns the title of the graphic in html
-    QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,const PCx_PrevisionItem *prevItem=nullptr) const;
+    QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const;
 
     //Histogram comparing percents of selected OREDs regarding to a reference for the last reporting date
     QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color)const;

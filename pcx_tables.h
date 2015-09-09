@@ -51,10 +51,10 @@ public:
     PCx_Tables(PCx_Reporting *reportingModel);
 
     QString getPCAPresetDayOfWork(unsigned int node, MODES::DFRFDIRI mode) const;
-    QString getPCAPresetBase100(unsigned int node, MODES::DFRFDIRI mode) const;
-    QString getPCAPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode) const;
-    QString getPCAPresetEvolution(unsigned int node, MODES::DFRFDIRI mode) const;
-    QString getPCAPresetOverview(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPCAPresetBase100(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
+    QString getPCAPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
+    QString getPCAPresetEvolution(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
+    QString getPCAPresetOverview(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
     QString getPCAPresetResults(unsigned int node) const;
 
     static QString getCSS();
@@ -63,19 +63,19 @@ public:
 
     //Content of preset "OVERVIEW"
     QString getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const;
-    QString getPCAT4(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPCAT4(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
     QString getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "EVOLUTION"
-    QString getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
     QString getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "EVOLUTIONCUMUL"
-    QString getPCAT2(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPCAT2(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
     QString getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "BASE100"
-    QString getPCAT5(unsigned int node, MODES::DFRFDIRI mode) const;
+    QString getPCAT5(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode=1) const;
     QString getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const;
 
     //Content of preset "DAYOFWORK"

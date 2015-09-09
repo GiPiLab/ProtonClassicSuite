@@ -22,7 +22,7 @@ FormAuditExplore::FormAuditExplore(QWidget *parent) :
     //interface = new QCPDocumentObject(this);
     //ui->textEdit->document()->documentLayout()->registerHandler(QCPDocumentObject::PlotTextFormat, interface);
     updateListOfAudits();
-    ui->textEdit->moveCursor(QTextCursor::Start);
+    referenceNode=1;
 }
 
 FormAuditExplore::~FormAuditExplore()
@@ -104,7 +104,7 @@ void FormAuditExplore::updateTextBrowser()
 
     QString output=model->generateHTMLHeader();
     output.append(model->generateHTMLAuditTitle());
-    output.append(report->generateHTMLAuditReportForNode(selectedTabs,QList<PCx_Tables::PCATABLES>(),selectedGraphics,selectedNode,selectedMode,doc));
+    output.append(report->generateHTMLAuditReportForNode(selectedTabs,QList<PCx_Tables::PCATABLES>(),selectedGraphics,selectedNode,selectedMode,referenceNode,doc));
     output.append("</body></html>");
     doc->setHtml(output);
     sb->setValue(sbval);
@@ -209,6 +209,9 @@ void FormAuditExplore::on_comboListAudits_activated(int index)
         delete model;
         delete report;
     }
+
+    referenceNode=1;
+
     model=new PCx_AuditWithTreeModel(selectedAuditId);
     report=new PCx_Report(model);
 
@@ -344,7 +347,7 @@ void FormAuditExplore::on_saveButton_clicked()
     //Generate report in non-embedded mode, saving images
     QString output=model->generateHTMLHeader();
     output.append(model->generateHTMLAuditTitle());
-    output.append(report->generateHTMLAuditReportForNode(selectedTabs,QList<PCx_Tables::PCATABLES>(),selectedGraphics,node,selectedMode,nullptr,absoluteImagePath,relativeImagePath,&progress));
+    output.append(report->generateHTMLAuditReportForNode(selectedTabs,QList<PCx_Tables::PCATABLES>(),selectedGraphics,node,selectedMode,referenceNode,nullptr,absoluteImagePath,relativeImagePath,&progress));
     output.append("</body></html>");
 
 
@@ -517,5 +520,13 @@ void FormAuditExplore::on_pushButtonExpandAll_clicked()
 void FormAuditExplore::on_checkBoxRawHistoryData_toggled(bool checked)
 {
     Q_UNUSED(checked);
+    updateTextBrowser();
+}
+
+
+void FormAuditExplore::on_treeView_doubleClicked(const QModelIndex &index)
+{
+    referenceNode=index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    QMessageBox::information(this,"Information",tr("Nouveau noeud de référence pour les calculs : %1").arg(model->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
     updateTextBrowser();
 }

@@ -26,7 +26,7 @@ public:
 
 
     QString generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs, QList<PCx_Tables::PCATABLES> listOfTables, QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
-                                      unsigned int selectedNode, MODES::DFRFDIRI mode, QTextDocument *document=nullptr, const QString &absoluteImagePath="",
+                                      unsigned int selectedNode, MODES::DFRFDIRI mode, unsigned int referenceNode=1,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
                                       const QString &relativeImagePath="", QProgressDialog *progress=nullptr, const PCx_PrevisionItem *prevItem=nullptr) const;
 
 

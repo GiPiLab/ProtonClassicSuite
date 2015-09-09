@@ -14,7 +14,7 @@ class FormDisplayPrevisionReport : public QWidget
     Q_OBJECT
 
 public:
-    explicit FormDisplayPrevisionReport(PCx_PrevisionItem *previsionItem, QWidget *parent = 0);
+    explicit FormDisplayPrevisionReport(PCx_PrevisionItem *previsionItem, unsigned int referenceNode=1, QWidget *parent = 0);
     ~FormDisplayPrevisionReport();
 
 
@@ -25,6 +25,7 @@ private:
     Ui::FormDisplayPrevisionReport *ui;
     PCx_PrevisionItem *previsionItem;
     QTextDocument *doc;
+    unsigned int referenceNode;
     QSize sizeHint() const;
 };
 

@@ -63,9 +63,9 @@ PCx_Graphics::~PCx_Graphics()
 }
 
 
-QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule, const PCx_PrevisionItem *prevItem) const
+QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule, const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const
 {
-    if(node==0 || plot==nullptr || auditModel==nullptr)
+    if(node==0 || plot==nullptr || auditModel==nullptr|| referenceNode==0)
     {
         qFatal("Assertion failed");
     }
@@ -78,8 +78,9 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     //Will contain data read from db
     QMap<unsigned int, qint64> dataRoot,dataNode;
 
-    q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=1 order by annee").arg(tableName).arg(auditModel->getAuditId()));
+    q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=:refNode order by annee").arg(tableName).arg(auditModel->getAuditId()));
     q.bindValue(":id",node);
+    q.bindValue(":refNode",referenceNode);
     q.exec();
 
     if(!q.isActive())
@@ -98,10 +99,10 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
         qint64 data=q.value(oredName).toLongLong();
 
-        if(q.value("id_node").toUInt()==1)
+        if(q.value("id_node").toUInt()==referenceNode)
         {
             dataRoot.insert(annee,data);
-            if(node==1)
+            if(node==referenceNode)
                 dataNode.insert(annee,data);
         }
         else
@@ -114,7 +115,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     {
         unsigned int year=prevItem->getYear();
         dataNode.insert(year,prevItem->getSummedPrevisionItemValue());
-        PCx_PrevisionItem tmpPrevRootItem=PCx_PrevisionItem(prevItem->getPrevision(),mode,1,year);
+        PCx_PrevisionItem tmpPrevRootItem=PCx_PrevisionItem(prevItem->getPrevision(),mode,referenceNode,year);
         tmpPrevRootItem.loadFromDb();
         dataRoot.insert(year,tmpPrevRootItem.getSummedPrevisionItemValue());
         //dataRoot.insert(year,)
@@ -197,8 +198,9 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
     //Legend
     QString nodeName=auditModel->getAttachedTree()->getNodeName(node);
+    QString refNodeName=auditModel->getAttachedTree()->getNodeName(referenceNode);
     plot->graph(0)->setName(nodeName);
-    plot->graph(1)->setName(QString("Total - %1").arg(nodeName));
+    plot->graph(1)->setName(QString("%2 - %1").arg(nodeName).arg(refNodeName));
 
     plot->legend->setVisible(true);
     plot->legend->setFont(QFont(QFont().family(),8));
@@ -262,12 +264,21 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     QString plotTitle;
     if(cumule==false)
     {
-            plotTitle=QObject::tr("&Eacute;volution comparée des %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED,true)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée des %1 de [ %4 ] hormis %2 et de [ %2 ]<br>(%3)")
+                    .arg(PCx_Audit::OREDtoCompleteString(modeORED,true))
+                    .arg(nodeName.toHtmlEscaped())
+                    .arg(MODES::modeToCompleteString(mode))
+                    .arg(refNodeName.toHtmlEscaped());
     }
 
     else
     {
-            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé des %1 de la collectivité hormis %2 et de [ %2 ]<br>(%3)").arg(PCx_Audit::OREDtoCompleteString(modeORED,true)).arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            plotTitle=QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ] hormis %2 et de [ %2 ]<br>(%3)")
+                    .arg(PCx_Audit::OREDtoCompleteString(modeORED,true))
+                    .arg(nodeName.toHtmlEscaped())
+                    .arg(MODES::modeToCompleteString(mode))
+                    .arg(refNodeName.toHtmlEscaped());
+
     }
 
     /*
