@@ -196,7 +196,7 @@ void ProtonClassicSuiteUnitTests::benchmarkReport()
                                               PCx_Graphics::PCAGRAPHICS::PCAG8,
                                               PCx_Graphics::PCAGRAPHICS::PCAG9,
                                               PCx_Graphics::PCAGRAPHICS::PCAHISTORY
-                                          },(qrand()%10)+1,MODES::DFRFDIRI::DF,&doc,nullptr,nullptr,nullptr,nullptr));
+                                          },(qrand()%10)+1,MODES::DFRFDIRI::DF,1,&doc,nullptr,nullptr,nullptr,nullptr));
 
 
     PCx_Audit::deleteAudit(auditId);

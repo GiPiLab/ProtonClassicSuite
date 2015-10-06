@@ -41,7 +41,7 @@ void ProtonClassicSuiteUnitTests::testCaseForTreeNodes()
     QCOMPARE(tree.getTypeId(nodeId),(unsigned)1);
     //Check the correct node name (the type name + TESTNODE)
     QCOMPARE(tree.getNodeName(nodeId),QString(QString::number(nodeId)+". "+tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODE"));
-    QVERIFY(tree.getListOfCompleteNodeNames().contains(tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODE"));
+    QVERIFY(tree.getListOfCompleteNodeNames().contains(QString::number(nodeId)+". "+tree.getTypeNameAndNodeName(nodeId).first+" "+"TESTNODE"));
 
     //Check if we can retrieve the id from the type and node names
     QCOMPARE(tree.getNodeIdFromTypeAndNodeName(tree.getTypeNameAndNodeName(nodeId)),(int)nodeId);

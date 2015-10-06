@@ -208,8 +208,10 @@ void ProtonClassicSuiteUnitTests::testCaseForAuditNodes()
     stats=statsSplitted.join("\n");
     stats=stats.simplified();
 
-    QByteArray expectedStats="abd2f7c381fce2c3cbec728bf1b9eed4c2d406e3fcc10197843d3e3690f72882";
+
+    QByteArray expectedStats="df2257644478406d063b186531e7564c8bccda1e3c8f9cede2e4852cb3a39776";
     QByteArray hash=hashString(stats);
+
 
     QCOMPARE(hash.toHex(),expectedStats);
 
