@@ -327,6 +327,9 @@
    </property>
   </action>
   <action name="action_Tutoriels">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/movies.png</normaloff>:/icons/icons/movies.png</iconset>
