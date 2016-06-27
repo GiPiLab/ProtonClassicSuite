@@ -1,6 +1,7 @@
 #include "pcx_reportingtablesupervisionmodel.h"
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QtMath>
 
 PCx_ReportingTableSupervisionModel::PCx_ReportingTableSupervisionModel(PCx_Reporting *reporting, MODES::DFRFDIRI mode,int selectedDateTimeT,QObject *parent) :
     QAbstractTableModel(parent),reporting(reporting),currentMode(mode)
@@ -149,7 +150,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
         Entry entry=entries.at(row);
         QString output;
         bool percentMode=false;
-        double computedValue=NAN;
+        double computedValue=std::numeric_limits<double>::quiet_NaN();
         switch(index.column())
         {
         case 0:
@@ -352,14 +353,14 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
 
     int nbJoursDepuisDebutAnnee=date.dayOfYear();
     int nbJoursRestants=365-nbJoursDepuisDebutAnnee;
-    nb15NRestantes=(int)(floor((double)nbJoursRestants/15.0));
+    nb15NRestantes=(int)(qFloor((double)nbJoursRestants/15.0));
     resteAConsommer=this->ouverts-this->realises;
     if(nb15NRestantes!=0)
     {
         consommePrevPar15N=resteAConsommer/nb15NRestantes;
     }
     else
-        consommePrevPar15N=NAN;
+        consommePrevPar15N=std::numeric_limits<double>::quiet_NaN();
 
     realisesPredits=this->realises/nbJoursDepuisDebutAnnee*365;
 
@@ -398,10 +399,10 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
     }
     else
     {
-        percentReal=NAN;
-        percentBP=NAN;
-        percentEngage=NAN;
-        percentDisponible=NAN;
-        tauxEcart=NAN;
+        percentReal=std::numeric_limits<double>::quiet_NaN();
+        percentBP=std::numeric_limits<double>::quiet_NaN();
+        percentEngage=std::numeric_limits<double>::quiet_NaN();
+        percentDisponible=std::numeric_limits<double>::quiet_NaN();
+        tauxEcart=std::numeric_limits<double>::quiet_NaN();
     }
 }

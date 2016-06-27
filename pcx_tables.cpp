@@ -1154,7 +1154,12 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
         die();
     }
 
-    double percentBP=NAN,percentReports=NAN,percentOCDM=NAN,percentVCDM=NAN,percentVINT=NAN,sumPercent=NAN;
+    double percentBP=std::numeric_limits<double>::quiet_NaN();
+    double percentReports=std::numeric_limits<double>::quiet_NaN();
+    double percentOCDM=std::numeric_limits<double>::quiet_NaN();
+    double percentVCDM=std::numeric_limits<double>::quiet_NaN();
+    double percentVINT=std::numeric_limits<double>::quiet_NaN();
+    double sumPercent=std::numeric_limits<double>::quiet_NaN();
 
     if(q.next())
     {
@@ -1218,7 +1223,10 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
         die();
     }
 
-    double percentOCDM=NAN,percentVCDM=NAN,percentVINT=NAN,sumPercent=NAN;
+    double percentOCDM=std::numeric_limits<double>::quiet_NaN();
+    double percentVCDM=std::numeric_limits<double>::quiet_NaN();
+    double percentVINT=std::numeric_limits<double>::quiet_NaN();
+    double sumPercent=std::numeric_limits<double>::quiet_NaN();
 
     if(q.next())
     {
@@ -1281,7 +1289,11 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
         die();
     }
 
-    double percentRealises=NAN,percentEngages=NAN,percentDispo=NAN,percentNonUtilise=NAN,percentUtilise=NAN;
+    double percentRealises=std::numeric_limits<double>::quiet_NaN();
+    double percentEngages=std::numeric_limits<double>::quiet_NaN();
+    double percentDispo=std::numeric_limits<double>::quiet_NaN();
+    double percentNonUtilise=std::numeric_limits<double>::quiet_NaN();
+    double percentUtilise=std::numeric_limits<double>::quiet_NaN();
 
     if(q.next())
     {

@@ -71,80 +71,80 @@ void ProtonClassicSuiteUnitTests::testCaseForPCATables()
 
 
     //SHA-256 hex hashes of expected html outputs for each table
-    QByteArray expectedT1="cc34e9319f104b30d01ae6138e19501698195deba0205ab1d9fc2a493570c683";
-    QByteArray expectedT2="6ac3b0c1b09497df5c2bc47deede3d1be27d30bd63a449a56ed2926881875f70";
-    QByteArray expectedT2bis="cdfa586dc11a79ee3bc86ab497a9de36cd9ae6f8502ea1ae23cff2e046cde119";
-    QByteArray expectedT3="b899f6878b5dc2a8a550a124e2564f4d6db4ae8395c1d1c2562c35949de308a4";
-    QByteArray expectedT3bis="af9ecc8534e0cf8ae1321a58f626e187c222fc9532a6ad0a4daf3b3f6de2ec63";
-    QByteArray expectedT4="8dd0b2a7dcd37186588de12a85d5441f8efd15668afcca72a9c23c50413c91ff";
-    QByteArray expectedT5="20d4fdbc516ef746c6bde211a04d517501eb51b9a1fae79c33bd680f75f75996";
-    QByteArray expectedT6="084dfea16e3ff8dd3a686b28e5d6965ba9e5b82c7696be96ff91f96216b0bbb1";
-    QByteArray expectedT7="ad8cbf1d3e0213d48f411b42ce74abe90080579919d5036d89a3166af342e5a3";
-    QByteArray expectedT8="b54f5261d2fc66e5199fc83c35384b705c09aa2c3a5461cbb049d26957819127";
-    QByteArray expectedT9="0d127d267f0f52fe1bb6e4896abd40fb6ab6fda603f5e2dffa7f2b9a34be0669";
-    QByteArray expectedT10="d4f817d530215e32cf8f6296fadb0c5a01b99b385a752e02704c258d4603f4ee";
-    QByteArray expectedT11="c2d71e7da541eaadd31ad5134713612606813fde9ba6428ba735c3354f6d4949";;
-    QByteArray expectedT12="75ea64119d3edf9a2df3c6c215077c5e0971b30ea5352e39e47f6b534f4bf72d";
-    QByteArray expectedTRaw="a84fdab99b6ff8d8433c26adffaec6a0100b866cb39d6e22e5c2b6bc495aeab3";
+    QByteArray expectedT1="2af41b9ce43db8ff515a73ab58667ba92ffb3c550611a83e09ca7bc48593dbcd";
+    QByteArray expectedT2="a77797447b71e6db72d019d7b6c8b799adde6e4b0a7df0ce873cc28dac364c0b";
+    QByteArray expectedT2bis="fe03fa9ea1b65a559902db310fc4694c27a340ad7ab280dfbc37674a545cbc32";
+    QByteArray expectedT3="51cbc76c1139dc03d33a1ffd794c1213ebab6cb89794c86554f9f2d2f92bce4b";
+    QByteArray expectedT3bis="fe45f39e0bf7858a8fb79b9d14c0a40adf345dd637517ad2c3927b694a7e5940";
+    QByteArray expectedT4="2630b27c4aebc757a9f8ebd080fca66f6986525fc8ee7785d2da0f12caa195a0";
+    QByteArray expectedT5="4aaa92f2445aaf45902d00ec11b4242e201115ae05f3b5559c71ed1e1004070a";
+    QByteArray expectedT6="2cec8ab80eddd9807d41052c05abdaa817f71ec5cb66c4f4e703a02fbfe5a4f8";
+    QByteArray expectedT7="2402b6f94ff60d72b081759a80792babcc6c8d8ee8aeafc6bc46b4d33dfc6a77";
+    QByteArray expectedT8="d605901779be1524daae86fe984d1bd4dd1f1af9602c9f9f49b8ba1cd110f310";
+    QByteArray expectedT9="23af270e93ce378762eae89d8be49801f6d56ef548567327d2d0c5eff5534384";
+    QByteArray expectedT10="7edb34e219369fc926d04bf02ff7b3cc6c3bdd39c6879a16e3921436e6b07a76";
+    QByteArray expectedT11="4b5e33b4056cf122ba663da9ce30821fc17787c5c64c42c4d38e387bb2b91708";;
+    QByteArray expectedT12="827149eb884222bd07d81b3cc35c6841b5bf9b2cebe4a6afe5b53acd87d5a8bc";
+    QByteArray expectedTRaw="e91be458468ece1c29ea9357d575831860ffd65616cbed361254997c397794ce";
 
     QByteArray hash=hashString(tables.getPCAT1(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
-   QCOMPARE(hash.toHex(),expectedT1);
+    qDebug()<<hash.toHex();
+    QCOMPARE(hash.toHex(),expectedT1);
 
     hash=hashString(tables.getPCAT2(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT2);
 
     hash=hashString(tables.getPCAT2bis(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT2bis);
 
     hash=hashString(tables.getPCAT3(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT3);
 
     hash=hashString(tables.getPCAT3bis(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
-   QCOMPARE(hash.toHex(),expectedT3bis);
+    qDebug()<<hash.toHex();
+    QCOMPARE(hash.toHex(),expectedT3bis);
 
     hash=hashString(tables.getPCAT4(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT4);
 
     hash=hashString(tables.getPCAT5(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT5);
 
     hash=hashString(tables.getPCAT6(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
-   QCOMPARE(hash.toHex(),expectedT6);
+    qDebug()<<hash.toHex();
+    QCOMPARE(hash.toHex(),expectedT6);
 
     hash=hashString(tables.getPCAT7(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT7);
 
     hash=hashString(tables.getPCAT8(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT8);
 
     hash=hashString(tables.getPCAT9(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT9);
 
     hash=hashString(tables.getPCAT10(1));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT10);
 
     hash=hashString(tables.getPCAT11(1));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT11);
 
     hash=hashString(tables.getPCAT12(1));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT12);
 
     hash=hashString(tables.getPCARawData(1,MODES::DFRFDIRI::DF));
-    //qDebug()<<hash.toHex();
+    qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedTRaw);
 
 
@@ -230,17 +230,18 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     PCx_Graphics graphics(&audit,&plot);
 
 #ifdef Q_OS_LINUX
-    QByteArray expectedG1="51695ec51edd0952732f80adf923483d0b8b0f3d1bc1f26682deda255c07ee98";
-    QByteArray expectedG2="44636b86c3be6080c0bda664f921ea9140709c6790d214d67b1f2f573a5c3845";
-    QByteArray expectedG3="dbc8cfba3aca6c2ec209e66ca362a9e65c4fdbbbd169d578d31b21ba2e83c995";
-    QByteArray expectedG4="75032ffc61383f0b3dee442bbb69fb574ea2f64ef08a22188a0286f5973464bd";
-    QByteArray expectedG5="d3a18acb27cf3fc4f79b434bd4f61eed0d2f4b17611f2ae23753563867c4cca6";
-    QByteArray expectedG6="1af0df4af22f7f9e98cb6d9085405866f5ffd72e48bbd11583e4d55f4d296e22";
-    QByteArray expectedG7="b25f5a201d27db6e6c7d6a2327ce4170d63afd0ccd083847092f2ca2a068786b";
-    QByteArray expectedG8="3d81ba9f3acb38f9e71af8fade6a94b1bed3c16c3e6dd7d39916d2634f4342c6";
-    QByteArray expectedG9="7235f9764d5e15639a0bcb263b8c0dff669d7ac76730611f4c810ac965df5952";
-    QByteArray expectedGHist="8ece265dbc16d2ae2bf67794fed582e1b06b6ae19daf326dd8fcb4fa2064b246";
+    QByteArray expectedG1="7ee0a8e2b2b96016df3ffff714a339280dfe03b48acbe0904c6acc44eb5c811a";
+    QByteArray expectedG2="65bbe405b7e59da62c127753e881487d4b8c8d1190a82793405d269658f18867";
+    QByteArray expectedG3="fb9d6fc80576cbbe77a1abe834fe5a3242ad9b454ff983d37a347751e6ec5a74";
+    QByteArray expectedG4="3c7d06df4b840d3558199181badbb7809ed90c3bf89bb113c1321f7f3a2a0531";
+    QByteArray expectedG5="11bc031f32b353fdaf54a30443d52873e37af19dd71e240b7ff5d7d735d9f8f1";
+    QByteArray expectedG6="248cf07f3444fedae490770344783dabbcff237e2f45d563015d7a65d4713f44";
+    QByteArray expectedG7="2f917402ce4c5f230515dd620f1c540ad3630dd67c22bb541096001f128f381c";
+    QByteArray expectedG8="ea992f330fa8fbf48816f56e1c0d81bf549f1d16058fedee9a1816089faddcce";
+    QByteArray expectedG9="e4d6139fcef9c4b2bc1a2ec91196b81b12a674d6e69fa800b33e681a7465712a";
+    QByteArray expectedGHist="e3f18690788437b36ba0eb7cc34d62347381d3d5b907348863e6a3d150e434cf";
 #elif defined(Q_OS_WIN32)
+    //Not up to date
     QByteArray expectedG1="018707e0534e68d317b0b5d483c7e319bf958131e2a6c36807e61b540c1eb947";
     QByteArray expectedG2="7a06df9077ba4114473922cf0face339ba039673aaebbc3e4dd00624311f9740";
     QByteArray expectedG3="171259d76791bdbc4ee3681eb4d34f005b5d28c5dc25f5d38a334ab2ea58e113";
@@ -267,7 +268,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G2"<<hash.toHex();
+    qDebug()<<"G2"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG2);
 
     ba.clear();
@@ -276,7 +277,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G3"<<hash.toHex();
+    qDebug()<<"G3"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG3);
 
     ba.clear();
@@ -285,7 +286,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G4"<<hash.toHex();
+    qDebug()<<"G4"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG4);
 
     ba.clear();
@@ -294,7 +295,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G5"<<hash.toHex();
+    qDebug()<<"G5"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG5);
 
     ba.clear();
@@ -303,7 +304,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G6"<<hash.toHex();
+    qDebug()<<"G6"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG6);
 
     ba.clear();
@@ -312,7 +313,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G7"<<hash.toHex();
+    qDebug()<<"G7"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG7);
 
     ba.clear();
@@ -321,7 +322,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G8"<<hash.toHex();
+    qDebug()<<"G8"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG8);
 
     ba.clear();
@@ -330,7 +331,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"G9"<<hash.toHex();
+    qDebug()<<"G9"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedG9);
 
     ba.clear();
@@ -339,7 +340,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics()
     plot.toPixmap(PCx_Graphics::DEFAULTWIDTH,PCx_Graphics::DEFAULTHEIGHT,PCx_Graphics::DEFAULTSCALE).save(&buffer,"PNG");
     buffer.close();
     hash=QCryptographicHash::hash(ba,QCryptographicHash::Sha256);
-    //qDebug()<<"GHist"<<hash.toHex();
+    qDebug()<<"GHist"<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedGHist);
 
     PCx_Audit::deleteAudit(auditId);

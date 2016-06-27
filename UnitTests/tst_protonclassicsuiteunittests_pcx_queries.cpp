@@ -27,7 +27,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAQueries()
                      PCx_QueryRank::GREATERSMALLER::GREATER,2,2010,2012,"REQ1");
     //qDebug()<<qr.exec();
     //qDebug()<<hashString(qr.exec()).toHex();
-    QByteArray expectedReqResult="c723ef05ba68ee87249489d9b4eb8104c58c606f6ecd1443fa12363aa515135e";
+    QByteArray expectedReqResult="359e289380e8ffafd14272646d1e35b02fbafdd53093a76c4af29d9a764a3e01";
     QCOMPARE(hashString(qr.exec()).toHex(),expectedReqResult);
     QVERIFY(qr.canSave("TITI"));
     unsigned int queryId=qr.save("TITI");
@@ -58,7 +58,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAQueries()
                           PCx_QueryVariation::OPERATORS::NOTEQUAL,0,2010,2012,"TOTI");
     //qDebug()<<qv.exec();
     //qDebug()<<hashString(qv.exec()).toHex();
-    QByteArray expectedReqVarResult="ea21c5d78ff2354bf3cbbfa43b647a417856d7e1dd67726400ed79959daf1d7e";
+    QByteArray expectedReqVarResult="b8bd8ca5da32d68c33591e807fd08020fe926d3dbe0e9eb9215741d68819ab4e";
     QCOMPARE(hashString(qv.exec()).toHex(),expectedReqVarResult);
     QVERIFY(qv.canSave("TOTO"));
     queryId=qv.save("TOTO");
@@ -90,7 +90,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAQueries()
 
     //qDebug()<<qm.exec();
     //qDebug()<<hashString(qm.exec()).toHex();
-    QByteArray expectedReqMMResult="8cd6c607e6ac2562960913c132600b302092a80bbdb69ee1a807ea97211abde1";
+    QByteArray expectedReqMMResult="c70aa134da68d82362b0ffc47b5cf56331d7ba84303a4bdcbf2ddd25e417c713";
     QCOMPARE(hashString(qm.exec()).toHex(),expectedReqMMResult);
     QVERIFY(qm.canSave("TUTU"));
     queryId=qm.save("TUTU");
