@@ -337,6 +337,9 @@
    <property name="text">
     <string>&amp;Tutoriels</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
