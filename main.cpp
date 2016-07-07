@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     //qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{message}");
 
-    qInstallMessageHandler(myMessageOutput);
+   // qInstallMessageHandler(myMessageOutput);
 
     //qDebug()<<"***ProtonClassicSuite starting***";
 
