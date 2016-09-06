@@ -15,30 +15,40 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 {
     QString message=QString("%1 (%2:%3)\n").arg(msg).arg(context.file).arg(context.line);
 
+    //Do not display a message box in case of XCB warning to avoid ui global freeze
+    bool noMessageBox=false;
+
+    if(message.contains("XCB",Qt::CaseInsensitive)==true)
+    {
+        noMessageBox=true;
+    }
+
     switch (type) {
 
     case QtInfoMsg:
         message.prepend("[I]");
         std::cerr<<qPrintable(message);
         break;
-
     case QtDebugMsg:
         message.prepend("[D]");
         std::cerr<<qPrintable(message);
         break;
     case QtWarningMsg:
         message.prepend("[W]");
-        QMessageBox::warning(0,"Attention",message);
+        if(noMessageBox==false)
+            QMessageBox::warning(0,"Attention",message);
         std::cerr<<qPrintable(message);
         break;
     case QtCriticalMsg:
         message.prepend("[C]");
-        QMessageBox::critical(0,"Erreur critique",message);
+        if(noMessageBox==false)
+            QMessageBox::critical(0,"Erreur critique",message);
         std::cerr<<qPrintable(message);
         break;
     case QtFatalMsg:
         message.prepend("[F]");
-        QMessageBox::critical(0,"Erreur fatale",message);
+        if(noMessageBox==false)
+            QMessageBox::critical(0,"Erreur fatale",message);
         std::cerr<<qPrintable(message);
         die();
     }
@@ -69,7 +79,7 @@ int main(int argc, char *argv[])
 
     //qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{message}");
 
-   // qInstallMessageHandler(myMessageOutput);
+    qInstallMessageHandler(myMessageOutput);
 
     //qDebug()<<"***ProtonClassicSuite starting***";
 
