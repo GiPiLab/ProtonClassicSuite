@@ -42,7 +42,7 @@
     <addaction name="actionOptions"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuDataInput">
+   <widget class="QMenu" name="menuAudits">
     <property name="title">
      <string>A&amp;udits</string>
     </property>
@@ -59,22 +59,21 @@
     <property name="title">
      <string>À &amp;propos...</string>
     </property>
-    <addaction name="actionA_propos"/>
+    <addaction name="actionAbout"/>
     <addaction name="actionCascade"/>
     <addaction name="actionCloseAllSubwin"/>
-    <addaction name="action_Tutoriels"/>
    </widget>
    <widget class="QMenu" name="menuReporting">
     <property name="title">
      <string>&amp;Reportings</string>
     </property>
     <addaction name="actionManageTree"/>
-    <addaction name="actionGestion_des_reportings"/>
+    <addaction name="actionManageReportings"/>
     <addaction name="actionReportingOverview"/>
-    <addaction name="actionGraphiques"/>
-    <addaction name="actionSurveillance_des_reportings"/>
+    <addaction name="actionReportingGraphics"/>
+    <addaction name="actionReportingSupervision"/>
     <addaction name="actionExploreReportings"/>
-    <addaction name="actionReportingGenerateur_de_rapports"/>
+    <addaction name="actionReportingReport"/>
    </widget>
    <widget class="QMenu" name="menuBudgets">
     <property name="title">
@@ -83,11 +82,11 @@
     <addaction name="actionManageTree"/>
     <addaction name="actionManageAudits"/>
     <addaction name="actionEditAudit"/>
-    <addaction name="actionGestion_des_pr_visions"/>
-    <addaction name="actionElaboration_budg_taire_PCB"/>
+    <addaction name="actionManagePrevisions"/>
+    <addaction name="actionBudgetElaboration"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuDataInput"/>
+   <addaction name="menuAudits"/>
    <addaction name="menuReporting"/>
    <addaction name="menuBudgets"/>
    <addaction name="menuA_propos"/>
@@ -120,18 +119,17 @@
    <addaction name="actionAuditReport"/>
    <addaction name="actionQueries"/>
    <addaction name="separator"/>
-   <addaction name="actionGestion_des_reportings"/>
+   <addaction name="actionManageReportings"/>
    <addaction name="actionReportingOverview"/>
-   <addaction name="actionGraphiques"/>
-   <addaction name="actionSurveillance_des_reportings"/>
+   <addaction name="actionReportingGraphics"/>
+   <addaction name="actionReportingSupervision"/>
    <addaction name="actionExploreReportings"/>
-   <addaction name="actionReportingGenerateur_de_rapports"/>
+   <addaction name="actionReportingReport"/>
    <addaction name="separator"/>
-   <addaction name="actionGestion_des_pr_visions"/>
-   <addaction name="actionElaboration_budg_taire_PCB"/>
+   <addaction name="actionManagePrevisions"/>
+   <addaction name="actionBudgetElaboration"/>
    <addaction name="separator"/>
-   <addaction name="actionA_propos"/>
-   <addaction name="action_Tutoriels"/>
+   <addaction name="actionAbout"/>
   </widget>
   <action name="actionManageTree">
    <property name="icon">
@@ -226,7 +224,7 @@
     <string>O&amp;ptions</string>
    </property>
   </action>
-  <action name="actionA_propos">
+  <action name="actionAbout">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/question.png</normaloff>:/icons/icons/question.png</iconset>
@@ -235,7 +233,7 @@
     <string>À &amp;propos...</string>
    </property>
   </action>
-  <action name="actionElaboration_budg_taire_PCB">
+  <action name="actionBudgetElaboration">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/editPrevisions.png</normaloff>:/icons/icons/editPrevisions.png</iconset>
@@ -244,7 +242,7 @@
     <string>Elaboration du budget</string>
    </property>
   </action>
-  <action name="actionGestion_des_reportings">
+  <action name="actionManageReportings">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/reportingManage.png</normaloff>:/icons/icons/reportingManage.png</iconset>
@@ -262,7 +260,7 @@
     <string>Vue d'&amp;ensemble du reporting</string>
    </property>
   </action>
-  <action name="actionSurveillance_des_reportings">
+  <action name="actionReportingSupervision">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/reportingForecast.png</normaloff>:/icons/icons/reportingForecast.png</iconset>
@@ -271,7 +269,7 @@
     <string>&amp;Surveillance du reporting et prévisions</string>
    </property>
   </action>
-  <action name="actionGraphiques">
+  <action name="actionReportingGraphics">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/reportingGraphics.png</normaloff>:/icons/icons/reportingGraphics.png</iconset>
@@ -289,7 +287,7 @@
     <string>E&amp;xplorateur de reporting</string>
    </property>
   </action>
-  <action name="actionReportingGenerateur_de_rapports">
+  <action name="actionReportingReport">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/reportingReport.png</normaloff>:/icons/icons/reportingReport.png</iconset>
@@ -308,7 +306,7 @@
     <string>&amp;Fermer tout</string>
    </property>
   </action>
-  <action name="actionGestion_des_pr_visions">
+  <action name="actionManagePrevisions">
    <property name="icon">
     <iconset resource="Images.qrc">
      <normaloff>:/icons/icons/previsionManage.png</normaloff>:/icons/icons/previsionManage.png</iconset>
@@ -327,21 +325,6 @@
    </property>
    <property name="toolTip">
     <string>Visualisation en Treemap</string>
-   </property>
-  </action>
-  <action name="action_Tutoriels">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="Images.qrc">
-     <normaloff>:/icons/icons/movies.png</normaloff>:/icons/icons/movies.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Tutoriels</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
    </property>
   </action>
  </widget>

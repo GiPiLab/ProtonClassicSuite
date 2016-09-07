@@ -34,6 +34,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
+
+
 void MainWindow::restoreSettings(void)
 {
     QCoreApplication::setOrganizationName("GiPiLab");
@@ -70,30 +74,32 @@ void MainWindow::setMenusState()
 {
     if(QSqlDatabase::database().databaseName().isEmpty())
     {
-        ui->menuDataInput->setEnabled(false);
+        ui->menuAudits->setEnabled(false);
         ui->menuReporting->setEnabled(false);
+        ui->menuBudgets->setEnabled(false);
+
         ui->actionEditAudit->setEnabled(false);
         ui->actionManageAudits->setEnabled(false);
         ui->actionManageTree->setEnabled(false);
         ui->actionQueries->setEnabled(false);
         ui->actionAuditReport->setEnabled(false);
         ui->actionExploreAudits->setEnabled(false);
-        ui->actionElaboration_budg_taire_PCB->setEnabled(false);
+        ui->actionBudgetElaboration->setEnabled(false);
         ui->actionExploreReportings->setEnabled(false);
-        ui->actionGestion_des_reportings->setEnabled(false);
-        ui->actionGraphiques->setEnabled(false);
-        ui->actionReportingGenerateur_de_rapports->setEnabled(false);
+        ui->actionManageReportings->setEnabled(false);
+        ui->actionReportingGraphics->setEnabled(false);
+        ui->actionReportingReport->setEnabled(false);
         ui->actionReportingOverview->setEnabled(false);
-        ui->actionSurveillance_des_reportings->setEnabled(false);
-        ui->actionGestion_des_pr_visions->setEnabled(false);
-        ui->actionElaboration_budg_taire_PCB->setEnabled(false);
-        ui->menuBudgets->setEnabled(false);
+        ui->actionReportingSupervision->setEnabled(false);
+        ui->actionManagePrevisions->setEnabled(false);
+
         ui->actionTreemap->setEnabled(false);
     }
     else
     {
-        ui->menuDataInput->setEnabled(true);
+        ui->menuAudits->setEnabled(true);
         ui->menuReporting->setEnabled(true);
+        ui->menuBudgets->setEnabled(true);
 
         ui->actionEditAudit->setEnabled(true);
         ui->actionManageAudits->setEnabled(true);
@@ -102,17 +108,15 @@ void MainWindow::setMenusState()
         ui->actionAuditReport->setEnabled(true);
         ui->actionExploreAudits->setEnabled(true);
         ui->actionTreemap->setEnabled(true);
-
-        ui->actionElaboration_budg_taire_PCB->setEnabled(true);
+        ui->actionBudgetElaboration->setEnabled(true);
         ui->actionExploreReportings->setEnabled(true);
-        ui->actionGestion_des_reportings->setEnabled(true);
-        ui->actionGraphiques->setEnabled(true);
-        ui->actionReportingGenerateur_de_rapports->setEnabled(true);
+        ui->actionManageReportings->setEnabled(true);
+        ui->actionReportingGraphics->setEnabled(true);
+        ui->actionReportingReport->setEnabled(true);
         ui->actionReportingOverview->setEnabled(true);
-        ui->actionSurveillance_des_reportings->setEnabled(true);
-        ui->actionGestion_des_pr_visions->setEnabled(true);
-        ui->actionElaboration_budg_taire_PCB->setEnabled(true);
-        ui->menuBudgets->setEnabled(true);
+        ui->actionReportingSupervision->setEnabled(true);
+        ui->actionManagePrevisions->setEnabled(true);
+
     }
 }
 
@@ -528,13 +532,13 @@ void MainWindow::on_actionQueries_triggered()
 
 }
 
-void MainWindow::on_actionA_propos_triggered()
+void MainWindow::on_actionAbout_triggered()
 {
     DialogAbout dlg(this);
     dlg.exec();
 }
 
-void MainWindow::on_actionGestion_des_reportings_triggered()
+void MainWindow::on_actionManageReportings_triggered()
 {
     if(formManageReportings==nullptr)
     {
@@ -644,7 +648,7 @@ void MainWindow::onFormReportingExploreWindowsDestroyed(QObject *obj)
 
 
 
-void MainWindow::on_actionSurveillance_des_reportings_triggered()
+void MainWindow::on_actionReportingSupervision_triggered()
 {
     FormReportingSupervision *dlg=new FormReportingSupervision();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
@@ -663,7 +667,7 @@ void MainWindow::on_actionSurveillance_des_reportings_triggered()
     }
 }
 
-void MainWindow::on_actionGraphiques_triggered()
+void MainWindow::on_actionReportingGraphics_triggered()
 {
     FormReportingGraphics *dlg=new FormReportingGraphics();
     dlg->setAttribute(Qt::WA_DeleteOnClose);
@@ -702,7 +706,7 @@ void MainWindow::on_actionExploreReportings_triggered()
 
 }
 
-void MainWindow::on_actionReportingGenerateur_de_rapports_triggered()
+void MainWindow::on_actionReportingReport_triggered()
 {
     if(formReportingReports==nullptr)
     {
@@ -761,7 +765,7 @@ void MainWindow::on_actionCloseAllSubwin_triggered()
     ui->mdiArea->closeAllSubWindows();
 }
 
-void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
+void MainWindow::on_actionBudgetElaboration_triggered()
 {
     if(formAuditPrevisions==nullptr)
     {
@@ -793,7 +797,7 @@ void MainWindow::on_actionElaboration_budg_taire_PCB_triggered()
 
 }
 
-void MainWindow::on_actionGestion_des_pr_visions_triggered()
+void MainWindow::on_actionManagePrevisions_triggered()
 {
     if(formManagePrevisions==nullptr)
     {
@@ -858,7 +862,3 @@ void MainWindow::on_actionTreemap_triggered()
 
 
 
-void MainWindow::on_action_Tutoriels_triggered()
-{
-    QDesktopServices::openUrl(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()+"/screencasts/tutoriels.html"));
-}

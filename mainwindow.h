@@ -56,28 +56,25 @@ private slots:
     void onFormReportingReportsWindowsDestroyed();
     void on_actionOptions_triggered();
     void on_actionQueries_triggered();
-    void on_actionA_propos_triggered();
-    void on_actionGestion_des_reportings_triggered();
+    void on_actionAbout_triggered();
+    void on_actionManageReportings_triggered();
     void on_actionReportingOverview_triggered();
     void onFormReportingTablesWindowsDestroyed(QObject *obj);
     void onFormReportingSupervisionWindowsDestroyed(QObject *obj);
     void onFormReportingGraphicsWindowsDestroyed(QObject *obj);
     void onFormReportingExploreWindowsDestroyed(QObject *obj);
-    void on_actionSurveillance_des_reportings_triggered();
-    void on_actionGraphiques_triggered();
+    void on_actionReportingSupervision_triggered();
+    void on_actionReportingGraphics_triggered();
     void on_actionExploreReportings_triggered();
-    void on_actionReportingGenerateur_de_rapports_triggered();
+    void on_actionReportingReport_triggered();
     void on_actionExploreAudits_triggered();
     void on_actionCascade_triggered();
     void on_actionCloseAllSubwin_triggered();
-    void on_actionElaboration_budg_taire_PCB_triggered();
-    void on_actionGestion_des_pr_visions_triggered();
+    void on_actionBudgetElaboration_triggered();
+    void on_actionManagePrevisions_triggered();
     void onFormManagePrevisionsWindowsDestroyed();
     void on_actionTreemap_triggered();
     void onFormAuditTreemapWindowsDestroyed(QObject *obj);
-
-
-    void on_action_Tutoriels_triggered();
 
 private:
 
