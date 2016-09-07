@@ -57,7 +57,7 @@
    </widget>
    <widget class="QMenu" name="menuA_propos">
     <property name="title">
-     <string>A&amp;ide</string>
+     <string>À &amp;propos...</string>
     </property>
     <addaction name="actionA_propos"/>
     <addaction name="actionCascade"/>
@@ -80,6 +80,9 @@
     <property name="title">
      <string>&amp;Budgets</string>
     </property>
+    <addaction name="actionManageTree"/>
+    <addaction name="actionManageAudits"/>
+    <addaction name="actionEditAudit"/>
     <addaction name="actionGestion_des_pr_visions"/>
     <addaction name="actionElaboration_budg_taire_PCB"/>
    </widget>
