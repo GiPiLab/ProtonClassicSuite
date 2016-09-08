@@ -13,7 +13,7 @@ DEFINES *= QT_USE_QSTRINGBUILDER
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ProtonClassicSuite
-TEMPLATE = app
+TEMPLATE=app
 
 include(QtXlsx/xlsx/qtxlsx.pri)
 
@@ -68,7 +68,8 @@ SOURCES += main.cpp\
     formdisplayprevisionreport.cpp \
     treemap.cpp \
     treemapwidget.cpp \
-    formaudittreemap.cpp
+    formaudittreemap.cpp \
+    productactivation.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -120,7 +121,8 @@ HEADERS  += mainwindow.h \
     formdisplayprevisionreport.h \
     treemap.h \
     treemapwidget.h \
-    formaudittreemap.h
+    formaudittreemap.h \
+    productactivation.h
 
 FORMS    += mainwindow.ui \
     formdisplaytree.ui \

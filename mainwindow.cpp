@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialogabout.h"
+#include "productactivation.h"
 #include <QWhatsThis>
 
 using namespace NUMBERSFORMAT;
@@ -36,6 +37,33 @@ MainWindow::~MainWindow()
 
 
 
+void MainWindow::desactivateActions()
+{
+    ui->menuAudits->setEnabled(false);
+    ui->menuReporting->setEnabled(false);
+    ui->menuBudgets->setEnabled(false);
+
+    ui->actionEditAudit->setEnabled(false);
+    ui->actionManageAudits->setEnabled(false);
+    ui->actionManageTree->setEnabled(false);
+    ui->actionQueries->setEnabled(false);
+    ui->actionAuditReport->setEnabled(false);
+    ui->actionExploreAudits->setEnabled(false);
+    ui->actionBudgetElaboration->setEnabled(false);
+    ui->actionExploreReportings->setEnabled(false);
+    ui->actionManageReportings->setEnabled(false);
+    ui->actionReportingGraphics->setEnabled(false);
+    ui->actionReportingReport->setEnabled(false);
+    ui->actionReportingOverview->setEnabled(false);
+    ui->actionReportingSupervision->setEnabled(false);
+    ui->actionManagePrevisions->setEnabled(false);
+
+    ui->actionTreemap->setEnabled(false);
+
+}
+
+
+
 
 
 void MainWindow::restoreSettings(void)
@@ -43,6 +71,10 @@ void MainWindow::restoreSettings(void)
     QCoreApplication::setOrganizationName("GiPiLab");
     QCoreApplication::setApplicationName("ProtonClassicSuite");
     QSettings settings;
+
+
+
+
     if(settings.value("mainwindow/maximised",false).toBool()==true)
         setWindowState(Qt::WindowMaximized);
     this->move(settings.value("mainwindow/position",QVariant(this->pos())).toPoint());
@@ -72,50 +104,71 @@ void MainWindow::saveSettings(void)
 
 void MainWindow::setMenusState()
 {
-    if(QSqlDatabase::database().databaseName().isEmpty())
+
+    desactivateActions();
+
+    if(!QSqlDatabase::database().databaseName().isEmpty())
     {
-        ui->menuAudits->setEnabled(false);
-        ui->menuReporting->setEnabled(false);
-        ui->menuBudgets->setEnabled(false);
 
-        ui->actionEditAudit->setEnabled(false);
-        ui->actionManageAudits->setEnabled(false);
-        ui->actionManageTree->setEnabled(false);
-        ui->actionQueries->setEnabled(false);
-        ui->actionAuditReport->setEnabled(false);
-        ui->actionExploreAudits->setEnabled(false);
-        ui->actionBudgetElaboration->setEnabled(false);
-        ui->actionExploreReportings->setEnabled(false);
-        ui->actionManageReportings->setEnabled(false);
-        ui->actionReportingGraphics->setEnabled(false);
-        ui->actionReportingReport->setEnabled(false);
-        ui->actionReportingOverview->setEnabled(false);
-        ui->actionReportingSupervision->setEnabled(false);
-        ui->actionManagePrevisions->setEnabled(false);
+        ProductActivation productActivation;
+        QSettings settings;
 
-        ui->actionTreemap->setEnabled(false);
-    }
-    else
-    {
-        ui->menuAudits->setEnabled(true);
-        ui->menuReporting->setEnabled(true);
-        ui->menuBudgets->setEnabled(true);
+        QString productKey=settings.value("licence/productkey").toString();
+        ProductActivation::AvailableModules modulesFlags=productActivation.checkLicenceKey(productKey);
 
-        ui->actionEditAudit->setEnabled(true);
-        ui->actionManageAudits->setEnabled(true);
-        ui->actionManageTree->setEnabled(true);
-        ui->actionQueries->setEnabled(true);
-        ui->actionAuditReport->setEnabled(true);
-        ui->actionExploreAudits->setEnabled(true);
-        ui->actionTreemap->setEnabled(true);
-        ui->actionBudgetElaboration->setEnabled(true);
-        ui->actionExploreReportings->setEnabled(true);
-        ui->actionManageReportings->setEnabled(true);
-        ui->actionReportingGraphics->setEnabled(true);
-        ui->actionReportingReport->setEnabled(true);
-        ui->actionReportingOverview->setEnabled(true);
-        ui->actionReportingSupervision->setEnabled(true);
-        ui->actionManagePrevisions->setEnabled(true);
+        if(!(modulesFlags & ProductActivation::AvailableModule::NOTHING))
+        {
+            bool ok;
+            QString text;
+
+            do
+            {
+                text=QInputDialog::getText(this,tr("Activation"), tr("Entrez votre clé d'activation :"),QLineEdit::Normal,"",&ok);
+
+            }while(ok && text.isEmpty());
+
+            if(ok)
+            {
+                modulesFlags=productActivation.checkLicenceKey(text);
+            }
+        }
+
+
+        if(modulesFlags & ProductActivation::AvailableModule::PCA)
+        {
+            ui->menuAudits->setEnabled(true);
+            ui->actionManageTree->setEnabled(true);
+            ui->actionEditAudit->setEnabled(true);
+            ui->actionManageAudits->setEnabled(true);
+            ui->actionQueries->setEnabled(true);
+            ui->actionAuditReport->setEnabled(true);
+            ui->actionExploreAudits->setEnabled(true);
+            ui->actionTreemap->setEnabled(true);
+        }
+
+
+        if(modulesFlags&ProductActivation::AvailableModule::PCB)
+        {
+            ui->menuBudgets->setEnabled(true);
+            ui->actionManageTree->setEnabled(true);
+            ui->actionEditAudit->setEnabled(true);
+            ui->actionManageAudits->setEnabled(true);
+            ui->actionManagePrevisions->setEnabled(true);
+            ui->actionBudgetElaboration->setEnabled(true);
+        }
+
+
+        if(modulesFlags&ProductActivation::AvailableModule::PCR)
+        {
+            ui->menuReporting->setEnabled(true);
+            ui->actionManageTree->setEnabled(true);
+            ui->actionExploreReportings->setEnabled(true);
+            ui->actionManageReportings->setEnabled(true);
+            ui->actionReportingGraphics->setEnabled(true);
+            ui->actionReportingReport->setEnabled(true);
+            ui->actionReportingOverview->setEnabled(true);
+            ui->actionReportingSupervision->setEnabled(true);
+        }
 
     }
 }

@@ -108,6 +108,8 @@ private:
     void saveSettings();
     void restoreSettings();
 
+    void desactivateActions();
+
 protected:
     void closeEvent(QCloseEvent *event);
 };

@@ -249,7 +249,6 @@ int question(const QString &text,QWidget *parent)
 
 
 
-
 namespace MODES
 {
 
