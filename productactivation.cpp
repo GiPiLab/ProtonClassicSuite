@@ -8,13 +8,13 @@
 
 ProductActivation::ProductActivation()
 {
-    hashedKeys.insert("7357d2d1fce5c95f2e19f6779da72cb8d9afc174efb6c0d0bffdede9c2da37fd8360772268e26bbcb22ececc8bb45666",AvailableModule::PCA);
-    hashedKeys.insert("16f37125c91a66bcc499f918696cf271e7f7d3c7e3fc794b67dbf684002abd1d46c9388cef507c4d00031d0c3d6410b4",AvailableModule::PCB);
-    hashedKeys.insert("43b8bd4ddeee40150945d1a0cfa6f086afd21cc035d952659c62f5d6ed4d72df496b739485f30bc983492b4062c4186c",AvailableModule::PCR);
-    hashedKeys.insert("0c8013ab87c231566dfcd2f0126ba8ca1e1256b4f17f50f8dc750d91ee61d337552c5264937782c1c8c0fb803125d4dd",AvailableModule::PCA|AvailableModule::PCB);
-    hashedKeys.insert("531d7a83142a0274c7048584d4f1e4fee39b72bb5737e72f7a268b93fa938f153884aff5908073e5508adb7d40e158dc",AvailableModule::PCA|AvailableModule::PCR);
-    hashedKeys.insert("8c295eeb24eb3a932c4245b56cecafb2c0e6572e52a0b3d74f65cdabafcc9f5d567528ac9c4feac7c6431172f2670667",AvailableModule::PCR|AvailableModule::PCB);
-    hashedKeys.insert("43564d8fa2bc70882bc5f1df5ebce3e649ebc2cb2bb7d424b56aa9b5339c281d74d33c4cdf1536033425bd6d4c66287b",AvailableModule::PCA|AvailableModule::PCB|AvailableModule::PCR);
+    hashedKeys.insert("0882f27431c1ac4096ae595b146972b27b24fc4c80a1fdd21d8573828a4df35246a5e8ae9f8ab8dbe2e591cb5c17936a84f86e157371703f88aa810b67766315",AvailableModule::PCA);
+    hashedKeys.insert("dd50ccea91f3101d8824e58ce203838b5376bee3ba07df02a34c2b9532c320feb126a75106ee2de046e53d6fd3b2a2d2b6ef3dc883d76b31bc575c80961acf73",AvailableModule::PCB);
+    hashedKeys.insert("77d22c1babeab292189bc1f6d0e82ef8d23107656d707c153c736d01276409f610a0638bdcb107e5a3eba3650b632d6b1e4ed6b423b6c736f677db52a35af21f",AvailableModule::PCR);
+    hashedKeys.insert("918633464913f4f9b5d700d157866cbcd67cc7f108006b7a6181d1ca4077009e82ec8d2508c03f79d9ebdd8005a7a87a38ede889d85f72e955ca99677c27493d",AvailableModule::PCA|AvailableModule::PCB);
+    hashedKeys.insert("3cf8ddbf43ae53a03a84115a56ab98b5256fa579d94c52ac8c833d333c9ebe5f9fd25b2a9a4bc6a59314a94d4814792d4dccbebb089ebbcaf64a42dcdecbd2f5",AvailableModule::PCA|AvailableModule::PCR);
+    hashedKeys.insert("04ffe56309c075f2f7447348b0ae55d0faa2e0661cde1f65df0f30cbd13b3ffc82fc46a294b838e1fc99b3d2a49d7ef0458111b17a44208e53bf61da5a87bd60",AvailableModule::PCR|AvailableModule::PCB);
+    hashedKeys.insert("c755c4c9e221648b2a21998625607111c8159a7fffcd36ca20f7d9c6855a7339e3ed343bad4615c67d6ff10ac76c527fee7b12c62a63de6577b798dedc2855b2",AvailableModule::PCA|AvailableModule::PCB|AvailableModule::PCR);
 
     QSettings settings;
     QByteArray productKey=settings.value("licence/productkey").toByteArray();
@@ -30,9 +30,10 @@ ProductActivation::~ProductActivation()
 
 const ProductActivation::AvailableModules ProductActivation::computeAvailablesModules(const QByteArray &hashedHexKey) const
 {
-    if(hashedKeys.contains(hashedHexKey))
+    QByteArray level2Hash=QCryptographicHash::hash(hashedHexKey,QCryptographicHash::Sha512).toHex();
+    if(hashedKeys.contains(level2Hash))
     {
-        return hashedKeys.value(hashedHexKey);
+        return hashedKeys.value(level2Hash);
     }
     else
     {
