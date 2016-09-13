@@ -1,7 +1,11 @@
 #include "dialogabout.h"
+#include "productactivation.h"
 #include "ui_dialogabout.h"
 #include <QDate>
 #include <QFile>
+#include <QSettings>
+#include <QInputDialog>
+#include <QMessageBox>
 #include <QTextStream>
 #include "utils.h"
 
@@ -19,9 +23,11 @@ DialogAbout::DialogAbout(QWidget *parent) :
     eulaFile.close();
     ui->plainTextEdit->setPlainText(line);
 
+
+    ProductActivation::AvailableModules modulesFlags=product.getAvailablesModules();
+    ui->labelLicenceMode->setText(product.availableModulesToString(modulesFlags));
+
 }
-
-
 
 DialogAbout::~DialogAbout()
 {
@@ -30,5 +36,21 @@ DialogAbout::~DialogAbout()
 
 void DialogAbout::on_pushButton_clicked()
 {
-    accept();
+    reject();
+}
+
+void DialogAbout::on_pushButtonActivateKey_clicked()
+{
+    if(!product.askForActivationKey())
+    {
+        QMessageBox::critical(this,tr("Attention"),tr("Clé invalide"));
+    }
+    else
+    {
+        ProductActivation::AvailableModules modulesFlags=product.getAvailablesModules();
+
+        ui->labelLicenceMode->setText(product.availableModulesToString(modulesFlags));
+        accept();
+    }
+
 }

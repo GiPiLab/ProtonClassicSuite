@@ -23,7 +23,8 @@ void die(int retcode)
 {
     QSqlDatabase::database().rollback();
     QSqlDatabase::database().close();
-    QApplication::instance()->exit(retcode);
+
+    QApplication::instance()->exit(retcode);    
     exit(retcode);
 }
 

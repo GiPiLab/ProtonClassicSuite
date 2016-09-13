@@ -1,6 +1,7 @@
 #ifndef DIALOGABOUT_H
 #define DIALOGABOUT_H
 
+#include "productactivation.h"
 #include <QDialog>
 
 namespace Ui {
@@ -18,7 +19,10 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+    void on_pushButtonActivateKey_clicked();
+
 private:
+    ProductActivation product;
     Ui::DialogAbout *ui;
 };
 

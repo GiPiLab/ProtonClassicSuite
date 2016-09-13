@@ -25,6 +25,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     restoreSettings();
     updateTitle();
+    ProductActivation productActivation;
+
+    ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
+
+
+    if(!modulesFlags)
+    {
+        ui->actionAbout->trigger();
+    }
     setMenusState();
     updateFormatModeAndDecimals();
 }
@@ -39,6 +48,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::desactivateActions()
 {
+    ui->actionNewDb->setEnabled(false);
+    ui->actionOpenDb->setEnabled(false);
+    ui->actionOptions->setEnabled(false);
+
+
     ui->menuAudits->setEnabled(false);
     ui->menuReporting->setEnabled(false);
     ui->menuBudgets->setEnabled(false);
@@ -61,10 +75,6 @@ void MainWindow::desactivateActions()
     ui->actionTreemap->setEnabled(false);
 
 }
-
-
-
-
 
 void MainWindow::restoreSettings(void)
 {
@@ -104,73 +114,72 @@ void MainWindow::saveSettings(void)
 
 void MainWindow::setMenusState()
 {
-
     desactivateActions();
 
-    if(!QSqlDatabase::database().databaseName().isEmpty())
+    ProductActivation productActivation;
+
+    ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
+
+    if(modulesFlags & ProductActivation::AvailableModule::PCA)
     {
+        ui->actionNewDb->setEnabled(true);
+        ui->actionOpenDb->setEnabled(true);
+        ui->actionOptions->setEnabled(true);
 
-        ProductActivation productActivation;
-        QSettings settings;
-
-        QString productKey=settings.value("licence/productkey").toString();
-        ProductActivation::AvailableModules modulesFlags=productActivation.checkLicenceKey(productKey);
-
-        if(!(modulesFlags & ProductActivation::AvailableModule::NOTHING))
+        if(!QSqlDatabase::database().databaseName().isEmpty())
         {
-            bool ok;
-            QString text;
-
-            do
-            {
-                text=QInputDialog::getText(this,tr("Activation"), tr("Entrez votre clé d'activation :"),QLineEdit::Normal,"",&ok);
-
-            }while(ok && text.isEmpty());
-
-            if(ok)
-            {
-                modulesFlags=productActivation.checkLicenceKey(text);
-            }
+        ui->menuAudits->setEnabled(true);
+        ui->actionManageTree->setEnabled(true);
+        ui->actionEditAudit->setEnabled(true);
+        ui->actionManageAudits->setEnabled(true);
+        ui->actionQueries->setEnabled(true);
+        ui->actionAuditReport->setEnabled(true);
+        ui->actionExploreAudits->setEnabled(true);
+        ui->actionTreemap->setEnabled(true);
         }
-
-
-        if(modulesFlags & ProductActivation::AvailableModule::PCA)
-        {
-            ui->menuAudits->setEnabled(true);
-            ui->actionManageTree->setEnabled(true);
-            ui->actionEditAudit->setEnabled(true);
-            ui->actionManageAudits->setEnabled(true);
-            ui->actionQueries->setEnabled(true);
-            ui->actionAuditReport->setEnabled(true);
-            ui->actionExploreAudits->setEnabled(true);
-            ui->actionTreemap->setEnabled(true);
-        }
-
-
-        if(modulesFlags&ProductActivation::AvailableModule::PCB)
-        {
-            ui->menuBudgets->setEnabled(true);
-            ui->actionManageTree->setEnabled(true);
-            ui->actionEditAudit->setEnabled(true);
-            ui->actionManageAudits->setEnabled(true);
-            ui->actionManagePrevisions->setEnabled(true);
-            ui->actionBudgetElaboration->setEnabled(true);
-        }
-
-
-        if(modulesFlags&ProductActivation::AvailableModule::PCR)
-        {
-            ui->menuReporting->setEnabled(true);
-            ui->actionManageTree->setEnabled(true);
-            ui->actionExploreReportings->setEnabled(true);
-            ui->actionManageReportings->setEnabled(true);
-            ui->actionReportingGraphics->setEnabled(true);
-            ui->actionReportingReport->setEnabled(true);
-            ui->actionReportingOverview->setEnabled(true);
-            ui->actionReportingSupervision->setEnabled(true);
-        }
-
     }
+
+
+    if(modulesFlags&ProductActivation::AvailableModule::PCB)
+    {
+        ui->actionNewDb->setEnabled(true);
+        ui->actionOpenDb->setEnabled(true);
+        ui->actionOptions->setEnabled(true);
+
+        if(!QSqlDatabase::database().databaseName().isEmpty())
+        {
+
+        ui->menuBudgets->setEnabled(true);
+        ui->actionManageTree->setEnabled(true);
+        ui->actionEditAudit->setEnabled(true);
+        ui->actionManageAudits->setEnabled(true);
+        ui->actionManagePrevisions->setEnabled(true);
+        ui->actionBudgetElaboration->setEnabled(true);
+        }
+    }
+
+
+    if(modulesFlags&ProductActivation::AvailableModule::PCR)
+    {
+        ui->actionNewDb->setEnabled(true);
+        ui->actionOpenDb->setEnabled(true);
+        ui->actionOptions->setEnabled(true);
+
+        if(!QSqlDatabase::database().databaseName().isEmpty())
+        {
+        ui->menuReporting->setEnabled(true);
+        ui->actionManageTree->setEnabled(true);
+        ui->actionExploreReportings->setEnabled(true);
+        ui->actionManageReportings->setEnabled(true);
+        ui->actionReportingGraphics->setEnabled(true);
+        ui->actionReportingReport->setEnabled(true);
+        ui->actionReportingOverview->setEnabled(true);
+        ui->actionReportingSupervision->setEnabled(true);
+        }
+    }
+
+
+
 }
 
 
@@ -588,7 +597,12 @@ void MainWindow::on_actionQueries_triggered()
 void MainWindow::on_actionAbout_triggered()
 {
     DialogAbout dlg(this);
-    dlg.exec();
+
+    if(dlg.exec()==QDialog::Accepted)
+    {
+        //Update menus if a new licence key is entered
+        setMenusState();
+    }
 }
 
 void MainWindow::on_actionManageReportings_triggered()

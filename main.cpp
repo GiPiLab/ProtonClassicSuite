@@ -65,6 +65,7 @@ int main(int argc, char *argv[])
     sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
     sharedMemory.attach();
 
+
     if (!sharedMemory.create(1)) {
         QMessageBox::information(nullptr,"Attention","Une seule instance de ProtonClassicSuite est autorisée à la fois");
         return EXIT_FAILURE;

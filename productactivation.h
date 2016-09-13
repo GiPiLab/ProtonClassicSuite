@@ -2,7 +2,8 @@
 #define PRODUCTACTIVATION_H
 
 #include <QFlags>
-#include<QHash>
+#include <QHash>
+#include <QSettings>
 
 class ProductActivation
 {
@@ -12,7 +13,7 @@ public:
 
     enum class AvailableModule
     {
-        NOTHING=0x0,
+        NOTHING=0,
         PCA=0x1,
         PCB=0x2,
         PCR=0x4
@@ -20,10 +21,26 @@ public:
 
     Q_DECLARE_FLAGS(AvailableModules,AvailableModule)
 
-    AvailableModules checkLicenceKey(const QString &cryptedKey);
+
+
+
+    const QString availableModulesToString(ProductActivation::AvailableModules modules) const;
+
+    bool askForActivationKey();
+
+    const ProductActivation::AvailableModules getAvailablesModules() const{return availableModules;}
+
+
+
 
 private:
-    QHash<QString,AvailableModules> cryptedKeys;
+    const QByteArray hashActivationKeyToHex(const QString &activationKey) const;
+
+    const AvailableModules computeAvailablesModules(const QByteArray &hashedHexKey) const;
+    QHash<QByteArray,AvailableModules> hashedKeys;
+    ProductActivation::AvailableModules availableModules;
+
+
 
 };
 
