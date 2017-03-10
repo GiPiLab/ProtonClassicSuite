@@ -5,24 +5,10 @@
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>620</width>
-    <height>533</height>
-   </rect>
-  </property>
   <property name="minimumSize">
    <size>
     <width>620</width>
     <height>533</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>781</width>
-    <height>559</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -31,6 +17,9 @@
   <property name="windowIcon">
    <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/setting_tools.png</normaloff>:/icons/icons/setting_tools.png</iconset>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
   </property>
   <property name="modal">
    <bool>true</bool>

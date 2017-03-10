@@ -22,6 +22,13 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     {
         noMessageBox=true;
     }
+#ifdef Q_OS_ANDROID
+    //Avoid an anoying popup on android and combobox
+    if(message.contains("This plugin does not support grabbing the keyboard",Qt::CaseInsensitive)==true)
+    {
+        noMessageBox=true;
+    }
+#endif
 
     switch (type) {
 
@@ -60,7 +67,7 @@ int main(int argc, char *argv[])
 
     //Avoid multiple application instances
 
-
+#ifndef Q_OS_ANDROID
     QSharedMemory sharedMemory;
     sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
     sharedMemory.attach();
@@ -70,7 +77,7 @@ int main(int argc, char *argv[])
         QMessageBox::information(nullptr,"Attention","Une seule instance de ProtonClassicSuite est autorisée à la fois");
         return EXIT_FAILURE;
     }
-
+#endif
 
     QTranslator qtTranslator;
     qtTranslator.load("qt_" + QLocale::system().name(),
@@ -107,6 +114,10 @@ int main(int argc, char *argv[])
     retval=a.exec();
 
     QSqlDatabase::database().close();
+
+#ifndef Q_OS_ANDROID
     sharedMemory.detach();
+#endif
+
     return retval;
 }

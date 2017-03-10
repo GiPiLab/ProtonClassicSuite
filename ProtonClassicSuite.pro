@@ -153,7 +153,12 @@ RC_ICONS = icons/logo64_64.ico
 QMAKE_CXXFLAGS_DEBUG += -Og
 #QMAKE_LFLAGS_DEBUG += -pg
 
-unix|win32: LIBS += -lgvc -lcgraph
+win32: LIBS += -lgvc -lcgraph
+
+unix:!android{
+    LIBS += -lgvc -lcgraph
+}
+
 
 win32: INCLUDEPATH += "c:/Program Files/Graphviz/include"
 
@@ -165,5 +170,16 @@ win32:DEPENDPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
 
 RESOURCES += \
     Images.qrc
+
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 

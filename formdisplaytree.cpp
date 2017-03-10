@@ -28,6 +28,7 @@ FormDisplayTree::~FormDisplayTree()
 
 void FormDisplayTree::on_printViewButton_clicked()
 {
+#ifndef Q_OS_ANDROID
     QPrinter printer;
 
        QPrintDialog *dialog = new QPrintDialog(&printer, this);
@@ -45,6 +46,9 @@ void FormDisplayTree::on_printViewButton_clicked()
        painter.translate(-width()/2, -height()/2);
 
        ui->treeView->render(&painter);
+#else
+    QMessageBox::warning(this,tr("Non supporté"),tr("Fonction non supportée sur cette plateforme"));
+#endif
 }
 
 void FormDisplayTree::on_expandButton_clicked()
@@ -60,6 +64,11 @@ void FormDisplayTree::on_collapseButton_clicked()
 
 void FormDisplayTree::on_exportButton_clicked()
 {
+#ifdef Q_OS_ANDROID
+    QMessageBox::warning(this,tr("Non supporté"),tr("Fonction non supportée sur cette plateforme"));
+    return;
+#endif
+
     QList<unsigned int> listOfTrees=PCx_Tree::getListOfTreesId();
     if(!listOfTrees.contains(model->getTreeId()))
     {

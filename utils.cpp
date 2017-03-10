@@ -14,9 +14,9 @@
 #include <cstdio>
 #include <QDebug>
 #include <QMessageBox>
-
+#ifndef Q_OS_ANDROID
 #include <graphviz/gvc.h>
-
+#endif
 
 
 void die(int retcode)
@@ -172,6 +172,7 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
 {
     Q_ASSERT(!outputFileName.isEmpty());
 
+#ifndef Q_OS_ANDROID
     QFile output(outputFileName);
 
     const char *dotData=dot.constData();
@@ -231,6 +232,11 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
     gvFreeLayout(gvc, g);
     agclose(g);
     gvFreeContext(gvc);
+
+#else
+    QMessageBox::warning(nullptr,QObject::tr("Non supporté"),QObject::tr("Fonction non supportée sur cette plateforme"));
+#endif
+
     return true;
 }
 
