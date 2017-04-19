@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QInputDialog>
+#include <QDebug>
 
 
 
@@ -15,7 +16,7 @@ ProductActivation::ProductActivation()
     hashedKeys.insert("3cf8ddbf43ae53a03a84115a56ab98b5256fa579d94c52ac8c833d333c9ebe5f9fd25b2a9a4bc6a59314a94d4814792d4dccbebb089ebbcaf64a42dcdecbd2f5",AvailableModule::PCA|AvailableModule::PCR);
     hashedKeys.insert("04ffe56309c075f2f7447348b0ae55d0faa2e0661cde1f65df0f30cbd13b3ffc82fc46a294b838e1fc99b3d2a49d7ef0458111b17a44208e53bf61da5a87bd60",AvailableModule::PCR|AvailableModule::PCB);
     hashedKeys.insert("c755c4c9e221648b2a21998625607111c8159a7fffcd36ca20f7d9c6855a7339e3ed343bad4615c67d6ff10ac76c527fee7b12c62a63de6577b798dedc2855b2",AvailableModule::PCA|AvailableModule::PCB|AvailableModule::PCR);
-
+    hashedKeys.insert("91d0eeb5a7572e93c21a805b7bd3432a9f8893ad4b1a3ecd30fb7496069f96d1cf6f272060a1d6b327ecbd8580c89478a9ef5f45463013296c7fd4df4c1a414e",AvailableModule::DEMO);
     QSettings settings;
     QByteArray productKey=settings.value("licence/productkey").toByteArray();
     availableModules=computeAvailablesModules(productKey);
@@ -58,6 +59,9 @@ const QString ProductActivation::availableModulesToString(ProductActivation::Ava
     if(modules & AvailableModule::PCR)
         activatedModules.append(QObject::tr("Reporting"));
 
+    if(modules & AvailableModule::DEMO)
+        return QObject::tr("Mode démo");
+
     if(!activatedModules.isEmpty())
     {
         return activatedModules.join('+');
@@ -83,7 +87,7 @@ bool ProductActivation::askForActivationKey()
         availableModules=computeAvailablesModules(hashedKey);
 
         if(availableModules&ProductActivation::AvailableModule::PCA || availableModules&ProductActivation::AvailableModule::PCR
-                ||availableModules&ProductActivation::AvailableModule::PCB)
+                ||availableModules&ProductActivation::AvailableModule::PCB || availableModules&ProductActivation::AvailableModule::DEMO)
         {
             QSettings settings;
             settings.setValue("licence/productkey",hashedKey);

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Elaboration du budget</string>
   </property>
+  <property name="whatsThis">
+   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cette fenêtre permet de fixer des critères de calcul à appliquer aux noeuds de l'arbre sur lequel s'adosse la prévision. Elle s'utilise de haut en bas. Les critères, additifs ou soustractifs sont tout d'abord &lt;span style=&quot; font-weight:600;&quot;&gt;construits&lt;/span&gt; dans la première zone horizontale, puis &lt;span style=&quot; font-weight:600;&quot;&gt;distribués&lt;/span&gt; au noeud ou aux feuilles à l'aide des boutons en gras. Différentes stratégies sont détaillées dans l'aide contextuelle de ces derniers.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Pour chaque noeud vous pouvez ensuite afficher sa &lt;span style=&quot; font-weight:600;&quot;&gt;fiche prévisionnelle&lt;/span&gt; et enregistrer les fiches de la branche active (le noeud et ses descendants)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+  </property>
   <layout class="QGridLayout" name="gridLayout_5">
    <property name="verticalSpacing">
     <number>4</number>

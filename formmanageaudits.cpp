@@ -1,5 +1,6 @@
 #include <QMessageBox>
 #include <QInputDialog>
+#include "productactivation.h"
 #include "formmanageaudits.h"
 #include "ui_formmanageaudits.h"
 #include "pcx_audit.h"
@@ -27,6 +28,17 @@ FormManageAudits::FormManageAudits(QWidget *parent):
     //ui->spinBoxFrom->setMaximum(date.year());
     //ui->spinBoxTo->setMaximum(date.year()+1);
     updateRandomButtonVisibility();
+
+    ProductActivation productActivation;
+    ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
+
+    if(modulesFlags & ProductActivation::AvailableModule::DEMO)
+    {
+        ui->pushButtonLoadDF->setVisible(false);
+        ui->pushButtonLoadRF->setVisible(false);
+        ui->pushButtonLoadDI->setVisible(false);
+        ui->pushButtonLoadRI->setVisible(false);
+    }
 
 }
 
@@ -57,7 +69,7 @@ void FormManageAudits::updateButtonsVisibility()
 void FormManageAudits::updateRandomButtonVisibility()
 {
     QSettings settings;
-    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    bool randomAllowed=settings.value("misc/randomAllowed",true).toBool();
     bool finished=false;
     if(selectedAudit!=nullptr)
     {
@@ -87,6 +99,14 @@ void FormManageAudits::updateListOfAudits()
     ui->comboListOfAudits->clear();
 
     QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits);
+
+    QList<QPair<unsigned int,QString> > lot=PCx_Tree::getListOfTrees(true);
+    if(!lot.isEmpty() && listOfAudits.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Vous pouvez maintenant créer un nouvel audit. Une fois créé, utilisez la fenêtre <b>saisie des données</b> pour le remplir manuellement, ou alors le bouton <b>Générer le fichier squelette</b> pour fabriquer un ficher excel que vous dupliquerez (un pour les DF, un pour les RF, ainsi de suite le cas échéant) et compléterez avec vos données, avant de les charger avec les boutons <b>Charger [x]</b>. Vous pouvez aussi remplir l'audit de données aléatoires à des fins de test."));
+    }
+
+
     ui->groupBoxAudits->setEnabled(!listOfAudits.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfAudits)
@@ -113,6 +133,12 @@ void FormManageAudits::updateListOfTrees()
 
     QList<QPair<unsigned int,QString> > lot=PCx_Tree::getListOfTrees(true);
     setEnabled(!lot.isEmpty());
+
+    if(lot.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("<b>Terminez</b> d'abord un arbre afin de pouvoir créer un audit"));
+    }
+
     QPair<unsigned int, QString> p;
     foreach(p,lot)
     {
@@ -183,7 +209,7 @@ void FormManageAudits::on_addAuditButton_clicked()
         {
             updateListOfAudits();
             emit(listOfAuditsChanged());
-            QMessageBox::information(this,tr("Information"),tr("Nouvel audit ajouté, utilisez la fenêtre \"saisie des données\" pour le remplir manuellement, ou alors les boutons ci-dessus pour utiliser un fichier Excel"));
+            QMessageBox::information(this,tr("Information"),tr("Nouvel audit ajouté, utilisez la fenêtre <b>saisie des données</b> pour le remplir manuellement, ou alors le bouton <b>générer un fichier squelette</b> afin de créer un fichier avec les feuilles de l'arbre et les colonnes à compléter. Ce fichier doit être dupliqué pour les DF, RF, DI, RI le cas échéant puis complété sous excel avec vos données. Une fois les fichiers complétés, utilisez les boutons <b>Charger [x]</b> pour les importer dans l'audit. Vous pouvez également remplir l'audit de données aléatoires à des fins de test"));
         }
 
     }

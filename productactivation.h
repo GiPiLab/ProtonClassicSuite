@@ -16,7 +16,8 @@ public:
         NOTHING=0,
         PCA=0x1,
         PCB=0x2,
-        PCR=0x4
+        PCR=0x4,
+        DEMO=0x8
     };
 
     Q_DECLARE_FLAGS(AvailableModules,AvailableModule)

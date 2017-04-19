@@ -34,6 +34,10 @@ void FormReportingReports::updateListOfReportings()
     ui->comboListReportings->clear();
 
     QList<QPair<unsigned int,QString> >listOfReportings=PCx_Reporting::getListOfReportings();
+    if(listOfReportings.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Commencez par créer et ajouter des données à un reporting dans la fenêtre de gestion des reportings"));
+    }
     bool nonEmpty=!listOfReportings.isEmpty();
     this->setEnabled(nonEmpty);
     QPair<unsigned int, QString> p;

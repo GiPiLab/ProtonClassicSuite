@@ -47,6 +47,13 @@ void FormAuditTreemap::updateListOfAudits()
     ui->comboListAudits->clear();
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
+
+    if(listOfAudits.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Créez et terminez un audit dans la fenêtre de gestion des audits"));
+    }
+
+
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
 

@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "pcx_tree.h"
 #include "formtreeconsistency.h"
+#include "productactivation.h"
 #include <QDebug>
 #include <QSqlRecord>
 #include <QSqlField>
@@ -14,12 +15,28 @@
 #include <QFileDialog>
 #include <QSettings>
 
+
+
+
+
+
 FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEditTree)
 {
     ui->setupUi(this);
     model=nullptr;
     updateListOfTree();    
     updateRandomButtonVisibility();
+
+    ProductActivation productActivation;
+    ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
+
+    if(modulesFlags & ProductActivation::AvailableModule::DEMO)
+    {
+        ui->importTreeButton->setDisabled(true);
+        ui->newTreeButton->setDisabled(true);
+        ui->duplicateTreeButton->setDisabled(true);
+        ui->addNodeButton->setVisible(false);
+    }
 }
 
 FormEditTree::~FormEditTree()
@@ -31,7 +48,7 @@ FormEditTree::~FormEditTree()
 void FormEditTree::updateRandomButtonVisibility()
 {
     QSettings settings;
-    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    bool randomAllowed=settings.value("misc/randomAllowed",true).toBool();
     ui->randomTreeButton->setEnabled(randomAllowed);
 }
 
@@ -74,6 +91,14 @@ void FormEditTree::updateListOfTree()
 
     QList<QPair<unsigned int,QString> > lot=PCx_Tree::getListOfTrees();
     bool nonEmpty=!lot.isEmpty();
+
+    if(lot.isEmpty())
+    {
+        QMessageBox::information(this,tr("Pour continuer"),tr("Vous pouvez ajouter un arbre, soit en le créant à la main, soit en l'important à partir d'un fichier excel, soit en générer un aléatoire à des fins de test. Le format de données attendu dans le fichier excel est détaillé dans l'aide contextuelle du bouton <b>importer arbre</b>"));
+    }
+
+
+
     setReadOnly(!nonEmpty);
     ui->deleteTreeButton->setEnabled(nonEmpty);
     ui->duplicateTreeButton->setEnabled(nonEmpty);
@@ -431,6 +456,7 @@ void FormEditTree::on_finishTreeButton_clicked()
         }
         emit(listOfTreeChanged());
         updateListOfTree();
+        QMessageBox::information(this,tr("Information"),tr("Arbre terminé. Vous pouvez maintenant l'utiliser pour créer des audits ou des reportings"));
     }
 }
 

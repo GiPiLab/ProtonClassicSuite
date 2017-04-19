@@ -20,7 +20,7 @@ DialogOptions::DialogOptions(QWidget *parent) :
     QSettings settings;
 
 
-    ui->checkBoxRandomAllowed->setChecked(settings.value("misc/randomAllowed",false).toBool());
+    ui->checkBoxRandomAllowed->setChecked(settings.value("misc/randomAllowed",true).toBool());
 
     QString css=settings.value("output/style","CSS").toString();
     if(css=="CSS")

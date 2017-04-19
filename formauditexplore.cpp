@@ -63,6 +63,13 @@ void FormAuditExplore::updateListOfAudits()
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
     //do not update text browser if no audit are available
+
+    if(listOfAudits.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Créez et terminez un audit dans la fenêtre de gestion des audits"));
+    }
+
+
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);
     doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un audit et n'oubliez pas de le terminer</h1>"));

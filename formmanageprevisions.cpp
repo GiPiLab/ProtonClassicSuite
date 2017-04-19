@@ -29,6 +29,16 @@ void FormManagePrevisions::updateListOfPrevisions()
     ui->comboListPrevisions->clear();
 
     QList<QPair<unsigned int,QString> > listOfPrevisions=PCx_Prevision::getListOfPrevisions();
+
+    QList<QPair<unsigned int,QString> > listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
+
+
+    if(listOfPrevisions.isEmpty() && ! listOfAudits.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Vous pouvez maintenant utiliser un audit pour créer une <b>prévision</b>. Une prévision consiste en un ensemble de critères appliqués à chaque noeud de l'arbre afin de fixer les valeurs des crédits prévus pour l'année N+1"));
+    }
+
+
     ui->groupBoxPrevisions->setEnabled(!listOfPrevisions.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfPrevisions)
@@ -90,6 +100,7 @@ void FormManagePrevisions::updateListOfAudits()
     QPair<unsigned int,QString> p;
     if(listOfAudits.count()==0)
     {
+        QMessageBox::information(this,tr("Information"),tr("Les prévisions s'appuient sur les données historiques des audits. Commencez par créer, remplir et terminer un audit dans la fenêtre de gestion des audits"));
         ui->groupBox_2->setEnabled(false);
     }
     else

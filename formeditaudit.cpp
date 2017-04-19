@@ -1,6 +1,7 @@
 #include "formeditaudit.h"
 #include "ui_formeditaudit.h"
 #include "pcx_tables.h"
+#include "productactivation.h"
 #include <QDebug>
 #include "utils.h"
 #include <QMessageBox>
@@ -40,7 +41,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) :
     ui->tableViewDI->setItemDelegate(delegateDI);
     ui->tableViewRI->setItemDelegate(delegateRI);
 
-    updateListOfAudits();    
+    updateListOfAudits();
 }
 
 FormEditAudit::~FormEditAudit()
@@ -69,6 +70,18 @@ void FormEditAudit::updateListOfAudits()
     //QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::UnFinishedAuditsOnly);
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::AllAudits);
     bool nonEmpty=!listOfAudits.isEmpty();
+
+
+    if(listOfAudits.isEmpty())
+    {
+         QMessageBox::information(this,tr("Information"),tr("Créez d'abord un audit dans la fenêtre de gestion des audits"));
+    }
+    else
+    {
+        QMessageBox::information(this,tr("Information"),tr("Les données sont modifiables pour les audits non terminés. Les valeurs se saisissent uniquement aux <b>feuilles</b> de l'arbre et les sommes sont mises à jour dynamiquement vers la racine"));
+    }
+
+
     ui->splitter->setEnabled(nonEmpty);
 
     QPair<unsigned int, QString> p;
@@ -153,9 +166,13 @@ void FormEditAudit::on_treeView_clicked(const QModelIndex &index)
     bool isLeaf=auditModel->getAttachedTree()->isLeaf(selectedNode);
     bool isFinished=auditModel->isFinished();
 
+    ProductActivation productActivation;
+    ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
+
+
     if(isLeaf)
     {
-        if(!isFinished)
+        if(!isFinished && !(modulesFlags & ProductActivation::AvailableModule::DEMO))
         {
             ui->tableViewDF->setEditTriggers(QAbstractItemView::AllEditTriggers);
             ui->tableViewRF->setEditTriggers(QAbstractItemView::AllEditTriggers);

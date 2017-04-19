@@ -120,7 +120,7 @@ void MainWindow::setMenusState()
 
     ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
 
-    if(modulesFlags & ProductActivation::AvailableModule::PCA)
+    if(modulesFlags & ProductActivation::AvailableModule::PCA || modulesFlags & ProductActivation::AvailableModule::DEMO)
     {
         ui->actionNewDb->setEnabled(true);
         ui->actionOpenDb->setEnabled(true);
@@ -137,10 +137,11 @@ void MainWindow::setMenusState()
         ui->actionExploreAudits->setEnabled(true);
         ui->actionTreemap->setEnabled(true);
         }
+
     }
 
 
-    if(modulesFlags&ProductActivation::AvailableModule::PCB)
+    if(modulesFlags&ProductActivation::AvailableModule::PCB || modulesFlags & ProductActivation::AvailableModule::DEMO)
     {
         ui->actionNewDb->setEnabled(true);
         ui->actionOpenDb->setEnabled(true);
@@ -148,18 +149,18 @@ void MainWindow::setMenusState()
 
         if(!QSqlDatabase::database().databaseName().isEmpty())
         {
-
-        ui->menuBudgets->setEnabled(true);
-        ui->actionManageTree->setEnabled(true);
-        ui->actionEditAudit->setEnabled(true);
-        ui->actionManageAudits->setEnabled(true);
-        ui->actionManagePrevisions->setEnabled(true);
-        ui->actionBudgetElaboration->setEnabled(true);
+            ui->menuBudgets->setEnabled(true);
+            ui->actionManageTree->setEnabled(true);
+            ui->actionEditAudit->setEnabled(true);
+            ui->actionManageAudits->setEnabled(true);
+            ui->actionManagePrevisions->setEnabled(true);
+            ui->actionBudgetElaboration->setEnabled(true);
         }
+
     }
 
 
-    if(modulesFlags&ProductActivation::AvailableModule::PCR)
+    if(modulesFlags&ProductActivation::AvailableModule::PCR || modulesFlags & ProductActivation::AvailableModule::DEMO)
     {
         ui->actionNewDb->setEnabled(true);
         ui->actionOpenDb->setEnabled(true);
@@ -176,6 +177,19 @@ void MainWindow::setMenusState()
         ui->actionReportingOverview->setEnabled(true);
         ui->actionReportingSupervision->setEnabled(true);
         }
+    }
+
+
+    if(((modulesFlags&ProductActivation::AvailableModule::PCA)||(modulesFlags&ProductActivation::AvailableModule::PCB)||(modulesFlags&ProductActivation::AvailableModule::PCR) || (modulesFlags & ProductActivation::AvailableModule::DEMO)))
+    {
+        if(QSqlDatabase::database().databaseName().isEmpty())
+        {
+            QMessageBox::information(this,tr("Pour démarrer"),tr("Commencez par créer une nouvelle base de données, ou ouvrir une base de données existante"));
+        }
+    }
+    else
+    {
+        QMessageBox::information(this,tr("Attention"),tr("Veuillez entrer une clé d'activation dans le menu <b>à propos</b>"));
     }
 
 
@@ -466,6 +480,8 @@ void MainWindow::on_actionNewDb_triggered()
     recentDb=fileName;
     updateTitle();
     setMenusState();
+
+    QMessageBox::information(this,tr("Pour continuer"),tr("Vous devez maintenant créer ou importer un arbre représentant la structure que vous souhaitez analyser, dans la fenêtre <b>gestion des arbres</b>"));
 }
 
 void MainWindow::on_actionOpenDb_triggered()
@@ -601,6 +617,7 @@ void MainWindow::on_actionAbout_triggered()
     if(dlg.exec()==QDialog::Accepted)
     {
         //Update menus if a new licence key is entered
+        on_actionCloseAllSubwin_triggered();
         setMenusState();
     }
 }

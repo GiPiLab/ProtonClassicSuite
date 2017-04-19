@@ -112,6 +112,18 @@ void FormAuditPrevisions::updateListOfPrevisions()
     ui->comboListPrevisions->clear();
 
     QList<QPair<unsigned int,QString> >listOfPrevisions=PCx_Prevision::getListOfPrevisions();
+
+    if(listOfPrevisions.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Créez d'abord une prévision dans la fenêtre de gestion des prévisions"));
+    }
+    else
+    {
+        QMessageBox::information(this,tr("Astuce"),tr("Pensez à utiliser l'<b>aide contextuelle</b> (clic sur le bouton à droite dans la barre d'outil puis sur une zone de cette fenêtre) afin d'obtenir des explications"));
+    }
+
+
+
     bool nonEmpty=!listOfPrevisions.isEmpty();
     this->setEnabled(nonEmpty);
 

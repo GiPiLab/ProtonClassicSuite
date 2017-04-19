@@ -58,6 +58,7 @@ void FormReportingGraphics::updateListOfReportings()
     QPair<unsigned int,QString> p;
     if(listOfReportings.count()==0)
     {
+        QMessageBox::information(this,tr("Information"),tr("Commencez par créer et ajouter des données à un reporting dans la fenêtre de gestion des reportings"));
         setEnabled(false);
         return;
     }

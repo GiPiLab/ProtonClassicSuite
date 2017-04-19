@@ -129,6 +129,12 @@ void FormQueries::updateListOfAudits()
     ui->comboBoxListAudits->clear();
 
     QList<QPair<unsigned int,QString> >listOfAudits=PCx_Audit::getListOfAudits(PCx_Audit::ListAuditsMode::FinishedAuditsOnly);
+
+    if(listOfAudits.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Créez et terminez un audit dans la fenêtre de gestion des audits"));
+    }
+
     //do not update text browser if no audit are available
     bool nonEmpty=!listOfAudits.isEmpty();
     this->setEnabled(nonEmpty);

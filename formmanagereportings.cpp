@@ -2,6 +2,7 @@
 #include "formmanagereportings.h"
 #include "ui_formmanagereportings.h"
 #include "formdisplaytree.h"
+#include "productactivation.h"
 #include <QMessageBox>
 #include <QMdiArea>
 #include <QMdiSubWindow>
@@ -20,6 +21,17 @@ FormManageReportings::FormManageReportings(QWidget *parent) :
     updateListOfTrees();
     updateListOfReportings();
     updateRandomVisibility();
+
+    ProductActivation productActivation;
+    ProductActivation::AvailableModules modulesFlags=productActivation.getAvailablesModules();
+
+    if(modulesFlags & ProductActivation::AvailableModule::DEMO)
+    {
+        ui->pushButtonLoadDF->setVisible(false);
+        ui->pushButtonLoadRF->setVisible(false);
+        ui->pushButtonLoadDI->setVisible(false);
+        ui->pushButtonLoadRI->setVisible(false);
+    }
 }
 
 FormManageReportings::~FormManageReportings()
@@ -44,6 +56,11 @@ void FormManageReportings::updateListOfTrees()
     ui->comboListOfTrees->clear();
 
     QList<QPair<unsigned int,QString> > lot=PCx_Tree::getListOfTrees(true);
+    if(lot.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Tout d'abord, créez et terminez un arbre dans la fenêtre de gestion des arbres"));
+    }
+
     setEnabled(!lot.isEmpty());
     QPair<unsigned int, QString> p;
     foreach(p,lot)
@@ -118,7 +135,7 @@ void FormManageReportings::on_pushButtonAddReporting_clicked()
         }
         if(PCx_Reporting::addNewReporting(text,selectedTree)>0)
         {
-            QMessageBox::information(this,tr("Succès"),tr("Nouveau reporting ajouté. Utilisez les boutons ci-dessus pour y ajouter des données."));
+            QMessageBox::information(this,tr("Information"),tr("Nouveau reporting ajouté, utilisez le bouton <b>générer un fichier squelette</b> afin de créer un fichier avec les feuilles de l'arbre et les colonnes à remplir. Ce fichier doit être dupliqué pour les DF, RF, DI, RI le cas échéant, puis complété sous excel avec vos données. Une fois les fichiers complétés, utilisez les boutons <b>Charger [x]</b> pour les importer dans l'audit. Vous pouvez également remplir le reporting de données aléatoires à des fins de test"));
             updateListOfReportings();
             emit(listOfReportingsChanged());
         }
@@ -130,6 +147,19 @@ void FormManageReportings::updateListOfReportings()
     ui->comboListOfReportings->clear();
 
     QList<QPair<unsigned int,QString> > listOfReportings=PCx_Reporting::getListOfReportings();
+
+
+    QList<QPair<unsigned int,QString> > lot=PCx_Tree::getListOfTrees(true);
+
+    if(!lot.isEmpty() && listOfReportings.isEmpty())
+    {
+        QMessageBox::information(this,tr("Information"),tr("Vous pouvez maintenant créer un nouveau reporting. Une fois créé, utilisez le bouton <b>Générer le fichier squelette</b> pour fabriquer un ficher excel que vous dupliquerez (un pour les DF, un pour les RF, ainsi de suite le cas échéant) et dont vous compléterez les colonnes avec vos données, avant de les charger avec les boutons <b>Charger [x]</b>. Vous pouvez aussi remplir le reporting de données aléatoires à des fins de test."));
+    }
+
+
+
+
+
     ui->groupBoxReportings->setEnabled(!listOfReportings.isEmpty());
     QPair<unsigned int,QString> p;
     foreach(p,listOfReportings)
@@ -159,7 +189,7 @@ void FormManageReportings::updateListOfPotentialAudits()
 void FormManageReportings::updateRandomVisibility()
 {
     QSettings settings;
-    bool randomAllowed=settings.value("misc/randomAllowed",false).toBool();
+    bool randomAllowed=settings.value("misc/randomAllowed",true).toBool();
     ui->pushButtonRandomDF->setEnabled(randomAllowed);
     ui->pushButtonRandomRF->setEnabled(randomAllowed);
     ui->pushButtonRandomDI->setEnabled(randomAllowed);

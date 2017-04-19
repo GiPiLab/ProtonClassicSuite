@@ -23,7 +23,6 @@ DialogAbout::DialogAbout(QWidget *parent) :
     eulaFile.close();
     ui->plainTextEdit->setPlainText(line);
 
-
     ProductActivation::AvailableModules modulesFlags=product.getAvailablesModules();
     ui->labelLicenceMode->setText(product.availableModulesToString(modulesFlags));
 

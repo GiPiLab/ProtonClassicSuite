@@ -31,7 +31,7 @@ public:
     /**
      * @brief MAXNODES is the maximum allowed number of nodes for a tree
      */
-    static const int MAXNODES=1500;
+    static const int MAXNODES=2000;
 
     /**
      * @brief MAXNODENAMELENGTH is the maximum allowed length of a node or type name
