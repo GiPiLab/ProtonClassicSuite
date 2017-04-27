@@ -373,7 +373,7 @@ void FormQueries::on_pushButtonDelete_clicked()
         return;
     }
 
-    foreach (QModelIndex idx,selection)
+    foreach (const QModelIndex & idx,selection)
     {
         unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
         PCx_Query::deleteQuery(model->getAuditId(),selectedQueryId);
@@ -394,7 +394,7 @@ QString FormQueries::execQueries(QModelIndexList items, QXlsx::Document *xlsDocu
     output.append(model->generateHTMLAuditTitle());
 
     int count=0;
-    foreach(QModelIndex idx,items)
+    foreach(const QModelIndex &idx,items)
     {
         unsigned int selectedQueryId=queriesModel->record(idx.row()).value("id").toUInt();
         PCx_Query::QUERIESTYPES selectedQueryType=(PCx_Query::QUERIESTYPES)queriesModel->record(idx.row()).value("query_mode").toUInt();

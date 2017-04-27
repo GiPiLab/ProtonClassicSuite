@@ -168,7 +168,7 @@ void FormEditTree::on_deleteTreeButton_clicked()
 
             updateListOfTree();
 
-            emit(listOfTreeChanged());
+            emit listOfTreeChanged();
         }
         else if(result==0)
         {
@@ -211,7 +211,7 @@ void FormEditTree::on_newTreeButton_clicked()
         }
        if(PCx_Tree::addTree(text)!=-1)
        {
-           emit(listOfTreeChanged());
+           emit listOfTreeChanged();
            updateListOfTree();
        }
     }
@@ -454,7 +454,7 @@ void FormEditTree::on_finishTreeButton_clicked()
         {
             die();
         }
-        emit(listOfTreeChanged());
+        emit listOfTreeChanged();
         updateListOfTree();
         QMessageBox::information(this,tr("Information"),tr("Arbre terminé. Vous pouvez maintenant l'utiliser pour créer des audits ou des reportings"));
     }
@@ -620,7 +620,7 @@ void FormEditTree::on_importTreeButton_clicked()
     if(PCx_Tree::importTreeFromXLSX(fileName,text)>0)
     {
         updateListOfTree();
-        emit(listOfTreeChanged());
+        emit listOfTreeChanged();
     }
 }
 

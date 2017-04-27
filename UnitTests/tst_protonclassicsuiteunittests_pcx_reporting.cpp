@@ -49,8 +49,8 @@ void ProtonClassicSuiteUnitTests::testCaseForReportingNodes()
     QCOMPARE(reporting.getLastReportingDate(MODES::DFRFDIRI::DI),QDate());
     QCOMPARE(reporting.getLastReportingDate(MODES::DFRFDIRI::RI),QDate());
 
-    unsigned int firstLeafId=tree.getLeavesId().first();
-    unsigned int lastLeafId=tree.getLeavesId().last();
+    unsigned int firstLeafId=tree.getLeavesId().constFirst();
+    unsigned int lastLeafId=tree.getLeavesId().constLast();
 
 
     for(int i=0;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)

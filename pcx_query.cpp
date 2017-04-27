@@ -33,8 +33,8 @@ void PCx_Query::setYears(unsigned int year1, unsigned int year2)
         year1=year2;
         year2=yeartmp;
     }
-    unsigned int firstYear=model->getYears().first();
-    unsigned int lastYear=model->getYears().last();
+    unsigned int firstYear=model->getYears().constFirst();
+    unsigned int lastYear=model->getYears().constLast();
     if(year1<firstYear)
     {
         year1=firstYear;

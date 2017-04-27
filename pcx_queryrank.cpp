@@ -66,7 +66,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 as b where a.id_node=b.id "
                           "and type=:typeId and %1 not null and annee>=:year1 and annee<=:year2 order by %1 %5 limit %6")
-                  .arg(oredString).arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
+                  .arg(oredString,MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(model->getAttachedTree()->getTreeId()).arg(order).arg(number));
         q.bindValue(":typeId",typeId);
     }
@@ -74,7 +74,7 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where annee>=:year1 "
                           "and annee<=:year2 and %1 not null order by %1 %4 limit %5")
-                  .arg(oredString).arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
+                  .arg(oredString,MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(order).arg(number));
     }
 
@@ -199,8 +199,8 @@ QString PCx_QueryRank::getDescription() const
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les %1 des %2 sont parmi les [%3] %4 entre %5 et %6")
-            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
+            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped(),
+            MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
             .arg(number).arg(greaterSmallerToString(grSm).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;

@@ -304,7 +304,7 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent)
 
     QPainter painter(this);
     QColor color(127,127,127,50);
-    QPen pen(color);
+
     QBrush brush(color);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);

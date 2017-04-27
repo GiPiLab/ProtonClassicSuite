@@ -13,7 +13,7 @@
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QString message=QString("%1 (%2:%3)\n").arg(msg).arg(context.file).arg(context.line);
+    QString message=QString("%1 (%2:%3)\n").arg(msg,context.file).arg(context.line);
 
     //Do not display a message box in case of XCB warning to avoid ui global freeze
     bool noMessageBox=false;

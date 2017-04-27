@@ -242,7 +242,6 @@ public:
     \ref ssDot and \ref ssPixmap) can be controlled with the \ref setSize function. Scatters are
     drawn with the pen and brush specified with \ref setPen and \ref setBrush.
   */
-  Q_ENUMS(ScatterShape)
   enum ScatterShape { ssNone       ///< no scatter symbols are drawn (e.g. in QCPGraph, data only represented with lines)
                       ,ssDot       ///< \enumimage{ssDot.png} a single pixel (use \ref ssDisc or \ref ssCircle if you want a round shape with a certain radius)
                       ,ssCross     ///< \enumimage{ssCross.png} a cross
@@ -262,6 +261,9 @@ public:
                       ,ssPixmap    ///< a custom pixmap specified by \ref setPixmap, centered on the data point coordinates
                       ,ssCustom    ///< custom painter operations are performed per scatter (As QPainterPath, see \ref setCustomPath)
                     };
+
+  Q_ENUM(ScatterShape)
+
 
   QCPScatterStyle();
   QCPScatterStyle(ScatterShape shape, double size=6);
@@ -647,7 +649,7 @@ public:
                      ,upMargins    ///< Phase in which the margins are calculated and set
                      ,upLayout     ///< Final phase in which the layout system places the rects of the elements
                    };
-  Q_ENUMS(UpdatePhase)
+  Q_ENUM(UpdatePhase)
 
   explicit QCPLayoutElement(QCustomPlot *parentPlot=0);
   virtual ~QCPLayoutElement();
@@ -884,7 +886,7 @@ public:
     
     \see QCPItemLine::setHead, QCPItemLine::setTail, QCPItemCurve::setHead, QCPItemCurve::setTail, QCPAxis::setLowerEnding, QCPAxis::setUpperEnding
   */
-  Q_ENUMS(EndingStyle)
+
   enum EndingStyle { esNone          ///< No ending decoration
                      ,esFlatArrow    ///< A filled arrow head with a straight/flat back (a triangle)
                      ,esSpikeArrow   ///< A filled arrow head with an indented back
@@ -896,6 +898,8 @@ public:
                      ,esHalfBar      ///< A bar perpendicular to the line, pointing out to only one side (to which side can be changed with \ref setInverted)
                      ,esSkewedBar    ///< A bar that is skewed (skew controllable via \ref setLength)
                    };
+
+  Q_ENUM(EndingStyle)
   
   QCPLineEnding();
   QCPLineEnding(EndingStyle style, double width=8, double length=10, bool inverted=false);
@@ -1055,7 +1059,7 @@ public:
   enum LabelType { ltNumber    ///< Tick coordinate is regarded as normal number and will be displayed as such. (see \ref setNumberFormat)
                    ,ltDateTime ///< Tick coordinate is regarded as a date/time (seconds since 1970-01-01T00:00:00 UTC) and will be displayed and formatted as such. (for details, see \ref setDateTimeFormat)
                  };
-  Q_ENUMS(LabelType)
+  Q_ENUM(LabelType)
   /*!
     Defines on which side of the axis the tick labels (numbers) shall appear.
     
@@ -1064,7 +1068,7 @@ public:
   enum LabelSide { lsInside    ///< Tick labels will be displayed inside the axis rect and clipped to the inner axis rect
                    ,lsOutside  ///< Tick labels will be displayed outside the axis rect
                  };
-  Q_ENUMS(LabelSide)
+  Q_ENUM(LabelSide)
   /*!
     Defines the scale of an axis.
     \see setScaleType
@@ -1072,7 +1076,7 @@ public:
   enum ScaleType { stLinear       ///< Linear scaling
                    ,stLogarithmic ///< Logarithmic scaling with correspondingly transformed plots and (major) tick marks at every base power (see \ref setScaleLogBase).
                  };
-  Q_ENUMS(ScaleType)
+  Q_ENUM(ScaleType)
   /*!
     Defines the selectable parts of an axis.
     \see setSelectableParts, setSelectedParts
@@ -1700,7 +1704,7 @@ public:
   enum LayerInsertMode { limBelow  ///< Layer is inserted below other layer
                          ,limAbove ///< Layer is inserted above other layer
                        };
-  Q_ENUMS(LayerInsertMode)
+  Q_ENUM(LayerInsertMode)
   
   /*!
     Defines with what timing the QCustomPlot surface is refreshed after a replot.
@@ -1909,7 +1913,7 @@ public:
   enum ColorInterpolation { ciRGB  ///< Color channels red, green and blue are linearly interpolated
                             ,ciHSV ///< Color channels hue, saturation and value are linearly interpolated (The hue is interpolated over the shortest angle distance)
                           };
-  Q_ENUMS(ColorInterpolation)
+  Q_ENUM(ColorInterpolation)
   
   /*!
     Defines the available presets that can be loaded with \ref loadPreset. See the documentation
@@ -1928,7 +1932,7 @@ public:
                         ,gpJet       ///< Hue variation similar to a spectrum, often used in numerical visualization (creates banding illusion but allows more precise magnitude estimates)
                         ,gpHues      ///< Full hue cycle, with highest and lowest color red (suitable for periodic data, such as angles and phases, see \ref setPeriodic)
                       };
-  Q_ENUMS(GradientPreset)
+  Q_ENUM(GradientPreset)
   
   QCPColorGradient(GradientPreset preset=gpCold);
   bool operator==(const QCPColorGradient &other) const;
@@ -2514,7 +2518,7 @@ public:
                    ,lsStepCenter ///< line is drawn as steps where the step is in between two data points
                    ,lsImpulse    ///< each data point is represented by a line parallel to the value axis, which reaches from the data point to the zero-value-line
                  };
-  Q_ENUMS(LineStyle)
+  Q_ENUM(LineStyle)
   /*!
     Defines what kind of error bars are drawn for each data point
   */
@@ -2523,7 +2527,7 @@ public:
                    ,etValue ///< Error bars for the value dimension of the data point are shown
                    ,etBoth  ///< Error bars for both key and value dimensions of the data point are shown
                  };
-  Q_ENUMS(ErrorType)
+  Q_ENUM(ErrorType)
   
   explicit QCPGraph(QCPAxis *keyAxis, QCPAxis *valueAxis);
   virtual ~QCPGraph();
@@ -2842,7 +2846,7 @@ public:
                    ,wtAxisRectRatio ///< Bar width is given by a fraction of the axis rect size
                    ,wtPlotCoords    ///< Bar width is in key coordinates and thus scales with the key axis range
                  };
-   Q_ENUMS(WidthType)
+   Q_ENUM(WidthType)
   
   explicit QCPBars(QCPAxis *keyAxis, QCPAxis *valueAxis);
   virtual ~QCPBars();
@@ -3163,7 +3167,7 @@ public:
   enum ChartStyle { csOhlc         ///< Open-High-Low-Close bar representation
                    ,csCandlestick  ///< Candlestick representation
                   };
-  Q_ENUMS(ChartStyle)
+  Q_ENUM(ChartStyle)
   
   explicit QCPFinancial(QCPAxis *keyAxis, QCPAxis *valueAxis);
   virtual ~QCPFinancial();
@@ -3657,7 +3661,7 @@ public:
                      ,tsCircle     ///< A circle
                      ,tsSquare     ///< A square
                    };
-  Q_ENUMS(TracerStyle)
+  Q_ENUM(TracerStyle)
 
   QCPItemTracer(QCustomPlot *parentPlot);
   virtual ~QCPItemTracer();

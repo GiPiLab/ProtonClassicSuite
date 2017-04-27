@@ -116,10 +116,10 @@ QString PCx_QueryVariation::getDescription() const
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les %1 des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
-            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
-            .arg(incDecToString(incDec).toHtmlEscaped()).arg(operatorToString(op).toHtmlEscaped())
-            .arg(formatFixedPoint(val,-1,true)).arg(percentOrPointToString(percentOrPoints).toHtmlEscaped())
+            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped(),
+            MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped(),
+            incDecToString(incDec).toHtmlEscaped(),operatorToString(op).toHtmlEscaped(),
+            formatFixedPoint(val,-1,true),percentOrPointToString(percentOrPoints).toHtmlEscaped())
             .arg(year1).arg(year2));
     return out;
 }
@@ -192,6 +192,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
     {
         qFatal("Assertion failed");
     }
+
 
     QMapIterator<unsigned int,qint64> i(valuesForYear1);
     while(i.hasNext())
@@ -306,7 +307,7 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
         xlsDoc->write(4,3,"Noeud");
         xlsDoc->write(4,4,year1);
         xlsDoc->write(4,5,year2);
-        xlsDoc->write(4,6,QString("%1 (en %2)").arg(incDecToString(incDec)).arg(percentOrPointToString(percentOrPoints)));
+        xlsDoc->write(4,6,QString("%1 (en %2)").arg(incDecToString(incDec),percentOrPointToString(percentOrPoints)));
     }
 
     output.append(QString("<table class='req1' align='center' cellpadding='5' style='margin-left:auto;margin-right:auto'>"
@@ -326,11 +327,11 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
 
         if(incDec!=INCREASEDECREASE::VARIATION)val=qAbs(val);
         output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td align='right'>%3</td><td align='right'>%4 %5</td></tr>")
-                .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-                .arg(formatFixedPoint(valuesForYear1.value(node)))
-                .arg(formatFixedPoint(valuesForYear2.value(node)))
-                .arg(formatFixedPoint(val,-1,true))
-                .arg(percentOrPointToString(percentOrPoints).toHtmlEscaped()));
+                .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
+                formatFixedPoint(valuesForYear1.value(node)),
+                formatFixedPoint(valuesForYear2.value(node)),
+                formatFixedPoint(val,-1,true),
+                percentOrPointToString(percentOrPoints).toHtmlEscaped()));
         if(xlsDoc!=nullptr)
         {
             QPair<QString,QString> typeAndNodeName=model->getAttachedTree()->getTypeNameAndNodeName(node);
@@ -356,9 +357,9 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const
     foreach(unsigned int probNode,problemNodes)
     {
         output.append(QString("<tr><td><i>%1</i></td><td><i>%2</i></td><td><i>%3</i></td><td align='right'><i>NA</i></td></tr>")
-                .arg(model->getAttachedTree()->getNodeName(probNode).toHtmlEscaped())
-                .arg(formatFixedPoint(valuesForYear1.value(probNode)))
-                .arg(formatFixedPoint(valuesForYear2.value(probNode))));
+                .arg(model->getAttachedTree()->getNodeName(probNode).toHtmlEscaped(),
+                formatFixedPoint(valuesForYear1.value(probNode)),
+                formatFixedPoint(valuesForYear2.value(probNode))));
         if(xlsDoc!=nullptr)
         {
             QPair<QString,QString> typeAndNodeName=model->getAttachedTree()->getTypeNameAndNodeName(probNode);

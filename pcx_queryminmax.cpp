@@ -72,7 +72,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 as b where a.id_node=b.id "
                           "and type=:typeId and %1 not null and %1>=:val1 and %1<=:val2 and annee>=:year1 and "
                           "annee<=:year2")
-                  .arg(oredString).arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
+                  .arg(oredString,MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId())
                   .arg(model->getAttachedTree()->getTreeId()));
         q.bindValue(":typeId",typeId);
     }
@@ -80,7 +80,7 @@ QString PCx_QueryMinMax::exec(QXlsx::Document *xlsDoc) const
     {
         q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 where annee>=:year1 "
                           "and annee<=:year2 and %1 not null and %1>=:val1 and %1<=:val2")
-                  .arg(oredString).arg(MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId()));
+                  .arg(oredString,MODES::modeToTableString(dfrfdiri)).arg(model->getAuditId()));
 
     }
 
@@ -209,9 +209,9 @@ QString PCx_QueryMinMax::getDescription() const
         out=QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
 
     out.append(QObject::tr(" dont les %1 des %2 sont compris entre %3€ et %4€ entre %5 et %6")
-            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped())
-            .arg(formatFixedPoint(val1)).arg(formatFixedPoint(val2))
+            .arg(PCx_Audit::OREDtoCompleteString(ored,true).toHtmlEscaped(),
+            MODES::modeToCompleteString(dfrfdiri).toLower().toHtmlEscaped(),
+            formatFixedPoint(val1),formatFixedPoint(val2))
             .arg(year1).arg(year2));
     return out;
 }

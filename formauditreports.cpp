@@ -407,7 +407,7 @@ void FormAuditReports::on_saveButton_clicked()
 
     progress.setValue(maximumProgressValue);
     if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(this,tr("Information"),tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped()).arg(relativeImagePath.toHtmlEscaped()));
+        QMessageBox::information(this,tr("Information"),tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped(),relativeImagePath.toHtmlEscaped()));
     else
         QMessageBox::critical(this,tr("Attention"),tr("Le rapport n'a pas pu être enregistré !"));
 

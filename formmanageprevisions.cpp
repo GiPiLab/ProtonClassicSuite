@@ -158,7 +158,7 @@ void FormManagePrevisions::on_pushButtonAddPrevision_clicked()
         if(PCx_Prevision::addNewPrevision(selectedAudit,text))
         {
             updateListOfPrevisions();
-            emit(listOfPrevisionsChanged());
+            emit listOfPrevisionsChanged();
             QMessageBox::information(this,tr("Information"),tr("Nouvelle prévision ajoutée ! Utilisez la fenêtre <b>élaboration du budget</b> afin de fixer des critères de prévision pour l'année N+1"));
         }
     }
@@ -183,7 +183,7 @@ void FormManagePrevisions::on_pushButtonDelete_clicked()
         selectedPrevision=nullptr;
     }
     updateListOfPrevisions();
-    emit(listOfPrevisionsChanged());
+    emit listOfPrevisionsChanged();
 }
 
 void FormManagePrevisions::on_pushButtonToAudit_clicked()
@@ -228,7 +228,7 @@ void FormManagePrevisions::on_pushButtonToAudit_clicked()
             //NOTE : not needed because the new audit is not finished
             updateListOfAudits();
             //To notify formManageAudits and formEditAudit
-            emit(listOfAuditsChanged());
+            emit listOfAuditsChanged();
         }
         //qDebug()<<"Adding an audit with name="<<text<<" years = "<<yearsString<<" treeId = "<<selectedTree;
     }
@@ -265,7 +265,7 @@ void FormManagePrevisions::on_pushButtonDuplicate_clicked()
         {
             QMessageBox::information(this,tr("Information"),tr("Prévision dupliquée !"));
             updateListOfPrevisions();
-            emit(listOfPrevisionsChanged());
+            emit listOfPrevisionsChanged();
         }
     }
 }

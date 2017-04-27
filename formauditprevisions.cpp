@@ -143,7 +143,7 @@ void FormAuditPrevisions::updatePrevisionItemTableModel()
         delete currentPrevisionItem;
         currentPrevisionItem=nullptr;
     }
-    currentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().last()+1);
+    currentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().constLast()+1);
     currentPrevisionItem->loadFromDb();
     if(currentPrevisionItemTableModel!=nullptr)
     {
@@ -165,7 +165,7 @@ void FormAuditPrevisions::updatePrevisionItemTableModel()
     }
     else
     {
-        recentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().last()+1);
+        recentPrevisionItem=new PCx_PrevisionItem(previsionModel,currentMode,currentNodeId,auditWithTreeModel->getYears().constLast()+1);
     }
     if(recentPrevisionItemTableModel==nullptr)
     {
@@ -178,7 +178,7 @@ void FormAuditPrevisions::updateLabels()
 {
     const QString &nodeName=auditWithTreeModel->getAttachedTree()->getNodeName(currentNodeId);
     ui->labelNodeName->setText(nodeName);
-    qint64 lastValueN=auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().last());
+    qint64 lastValueN=auditWithTreeModel->getNodeValue(currentNodeId,currentMode,PCx_Audit::ORED::OUVERTS,auditWithTreeModel->getYears().constLast());
     ui->labelValueN->setText(NUMBERSFORMAT::formatFixedPoint(lastValueN));
     ui->labelValueNplus1->setText(NUMBERSFORMAT::formatFixedPoint(currentPrevisionItem->getSummedPrevisionItemValue()));
     ui->labelValuePrevisionItem->setText(NUMBERSFORMAT::formatFixedPoint(recentPrevisionItem->getPrevisionItemValue()));

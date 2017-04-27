@@ -78,6 +78,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     //Will contain data read from db
     QMap<unsigned int, qint64> dataRoot,dataNode;
 
+
     q.prepare(QString("select * from audit_%1_%2 where id_node=:id or id_node=:refNode order by annee").arg(tableName).arg(auditModel->getAuditId()));
     q.bindValue(":id",node);
     q.bindValue(":refNode",referenceNode);
@@ -124,10 +125,11 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
 
     //dataRoot and dataNode must have the same keys
-    if(dataRoot.keys()!=dataNode.keys())
+    //NOTE : Remove this costly assertion
+    /*if(dataRoot.keys()!=dataNode.keys())
     {
-        qFatal("Assertion failed");
-    }
+        qFatal("Assertion failed keys are not equal");
+    }*/
 
     qint64 firstYearDataRoot=dataRoot.value(firstYear);
     qint64 firstYearDataNode=dataNode.value(firstYear);
@@ -138,15 +140,20 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     QVector<double> dataPlotRootX,dataPlotNodeX,dataPlotRootY,dataPlotNodeY;
 
     double minYRange=DBL_MAX-1,maxYRange=DBL_MIN+1;
-    foreach(unsigned int key,dataRoot.keys())
+
+
+    for(QMap<unsigned int, qint64>::const_iterator it=dataRoot.constBegin(), end = dataRoot.constEnd();it!=end;++it)
     {
+    //foreach(unsigned int key,dataRoot.keys())
+    //{
         qint64 diffRootNode2=0,diffRootNode=0,diffNode=0;
 
+        unsigned int key=it.key();
         //Skip the first year
         if(key>firstYear)
         {
             double percentRoot=0.0,percentNode=0.0;
-            diffRootNode2=dataRoot.value(key)-dataNode.value(key);
+            diffRootNode2=it.value()-dataNode.value(key);
 
             diffRootNode=diffRootNode2-diffRootNode1;
             diffNode=dataNode.value(key)-firstYearDataNode;
@@ -181,10 +188,26 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         }
     }
 
-    dataPlotNodeX=dataPlotNode.keys().toVector();
-    dataPlotNodeY=dataPlotNode.values().toVector();
-    dataPlotRootX=dataPlotRoot.keys().toVector();
-    dataPlotRootY=dataPlotRoot.values().toVector();
+
+    //Optimize this :
+    //dataPlotNodeX=dataPlotNode.keys().toVector();
+    //dataPlotNodeY=dataPlotNode.values().toVector();
+
+    for(QMap<double,double>::const_iterator it=dataPlotNode.constBegin(),end=dataPlotNode.constEnd();it!=end;++it)
+    {
+        dataPlotNodeX.append(it.key());
+        dataPlotNodeY.append(it.value());
+    }
+
+
+    //And that :
+    //dataPlotRootX=dataPlotRoot.keys().toVector();
+    //dataPlotRootY=dataPlotRoot.values().toVector();
+    for(QMap<double,double>::const_iterator it=dataPlotRoot.constBegin(),end=dataPlotRoot.constEnd();it!=end;++it)
+    {
+        dataPlotRootX.append(it.key());
+        dataPlotRootY.append(it.value());
+    }
 
     plot->clearItems();
     plot->clearGraphs();
@@ -200,7 +223,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     QString nodeName=auditModel->getAttachedTree()->getNodeName(node);
     QString refNodeName=auditModel->getAttachedTree()->getNodeName(referenceNode);
     plot->graph(0)->setName(nodeName);
-    plot->graph(1)->setName(QString("%2 - %1").arg(nodeName).arg(refNodeName));
+    plot->graph(1)->setName(QString("%2 - %1").arg(nodeName,refNodeName));
 
     plot->legend->setVisible(true);
     plot->legend->setFont(QFont(QFont().family(),8));
@@ -211,15 +234,18 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     plot->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
 
     //Add value labels to points
-    if(dataPlotRoot.keys()!=dataPlotNode.keys())
+
+    //NOTE : Remove this costly assert
+    /*if(dataPlotRoot.keys()!=dataPlotNode.keys())
     {
         qFatal("Assertion failed");
-    }
+    }*/
     int i=0;
 
-    foreach(double key,dataPlotRoot.keys())
+    for(QMap<double,double>::const_iterator it=dataPlotRoot.constBegin(), end = dataPlotRoot.constEnd();it!=end;++it)
     {
-        double val1=dataPlotRoot.value(key);
+        double key=it.key();
+        double val1=it.value();
         double val2=dataPlotNode.value(key);
         QCPItemText *text=new QCPItemText(plot);
         text->setText(formatDouble(val1,-1,true)+"\%");
@@ -265,19 +291,15 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     if(cumule==false)
     {
             plotTitle=QObject::tr("&Eacute;volution comparée des %1 de [ %4 ] hormis %2 et de [ %2 ]<br>(%3)")
-                    .arg(PCx_Audit::OREDtoCompleteString(modeORED,true))
-                    .arg(nodeName.toHtmlEscaped())
-                    .arg(MODES::modeToCompleteString(mode))
-                    .arg(refNodeName.toHtmlEscaped());
+                    .arg(PCx_Audit::OREDtoCompleteString(modeORED,true),nodeName.toHtmlEscaped(),
+                    MODES::modeToCompleteString(mode),refNodeName.toHtmlEscaped());
     }
 
     else
     {
             plotTitle=QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ] hormis %2 et de [ %2 ]<br>(%3)")
-                    .arg(PCx_Audit::OREDtoCompleteString(modeORED,true))
-                    .arg(nodeName.toHtmlEscaped())
-                    .arg(MODES::modeToCompleteString(mode))
-                    .arg(refNodeName.toHtmlEscaped());
+                    .arg(PCx_Audit::OREDtoCompleteString(modeORED,true),nodeName.toHtmlEscaped(),
+                    MODES::modeToCompleteString(mode),refNodeName.toHtmlEscaped());
 
     }
 
@@ -409,7 +431,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
         die();
     }
 
-    QList<QPair<QString,QString> > listModesAndLabels;
+    QVector<QPair<QString,QString> > listModesAndLabels;
     listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS)));
     listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)));
     listModesAndLabels.append(QPair<QString,QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES),PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES)));
@@ -530,8 +552,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     if(miniMode==true)
     {
         if(selectedORED.count()==2)
-            plotTitle=QObject::tr("%1 (bleu) et %2 (rouge)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true))
-                    .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(1),true));
+            plotTitle=QObject::tr("%1 (bleu) et %2 (rouge)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true),PCx_Audit::OREDtoCompleteString(selectedORED.at(1),true));
 
         QCPPlotTitle * title;
         if(plot->plotLayout()->elementCount()==1)
@@ -551,13 +572,11 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     {
         if(prevItem!=nullptr)
         {
-        plotTitle=QString("Données historiques et prévision pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped())
-                .arg(MODES::modeToCompleteString(mode));
+        plotTitle=QString("Données historiques et prévision pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),MODES::modeToCompleteString(mode));
         }
         else
         {
-            plotTitle=QString("Données historiques pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped())
-                    .arg(MODES::modeToCompleteString(mode));
+            plotTitle=QString("Données historiques pour %1<br>(%2)").arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),MODES::modeToCompleteString(mode));
         }
     }
     if(selectedORED.isEmpty())
@@ -697,7 +716,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->clearGraphs();
     plot->clearPlottables();
 
-    QString plotTitle=QObject::tr("%1\n(%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+    QString plotTitle=QObject::tr("%1\n(%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
     QCPPlotTitle * title;
     if(plot->plotLayout()->elementCount()==1)
@@ -836,7 +855,7 @@ QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode
                                                 PCx_Reporting::OREDPCR::VCDM,
                                                 PCx_Reporting::OREDPCR::VIREMENTSINTERNES
                                                };
-    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorDFBar());
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName,modeName),getColorDFBar());
 }
 
 QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) const
@@ -848,7 +867,7 @@ QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode)
                                                 PCx_Reporting::OREDPCR::VCDM,
                                                 PCx_Reporting::OREDPCR::VIREMENTSINTERNES
                                                };
-    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorRFBar());
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName,modeName),getColorRFBar());
 }
 
 QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) const
@@ -859,7 +878,7 @@ QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mod
                                                 PCx_Reporting::OREDPCR::ENGAGES,
                                                 PCx_Reporting::OREDPCR::DISPONIBLES
                                                };
-    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName).arg(modeName),getColorDIBar());
+    return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName,modeName),getColorDIBar());
 }
 
 QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const

@@ -100,9 +100,10 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
     QString reqUpdateSet;
 
     QStringList reqSetList,bindSetList,reqUpdateSetList;
-    foreach(PCx_Reporting::OREDPCR ored,vals.keys())
+
+    for(QMap<PCx_Reporting::OREDPCR,double>::const_iterator it=vals.constBegin(),end=vals.constEnd();it!=end;++it)
     {
-        QString tblString=OREDPCRtoTableString(ored);
+        QString tblString=OREDPCRtoTableString(it.key());
         reqSetList.append(tblString);
         bindSetList.append(":v"+tblString);
         reqUpdateSetList.append(tblString+"=:v"+tblString);
@@ -119,11 +120,12 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
 
     //UPSERT simulation: INSERT the row if not existing, UPDATE if the row exists
     q.prepare(QString("insert or ignore into %1 (%2) values (%3)")
-              .arg(tableName).arg(reqSet).arg(reqBind));
+              .arg(tableName,reqSet,reqBind));
 
 
-    foreach(PCx_Reporting::OREDPCR ored,vals.keys())
+    for(QMap<PCx_Reporting::OREDPCR,double>::const_iterator it=vals.constBegin(),end=vals.constEnd();it!=end;++it)
     {
+        PCx_Reporting::OREDPCR ored=it.key();
         QString tblString=OREDPCRtoTableString(ored);
         if(ored==PCx_Reporting::OREDPCR::DISPONIBLES)
         {
@@ -148,9 +150,11 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
     //INSERT has failed, row already exists so UPDATE the row
     if(q.numRowsAffected()<1)
     {
-        q.prepare(QString("update %1 set %2 where id_node=:id_node and date=:date").arg(tableName).arg(reqUpdateSet));
-        foreach(PCx_Reporting::OREDPCR ored,vals.keys())
+        q.prepare(QString("update %1 set %2 where id_node=:id_node and date=:date").arg(tableName,reqUpdateSet));
+        for(QMap<PCx_Reporting::OREDPCR,double>::const_iterator it=vals.constBegin(),end=vals.constEnd();it!=end;++it)
         {
+            PCx_Reporting::OREDPCR ored=it.key();
+
             QString tblString=OREDPCRtoTableString(ored);
             if(ored==PCx_Reporting::OREDPCR::DISPONIBLES)
             {
@@ -196,7 +200,7 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
 qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OREDPCR ored, QDate date) const
 {
     QSqlQuery q;
-    q.prepare(QString("select %1 from reporting_%2_%3 where date=:date and id_node=:node").arg(OREDPCRtoTableString(ored)).arg(modeToTableString(mode)).arg(reportingId));
+    q.prepare(QString("select %1 from reporting_%2_%3 where date=:date and id_node=:node").arg(OREDPCRtoTableString(ored),modeToTableString(mode)).arg(reportingId));
     q.bindValue(":date",QDateTime(date).toTime_t());
     q.bindValue(":node",nodeId);
     if(!q.exec())
@@ -261,7 +265,7 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
     //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
     QSqlQuery q;
 
-    q.prepare(QString("select * from %1 where id_node in(%2) and date=:date").arg(tableName).arg(childrenString));
+    q.prepare(QString("select * from %1 where id_node in(%2) and date=:date").arg(tableName,childrenString));
     unsigned int tDate=QDateTime(date).toTime_t();
 
 
@@ -814,8 +818,8 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const
     int yearDI=dateDI.year();
     int yearRI=dateRI.year();
 
-    int auditLastYear=audit->getYears().last();
-    int auditFirstYear=audit->getYears().first();
+    int auditLastYear=audit->getYears().constLast();
+    int auditFirstYear=audit->getYears().constFirst();
     if((yearDF>auditLastYear || yearDF<auditFirstYear) &&
             (yearRF>auditLastYear || yearRF<auditFirstYear) &&
             (yearDI>auditLastYear || yearDI<auditFirstYear) &&
@@ -1183,12 +1187,12 @@ QString PCx_Reporting::getCSS()
 
 QString PCx_Reporting::generateHTMLHeader() const
 {
-    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Reporting %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(reportingName.toHtmlEscaped()).arg(getCSS());
+    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Reporting %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(reportingName.toHtmlEscaped(),getCSS());
 }
 
 QString PCx_Reporting::generateHTMLReportingTitle() const
 {
-    return QString("<h3>Reporting %1, arbre %3</h3>").arg(reportingName.toHtmlEscaped()).arg(attachedTreeName.toHtmlEscaped());
+    return QString("<h3>Reporting %1, arbre %3</h3>").arg(reportingName.toHtmlEscaped(),attachedTreeName.toHtmlEscaped());
 }
 
 QSet<QDate> PCx_Reporting::getDatesForNodeAndMode( unsigned int nodeId, MODES::DFRFDIRI mode) const
@@ -1711,7 +1715,7 @@ QList<QPair<unsigned int, QString> > PCx_Reporting::getListOfReportings()
         dt.setTimeSpec(Qt::UTC);
         QDateTime dtLocal=dt.toLocalTime();
         QPair<unsigned int, QString> p;
-        item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+        item=QString("%1 - %2").arg(query.value("nom").toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
         p.first=query.value("id").toUInt();
         p.second=item;
         listOfReportings.append(p);

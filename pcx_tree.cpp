@@ -196,8 +196,8 @@ QStringList PCx_Tree::getListOfCompleteNodeNames() const
     while(q.next())
     {
         nodeNames.append(QString("%3. %1 %2")
-                         .arg(idTypeToName(q.value("type").toUInt()))
-                         .arg(q.value("nom").toString())
+                         .arg(idTypeToName(q.value("type").toUInt()),
+                         q.value("nom").toString())
                          .arg(q.value("id").toUInt()));
 
     }
@@ -271,29 +271,34 @@ int PCx_Tree::guessHierarchy()
         return 0;
 
 
-    foreach(const QString &key,prefixToId.keys())
+    for(QHash<QString,unsigned int>::const_iterator it=prefixToId.constBegin(),end=prefixToId.constEnd();it!=end;++it)
     {
-        if(key.size()>1)
+    //foreach(const QString &key,prefixToId.keys())
+    //{
+        if(it.key().size()>1)
         {
             //TODO: multi level chop to find 701 child of 7 without 70
-            QString chopped=key;
+            QString chopped=it.key();
             chopped.chop(1);
             if(prefixToId.contains(chopped))
             {
-                idToPid.insert(prefixToId.value(key),prefixToId.value(chopped));
+                idToPid.insert(it.value(),prefixToId.value(chopped));
             }
         }
     }
 
     int count=0;
     QSqlDatabase::database().transaction();
-    foreach(unsigned int id,idToPid.keys())
+
+    for(QHash<unsigned int,unsigned int>::const_iterator it=idToPid.constBegin(),end=idToPid.constEnd();it!=end;++it)
     {
-        if(oldIdToPid.value(id)!=idToPid.value(id))
+        unsigned int id=it.key();
+
+        if(oldIdToPid.value(id)!=it.value())
         {
             QSqlQuery q;
             q.prepare(QString("update arbre_%1 set pid=:pid where id=:id").arg(treeId));
-            q.bindValue(":pid",idToPid.value(id));
+            q.bindValue(":pid",it.value());
             q.bindValue(":id",id);
             if(!q.exec())
             {
@@ -679,7 +684,7 @@ QString PCx_Tree::getNodeName(unsigned int node) const
         if(node>1)
         {
             QString typeName=idTypeToName(q.value(0).toUInt());
-            return QString("%3. %1 %2").arg(typeName).arg(q.value(1).toString()).arg(node);
+            return QString("%3. %1 %2").arg(typeName,q.value(1).toString()).arg(node);
         }
         //Root does not has type
         else
@@ -1236,7 +1241,7 @@ int PCx_Tree::addTree(const QString &name)
     }
 
     QStringList listOfTypes=getListOfDefaultTypes();
-    foreach(QString oneType,listOfTypes)
+    foreach(const QString & oneType,listOfTypes)
     {
         query.prepare(QString("insert into types_%1 (nom) values(:nomtype)").arg(treeId));
         query.bindValue(":nomtype",oneType);
@@ -1304,7 +1309,7 @@ QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
 
         if(query.value("termine").toBool()==true)
         {
-            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             QPair<unsigned int, QString> p;
             p.first=query.value(0).toUInt();
             p.second=item;
@@ -1312,7 +1317,7 @@ QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
         }
         else if(finishedOnly==false)
         {
-            item=QString("%1 - %2").arg(query.value(1).toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2").arg(query.value(1).toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             QPair<unsigned int, QString> p;
             p.first=query.value(0).toUInt();
             p.second=item;
@@ -1492,7 +1497,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         unsigned int pid;
     };
 
-    QList<_node> foundNodes;
+    QVector<_node> foundNodes;
     QSet<QString> foundTypes;
     QSet<unsigned int> foundIds;
 
@@ -1572,7 +1577,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
     }while(i<=rowCount);
 
     //Check if all nodes have a valid PID, ie no orphan nodes
-    foreach(_node aNode,foundNodes)
+    foreach(const _node & aNode,foundNodes)
     {
         if(aNode.pid!=1 && !foundIds.contains(aNode.pid))
         {
@@ -1583,7 +1588,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
     //Check if there is at least one first level node, ie one node has the root for PID
     bool okRoot=false;
-    foreach(_node aNode,foundNodes)
+    foreach(const _node & aNode,foundNodes)
     {
         if(aNode.pid==1)
         {
@@ -1624,7 +1629,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         typesToIdTypes.insert(oneType,oneTypeId);
     }
 
-    foreach(_node aNode,foundNodes)
+    foreach(const _node & aNode,foundNodes)
     {
         tree.addNode(aNode.pid,typesToIdTypes.value(aNode.typeName),aNode.nodeName,aNode.id);
     }

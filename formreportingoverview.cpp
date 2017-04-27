@@ -480,7 +480,7 @@ void FormReportingOverview::on_checkBoxDisponibles_toggled(bool checked)
 void FormReportingOverview::on_pushButtonCopyToDocument_clicked()
 {
     QTextCursor cursor=ui->textEdit->textCursor();
-    cursor.insertHtml(QString("<p>%1 - %2</p>").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped()).arg(PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(getSelectedMode())));
+    cursor.insertHtml(QString("<p>%1 - %2</p>").arg(selectedReporting->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(getSelectedMode())));
     cursor.insertHtml(qTableViewToHtml(ui->tableView));
 }
 

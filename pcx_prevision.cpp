@@ -292,7 +292,7 @@ QList<QPair<unsigned int, QString> > PCx_Prevision::getListOfPrevisions()
         dt.setTimeSpec(Qt::UTC);
         QDateTime dtLocal=dt.toLocalTime();
         QPair<unsigned int, QString> p;
-        item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+        item=QString("%1 - %2").arg(query.value("nom").toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
         p.first=query.value("id").toUInt();
         p.second=item;
         listOfPrevisions.append(p);
@@ -428,11 +428,11 @@ unsigned int PCx_Prevision::addNewPrevision(unsigned int auditId, const QString 
 
 QString PCx_Prevision::generateHTMLHeader() const
 {
-    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Prévision %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(previsionName.toHtmlEscaped()).arg(PCx_Audit::getCSS());
+    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Prévision %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(previsionName.toHtmlEscaped(),PCx_Audit::getCSS());
 }
 
 QString PCx_Prevision::generateHTMLPrevisionTitle() const
 {
-    return QString("<h3>Prévision %1 portant sur l'audit %2 (%3)</h3>").arg(previsionName.toHtmlEscaped()).arg(attachedAudit->getAuditName().toHtmlEscaped()).arg(attachedAudit->getYearsString());
+    return QString("<h3>Prévision %1 portant sur l'audit %2 (%3)</h3>").arg(previsionName.toHtmlEscaped(),attachedAudit->getAuditName().toHtmlEscaped(),attachedAudit->getYearsString());
 }
 

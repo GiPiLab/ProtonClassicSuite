@@ -16,7 +16,7 @@ FormDisplayTree::FormDisplayTree(unsigned int treeId, QWidget *parent):
     model=new PCx_TreeModel(treeId);
     ui->treeView->setModel(model);
     QDateTime dt=QDateTime::currentDateTime();
-    ui->label->setText(tr("Arbre %1 le %2 à %3").arg(model->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
+    ui->label->setText(tr("Arbre %1 le %2 à %3").arg(model->getName(),dt.date().toString("dd/MM/yyyy"),dt.time().toString()));
     ui->treeView->expandToDepth(1);
 }
 

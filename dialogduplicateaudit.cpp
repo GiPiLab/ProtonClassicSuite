@@ -12,8 +12,8 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
     ui->labelOldDate->setText(oldAudit->getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
     ui->labelOldTree->setText(QString("%1 (%2 noeuds)").arg(oldAudit->getAttachedTreeName()).arg(oldAudit->getAttachedTree()->getNumberOfNodes()));
     ui->labelOldYears->setText(oldAudit->getYearsString());
-    ui->spinBoxYear1->setValue(oldAudit->getYears().first());
-    ui->spinBoxYear2->setValue(oldAudit->getYears().last());
+    ui->spinBoxYear1->setValue(oldAudit->getYears().constFirst());
+    ui->spinBoxYear2->setValue(oldAudit->getYears().constLast());
    //Remove date constraints
     // QDate date=QDate::currentDate();
    // ui->spinBoxYear1->setMaximum(date.year());

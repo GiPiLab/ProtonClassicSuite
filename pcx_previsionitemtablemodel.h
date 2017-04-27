@@ -6,6 +6,9 @@
 
 class PCx_PrevisionItemTableModel : public QAbstractTableModel
 {
+
+    Q_OBJECT
+
 public:
     explicit PCx_PrevisionItemTableModel(PCx_PrevisionItem *previsionItem,QObject *parent=0);
 

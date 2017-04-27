@@ -75,7 +75,7 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const
         output=QObject::tr("la dernière valeur des %1").arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::PERCENT:
-        output=QObject::tr("%1\% de la dernière valeur %2").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand)).arg(PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
+        output=QObject::tr("%1\% de la dernière valeur %2").arg(NUMBERSFORMAT::formatFixedPoint(previsionOperand),PCx_Audit::OREDtoCompleteString(previsionOredTarget,true));
         break;
     case PREVISIONOPERATOR::FIXEDVALUE:
         output=QObject::tr("Valeur fixe");
@@ -203,8 +203,8 @@ qint64 PCx_PrevisionItemCriteria::getLastValueOf(unsigned int auditId, MODES::DF
 
     QSqlQuery q;
 
-    q.prepare(QString("select %1 from audit_%2_%3 where id_node=:id_node order by annee desc limit 1").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
-              .arg(MODES::modeToTableString(mode))
+    q.prepare(QString("select %1 from audit_%2_%3 where id_node=:id_node order by annee desc limit 1").arg(PCx_Audit::OREDtoTableString(previsionOredTarget),
+              MODES::modeToTableString(mode))
               .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
@@ -246,8 +246,8 @@ qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRF
     }
     QSqlQuery q;
 
-    q.prepare(QString("select min(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
-              .arg(MODES::modeToTableString(mode))
+    q.prepare(QString("select min(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget),
+              MODES::modeToTableString(mode))
               .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
@@ -273,8 +273,8 @@ qint64 PCx_PrevisionItemCriteria::getMaximumOf(unsigned int auditId, MODES::DFRF
         qFatal("Assertion failed");
     }
     QSqlQuery q;
-    q.prepare(QString("select max(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
-              .arg(MODES::modeToTableString(mode))
+    q.prepare(QString("select max(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget),
+              MODES::modeToTableString(mode))
               .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
@@ -301,8 +301,8 @@ qint64 PCx_PrevisionItemCriteria::getAverageOf(unsigned int auditId, MODES::DFRF
         qFatal("Assertion failed");
     }
     QSqlQuery q;
-    q.prepare(QString("select avg(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
-              .arg(MODES::modeToTableString(mode))
+    q.prepare(QString("select avg(%1) from audit_%2_%3 where id_node=:id_node").arg(PCx_Audit::OREDtoTableString(previsionOredTarget),
+              MODES::modeToTableString(mode))
               .arg(auditId));
     q.bindValue(":id_node",nodeId);
     if(!q.exec())
@@ -332,8 +332,8 @@ qint64 PCx_PrevisionItemCriteria::getReglinOf(unsigned int auditId, MODES::DFRFD
 
     QSqlQuery q;
     q.prepare(QString("select annee,%1 from audit_%2_%3 where id_node=:id_node and %1 not null order by annee")
-              .arg(PCx_Audit::OREDtoTableString(previsionOredTarget))
-              .arg(MODES::modeToTableString(mode))
+              .arg(PCx_Audit::OREDtoTableString(previsionOredTarget),
+              MODES::modeToTableString(mode))
               .arg(auditId)
               );
     q.bindValue(":id_node",nodeId);

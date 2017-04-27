@@ -41,7 +41,7 @@ PCx_Audit::PCx_Audit(unsigned int auditId,bool _noLoadAttachedTree) :
         QStringList yearsSplitted=yearsString.split(',');
 
         QSet<unsigned int> yearsTemp;
-        foreach (QString uneAnnee, yearsSplitted) {
+        foreach (const QString &uneAnnee, yearsSplitted) {
             yearsTemp.insert(uneAnnee.toUInt());
         }
         years=yearsTemp.toList();
@@ -187,7 +187,7 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigne
     //qDebug()<<"Request String ="<<reqString;
 
     q.prepare(QString("update %1 set %2 where id_node=:id_node and annee=:year")
-              .arg(tableName).arg(reqString));
+              .arg(tableName,reqString));
 
     if(vals.contains(PCx_Audit::ORED::OUVERTS))
     {
@@ -240,7 +240,7 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigne
 qint64 PCx_Audit::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, PCx_Audit::ORED ored, unsigned int year) const
 {
     QSqlQuery q;
-    q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored)).arg(modeToTableString(mode)).arg(auditId));
+    q.prepare(QString("select %1 from audit_%2_%3 where annee=:year and id_node=:node").arg(OREDtoTableString(ored),modeToTableString(mode)).arg(auditId));
     q.bindValue(":year",year);
     q.bindValue(":node",nodeId);
     if(!q.exec())
@@ -328,7 +328,7 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
     QSqlQuery q;
 
 
-    foreach(QString lemode,modes)
+    foreach(const QString & lemode,modes)
     {
         q.prepare(QString("update audit_%3_%1 set ouverts="
                           "(select ouverts from audit_%3_%2 where audit_%3_%2.id_node=audit_%3_%1.id_node "
@@ -479,7 +479,7 @@ void PCx_Audit::updateParent(const QString &tableName, unsigned int annee, unsig
     //qDebug()<<"Children of "<<nodeId<<" = "<<listOfChildren;
     QSqlQuery q;
 
-    q.prepare(QString("select ouverts,realises,engages,disponibles from %1 where id_node in(%2) and annee=:annee").arg(tableName).arg(childrenString));
+    q.prepare(QString("select ouverts,realises,engages,disponibles from %1 where id_node in(%2) and annee=:annee").arg(tableName,childrenString));
     q.bindValue(":annee",annee);
     if(!q.exec())
     {
@@ -576,9 +576,9 @@ QString PCx_Audit::getHTMLAuditStatistics() const
                        "</table>\n")
                .arg(attachedTreeName.toHtmlEscaped())
                .arg(getAttachedTree()->getNumberOfNodes())
-               .arg(yearsString)
-               .arg(creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped())
-               .arg(finishedString);
+               .arg(yearsString,
+               creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped(),
+               finishedString);
 
 
     out.append("\n<br><table cellpadding='5' border='1' align='center'>\n"
@@ -674,7 +674,7 @@ QList<unsigned int> PCx_Audit::getNodesWithAllNullValues(MODES::DFRFDIRI mode,un
               <<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES);
     QSqlQuery q;
     q.prepare(QString("select id_node from audit_%1_%2 where (%3 is null and %4 is null and %5 is null) and annee=:year").arg(tableMode).arg(auditId)
-              .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
+              .arg(oredStrings.at(0),oredStrings.at(1),oredStrings.at(2)));
 
     q.bindValue(":year",year);
     if(!q.exec())
@@ -705,7 +705,7 @@ QList<unsigned int> PCx_Audit::getNodesWithNonNullValues(MODES::DFRFDIRI mode,un
                  <<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES);
     QSqlQuery q;
     q.prepare(QString("select id_node from audit_%1_%2 where (%3 not null or %4 not null or %5 not null) and annee=:year").arg(tableMode).arg(auditId)
-                .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2)));
+                .arg(oredStrings.at(0),oredStrings.at(1),oredStrings.at(2)));
 
     q.bindValue(":year",year);
     if(!q.exec())
@@ -734,7 +734,7 @@ QList<unsigned int> PCx_Audit::getNodesWithAllZeroValues(MODES::DFRFDIRI mode, u
                  <<PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES);
     QSqlQuery q;
     QString sq=QString("select id_node from audit_%1_%2 where (%3 = 0 and %4 = 0 and %5 = 0) and annee=:year").arg(tableMode).arg(auditId)
-                .arg(oredStrings.at(0)).arg(oredStrings.at(1)).arg(oredStrings.at(2));
+                .arg(oredStrings.at(0),oredStrings.at(1),oredStrings.at(2));
 
     q.prepare(sq);
     q.bindValue(":year",year);
@@ -1105,12 +1105,12 @@ QString PCx_Audit::getCSS()
 
 QString PCx_Audit::generateHTMLHeader() const
 {
-    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(auditName.toHtmlEscaped()).arg(getCSS());
+    return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<html>\n<head><title>Audit %1</title>\n<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n<style type='text/css'>\n%2\n</style>\n</head>\n<body>").arg(auditName.toHtmlEscaped(),getCSS());
 }
 
 QString PCx_Audit::generateHTMLAuditTitle() const
 {
-    return QString("<h3>Audit %1 (%2), arbre %3</h3>").arg(auditName.toHtmlEscaped()).arg(yearsString).arg(attachedTreeName.toHtmlEscaped());
+    return QString("<h3>Audit %1 (%2), arbre %3</h3>").arg(auditName.toHtmlEscaped(),yearsString,attachedTreeName.toHtmlEscaped());
 }
 
 
@@ -1588,7 +1588,7 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode m
         if(query.value("termine").toBool()==true)
         {
             //Finished audit
-            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             if(mode!=PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly)
             {
                 p.first=query.value("id").toUInt();
@@ -1599,7 +1599,7 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAudits(ListAuditsMode m
         else if(mode!=PCx_Audit::ListAuditsMode::FinishedAuditsOnly)
         {
             //Unfinished audit
-            item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2").arg(query.value("nom").toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             p.first=query.value("id").toUInt();
             p.second=item;
             listOfAudits.append(p);
@@ -1636,7 +1636,7 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisT
         if(query.value("termine").toBool()==true)
         {
             //Finished audit
-            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2 (audit terminé)").arg(query.value("nom").toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             if(mode!=PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly)
             {
                 p.first=query.value("id").toUInt();
@@ -1647,7 +1647,7 @@ QList<QPair<unsigned int, QString> > PCx_Audit::getListOfAuditsAttachedWithThisT
         else if(mode!=PCx_Audit::ListAuditsMode::FinishedAuditsOnly)
         {
             //Unfinished audit
-            item=QString("%1 - %2").arg(query.value("nom").toString()).arg(dtLocal.toString(Qt::SystemLocaleShortDate));
+            item=QString("%1 - %2").arg(query.value("nom").toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             p.first=query.value("id").toUInt();
             p.second=item;
             listOfAudits.append(p);

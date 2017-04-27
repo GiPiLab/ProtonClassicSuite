@@ -208,7 +208,7 @@ void FormManageAudits::on_addAuditButton_clicked()
         if(PCx_Audit::addNewAudit(text,years,selectedTree)>0)
         {
             updateListOfAudits();
-            emit(listOfAuditsChanged());
+            emit listOfAuditsChanged();
             QMessageBox::information(this,tr("Information"),tr("Nouvel audit ajouté, utilisez la fenêtre <b>saisie des données</b> pour le remplir manuellement, ou alors le bouton <b>générer un fichier squelette</b> afin de créer un fichier avec les feuilles de l'arbre et les colonnes à compléter. Ce fichier doit être dupliqué pour les DF, RF, DI, RI le cas échéant puis complété sous excel avec vos données. Une fois les fichiers complétés, utilisez les boutons <b>Charger [x]</b> pour les importer dans l'audit. Vous pouvez également remplir l'audit de données aléatoires à des fins de test"));
         }
 
@@ -266,7 +266,7 @@ void FormManageAudits::on_deleteAuditButton_clicked()
         selectedAudit=nullptr;
     }
     updateListOfAudits();
-    emit(listOfAuditsChanged());
+    emit listOfAuditsChanged();
 }
 
 
@@ -289,7 +289,7 @@ void FormManageAudits::on_finishAuditButton_clicked()
         qWarning()<<"Invalid audit selected !";
     }
     updateListOfAudits();
-    emit(listOfAuditsChanged());
+    emit listOfAuditsChanged();
 }
 
 
@@ -300,7 +300,7 @@ void FormManageAudits::on_cloneAuditButton_clicked()
     if(res==QDialog::Accepted)
     {
         updateListOfAudits();
-        emit(listOfAuditsChanged());
+        emit listOfAuditsChanged();
     }
 }
 

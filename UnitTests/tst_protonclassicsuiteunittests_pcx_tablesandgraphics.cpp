@@ -11,8 +11,8 @@
 
 void ProtonClassicSuiteUnitTests::fillTestAudit(PCx_Audit *audit)
 {
-    int firstYear=audit->getYears().first();
-    int lastYear=audit->getYears().last();
+    int firstYear=audit->getYears().constFirst();
+    int lastYear=audit->getYears().constLast();
     QList<double> values={65678.3, 66154.3, 394754, 68857.1, 218632, 369859, 82991.4, 363930, 129854,
                            292819, 118571, 319187, 38998.5, 243909, 189486, 343779, 22629.2, 351890,
                            31705.7, 113993, 423967, 88494.2, 392966, 341903, 55329.6, 295115, 6070.43,
@@ -88,63 +88,63 @@ void ProtonClassicSuiteUnitTests::testCaseForPCATables()
     QByteArray expectedTRaw="e91be458468ece1c29ea9357d575831860ffd65616cbed361254997c397794ce";
 
     QByteArray hash=hashString(tables.getPCAT1(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT1);
 
     hash=hashString(tables.getPCAT2(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT2);
 
     hash=hashString(tables.getPCAT2bis(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT2bis);
 
     hash=hashString(tables.getPCAT3(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT3);
 
     hash=hashString(tables.getPCAT3bis(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT3bis);
 
     hash=hashString(tables.getPCAT4(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT4);
 
     hash=hashString(tables.getPCAT5(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT5);
 
     hash=hashString(tables.getPCAT6(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT6);
 
     hash=hashString(tables.getPCAT7(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT7);
 
     hash=hashString(tables.getPCAT8(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT8);
 
     hash=hashString(tables.getPCAT9(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT9);
 
     hash=hashString(tables.getPCAT10(1));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT10);
 
     hash=hashString(tables.getPCAT11(1));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT11);
 
     hash=hashString(tables.getPCAT12(1));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedT12);
 
     hash=hashString(tables.getPCARawData(1,MODES::DFRFDIRI::DF));
-    qDebug()<<hash.toHex();
+    //qDebug()<<hash.toHex();
     QCOMPARE(hash.toHex(),expectedTRaw);
 
 
@@ -154,7 +154,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCATables()
 
 void ProtonClassicSuiteUnitTests::benchmarkReport()
 {
-    unsigned int treeId=PCx_Tree::createRandomTree("RANDOM",10);
+    unsigned int treeId=PCx_Tree::createRandomTree("RANDOM",50);
     PCx_Tree tree(treeId);
     tree.finishTree();
     QTextDocument doc;

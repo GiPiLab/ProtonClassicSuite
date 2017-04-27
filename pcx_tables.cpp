@@ -36,7 +36,7 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th>"
                            "<th>R&eacute;alis&eacute;</th><th>%/crédits ouverts</th>"
                            "<th>Engag&eacute;</th><th>%/crédits ouverts</th><th>Disponible</th><th>%/crédits ouverts</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -67,9 +67,9 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
                               "<td align='right' class='t1pourcent'>%4\%</td><td align='right' class='t1valeur'>%5</td><td align='right' class='t1pourcent'>%6\%</td>"
                               "<td align='right' class='t1valeur'>%7</td><td align='right' class='t1pourcent'>%8\%</td></tr>").arg(q.value("annee").toUInt())
-                      .arg(formatFixedPoint(ouverts)).arg(formatFixedPoint(realises)).arg(formatDouble(percentRealisesOuverts,-1,true))
-                      .arg(formatFixedPoint(engages)).arg(formatDouble(percentEngagesOuverts,-1,true))
-                      .arg(formatFixedPoint(disponibles)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
+                      .arg(formatFixedPoint(ouverts),formatFixedPoint(realises),formatDouble(percentRealisesOuverts,-1,true),
+                      formatFixedPoint(engages),formatDouble(percentEngagesOuverts,-1,true),
+                      formatFixedPoint(disponibles),formatDouble(percentDisponiblesOuverts,-1,true)));
     }
 
     output.append(QStringLiteral("</table>"));
@@ -89,9 +89,7 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode, unsigned i
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de [ %3 ] "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(mode))
-            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode),auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
     qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0;
@@ -170,7 +168,7 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode, unsigned i
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/diffFirstYearRootNodeRealises;
             }
             output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true),formatDouble(percentRealises,-1,true)));
 
         }
     }
@@ -193,9 +191,8 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode, unsigne
                            "<b>&Eacute;volution du compte administratif de [ %3 ] "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(mode))
-            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
+            MODES::modeToCompleteString(mode),auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot;
@@ -277,7 +274,7 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode, unsigne
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/diffFirstYearRootNodeRealises;
             }
             output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true),formatDouble(percentRealises,-1,true)));
 
             //Here is the trick between T2 and T2bis, change the reference each year (the css changes also)
             diffFirstYearRootNodeOuverts=diffRootNodeOuverts;
@@ -303,7 +300,7 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t2entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -347,7 +344,7 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/firstYearRealisesNode;
             }
             output.append(QString("<tr><td class='t2annee'>%1</td><td align='right' class='t2pourcent'>%2\%</td><td align='right' class='t2pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true),formatDouble(percentRealises,-1,true)));
 
         }
     }
@@ -368,7 +365,7 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
                            "<b>&Eacute;volution du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t3entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -412,7 +409,7 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
                 percentRealises=diffCurrentYearFirstYearRealises*100.0/firstYearRealisesNode;
             }
             output.append(QString("<tr><td class='t3annee'>%1</td><td align='right' class='t3pourcent'>%2\%</td><td align='right' class='t3pourcent'>%3\%</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,-1,true)).arg(formatDouble(percentRealises,-1,true)));
+                          .arg(annee).arg(formatDouble(percentOuverts,-1,true),formatDouble(percentRealises,-1,true)));
 
             //Here is the only difference between T3 and T3bis (appart the styling of tables)
             firstYearOuvertsNode=ouverts;
@@ -436,9 +433,9 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode,unsigned in
                            "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>par rapport à [ %3 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t4entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(mode))
-            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
+            MODES::modeToCompleteString(mode),
+            auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
     QHash<unsigned int,qint64> ouvertsRoot,realisesRoot;
 
@@ -490,7 +487,7 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode,unsigned in
         }
 
         output.append(QString("<tr><td class='t4annee'>%1</td><td align='right' class='t4pourcent'>%2\%</td><td align='right' class='t4pourcent'>"
-                              "%3\%</td></tr>").arg(annee).arg(formatDouble(percentOuvertsRoot,-1,true)).arg(formatDouble(percentRealisesRoot,-1,true)));
+                              "%3\%</td></tr>").arg(annee).arg(formatDouble(percentOuvertsRoot,-1,true),formatDouble(percentRealisesRoot,-1,true)));
 
     }
 
@@ -515,9 +512,7 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode,unsigned in
                            "<tr class='t5entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Crédits ouverts</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t5entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-            .arg(MODES::modeToCompleteString(mode))
-            .arg(auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode),auditModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped());
 
     QMap<unsigned int,qint64> ouvertsRoot,realisesRoot,engagesRoot,disponiblesRoot;
     qint64 firstYearOuvertsRoot=0,firstYearRealisesRoot=0,firstYearEngagesRoot=0,firstYearDisponiblesRoot=0;
@@ -628,8 +623,8 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode,unsigned in
             output.append(QString("<tr><td class='t5annee'>%1</td><td align='right' class='t5pourcent'>%2</td>"
                                   "<td align='right' class='t5pourcent'>%3</td><td align='right' class='t5pourcent'>%4</td>"
                                   "<td align='right' class='t5valeur'>%5</td><td align='right' class='t5valeur'>%6</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true)).arg(formatDouble(percentNC,0,true))
-                          .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
+                          .arg(annee).arg(formatDouble(percentOuverts,0,true),formatDouble(percentRealises,0,true),formatDouble(percentNC,0,true),
+                          formatDouble(percentEngages,0,true),formatDouble(percentDisponibles,0,true)));
         }
     }
     output.append(QStringLiteral("</table>"));
@@ -652,7 +647,7 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t6entete'><th valign='middle' rowspan=2>Exercice</th><th valign='middle' rowspan=2>Crédits ouverts</th>"
                            "<th valign='middle' rowspan=2>R&eacute;alis&eacute;</th><th colspan=3 align='center'>Non consomm&eacute;</th></tr>"
                            "<tr class='t6entete'><th valign='middle'>Total</th><th style='font-weight:normal'>dont<br>engag&eacute;</th><th style='font-weight:normal'>dont<br>disponible</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
 
     QSqlQuery q;
@@ -712,9 +707,9 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
             output.append(QString("<tr><td class='t6annee'>%1</td><td align='right' class='t6pourcent'>%2</td>"
                                   "<td align='right' class='t6pourcent'>%3</td><td align='right' class='t6pourcent'>%4</td>"
                                   "<td align='right' class='t6valeur'>%5</td><td align='right' class='t6valeur'>%6</td></tr>")
-                          .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true))
-                          .arg(formatDouble(percentNC,0,true)).arg(formatDouble(percentEngages,0,true))
-                          .arg(formatDouble(percentDisponibles,0,true)));
+                          .arg(annee).arg(formatDouble(percentOuverts,0,true),formatDouble(percentRealises,0,true),
+                          formatDouble(percentNC,0,true),formatDouble(percentEngages,0,true),
+                          formatDouble(percentDisponibles,0,true)));
         }
     }
     output.append(QStringLiteral("</table>"));
@@ -737,7 +732,7 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
                            " 365/365<sup>&egrave;me</sup> entre le r&eacute;alis&eacute; budg&eacute;taire et l'ann&eacute;e</u></b>"
                            "<tr class='t7entete'><th>Exercice</th><th>Crédits ouverts</th><th>R&eacute;alis&eacute;</th>"
                            "<th>Engag&eacute;</th><th>Disponible</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
 
     QSqlQuery q;
@@ -770,8 +765,8 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
         output.append(QString("<tr><td class='t7annee'>%1</td><td align='right' class='t7pourcent'>%2</td>"
                               "<td align='right' class='t7pourcent'>%3</td><td align='right' class='t7pourcent'>%4</td>"
                               "<td align='right' class='t7pourcent'>%5</td></tr>")
-                      .arg(annee).arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentRealises,0,true))
-                      .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
+                      .arg(annee).arg(formatDouble(percentOuverts,0,true),formatDouble(percentRealises,0,true),
+                      formatDouble(percentEngages,0,true),formatDouble(percentDisponibles,0,true)));
     }
     output.append(QStringLiteral("</table>"));
     return output;
@@ -788,7 +783,7 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
     QString output=QString("\n<table width='50%' align='center' cellpadding='5'>"
                            "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
 
     QSqlQuery q;
@@ -825,8 +820,8 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
                           "<tr><td class='t8annee' align='center' style='font-weight:normal'>Non utilis&eacute;</td><td align='right' class='t8valeur'>%2\%</td></tr>"
                           "<tr><td class='t8annee' align='center'><i>dont engag&eacute;</i></td><td align='right' class='t8pourcent'><i>%3\%</i></td></tr>"
                           "<tr><td class='t8annee' align='center'><i>dont disponible</i></td><td align='right' class='t8pourcent'><i>%4\%</i></td></tr>")
-                  .arg(formatDouble(percentRealisesOuverts,-1,true)).arg(formatDouble(percentDisponiblesOuverts+percentEngagesOuverts,-1,true))
-                  .arg(formatDouble(percentEngagesOuverts,-1,true)).arg(formatDouble(percentDisponiblesOuverts,-1,true)));
+                  .arg(formatDouble(percentRealisesOuverts,-1,true),formatDouble(percentDisponiblesOuverts+percentEngagesOuverts,-1,true),
+                  formatDouble(percentEngagesOuverts,-1,true),formatDouble(percentDisponiblesOuverts,-1,true)));
 
     output.append(QStringLiteral("</table>"));
     return output;
@@ -845,7 +840,7 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t9entete'><td colspan=2 align='center'>"
                            "<b>&Eacute;quivalences moyennes en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>[ %1 ]"
                            " (<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b>"
-                           "</td></tr>").arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+                           "</td></tr>").arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -880,8 +875,8 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
                           "<tr><td class='t9annee' style='font-weight:normal'>D&eacute;passement de capacit&eacute; des pr&eacute;visions</td><td align='right' class='t9valeur' valign='middle'>%2 jours</td></tr>"
                           "<tr><td class='t9annee'><i>dont engag&eacute;</i></td><td class='t9pourcent' align='right' valign='middle'><i>%3 jours</i></td></tr>"
                           "<tr><td class='t9annee'><i>dont disponible</i></td><td class='t9pourcent' align='right' valign='middle'><i>%4 jours</i></td></tr>")
-                  .arg(formatDouble(percentOuverts,0,true)).arg(formatDouble(percentNC,0,true))
-                  .arg(formatDouble(percentEngages,0,true)).arg(formatDouble(percentDisponibles,0,true)));
+                  .arg(formatDouble(percentOuverts,0,true),formatDouble(percentNC,0,true),
+                  formatDouble(percentEngages,0,true),formatDouble(percentDisponibles,0,true)));
     output.append(QStringLiteral("</table>"));
     return output;
 }
@@ -1117,10 +1112,10 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
     qint64 nodeVal=reportingModel->getNodeValue(node,mode,PCx_Reporting::OREDPCR::OUVERTS,lastDate);
 
     QString out=QObject::tr("<p>Le %1, date de la dernière situation PCR, les crédits ouverts pour <strong>%2</strong> s'élevaient à %3 € %4</p>")
-            .arg(lastDate.toString(Qt::DefaultLocaleShortDate))
-            .arg(reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-            .arg(NUMBERSFORMAT::formatFixedPoint(nodeVal))
-            .arg(node!=1?"représentant : ":"");
+            .arg(lastDate.toString(Qt::DefaultLocaleShortDate),
+            reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
+            NUMBERSFORMAT::formatFixedPoint(nodeVal),
+            node!=1?"représentant : ":"");
 
     out.append(QStringLiteral("<ul>"));
     unsigned int pid;
@@ -1132,8 +1127,8 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
         if(pidVal!=0)
         {
             out.append(QString("<li>%1 % des crédits de <b>%2</b></li>")
-                       .arg(formatDouble((double)nodeVal/(double)pidVal*100.0,-1,true))
-                       .arg(reportingModel->getAttachedTree()->getNodeName(pid).toHtmlEscaped())
+                       .arg(formatDouble((double)nodeVal/(double)pidVal*100.0,-1,true),
+                       reportingModel->getAttachedTree()->getNodeName(pid).toHtmlEscaped())
                        );
         }
         tmpNode=pid;
@@ -1183,28 +1178,28 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
 
         QString out=QString("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Part des cr&eacute;dits ouverts</th></tr>"
                             "<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(bp))
-                .arg(NUMBERSFORMAT::formatDouble(percentBP,-1,true));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP,true),
+                NUMBERSFORMAT::formatFixedPoint(bp),
+                NUMBERSFORMAT::formatDouble(percentBP,-1,true));
         out.append(QString("<tr><td class='t1annee'>%1</td><td class='t1valeur' align='right'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(reports))
-                .arg(NUMBERSFORMAT::formatDouble(percentReports,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::REPORTS,true),
+                NUMBERSFORMAT::formatFixedPoint(reports),
+                NUMBERSFORMAT::formatDouble(percentReports,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(ocdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentOCDM,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true),
+                NUMBERSFORMAT::formatFixedPoint(ocdm),
+                NUMBERSFORMAT::formatDouble(percentOCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(vcdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentVCDM,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true),
+                NUMBERSFORMAT::formatFixedPoint(vcdm),
+                NUMBERSFORMAT::formatDouble(percentVCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(vInt))
-                .arg(NUMBERSFORMAT::formatDouble(percentVINT,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true),
+                NUMBERSFORMAT::formatFixedPoint(vInt),
+                NUMBERSFORMAT::formatDouble(percentVINT,-1,true)));
         out.append(QString("<tr><td class='t1annee'><b>TOTAL</b></td><td align='right'  class='t1valeur'><b>%1</b></td><td align='right'  class='t1pourcent'><b>%2 \%</b></td></tr></table>")
-                   .arg(NUMBERSFORMAT::formatFixedPoint(sum))
-                   .arg(NUMBERSFORMAT::formatDouble(sumPercent,-1,true))
+                   .arg(NUMBERSFORMAT::formatFixedPoint(sum),
+                   NUMBERSFORMAT::formatDouble(sumPercent,-1,true))
                    );
 
         return out;
@@ -1249,28 +1244,28 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
         QString out=QStringLiteral("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Variation en \% du BP</th></tr>");
 
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(ocdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentOCDM,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true),
+                NUMBERSFORMAT::formatFixedPoint(ocdm),
+                NUMBERSFORMAT::formatDouble(percentOCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(vcdm))
-                .arg(NUMBERSFORMAT::formatDouble(percentVCDM,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VCDM,true),
+                NUMBERSFORMAT::formatFixedPoint(vcdm),
+                NUMBERSFORMAT::formatDouble(percentVCDM,-1,true)));
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
-                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true))
-                .arg(NUMBERSFORMAT::formatFixedPoint(vInt))
-                .arg(NUMBERSFORMAT::formatDouble(percentVINT,-1,true)));
+                .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::VIREMENTSINTERNES,true),
+                NUMBERSFORMAT::formatFixedPoint(vInt),
+                NUMBERSFORMAT::formatDouble(percentVINT,-1,true)));
         out.append(QString("<tr><td class='t1annee'><b>TOTAL</b></td><td align='right'  class='t1valeur'><b>%1</b></td><td align='right'  class='t1pourcent'><b>%2 \%</b></td></tr></table>")
-                   .arg(NUMBERSFORMAT::formatFixedPoint(sum))
-                   .arg(NUMBERSFORMAT::formatDouble(sumPercent,-1,true))
+                   .arg(NUMBERSFORMAT::formatFixedPoint(sum),
+                   NUMBERSFORMAT::formatDouble(sumPercent,-1,true))
                    );
 
         out.prepend(QString("<p>Entre le 1er janvier et le %1, date de la dernière situation PCR, les crédits alloués au budget primitif à <b>%2</b> ont "
                             "enregistré une variation de %3 €, correspondant à %4 \% de l'autorisation d'origine</p>")
-                    .arg(laDate.toString(Qt::DefaultLocaleShortDate))
-                    .arg(reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
-                    .arg(NUMBERSFORMAT::formatFixedPoint(sum))
-                    .arg(NUMBERSFORMAT::formatDouble(sumPercent,-1,true)));
+                    .arg(laDate.toString(Qt::DefaultLocaleShortDate),
+                    reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
+                    NUMBERSFORMAT::formatFixedPoint(sum),
+                    NUMBERSFORMAT::formatDouble(sumPercent,-1,true)));
 
         return out;
     }
@@ -1323,18 +1318,14 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
         out.append(QStringLiteral("<tr><td colspan='3' class='t1annee'>UTILISÉ</td></tr>"));
 
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(realises))
-                .arg(NUMBERSFORMAT::formatDouble(percentRealises,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(realises),NUMBERSFORMAT::formatDouble(percentRealises,-1,true)));
         //out.append("<tr><td colspan='3'>&nbsp;</td></tr>");
         out.append(QString("<tr><td class='t1annee'>NON&nbsp;UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(nonUtilise))
-                .arg(NUMBERSFORMAT::formatDouble(percentNonUtilise,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(nonUtilise),NUMBERSFORMAT::formatDouble(percentNonUtilise,-1,true)));
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(engages))
-                .arg(NUMBERSFORMAT::formatDouble(percentEngages,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(engages),NUMBERSFORMAT::formatDouble(percentEngages,-1,true)));
         out.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
-                .arg(NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(disponibles),NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
 
         outGlob.append(out);
         outGlob.append(QStringLiteral("</td><td>"));
@@ -1343,22 +1334,18 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
         QString out2("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
         out2.append(QString("<tr><td class='t1annee'>UTILISÉ</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(utilise))
-                .arg(NUMBERSFORMAT::formatDouble(percentUtilise,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(utilise),NUMBERSFORMAT::formatDouble(percentUtilise,-1,true)));
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Réalisé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(realises))
-                .arg(NUMBERSFORMAT::formatDouble(percentRealises,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(realises),NUMBERSFORMAT::formatDouble(percentRealises,-1,true)));
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Engagé</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(engages))
-                .arg(NUMBERSFORMAT::formatDouble(percentEngages,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(engages),NUMBERSFORMAT::formatDouble(percentEngages,-1,true)));
         //out2.append("<tr><td colspan='3'>&nbsp;</td></tr>");
 
 
         out2.append(QStringLiteral("<tr><td colspan='3' class='t1annee'>NON&nbsp;UTILISÉ</td></tr>"));
 
         out2.append(QString("<tr><td class='t1annee' align='right'>=>&nbsp;Disponible</td><td align='right' class='t1valeur'>%1</td><td  align='right' class='t1pourcent'>%2 \%</td></tr></table>")
-                .arg(NUMBERSFORMAT::formatFixedPoint(disponibles))
-                .arg(NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
+                .arg(NUMBERSFORMAT::formatFixedPoint(disponibles),NUMBERSFORMAT::formatDouble(percentDispo,-1,true)));
 
         outGlob.append(out2);
         outGlob.append(QStringLiteral("</td></tr></table>"));
@@ -1405,12 +1392,12 @@ QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const
                             "<li>semestrielle = <b>%5</b> €</li>"
                             "<li>annuelle = <b>%6</b> €</li>"
                             "</ul></li>")
-                .arg(NUMBERSFORMAT::formatDouble(journ))
-                .arg(NUMBERSFORMAT::formatDouble(hebd))
-                .arg(NUMBERSFORMAT::formatDouble(mens))
-                .arg(NUMBERSFORMAT::formatDouble(mens*3))
-                .arg(NUMBERSFORMAT::formatDouble(mens*6))
-                .arg(NUMBERSFORMAT::formatDouble(ouverts));
+                .arg(NUMBERSFORMAT::formatDouble(journ),
+                NUMBERSFORMAT::formatDouble(hebd),
+                NUMBERSFORMAT::formatDouble(mens),
+                NUMBERSFORMAT::formatDouble(mens*3),
+                NUMBERSFORMAT::formatDouble(mens*6),
+                NUMBERSFORMAT::formatDouble(ouverts));
 
         out.append(QString("<li>Utilisation <b>effective</b> moyenne des crédits :<ul>"
                            "<li>journalière = <b>%1</b> €</li>")
@@ -1515,8 +1502,7 @@ QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const
         if(q.value("ouverts").toLongLong()!=0)
         {
             out.append(QString("<li>Taux d'écart constaté le %1, date de la dernière situation PCR = <b>%2 \%</b></li></ol>")
-                       .arg(laDate.toString(Qt::DefaultLocaleShortDate))
-                       .arg(NUMBERSFORMAT::formatDouble((journReal*365-ouverts)/ouverts*100)));
+                       .arg(laDate.toString(Qt::DefaultLocaleShortDate),NUMBERSFORMAT::formatDouble((journReal*365-ouverts)/ouverts*100)));
 
             out.append(QStringLiteral("<p>Le taux d'écart signale, s'il est négatif, un cycle à venir, s'il est positif, un cycle en cours ou passé."
                        " En l'absence de cycle, le taux d'écart anticipe, s'il est positif, une insuffisance de crédits, s'il est négatif un excédent de crédits.</p>"));
@@ -1600,7 +1586,7 @@ QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
                            "<tr class='t1entete'><td align='center' colspan=5><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th>"
                            "<th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th><th>Disponible</th></tr>")
-            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped()).arg(MODES::modeToCompleteString(mode));
+            .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
     QSqlQuery q;
     q.prepare(QString("select * from %1 where id_node=:id order by annee").arg(tableName));
@@ -1622,7 +1608,7 @@ QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
 
         output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1valeur'>%3</td>"
                               "<td align='right' class='t1valeur'>%4</td><td align='right' class='t1valeur'>%5</td></tr>").arg(q.value("annee").toUInt())
-                      .arg(formatFixedPoint(ouverts)).arg(formatFixedPoint(realises)).arg(formatFixedPoint(engages)).arg(formatFixedPoint(disponibles)));
+                      .arg(formatFixedPoint(ouverts),formatFixedPoint(realises),formatFixedPoint(engages),formatFixedPoint(disponibles)));
     }
 
     output.append(QStringLiteral("</table>"));

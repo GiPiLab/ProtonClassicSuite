@@ -213,7 +213,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     file.close();
     //progress.setValue(maximumProgressValue);
     if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(0,QObject::tr("Information"),QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped()).arg(relativeImagePath.toHtmlEscaped()));
+        QMessageBox::information(0,QObject::tr("Information"),QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped(),relativeImagePath.toHtmlEscaped()));
     else
     {
         QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Le document n'a pas pu être enregistré !"));
@@ -240,8 +240,8 @@ QString PCx_PrevisionItem::getPrevisionItemsOfDescendantsAsHTML() const
 
     if(!prevision->getAttachedTree()->isLeaf(nodeId))
     {
-        output=QString("<h3>Critères appliqués aux descendants de <b>%1</b> (%2)</h3>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
-                .arg(MODES::modeToCompleteString(mode));
+        output=QString("<h3>Critères appliqués aux descendants de <b>%1</b> (%2)</h3>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped(),
+                MODES::modeToCompleteString(mode));
         QList<unsigned int> descendants=prevision->getAttachedTree()->getDescendantsId(nodeId);
         foreach(unsigned int descendant,descendants)
         {
@@ -249,8 +249,8 @@ QString PCx_PrevisionItem::getPrevisionItemsOfDescendantsAsHTML() const
             tmpItem.loadFromDb();
             if(!tmpItem.getItemsToAdd().isEmpty() || !tmpItem.getItemsToSubstract().isEmpty())
             {
-                output.append(QString("<p><a href='#node_%3'><b>%1 : %2€</b></a></p>").arg(prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped())
-                              .arg(NUMBERSFORMAT::formatFixedPoint(tmpItem.getSummedPrevisionItemValue()))
+                output.append(QString("<p><a href='#node_%3'><b>%1 : %2€</b></a></p>").arg(prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped(),
+                              NUMBERSFORMAT::formatFixedPoint(tmpItem.getSummedPrevisionItemValue()))
                               .arg(descendant));
                 output.append(tmpItem.getPrevisionItemAsHTML());
             }
@@ -261,8 +261,8 @@ QString PCx_PrevisionItem::getPrevisionItemsOfDescendantsAsHTML() const
     {
         if(!itemsToAdd.isEmpty()||!itemsToSubstract.isEmpty())
         {
-            output.append(QString("<p><b>%1 : %2€</b></p>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped())
-                          .arg(NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
+            output.append(QString("<p><b>%1 : %2€</b></p>").arg(prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped(),
+                          NUMBERSFORMAT::formatFixedPoint(getSummedPrevisionItemValue())));
 
             output.append(getPrevisionItemAsHTML());
         }
@@ -526,8 +526,8 @@ QString PCx_PrevisionItem::getPrevisionItemAsHTML() const
     foreach(const PCx_PrevisionItemCriteria &criteria,itemsToAdd)
     {
         output.append(QString("<li style='color:darkgreen'>%1 : %2€</li>")
-                      .arg(criteria.getCriteriaLongDescription().toHtmlEscaped())
-                      .arg(NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId,mode,nodeId))));
+                      .arg(criteria.getCriteriaLongDescription().toHtmlEscaped(),
+                      NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId,mode,nodeId))));
     }
     if(toAdd)
         output.append("</ul>");
@@ -541,8 +541,8 @@ QString PCx_PrevisionItem::getPrevisionItemAsHTML() const
     foreach(const PCx_PrevisionItemCriteria &criteria,itemsToSubstract)
     {
         output.append(QString("<li style='color:darkred'>%1 : %2€</li>")
-                      .arg(criteria.getCriteriaLongDescription().toHtmlEscaped())
-                      .arg(NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId,mode,nodeId))));
+                      .arg(criteria.getCriteriaLongDescription().toHtmlEscaped(),
+                      NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId,mode,nodeId))));
     }
     if(toSub)
         output.append("</ul>");

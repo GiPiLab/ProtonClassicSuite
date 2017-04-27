@@ -13,7 +13,7 @@ FormTreeConsistency::FormTreeConsistency(unsigned int treeId,QWidget *parent) :
 
     tree=new PCx_Tree(treeId);
     QDateTime dt=QDateTime::currentDateTime();
-    ui->label->setText(tr("Arbre %1 le %2 à %3").arg(tree->getName()).arg(dt.date().toString("dd/MM/yyyy")).arg(dt.time().toString()));
+    ui->label->setText(tr("Arbre %1 le %2 à %3").arg(tree->getName(),dt.date().toString("dd/MM/yyyy"),dt.time().toString()));
 
     populateTableInfos();
     populateListOfNodesWithSameNameButDifferentTypes();
