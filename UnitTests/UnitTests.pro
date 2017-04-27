@@ -18,8 +18,8 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-QMAKE_CXXFLAGS+=-Og --coverage
-QMAKE_LFLAGS+=--coverage
+#QMAKE_CXXFLAGS+=-Og --coverage
+#QMAKE_LFLAGS+=--coverage
 
 SOURCES += utils.cpp \
     tst_protonclassicsuiteunittests_main.cpp \
