@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "pcx_query.h"
 
+
 PCx_Report::PCx_Report(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,int graphicsHeight,double scale):auditModel(model),tables(model),graphics(model,plot,graphicsWidth,graphicsHeight,scale)
 {
     if(model==nullptr)
@@ -246,11 +247,19 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
             imageName.prepend(encodedRelativeImagePath+"/");
             imageAbsoluteName.prepend(absoluteImagePath+"/");
 
+
             if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
             {
                 qCritical()<<"Unable to save "<<imageAbsoluteName;
                 die();
             }
+
+            /*if(!plot->saveSvg(imageAbsoluteName,graphicsWidth,graphicsHeight))
+            {
+                qCritical()<<"Unable to save "<<imageAbsoluteName;
+                die();
+            }*/
+
             output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
             if(progress!=nullptr)

@@ -24,7 +24,7 @@
 ****************************************************************************/
 
 #include "qcustomplot.h"
-
+#include <QtSvg/qsvggenerator.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -10508,6 +10508,52 @@ bool QCustomPlot::savePdf(const QString &fileName, bool noCosmeticPen, int width
 #endif // QT_NO_PRINTER
   return success;
 }
+
+
+/**
+ * @brief QCustomPlot::saveSvg : save to SVG (implemented for ProtonClassicSuite by Thib)
+ * @param fileName
+ * @param noCosmeticPen
+ * @param width
+ * @param height
+ * @return
+ */
+bool QCustomPlot::saveSvg(const QString &fileName, int width, int height)
+{
+  bool success = false;
+
+  qDebug()<<"Width = "<<width<<" Height = "<<height;
+
+  QCPPainter printpainter;
+  QSvgGenerator generator;
+  generator.setFileName(fileName);
+  generator.setSize(QSize(width, height));
+  generator.setViewBox(QRect(0, 0, width, height));
+
+  QRect oldViewport = viewport();
+  setViewport(QRect(0, 0, width, height));
+
+  if (printpainter.begin(&generator))
+  {
+    printpainter.setMode(QCPPainter::pmVectorized);
+    printpainter.setMode(QCPPainter::pmNoCaching);
+    //printpainter.setMode(QCPPainter::pmNonCosmetic, noCosmeticPen);
+    printpainter.setWindow(mViewport);
+    if (mBackgroundBrush.style() != Qt::NoBrush &&
+        mBackgroundBrush.color() != Qt::white &&
+        mBackgroundBrush.color() != Qt::transparent &&
+        mBackgroundBrush.color().alpha() > 0) // draw background color if not white/transparent
+      printpainter.fillRect(viewport(), mBackgroundBrush);
+    draw(&printpainter);
+    printpainter.end();
+    success = true;
+  }
+  setViewport(oldViewport);
+  return success;
+}
+
+
+
 
 /*!
   Saves a PNG image file to \a fileName on disc. The output plot will have the dimensions \a width

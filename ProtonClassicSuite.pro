@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui sql printsupport
+QT       += core gui sql printsupport svg
 
 CONFIG += c++11
 DEFINES *= QT_USE_QSTRINGBUILDER
