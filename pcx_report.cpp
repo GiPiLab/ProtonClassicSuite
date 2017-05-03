@@ -26,7 +26,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         qFatal("Assertion failed");
     }
 
-    QString output;
+    QString output="\n<div class='nodecontainer'>\n";
 
     //Either group of tables, or individual tables
     if(!listOfTabs.isEmpty())
@@ -266,6 +266,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
                 progress->setValue(++progressValue);
         }
     }
+    output.append("\n</div>\n");
     return output;
 }
 
@@ -325,7 +326,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     int graphicsHeight=graphics.getGraphicsHeight()/1.2;
     double scale=graphics.getScale();
 
-    QString output;
+    QString output="\n<div class='nodecontainer'>\n";
 
     if(listOfPresets.contains(PCRPRESETS::PCRPRESET_S))
     {
@@ -502,6 +503,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         }
     }
 
+    output.append("\n</div>\n");
     return output;
 }
 

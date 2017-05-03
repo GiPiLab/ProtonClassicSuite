@@ -234,7 +234,7 @@ void FormReportingReports::on_saveButton_clicked()
 
     foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
-        output.append(QString("<h1 id='node%2'>%1</h1>").arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
+        output.append(QString("\n\n<h1 id='node%2'>%1</h1>").arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
 
         if(selectedPresets.contains(PCx_Report::PCRPRESETS::PCRPRESET_S))
         {
@@ -246,7 +246,7 @@ void FormReportingReports::on_saveButton_clicked()
             output.append(report->generateHTMLReportingReportForNode(presetsSansS,selectedNode,mode,ui->checkBoxIncludeGraphics->isChecked(),nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
-            output.append("<br><br><br>");
+            output.append("\n<br><br><br>");
         }
 
         if(!progress.wasCanceled())
@@ -258,9 +258,9 @@ void FormReportingReports::on_saveButton_clicked()
             dir.removeRecursively();
             return;
         }
-        output.append("<br><br><br><br>");
+        output.append("\n\n<br><br><br><br>");
     }
-    output.append("</body></html>");
+    output.append("\n</body></html>");
 
     QString settingStyle=settings.value("output/style","CSS").toString();
     if(settingStyle=="INLINE")

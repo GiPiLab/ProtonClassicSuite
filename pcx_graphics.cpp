@@ -1064,7 +1064,7 @@ int PCx_Graphics::getAlpha()
 
 QString PCx_Graphics::getCSS()
 {
-    return "\ndiv.g{margin-left:auto;margin-right:auto;page-break-inside:avoid;}";
+    return "\ndiv.g{margin-top:2em;margin-left:auto;margin-right:auto;page-break-inside:avoid;}";
 }
 
 

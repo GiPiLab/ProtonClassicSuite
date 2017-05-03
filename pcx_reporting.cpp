@@ -1176,7 +1176,9 @@ QString PCx_Reporting::getCSS()
     QString css="\nbody{font-family:sans-serif;font-size:9pt;background-color:white;color:black;}"
                 "\nh1{color:#A00;}"
                 "\nh2{color:navy;}"
-                "\nh3{color:green;font-size:larger}";
+                "\nh3{color:green;font-size:larger}"
+                "\n.nodecontainer{display:flex;flex-wrap:wrap}"
+            ;
 
     css.append(PCx_Query::getCSS());
     css.append(PCx_Tables::getCSS());

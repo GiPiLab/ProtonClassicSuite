@@ -31,7 +31,7 @@ QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
-    QString output=QString("\n<table align='center' width='98%' cellpadding='5'>"
+    QString output=QString("\n<table align='center' width='98%' class='t1' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=8><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th>"
                            "<th>R&eacute;alis&eacute;</th><th>%/crédits ouverts</th>"
@@ -84,7 +84,7 @@ QString PCx_Tables::getPCAT2(unsigned int node, MODES::DFRFDIRI mode, unsigned i
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
-    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t2' width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de [ %3 ] "
                            "<u>hors celui de [ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -186,7 +186,7 @@ QString PCx_Tables::getPCAT2bis(unsigned int node, MODES::DFRFDIRI mode, unsigne
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     //The classes "t3xxx" are not a mistake
-    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t2bis' width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de [ %3 ] "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -295,7 +295,7 @@ QString PCx_Tables::getPCAT3(unsigned int node, MODES::DFRFDIRI mode) const
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
     //The classes "t2xxx" are not a mistake
-    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t3' width='70%' align='center' cellpadding='5'>"
                            "<tr class='t2entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution cumul&eacute;e du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -360,7 +360,7 @@ QString PCx_Tables::getPCAT3bis(unsigned int node, MODES::DFRFDIRI mode) const
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
-    QString output=QString("\n<table width='70%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t3bis' width='70%' align='center' cellpadding='5'>"
                            "<tr class='t3entete'><td colspan=3 align='center'>"
                            "<b>&Eacute;volution du compte administratif de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -429,7 +429,7 @@ QString PCx_Tables::getPCAT4(unsigned int node, MODES::DFRFDIRI mode,unsigned in
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
-    QString output=QString("\n<table align='center' width='65%' cellpadding='5'>"
+    QString output=QString("\n<table class='t4' align='center' width='65%' cellpadding='5'>"
                            "<tr class='t4entete'><td colspan=3 align='center'><b>Poids relatif de [ %1 ]<br>par rapport à [ %3 ] "
                            "(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t4entete'><th>Exercice</th><th>Pour les crédits ouverts</th><th>Pour le r&eacute;alis&eacute;</th></tr>")
@@ -505,7 +505,7 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode,unsigned in
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
-    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t5' width='80%' align='center' cellpadding='5'>"
                            "<tr class='t5entete'><td colspan=6 align='center'>"
                            "<b>Analyse en base 100 du compte administratif de [ %3 ] "
                            "<u>hors celui de<br>[ %1 ]</u> (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -640,7 +640,7 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
-    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t6' width='80%' align='center' cellpadding='5'>"
                            "<tr class='t6entete'><td colspan=6 align='center'>"
                            "<b>Analyse en base 100 du compte administratif de [ %1 ]"
                            "<br>(<span style='color:#7c0000'>%2</span>)</b></td></tr>"
@@ -725,7 +725,7 @@ QString PCx_Tables::getPCAT7(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
-    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t7' width='80%' align='center' cellpadding='5'>"
                            "<tr class='t7entete'><td colspan=5 align='center'>"
                            "<b>Transcription en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>"
                            "[ %1 ] (<span style='color:#7c0000'>%2</span>)<br><u>sur la base d'une &eacute;quivalence de"
@@ -780,7 +780,7 @@ QString PCx_Tables::getPCAT8(unsigned int node, MODES::DFRFDIRI mode) const
     }
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
-    QString output=QString("\n<table width='50%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t8' width='50%' align='center' cellpadding='5'>"
                            "<tr class='t8entete'><td colspan=2 align='center'><b>Moyennes budg&eacute;taires de<br>[ %1 ] "
                            "(<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b></td></tr>")
             .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),MODES::modeToCompleteString(mode));
@@ -836,7 +836,7 @@ QString PCx_Tables::getPCAT9(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
-    QString output=QString("\n<table width='60%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t9' width='60%' align='center' cellpadding='5'>"
                            "<tr class='t9entete'><td colspan=2 align='center'>"
                            "<b>&Eacute;quivalences moyennes en &laquo;&nbsp;jours activit&eacute;&nbsp;&raquo; de<br>[ %1 ]"
                            " (<span style='color:#7c0000'>%2</span>)<br>constat&eacute;es pour la p&eacute;riode audit&eacute;e</b>"
@@ -889,7 +889,7 @@ QString PCx_Tables::getPCAT10(unsigned int node) const
     {
         qFatal("Assertion failed");
     }
-    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t10' width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS de FONCTIONNEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
@@ -959,7 +959,7 @@ QString PCx_Tables::getPCAT11(unsigned int node) const
         qFatal("Assertion failed");
     }
 
-    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t11' width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS d'INVESTISSEMENT de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
@@ -1029,7 +1029,7 @@ QString PCx_Tables::getPCAT12(unsigned int node) const
         qFatal("Assertion failed");
     }
 
-    QString output=QString("\n<table width='80%' align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='t12' width='80%' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=4><b>R&Eacute;SULTATS BUDG&Eacute;TAIRES de [ %1 ]"
                            "<br>UCC <span style='color:black'>&eacute;quilibr&eacute;e (0)</span> <span style='color:#008000'>exc&eacute;dentaire (+) </span>"
                            "<span style='color:#7c0000'>d&eacute;ficitaire (-)</span></b></td></tr>"
@@ -1176,7 +1176,7 @@ QString PCx_Tables::getPCRProvenance(unsigned int node, MODES::DFRFDIRI mode) co
 
         qint64 sum=bp+reports+ocdm+vcdm+vInt;
 
-        QString out=QString("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Part des cr&eacute;dits ouverts</th></tr>"
+        QString out=QString("<table class='tPCRProvenance' align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Part des cr&eacute;dits ouverts</th></tr>"
                             "<tr><td class='t1annee'>%1</td><td align='right' class='t1valeur'>%2</td><td align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::BP,true),
                 NUMBERSFORMAT::formatFixedPoint(bp),
@@ -1241,7 +1241,7 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
 
         qint64 sum=ocdm+vcdm+vInt;
 
-        QString out=QStringLiteral("<table align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Variation en \% du BP</th></tr>");
+        QString out=QStringLiteral("<table class='tPCRVARIATION' align='center' cellpadding='5'><tr class='t1entete'><th>PROVENANCE</th><th>MONTANT</th><th>Variation en \% du BP</th></tr>");
 
         out.append(QString("<tr><td class='t1annee'>%1</td><td  align='right' class='t1valeur'>%2</td><td  align='right' class='t1pourcent'>%3 \%</td></tr>")
                 .arg(PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCR::OCDM,true),
@@ -1311,7 +1311,7 @@ QString PCx_Tables::getPCRUtilisation(unsigned int node, MODES::DFRFDIRI mode) c
 
 
         //First table
-        QString outGlob(QLatin1String("<table align='center' cellspacing='5'><tr><td>"));
+        QString outGlob(QLatin1String("<table class='tPCRUTILISATION' align='center' cellspacing='5'><tr><td>"));
 
         QString out("<table width='100%' cellpadding='5'><tr class='t1entete'><th colspan='3' align='right'>Pourcentage&nbsp;des&nbsp;crédits&nbsp;ouverts</th></tr>");
 
@@ -1552,7 +1552,9 @@ QString PCx_Tables::getPCAPresetResults(unsigned int node) const
 
 QString PCx_Tables::getCSS()
 {
-    return QStringLiteral("\ntable{color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
+    return QStringLiteral("\ntable{margin-top:2em;color:navy;font-weight:400;font-size:8pt;page-break-inside:avoid;}"
+
+                          "\ntable.t1{width:90%;}"
     "\ntd.t1annee,td.t3annee{background-color:#b3b3b3;}"
     "\ntd.t1pourcent{background-color:#b3b3b3;color:#FFF;}"
     "\ntd.t1valeur,td.t2valeur,td.t3valeur,td.t4annee,td.t4valeur,td.t4pourcent,td.t5annee,td.t7annee{background-color:#e6e6e6;}"
@@ -1582,7 +1584,7 @@ QString PCx_Tables::getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const
 
     QString tableName=QString("audit_%1_%2").arg(MODES::modeToTableString(mode)).arg(auditModel->getAuditId());
 
-    QString output=QString("\n<table align='center' cellpadding='5'>"
+    QString output=QString("\n<table class='tPCARAW' align='center' cellpadding='5'>"
                            "<tr class='t1entete'><td align='center' colspan=5><b>%1 (<span style='color:#7c0000'>%2</span>)</b></td></tr>"
                            "<tr class='t1entete'><th>Exercice</th><th>Crédits ouverts</th>"
                            "<th>R&eacute;alis&eacute;</th><th>Engag&eacute;</th><th>Disponible</th></tr>")

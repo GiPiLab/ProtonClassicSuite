@@ -341,7 +341,7 @@ void FormAuditReports::on_saveButton_clicked()
 
     foreach (unsigned int selectedNode,sortedSelectedNodes)
     {
-        output.append(QString("<h2 id='node%2'>%1</h2>").arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
+        output.append(QString("\n\n<h2 id='node%2'>%1</h2>").arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped()).arg(selectedNode));
 
         if(!modeIndependantGraphics.isEmpty() || !modeIndependantTables.isEmpty())
         {
@@ -353,7 +353,7 @@ void FormAuditReports::on_saveButton_clicked()
             output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(),selectedTables,selectedGraphics,selectedNode,mode,referenceNode,nullptr,absoluteImagePath,relativeImagePath,nullptr));
             if(progress.wasCanceled())
                 goto cleanup;
-            output.append(QStringLiteral("<br><br><br>"));
+            output.append(QStringLiteral("\n<br><br><br>"));
         }
         if(!progress.wasCanceled())
             progress.setValue(++i);
@@ -364,9 +364,9 @@ void FormAuditReports::on_saveButton_clicked()
             dir.removeRecursively();
             return;
         }
-        output.append(QStringLiteral("<br><br><br><br>"));
+        output.append(QStringLiteral("\n\n<br><br><br><br>"));
     }
-    output.append(QStringLiteral("</body></html>"));
+    output.append(QStringLiteral("\n</body></html>"));
 
     QString settingStyle=settings.value("output/style","CSS").toString();
     if(settingStyle=="INLINE")
