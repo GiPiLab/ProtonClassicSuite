@@ -1095,7 +1095,7 @@ QString PCx_Audit::getCSS()
             "\nh1{color:#A00;}"
             "\nh2{color:navy;}"
             "\nh3{color:green;font-size:larger}"
-            "\n.nodecontainer{display:flex;flex-wrap:wrap}"
+            "\n.auditNodeContainer{display:flex;flex-wrap:wrap}"
             ;
 
     css.append(PCx_Query::getCSS());
