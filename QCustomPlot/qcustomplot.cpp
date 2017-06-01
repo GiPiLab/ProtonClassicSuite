@@ -24,7 +24,6 @@
 ****************************************************************************/
 
 #include "qcustomplot.h"
-#include <QtSvg/qsvggenerator.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -10518,7 +10517,7 @@ bool QCustomPlot::savePdf(const QString &fileName, bool noCosmeticPen, int width
  * @param height
  * @return
  */
-bool QCustomPlot::saveSvg(const QString &fileName, int width, int height)
+/*bool QCustomPlot::saveSvg(const QString &fileName, int width, int height)
 {
   bool success = false;
 
@@ -10551,7 +10550,7 @@ bool QCustomPlot::saveSvg(const QString &fileName, int width, int height)
   setViewport(oldViewport);
   return success;
 }
-
+*/
 
 
 

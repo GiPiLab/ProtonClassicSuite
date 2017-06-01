@@ -1823,7 +1823,7 @@ public:
   QCPAxis *xAxis, *yAxis, *xAxis2, *yAxis2;
   QCPLegend *legend;
   
-  bool saveSvg(const QString &fileName, int width=0, int height=0);
+//  bool saveSvg(const QString &fileName, int width=0, int height=0);
 signals:
   void mouseDoubleClick(QMouseEvent *event);
   void mousePress(QMouseEvent *event);
