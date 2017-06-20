@@ -7,6 +7,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QTextStream>
+#include <QDebug>
 #include "utils.h"
 
 DialogAbout::DialogAbout(QWidget *parent) :

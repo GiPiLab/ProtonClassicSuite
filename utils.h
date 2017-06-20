@@ -4,7 +4,7 @@
 #include <QString>
 #include <QTableView>
 
-#define VERSION __DATE__
+#define VERSION "20 juin 2017"
 
 #define MAXOBJECTNAMELENGTH 64 ///< Maximum length of audits, reportings, trees, queries and previsions names
 

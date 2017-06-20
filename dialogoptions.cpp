@@ -215,7 +215,7 @@ void DialogOptions::on_pushButtonReset_clicked()
 
     ui->radioButtonUnits->setChecked(true);
 
-    ui->checkBoxRandomAllowed->setChecked(false);
+    ui->checkBoxRandomAllowed->setChecked(true);
 
     ui->pushButtonColorReqMinMax->setStyleSheet("background-color:"+colorReqMinMax.name());
     ui->pushButtonColorReqRank->setStyleSheet("background-color:"+colorReqRank.name());
