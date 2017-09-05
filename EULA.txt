@@ -1,58 +1,35 @@
-CONTRAT DE LICENCE D'UTILISATEUR FINAL ET DE GARANTIE
+ProtonClassicSuite
 
+Copyright Thibault Mondary, Laboratoire de Recherche pour le Développement Local (2006--)
 
-Ce programme, tout document imprimé, toute documentation en ligne ou électronique et tout ou partie des exemplaires et œuvres dérivées de ce programme et de ses éléments (ci-après le « Programme ») sont protégés par le droit d'auteur et sont la propriété du Laboratoire de Recherche pour le Développement Local. L'utilisation du Programme est soumise aux conditions de ce Contrat de licence d'utilisateur final et de garantie (le « Contrat de Licence »). Le Programme est destiné à l'usage exclusif de l'utilisateur final, conformément aux conditions du Contrat de licence. Toute utilisation, reproduction ou redistribution du Programme qui ne respecte pas les conditions du Contrat de licence est expressément interdite.
+labo@gipilab.org
 
+Ce logiciel est un programme informatique servant à cerner l'ensemble des données budgétaires
+de la collectivité territoriale (audit, reporting infra-annuel, prévision des dépenses à venir)
 
-1. Licence d'utilisation. Par les présentes, le Laboratoire de Recherche pour le Développement Local vous concède un droit d'installation et d'utilisation du Programme soumises aux conditions de ce Contrat de licence et spécifiquement attaché à votre collectivité. Votre licence ne vous confère aucun titre ou droit de propriété sur le Programme. 
+Ce logiciel est régi par la licence CeCILL soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA
+sur le site "http://www.cecill.info".
 
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée. Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme, le
+titulaire des droits patrimoniaux et les concédants successifs.
 
-2. Droits de propriété. Tous les droits, titres, intérêts et droits de propriété sur le Programme et tout droit d'auteur, droit de conception, droit sur des bases de données, brevets et tous droits de propriété attachés à des inventions, savoir-faire, noms de marque et de commerce, secrets commerciaux et marques de commerce (déposées ou non) ainsi que toutes demandes d'enregistrement ou de dépôt de ces droits et autres droits de propriété intellectuelle (ci après les « Droits de propriété intellectuelle »), relatifs ou liés au Programme et à tout ou partie de ses exemplaires (notamment et sans limitation, tous les titres, code informatiques, textes, concepts, graphismes, méthodes de fonctionnement, droits moraux, toute documentation s'y rapportant) sont la propriété exclusive du Laboratoire de Recherche pour le Développement Local. Le Programme est protégé par les lois applicables en matière de droit d'auteur dans tous les pays du monde, les traités et conventions internationaux sur les droits d'auteur et les autres réglementations. Tous les droits sont revendiqués et réservés.
+A cet égard l'attention de l'utilisateur est attirée sur les risques
+associés au chargement, à l'utilisation, à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant des connaissances informatiques approfondies. Les
+utilisateurs sont donc invités à charger et tester l'adéquation du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement,
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité.
 
-
-3. Responsabilités de l'utilisateur final.
-* SOUS RÉSERVE DE LA CONCESSION DE LICENCE EN VERTU DES PRÉSENTES, VOUS N'ETES PAS AUTORISE A COPIER, PHOTOCOPIER, REPRODUIRE, TRADUIRE, RETRO-COMPILER, RETROUVER LE CODE SOURCE, MODIFIER, ADAPTER, FUSIONNER, CONVERTIR, DESASSEMBLER, DECOMPILER LE PROGRAMME OU CREER DES ŒUVRES DERIVEES BASEES SUR LE PROGRAMME, EN TOTALITE OU EN PARTIE, OU SUPPRIMER UNE NOTICE OU UNE MENTION DE PROPRIETE INTELLECTUELLE DU PROGRAMME, SANS L'ACCORD PREALABLE ECRIT DU Laboratoire de Recherche pour le Développement Local. SAUF DISPOSITION CONTRAIRE DE LA LOI APPLICABLE (TOUTES LES MODIFICATIONS, ADAPTATIONS OU AMELIORATIONS SONT ET RESTERONT LA PROPRIETE EXCLUSIVE DU Laboratoire de Recherche pour le Développement Local) ;
-* LE PROGRAMME VOUS EST CONCEDE SOUS LICENCE EN TANT QUE PRODUIT UNIQUE. SES COMPOSANTES NE DOIVENT PAS ETRE DISSOCIEES POUR ETRE UTILISEES SUR PLUSIEURS ORDINATEURS. 
-* VOUS POUVEZ UTILISER LE PROGRAMME POUR L'USAGE UNIQUE DE VOTRE COLLECTIVITE COMME DECRIT DANS CE CONTRAT DE LICENCE, MAIS VOUS N'ETES PAS AUTORISE A : 
-    ** VENDRE, DISTRIBUER OU CEDER DES EXEMPLAIRES OU DES REPRODUCTIONS DU PROGRAMME A D'AUTRES PARTIES, DE QUELQUE FAÇON QUE CE SOIT, NI A LOUER, CEDER EN CREDIT-BAIL OU CONCEDER DES LICENCES DU PROGRAMME A DES TIERS, SANS L'ACCORD PREALABLE ECRIT DU Laboratoire de Recherche pour le Développement Local ; OU
-    ** EXPLOITER LE PROGRAMME OU L'UNE DE SES PARTIES, A DES FINS COMMERCIALES, NOTAMMENT ET SANS LIMITATION, DANS UN SALON INTERNET OU TOUT AUTRE SITE PUBLIC ;
-    ** UTILISER, COPIER, CEDER OU DISTRIBUER LE PROGRAMME OU L'UNE DE SES PARTIES, SAUF COMME AUTORISE PAR LE PRESENT CONTRAT DE LICENCE;
-    ** UTILISER, CEDER, LOUER, PRETER, FACTURER OU NEGOCIER LE PROGRAMME OU L'UNE DE SES PARTIES OU UN DROIT SUR LE PROGRAMME OU EN VERTU DU PRESENT CONTRAT DE LICENCE, SAUF COMME EXPRESSEMENT STIPULE DANS LES PRESENTES ;
-    ** SUPPRIMER, DESACTIVER OU CONTOURNER UNE NOTICE OU MENTION DE PROPRIETE ;
-    ** CREER DES DONNEES OU DES PROGRAMMES EXECUTABLES QUI REPRODUISENT LES DONNEES OU LES FONCTIONNALITES DU PROGRAMME ;
-* VOUS DEVEZ EFFECTUER, REGULIEREMENT ET DANS UN AUTRE EMPLACEMENT SÛR, DES COPIES DE TOUT FICHIER DE DONNEES RELATIF A VOTRE UTILISATION DU PROGRAMME, LE Laboratoire de Recherche pour le Développement Local NE POUVANT ETRE TENU POUR RESPONSABLE DE LA PERTE OU DE L'ALTERATION DES DONNEES.
-
-
-4. Résiliation. Ce Contrat de licence restera en vigueur jusqu'à sa résiliation. Vous pouvez mettre fin au Contrat de licence, à tout moment, en informant le Laboratoire de Recherche pour le Développement Local par lettre recommandée avec accusé de réception 15 jours avant la date souhaitée de fin de contrat de licence. Dès la fin du contrat de licence vous vous engagez à supprimer et désinstaller le Programme de tout ordinateur sur lequel il aurait été installé. La présente Licence sera automatiquement résiliée si vous ne respectez pas l'une des modalités et conditions. Le Laboratoire de Recherche pour le Développement Local peut de plus, à son entière discrétion, notifier la résiliation du présent Contrat de licence dans le cas où il apprendrait que vous ne respectez pas les modalités et conditions stipulées dans les présentes. Dans ce cas, vous devez immédiatement détruire et effacer le Programme et tout ou partie des copies en votre possession ou sous votre contrôle et stockées sur un support quel qu'il soit, et, sur demande du Laboratoire de Recherche pour le Développement Local, certifier que vous avez effectué cette destruction.
-
-
-5. Limitation de garantie. Le Laboratoire de Recherche pour le Développement Local ne garantit pas le fonctionnement continu ou sans erreur du Programme ou la correction des erreurs. Il vous incombe d'assumer tous les risques résultant de l'utilisation ou de l'exécution du Programme par votre collectivité.
-
-
-6. Limitation de responsabilité. DANS TOUTE LA MESURE AUTORISÉE PAR LA LOI APPLICABLE, LE Laboratoire de Recherche pour le Développement Local NE SERA TENU RESPONSABLE, DE QUELQUE FAÇON QUE CE SOIT, DE LA PERTE DE DONNEES OU DES DOMMAGES, DE QUELQUE NATURE QU'ILS SOIENT, RÉSULTANT DE L'UTILISATION DU PROGRAMME, NOTAMMENT MAIS SANS LIMITATION, DE LA DÉFAILLANCE OU DU DYSFONCTIONNEMENT DU OU DES ORDINATEURS SUR LESQUELS LE PROGRAMME EST INSTALLE.
-
-Le Laboratoire de Recherche pour le Développement Local ne sera pas tenu pour responsable des dommages, préjudices ou pertes occasionnées à votre collectivité résultant d'une négligence, d'une mauvaise utilisation ou de la modification du Programme.
-
-
-Vous vous engagez à indemniser, défendre et dégager le Laboratoire de Recherche pour le Développement Local, ses dirigeants, ses administrateurs, ses employés et ses agents contre toutes réclamations, coûts et dépenses, notamment les frais juridiques, découlant, directement ou indirectement, de vos actions et omissions lors d'une utilisation du Programme non conforme aux modalités du présent Contrat de licence.
-
-
-7. Recours en équité. Par les présentes, vous reconnaissez que le Laboratoire de Recherche pour le Développement Local subira des dommages irréparables si les modalités du présent Contrat ne sont pas strictement appliquées et, en conséquence, vous acceptez que le Laboratoire de Recherche pour le Développement Local puisse, sans obligation, garantie ou preuve de dommages, légitimement faire valoir des recours en équité appropriés relativement aux violations du présent Contrat de licence, en plus de tels autres recours dont le Laboratoire de Recherche pour le Développement Local pourrait disposer, en vertu des lois applicables.
-
-
-8. Modification. La modification du présent Contrat de licence ne peut être établie que par un écrit spécifiant cette modification et signé par les deux parties. 
-
-Dans le cas où une disposition du présent Contrat de licence serait déclarée inapplicable par un tribunal ou une autre juridiction compétente, cette disposition sera appliquée dans toute la limite autorisée et les autres dispositions du présent Contrat de licence resteront en vigueur et de plein effet. 
-
-
-
-LOI APPLICABLE
-
-* Ce Contrat de licence est régi par loi française. 
-
-
-
-© 2006-2017 GiPiLab. Tous droits réservés.
-
-Contact 
-Laboratoire de Recherche pour le Développement Local, 47 avenue d'Antioche, 17590 Ars-en-Ré. FRANCE
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
+pris connaissance de la licence CeCILL, et que vous en avez accepté les
+termes.
