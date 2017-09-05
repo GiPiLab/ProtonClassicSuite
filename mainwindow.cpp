@@ -180,14 +180,7 @@ void MainWindow::setMenusState()
     }
 
 
-    if(((modulesFlags&ProductActivation::AvailableModule::PCA)||(modulesFlags&ProductActivation::AvailableModule::PCB)||(modulesFlags&ProductActivation::AvailableModule::PCR) || (modulesFlags & ProductActivation::AvailableModule::DEMO)))
-    {
-        if(QSqlDatabase::database().databaseName().isEmpty())
-        {
-            QMessageBox::information(this,tr("Pour démarrer"),tr("Commencez par créer une nouvelle base de données, ou ouvrir une base de données existante"));
-        }
-    }
-    else
+    if(!((modulesFlags&ProductActivation::AvailableModule::PCA)||(modulesFlags&ProductActivation::AvailableModule::PCB)||(modulesFlags&ProductActivation::AvailableModule::PCR) || (modulesFlags & ProductActivation::AvailableModule::DEMO)))
     {
         QMessageBox::information(this,tr("Attention"),tr("Veuillez entrer une clé d'activation dans le menu <b>à propos</b>"));
     }
