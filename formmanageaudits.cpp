@@ -1,7 +1,7 @@
 /*
 * ProtonClassicSuite
 * 
-* Copyright Thibault Mondary, Laboratoire de Recherche pour le Développement Local (2006--)
+* Copyright Thibault et Gilbert Mondary, Laboratoire de Recherche pour le Développement Local (2006--)
 * 
 * labo@gipilab.org
 * 
