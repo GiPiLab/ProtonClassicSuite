@@ -1,4 +1,4 @@
-#ProtonClassicSuite
+# ProtonClassicSuite
 ©2006-- Laboratoire de Recherche pour le Développement Local
 
 Cette suite logicielle à destination des organismes publics (collectivités locales, communautés de communes, etc.) regroupe sous une même interface :
@@ -8,13 +8,13 @@ Cette suite logicielle à destination des organismes publics (collectivités loc
 * ProtonClassicBudget, pour l'allocation de crédits des exercices à venir
 
 
-##Sites web :
+## Sites web :
 
 * https://protonclassic.com
 * https://gipilab.org
 
 
-##Instruction de compilation
+## Instruction de compilation
 
 Installer :
 
