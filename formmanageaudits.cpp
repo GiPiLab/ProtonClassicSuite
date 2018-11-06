@@ -63,9 +63,11 @@ FormManageAudits::FormManageAudits(QWidget *parent):
     updateListOfTrees();
     updateListOfAudits();
     //Remove date constraints
-    //QDate date=QDate::currentDate();
+    QDate date=QDate::currentDate();
     //ui->spinBoxFrom->setMaximum(date.year());
     //ui->spinBoxTo->setMaximum(date.year()+1);
+
+    ui->spinBoxTo->setValue(date.year()-1);
     updateRandomButtonVisibility();
 
 }
