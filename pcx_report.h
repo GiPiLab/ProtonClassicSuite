@@ -90,6 +90,7 @@ private:
     PCx_Report(const PCx_Report &c);
     PCx_Report &operator=(const PCx_Report &);
 
+    bool saveImageToDisk(QCustomPlot *plot, const QString &imageAbsoluteName, int graphicsWidth, int graphicsHeight, double scale, const QString &imgFormat) const;
 };
 
 #endif // PCX_REPORT_H

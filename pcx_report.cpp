@@ -38,6 +38,7 @@
 *
 */
 
+#include <QtSvg/QtSvg>
 #include "pcx_report.h"
 #include "utils.h"
 #include "pcx_query.h"
@@ -210,25 +211,6 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         QString imageFormat=settings.value("output/imageFormat","png").toString();
         QString encodedRelativeImagePath=QUrl::toPercentEncoding(relativeImagePath);
 
-        const char *imgFormat="png";
-        int quality=-1;
-        if(imageFormat=="png")
-        {
-            imgFormat="png";
-            quality=-1;
-        }
-
-        //FIXME : save to JPG as a workaround because saving to PNG is very slow
-        else if(imageFormat=="jpg")
-        {
-            imgFormat="jpeg";
-            quality=96;
-        }
-        else
-        {
-            qCritical()<<"Invalid image format";
-            die();
-        }
         QString suffix="."+imageFormat;
 
         int progressValue=0;
@@ -287,18 +269,10 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
             imageName.prepend(encodedRelativeImagePath+"/");
             imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-
-            if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+            if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
             {
-                qCritical()<<"Unable to save "<<imageAbsoluteName;
                 die();
             }
-
-            /*if(!plot->saveSvg(imageAbsoluteName,graphicsWidth,graphicsHeight))
-            {
-                qCritical()<<"Unable to save "<<imageAbsoluteName;
-                die();
-            }*/
 
             output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
@@ -333,25 +307,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
     QSettings settings;
     QString imageFormat=settings.value("output/imageFormat","png").toString();
-    const char *imgFormat="png";
-    int quality=-1;
-    if(imageFormat=="png")
-    {
-        imgFormat="png";
-        quality=-1;
-    }
 
-    //FIXME : save to JPG as a workaround because saving to PNG is very slow
-    else if(imageFormat=="jpg")
-    {
-        imgFormat="jpeg";
-        quality=96;
-    }
-    else
-    {
-        qCritical()<<"Invalid image format";
-        die();
-    }
     QString suffix="."+imageFormat;
 
     int progressValue=0;
@@ -361,9 +317,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     }
 
     QCustomPlot *plot=graphics.getPlot();
-    //Reduce size a little bit
-    int graphicsWidth=graphics.getGraphicsWidth()/1.2;
-    int graphicsHeight=graphics.getGraphicsHeight()/1.2;
+
+    int graphicsWidth=graphics.getGraphicsWidth();
+    int graphicsHeight=graphics.getGraphicsHeight();
     double scale=graphics.getScale();
 
     QString output="\n<div class='reportingNodeContainer'>\n";
@@ -412,11 +368,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
-                    qCritical()<<"Unable to save "<<imageAbsoluteName;
                     die();
                 }
+
                 output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
                 if(progress!=nullptr)
@@ -452,11 +408,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
-                    qCritical()<<"Unable to save "<<imageAbsoluteName;
                     die();
                 }
+
                 output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
                 if(progress!=nullptr)
@@ -490,11 +446,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
-                    qCritical()<<"Unable to save "<<imageAbsoluteName;
                     die();
                 }
+
                 output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
                 if(progress!=nullptr)
@@ -529,11 +485,12 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+
+                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
-                    qCritical()<<"Unable to save "<<imageAbsoluteName;
                     die();
                 }
+
                 output.append(QString("<br><div align='center' class='g'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(imageName));
                 if(progress!=nullptr)
@@ -546,6 +503,60 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     output.append("\n</div>\n");
     return output;
 }
+
+bool PCx_Report::saveImageToDisk(QCustomPlot *plot,const QString &imageAbsoluteName,int graphicsWidth,int graphicsHeight,double scale,const QString &imageFormat) const
+{
+    const char *imgFormat="png";
+    int quality=-1;
+
+    if(imageFormat=="png")
+    {
+        imgFormat="png";
+        quality=-1;
+    }
+    else if(imageFormat=="jpg")
+    {
+        imgFormat="jpeg";
+        quality=96;
+    }
+    else if(imageFormat=="svg")
+    {
+        imgFormat="svg";
+        quality=-1;
+    }
+    else
+    {
+        qCritical()<<"Invalid image format";
+        return false;
+    }
+
+    if(imageFormat=="svg")
+    {
+        QSvgGenerator svggenerator;
+        svggenerator.setFileName(imageAbsoluteName);
+        QCPPainter qcpPainter;
+        qcpPainter.begin(&svggenerator);
+        plot->toPainter(&qcpPainter, graphicsWidth, graphicsHeight);
+        qcpPainter.end();
+    }
+    else if(imageFormat=="png" || imageFormat=="jpg")
+    {
+        if(!plot->saveRastered(imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imgFormat,quality))
+        {
+            qCritical()<<"Unable to save "<<imageAbsoluteName;
+            die();
+        }
+    }
+    else
+    {
+        qCritical()<<"Invalid image format";
+        return false;
+    }
+    return true;
+}
+
+
+
 
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const
 {

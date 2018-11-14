@@ -75,6 +75,10 @@ DialogOptions::DialogOptions(QWidget *parent) :
         ui->radioButtonJPG->setChecked(true);
     else if(imageFormat=="png")
         ui->radioButtonPNG->setChecked(true);
+    else if(imageFormat=="svg")
+    {
+        ui->radioButtonSVG->setChecked(true);
+    }
     else
         qWarning()<<"Unsupported option for image format !";
 
@@ -183,6 +187,8 @@ void DialogOptions::on_pushButtonOk_clicked()
         settings.setValue("output/imageFormat","jpg");
     else if(ui->radioButtonPNG->isChecked())
         settings.setValue("output/imageFormat","png");
+    else if(ui->radioButtonSVG->isChecked())
+        settings.setValue("output/imageFormat","svg");
     else
     {
         qWarning()<<"Unknown case of option selection for image format";
