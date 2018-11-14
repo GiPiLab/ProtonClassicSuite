@@ -94,8 +94,8 @@ public:
         PCRCYCLES
     };
 
-    PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
-    PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot=0, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
+    PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot=nullptr, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
+    PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot=nullptr, int graphicsWidth=DEFAULTWIDTH, int graphicsHeight=DEFAULTHEIGHT, double scale=1.0);
     virtual ~PCx_Graphics();
 
 
@@ -112,7 +112,7 @@ public:
     QString getPCAG9(unsigned int node) const;
 
 
-    QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED, const PCx_PrevisionItem *prevItem=nullptr, bool miniMode=false)const;
+    QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED, const PCx_PrevisionItem *prevItem=nullptr, bool miniMode=false) const;
 
     //History line plot with selected OREDPCR
     QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
@@ -123,7 +123,7 @@ public:
     QString getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const;
 
 
-    QCustomPlot * getPlot() const{return plot;}
+    QCustomPlot * getPlot() const;
     int getGraphicsWidth() const{return graphicsWidth;}
     int getGraphicsHeight() const{return graphicsHeight;}
     double getScale() const{return scale;}
@@ -158,6 +158,8 @@ private:
     int graphicsWidth,graphicsHeight;
     double scale;
 
+    //WARNING : plot object is shared accross this class and is created once, that means each call to graphing method MUST
+    //ensure the state of the plot is fully described (clearing data, setting axis ticker...)
     QCustomPlot *plot;
 
     PCx_Graphics(const PCx_Graphics &c);

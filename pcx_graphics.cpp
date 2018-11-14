@@ -38,6 +38,9 @@
 *
 */
 
+
+
+
 #include "pcx_graphics.h"
 #include "utils.h"
 #include <float.h>
@@ -59,8 +62,11 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
     setGraphicsHeight(graphicsHeight);
     setScale(scale);
 
-    if(plot==0)
+    if(plot==nullptr)
     {
+        //Attention : le "plot" est partagé et utilisé par toutes les méthodes, donc son état est
+        //dépendant de l'appel précédent : penser à bien fixer les axes, légendes, ticker...
+
         this->plot=new QCustomPlot();
         ownPlot=true;
     }
@@ -69,6 +75,8 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
         this->plot=plot;
         ownPlot=false;
     }
+    qDebug()<<"Ownplot = "<<ownPlot;
+
 }
 
 
@@ -83,8 +91,10 @@ PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int
     setGraphicsHeight(graphicsHeight);
     setScale(scale);
 
-    if(plot==0)
+    if(plot==nullptr)
     {
+        //Attention : le "plot" est partagé et utilisé par toutes les méthodes, donc son état est
+        //dépendant de l'appel précédent : penser à bien fixer les axes, légendes, ticker...
         this->plot=new QCustomPlot();
         ownPlot=true;
     }
@@ -228,21 +238,12 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         }
     }
 
-
-    //Optimize this :
-    //dataPlotNodeX=dataPlotNode.keys().toVector();
-    //dataPlotNodeY=dataPlotNode.values().toVector();
-
     for(QMap<double,double>::const_iterator it=dataPlotNode.constBegin(),end=dataPlotNode.constEnd();it!=end;++it)
     {
         dataPlotNodeX.append(it.key());
         dataPlotNodeY.append(it.value());
     }
 
-
-    //And that :
-    //dataPlotRootX=dataPlotRoot.keys().toVector();
-    //dataPlotRootY=dataPlotRoot.values().toVector();
     for(QMap<double,double>::const_iterator it=dataPlotRoot.constBegin(),end=dataPlotRoot.constEnd();it!=end;++it)
     {
         dataPlotRootX.append(it.key());
@@ -254,10 +255,10 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     plot->clearPlottables();
 
     plot->addGraph();
-    plot->graph(0)->setData(dataPlotNodeX,dataPlotNodeY);
+    plot->graph(0)->setData(dataPlotNodeX,dataPlotNodeY,true);
 
     plot->addGraph();
-    plot->graph(1)->setData(dataPlotRootX,dataPlotRootY);
+    plot->graph(1)->setData(dataPlotRootX,dataPlotRootY,true);
 
     //Legend
     QString nodeName=auditModel->getAttachedTree()->getNodeName(node);
@@ -265,21 +266,16 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     plot->graph(0)->setName(nodeName);
     plot->graph(1)->setName(QString("%2 - %1").arg(nodeName,refNodeName));
 
+    plot->yAxis->setLabel("%");
+
     plot->legend->setVisible(true);
     plot->legend->setFont(QFont(QFont().family(),8));
-    plot->legend->setRowSpacing(-5);
+    plot->legend->setRowSpacing(3);
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom);
 
     plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
     plot->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
 
-    //Add value labels to points
-
-    //NOTE : Remove this costly assert
-    /*if(dataPlotRoot.keys()!=dataPlotNode.keys())
-    {
-        qFatal("Assertion failed");
-    }*/
     int i=0;
 
     for(QMap<double,double>::const_iterator it=dataPlotRoot.constBegin(), end = dataPlotRoot.constEnd();it!=end;++it)
@@ -290,10 +286,6 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         QCPItemText *text=new QCPItemText(plot);
         text->setText(formatDouble(val1,-1,true)+"\%");
         int alignment=Qt::AlignHCenter;
-       /* if(i==0)
-            alignment=Qt::AlignRight;
-        else if(i==j)
-            alignment=Qt::AlignLeft;*/
 
         if(val1<val2)
             alignment|=Qt::AlignTop;
@@ -303,16 +295,11 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         text->setPadding(QMargins(3,3,3,3));
         text->setPositionAlignment((Qt::AlignmentFlag)alignment);
         text->position->setCoords(key,val1);
-        plot->addItem(text);
 
         text=new QCPItemText(plot);
         text->setText(formatDouble(val2,-1,true)+"\%");
 
         alignment=Qt::AlignHCenter;
-        /*if(i==0)
-            alignment=Qt::AlignRight;
-        else if(i==j)
-            alignment=Qt::AlignLeft;*/
 
         if(val2<val1)
             alignment|=Qt::AlignTop;
@@ -322,10 +309,8 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         text->setPadding(QMargins(3,3,3,3));
         text->setPositionAlignment((Qt::AlignmentFlag)alignment);
         text->position->setCoords(key,val2);
-        plot->addItem(text);
         i++;
     }
-
 
     QString plotTitle;
     if(cumule==false)
@@ -343,26 +328,6 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
     }
 
-    /*
-     * Embedded plot title, not used here
-     *
-     * QCPPlotTitle *title;
-    if(plot->plotLayout()->elementCount()==1)
-    {
-        plot->plotLayout()->insertRow(0);
-        title=new QCPPlotTitle(plot,plotTitle);
-        title->setAutoMargins(QCP::msAll);
-        title->setMargins(QMargins(0,0,0,0));
-        //title->setFont(QFont(QFont().family(),12));
-        plot->plotLayout()->addElement(0,0,title);
-    }
-    else
-    {
-        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
-        title->setText(plotTitle);
-    }
-    */
-
     QColor c=getColorPen1();
     int alpha=getAlpha();
     plot->graph(0)->setPen(QPen(c));
@@ -373,19 +338,19 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     c.setAlpha(alpha);
     plot->graph(1)->setBrush(QBrush(c));
 
-    plot->xAxis->setAutoTicks(true);
-    plot->xAxis->setAutoTickLabels(true);
-    plot->xAxis->setAutoTickStep(false);
-    plot->xAxis->setAutoSubTicks(false);
-    plot->xAxis->setTickLength(0,4);
-    plot->xAxis->setTickStep(1);
-    plot->xAxis->setSubTickCount(0);
+    QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
+    plot->xAxis->setTicker(fixedTicker);
+    fixedTicker->setTickStep(1.0);
+
+    plot->xAxis->setSubTickLength(0);
+    plot->xAxis->setTickLength(4);
+
+
     plot->xAxis->setTickLabelRotation(0);
     plot->xAxis->grid()->setVisible(false);
     plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
     plot->xAxis->setRange(dataPlotNodeX.first()-0.8,dataPlotNodeX.last()+0.8);
 
-    //qDebug()<<"Min YRange="<<minYRange<<" Max YRange="<<maxYRange;
     double padding=(maxYRange-minYRange)*0.2;
 
     plot->yAxis->setRange(minYRange-(padding*2),maxYRange+padding);
@@ -401,7 +366,6 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
 
     QString plotTitle;
 
-
     plot->clearItems();
     plot->clearGraphs();
     plot->clearPlottables();
@@ -410,10 +374,6 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     QCPBars *rfBar=new QCPBars(plot->xAxis,plot->yAxis);
     QCPBars *diBar=new QCPBars(plot->xAxis,plot->yAxis);
     QCPBars *riBar=new QCPBars(plot->xAxis,plot->yAxis);
-    plot->addPlottable(dfBar);
-    plot->addPlottable(rfBar);
-    plot->addPlottable(diBar);
-    plot->addPlottable(riBar);
 
     QPen pen;
     pen.setWidth(0);
@@ -481,6 +441,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     QVector<QString> labels;
     QVector<double> valuesDF,valuesRF,valuesDI,valuesRI;
     int tickCounter=0;
+    QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
 
     QPair<QString,QString>mode;
     while(q.next())
@@ -518,21 +479,19 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
             valuesRF.append(percentRF);
             valuesDI.append(percentDI);
             valuesRI.append(percentRI);
-            ticks.append(++tickCounter);
-            labels.append(QString("%1 %2").arg(mode.second).arg(annee));
+            ++tickCounter;
+            ticks.append(tickCounter);
+            textTicker->addTick(tickCounter,QString("%1 %2").arg(mode.second).arg(annee));
         }
-        ticks.append(++tickCounter);
+        ++tickCounter;
+        ticks.append(tickCounter);
+        textTicker->addTick(tickCounter,QString());
         labels.append(QString());
         valuesDF.append(0.0);
         valuesRF.append(0.0);
         valuesDI.append(0.0);
         valuesRI.append(0.0);
     }
-    /*qDebug()<<"G9:ticks = "<<ticks;
-    qDebug()<<"G9:ValueDF = "<<valuesDF;
-    qDebug()<<"G9:ValueRF = "<<valuesRF;
-    qDebug()<<"G9:ValueDI = "<<valuesDI;
-    qDebug()<<"G9:ValueRI = "<<valuesRI;*/
 
     dfBar->setData(ticks,valuesDF);
     rfBar->setData(ticks,valuesRF);
@@ -542,21 +501,17 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     QFont legendFont=QFont();
     legendFont.setPointSize(8);
     plot->legend->setFont(legendFont);
-    plot->legend->setRowSpacing(-8);
-    //plot->legend->setIconSize(50,5);
+    plot->legend->setRowSpacing(-3);
     plot->legend->setVisible(true);
 
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignHCenter);
 
-    plot->xAxis->setAutoTicks(false);
-    plot->xAxis->setAutoTickLabels(false);
     plot->yAxis->setLabel("%");
     plot->xAxis->setTickLength(0,0);
     plot->xAxis->grid()->setVisible(false);
     plot->xAxis->setTickLabelRotation(90);
-    plot->xAxis->setTickVector(ticks);
-    plot->xAxis->setTickVectorLabels(labels);
-    plot->xAxis->setSubTickCount(0);
+
+    plot->xAxis->setTicker(textTicker);
     plot->xAxis->setRange(0,tickCounter);
     plot->yAxis->setRange(0,160);
 
@@ -573,10 +528,10 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         return QString();
     }
 
+
     plot->clearItems();
     plot->clearGraphs();
     plot->clearPlottables();
-
 
     QString plotTitle;
 
@@ -594,17 +549,17 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         if(selectedORED.count()==2)
             plotTitle=QObject::tr("%1 (bleu) et %2 (rouge)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true),PCx_Audit::OREDtoCompleteString(selectedORED.at(1),true));
 
-        QCPPlotTitle * title;
+        QCPTextElement * title;
         if(plot->plotLayout()->elementCount()==1)
         {
             plot->plotLayout()->insertRow(0);
-            title=new QCPPlotTitle(plot,plotTitle);
+            title=new QCPTextElement(plot,plotTitle);
             title->setFont(QFont(QFont().family(),8));
             plot->plotLayout()->addElement(0,0,title);
         }
         else
         {
-            title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+            title=(QCPTextElement *)plot->plotLayout()->elementAt(0);
             title->setText(plotTitle);
         }
     }
@@ -688,10 +643,10 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     QCPRange range;
 
     range=plot->yAxis->range();
-    range.lower-=(range.lower*20.0/100.0);
-    range.upper+=(range.upper*10.0/100.0);
+    double diffRange=range.upper*0.5;
+    range.lower-=(diffRange/3);
+    range.upper+=(diffRange);
     plot->yAxis->setRange(range);
-    plot->yAxis->setLabel("");
 
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
@@ -699,20 +654,17 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     {
         plot->legend->setVisible(true);
         plot->legend->setFont(QFont(QFont().family(),7));
-        //plot->legend->setRowSpacing(-8);
-        //plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignRight);
-        plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignCenter);
+        plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignCenter);
     }
 
+    QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
+    plot->xAxis->setTicker(fixedTicker);
+    fixedTicker->setTickStep(1.0);
 
-    plot->xAxis->setAutoTicks(true);
-    plot->xAxis->setAutoTickLabels(true);
-    plot->xAxis->setAutoTickStep(false);
-    plot->xAxis->setAutoSubTicks(false);
-    plot->xAxis->setTickLength(0,4);
+    plot->xAxis->setSubTickLength(0);
+    plot->xAxis->setTickLength(4);
+
     plot->xAxis->setTickLabelRotation(0);
-    plot->xAxis->setTickStep(1);
-    plot->xAxis->setSubTickCount(0);
     if(miniMode==true)
     {
         plot->xAxis->setTickLabelRotation(45);
@@ -720,23 +672,11 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         plot->xAxis->setTickLabelFont(QFont(QFont().family(),7));
     }
 
-    //plot->yAxis->setVisible(false);
-    plot->yAxis->setAutoTicks(true);
-    plot->yAxis->setAutoTickCount(4);
-    plot->yAxis->setAutoTickLabels(true);
-    plot->yAxis->setAutoSubTicks(false);
-    plot->yAxis->setSubTickCount(0);
+    plot->yAxis->setLabel("€");
     plot->yAxis->setNumberFormat("gbc");
-
 
     plot->xAxis->setRange(dataX.first()-0.8,dataX.last()+0.8);
     plot->xAxis->grid()->setVisible(false);
-
-  //  plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
-
-    // plot->xAxis->setAutoTickStep(false);
-   // plot->xAxis->setTickStep(3600*24*15);
-
 
     plot->replot();
     return plotTitle;
@@ -758,17 +698,17 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
     QString plotTitle=QObject::tr("%1\n(%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
-    QCPPlotTitle * title;
+    QCPTextElement * title;
     if(plot->plotLayout()->elementCount()==1)
     {
         plot->plotLayout()->insertRow(0);
-        title=new QCPPlotTitle(plot,plotTitle);
+        title=new QCPTextElement(plot,plotTitle);
         title->setFont(QFont(QFont().family(),11));
         plot->plotLayout()->addElement(0,0,title);
     }
     else
     {
-        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+        title=(QCPTextElement *)plot->plotLayout()->elementAt(0);
         title->setText(plotTitle);
     }
 
@@ -863,22 +803,13 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->legend->setRowSpacing(-5);
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignRight);
 
-    plot->xAxis->setAutoTicks(true);
-
-    plot->xAxis->setAutoTickLabels(true);
     plot->xAxis->setTickLabelRotation(0);
+    plot->yAxis->setLabel("€");
 
-    plot->yAxis->setAutoTicks(true);
-    plot->yAxis->setLabel("");
-    plot->yAxis->setAutoTickLabels(true);
-    plot->yAxis->setAutoTickLabels(true);
+    QSharedPointer<QCPAxisTickerDateTime> dateTimeTicker(new QCPAxisTickerDateTime);
+    dateTimeTicker->setDateTimeFormat("MMM\nyyyy");
 
-    plot->xAxis->setTickLabelType(QCPAxis::ltDateTime);
-   // plot->xAxis->setAutoTickStep(false);
-   // plot->xAxis->setTickStep(3600*24*15);
-
-    plot->xAxis->setDateTimeFormat("MMM\nyyyy");
-
+    plot->xAxis->setTicker(dateTimeTicker);
 
     plot->replot();
     return plotTitle;
@@ -927,6 +858,11 @@ QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) co
     return getPCRHistory(nodeId,mode,oredPCR);
 }
 
+QCustomPlot *PCx_Graphics::getPlot() const
+{
+    return plot;
+}
+
 QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,QColor color) const
 {
     if(reportingModel==nullptr)
@@ -939,22 +875,21 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
     plot->clearGraphs();
     plot->clearPlottables();
 
-    QCPPlotTitle * title;
+    QCPTextElement * title;
     if(plot->plotLayout()->elementCount()==1)
     {
         plot->plotLayout()->insertRow(0);
-        title=new QCPPlotTitle(plot,plotTitle);
+        title=new QCPTextElement(plot,plotTitle);
         title->setFont(QFont(QFont().family(),11));
         plot->plotLayout()->addElement(0,0,title);
     }
     else
     {
-        title=(QCPPlotTitle *)plot->plotLayout()->elementAt(0);
+        title=(QCPTextElement *)plot->plotLayout()->elementAt(0);
         title->setText(plotTitle);
     }
 
     QCPBars *bars=new QCPBars(plot->xAxis,plot->yAxis);
-    plot->addPlottable(bars);
 
     QPen pen;
     pen.setWidth(0);
@@ -980,16 +915,22 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
     }
 
     QVector<double> ticks;
-    QVector<QString> labels;
     QVector<double> values;
 
     int i=1;
+
+    QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
+
+    plot->xAxis->setTicker(textTicker);
+
+
     foreach(PCx_Reporting::OREDPCR ored,selectedOREDPCR)
     {
-        labels.append(PCx_Reporting::OREDPCRtoCompleteString(ored));
-        ticks.append(i++);
-
+        textTicker->addTick(i,PCx_Reporting::OREDPCRtoCompleteString(ored));
+        ticks.append(i);
+        i++;
     }
+
 
     while(q.next())
     {
@@ -1008,19 +949,12 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
 
     plot->legend->setVisible(false);
 
-    plot->xAxis->setAutoTicks(false);
-    plot->xAxis->setAutoTickLabels(false);
+
     plot->yAxis->setLabel("%");
     plot->xAxis->setTickLength(0,0);
     plot->xAxis->grid()->setVisible(false);
-    //plot->xAxis->setTickLabelRotation(90);
-    plot->xAxis->setTickVector(ticks);
-    plot->xAxis->setTickVectorLabels(labels);
-    plot->xAxis->setSubTickCount(0);
-    //plot->graph()->rescaleAxes();
     plot->xAxis->setRange(0,ticks.count()+1);
     plot->yAxis->rescale();
-    //plot->yAxis->setRange(0,150);
 
     return plotTitle;
 }
@@ -1056,7 +990,6 @@ QColor PCx_Graphics::getColorPen1()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/pen1",PCx_Graphics::DEFAULTPENCOLOR1).toUInt();
-  //  qDebug()<<oldcolor;
     return QColor(oldcolor);
 }
 
