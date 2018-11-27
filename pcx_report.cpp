@@ -60,7 +60,7 @@ PCx_Report::PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot, int gra
 
 QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs, QList<PCx_Tables::PCATABLES> listOfTables, QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
                                                    unsigned int selectedNode, MODES::DFRFDIRI mode, unsigned int referenceNode, QTextDocument *document, const QString &absoluteImagePath,
-                                                   const QString &relativeImagePath, QProgressDialog *progress,const PCx_PrevisionItem *prevItem) const
+                                                   const QString &relativeImagePath, QProgressDialog *progress,const PCx_PrevisionItem *prevItem)
 {
     if(selectedNode==0 || referenceNode==0 || auditModel==nullptr)
     {
@@ -152,7 +152,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         }
     }
 
-    QCustomPlot *plot=graphics.getPlot();
+
     int graphicsWidth=graphics.getGraphicsWidth();
     int graphicsHeight=graphics.getGraphicsHeight();
     double scale=graphics.getScale();
@@ -198,7 +198,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
                 break;
             }
             QString name="mydata://"+QString::number(qrand());
-            document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,scale)));
+
+            document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(graphics.getPlot()->toPixmap(graphicsWidth,graphicsHeight,scale)));
             output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth).arg(graphicsHeight).arg(name));
         }
@@ -269,7 +270,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
             imageName.prepend(encodedRelativeImagePath+"/");
             imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-            if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
+            if(saveImageToDisk(graphics.getPlot(),imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
             {
                 die();
             }
@@ -284,7 +285,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     return output;
 }
 
-QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets, unsigned int selectedNode, MODES::DFRFDIRI mode, bool includeGraphics, QTextDocument *document, const QString &absoluteImagePath, const QString &relativeImagePath, QProgressDialog *progress) const
+QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets, unsigned int selectedNode, MODES::DFRFDIRI mode, bool includeGraphics, QTextDocument *document, const QString &absoluteImagePath, const QString &relativeImagePath, QProgressDialog *progress)
 {
     if(reportingModel==nullptr)
     {
@@ -315,8 +316,6 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     {
         progressValue=progress->value();
     }
-
-    QCustomPlot *plot=graphics.getPlot();
 
     int graphicsWidth=graphics.getGraphicsWidth();
     int graphicsHeight=graphics.getGraphicsHeight();
@@ -356,7 +355,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             if(inlineImageMode)
             {
                 QString name="mydata://"+QString::number(qrand());
-                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(graphics.getPlot()->toPixmap(graphicsWidth,graphicsHeight,1.0)));
                 output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
@@ -368,7 +367,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
+                if(saveImageToDisk(graphics.getPlot(),imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
                     die();
                 }
@@ -396,7 +395,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             if(inlineImageMode)
             {
                 QString name="mydata://"+QString::number(qrand());
-                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(graphics.getPlot()->toPixmap(graphicsWidth,graphicsHeight,1.0)));
                 output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
@@ -408,7 +407,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
+                if(saveImageToDisk(graphics.getPlot(),imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
                     die();
                 }
@@ -434,7 +433,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             if(inlineImageMode)
             {
                 QString name="mydata://"+QString::number(qrand());
-                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(graphics.getPlot()->toPixmap(graphicsWidth,graphicsHeight,1.0)));
                 output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
@@ -446,7 +445,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageName.prepend(encodedRelativeImagePath+"/");
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
-                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
+                if(saveImageToDisk(graphics.getPlot(),imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
                     die();
                 }
@@ -473,7 +472,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
             if(inlineImageMode)
             {
                 QString name="mydata://"+QString::number(qrand());
-                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(plot->toPixmap(graphicsWidth,graphicsHeight,1.0)));
+                document->addResource(QTextDocument::ImageResource,QUrl(name),QVariant(graphics.getPlot()->toPixmap(graphicsWidth,graphicsHeight,1.0)));
                 output.append(QString("<br><div class='g' align='center'><img align='center' width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                               .arg(graphicsWidth).arg(graphicsHeight).arg(name));
 
@@ -486,7 +485,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                 imageAbsoluteName.prepend(absoluteImagePath+"/");
 
 
-                if(saveImageToDisk(plot,imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
+                if(saveImageToDisk(graphics.getPlot(),imageAbsoluteName,graphicsWidth,graphicsHeight,scale,imageFormat)==false)
                 {
                     die();
                 }

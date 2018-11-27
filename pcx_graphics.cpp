@@ -63,10 +63,7 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
     setScale(scale);
 
     if(plot==nullptr)
-    {
-        //Attention : le "plot" est partagé et utilisé par toutes les méthodes, donc son état est
-        //dépendant de l'appel précédent : penser à bien fixer les axes, légendes, ticker...
-
+    {        
         this->plot=new QCustomPlot();
         ownPlot=true;
     }
@@ -92,9 +89,7 @@ PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int
     setScale(scale);
 
     if(plot==nullptr)
-    {
-        //Attention : le "plot" est partagé et utilisé par toutes les méthodes, donc son état est
-        //dépendant de l'appel précédent : penser à bien fixer les axes, légendes, ticker...
+    {        
         this->plot=new QCustomPlot();
         ownPlot=true;
     }
@@ -113,7 +108,7 @@ PCx_Graphics::~PCx_Graphics()
 }
 
 
-QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule, const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const
+QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule, const PCx_PrevisionItem *prevItem, unsigned int referenceNode)
 {
     if(node==0 || plot==nullptr || auditModel==nullptr|| referenceNode==0)
     {
@@ -250,9 +245,20 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         dataPlotRootY.append(it.value());
     }
 
-    plot->clearItems();
-    plot->clearGraphs();
-    plot->clearPlottables();
+    if(ownPlot==true)
+    {
+        if(plot!=nullptr)
+        {
+            delete plot;
+        }
+        plot=new QCustomPlot();
+    }
+    else
+    {
+        plot->clearGraphs();
+        plot->clearItems();
+        plot->clearPlottables();
+    }
 
     plot->addGraph();
     plot->graph(0)->setData(dataPlotNodeX,dataPlotNodeY,true);
@@ -269,7 +275,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     plot->yAxis->setLabel("%");
 
     plot->legend->setVisible(true);
-    plot->legend->setFont(QFont(QFont().family(),8));
+    plot->legend->setFont(QFont("DejaVu Sans"));
     plot->legend->setRowSpacing(3);
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom);
 
@@ -285,28 +291,41 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         double val2=dataPlotNode.value(key);
         QCPItemText *text=new QCPItemText(plot);
         text->setText(formatDouble(val1,-1,true)+"\%");
+        text->setFont(QFont("DejaVu Sans"));
         int alignment=Qt::AlignHCenter;
 
         if(val1<val2)
+        {
             alignment|=Qt::AlignTop;
+            text->setPadding(QMargins(0,8,0,0));
+        }
         else
+        {
             alignment|=Qt::AlignBottom;
+            text->setPadding(QMargins(0,0,0,4));
+        }
 
-        text->setPadding(QMargins(3,3,3,3));
         text->setPositionAlignment((Qt::AlignmentFlag)alignment);
         text->position->setCoords(key,val1);
 
+
         text=new QCPItemText(plot);
         text->setText(formatDouble(val2,-1,true)+"\%");
+        text->setFont(QFont("DejaVu Sans"));
 
         alignment=Qt::AlignHCenter;
 
         if(val2<val1)
+        {
             alignment|=Qt::AlignTop;
+            text->setPadding(QMargins(0,8,0,0));
+        }
         else
+        {
             alignment|=Qt::AlignBottom;
+            text->setPadding(QMargins(0,0,0,4));
+        }
 
-        text->setPadding(QMargins(3,3,3,3));
         text->setPositionAlignment((Qt::AlignmentFlag)alignment);
         text->position->setCoords(key,val2);
         i++;
@@ -345,6 +364,8 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     plot->xAxis->setSubTickLength(0);
     plot->xAxis->setTickLength(4);
 
+    plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
+    plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
 
     plot->xAxis->setTickLabelRotation(0);
     plot->xAxis->grid()->setVisible(false);
@@ -357,7 +378,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     return plotTitle;
 }
 
-QString PCx_Graphics::getPCAG9(unsigned int node) const
+QString PCx_Graphics::getPCAG9(unsigned int node)
 {
     if(node==0 || plot==nullptr|| auditModel==nullptr)
     {
@@ -366,9 +387,21 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
 
     QString plotTitle;
 
-    plot->clearItems();
-    plot->clearGraphs();
-    plot->clearPlottables();
+    if(ownPlot==true)
+    {
+        if(plot!=nullptr)
+        {
+            delete plot;
+        }
+        plot=new QCustomPlot();
+    }
+    else
+    {
+        plot->clearGraphs();
+        plot->clearItems();
+        plot->clearPlottables();
+    }
+
 
     QCPBars *dfBar=new QCPBars(plot->xAxis,plot->yAxis);
     QCPBars *rfBar=new QCPBars(plot->xAxis,plot->yAxis);
@@ -480,7 +513,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
             valuesDI.append(percentDI);
             valuesRI.append(percentRI);
             ++tickCounter;
-            ticks.append(tickCounter);
+            ticks.append(tickCounter);           
             textTicker->addTick(tickCounter,QString("%1 %2").arg(mode.second).arg(annee));
         }
         ++tickCounter;
@@ -498,10 +531,10 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     diBar->setData(ticks,valuesDI);
     riBar->setData(ticks,valuesRI);
 
-    QFont legendFont=QFont();
-    legendFont.setPointSize(8);
-    plot->legend->setFont(legendFont);
-    plot->legend->setRowSpacing(-3);
+    plot->legend->setFont(QFont("DejaVu Sans",8));
+
+    plot->legend->setRowSpacing(-4);
+    plot->legend->setWrap(2);
     plot->legend->setVisible(true);
 
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignHCenter);
@@ -510,17 +543,19 @@ QString PCx_Graphics::getPCAG9(unsigned int node) const
     plot->xAxis->setTickLength(0,0);
     plot->xAxis->grid()->setVisible(false);
     plot->xAxis->setTickLabelRotation(90);
+    plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
+    plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
 
     plot->xAxis->setTicker(textTicker);
     plot->xAxis->setRange(0,tickCounter);
-    plot->yAxis->setRange(0,160);
+    plot->yAxis->setRange(0,180);
 
     plotTitle=QString("Proportions des d&eacute;penses et recettes pour [ %1 ]").arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
     return plotTitle;
 
 }
 
-QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED,const PCx_PrevisionItem *prevItem,bool miniMode) const
+QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED,const PCx_PrevisionItem *prevItem,bool miniMode)
 {
     if(auditModel==nullptr)
     {
@@ -528,10 +563,21 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         return QString();
     }
 
+    if(ownPlot==true)
+    {
+        if(plot!=nullptr)
+        {
+            delete plot;
+        }
+        plot=new QCustomPlot();
+    }
+    else
+    {
+        plot->clearGraphs();
+        plot->clearItems();
+        plot->clearPlottables();
+    }
 
-    plot->clearItems();
-    plot->clearGraphs();
-    plot->clearPlottables();
 
     QString plotTitle;
 
@@ -544,6 +590,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         Qt::yellow
     };
 
+
     if(miniMode==true)
     {
         if(selectedORED.count()==2)
@@ -554,7 +601,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         {
             plot->plotLayout()->insertRow(0);
             title=new QCPTextElement(plot,plotTitle);
-            title->setFont(QFont(QFont().family(),8));
+            title->setFont(QFont("DejaVu Sans",8));
             plot->plotLayout()->addElement(0,0,title);
         }
         else
@@ -650,10 +697,11 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
+    plot->legend->setFont(QFont("DejaVu Sans"));
     if(miniMode==false)
     {
         plot->legend->setVisible(true);
-        plot->legend->setFont(QFont(QFont().family(),7));
+        plot->legend->setFont(QFont("DejaVu Sans",7));
         plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignTop|Qt::AlignCenter);
     }
 
@@ -665,15 +713,18 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->xAxis->setTickLength(4);
 
     plot->xAxis->setTickLabelRotation(0);
+    plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
+    plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
+
     if(miniMode==true)
     {
         plot->xAxis->setTickLabelRotation(45);
-        plot->yAxis->setTickLabelFont(QFont(QFont().family(),7));
-        plot->xAxis->setTickLabelFont(QFont(QFont().family(),7));
+        plot->yAxis->setTickLabelFont(QFont("DejaVu Sans",7));
+        plot->xAxis->setTickLabelFont(QFont("DejaVu Sans",7));
     }
 
     plot->yAxis->setLabel("€");
-    plot->yAxis->setNumberFormat("gbc");
+        plot->yAxis->setNumberFormat("gbc");
 
     plot->xAxis->setRange(dataX.first()-0.8,dataX.last()+0.8);
     plot->xAxis->grid()->setVisible(false);
@@ -684,7 +735,9 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
 
 
-QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR) const
+
+
+QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)
 {
     if(reportingModel==nullptr)
     {
@@ -692,9 +745,20 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         return QString();
     }
 
-    plot->clearItems();
-    plot->clearGraphs();
-    plot->clearPlottables();
+    if(ownPlot==true)
+    {
+        if(plot!=nullptr)
+        {
+            delete plot;
+        }
+        plot=new QCustomPlot();
+    }
+    else
+    {
+        plot->clearGraphs();
+        plot->clearItems();
+        plot->clearPlottables();
+    }
 
     QString plotTitle=QObject::tr("%1\n(%2)").arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),MODES::modeToCompleteString(mode));
 
@@ -703,7 +767,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     {
         plot->plotLayout()->insertRow(0);
         title=new QCPTextElement(plot,plotTitle);
-        title->setFont(QFont(QFont().family(),11));
+        title->setFont(QFont("DejaVu Sans",11));
         plot->plotLayout()->addElement(0,0,title);
     }
     else
@@ -799,7 +863,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     plot->legend->setVisible(true);
-    plot->legend->setFont(QFont(QFont().family(),8));
+    plot->legend->setFont(QFont("DejaVu Sans",8));
     plot->legend->setRowSpacing(-5);
     plot->axisRect()->insetLayout()->setInsetAlignment(0,Qt::AlignBottom|Qt::AlignRight);
 
@@ -815,7 +879,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     return plotTitle;
 }
 
-QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) const
+QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode)
 {
     QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName=MODES::modeToCompleteString(mode);
@@ -829,7 +893,7 @@ QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode
     return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName,modeName),getColorDFBar());
 }
 
-QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) const
+QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode)
 {
     QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName=MODES::modeToCompleteString(mode);
@@ -841,7 +905,7 @@ QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode)
     return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::BP,QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName,modeName),getColorRFBar());
 }
 
-QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) const
+QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode)
 {
     QString nodeName=reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName=MODES::modeToCompleteString(mode);
@@ -852,18 +916,18 @@ QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mod
     return getPCRPercentBars(nodeId,mode,selectedORED,PCx_Reporting::OREDPCR::OUVERTS,QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName,modeName),getColorDIBar());
 }
 
-QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const
+QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode)
 {
     QList<PCx_Reporting::OREDPCR> oredPCR={PCx_Reporting::OREDPCR::OUVERTS,PCx_Reporting::OREDPCR::REALISES};
     return getPCRHistory(nodeId,mode,oredPCR);
 }
 
-QCustomPlot *PCx_Graphics::getPlot() const
+QCustomPlot * PCx_Graphics::getPlot() const
 {
     return plot;
 }
 
-QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,QColor color) const
+QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,QColor color)
 {
     if(reportingModel==nullptr)
     {
@@ -871,16 +935,27 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
         return QString();
     }
 
-    plot->clearItems();
-    plot->clearGraphs();
-    plot->clearPlottables();
+    if(ownPlot==true)
+    {
+        if(plot!=nullptr)
+        {
+            delete plot;
+        }
+        plot=new QCustomPlot();
+    }
+    else
+    {
+        plot->clearGraphs();
+        plot->clearItems();
+        plot->clearPlottables();
+    }
 
     QCPTextElement * title;
     if(plot->plotLayout()->elementCount()==1)
     {
         plot->plotLayout()->insertRow(0);
         title=new QCPTextElement(plot,plotTitle);
-        title->setFont(QFont(QFont().family(),11));
+        title->setFont(QFont("DejaVu Sans",11));
         plot->plotLayout()->addElement(0,0,title);
     }
     else

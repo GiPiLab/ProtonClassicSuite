@@ -99,31 +99,30 @@ public:
     virtual ~PCx_Graphics();
 
 
-    QString getPCAG1(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false,prevItem,referenceNode);}
-    QString getPCAG3(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,false,prevItem,referenceNode);}
-    QString getPCAG5(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,false,prevItem,referenceNode);}
-    QString getPCAG7(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,false,prevItem,referenceNode);}
+    QString getPCAG1(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,false,prevItem,referenceNode);}
+    QString getPCAG3(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,false,prevItem,referenceNode);}
+    QString getPCAG5(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,false,prevItem,referenceNode);}
+    QString getPCAG7(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,false,prevItem,referenceNode);}
 
-    QString getPCAG2(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,true,prevItem,referenceNode);}
-    QString getPCAG4(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,true,prevItem,referenceNode);}
-    QString getPCAG6(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,true,prevItem,referenceNode);}
-    QString getPCAG8(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true,prevItem,referenceNode);}
+    QString getPCAG2(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::OUVERTS,true,prevItem,referenceNode);}
+    QString getPCAG4(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::REALISES,true,prevItem,referenceNode);}
+    QString getPCAG6(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::ENGAGES,true,prevItem,referenceNode);}
+    QString getPCAG8(unsigned int node,MODES::DFRFDIRI mode,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1)  {return getPCAG1G8(node,mode,PCx_Audit::ORED::DISPONIBLES,true,prevItem,referenceNode);}
 
-    QString getPCAG9(unsigned int node) const;
+    QString getPCAG9(unsigned int node);
 
-
-    QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED, const PCx_PrevisionItem *prevItem=nullptr, bool miniMode=false) const;
+    QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED, const PCx_PrevisionItem *prevItem=nullptr, bool miniMode=false);
 
     //History line plot with selected OREDPCR
-    QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)const;
+    QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR);
 
-    QString getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) const;
-    QString getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) const;
-    QString getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) const;
-    QString getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) const;
+    QString getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode);
+    QString getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode);
+    QString getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode);
+    QString getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode);
 
+    QCustomPlot *getPlot() const;
 
-    QCustomPlot * getPlot() const;
     int getGraphicsWidth() const{return graphicsWidth;}
     int getGraphicsHeight() const{return graphicsHeight;}
     double getScale() const{return scale;}
@@ -150,16 +149,14 @@ private:
     PCx_Reporting *reportingModel;
 
     //Returns the title of the graphic in html
-    QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1) const;
+    QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,const PCx_PrevisionItem *prevItem=nullptr, unsigned int referenceNode=1);
 
     //Histogram comparing percents of selected OREDs regarding to a reference for the last reporting date
-    QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color)const;
+    QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color);
     bool ownPlot;
     int graphicsWidth,graphicsHeight;
     double scale;
 
-    //WARNING : plot object is shared accross this class and is created once, that means each call to graphing method MUST
-    //ensure the state of the plot is fully described (clearing data, setting axis ticker...)
     QCustomPlot *plot;
 
     PCx_Graphics(const PCx_Graphics &c);

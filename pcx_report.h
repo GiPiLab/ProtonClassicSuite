@@ -67,11 +67,11 @@ public:
 
     QString generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs, QList<PCx_Tables::PCATABLES> listOfTables, QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
                                       unsigned int selectedNode, MODES::DFRFDIRI mode, unsigned int referenceNode=1,QTextDocument *document=nullptr, const QString &absoluteImagePath="",
-                                      const QString &relativeImagePath="", QProgressDialog *progress=nullptr, const PCx_PrevisionItem *prevItem=nullptr) const;
+                                      const QString &relativeImagePath="", QProgressDialog *progress=nullptr, const PCx_PrevisionItem *prevItem=nullptr);
 
 
     QString generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets,unsigned int selectedNode, MODES::DFRFDIRI mode, bool includeGraphics=true, QTextDocument *document=nullptr,
-                                               const QString &absoluteImagePath="",const QString &relativeImagePath="",QProgressDialog *progress=nullptr) const;
+                                               const QString &absoluteImagePath="",const QString &relativeImagePath="",QProgressDialog *progress=nullptr) ;
 
     QString generateHTMLTOC(QList<unsigned int> nodes) const;
 
@@ -90,7 +90,7 @@ private:
     PCx_Report(const PCx_Report &c);
     PCx_Report &operator=(const PCx_Report &);
 
-    bool saveImageToDisk(QCustomPlot *plot, const QString &imageAbsoluteName, int graphicsWidth, int graphicsHeight, double scale, const QString &imgFormat) const;
+    bool saveImageToDisk(QCustomPlot * plot, const QString &imageAbsoluteName, int graphicsWidth, int graphicsHeight, double scale, const QString &imgFormat) const;
 };
 
 #endif // PCX_REPORT_H
