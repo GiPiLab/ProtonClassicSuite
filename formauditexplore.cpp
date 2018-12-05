@@ -379,7 +379,7 @@ void FormAuditExplore::on_saveButton_clicked()
 
     int maximumProgressValue=selectedGraphics.count();
 
-    QProgressDialog progress(tr("Enregistrement en cours..."),0,0,maximumProgressValue);
+    QProgressDialog progress(tr("Enregistrement en cours..."),nullptr,0,maximumProgressValue);
     progress.setMinimumDuration(1000);
 
     progress.setWindowModality(Qt::ApplicationModal);

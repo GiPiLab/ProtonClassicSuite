@@ -133,7 +133,7 @@ void FormReportingExplore::updateListOfReportings()
 
 QSize FormReportingExplore::sizeHint() const
 {
-    return QSize(1000,500);
+    return {1000,500};
 }
 
 void FormReportingExplore::on_comboListReportings_activated(int index)
@@ -161,7 +161,7 @@ void FormReportingExplore::on_comboListReportings_activated(int index)
     int graphicsWidth=settings.value("graphics/width",PCx_Graphics::DEFAULTWIDTH).toInt();
     int graphicsHeight=settings.value("graphics/height",PCx_Graphics::DEFAULTHEIGHT).toInt();
 
-    report=new PCx_Report(selectedReporting,0,graphicsWidth,graphicsHeight,1.0);
+    report=new PCx_Report(selectedReporting,nullptr,graphicsWidth,graphicsHeight,1.0);
 
 
     document->clear();

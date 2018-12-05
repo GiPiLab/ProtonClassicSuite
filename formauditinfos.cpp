@@ -65,7 +65,7 @@ FormAuditInfos::~FormAuditInfos()
 
 QSize FormAuditInfos::sizeHint() const
 {
-    return QSize(650,450);
+    return {650,450};
 }
 
 void FormAuditInfos::on_pushButton_clicked()

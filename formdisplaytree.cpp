@@ -71,7 +71,7 @@ void FormDisplayTree::on_printViewButton_clicked()
 #ifndef Q_OS_ANDROID
     QPrinter printer;
 
-       QPrintDialog *dialog = new QPrintDialog(&printer, this);
+       auto *dialog = new QPrintDialog(&printer, this);
        dialog->setWindowTitle(tr("Imprimer"));
        if (dialog->exec() != QDialog::Accepted)
            return;

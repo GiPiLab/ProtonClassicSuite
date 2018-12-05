@@ -490,9 +490,9 @@ void FormEditTree::on_finishTreeButton_clicked()
 
 void FormEditTree::on_viewTreeButton_clicked()
 {
-    FormDisplayTree *ddt=new FormDisplayTree(model->getTreeId(),this);
+    auto *ddt=new FormDisplayTree(model->getTreeId(),this);
     ddt->setAttribute(Qt::WA_DeleteOnClose);
-    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    auto *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     QMdiSubWindow *subWin=mdiArea->addSubWindow(ddt);
     subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
@@ -654,9 +654,9 @@ void FormEditTree::on_importTreeButton_clicked()
 
 void FormEditTree::on_consistencyButton_clicked()
 {
-    FormTreeConsistency *form=new FormTreeConsistency(model->getTreeId(),this);
+    auto *form=new FormTreeConsistency(model->getTreeId(),this);
     form->setAttribute(Qt::WA_DeleteOnClose);
-    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    auto *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     QMdiSubWindow *subWin=mdiArea->addSubWindow(form);
     subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
@@ -665,7 +665,7 @@ void FormEditTree::on_consistencyButton_clicked()
 
 QSize FormEditTree::sizeHint() const
 {
-    return QSize(700,550);
+    return {700,550};
 }
 
 void FormEditTree::on_guessHierarchyButton_clicked()

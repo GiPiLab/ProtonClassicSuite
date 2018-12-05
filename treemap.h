@@ -48,7 +48,7 @@
 class TreeMap
 {
 public:
-    TreeMap(TreeMap *parent = nullptr, const QString &name = "", unsigned int id=0, int year=0, double value = 0.0);
+    TreeMap(TreeMap *parent = nullptr, QString name = "", unsigned int id=0, int year=0, double value = 0.0);
     virtual ~TreeMap();
 
     TreeMap *insert(const QString &name, unsigned int id=0, int year=0, double value=0.0);

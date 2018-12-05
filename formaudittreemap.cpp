@@ -133,7 +133,7 @@ void FormAuditTreemap::updateTreeMapWidget()
 
 QSize FormAuditTreemap::sizeHint() const
 {
-    return QSize(450,400);
+    return {450,400};
 }
 
 void FormAuditTreemap::on_comboListAudits_activated(int index)

@@ -563,7 +563,7 @@ void FormAuditReports::on_pushButtonUnSelectAllNodes_clicked()
 
 QSize FormAuditReports::sizeHint() const
 {
-    return QSize(900,600);
+    return {900,600};
 }
 
 void FormAuditReports::on_treeView_doubleClicked(const QModelIndex &index)

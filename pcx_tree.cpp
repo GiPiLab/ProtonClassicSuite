@@ -442,32 +442,30 @@ bool PCx_Tree::isLeaf(unsigned int nodeId)
         return nodeIsALeaf.value(nodeId);
     }
 
-    else
+    QSqlQuery q;
+    q.prepare(QString("select count(*) from arbre_%1 where pid=:nodeid").arg(treeId));
+    q.bindValue(":nodeid",nodeId);
+    if(!q.exec())
     {
-        QSqlQuery q;
-        q.prepare(QString("select count(*) from arbre_%1 where pid=:nodeid").arg(treeId));
-        q.bindValue(":nodeid",nodeId);
-        if(!q.exec())
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.next())
+    {
+        if(q.value(0).toInt()==0)
         {
-            qCritical()<<q.lastError();
-            die();
+            if(finished)
+                nodeIsALeaf.insert(nodeId,true);
+            return true;
         }
-        if(q.next())
+        else
         {
-            if(q.value(0).toInt()==0)
-            {
-                if(finished)
-                    nodeIsALeaf.insert(nodeId,true);
-                return true;
-            }
-            else
-            {
-                if(finished)
-                    nodeIsALeaf.insert(nodeId,false);
-                return false;
-            }
+            if(finished)
+                nodeIsALeaf.insert(nodeId,false);
+            return false;
         }
     }
+
     return false;
 }
 
@@ -727,10 +725,8 @@ QString PCx_Tree::getNodeName(unsigned int node) const
             return QString("%3. %1 %2").arg(typeName,q.value(1).toString()).arg(node);
         }
         //Root does not has type
-        else
-        {
-            return QString::number(node)+". "+q.value(1).toString();
-        }
+        return QString::number(node)+". "+q.value(1).toString();
+
     }
     else
     {
@@ -1181,7 +1177,7 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
         qFatal("Assertion failed");
     }
 
-    qsrand(time(NULL));
+    qsrand(time(nullptr));
     unsigned int maxNumType=getListOfDefaultTypes().size();
 
     QStringList usedFirstNames;
@@ -1489,8 +1485,7 @@ int PCx_Tree::deleteTree(unsigned int treeId)
 
 
 bool PCx_Tree::checkIdToTypeAndName(unsigned int id, const QString &typeName, const QString &nodeName) const
-{
-    QSqlQuery q;
+{    
     QPair<QString,QString> typeAndNodeName=getTypeNameAndNodeName(id);
     if(typeAndNodeName.first!=typeName || typeAndNodeName.second!=nodeName)
         return false;
@@ -1509,7 +1504,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
     QFileInfo fi(fileName);
     if(!fi.isReadable()||!fi.isFile())
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier invalide ou non lisible"));
+        QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Fichier invalide ou non lisible"));
         return -1;
     }
 
@@ -1520,7 +1515,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
             !xlsx.read(1,3).isValid()||
             !xlsx.read(1,4).isValid())
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide"));
+        QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide"));
         return -1;
     }
 
@@ -1553,7 +1548,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
         if(!(cellNodeId.isValid() && cellNodeType.isValid() && cellNodeName.isValid() && cellParentId.isValid()))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. Le fichier doit contenir des données sur les quatre premières colonnes").arg(i));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. Le fichier doit contenir des données sur les quatre premières colonnes").arg(i));
             return -1;
         }
 
@@ -1565,12 +1560,12 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
         if(aNode.id<=1)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. L'identifiant du noeud doit être un entier strictement supérieur à 1").arg(i));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. L'identifiant du noeud doit être un entier strictement supérieur à 1").arg(i));
             return -1;
         }
         if(aNode.pid<1)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. L'identifiant du noeud doit être un entier supérieur ou égal à 1 (1 indique la racine de l'arbre)").arg(i));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide ligne %1. L'identifiant du noeud doit être un entier supérieur ou égal à 1 (1 indique la racine de l'arbre)").arg(i));
             return -1;
         }
 
@@ -1582,7 +1577,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
         if(aNode.typeName.isEmpty())
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Type du noeud manquant ou invalide ligne %1 colonne 2 !").arg(i));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Type du noeud manquant ou invalide ligne %1 colonne 2 !").arg(i));
             return -1;
         }
 
@@ -1610,7 +1605,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         i++;
         if(i>PCx_Tree::MAXNODES)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre (maximum %1) !").arg(PCx_Tree::MAXNODES));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Trop de noeuds dans l'arbre (maximum %1) !").arg(PCx_Tree::MAXNODES));
             return -1;
         }
 
@@ -1662,7 +1657,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         unsigned int oneTypeId=tree.addType(oneType);
         if(oneTypeId==0)
         {
-            QMessageBox::warning(0,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType.toHtmlEscaped()));
+            QMessageBox::warning(nullptr,QObject::tr("Erreur"),QObject::tr("Type %1 invalide").arg(oneType.toHtmlEscaped()));
             QSqlDatabase::database().rollback();
             return -1;
         }

@@ -86,7 +86,7 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) :
     ui->comboBoxOREDDispatchRef->setCurrentText(PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES,true));
 
 
-    connect(ui->textBrowser,SIGNAL(anchorClicked(QUrl)),this,SLOT(onAnchorClicked(QUrl)));
+        connect(ui->textBrowser,&QTextBrowser::anchorClicked,this,&FormAuditPrevisions::onAnchorClicked);
 
     updateListOfPrevisions();
 }
@@ -512,7 +512,7 @@ void FormAuditPrevisions::on_checkBoxDisplayLeafCriteria_toggled(bool checked)
 
 QSize FormAuditPrevisions::sizeHint() const
 {
-    return QSize(850,500);
+    return {850,500};
 }
 
 void FormAuditPrevisions::on_pushButtonDisplayReport_clicked()

@@ -183,7 +183,7 @@ public:
      * @param fastMode if true, skip few checks (is the node a leaf, is year valid is the audit finished) to speedup
      * @return true on success, false if fastMode==false and checks failed
      */
-    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, QMap<ORED, double> vals, bool fastMode=false);
+    bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, unsigned int year, const QMap<ORED, double>& vals, bool fastMode=false);
 
     /**
      * @brief getNodeValue gets the audit value of a node
@@ -338,7 +338,7 @@ public:
      * @param attachedTreeId the identifier of the tree
      * @return the identifier of the new audit, or 0 if the audit name exists, or the tree id does not exists (or is not finished)
      */
-    static unsigned int addNewAudit(const QString &name, QList<unsigned int> years, unsigned int attachedTreeId);
+    static unsigned int addNewAudit(const QString &name, const QList<unsigned int>& years, unsigned int attachedTreeId);
 
     /**
      * @brief deleteAudit removes an audit from the database

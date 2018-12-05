@@ -178,8 +178,9 @@ FORMS    += mainwindow.ui \
     formaudittreemap.ui
 
 RC_ICONS = icons/logo64_64.ico
+
+#Profile
 #QMAKE_CXXFLAGS_DEBUG += -pg
-QMAKE_CXXFLAGS_DEBUG += -Og
 #QMAKE_LFLAGS_DEBUG += -pg
 
 win32: LIBS += -lgvc -lcgraph

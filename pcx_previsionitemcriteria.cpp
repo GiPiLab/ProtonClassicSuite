@@ -44,9 +44,7 @@
 #include <QSqlError>
 
 PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria()
-{
-
-}
+= default;
 
 PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria(const QString &serializedCriteria)
 {
@@ -61,9 +59,7 @@ PCx_PrevisionItemCriteria::PCx_PrevisionItemCriteria(PREVISIONOPERATOR prevision
 
 
 PCx_PrevisionItemCriteria::~PCx_PrevisionItemCriteria()
-{
-
-}
+= default;
 
 qint64 PCx_PrevisionItemCriteria::compute(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const
 {

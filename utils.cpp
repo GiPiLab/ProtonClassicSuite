@@ -68,7 +68,7 @@ void die(int retcode)
     exit(retcode);
 }
 
-void initializeNewDb(void)
+void initializeNewDb()
 {
     QSqlQuery query;
 
@@ -224,7 +224,7 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName)
 
     g = agmemread(dotData);
 
-    if(g==NULL)
+    if(g==nullptr)
     {
         gvFreeContext(gvc);
         qCritical()<<"Error while reading DOT data !";
@@ -362,7 +362,7 @@ QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits)
     {
         return QString();
     }
-    if(forcedUnits==false)
+    if(!forcedUnits)
     {
         switch(currentFormatMode)
         {
@@ -395,7 +395,7 @@ QString formatDouble(double num, int decimals, bool forcedUnits)
     QLocale locale;
     QString out;
 
-    if(forcedUnits==false)
+    if(!forcedUnits)
     {
         switch(currentFormatMode)
         {
@@ -424,9 +424,10 @@ QString formatDouble(double num, int decimals, bool forcedUnits)
 qint64 doubleToFixedPoint(double num)
 {
     if(num>=0.0)
+    {
         return (qint64)((num+0.0005)*FIXEDPOINTCOEFF);
-    else
-        return (qint64)((num-0.0005)*FIXEDPOINTCOEFF);
+    }
+    return (qint64)((num-0.0005)*FIXEDPOINTCOEFF);
 }
 
 double fixedPointToDouble(qint64 num)

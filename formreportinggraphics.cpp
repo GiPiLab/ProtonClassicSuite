@@ -294,7 +294,7 @@ void FormReportingGraphics::on_checkBoxDisponibles_toggled(bool checked)
 
 QSize FormReportingGraphics::sizeHint() const
 {
-    return QSize(800,500);
+    return {800,500};
 }
 
 void FormReportingGraphics::on_pushButtonExportPlot_clicked()

@@ -76,5 +76,5 @@ void FormDisplayPrevisionReport::on_pushButtonSaveHTML_clicked()
 
 QSize FormDisplayPrevisionReport::sizeHint() const
 {
-    return QSize(800,600);
+    return {800,600};
 }

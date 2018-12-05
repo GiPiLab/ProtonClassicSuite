@@ -108,7 +108,7 @@ void PCx_NodeSimilarityTableModel::computeDistances()
 
     int maxVal=listOfStrings.size();
 
-    QProgressDialog progress(QObject::tr("Calcul des similarités..."),0,0,maxVal);
+    QProgressDialog progress(QObject::tr("Calcul des similarités..."),nullptr,0,maxVal);
 
     progress.setWindowModality(Qt::ApplicationModal);
 

@@ -130,6 +130,8 @@ private:
     FormAuditPrevisions *formAuditPrevisions;
     FormManagePrevisions *formManagePrevisions;
 
+    QAction *whatThisAction;
+
 
 
     //Multiple "tables" dialogs are allowed

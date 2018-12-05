@@ -41,9 +41,10 @@
 #include "treemap.h"
 #include <QDebug>
 #include <QtMath>
+#include <utility>
 
 
-TreeMap::TreeMap(TreeMap *parent, const QString &name, unsigned int id, int year, double value):parent(parent),name(name),id(id),year(year),value(value)
+TreeMap::TreeMap(TreeMap *parent, QString name, unsigned int id, int year, double value):parent(parent),name(std::move(name)),id(id),year(year),value(value)
 {
 }
 
@@ -79,7 +80,7 @@ TreeMap *TreeMap::findAt(const QPoint &pos) const
     return nullptr;
 }
 
-void TreeMap::clear(void)
+void TreeMap::clear()
 {
     foreach (TreeMap *x, children)
     {

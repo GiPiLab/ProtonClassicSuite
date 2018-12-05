@@ -55,9 +55,7 @@ PCx_PrevisionItem::PCx_PrevisionItem(PCx_Prevision *prevision, MODES::DFRFDIRI m
 }
 
 PCx_PrevisionItem::~PCx_PrevisionItem()
-{
-
-}
+= default;
 
 void PCx_PrevisionItem::loadFromDb()
 {
@@ -131,7 +129,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     QFile file(fileName);
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
-        QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+        QMessageBox::critical(nullptr,QObject::tr("Attention"),QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
         return false;
     }
     //Will reopen after computation
@@ -148,7 +146,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     {
         if(!fi.absoluteDir().mkdir(relativeImagePath))
         {
-            QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Création du dossier des images impossible"));
+            QMessageBox::critical(nullptr,QObject::tr("Attention"),QObject::tr("Création du dossier des images impossible"));
             return false;
         }
     }
@@ -156,7 +154,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     {
         if(!imageDirInfo.isWritable())
         {
-            QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Ecriture impossible dans le dossier des images"));
+            QMessageBox::critical(nullptr,QObject::tr("Attention"),QObject::tr("Ecriture impossible dans le dossier des images"));
             return false;
         }
     }
@@ -241,7 +239,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
 
     if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
     {
-        QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+        QMessageBox::critical(nullptr,QObject::tr("Attention"),QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
         QDir dir(absoluteImagePath);
         dir.removeRecursively();
         return false;
@@ -253,10 +251,10 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     file.close();
     //progress.setValue(maximumProgressValue);
     if(stream.status()==QTextStream::Ok)
-        QMessageBox::information(0,QObject::tr("Information"),QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped(),relativeImagePath.toHtmlEscaped()));
+        QMessageBox::information(nullptr,QObject::tr("Information"),QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>").arg(fi.fileName().toHtmlEscaped(),relativeImagePath.toHtmlEscaped()));
     else
     {
-        QMessageBox::critical(0,QObject::tr("Attention"),QObject::tr("Le document n'a pas pu être enregistré !"));
+        QMessageBox::critical(nullptr,QObject::tr("Attention"),QObject::tr("Le document n'a pas pu être enregistré !"));
         return false;
     }
 
@@ -449,7 +447,7 @@ bool PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves(PCx_Audit::ORED or
 
     if(computedValue!=0 && (total==0 || total==-MAX_NUM))
     {
-        QMessageBox::warning(0,QObject::tr("Attention"),QObject::tr("Je ne peux pas répartir cette somme sur la base de %2 nuls pour %1 !").arg(lastYear).arg(PCx_Audit::OREDtoCompleteString(oredReference,true)));
+        QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Je ne peux pas répartir cette somme sur la base de %2 nuls pour %1 !").arg(lastYear).arg(PCx_Audit::OREDtoCompleteString(oredReference,true)));
         return false;
     }
 

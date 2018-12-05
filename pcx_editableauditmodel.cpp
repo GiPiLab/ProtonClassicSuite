@@ -123,7 +123,7 @@ PCx_EditableAuditModel::~PCx_EditableAuditModel()
 void PCx_EditableAuditModel::onModelDataChanged(const QModelIndex &topLeft, const QModelIndex & bottomRight)
 {
     Q_UNUSED(bottomRight);
-    QSqlTableModel *model=(QSqlTableModel *)topLeft.model();
+    auto *model=(QSqlTableModel *)topLeft.model();
 
     //qDebug()<<"Audit Data changed for model "<<model->tableName()<<": topleft column = "<<topLeft.column()<<" topleft row = "<<topLeft.row()<<"bottomRight column = "<<bottomRight.column()<<" bottomRight row = "<<bottomRight.row();
     //qDebug()<<"Model dirty : "<<model->isDirty();
@@ -156,7 +156,7 @@ void PCx_EditableAuditModel::onModelDataChanged(const QModelIndex &topLeft, cons
 
 void PCx_EditableAuditModel::propagateToAncestors(const QModelIndex &node)
 {
-    QSqlTableModel *model=(QSqlTableModel *)node.model();
+    auto *model=(QSqlTableModel *)node.model();
     int row=node.row();
     unsigned int nodeId=model->index(row,(int)COLINDEXES::COL_IDNODE).data().toUInt();
     unsigned int annee=model->index(row,(int)COLINDEXES::COL_ANNEE).data().toUInt();

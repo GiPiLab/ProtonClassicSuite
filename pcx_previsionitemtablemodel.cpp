@@ -47,8 +47,7 @@ PCx_PrevisionItemTableModel::PCx_PrevisionItemTableModel(PCx_PrevisionItem *prev
 
 
 PCx_PrevisionItemTableModel::~PCx_PrevisionItemTableModel()
-{
-}
+= default;
 
 void PCx_PrevisionItemTableModel::setPrevisionItem(PCx_PrevisionItem *previsionItem)
 {

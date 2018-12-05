@@ -59,8 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
     formReportingReports=nullptr;
     formAuditPrevisions=nullptr;
     formManagePrevisions=nullptr;
-    QAction *whatThisAction=QWhatsThis::createAction();
-    ui->toolBar->insertAction(0,whatThisAction);
+    whatThisAction=QWhatsThis::createAction();
+    ui->toolBar->insertAction(nullptr,whatThisAction);
 
     restoreSettings();
     updateTitle();
@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     saveSettings();
+    delete whatThisAction;
     delete ui;
 }
 
@@ -112,7 +113,7 @@ void MainWindow::desactivateActions()
 
 }
 
-void MainWindow::restoreSettings(void)
+void MainWindow::restoreSettings()
 {
     QCoreApplication::setOrganizationName("GiPiLab");
     QCoreApplication::setApplicationName("ProtonClassicSuite");
@@ -136,7 +137,7 @@ void MainWindow::restoreSettings(void)
 
 }
 
-void MainWindow::saveSettings(void)
+void MainWindow::saveSettings()
 {
     QSettings settings;
     settings.setValue("mainwindow/maximised",this->isMaximized());

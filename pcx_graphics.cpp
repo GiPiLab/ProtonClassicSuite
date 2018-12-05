@@ -43,7 +43,7 @@
 
 #include "pcx_graphics.h"
 #include "utils.h"
-#include <float.h>
+#include <cfloat>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QObject>
@@ -72,8 +72,6 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model,QCustomPlot *plot,int graphicsWidth,
         this->plot=plot;
         ownPlot=false;
     }
-    qDebug()<<"Ownplot = "<<ownPlot;
-
 }
 
 
@@ -98,7 +96,6 @@ PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int
         this->plot=plot;
         ownPlot=false;
     }
-
 }
 
 PCx_Graphics::~PCx_Graphics()
@@ -164,17 +161,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         PCx_PrevisionItem tmpPrevRootItem=PCx_PrevisionItem(prevItem->getPrevision(),mode,referenceNode,year);
         tmpPrevRootItem.loadFromDb();
         dataRoot.insert(year,tmpPrevRootItem.getSummedPrevisionItemValue());
-        //dataRoot.insert(year,)
     }
-
-
-
-    //dataRoot and dataNode must have the same keys
-    //NOTE : Remove this costly assertion
-    /*if(dataRoot.keys()!=dataNode.keys())
-    {
-        qFatal("Assertion failed keys are not equal");
-    }*/
 
     qint64 firstYearDataRoot=dataRoot.value(firstYear);
     qint64 firstYearDataNode=dataNode.value(firstYear);
@@ -189,8 +176,6 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
     for(QMap<unsigned int, qint64>::const_iterator it=dataRoot.constBegin(), end = dataRoot.constEnd();it!=end;++it)
     {
-    //foreach(unsigned int key,dataRoot.keys())
-    //{
         qint64 diffRootNode2=0,diffRootNode=0,diffNode=0;
 
         unsigned int key=it.key();
@@ -289,7 +274,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         double key=it.key();
         double val1=it.value();
         double val2=dataPlotNode.value(key);
-        QCPItemText *text=new QCPItemText(plot);
+        auto *text=new QCPItemText(plot);
         text->setText(formatDouble(val1,-1,true)+"\%");
         text->setFont(QFont("DejaVu Sans"));
         int alignment=Qt::AlignHCenter;
@@ -403,10 +388,10 @@ QString PCx_Graphics::getPCAG9(unsigned int node)
     }
 
 
-    QCPBars *dfBar=new QCPBars(plot->xAxis,plot->yAxis);
-    QCPBars *rfBar=new QCPBars(plot->xAxis,plot->yAxis);
-    QCPBars *diBar=new QCPBars(plot->xAxis,plot->yAxis);
-    QCPBars *riBar=new QCPBars(plot->xAxis,plot->yAxis);
+    auto *dfBar=new QCPBars(plot->xAxis,plot->yAxis);
+    auto *rfBar=new QCPBars(plot->xAxis,plot->yAxis);
+    auto *diBar=new QCPBars(plot->xAxis,plot->yAxis);
+    auto *riBar=new QCPBars(plot->xAxis,plot->yAxis);
 
     QPen pen;
     pen.setWidth(0);
@@ -646,7 +631,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         dataX.append((double)date);
 
         //WARNING : ORED fixed size here
-        for(int i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
+        for(auto i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
         {
             if(selectedORED.contains((PCx_Audit::ORED)i))
             {
@@ -673,7 +658,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
     bool first=true;
     //WARNING : ORED fixed size here
-    for(int i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
+    for(auto i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
     {
         if(selectedORED.contains((PCx_Audit::ORED)i))
         {
@@ -817,7 +802,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         unsigned int date=q.value("date").toUInt();
         dataX.append((double)date);
 
-        for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
+        for(auto i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
         {
             if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
             {
@@ -834,7 +819,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
 
     bool first=true;
-    for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
+    for(auto i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
     {
         if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
         {
@@ -964,7 +949,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
         title->setText(plotTitle);
     }
 
-    QCPBars *bars=new QCPBars(plot->xAxis,plot->yAxis);
+    auto *bars=new QCPBars(plot->xAxis,plot->yAxis);
 
     QPen pen;
     pen.setWidth(0);
@@ -1065,42 +1050,42 @@ QColor PCx_Graphics::getColorPen1()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/pen1",PCx_Graphics::DEFAULTPENCOLOR1).toUInt();
-    return QColor(oldcolor);
+    return {oldcolor};
 }
 
 QColor PCx_Graphics::getColorPen2()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/pen2",PCx_Graphics::DEFAULTPENCOLOR2).toUInt();
-    return QColor(oldcolor);
+    return {oldcolor};
 }
 
 QColor PCx_Graphics::getColorDFBar()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/penDFBar",PCx_Graphics::DEFAULTCOLORDFBAR).toUInt();
-    return QColor(oldcolor);
+    return {oldcolor};
 }
 
 QColor PCx_Graphics::getColorRFBar()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/penRFBar",PCx_Graphics::DEFAULTCOLORRFBAR).toUInt();
-    return QColor(oldcolor);
+    return {oldcolor};
 }
 
 QColor PCx_Graphics::getColorDIBar()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/penDIBar",PCx_Graphics::DEFAULTCOLORDIBAR).toUInt();
-    return QColor(oldcolor);
+    return {oldcolor};
 }
 
 QColor PCx_Graphics::getColorRIBar()
 {
     QSettings settings;
     unsigned int oldcolor=settings.value("graphics/penRIBar",PCx_Graphics::DEFAULTCOLORRIBAR).toUInt();
-    return QColor(oldcolor);
+    return {oldcolor};
 }
 
 int PCx_Graphics::getAlpha()

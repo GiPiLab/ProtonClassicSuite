@@ -115,9 +115,9 @@ void FormManageReportings::on_pushButtonDisplayTree_clicked()
 
     unsigned int selectedTree=ui->comboListOfTrees->currentData().toUInt();
 
-    FormDisplayTree *ddt=new FormDisplayTree(selectedTree,this);
+    auto *ddt=new FormDisplayTree(selectedTree,this);
     ddt->setAttribute(Qt::WA_DeleteOnClose);
-    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    auto *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     QMdiSubWindow *subWin=mdiArea->addSubWindow(ddt);
     subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));

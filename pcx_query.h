@@ -66,7 +66,7 @@ public:
 
     PCx_Query(PCx_Audit *model);
     PCx_Query(PCx_Audit *model,unsigned int typeId,PCx_Audit::ORED ored,MODES::DFRFDIRI dfrfdiri,
-                                      unsigned int year1, unsigned int year2,const QString &name="");
+                                      unsigned int year1, unsigned int year2,QString name="");
 
     QPair<unsigned int,unsigned int> getYears() const {return QPair<unsigned int, unsigned int>(year1,year2);}
     virtual void setYears(unsigned int year1, unsigned int year2);

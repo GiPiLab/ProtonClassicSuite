@@ -410,7 +410,7 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
     this->dERO2=QDate();
     if(realisesPredits!=0.0)
     {
-        int joursDCICO=(int)(365*this->ouverts/realisesPredits);
+        auto joursDCICO=(int)(365*this->ouverts/realisesPredits);
         if(joursDCICO>0)
         {
             QDate tmpDate(date.year(),1,1);
@@ -424,7 +424,7 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
         if(this->realises!=0.0)
         {
             QDate tmpDate(date.year(),1,1);
-            int joursCoupure=(int)(ouvertsDemi*nbJoursDepuisDebutAnnee/this->realises);
+            auto joursCoupure=(int)(ouvertsDemi*nbJoursDepuisDebutAnnee/this->realises);
             this->dERO2=tmpDate.addDays(joursCoupure);
         }
     }

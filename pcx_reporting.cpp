@@ -493,7 +493,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
     QFileInfo fi(fileName);
     if(!fi.isReadable()||!fi.isFile())
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Fichier invalide ou non lisible"));
+        QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Fichier invalide ou non lisible"));
         return false;
     }
 
@@ -507,7 +507,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
          xlsx.read(1,11).isValid() && xlsx.read(1,12).isValid() &&
          xlsx.read(1,13).isValid() && xlsx.read(1,14).isValid()))
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
+        QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
         return false;
     }
 
@@ -517,7 +517,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
     int row=2;
     if(rowCount<2)
     {
-        QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
+        QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Format de fichier invalide. Vous pouvez exporter un fichier squelette dans l'interface de gestion des reportings"));
         return false;
     }
 
@@ -538,7 +538,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         //Do not use read for date, always assume "1900" mode to ensure libreoffice compatibility
         if(xlsx.read(row,4).isNull())
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, spécifiez une date").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, spécifiez une date").arg(row));
             return false;
         }
         date=xlsx.cellAt(row,4)->value();
@@ -556,7 +556,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
         if(!(cellNodeId.isValid() && nodeType.isValid() && nodeName.isValid() && date.isValid()))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez l'identifiant, le type et le nom du noeud ainsi que la date d'application").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, remplissez l'identifiant, le type et le nom du noeud ainsi que la date d'application").arg(row));
             return false;
         }
 
@@ -565,13 +565,13 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         typeAndNode.second=nodeName.toString().simplified();
         if(typeAndNode.first.isEmpty() || typeAndNode.second.isEmpty())
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud ne peuvent pas être vides (ni composés d'espaces)").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud ne peuvent pas être vides (ni composés d'espaces)").arg(row));
             return false;
 
         }
         if(typeAndNode.first.size()>PCx_Tree::MAXNODENAMELENGTH || typeAndNode.second.size()>PCx_Tree::MAXNODENAMELENGTH)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud sont trop longs").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Erreur de format ligne %1, le type et le nom du noeud sont trop longs").arg(row));
             return false;
         }
 
@@ -590,7 +590,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
                 ||dblOCDM>MAX_NUM||dblVCDM>MAX_NUM||dblBudgetVote>MAX_NUM||dblVInternes>MAX_NUM
                 ||dblRattachesNMoins1>MAX_NUM)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Valeur trop grande ligne %1 (valeur maximale : %2) !").arg(row).arg(MAX_NUM));
             return false;
         }
 
@@ -599,14 +599,14 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
                 ||!qIsFinite(dblVCDM)||!qIsFinite(dblBudgetVote)||!qIsFinite(dblVInternes)
                 ||!qIsFinite(dblRattachesNMoins1))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur infinie ligne %1 non autorisée !").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Valeur infinie ligne %1 non autorisée !").arg(row));
             return false;
         }
 
         if(dblOuv<0.0 || dblReal<0.0 || dblEng<0.0 || dblBP<0.0|| dblReports <0.0
                 ||dblBudgetVote<0.0 || dblRattachesNMoins1<0.0)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Valeur négative ligne %1 non autorisée !").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Valeur négative ligne %1 non autorisée !").arg(row));
             return false;
         }
 
@@ -619,7 +619,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
         //nodeId=getAttachedTree()->getNodeIdFromTypeAndNodeName(typeAndNode);
         if(!getAttachedTree()->checkIdToTypeAndName(nodeId,typeAndNode.first,typeAndNode.second))
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 ne correspond pas aux type et nom indiqués sur la même ligne").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("L'identifiant du noeud ligne %1 ne correspond pas aux type et nom indiqués sur la même ligne").arg(row));
             return false;
         }
 
@@ -627,7 +627,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
 
         if(!leaf)
         {
-            QMessageBox::critical(0,QObject::tr("Erreur"),QObject::tr("Le noeud ligne %1 n'est pas une feuille ! Remplissez les données pour les feuilles seulement, en utilisant un fichier modèle obtenu à l'aide du bouton d'exportation").arg(row));
+            QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Le noeud ligne %1 n'est pas une feuille ! Remplissez les données pour les feuilles seulement, en utilisant un fichier modèle obtenu à l'aide du bouton d'exportation").arg(row));
             return false;
         }
         row++;
@@ -807,7 +807,7 @@ QDate PCx_Reporting::getLastReportingDate(MODES::DFRFDIRI mode,unsigned int node
         die();
     }
     if(!q.next())
-        return QDate();
+        return {};
 
     return QDateTime::fromTime_t(q.value(0).toUInt()).date();
 }
@@ -1279,7 +1279,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
     QSqlDatabase::database().transaction();
 
     int nbNode=0;
-    qsrand(time(NULL));
+    qsrand(time(nullptr));
 
     double randval;
 
@@ -1294,7 +1294,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode)
     {
         data.clear();
 
-        for(int i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
+        for(auto i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
         {
             if(i==(int)PCx_Reporting::OREDPCR::DISPONIBLES)
                 continue;
@@ -1347,7 +1347,7 @@ bool PCx_Reporting::dateExistsForNodeAndMode(QDate date, unsigned int nodeId, MO
 void PCx_Reporting::OREDPCRToComboBox(QComboBox *combo)
 {
     combo->clear();
-    for(int i=(int)OREDPCR::OUVERTS;i<=(int)OREDPCR::NONELAST;i++)
+    for(auto i=(int)OREDPCR::OUVERTS;i<=(int)OREDPCR::NONELAST;i++)
         combo->addItem(OREDPCRtoCompleteString((OREDPCR)i),i);
 }
 

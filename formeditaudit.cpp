@@ -134,7 +134,7 @@ void FormEditAudit::updateListOfAudits()
 
 QSize FormEditAudit::sizeHint() const
 {
-    return QSize(900,400);
+    return {900,400};
 }
 
 void FormEditAudit::on_comboListAudits_activated(int index)
@@ -149,7 +149,7 @@ void FormEditAudit::on_comboListAudits_activated(int index)
 
     QItemSelectionModel *m=ui->treeView->selectionModel();
     //Read-write audit model
-    auditModel=new PCx_EditableAuditModel(selectedAuditId,0);
+    auditModel=new PCx_EditableAuditModel(selectedAuditId,nullptr);
     ui->treeView->setModel(auditModel->getAttachedTree());
     delete m;
     ui->treeView->expandToDepth(1);
@@ -240,9 +240,9 @@ void FormEditAudit::on_pushButtonExpandAll_clicked()
 
 void FormEditAudit::on_statsButton_clicked()
 {
-    FormAuditInfos *infos=new FormAuditInfos(auditModel->getAuditId(),this);
+    auto *infos=new FormAuditInfos(auditModel->getAuditId(),this);
     infos->setAttribute(Qt::WA_DeleteOnClose);
-    QMdiSubWindow *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
+    auto *mdiSubWin=(QMdiSubWindow *)this->parentWidget();
     QMdiArea *mdiArea=mdiSubWin->mdiArea();
     mdiArea->addSubWindow(infos);
     infos->show();

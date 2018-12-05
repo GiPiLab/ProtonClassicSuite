@@ -47,7 +47,7 @@
 #include <QLibraryInfo>
 #include <QDebug>
 #include <QLocale>
-#include <time.h>
+#include <ctime>
 #include <iostream>
 #include <QSqlQuery>
 
@@ -83,19 +83,19 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     case QtWarningMsg:
         message.prepend("[W]");
         if(noMessageBox==false)
-            QMessageBox::warning(0,"Attention",message);
+            QMessageBox::warning(nullptr,"Attention",message);
         std::cerr<<qPrintable(message);
         break;
     case QtCriticalMsg:
         message.prepend("[C]");
         if(noMessageBox==false)
-            QMessageBox::critical(0,"Erreur critique",message);
+            QMessageBox::critical(nullptr,"Erreur critique",message);
         std::cerr<<qPrintable(message);
         break;
     case QtFatalMsg:
         message.prepend("[F]");
         if(noMessageBox==false)
-            QMessageBox::critical(0,"Erreur fatale",message);
+            QMessageBox::critical(nullptr,"Erreur fatale",message);
         std::cerr<<qPrintable(message);
         die();
     }

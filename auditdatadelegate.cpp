@@ -85,7 +85,7 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
 void auditDataDelegate::setEditorData(QWidget *editor,const QModelIndex &index) const
 {
-    QDoubleSpinBox *edit=(QDoubleSpinBox *)editor;
+    auto *edit=dynamic_cast<QDoubleSpinBox *>(editor);
     //Convert fixed point arithmetics to double for displaying
     edit->setValue(fixedPointToDouble(index.data().toLongLong()));
 }
@@ -106,7 +106,7 @@ QWidget *auditDataDelegate::createEditor(QWidget *parent, const QStyleOptionView
 
     if(index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_DISPONIBLES || index.column()==(int)PCx_EditableAuditModel::COLINDEXES::COL_ANNEE)
     {
-        return 0;
+        return nullptr;
     }
     QDoubleSpinBox *spin=new QDoubleSpinBox(parent);
     spin->setDecimals(3);
