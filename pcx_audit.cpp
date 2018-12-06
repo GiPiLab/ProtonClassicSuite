@@ -479,8 +479,7 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<unsigned int> years,
     }
 
     QSqlDatabase::database().commit();
-    return newAuditId;
-
+    return static_cast<int>(newAuditId);
 }
 
 

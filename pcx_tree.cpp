@@ -50,6 +50,7 @@
 #include <QUuid>
 #include <QElapsedTimer>
 #include <QFileInfo>
+#include <QRandomGenerator>
 
 QStringList PCx_Tree::firstNameList={"Aaron","Abdonie","Abdonise","Abel","Abélard","Abélarde","Abel-François","Abélie","Abelin","Abeline","Abella","Abelle","Abigaelle","Abigaïl","Abraham","Achille","Adalbert","Adam","Adel","Adélaïde","Adèle","Adélia","Adélie","Adeline","Adelphe","Adelphine","Adémar","Adolph","Adolphe","Adrien","Adrienne","Agathe","Aglaé","Agnès","Agrippin","Aimé","Aimée","Alain","Alban","Albane","Albéric","Albert","Alberte","Albertin","Albertine","Albin","Alcée",
                                      "Alde","Aldric","Alexandra","Alexandre","Alexandrine","Alexia","Alexis","Alfred","Alice","Alicia","Alida","Aliénor","Aline","Aliptien","Alison","Alma","Almaric","Aloïs","Aloïse","Aloïsse","Aloys","Aloysa","Aloyse","Aloysia","Alphonse","Alphonsine","Alvare","Amace","Amadou","Amadour","Amalric","Amance","Amand","Amanda","Amande","Amandine","Amandio","Amans","Amant","Amante","Amanthe","Amantine","Amaury","Ambre","Ambroise","Amédée","Amel","Amélie","Ameline","Améline","Amerigo","Anabelle","Anaëlle","Anaïs","Anastasie","Anatole","André","Andréa","Andréanne","Andrée","Andy","Ange","Angèle","Angeline","Angélique","Anicet",
@@ -112,7 +113,7 @@ PCx_Tree::PCx_Tree(unsigned int treeId):treeId(treeId)
 unsigned int PCx_Tree::addNode(unsigned int pid, unsigned int typeId, const QString &name, unsigned int forcedNodeId)
 {
     if(pid==0||typeId==0||name.isEmpty()||name.size()>MAXNODENAMELENGTH ||
-             getNumberOfNodes()>MAXNODES)
+            getNumberOfNodes()>MAXNODES)
     {
         qFatal("Assertion failed");
     }
@@ -237,7 +238,7 @@ QStringList PCx_Tree::getListOfCompleteNodeNames() const
     {
         nodeNames.append(QString("%3. %1 %2")
                          .arg(idTypeToName(q.value("type").toUInt()),
-                         q.value("nom").toString())
+                              q.value("nom").toString())
                          .arg(q.value("id").toUInt()));
 
     }
@@ -265,7 +266,8 @@ QList<unsigned int> PCx_Tree::getLeavesId()
 QList<unsigned int> PCx_Tree::getAncestorsId(unsigned int node) const
 {
     QList<unsigned int> ancestors;
-    if(node==1)return ancestors;
+    if(node==1) {return ancestors;
+    }
 
     do
     {
@@ -307,14 +309,15 @@ int PCx_Tree::guessHierarchy()
             }
         }
     }
-    if(prefixToId.count()<=1)
+    if(prefixToId.count()<=1) {
         return 0;
+    }
 
 
     for(QHash<QString,unsigned int>::const_iterator it=prefixToId.constBegin(),end=prefixToId.constEnd();it!=end;++it)
     {
-    //foreach(const QString &key,prefixToId.keys())
-    //{
+        //foreach(const QString &key,prefixToId.keys())
+        //{
         if(it.key().size()>1)
         {
             //TODO: multi level chop to find 701 child of 7 without 70
@@ -454,16 +457,18 @@ bool PCx_Tree::isLeaf(unsigned int nodeId)
     {
         if(q.value(0).toInt()==0)
         {
-            if(finished)
+            if(finished) {
                 nodeIsALeaf.insert(nodeId,true);
+            }
             return true;
         }
-        else
-        {
-            if(finished)
-                nodeIsALeaf.insert(nodeId,false);
-            return false;
+        
+        
+        if(finished) {
+            nodeIsALeaf.insert(nodeId,false);
         }
+        return false;
+        
     }
 
     return false;
@@ -484,8 +489,9 @@ unsigned int PCx_Tree::getNumberOfNodesWithThisType(unsigned int typeId) const
         qCritical()<<q.lastError();
         die();
     }
-    if(!q.next())
+    if(!q.next()) {
         return 0;
+    }
     return q.value(0).toUInt();
 }
 
@@ -499,8 +505,9 @@ QList<unsigned int> PCx_Tree::sortNodesBFS(QList<unsigned int> &nodes) const
     while(!toCheck.isEmpty())
     {
         unsigned int node=toCheck.takeFirst();
-        if(nodes.contains(node))
+        if(nodes.contains(node)) {
             sortedNodes.append(node);
+        }
         toCheck.append(getChildren(node));
     }
     return sortedNodes;
@@ -511,8 +518,9 @@ QList<unsigned int> PCx_Tree::sortNodesDFS(QList<unsigned int> &nodes,unsigned i
 {
     QList<unsigned int> sortedNodes;
 
-    if(nodes.contains(currentNode))
+    if(nodes.contains(currentNode)) {
         sortedNodes.append(currentNode);
+    }
 
     QList<unsigned int> children=getChildren(currentNode);
     foreach(unsigned int childId,children)
@@ -586,7 +594,7 @@ void PCx_Tree::updateNodePid(unsigned int nodeId, unsigned int newPid)
 
 bool PCx_Tree::finishTree()
 {
-    if(this->finished==false)
+    if(!this->finished)
     {
         QSqlQuery q;
         q.prepare("update index_arbres set termine=1 where id=:id");
@@ -693,10 +701,10 @@ QPair<QString,QString> PCx_Tree::getTypeNameAndNodeName(unsigned int node) const
         }
         return typeNameAndNodeName;
     }
-    else
-    {
-        qWarning()<<"Missing node"<<node;
-    }
+    
+    
+    qWarning()<<"Missing node"<<node;
+    
     return QPair<QString,QString>();
 
 }
@@ -728,10 +736,10 @@ QString PCx_Tree::getNodeName(unsigned int node) const
         return QString::number(node)+". "+q.value(1).toString();
 
     }
-    else
-    {
-        qWarning()<<"Missing node"<<node;
-    }
+    
+    
+    qWarning()<<"Missing node"<<node;
+    
     return QString();
 }
 
@@ -758,7 +766,7 @@ bool PCx_Tree::deleteNode(unsigned int nodeId)
         listOfChildrens.append(q.value(0).toUInt());
     }
 
-    if(listOfChildrens.size()==0)
+    if(listOfChildrens.empty())
     {
         q.prepare(QString("delete from arbre_%1 where id=:id").arg(treeId));
         q.bindValue(":id",nodeId);
@@ -775,14 +783,14 @@ bool PCx_Tree::deleteNode(unsigned int nodeId)
         }
         return true;
     }
-    else
+    
+    
+    foreach(unsigned int child,listOfChildrens)
     {
-        foreach(unsigned int child,listOfChildrens)
-        {
-            deleteNode(child);
-        }
-        deleteNode(nodeId);
+        deleteNode(child);
     }
+    deleteNode(nodeId);
+    
     return true;
 }
 
@@ -834,8 +842,9 @@ bool PCx_Tree::toXLSX(const QString &fileName) const
     foreach(unsigned int node,nodes)
     {
         //Skip the root
-        if(node==1)
+        if(node==1) {
             continue;
+        }
 
         unsigned int pid=getParentId(node);
         typeNameAndNodeName=getTypeNameAndNodeName(node);
@@ -960,7 +969,7 @@ bool PCx_Tree::validateType(const QString &newType)
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Vous ne pouvez pas utiliser un type vide !"));
         return false;
     }
-    else if(listOfTypeNames.contains(newType))
+    if(listOfTypeNames.contains(newType))
     {
         QMessageBox::warning(nullptr,QObject::tr("Attention"),QObject::tr("Le type <b>%1</b> existe déjà !").arg(newType.toHtmlEscaped()));
         return false;
@@ -975,9 +984,10 @@ int PCx_Tree::nameToIdType(const QString &typeName) const
         qFatal("Assertion failed");
     }
     QString typeNameSpl=typeName.simplified();
-    if(listOfTypeNames.contains(typeNameSpl))
-        return idTypesToNames.key(typeNameSpl);
-    else return -1;
+    if(listOfTypeNames.contains(typeNameSpl)) {
+        return static_cast<int>(idTypesToNames.key(typeNameSpl));
+    }
+    return -1;
 }
 
 QList<QPair<unsigned int, QString> > PCx_Tree::getAllTypes() const
@@ -1004,30 +1014,30 @@ unsigned int PCx_Tree::addType(const QString &typeName)
 {
     unsigned int typeId=0;
 
-    if(validateType(typeName)==false)
+    if(!validateType(typeName)) {
         return 0;
 
-    else
-    {
-        QSqlQuery q;
-        q.prepare(QString("insert into types_%1 (nom) values(:nom)").arg(treeId));
-        q.bindValue(":nom",typeName);
-        if(!q.exec())
-        {
-            qCritical()<<q.lastError();
-            die();
-        }
-        if(q.numRowsAffected()!=1)
-        {
-            qCritical()<<q.lastError();
-            die();
-        }
-
-        typeId=q.lastInsertId().toUInt();
-
-        idTypesToNames.insert(typeId,typeName);
-        listOfTypeNames.append(typeName);
     }
+    
+    QSqlQuery q;
+    q.prepare(QString("insert into types_%1 (nom) values(:nom)").arg(treeId));
+    q.bindValue(":nom",typeName);
+    if(!q.exec())
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+    if(q.numRowsAffected()!=1)
+    {
+        qCritical()<<q.lastError();
+        die();
+    }
+
+    typeId=q.lastInsertId().toUInt();
+
+    idTypesToNames.insert(typeId,typeName);
+    listOfTypeNames.append(typeName);
+    
     return typeId;
 }
 
@@ -1064,7 +1074,8 @@ bool PCx_Tree::deleteType(unsigned int typeId)
         }
 
     }
-    else return false;
+    else { return false;
+    }
 
     query.prepare(QString("delete from types_%1 where id=:id").arg(treeId));
     query.bindValue(":id",typeId);
@@ -1177,8 +1188,8 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
         qFatal("Assertion failed");
     }
 
-    qsrand(time(nullptr));
-    unsigned int maxNumType=getListOfDefaultTypes().size();
+    qsrand(static_cast<unsigned int>(time(nullptr)));
+    int maxNumType=getListOfDefaultTypes().size();
 
     QStringList usedFirstNames;
     QSqlDatabase::database().transaction();
@@ -1186,8 +1197,10 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
     for(unsigned int i=1;i<nbNodes;i++)
     {
         QSqlQuery q;
-        unsigned int type=(qrand()%maxNumType)+1;
-        unsigned int pid=(qrand()%i)+1;
+
+
+        unsigned int type=static_cast<unsigned int>(qrand()%maxNumType)+1;
+        unsigned int pid=(static_cast<unsigned int>(qrand())%i)+1;
         //QString name=QUuid::createUuid().toString();
         QString name=firstNameList.at(qrand()%firstNameListSize);
         while(usedFirstNames.contains(name))
@@ -1204,14 +1217,14 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
         if(q.numRowsAffected()!=1)
         {
             qCritical()<<q.lastError();
-            deleteTree(lastId);
+            deleteTree(static_cast<unsigned int>(lastId));
             die();
         }
     }
 
     //Reorder types
 
-    PCx_Tree tree(lastId);
+    PCx_Tree tree(static_cast<unsigned int>(lastId));
     QList<unsigned int>nodes;
 
     bool changed;
@@ -1237,7 +1250,7 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
                     if(q.numRowsAffected()!=1)
                     {
                         qCritical()<<q.lastError();
-                        deleteTree(lastId);
+                        deleteTree(static_cast<unsigned int>(lastId));
                         die();
                     }
                     q.bindValue(QStringLiteral(":type"),type1);
@@ -1246,13 +1259,13 @@ int PCx_Tree::createRandomTree(const QString &name,unsigned int nbNodes)
                     if(q.numRowsAffected()!=1)
                     {
                         qCritical()<<q.lastError();
-                        deleteTree(lastId);
+                        deleteTree(static_cast<unsigned int>(lastId));
                         die();
                     }
                 }
             }
         }
-    }while(changed==true);
+    }while(changed);
     QSqlDatabase::database().commit();
     return lastId;
 }
@@ -1310,11 +1323,11 @@ QList<unsigned int> PCx_Tree::getListOfTreesId(bool finishedOnly)
 
     while(query.next())
     {
-        if(query.value("termine").toBool()==true)
+        if(query.value("termine").toBool())
         {
             listOfTrees.append(query.value("id").toUInt());
         }
-        else if(finishedOnly==false)
+        else if(!finishedOnly)
         {
             listOfTrees.append(query.value("id").toUInt());
         }
@@ -1343,7 +1356,7 @@ QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
         dt.setTimeSpec(Qt::UTC);
         QDateTime dtLocal=dt.toLocalTime();
 
-        if(query.value("termine").toBool()==true)
+        if(query.value("termine").toBool())
         {
             item=QString("%1 - %2 (arbre terminé)").arg(query.value(1).toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             QPair<unsigned int, QString> p;
@@ -1351,7 +1364,7 @@ QList<QPair<unsigned int, QString> > PCx_Tree::getListOfTrees(bool finishedOnly)
             p.second=item;
             listOfTrees.append(p);
         }
-        else if(finishedOnly==false)
+        else if(!finishedOnly)
         {
             item=QString("%1 - %2").arg(query.value(1).toString(),dtLocal.toString(Qt::SystemLocaleShortDate));
             QPair<unsigned int, QString> p;
@@ -1487,8 +1500,9 @@ int PCx_Tree::deleteTree(unsigned int treeId)
 bool PCx_Tree::checkIdToTypeAndName(unsigned int id, const QString &typeName, const QString &nodeName) const
 {    
     QPair<QString,QString> typeAndNodeName=getTypeNameAndNodeName(id);
-    if(typeAndNodeName.first!=typeName || typeAndNodeName.second!=nodeName)
+    if(typeAndNodeName.first!=typeName || typeAndNodeName.second!=nodeName) {
         return false;
+    }
     return true;
 }
 
@@ -1526,10 +1540,10 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
     struct _node
     {
-        unsigned int id;
+        unsigned int id{};
         QString typeName;
         QString nodeName;
-        unsigned int pid;
+        unsigned int pid{};
     };
 
     QVector<_node> foundNodes;
@@ -1631,7 +1645,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
             break;
         }
     }
-    if(okRoot==false)
+   if(!okRoot)
     {
         QMessageBox::critical(nullptr,QObject::tr("Erreur"),QObject::tr("Aucun noeud n'est accroché à la racine. Renseignez '1' comme identifiant du père colonne 4 pour indiquer un noeud accroché à la racine."));
         return -1;
@@ -1645,7 +1659,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
         qFatal("Assertion failed");
     }
 
-    PCx_Tree tree(treeId);
+    PCx_Tree tree(static_cast<unsigned int>(treeId));
 
     QHash<QString,unsigned int> typesToIdTypes;
 

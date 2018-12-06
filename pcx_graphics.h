@@ -111,10 +111,10 @@ public:
 
     QString getPCAG9(unsigned int node);
 
-    QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED, const PCx_PrevisionItem *prevItem=nullptr, bool miniMode=false);
+    QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Audit::ORED>& selectedORED, const PCx_PrevisionItem *prevItem=nullptr, bool miniMode=false);
 
     //History line plot with selected OREDPCR
-    QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR);
+    QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Reporting::OREDPCR>& selectedOREDPCR);
 
     QString getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode);
     QString getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode);
@@ -154,8 +154,8 @@ private:
     //Histogram comparing percents of selected OREDs regarding to a reference for the last reporting date
     QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color);
     bool ownPlot;
-    int graphicsWidth,graphicsHeight;
-    double scale;
+    int graphicsWidth{},graphicsHeight{};
+    double scale{};
 
     QCustomPlot *plot;
 

@@ -100,7 +100,7 @@ PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int
 
 PCx_Graphics::~PCx_Graphics()
 {
-    if(ownPlot==true)
+    if(ownPlot)
         delete plot;
 }
 
@@ -197,7 +197,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
                 minYRange=percentRoot;
             if(percentRoot>maxYRange)
                 maxYRange=percentRoot;
-            dataPlotRoot.insert((double)key,percentRoot);
+            dataPlotRoot.insert(static_cast<double>(key),percentRoot);
 
             if(firstYearDataNode!=0)
             {
@@ -207,10 +207,10 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
                 minYRange=percentNode;
             if(percentNode>maxYRange)
                 maxYRange=percentNode;
-            dataPlotNode.insert((double)key,percentNode);
+            dataPlotNode.insert(static_cast<double>(key),percentNode);
 
             //cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
-            if(cumule==false)
+            if(!cumule)
             {
                 diffRootNode1=diffRootNode2;
                 firstYearDataNode=dataNode.value(key);
@@ -230,12 +230,9 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         dataPlotRootY.append(it.value());
     }
 
-    if(ownPlot==true)
+    if(ownPlot)
     {
-        if(plot!=nullptr)
-        {
-            delete plot;
-        }
+        delete plot;
         plot=new QCustomPlot();
     }
     else
@@ -275,7 +272,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         double val1=it.value();
         double val2=dataPlotNode.value(key);
         auto *text=new QCPItemText(plot);
-        text->setText(formatDouble(val1,-1,true)+"\%");
+        text->setText(formatDouble(val1,-1,true)+'%');
         text->setFont(QFont("DejaVu Sans"));
         int alignment=Qt::AlignHCenter;
 
@@ -290,12 +287,12 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
             text->setPadding(QMargins(0,0,0,4));
         }
 
-        text->setPositionAlignment((Qt::AlignmentFlag)alignment);
+        text->setPositionAlignment(static_cast<Qt::AlignmentFlag>(alignment));
         text->position->setCoords(key,val1);
 
 
         text=new QCPItemText(plot);
-        text->setText(formatDouble(val2,-1,true)+"\%");
+        text->setText(formatDouble(val2,-1,true)+'%');
         text->setFont(QFont("DejaVu Sans"));
 
         alignment=Qt::AlignHCenter;
@@ -311,13 +308,13 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
             text->setPadding(QMargins(0,0,0,4));
         }
 
-        text->setPositionAlignment((Qt::AlignmentFlag)alignment);
+        text->setPositionAlignment(static_cast<Qt::AlignmentFlag>(alignment));
         text->position->setCoords(key,val2);
         i++;
     }
 
     QString plotTitle;
-    if(cumule==false)
+    if(!cumule)
     {
             plotTitle=QObject::tr("&Eacute;volution comparée des %1 de [ %4 ] hormis %2 et de [ %2 ]<br>(%3)")
                     .arg(PCx_Audit::OREDtoCompleteString(modeORED,true),nodeName.toHtmlEscaped(),
@@ -372,12 +369,9 @@ QString PCx_Graphics::getPCAG9(unsigned int node)
 
     QString plotTitle;
 
-    if(ownPlot==true)
+    if(ownPlot)
     {
-        if(plot!=nullptr)
-        {
-            delete plot;
-        }
+        delete plot;
         plot=new QCustomPlot();
     }
     else
@@ -540,7 +534,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node)
 
 }
 
-QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Audit::ORED> selectedORED,const PCx_PrevisionItem *prevItem,bool miniMode)
+QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Audit::ORED>& selectedORED,const PCx_PrevisionItem *prevItem,bool miniMode)
 {
     if(auditModel==nullptr)
     {
@@ -548,12 +542,9 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         return QString();
     }
 
-    if(ownPlot==true)
+    if(ownPlot)
     {
-        if(plot!=nullptr)
-        {
-            delete plot;
-        }
+        delete plot;
         plot=new QCustomPlot();
     }
     else
@@ -576,7 +567,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     };
 
 
-    if(miniMode==true)
+    if(miniMode)
     {
         if(selectedORED.count()==2)
             plotTitle=QObject::tr("%1 (bleu) et %2 (rouge)").arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0),true),PCx_Audit::OREDtoCompleteString(selectedORED.at(1),true));
@@ -591,7 +582,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         }
         else
         {
-            title=(QCPTextElement *)plot->plotLayout()->elementAt(0);
+            title=dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
             title->setText(plotTitle);
         }
     }
@@ -628,14 +619,14 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     while(q.next())
     {
         unsigned int date=q.value("annee").toUInt();
-        dataX.append((double)date);
+        dataX.append(static_cast<double>(date));
 
         //WARNING : ORED fixed size here
-        for(auto i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
+        for(int i=static_cast<int>(PCx_Audit::ORED::OUVERTS);i<4;i++)
         {
-            if(selectedORED.contains((PCx_Audit::ORED)i))
+            if(selectedORED.contains(static_cast<PCx_Audit::ORED>(i)))
             {
-                qint64 data=q.value(PCx_Audit::OREDtoTableString((PCx_Audit::ORED)i)).toLongLong();
+                qint64 data=q.value(PCx_Audit::OREDtoTableString(static_cast<PCx_Audit::ORED>(i))).toLongLong();
                 dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
             }
         }
@@ -649,7 +640,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
     if(prevItem!=nullptr)
     {
-        dataX.append((double)prevItem->getYear());
+        dataX.append(static_cast<double>(prevItem->getYear()));
         qint64 summedPrev=prevItem->getSummedPrevisionItemValue();
        // if(summedPrev!=0)
             dataY[0].append(NUMBERSFORMAT::fixedPointToDouble(summedPrev));
@@ -658,13 +649,13 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
     bool first=true;
     //WARNING : ORED fixed size here
-    for(auto i=(int)PCx_Audit::ORED::OUVERTS;i<4;i++)
+    for(int i=static_cast<int>(PCx_Audit::ORED::OUVERTS);i<4;i++)
     {
-        if(selectedORED.contains((PCx_Audit::ORED)i))
+        if(selectedORED.contains(static_cast<PCx_Audit::ORED>(i)))
         {
             plot->addGraph();
             plot->graph()->setData(dataX,dataY[i]);
-            plot->graph()->setName(PCx_Audit::OREDtoCompleteString((PCx_Audit::ORED)i));
+            plot->graph()->setName(PCx_Audit::OREDtoCompleteString(static_cast<PCx_Audit::ORED>(i)));
             plot->graph()->setPen(QPen(PENCOLORS[i]));
             plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
             plot->graph()->rescaleAxes(!first);
@@ -683,7 +674,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
     plot->legend->setFont(QFont("DejaVu Sans"));
-    if(miniMode==false)
+    if(!miniMode)
     {
         plot->legend->setVisible(true);
         plot->legend->setFont(QFont("DejaVu Sans",7));
@@ -701,7 +692,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
     plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
 
-    if(miniMode==true)
+    if(miniMode)
     {
         plot->xAxis->setTickLabelRotation(45);
         plot->yAxis->setTickLabelFont(QFont("DejaVu Sans",7));
@@ -722,7 +713,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
 
 
-QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, QList<PCx_Reporting::OREDPCR> selectedOREDPCR)
+QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Reporting::OREDPCR>& selectedOREDPCR)
 {
     if(reportingModel==nullptr)
     {
@@ -730,12 +721,9 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         return QString();
     }
 
-    if(ownPlot==true)
+    if(ownPlot)
     {
-        if(plot!=nullptr)
-        {
-            delete plot;
-        }
+        delete plot;
         plot=new QCustomPlot();
     }
     else
@@ -757,7 +745,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
     else
     {
-        title=(QCPTextElement *)plot->plotLayout()->elementAt(0);
+        title=dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
         title->setText(plotTitle);
     }
 
@@ -768,7 +756,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
 
     //Colors for each graph
-    Qt::GlobalColor PENCOLORS[(int)PCx_Reporting::OREDPCR::NONELAST]=
+    Qt::GlobalColor PENCOLORS[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)]=
     {
         Qt::blue,
         Qt::red,
@@ -795,18 +783,18 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         qCritical()<<q.lastError();
         die();
     }
-    QVector<double> dataX,dataY[(int)PCx_Reporting::OREDPCR::NONELAST];
+    QVector<double> dataX,dataY[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)];
 
     while(q.next())
     {
         unsigned int date=q.value("date").toUInt();
-        dataX.append((double)date);
+        dataX.append(static_cast<double>(date));
 
-        for(auto i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
+        for(int i=static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);i<static_cast<int>(PCx_Reporting::OREDPCR::NONELAST);i++)
         {
-            if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
+            if(selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i)))
             {
-                qint64 data=q.value(PCx_Reporting::OREDPCRtoTableString((PCx_Reporting::OREDPCR)i)).toLongLong();
+                qint64 data=q.value(PCx_Reporting::OREDPCRtoTableString(static_cast<PCx_Reporting::OREDPCR>(i))).toLongLong();
                 dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
             }
         }
@@ -819,13 +807,13 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
 
     bool first=true;
-    for(auto i=(int)PCx_Reporting::OREDPCR::OUVERTS;i<(int)PCx_Reporting::OREDPCR::NONELAST;i++)
+    for(int i=static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);i<static_cast<int>(PCx_Reporting::OREDPCR::NONELAST);i++)
     {
-        if(selectedOREDPCR.contains((PCx_Reporting::OREDPCR)i))
+        if(selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i)))
         {
             plot->addGraph();
             plot->graph()->setData(dataX,dataY[i]);
-            plot->graph()->setName(PCx_Reporting::OREDPCRtoCompleteString((PCx_Reporting::OREDPCR)i));
+            plot->graph()->setName(PCx_Reporting::OREDPCRtoCompleteString(static_cast<PCx_Reporting::OREDPCR>(i)));
             plot->graph()->setPen(QPen(PENCOLORS[i]));
             plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
             plot->graph()->rescaleAxes(!first);
@@ -834,11 +822,11 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
 
     QCPRange range;
-    unsigned int year=QDateTime::fromTime_t((int)dataX.first()).date().year();
+    int year=QDateTime::fromTime_t(static_cast<unsigned int>(dataX.first())).date().year();
     QDateTime dtBegin(QDate(year,1,1));
     QDateTime dtEnd(QDate(year,12,31));
-    plot->xAxis->setRangeLower((double)dtBegin.toTime_t());
-    plot->xAxis->setRangeUpper((double)dtEnd.toTime_t());
+    plot->xAxis->setRangeLower(static_cast<double>(dtBegin.toTime_t()));
+    plot->xAxis->setRangeUpper(static_cast<double>(dtEnd.toTime_t()));
 
     range=plot->yAxis->range();
     range.lower-=(range.lower*20.0/100.0);
@@ -919,13 +907,9 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
         qWarning()<<"Model error";
         return QString();
     }
-
-    if(ownPlot==true)
+    if(ownPlot)
     {
-        if(plot!=nullptr)
-        {
-            delete plot;
-        }
+        delete plot;
         plot=new QCustomPlot();
     }
     else
@@ -945,7 +929,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
     }
     else
     {
-        title=(QCPTextElement *)plot->plotLayout()->elementAt(0);
+        title=dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
         title->setText(plotTitle);
     }
 
@@ -1001,7 +985,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
             foreach(PCx_Reporting::OREDPCR ored,selectedOREDPCR)
             {
                 qint64 val=q.value(PCx_Reporting::OREDPCRtoTableString(ored)).toLongLong();
-                values.append((double)val/(double)refVal*100.0);
+                values.append(static_cast<double>(val)/static_cast<double>(refVal)*100.0);
             }
     }
 

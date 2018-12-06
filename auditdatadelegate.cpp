@@ -93,7 +93,7 @@ void auditDataDelegate::setEditorData(QWidget *editor,const QModelIndex &index) 
 
 void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
-    QDoubleSpinBox *edit=(QDoubleSpinBox *)editor;
+    QDoubleSpinBox *edit=dynamic_cast<QDoubleSpinBox *>(editor);
     double value=edit->value();
     if(value>MAX_NUM)value=MAX_NUM;
     edit->setValue(doubleToFixedPoint(value));

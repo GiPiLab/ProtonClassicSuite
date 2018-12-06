@@ -568,7 +568,7 @@ void FormEditTree::on_randomTreeButton_clicked()
 {
     bool ok;
     QString text;
-    unsigned int nbNodes;
+    int nbNodes;
 
     nbNodes=QInputDialog::getInt(this,tr("Nouvel arbre aléatoire"),tr("Nombre de noeuds"),20,2,PCx_Tree::MAXNODES,1,&ok);
 
