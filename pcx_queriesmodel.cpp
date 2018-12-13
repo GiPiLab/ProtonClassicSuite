@@ -62,8 +62,9 @@ PCx_QueriesModel::PCx_QueriesModel(PCx_Audit *auditModel, QObject *parent)
 }
 
 QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const {
-  if (!item.isValid())
+  if (!item.isValid()) {
     return QVariant();
+  }
 
   if (role == Qt::BackgroundRole) {
     PCx_Query::QUERIESTYPES queryType =
@@ -103,8 +104,9 @@ QVariant PCx_QueriesModel::data(const QModelIndex &item, int role) const {
     qDebug() << "Unsupported query type";
     return QVariant();
 
-  } else
+  } else {
     return QSqlQueryModel::data(item, role);
+  }
 }
 
 void PCx_QueriesModel::update() {

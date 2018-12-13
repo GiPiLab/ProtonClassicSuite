@@ -54,8 +54,9 @@ TreeMapWidget::TreeMapWidget(QWidget *parent) : QWidget(parent) {
 }
 
 TreeMapWidget::~TreeMapWidget() {
-  if (root != nullptr)
+  if (root != nullptr) {
     delete root;
+  }
 }
 
 void TreeMapWidget::setDataGroupByYears(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored,
@@ -77,15 +78,17 @@ void TreeMapWidget::setDataGroupByYears(PCx_Audit *audit, MODES::DFRFDIRI mode, 
 
     if (tree->isLeaf(nodeId)) {
       qint64 val = audit->getNodeValue(nodeId, mode, ored, aYear);
-      if (val > 0)
+      if (val > 0) {
         group->insert(tree->getNodeName(nodeId), nodeId, aYear, NUMBERSFORMAT::fixedPointToDouble(val));
+      }
     } else {
       QList<unsigned int> children = tree->getChildren(nodeId);
 
       foreach (unsigned int child, children) {
         qint64 val = audit->getNodeValue(child, mode, ored, aYear);
-        if (val > 0)
+        if (val > 0) {
           group->insert(tree->getNodeName(child), child, aYear, NUMBERSFORMAT::fixedPointToDouble(val));
+        }
       }
     }
   }
@@ -120,14 +123,18 @@ void TreeMapWidget::setDataGroupByModes(PCx_Audit *audit, PCx_Audit::ORED ored, 
     rf = audit->getNodeValue(nodeId, MODES::DFRFDIRI::RF, ored, year);
     di = audit->getNodeValue(nodeId, MODES::DFRFDIRI::DI, ored, year);
     ri = audit->getNodeValue(nodeId, MODES::DFRFDIRI::RI, ored, year);
-    if (df > 0)
+    if (df > 0) {
       groupDF->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(df));
-    if (rf > 0)
+    }
+    if (rf > 0) {
       groupRF->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(rf));
-    if (di > 0)
+    }
+    if (di > 0) {
       groupDI->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(di));
-    if (ri > 0)
+    }
+    if (ri > 0) {
       groupRI->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(ri));
+    }
   } else {
     QList<unsigned int> children = tree->getChildren(nodeId);
     foreach (unsigned int child, children) {
@@ -136,14 +143,18 @@ void TreeMapWidget::setDataGroupByModes(PCx_Audit *audit, PCx_Audit::ORED ored, 
       rf = audit->getNodeValue(child, MODES::DFRFDIRI::RF, ored, year);
       di = audit->getNodeValue(child, MODES::DFRFDIRI::DI, ored, year);
       ri = audit->getNodeValue(child, MODES::DFRFDIRI::RI, ored, year);
-      if (df > 0)
+      if (df > 0) {
         groupDF->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(df));
-      if (rf > 0)
+      }
+      if (rf > 0) {
         groupRF->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(rf));
-      if (di > 0)
+      }
+      if (di > 0) {
         groupDI->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(di));
-      if (ri > 0)
+      }
+      if (ri > 0) {
         groupRI->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(ri));
+      }
     }
   }
 
@@ -179,14 +190,18 @@ void TreeMapWidget::setDataGroupByORED(PCx_Audit *audit, MODES::DFRFDIRI mode, i
     e = audit->getNodeValue(nodeId, mode, PCx_Audit::ORED::ENGAGES, year);
     d = audit->getNodeValue(nodeId, mode, PCx_Audit::ORED::DISPONIBLES, year);
 
-    if (o > 0)
+    if (o > 0) {
       groupO->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(o));
-    if (r > 0)
+    }
+    if (r > 0) {
       groupR->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(r));
-    if (e > 0)
+    }
+    if (e > 0) {
       groupE->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(e));
-    if (d > 0)
+    }
+    if (d > 0) {
       groupD->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(d));
+    }
 
   }
 
@@ -199,14 +214,18 @@ void TreeMapWidget::setDataGroupByORED(PCx_Audit *audit, MODES::DFRFDIRI mode, i
       e = audit->getNodeValue(child, mode, PCx_Audit::ORED::ENGAGES, year);
       d = audit->getNodeValue(child, mode, PCx_Audit::ORED::DISPONIBLES, year);
 
-      if (o > 0)
+      if (o > 0) {
         groupO->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(o));
-      if (r > 0)
+      }
+      if (r > 0) {
         groupR->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(r));
-      if (e > 0)
+      }
+      if (e > 0) {
         groupE->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(e));
-      if (d > 0)
+      }
+      if (d > 0) {
         groupD->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(d));
+      }
     }
   }
 
@@ -234,8 +253,9 @@ void TreeMapWidget::setDataGroupByNode(PCx_Audit *audit, MODES::DFRFDIRI mode, P
   if (tree->isLeaf(nodeId)) {
     TreeMap *group = root->insert("", nodeId, year, 0.0);
     qint64 val = audit->getNodeValue(nodeId, mode, ored, year);
-    if (val > 0)
+    if (val > 0) {
       group->insert(tree->getNodeName(nodeId), nodeId, year, NUMBERSFORMAT::fixedPointToDouble(val));
+    }
   }
 
   else {
@@ -244,8 +264,9 @@ void TreeMapWidget::setDataGroupByNode(PCx_Audit *audit, MODES::DFRFDIRI mode, P
 
     foreach (unsigned int child, children) {
       qint64 val = audit->getNodeValue(child, mode, ored, year);
-      if (val > 0)
+      if (val > 0) {
         group->insert(tree->getNodeName(child), child, year, NUMBERSFORMAT::fixedPointToDouble(val));
+      }
     }
   }
 
@@ -260,8 +281,9 @@ bool TreeMapWidget::eventFilter(QObject *object, QEvent *e) {
     TreeMap *underMouse = nullptr;
 
     foreach (TreeMap *first, root->getChildren())
-      if ((underMouse = first->findAt(pos)) != nullptr)
+      if ((underMouse = first->findAt(pos)) != nullptr) {
         break;
+      }
 
     if (underMouse && highlight != underMouse) {
       highlight = underMouse;
@@ -280,8 +302,9 @@ bool TreeMapWidget::eventFilter(QObject *object, QEvent *e) {
     if (button == Qt::LeftButton) {
       TreeMap *underMouse = nullptr;
       foreach (TreeMap *first, root->getChildren())
-        if ((underMouse = first->findAt(pos)) != nullptr)
+        if ((underMouse = first->findAt(pos)) != nullptr) {
           break;
+        }
 
       if (underMouse) {
         emit clicked(underMouse->getName(), underMouse->getId(), underMouse->getYear(), underMouse->getValue());
@@ -293,8 +316,9 @@ bool TreeMapWidget::eventFilter(QObject *object, QEvent *e) {
 
 void TreeMapWidget::paintEvent(QPaintEvent *paintEvent) {
   Q_UNUSED(paintEvent);
-  if (!root)
+  if (!root) {
     return;
+  }
 
   QFont font;
 
@@ -331,10 +355,11 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent) {
 
   foreach (TreeMap *first, root->getChildren()) {
     foreach (TreeMap *second, first->getChildren()) {
-      if (second == highlight)
+      if (second == highlight) {
         painter.setBrush(hbrush);
-      else
+      } else {
         painter.setBrush(brush);
+      }
       painter.setPen(Qt::NoPen);
       QRect secondRect = second->getRect();
       painter.drawRect(secondRect.x(), secondRect.y(), secondRect.width(), secondRect.height());
@@ -368,6 +393,7 @@ void TreeMapWidget::paintEvent(QPaintEvent *paintEvent) {
 
 void TreeMapWidget::resizeEvent(QResizeEvent *resizeEvent) {
   Q_UNUSED(resizeEvent);
-  if (root)
+  if (root) {
     root->layout(QRect(0, 0, geometry().width(), geometry().height()));
+  }
 }

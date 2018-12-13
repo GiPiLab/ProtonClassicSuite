@@ -122,15 +122,17 @@ void FormAuditTreemap::updateTreeMapWidget() {
 QSize FormAuditTreemap::sizeHint() const { return {450, 400}; }
 
 void FormAuditTreemap::on_comboListAudits_activated(int index) {
-  if (index == -1 || ui->comboListAudits->count() == 0)
+  if (index == -1 || ui->comboListAudits->count() == 0) {
     return;
+  }
   unsigned int selectedAuditId = ui->comboListAudits->currentData().toUInt();
   if (selectedAuditId == 0) {
     qFatal("Assertion failed");
   }
 
-  if (selectedAudit != nullptr)
+  if (selectedAudit != nullptr) {
     delete selectedAudit;
+  }
 
   selectedAudit = new PCx_Audit(selectedAuditId);
   selectedNode = 1;
@@ -144,35 +146,40 @@ void FormAuditTreemap::on_comboListAudits_activated(int index) {
 }
 
 void FormAuditTreemap::on_comboBoxMode_activated(int index) {
-  if (index == -1 || ui->comboBoxMode->count() == 0)
+  if (index == -1 || ui->comboBoxMode->count() == 0) {
     return;
+  }
   selectedMode = static_cast<MODES::DFRFDIRI>(ui->comboBoxMode->currentData().toUInt());
   updateTreeMapWidget();
 }
 
 void FormAuditTreemap::on_comboBoxORED_activated(int index) {
-  if (index == -1 || ui->comboBoxORED->count() == 0)
+  if (index == -1 || ui->comboBoxORED->count() == 0) {
     return;
+  }
   selectedORED = static_cast<PCx_Audit::ORED>(ui->comboBoxORED->currentData().toUInt());
   updateTreeMapWidget();
 }
 
 void FormAuditTreemap::on_comboBoxYear_activated(int index) {
-  if (index == -1 || ui->comboBoxYear->count() == 0)
+  if (index == -1 || ui->comboBoxYear->count() == 0) {
     return;
+  }
 
   selectedYear = ui->comboBoxYear->currentText().toInt();
 
-  if (selectedAudit != nullptr)
+  if (selectedAudit != nullptr) {
     updateTreeMapWidget();
+  }
 }
 
 void FormAuditTreemap::on_treeMapWidget_clicked(const QString &name, unsigned int id, int year, double value) {
   Q_UNUSED(name);
   Q_UNUSED(year);
   Q_UNUSED(value);
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   selectedNode = id;
   updateTreeMapWidget();
 }
@@ -184,18 +191,21 @@ void FormAuditTreemap::on_treeMapWidget_highlighted(const QString &name, unsigne
 }
 
 void FormAuditTreemap::on_pushButtonGoToPid_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
 
-  if (selectedNode > 1)
+  if (selectedNode > 1) {
     selectedNode = selectedAudit->getAttachedTree()->getParentId(selectedNode);
+  }
 
   updateTreeMapWidget();
 }
 
 void FormAuditTreemap::on_pushButtonSave_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
 
   QString caption = selectedAudit->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped() + "\n";
   QStringList items;
@@ -214,11 +224,13 @@ void FormAuditTreemap::on_pushButtonSave_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Images PNG (*.png)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0) {
     fileName.append(".png");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -239,10 +251,11 @@ void FormAuditTreemap::on_pushButtonSave_clicked() {
 
   p.end();
 
-  if (withLegend.save(fileName))
+  if (withLegend.save(fileName)) {
     QMessageBox::information(this, tr("Information"), tr("Image enregistrée"));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Image non enregistrée !"));
+  }
 }
 
 void FormAuditTreemap::on_radioButtonGroupByMode_toggled(bool checked) {

@@ -69,15 +69,17 @@ int PCx_PrevisionItemTableModel::rowCount(const QModelIndex &parent) const {
 
 QVariant PCx_PrevisionItemTableModel::data(const QModelIndex &index, int role) const {
   // FIXME : Too much refresh
-  if (!index.isValid())
+  if (!index.isValid()) {
     return QVariant();
+  }
 
   if (role == Qt::DisplayRole) {
     const PCx_PrevisionItemCriteria *trueItem = nullptr;
-    if (index.row() < previsionItem->getItemsToAdd().count())
+    if (index.row() < previsionItem->getItemsToAdd().count()) {
       trueItem = &previsionItem->getItemsToAdd().at(index.row());
-    else
+    } else {
       trueItem = &previsionItem->getItemsToSubstract().at(index.row() - previsionItem->getItemsToAdd().count());
+    }
 
     if (index.column() == 0) {
       return trueItem->getCriteriaLongDescription();
@@ -86,14 +88,16 @@ QVariant PCx_PrevisionItemTableModel::data(const QModelIndex &index, int role) c
                                                                previsionItem->getMode(), previsionItem->getNodeId()));
     }
   } else if (role == Qt::BackgroundRole) {
-    if (index.row() < previsionItem->getItemsToAdd().count())
+    if (index.row() < previsionItem->getItemsToAdd().count()) {
       return QVariant(QBrush(QColor(Qt::green)));
-    else
+    } else {
       return QVariant(QBrush(QColor(Qt::red)));
+    }
 
   } else if (role == Qt::TextAlignmentRole) {
-    if (index.column() == 1)
+    if (index.column() == 1) {
       return Qt::AlignCenter;
+    }
   }
   return QVariant();
 }
@@ -101,10 +105,12 @@ QVariant PCx_PrevisionItemTableModel::data(const QModelIndex &index, int role) c
 QVariant PCx_PrevisionItemTableModel::headerData(int section, Qt::Orientation orientation, int role) const {
   if (role == Qt::DisplayRole) {
     if (orientation == Qt::Horizontal) {
-      if (section == 0)
+      if (section == 0) {
         return QObject::tr("Critère");
-      if (section == 1)
+      }
+      if (section == 1) {
         return QObject::tr("Valeur");
+      }
     }
   }
   return QVariant();

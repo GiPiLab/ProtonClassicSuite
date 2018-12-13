@@ -61,12 +61,15 @@ FormReportingOverview::FormReportingOverview(QWidget *parent) : QWidget(parent),
 
 FormReportingOverview::~FormReportingOverview() {
   delete ui;
-  if (proxyModel != nullptr)
+  if (proxyModel != nullptr) {
     delete proxyModel;
-  if (selectedReporting != nullptr)
+  }
+  if (selectedReporting != nullptr) {
     delete selectedReporting;
-  if (tableOverviewModel != nullptr)
+  }
+  if (tableOverviewModel != nullptr) {
     delete tableOverviewModel;
+  }
 }
 
 void FormReportingOverview::onListOfReportingsChanged() { updateListOfReportings(); }
@@ -83,8 +86,9 @@ void FormReportingOverview::onReportingDataChanged(unsigned int reportingId) {
 }
 
 void FormReportingOverview::on_comboListReportings_activated(int index) {
-  if (index == -1 || ui->comboListReportings->count() == 0)
+  if (index == -1 || ui->comboListReportings->count() == 0) {
     return;
+  }
   unsigned int selectedReportingId = ui->comboListReportings->currentData().toUInt();
 
   if (selectedReporting != nullptr) {
@@ -133,8 +137,9 @@ void FormReportingOverview::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else
+  } else {
     setEnabled(true);
+  }
 
   foreach (p, listOfReportings) { ui->comboListReportings->insertItem(0, p.second, p.first); }
   ui->comboListReportings->setCurrentIndex(0);
@@ -206,49 +211,56 @@ void FormReportingOverview::changeMode(PCx_ReportingTableOverviewModel::OVERVIEW
 
 bool FormReportingOverview::dateExistsForNodeAndMode(time_t timeT, unsigned int nodeId,
                                                      PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) const {
-  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF) {
     return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DF);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF) {
     return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI) {
     return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI) {
     return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RI);
 
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF) {
     return (selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DF) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF));
 
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI) {
     return (selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RI));
 
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI) {
     return (selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DF) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RI));
+  }
   qWarning() << "Unsupported case found !";
   return false;
 }
 
 PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingOverview::getSelectedMode() const {
-  if (ui->radioButtonDF->isChecked())
+  if (ui->radioButtonDF->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
-  if (ui->radioButtonRF->isChecked())
+  }
+  if (ui->radioButtonRF->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF;
-  if (ui->radioButtonDI->isChecked())
+  }
+  if (ui->radioButtonDI->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI;
-  if (ui->radioButtonRI->isChecked())
+  }
+  if (ui->radioButtonRI->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI;
-  if (ui->radioButtonRFDF->isChecked())
+  }
+  if (ui->radioButtonRFDF->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF;
-  if (ui->radioButtonRIDI->isChecked())
+  }
+  if (ui->radioButtonRIDI->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI;
-  if (ui->radioButtonRFDFRIDI->isChecked())
+  }
+  if (ui->radioButtonRFDFRIDI->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI;
 
-  else {
+  } else {
     qWarning() << "Invalid selection";
   }
   return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
@@ -442,26 +454,24 @@ void FormReportingOverview::on_pushButtonCopyToDocument_clicked() {
 
 void FormReportingOverview::on_comboBoxRefColumn_activated(int index) {
   Q_UNUSED(index);
-  if (ui->comboBoxRefColumn->count() == 0)
+  if (ui->comboBoxRefColumn->count() == 0) {
     return;
+  }
   PCx_Reporting::OREDPCR selectedOred =
       static_cast<PCx_Reporting::OREDPCR>(ui->comboBoxRefColumn->currentData().toInt());
   tableOverviewModel->setColRef(selectedOred);
-  if (selectedOred != PCx_Reporting::OREDPCR::NONELAST) {
-    ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
-  }
+  ui->comboBoxRefDate->setCurrentIndex(ui->comboBoxRefDate->count());
   ui->tableView->resizeColumnsToContents();
 }
 
 void FormReportingOverview::on_comboBoxRefDate_activated(int index) {
   Q_UNUSED(index);
-  if (ui->comboBoxRefDate->count() == 0)
+  if (ui->comboBoxRefDate->count() == 0) {
     return;
+  }
   time_t selectedDate = ui->comboBoxRefDate->currentData().toInt();
   tableOverviewModel->setDateRef(selectedDate);
-  if (selectedDate != -1) {
-    ui->comboBoxRefColumn->setCurrentIndex(ui->comboBoxRefColumn->count());
-  }
+  ui->comboBoxRefColumn->setCurrentIndex(ui->comboBoxRefColumn->count());
   ui->tableView->resizeColumnsToContents();
 }
 
@@ -502,11 +512,13 @@ void FormReportingOverview::on_pushButtonExportHTML_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -526,11 +538,12 @@ void FormReportingOverview::on_pushButtonExportHTML_clicked() {
   stream << output;
   stream.flush();
   file.close();
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
                              tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
+  }
 }
 
 void FormReportingOverview::on_pushButtonExpandAll_clicked() { ui->treeView->expandAll(); }

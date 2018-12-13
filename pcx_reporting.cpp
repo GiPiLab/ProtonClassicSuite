@@ -91,8 +91,9 @@ PCx_Reporting::PCx_Reporting(unsigned int reportingId, bool _noLoadAttachedTree)
 }
 
 PCx_Reporting::~PCx_Reporting() {
-  if (attachedTree != nullptr)
+  if (attachedTree != nullptr) {
     delete attachedTree;
+  }
 }
 
 unsigned int PCx_Reporting::getAttachedTreeId(unsigned int reportingId) {
@@ -355,60 +356,71 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
                     "bp,:reports,:ocdm,:vcdm,:budgetvote,:vcinterne,"
                     ":rattachenmoins1)")
                 .arg(tableName));
-  if (nullOuverts)
+  if (nullOuverts) {
     q.bindValue(":ouverts", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":ouverts", sumOuverts);
+  }
 
-  if (nullRealises)
+  if (nullRealises) {
     q.bindValue(":realises", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":realises", sumRealises);
+  }
 
-  if (nullEngages)
+  if (nullEngages) {
     q.bindValue(":engages", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":engages", sumEngages);
+  }
 
-  if (nullDisponibles)
+  if (nullDisponibles) {
     q.bindValue(":disponibles", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":disponibles", sumDisponibles);
+  }
 
-  if (nullBP)
+  if (nullBP) {
     q.bindValue(":bp", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":bp", sumBP);
+  }
 
-  if (nullReports)
+  if (nullReports) {
     q.bindValue(":reports", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":reports", sumReports);
+  }
 
-  if (nullOCDM)
+  if (nullOCDM) {
     q.bindValue(":ocdm", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":ocdm", sumOCDM);
+  }
 
-  if (nullVCDM)
+  if (nullVCDM) {
     q.bindValue(":vcdm", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":vcdm", sumVCDM);
+  }
 
-  if (nullBudgetVote)
+  if (nullBudgetVote) {
     q.bindValue(":budgetvote", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":budgetvote", sumBudgetVote);
+  }
 
-  if (nullVCInternes)
+  if (nullVCInternes) {
     q.bindValue(":vcinterne", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":vcinterne", sumVCInternes);
+  }
 
-  if (nullRattachesNMoins1)
+  if (nullRattachesNMoins1) {
     q.bindValue(":rattachenmoins1", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":rattachenmoins1", sumRattachesNMoins1);
+  }
 
   q.bindValue(":date", tDate);
   q.bindValue(":id_node", parent);
@@ -737,8 +749,9 @@ QDate PCx_Reporting::getLastReportingDate(MODES::DFRFDIRI mode, unsigned int nod
     qCritical() << q.lastError();
     die();
   }
-  if (!q.next())
+  if (!q.next()) {
     return {};
+  }
 
   return QDateTime::fromTime_t(q.value(0).toUInt()).date();
 }
@@ -753,8 +766,9 @@ bool PCx_Reporting::deleteLastReportingDate(MODES::DFRFDIRI mode) {
     qCritical() << q.lastError();
     die();
   }
-  if (q.numRowsAffected() < 1)
+  if (q.numRowsAffected() < 1) {
     return false;
+  }
 
   return true;
 }
@@ -806,14 +820,18 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const 
   QList<unsigned int> leaves = attachedTree->getLeavesId();
 
   bool doDF = false, doRF = false, doDI = false, doRI = false;
-  if (yearDF <= auditLastYear && yearDF >= auditFirstYear)
+  if (yearDF <= auditLastYear && yearDF >= auditFirstYear) {
     doDF = true;
-  if (yearRF <= auditLastYear && yearRF >= auditFirstYear)
+  }
+  if (yearRF <= auditLastYear && yearRF >= auditFirstYear) {
     doRF = true;
-  if (yearDI <= auditLastYear && yearDI >= auditFirstYear)
+  }
+  if (yearDI <= auditLastYear && yearDI >= auditFirstYear) {
     doDI = true;
-  if (yearRI <= auditLastYear && yearRI >= auditFirstYear)
+  }
+  if (yearRI <= auditLastYear && yearRI >= auditFirstYear) {
     doRI = true;
+  }
 
   int nbDo = static_cast<int>(doDF) + static_cast<int>(doRF) + static_cast<int>(doDI) + static_cast<int>(doRI);
   int progressMax = nbDo * leaves.count();
@@ -1167,18 +1185,20 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
 
   QDate lastDate = getLastReportingDate(mode);
   QDate nextDate;
-  if (!lastDate.isNull())
+  if (!lastDate.isNull()) {
     nextDate = lastDate.addDays(15);
-  else
+  } else {
     nextDate = QDate(QDate::currentDate().year(), 1, 1);
+  }
 
   foreach (unsigned int leaf, leaves) {
     data.clear();
 
     for (auto i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
          i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
-      if (i == static_cast<int>(PCx_Reporting::OREDPCR::DISPONIBLES))
+      if (i == static_cast<int>(PCx_Reporting::OREDPCR::DISPONIBLES)) {
         continue;
+      }
       randval = randomGenerator->bounded(0, MAX_RANDOM_NUM_FOR_A_LEAF);
 
       data.insert(static_cast<PCx_Reporting::OREDPCR>(i), randval);
@@ -1216,15 +1236,17 @@ bool PCx_Reporting::dateExistsForNodeAndMode(QDate date, unsigned int nodeId, MO
     qCritical() << q.lastError();
     die();
   }
-  if (q.value(0).toInt() > 0)
+  if (q.value(0).toInt() > 0) {
     return true;
+  }
   return false;
 }
 
 void PCx_Reporting::OREDPCRToComboBox(QComboBox *combo) {
   combo->clear();
-  for (int i = static_cast<int>(OREDPCR::OUVERTS); i <= static_cast<int>(OREDPCR::NONELAST); i++)
+  for (int i = static_cast<int>(OREDPCR::OUVERTS); i <= static_cast<int>(OREDPCR::NONELAST); i++) {
     combo->addItem(OREDPCRtoCompleteString(static_cast<OREDPCR>(i)), i);
+  }
 }
 
 QString PCx_Reporting::OREDPCRtoCompleteString(OREDPCR ored, bool capitalizeFirstLetter) {
@@ -1324,29 +1346,40 @@ QString PCx_Reporting::OREDPCRtoTableString(OREDPCR ored) {
 }
 
 PCx_Reporting::OREDPCR PCx_Reporting::OREDPCRFromTableString(const QString &ored) {
-  if (ored == OREDPCRtoTableString(OREDPCR::OUVERTS))
+  if (ored == OREDPCRtoTableString(OREDPCR::OUVERTS)) {
     return OREDPCR::OUVERTS;
-  if (ored == OREDPCRtoTableString(OREDPCR::REALISES))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::REALISES)) {
     return OREDPCR::REALISES;
-  if (ored == OREDPCRtoTableString(OREDPCR::ENGAGES))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::ENGAGES)) {
     return OREDPCR::ENGAGES;
-  if (ored == OREDPCRtoTableString(OREDPCR::DISPONIBLES))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::DISPONIBLES)) {
     return OREDPCR::DISPONIBLES;
+  }
 
-  if (ored == OREDPCRtoTableString(OREDPCR::BP))
+  if (ored == OREDPCRtoTableString(OREDPCR::BP)) {
     return OREDPCR::BP;
-  if (ored == OREDPCRtoTableString(OREDPCR::REPORTS))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::REPORTS)) {
     return OREDPCR::REPORTS;
-  if (ored == OREDPCRtoTableString(OREDPCR::OCDM))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::OCDM)) {
     return OREDPCR::OCDM;
-  if (ored == OREDPCRtoTableString(OREDPCR::VCDM))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::VCDM)) {
     return OREDPCR::VCDM;
-  if (ored == OREDPCRtoTableString(OREDPCR::VIREMENTSINTERNES))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::VIREMENTSINTERNES)) {
     return OREDPCR::VIREMENTSINTERNES;
-  if (ored == OREDPCRtoTableString(OREDPCR::RATTACHENMOINS1))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::RATTACHENMOINS1)) {
     return OREDPCR::RATTACHENMOINS1;
-  if (ored == OREDPCRtoTableString(OREDPCR::BUDGETVOTE))
+  }
+  if (ored == OREDPCRtoTableString(OREDPCR::BUDGETVOTE)) {
     return OREDPCR::BUDGETVOTE;
+  }
 
   qWarning() << "Invalid ORED string" << ored << "specified, defaulting to NONE";
   return OREDPCR::NONELAST;
@@ -1591,8 +1624,9 @@ bool PCx_Reporting::reportingNameExists(const QString &reportingName) {
     die();
   }
 
-  if (q.value(0).toLongLong() > 0)
+  if (q.value(0).toLongLong() > 0) {
     return true;
+  }
   return false;
 }
 

@@ -248,12 +248,12 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   stream.flush();
   file.close();
   // progress.setValue(maximumProgressValue);
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(nullptr, QObject::tr("Information"),
                              QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images "
                                          "sont stockées dans le dossier <b>%2</b>")
                                  .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
-  else {
+  } else {
     QMessageBox::critical(nullptr, QObject::tr("Attention"), QObject::tr("Le document n'a pas pu être enregistré !"));
     return false;
   }
@@ -356,8 +356,9 @@ qint64 PCx_PrevisionItem::getPrevisionItemValue() const {
 
 void PCx_PrevisionItem::insertCriteriaToAdd(PCx_PrevisionItemCriteria criteria, bool compute) {
   itemsToAdd.append(criteria);
-  if (compute)
+  if (compute) {
     computedValue = getPrevisionItemValue();
+  }
 }
 
 void PCx_PrevisionItem::dispatchCriteriaItemsToChildrenLeaves() {
@@ -384,8 +385,9 @@ void PCx_PrevisionItem::dispatchCriteriaItemsToChildrenLeaves() {
   }
 
   // Remove current items
-  if (!leavesId.contains(nodeId))
+  if (!leavesId.contains(nodeId)) {
     deleteAllCriteria();
+  }
   saveDataToDb();
 
   // Remove items from ancestors
@@ -463,14 +465,16 @@ bool PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves(PCx_Audit::ORED or
 
 void PCx_PrevisionItem::insertCriteriaToSub(PCx_PrevisionItemCriteria criteria, bool compute) {
   itemsToSubstract.append(criteria);
-  if (compute)
+  if (compute) {
     computedValue = getPrevisionItemValue();
+  }
 }
 
 bool PCx_PrevisionItem::deleteCriteria(QModelIndexList selectedIndexes, bool compute) {
   // WARNING : only single selection supported
-  if (selectedIndexes.isEmpty())
+  if (selectedIndexes.isEmpty()) {
     return true;
+  }
   if (selectedIndexes.size() > 1) {
     qDebug() << "Multiselect not implemented";
   }
@@ -481,8 +485,9 @@ bool PCx_PrevisionItem::deleteCriteria(QModelIndexList selectedIndexes, bool com
   } else {
     itemsToSubstract.removeAt(index.row() - itemsToAdd.size());
   }
-  if (compute)
+  if (compute) {
     computedValue = getPrevisionItemValue();
+  }
   //  saveDataToDb();
 
   return true;
@@ -511,8 +516,9 @@ QString PCx_PrevisionItem::getPrevisionItemAsHTML() const {
                       .arg(criteria.getCriteriaLongDescription().toHtmlEscaped(),
                            NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId, mode, nodeId))));
   }
-  if (toAdd)
+  if (toAdd) {
     output.append("</ul>");
+  }
 
   if (itemsToSubstract.count() > 0) {
     toSub = true;
@@ -524,8 +530,9 @@ QString PCx_PrevisionItem::getPrevisionItemAsHTML() const {
                       .arg(criteria.getCriteriaLongDescription().toHtmlEscaped(),
                            NUMBERSFORMAT::formatFixedPoint(criteria.compute(auditId, mode, nodeId))));
   }
-  if (toSub)
+  if (toSub) {
     output.append("</ul>");
+  }
   return output;
 }
 
@@ -565,8 +572,9 @@ void PCx_PrevisionItem::saveDataToDb() {
 QString PCx_PrevisionItem::getLongDescription() const {
   QString out;
   QStringList listItems;
-  if (itemsToAdd.size() == 0 && itemsToSubstract.size() == 0)
+  if (itemsToAdd.size() == 0 && itemsToSubstract.size() == 0) {
     return QObject::tr("aucune prévision");
+  }
   foreach (const PCx_PrevisionItemCriteria &criteria, itemsToAdd) {
     listItems.append(criteria.getCriteriaLongDescription());
   }

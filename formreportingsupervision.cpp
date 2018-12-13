@@ -106,12 +106,15 @@ void FormReportingSupervision::setColumnVisibility() {
 
 FormReportingSupervision::~FormReportingSupervision() {
   delete ui;
-  if (proxyModel != nullptr)
+  if (proxyModel != nullptr) {
     delete proxyModel;
-  if (selectedReporting != nullptr)
+  }
+  if (selectedReporting != nullptr) {
     delete selectedReporting;
-  if (model != nullptr)
+  }
+  if (model != nullptr) {
     delete model;
+  }
 }
 
 void FormReportingSupervision::updateListOfReportings() {
@@ -125,8 +128,9 @@ void FormReportingSupervision::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else
+  } else {
     setEnabled(true);
+  }
 
   foreach (p, listOfReportings) { ui->comboListReportings->insertItem(0, p.second, p.first); }
   ui->comboListReportings->setCurrentIndex(0);
@@ -143,8 +147,9 @@ void FormReportingSupervision::onReportingDataChanged(unsigned int reportingId) 
 }
 
 void FormReportingSupervision::on_comboListReportings_activated(int index) {
-  if (index == -1 || ui->comboListReportings->count() == 0)
+  if (index == -1 || ui->comboListReportings->count() == 0) {
     return;
+  }
   unsigned int selectedReportingId = ui->comboListReportings->currentData().toUInt();
 
   if (selectedReporting != nullptr) {
@@ -177,16 +182,19 @@ void FormReportingSupervision::on_comboListReportings_activated(int index) {
 }
 
 MODES::DFRFDIRI FormReportingSupervision::getSelectedMode() const {
-  if (ui->radioButtonDF->isChecked())
+  if (ui->radioButtonDF->isChecked()) {
     return MODES::DFRFDIRI::DF;
-  if (ui->radioButtonRF->isChecked())
+  }
+  if (ui->radioButtonRF->isChecked()) {
     return MODES::DFRFDIRI::RF;
-  if (ui->radioButtonDI->isChecked())
+  }
+  if (ui->radioButtonDI->isChecked()) {
     return MODES::DFRFDIRI::DI;
-  if (ui->radioButtonRI->isChecked())
+  }
+  if (ui->radioButtonRI->isChecked()) {
     return MODES::DFRFDIRI::RI;
 
-  else {
+  } else {
     qWarning() << "Invalid selection";
   }
   return MODES::DFRFDIRI::DF;
@@ -321,11 +329,13 @@ void FormReportingSupervision::on_pushButtonExportHTML_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -345,11 +355,12 @@ void FormReportingSupervision::on_pushButtonExportHTML_clicked() {
   stream << output;
   stream.flush();
   file.close();
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
                              tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
+  }
 }
 
 QSize FormReportingSupervision::sizeHint() const { return {900, 500}; }
@@ -427,8 +438,9 @@ void FormReportingSupervision::on_pushButtonSelectAll_clicked() {
 
 void FormReportingSupervision::on_comboBoxListDates_activated(int index) {
   Q_UNUSED(index);
-  if (ui->comboBoxListDates->count() == 0)
+  if (ui->comboBoxListDates->count() == 0) {
     return;
+  }
   time_t selectedDate = ui->comboBoxListDates->currentData().toInt();
   model->setDateTimeT(selectedDate);
 

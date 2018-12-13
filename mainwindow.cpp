@@ -110,16 +110,18 @@ void MainWindow::restoreSettings() {
   QCoreApplication::setApplicationName("ProtonClassicSuite");
   QSettings settings;
 
-  if (settings.value("mainwindow/maximised", false).toBool() == true)
+  if (settings.value("mainwindow/maximised", false).toBool() == true) {
     setWindowState(Qt::WindowMaximized);
+  }
   this->move(settings.value("mainwindow/position", QVariant(this->pos())).toPoint());
   this->resize(settings.value("mainwindow/size", QVariant(this->size())).toSize());
 
   recentDb = settings.value("database/recentdb").toString();
   if (!recentDb.isEmpty()) {
     QFileInfo fi(recentDb);
-    if (fi.exists() && fi.isFile() && fi.isReadable() && fi.isWritable())
+    if (fi.exists() && fi.isFile() && fi.isReadable() && fi.isWritable()) {
       loadDb(recentDb);
+    }
   }
 }
 
@@ -129,8 +131,9 @@ void MainWindow::saveSettings() {
   settings.setValue("mainwindow/position", this->pos());
   settings.setValue("mainwindow/size", this->size());
 
-  if (!recentDb.isEmpty())
+  if (!recentDb.isEmpty()) {
     settings.setValue("database/recentdb", recentDb);
+  }
 }
 
 void MainWindow::setMenusState() {
@@ -380,11 +383,13 @@ void MainWindow::on_actionNewDb_triggered() {
 
   QString fileName = fileDialog.getSaveFileName(this, tr("Nouvelle base de données"), "",
                                                 tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("pcxdb", Qt::CaseInsensitive))
+  if (fi.suffix().compare("pcxdb", Qt::CaseInsensitive)) {
     fileName.append(".pcxdb");
+  }
   fi = QFileInfo(fileName);
 
   QFile newFile(fileName);
@@ -428,8 +433,9 @@ void MainWindow::on_actionOpenDb_triggered() {
 
   QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir une base de données"), "",
                                                 tr("Bases de données ProtonClassicSuite (*.pcxdb)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
   if (!fi.isWritable() || !fi.isFile() || !fi.isReadable()) {
     QMessageBox::critical(this, tr("Attention"), tr("Le fichier n'est pas accessible en lecture/écriture"));

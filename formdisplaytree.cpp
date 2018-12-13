@@ -71,8 +71,9 @@ void FormDisplayTree::on_printViewButton_clicked() {
 
   auto *dialog = new QPrintDialog(&printer, this);
   dialog->setWindowTitle(tr("Imprimer"));
-  if (dialog->exec() != QDialog::Accepted)
+  if (dialog->exec() != QDialog::Accepted) {
     return;
+  }
   QPainter painter;
   painter.begin(&printer);
   double xscale = printer.pageRect().width() / double(ui->treeView->width());
@@ -113,12 +114,14 @@ void FormDisplayTree::on_exportButton_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format PDF"), "", tr("Fichiers PDF (*.pdf)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("pdf", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("pdf", Qt::CaseInsensitive) != 0) {
     fileName.append(".pdf");
+  }
   fi = QFileInfo(fileName);
 
   // Process dot graph
@@ -131,12 +134,14 @@ void FormDisplayTree::on_exportButton_clicked() {
   if (question(tr("Enregistrer aussi la source au format GraphViz ?")) == QMessageBox::Yes) {
     QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer la source de l'arbre au format DOT"), "",
                                                   tr("Fichiers Graphviz (*.dot)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     QFileInfo fi(fileName);
-    if (fi.suffix().compare("dot", Qt::CaseInsensitive) != 0)
+    if (fi.suffix().compare("dot", Qt::CaseInsensitive) != 0) {
       fileName.append(".dot");
+    }
     fi = QFileInfo(fileName);
 
     QFile file(fileName);
@@ -162,12 +167,14 @@ void FormDisplayTree::on_exportXLSXButton_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer l'arbre au format XLSX"), "", tr("Fichiers XLSX (*.xlsx)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
     fileName.append(".xlsx");
+  }
   fi = QFileInfo(fileName);
 
   bool res = model->toXLSX(fileName);

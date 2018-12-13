@@ -52,7 +52,7 @@ FormManagePrevisions::FormManagePrevisions(QWidget *parent) : QWidget(parent), u
   updateListOfPrevisions();
   updateListOfAudits();
 
-  // TODO : Import/export des prévisions
+  // TODO(unknown): Import/export des prévisions
 }
 
 void FormManagePrevisions::onListOfAuditsChanged() { updateListOfAudits(); }
@@ -82,18 +82,21 @@ void FormManagePrevisions::updateListOfPrevisions() {
 
 FormManagePrevisions::~FormManagePrevisions() {
   delete ui;
-  if (selectedPrevision != nullptr)
+  if (selectedPrevision != nullptr) {
     delete selectedPrevision;
+  }
 }
 
 void FormManagePrevisions::onSelectedPrevisionUpdated() {
-  if (selectedPrevision != nullptr)
+  if (selectedPrevision != nullptr) {
     ui->pushButtonToAudit->setEnabled(!selectedPrevision->isPrevisionEmpty());
+  }
 }
 
 void FormManagePrevisions::on_comboListPrevisions_activated(int index) {
-  if (index == -1 || ui->comboListPrevisions->count() == 0)
+  if (index == -1 || ui->comboListPrevisions->count() == 0) {
     return;
+  }
   unsigned int selectedPrevisionId = ui->comboListPrevisions->currentData().toUInt();
 
   if (selectedPrevision != nullptr) {
@@ -188,8 +191,9 @@ void FormManagePrevisions::on_pushButtonDelete_clicked() {
                    .arg(ui->comboListPrevisions->currentText().toHtmlEscaped())) == QMessageBox::No) {
     return;
   }
-  if (PCx_Prevision::deletePrevision(ui->comboListPrevisions->currentData().toUInt()) == false)
+  if (PCx_Prevision::deletePrevision(ui->comboListPrevisions->currentData().toUInt()) == false) {
     die();
+  }
   if (selectedPrevision != nullptr) {
     delete selectedPrevision;
     selectedPrevision = nullptr;

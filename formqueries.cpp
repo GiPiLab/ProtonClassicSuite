@@ -164,12 +164,14 @@ FormQueries::~FormQueries() {
   if (report != nullptr) {
     delete report;
   }
-  if (queriesModel != nullptr)
+  if (queriesModel != nullptr) {
     delete queriesModel;
+  }
   doc->clear();
   delete doc;
-  if (xlsDoc != nullptr)
+  if (xlsDoc != nullptr) {
     delete xlsDoc;
+  }
   delete ui;
 }
 
@@ -182,8 +184,9 @@ void FormQueries::onColorChanged() {
 }
 
 void FormQueries::onListOfQueriesChanged(unsigned int auditId) {
-  if (model == nullptr || queriesModel == nullptr)
+  if (model == nullptr || queriesModel == nullptr) {
     return;
+  }
 
   if (model->getAuditId() == auditId) {
     queriesModel->update();
@@ -204,9 +207,10 @@ void FormQueries::updateListOfAudits() {
   // do not update text browser if no audit are available
   bool nonEmpty = !listOfAudits.isEmpty();
   this->setEnabled(nonEmpty);
-  if (!nonEmpty)
+  if (!nonEmpty) {
     doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un "
                     "audit et n'oubliez pas de le terminer</h1>"));
+  }
 
   QPair<unsigned int, QString> p;
   foreach (p, listOfAudits) { ui->comboBoxListAudits->insertItem(0, p.second, p.first); }
@@ -215,22 +219,26 @@ void FormQueries::updateListOfAudits() {
 }
 
 void FormQueries::on_comboBoxListAudits_activated(int index) {
-  if (index == -1 || ui->comboBoxListAudits->count() == 0)
+  if (index == -1 || ui->comboBoxListAudits->count() == 0) {
     return;
+  }
   unsigned int selectedAuditId = ui->comboBoxListAudits->currentData().toUInt();
   if (selectedAuditId == 0) {
     qFatal("Assertion failed");
   }
   // qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-  if (model != nullptr)
+  if (model != nullptr) {
     delete model;
+  }
 
-  if (report != nullptr)
+  if (report != nullptr) {
     delete report;
+  }
 
-  if (queriesModel != nullptr)
+  if (queriesModel != nullptr) {
     delete queriesModel;
+  }
 
   model = new PCx_Audit(selectedAuditId);
   report = new PCx_Report(model);
@@ -409,8 +417,9 @@ redo:
 
 void FormQueries::on_pushButtonDelete_clicked() {
   QModelIndexList selection = ui->listView->selectionModel()->selectedIndexes();
-  if (selection.isEmpty())
+  if (selection.isEmpty()) {
     return;
+  }
 
   if (question(tr("Voulez-vous vraiment <b>supprimer</b> les requêtes "
                   "sélectionnées ? Cette action ne peut être annulée")) == QMessageBox::No) {
@@ -473,8 +482,9 @@ QString FormQueries::execQueries(QModelIndexList items, QXlsx::Document *xlsDocu
 
 void FormQueries::on_pushButtonExecFromList_clicked() {
   QModelIndexList selection = ui->listView->selectionModel()->selectedIndexes();
-  if (selection.isEmpty())
+  if (selection.isEmpty()) {
     return;
+  }
   doc->clear();
   if (xlsDoc != nullptr) {
     delete xlsDoc;
@@ -498,17 +508,20 @@ void FormQueries::on_listView_activated(const QModelIndex &index) {
 }
 
 void FormQueries::on_pushButtonSave_clicked() {
-  if (doc->isEmpty())
+  if (doc->isEmpty()) {
     return;
+  }
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le résultat de la requête en HTML"), "",
                                                 tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -668,17 +681,20 @@ redo:
 }
 
 void FormQueries::on_pushButtonSaveXLSX_clicked() {
-  if (doc->isEmpty() || xlsDoc == nullptr)
+  if (doc->isEmpty() || xlsDoc == nullptr) {
     return;
+  }
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer le résultat de la requête en XLSX"), "",
                                                 tr("Fichiers XLSX (*.xlsx)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
     fileName.append(".xlsx");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);

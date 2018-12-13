@@ -171,18 +171,21 @@ bool PCx_Audit::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, int yea
   }
 
   if (vals.contains(PCx_Audit::ORED::OUVERTS)) {
-    if (!reqString.isEmpty())
+    if (!reqString.isEmpty()) {
       reqString.append(",");
+    }
     reqString.append("ouverts=:vouverts");
   }
   if (vals.contains(PCx_Audit::ORED::REALISES)) {
-    if (!reqString.isEmpty())
+    if (!reqString.isEmpty()) {
       reqString.append(",");
+    }
     reqString.append("realises=:vrealises");
   }
   if (vals.contains(PCx_Audit::ORED::ENGAGES)) {
-    if (!reqString.isEmpty())
+    if (!reqString.isEmpty()) {
       reqString.append(",");
+    }
     reqString.append("engages=:vengages");
   }
 
@@ -285,14 +288,18 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<int> years, bool cop
 
   QStringList modes;
 
-  if (copyDF)
+  if (copyDF) {
     modes.append(MODES::modeToTableString(MODES::DFRFDIRI::DF));
-  if (copyRF)
+  }
+  if (copyRF) {
     modes.append(MODES::modeToTableString(MODES::DFRFDIRI::RF));
-  if (copyDI)
+  }
+  if (copyDI) {
     modes.append(MODES::modeToTableString(MODES::DFRFDIRI::DI));
-  if (copyRI)
+  }
+  if (copyRI) {
     modes.append(MODES::modeToTableString(MODES::DFRFDIRI::RI));
+  }
 
   QProgressDialog progress(QObject::tr("Données en cours de recopie..."), nullptr, 0, modes.size() * 4 + 1);
   // progress.setMinimumDuration(0);
@@ -513,25 +520,29 @@ void PCx_Audit::updateParent(const QString &tableName, int annee, unsigned int n
                     "ouverts=:ouverts,realises=:realises,engages=:engages,disponibles=:"
                     "disponibles where annee=:annee and id_node=:id_node")
                 .arg(tableName));
-  if (nullOuverts)
+  if (nullOuverts) {
     q.bindValue(":ouverts", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":ouverts", sumOuverts);
+  }
 
-  if (nullRealises)
+  if (nullRealises) {
     q.bindValue(":realises", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":realises", sumRealises);
+  }
 
-  if (nullEngages)
+  if (nullEngages) {
     q.bindValue(":engages", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":engages", sumEngages);
+  }
 
-  if (nullDisponibles)
+  if (nullDisponibles) {
     q.bindValue(":disponibles", QVariant(QVariant::LongLong));
-  else
+  } else {
     q.bindValue(":disponibles", sumDisponibles);
+  }
 
   q.bindValue(":annee", annee);
   q.bindValue(":id_node", parent);
@@ -1119,14 +1130,18 @@ QString PCx_Audit::OREDtoTableString(ORED ored) {
 }
 
 PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &oredString) {
-  if (oredString == OREDtoTableString(ORED::OUVERTS))
+  if (oredString == OREDtoTableString(ORED::OUVERTS)) {
     return ORED::OUVERTS;
-  if (oredString == OREDtoTableString(ORED::REALISES))
+  }
+  if (oredString == OREDtoTableString(ORED::REALISES)) {
     return ORED::REALISES;
-  if (oredString == OREDtoTableString(ORED::ENGAGES))
+  }
+  if (oredString == OREDtoTableString(ORED::ENGAGES)) {
     return ORED::ENGAGES;
-  if (oredString == OREDtoTableString(ORED::DISPONIBLES))
+  }
+  if (oredString == OREDtoTableString(ORED::DISPONIBLES)) {
     return ORED::DISPONIBLES;
+  }
 
   qWarning() << "Invalid ORED string !";
   return ORED::OUVERTS;

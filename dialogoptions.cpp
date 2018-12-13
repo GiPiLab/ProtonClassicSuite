@@ -59,40 +59,48 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
   ui->checkBoxRandomAllowed->setChecked(settings.value("misc/randomAllowed", true).toBool());
 
   QString css = settings.value("output/style", "CSS").toString();
-  if (css == "CSS")
+  if (css == "CSS") {
     ui->radioButtonCSS->setChecked(true);
-  else if (css == "INLINE")
+  } else if (css == "INLINE") {
     ui->radioButtonInline->setChecked(true);
-  else
+  } else {
     qWarning() << "Unsupported option for CSS !";
+  }
 
   QString imageFormat = settings.value("output/imageFormat", "png").toString();
-  if (imageFormat == "jpg")
+  if (imageFormat == "jpg") {
     ui->radioButtonJPG->setChecked(true);
-  else if (imageFormat == "png")
+  } else if (imageFormat == "png") {
     ui->radioButtonPNG->setChecked(true);
-  else if (imageFormat == "svg") {
+  } else if (imageFormat == "svg") {
     ui->radioButtonSVG->setChecked(true);
-  } else
+  } else {
     qWarning() << "Unsupported option for image format !";
+  }
 
   int imageWidth = settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt();
-  if (imageWidth < PCx_Graphics::MINWIDTH)
+  if (imageWidth < PCx_Graphics::MINWIDTH) {
     imageWidth = PCx_Graphics::MINWIDTH;
-  if (imageWidth > PCx_Graphics::MAXWIDTH)
+  }
+  if (imageWidth > PCx_Graphics::MAXWIDTH) {
     imageWidth = PCx_Graphics::MAXWIDTH;
+  }
 
   int imageHeight = settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt();
-  if (imageHeight < PCx_Graphics::MINHEIGHT)
+  if (imageHeight < PCx_Graphics::MINHEIGHT) {
     imageHeight = PCx_Graphics::MINHEIGHT;
-  if (imageHeight > PCx_Graphics::MAXHEIGHT)
+  }
+  if (imageHeight > PCx_Graphics::MAXHEIGHT) {
     imageHeight = PCx_Graphics::MAXHEIGHT;
+  }
 
   double scale = settings.value("graphics/scale", PCx_Graphics::DEFAULTSCALE).toDouble();
-  if (scale < PCx_Graphics::MINSCALE)
+  if (scale < PCx_Graphics::MINSCALE) {
     scale = PCx_Graphics::MINSCALE;
-  if (scale > PCx_Graphics::MAXSCALE)
+  }
+  if (scale > PCx_Graphics::MAXSCALE) {
     scale = PCx_Graphics::MAXSCALE;
+  }
 
   unsigned int numdecimals = settings.value("format/numdecimals", DEFAULTNUMDECIMALS).toUInt();
   ui->spinBoxNumDecimals->setValue(static_cast<int>(numdecimals));
@@ -156,26 +164,27 @@ DialogOptions::~DialogOptions() { delete ui; }
 void DialogOptions::on_pushButtonOk_clicked() {
   QSettings settings;
 
-  if (ui->checkBoxRandomAllowed->isChecked())
+  if (ui->checkBoxRandomAllowed->isChecked()) {
     settings.setValue("misc/randomAllowed", true);
-  else
+  } else {
     settings.setValue("misc/randomAllowed", false);
+  }
 
-  if (ui->radioButtonCSS->isChecked())
+  if (ui->radioButtonCSS->isChecked()) {
     settings.setValue("output/style", "CSS");
-  else if (ui->radioButtonInline->isChecked())
+  } else if (ui->radioButtonInline->isChecked()) {
     settings.setValue("output/style", "INLINE");
-  else {
+  } else {
     qWarning() << "Unknown case of option selection for CSS";
   }
 
-  if (ui->radioButtonJPG->isChecked())
+  if (ui->radioButtonJPG->isChecked()) {
     settings.setValue("output/imageFormat", "jpg");
-  else if (ui->radioButtonPNG->isChecked())
+  } else if (ui->radioButtonPNG->isChecked()) {
     settings.setValue("output/imageFormat", "png");
-  else if (ui->radioButtonSVG->isChecked())
+  } else if (ui->radioButtonSVG->isChecked()) {
     settings.setValue("output/imageFormat", "svg");
-  else {
+  } else {
     qWarning() << "Unknown case of option selection for image format";
   }
 

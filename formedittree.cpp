@@ -64,8 +64,9 @@ FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEd
 }
 
 FormEditTree::~FormEditTree() {
-  if (model != nullptr)
+  if (model != nullptr) {
     delete model;
+  }
   delete ui;
 }
 
@@ -188,8 +189,9 @@ void FormEditTree::on_deleteTreeButton_clicked() {
 }
 
 void FormEditTree::onTypesChanged() {
-  if (model->updateTree() == false)
+  if (model->updateTree() == false) {
     die();
+  }
   ui->treeView->expandToDepth(1);
 }
 
@@ -240,8 +242,9 @@ void FormEditTree::on_deleteTypeButton_clicked() {
 }
 
 void FormEditTree::on_addNodeButton_clicked() {
-  if (model == nullptr)
+  if (model == nullptr) {
     return;
+  }
   QModelIndexList selection = ui->treeView->selectionModel()->selectedIndexes();
 
   if (!selection.isEmpty()) {
@@ -302,8 +305,9 @@ de ce type avec ce nom !")); goto redo;
 }
 
 void FormEditTree::on_modifyNodeButton_clicked() {
-  if (model == nullptr)
+  if (model == nullptr) {
     return;
+  }
 
   QModelIndexList selection = ui->treeView->selectionModel()->selectedIndexes();
 
@@ -397,8 +401,9 @@ noeud de ce type portant ce nom dans l'arbre !")); goto redo;
 }
 
 void FormEditTree::on_deleteNodeButton_clicked() {
-  if (model == nullptr)
+  if (model == nullptr) {
     return;
+  }
 
   QModelIndexList selection = ui->treeView->selectionModel()->selectedIndexes();
 
@@ -459,8 +464,9 @@ void FormEditTree::on_viewTreeButton_clicked() {
 }
 
 void FormEditTree::on_comboBox_activated(int index) {
-  if (index == -1)
+  if (index == -1) {
     return;
+  }
   if (model != nullptr) {
     QItemSelectionModel *m = ui->listTypesView->selectionModel();
     ui->listTypesView->setModel(nullptr);
@@ -561,8 +567,9 @@ void FormEditTree::on_importTreeButton_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName = fileDialog.getOpenFileName(this, tr("Ouvrir un arbre"), "", tr("Arbres au format XLSX (*.xlsx)"));
 
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   bool ok;
   QString text;
@@ -574,8 +581,9 @@ redo:
                .simplified();
   } while (ok && text.isEmpty());
 
-  if (!ok)
+  if (!ok) {
     return;
+  }
 
   if (PCx_Tree::treeNameExists(text)) {
     QMessageBox::warning(this, tr("Attention"), tr("Il existe déjà un arbre portant ce nom !"));
@@ -611,10 +619,11 @@ void FormEditTree::on_guessHierarchyButton_clicked() {
     int count = model->guessHierarchy();
     if (count > 0) {
       ui->treeView->expandToDepth(1);
-      if (count > 1)
+      if (count > 1) {
         QMessageBox::information(this, tr("Information"), tr("%1 noeuds réorganisés").arg(count));
-      else
+      } else {
         QMessageBox::information(this, tr("Information"), tr("%1 noeud réorganisé").arg(count));
+      }
     } else {
       QMessageBox::information(this, tr("Information"), tr("Aucune nouvelle relation trouvée"));
     }

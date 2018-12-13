@@ -61,8 +61,9 @@ FormManageReportings::FormManageReportings(QWidget *parent) : QWidget(parent), u
 }
 
 FormManageReportings::~FormManageReportings() {
-  if (selectedReporting != nullptr)
+  if (selectedReporting != nullptr) {
     delete selectedReporting;
+  }
   delete ui;
 }
 
@@ -184,8 +185,9 @@ void FormManageReportings::updateListOfReportings() {
 
 void FormManageReportings::updateListOfPotentialAudits() {
   ui->comboListOfAudits->clear();
-  if (selectedReporting == nullptr)
+  if (selectedReporting == nullptr) {
     return;
+  }
 
   QList<QPair<unsigned int, QString>> listOfAuditsWithThisTree =
       PCx_Audit::getListOfAuditsAttachedWithThisTree(selectedReporting->getAttachedTreeId());
@@ -213,16 +215,18 @@ void FormManageReportings::on_pushButtonDeleteReporting_clicked() {
                    .arg(ui->comboListOfReportings->currentText().toHtmlEscaped())) == QMessageBox::No) {
     return;
   }
-  if (PCx_Reporting::deleteReporting(ui->comboListOfReportings->currentData().toUInt()) == false)
+  if (PCx_Reporting::deleteReporting(ui->comboListOfReportings->currentData().toUInt()) == false) {
     die();
+  }
 
   updateListOfReportings();
   emit listOfReportingsChanged();
 }
 
 void FormManageReportings::on_comboListOfReportings_activated(int index) {
-  if (index == -1 || ui->comboListOfReportings->count() == 0)
+  if (index == -1 || ui->comboListOfReportings->count() == 0) {
     return;
+  }
   unsigned int selectedReportingId = ui->comboListOfReportings->currentData().toUInt();
 
   if (selectedReporting != nullptr) {
@@ -243,12 +247,14 @@ void FormManageReportings::on_pushButtonExportLeaves_clicked() {
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName =
         fileDialog.getSaveFileName(this, tr("Enregistrer le squelette de reporting"), "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     QFileInfo fi(fileName);
-    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
       fileName.append(".xlsx");
+    }
     fi = QFileInfo(fileName);
 
     bool res = selectedReporting->exportLeavesSkeleton(fileName);
@@ -267,8 +273,9 @@ void FormManageReportings::on_pushButtonLoadDF_clicked() {
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName =
         fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"), "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     bool res = selectedReporting->importDataFromXLSX(fileName, MODES::DFRFDIRI::DF);
 
@@ -287,8 +294,9 @@ void FormManageReportings::on_pushButtonLoadRF_clicked() {
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName =
         fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"), "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     bool res = selectedReporting->importDataFromXLSX(fileName, MODES::DFRFDIRI::RF);
 
@@ -307,8 +315,9 @@ void FormManageReportings::on_pushButtonLoadDI_clicked() {
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName =
         fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"), "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     bool res = selectedReporting->importDataFromXLSX(fileName, MODES::DFRFDIRI::DI);
 
@@ -327,8 +336,9 @@ void FormManageReportings::on_pushButtonLoadRI_clicked() {
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
     QString fileName =
         fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"), "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     bool res = selectedReporting->importDataFromXLSX(fileName, MODES::DFRFDIRI::RI);
 
@@ -348,12 +358,14 @@ void FormManageReportings::on_pushButtonExportDF_clicked() {
     QString fileName =
         fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DF)),
                                    "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     QFileInfo fi(fileName);
-    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
       fileName.append(".xlsx");
+    }
     fi = QFileInfo(fileName);
 
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::DF, fileName);
@@ -375,12 +387,14 @@ void FormManageReportings::on_pushButtonExportRF_clicked() {
     QString fileName =
         fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RF)),
                                    "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     QFileInfo fi(fileName);
-    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
       fileName.append(".xlsx");
+    }
     fi = QFileInfo(fileName);
 
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::RF, fileName);
@@ -402,12 +416,14 @@ void FormManageReportings::on_pushButtonExportDI_clicked() {
     QString fileName =
         fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::DI)),
                                    "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     QFileInfo fi(fileName);
-    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
       fileName.append(".xlsx");
+    }
     fi = QFileInfo(fileName);
 
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::DI, fileName);
@@ -436,22 +452,26 @@ void FormManageReportings::updateReportingInfos() {
     ui->labelLastRF->setText(dateRF.toString(Qt::DefaultLocaleShortDate));
     ui->labelLastDI->setText(dateDI.toString(Qt::DefaultLocaleShortDate));
     ui->labelLastRI->setText(dateRI.toString(Qt::DefaultLocaleShortDate));
-    if (!dateDF.isValid())
+    if (!dateDF.isValid()) {
       ui->pushButtonDeleteLastDF->setEnabled(false);
-    else
+    } else {
       ui->pushButtonDeleteLastDF->setEnabled(true);
-    if (!dateRF.isValid())
+    }
+    if (!dateRF.isValid()) {
       ui->pushButtonDeleteLastRF->setEnabled(false);
-    else
+    } else {
       ui->pushButtonDeleteLastRF->setEnabled(true);
-    if (!dateDI.isValid())
+    }
+    if (!dateDI.isValid()) {
       ui->pushButtonDeleteLastDI->setEnabled(false);
-    else
+    } else {
       ui->pushButtonDeleteLastDI->setEnabled(true);
-    if (!dateRI.isValid())
+    }
+    if (!dateRI.isValid()) {
       ui->pushButtonDeleteLastRI->setEnabled(false);
-    else
+    } else {
       ui->pushButtonDeleteLastRI->setEnabled(true);
+    }
 
     emit reportingDataUpdated(selectedReporting->getReportingId());
   }
@@ -464,12 +484,14 @@ void FormManageReportings::on_pushButtonExportRI_clicked() {
     QString fileName =
         fileDialog.getSaveFileName(this, tr("Enregistrer les %1").arg(MODES::modeToCompleteString(MODES::DFRFDIRI::RI)),
                                    "", tr("Fichiers XLSX (*.xlsx)"));
-    if (fileName.isEmpty())
+    if (fileName.isEmpty()) {
       return;
+    }
 
     QFileInfo fi(fileName);
-    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+    if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
       fileName.append(".xlsx");
+    }
     fi = QFileInfo(fileName);
 
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::RI, fileName);

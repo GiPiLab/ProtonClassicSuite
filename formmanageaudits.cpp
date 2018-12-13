@@ -71,14 +71,16 @@ FormManageAudits::FormManageAudits(QWidget *parent) : QWidget(parent), ui(new Ui
 }
 
 FormManageAudits::~FormManageAudits() {
-  if (selectedAudit != nullptr)
+  if (selectedAudit != nullptr) {
     delete selectedAudit;
+  }
   delete ui;
 }
 
 void FormManageAudits::updateButtonsVisibility() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   bool finished = selectedAudit->isFinished();
   ui->pushButtonClearDF->setEnabled(!finished);
   ui->pushButtonClearRF->setEnabled(!finished);
@@ -99,22 +101,26 @@ void FormManageAudits::updateRandomButtonVisibility() {
     finished = selectedAudit->isFinished();
   }
 
-  if (!finished)
+  if (!finished) {
     ui->pushButtonRandomDF->setEnabled(randomAllowed);
-  else
+  } else {
     ui->pushButtonRandomDF->setEnabled(false);
-  if (!finished)
+  }
+  if (!finished) {
     ui->pushButtonRandomRF->setEnabled(randomAllowed);
-  else
+  } else {
     ui->pushButtonRandomRF->setEnabled(false);
-  if (!finished)
+  }
+  if (!finished) {
     ui->pushButtonRandomDI->setEnabled(randomAllowed);
-  else
+  } else {
     ui->pushButtonRandomDI->setEnabled(false);
-  if (!finished)
+  }
+  if (!finished) {
     ui->pushButtonRandomRI->setEnabled(randomAllowed);
-  else
+  } else {
     ui->pushButtonRandomRI->setEnabled(false);
+  }
 }
 
 void FormManageAudits::updateListOfAudits() {
@@ -231,8 +237,9 @@ redo:
 }
 
 void FormManageAudits::on_comboListOfAudits_activated(int index) {
-  if (index == -1 || ui->comboListOfAudits->count() == 0)
+  if (index == -1 || ui->comboListOfAudits->count() == 0) {
     return;
+  }
   unsigned int selectedAuditId = ui->comboListOfAudits->currentData().toUInt();
 
   if (selectedAudit != nullptr) {
@@ -270,8 +277,9 @@ void FormManageAudits::on_deleteAuditButton_clicked() {
                    .arg(ui->comboListOfAudits->currentText().toHtmlEscaped())) == QMessageBox::No) {
     return;
   }
-  if (PCx_Audit::deleteAudit(ui->comboListOfAudits->currentData().toUInt()) == false)
+  if (PCx_Audit::deleteAudit(ui->comboListOfAudits->currentData().toUInt()) == false) {
     return;
+  }
 
   if (selectedAudit != nullptr) {
     delete selectedAudit;
@@ -340,8 +348,9 @@ void FormManageAudits::on_statisticsAuditButton_clicked() {
 }
 
 void FormManageAudits::on_pushButtonRandomDF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::DF;
 
   if (question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?")
@@ -358,8 +367,9 @@ void FormManageAudits::on_pushButtonRandomDF_clicked() {
 }
 
 void FormManageAudits::on_pushButtonRandomRF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::RF;
 
   if (question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?")
@@ -376,8 +386,9 @@ void FormManageAudits::on_pushButtonRandomRF_clicked() {
 }
 
 void FormManageAudits::on_pushButtonRandomDI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::DI;
 
   if (question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?")
@@ -394,8 +405,9 @@ void FormManageAudits::on_pushButtonRandomDI_clicked() {
 }
 
 void FormManageAudits::on_pushButtonRandomRI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::RI;
 
   if (question(tr("Remplir les <b>%1</b> de l'audit de données aléatoires ?")
@@ -412,8 +424,9 @@ void FormManageAudits::on_pushButtonRandomRI_clicked() {
 }
 
 void FormManageAudits::on_pushButtonClearDF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::DF;
 
   if (question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped())) ==
@@ -426,8 +439,9 @@ void FormManageAudits::on_pushButtonClearDF_clicked() {
 }
 
 void FormManageAudits::on_pushButtonClearRF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::RF;
 
   if (question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped())) ==
@@ -440,8 +454,9 @@ void FormManageAudits::on_pushButtonClearRF_clicked() {
 }
 
 void FormManageAudits::on_pushButtonClearDI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::DI;
 
   if (question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped())) ==
@@ -454,8 +469,9 @@ void FormManageAudits::on_pushButtonClearDI_clicked() {
 }
 
 void FormManageAudits::on_pushButtonClearRI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::RI;
 
   if (question(tr("Effacer toutes les <b>%1</b> ?").arg(MODES::modeToCompleteString(mode).toHtmlEscaped())) ==
@@ -468,32 +484,36 @@ void FormManageAudits::on_pushButtonClearRI_clicked() {
 }
 
 void FormManageAudits::on_pushButtonLoadDF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   if (importLeaves(MODES::DFRFDIRI::DF)) {
     emit auditDataUpdated(selectedAudit->getAuditId());
   }
 }
 
 void FormManageAudits::on_pushButtonLoadRF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   if (importLeaves(MODES::DFRFDIRI::RF)) {
     emit auditDataUpdated(selectedAudit->getAuditId());
   }
 }
 
 void FormManageAudits::on_pushButtonLoadDI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   if (importLeaves(MODES::DFRFDIRI::DI)) {
     emit auditDataUpdated(selectedAudit->getAuditId());
   }
 }
 
 void FormManageAudits::on_pushButtonLoadRI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   if (importLeaves(MODES::DFRFDIRI::RI)) {
     emit auditDataUpdated(selectedAudit->getAuditId());
   }
@@ -504,8 +524,9 @@ bool FormManageAudits::importLeaves(MODES::DFRFDIRI mode) {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getOpenFileName(this, tr("Charger les données des feuilles"), "", tr("Fichiers XLSX (*.xlsx)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return false;
+  }
 
   bool res = selectedAudit->importDataFromXLSX(fileName, mode);
 
@@ -524,12 +545,14 @@ bool FormManageAudits::exportLeaves(MODES::DFRFDIRI mode) {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer les données des feuilles"), "", tr("Fichiers XLSX (*.xlsx)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return false;
+  }
 
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
     fileName.append(".xlsx");
+  }
   fi = QFileInfo(fileName);
 
   bool res = selectedAudit->exportLeavesDataXLSX(mode, fileName);
@@ -544,43 +567,50 @@ bool FormManageAudits::exportLeaves(MODES::DFRFDIRI mode) {
 }
 
 void FormManageAudits::on_pushButtonExportDF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   exportLeaves(MODES::DFRFDIRI::DF);
 }
 
 void FormManageAudits::on_pushButtonExportRF_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   exportLeaves(MODES::DFRFDIRI::RF);
 }
 
 void FormManageAudits::on_pushButtonExportDI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   exportLeaves(MODES::DFRFDIRI::DI);
 }
 
 void FormManageAudits::on_pushButtonExportRI_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
   exportLeaves(MODES::DFRFDIRI::RI);
 }
 
 void FormManageAudits::on_pushButtonSkel_clicked() {
-  if (selectedAudit == nullptr)
+  if (selectedAudit == nullptr) {
     return;
+  }
 
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer le squelette de reporting"), "", tr("Fichiers XLSX (*.xlsx)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("xlsx", Qt::CaseInsensitive) != 0) {
     fileName.append(".xlsx");
+  }
   fi = QFileInfo(fileName);
 
   bool res = selectedAudit->exportLeavesSkeleton(fileName);

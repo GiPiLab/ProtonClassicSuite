@@ -60,10 +60,12 @@ FormReportingGraphics::FormReportingGraphics(QWidget *parent) : QWidget(parent),
 
 FormReportingGraphics::~FormReportingGraphics() {
   delete ui;
-  if (selectedReporting != nullptr)
+  if (selectedReporting != nullptr) {
     delete selectedReporting;
-  if (graphics != nullptr)
+  }
+  if (graphics != nullptr) {
     delete graphics;
+  }
 }
 
 void FormReportingGraphics::onListOfReportingsChanged() { updateListOfReportings(); }
@@ -90,8 +92,9 @@ void FormReportingGraphics::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else
+  } else {
     setEnabled(true);
+  }
 
   foreach (p, listOfReportings) { ui->comboListOfReportings->insertItem(0, p.second, p.first); }
   ui->comboListOfReportings->setCurrentIndex(0);
@@ -99,8 +102,9 @@ void FormReportingGraphics::updateListOfReportings() {
 }
 
 void FormReportingGraphics::on_comboListOfReportings_activated(int index) {
-  if (index == -1 || ui->comboListOfReportings->count() == 0)
+  if (index == -1 || ui->comboListOfReportings->count() == 0) {
     return;
+  }
   unsigned int selectedReportingId = ui->comboListOfReportings->currentData().toUInt();
 
   if (selectedReporting != nullptr) {
@@ -129,16 +133,19 @@ void FormReportingGraphics::on_treeView_clicked(const QModelIndex &index) {
 }
 
 MODES::DFRFDIRI FormReportingGraphics::getSelectedMode() const {
-  if (ui->radioButtonDF->isChecked())
+  if (ui->radioButtonDF->isChecked()) {
     return MODES::DFRFDIRI::DF;
-  if (ui->radioButtonRF->isChecked())
+  }
+  if (ui->radioButtonRF->isChecked()) {
     return MODES::DFRFDIRI::RF;
-  if (ui->radioButtonDI->isChecked())
+  }
+  if (ui->radioButtonDI->isChecked()) {
     return MODES::DFRFDIRI::DI;
-  if (ui->radioButtonRI->isChecked())
+  }
+  if (ui->radioButtonRI->isChecked()) {
     return MODES::DFRFDIRI::RI;
 
-  else {
+  } else {
     qWarning() << "Invalid selection";
   }
   return MODES::DFRFDIRI::DF;
@@ -146,28 +153,39 @@ MODES::DFRFDIRI FormReportingGraphics::getSelectedMode() const {
 
 QList<PCx_Reporting::OREDPCR> FormReportingGraphics::getSelectedOREDPCR() const {
   QList<PCx_Reporting::OREDPCR> selection;
-  if (ui->checkBoxBP->isChecked())
+  if (ui->checkBoxBP->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::BP);
-  if (ui->checkBoxReports->isChecked())
+  }
+  if (ui->checkBoxReports->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::REPORTS);
-  if (ui->checkBoxOCDM->isChecked())
+  }
+  if (ui->checkBoxOCDM->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::OCDM);
-  if (ui->checkBoxVCDM->isChecked())
+  }
+  if (ui->checkBoxVCDM->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::VCDM);
-  if (ui->checkBoxVInternes->isChecked())
+  }
+  if (ui->checkBoxVInternes->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::VIREMENTSINTERNES);
-  if (ui->checkBoxBudgetVote->isChecked())
+  }
+  if (ui->checkBoxBudgetVote->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::BUDGETVOTE);
-  if (ui->checkBoxRattachesN1->isChecked())
+  }
+  if (ui->checkBoxRattachesN1->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::RATTACHENMOINS1);
-  if (ui->checkBoxOuverts->isChecked())
+  }
+  if (ui->checkBoxOuverts->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::OUVERTS);
-  if (ui->checkBoxRealises->isChecked())
+  }
+  if (ui->checkBoxRealises->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::REALISES);
-  if (ui->checkBoxEngages->isChecked())
+  }
+  if (ui->checkBoxEngages->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::ENGAGES);
-  if (ui->checkBoxDisponibles->isChecked())
+  }
+  if (ui->checkBoxDisponibles->isChecked()) {
     selection.append(PCx_Reporting::OREDPCR::DISPONIBLES);
+  }
   return selection;
 }
 
@@ -179,23 +197,27 @@ void FormReportingGraphics::updatePlot() {
 }
 
 void FormReportingGraphics::on_radioButtonDF_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updatePlot();
+  }
 }
 
 void FormReportingGraphics::on_radioButtonRF_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updatePlot();
+  }
 }
 
 void FormReportingGraphics::on_radioButtonDI_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updatePlot();
+  }
 }
 
 void FormReportingGraphics::on_radioButtonRI_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updatePlot();
+  }
 }
 
 void FormReportingGraphics::on_checkBoxBP_toggled(bool checked) {
@@ -259,11 +281,13 @@ void FormReportingGraphics::on_pushButtonExportPlot_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Images PNG (*.png)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0) {
     fileName.append(".png");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -273,10 +297,11 @@ void FormReportingGraphics::on_pushButtonExportPlot_clicked() {
   }
   file.close();
 
-  if (ui->plot->savePng(fileName, 0, 0, 3.0) == true)
+  if (ui->plot->savePng(fileName, 0, 0, 3.0) == true) {
     QMessageBox::information(this, tr("Information"), tr("Image enregistrée"));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Image non enregistrée !"));
+  }
 }
 
 void FormReportingGraphics::on_pushButtonExpandAll_clicked() { ui->treeView->expandAll(); }

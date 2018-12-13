@@ -73,16 +73,19 @@ double PCx_StringDistance::normalizedLevenshteinDistance(const QString &sa, cons
     tal = ta;
   }
 
-  if (sal == tal)
+  if (sal == tal) {
     return 0.0;
+  }
 
   n = sal.length();
   m = tal.length();
 
-  if (n == 0)
+  if (n == 0) {
     return (1.0);
-  if (m == 0)
+  }
+  if (m == 0) {
     return (1.0);
+  }
 
   int maxSize = qMax(m, n);
 
@@ -95,18 +98,21 @@ double PCx_StringDistance::normalizedLevenshteinDistance(const QString &sa, cons
   ++m;
   ++n;
 
-  for (k = 0; k < n; k++)
+  for (k = 0; k < n; k++) {
     tabDistances[k] = k;
+  }
 
-  for (k = 0; k < m; k++)
+  for (k = 0; k < m; k++) {
     tabDistances[k * n] = k;
+  }
 
   for (i = 1; i < n; i++) {
     for (j = 1; j < m; j++) {
-      if (s[i - 1] == t[j - 1])
+      if (s[i - 1] == t[j - 1]) {
         cost = 0;
-      else
+      } else {
         cost = 1;
+      }
       tabDistances[j * n + i] = minimum(tabDistances[(j - 1) * n + i] + 1, tabDistances[j * n + i - 1] + 1,
                                         tabDistances[(j - 1) * n + i - 1] + cost);
     }
@@ -118,10 +124,12 @@ double PCx_StringDistance::normalizedLevenshteinDistance(const QString &sa, cons
 
 int PCx_StringDistance::minimum(int a, int b, int c) {
   int min = a;
-  if (b < min)
+  if (b < min) {
     min = b;
-  if (c < min)
+  }
+  if (c < min) {
     min = c;
+  }
   return min;
 }
 
@@ -144,17 +152,20 @@ double PCx_StringDistance::jaroWinklerDistance(const QString &str1, const QStrin
   int range = qMax(0, qMax(sl, al) / 2 - 1);
   double dw;
 
-  if (!sl || !al)
+  if (!sl || !al) {
     return 0.0;
+  }
 
   QVarLengthArray<int> sflags(sl);
   QVarLengthArray<int> aflags(al);
 
-  for (i = 0; i < al; i++)
+  for (i = 0; i < al; i++) {
     aflags[i] = 0;
+  }
 
-  for (i = 0; i < sl; i++)
+  for (i = 0; i < sl; i++) {
     sflags[i] = 0;
+  }
 
   /* calculate matching characters */
   for (i = 0; i < al; i++) {
@@ -168,8 +179,9 @@ double PCx_StringDistance::jaroWinklerDistance(const QString &str1, const QStrin
     }
   }
 
-  if (!m)
+  if (!m) {
     return 0.0;
+  }
 
   /* calculate character transpositions */
   l = 0;
@@ -181,8 +193,9 @@ double PCx_StringDistance::jaroWinklerDistance(const QString &str1, const QStrin
           break;
         }
       }
-      if (a[i] != s[j])
+      if (a[i] != s[j]) {
         t++;
+      }
     }
   }
   t /= 2;
@@ -192,11 +205,13 @@ double PCx_StringDistance::jaroWinklerDistance(const QString &str1, const QStrin
 
   /* calculate common string prefix up to 4 chars */
   l = 0;
-  for (i = 0; i < qMin(qMin(sl, al), 4); i++)
-    if (s[i] == a[i])
+  for (i = 0; i < qMin(qMin(sl, al), 4); i++) {
+    if (s[i] == a[i]) {
       l++;
+    }
+  }
 
-      /* Jaro-Winkler distance */
+  /* Jaro-Winkler distance */
 #define SCALING_FACTOR 0.1
 
   dw = dw + (l * SCALING_FACTOR * (1 - dw));

@@ -116,8 +116,9 @@ QString PCx_PrevisionItemCriteria::getCriteriaLongDescription() const {
 }
 
 bool PCx_PrevisionItemCriteria::unserialize(const QString &criteriaString) {
-  if (criteriaString.isEmpty())
+  if (criteriaString.isEmpty()) {
     return true;
+  }
   QStringList items = criteriaString.split(",", QString::SkipEmptyParts);
   if (items.size() != 3) {
     qWarning() << "Invalid criteria string : " << criteriaString;
@@ -323,8 +324,9 @@ qint64 PCx_PrevisionItemCriteria::getReglinOf(unsigned int auditId, MODES::DFRFD
     x.append(static_cast<double>(q.value(0).toUInt()));
     y.append(NUMBERSFORMAT::fixedPointToDouble(q.value(1).toLongLong()));
   }
-  if (x.isEmpty() || y.isEmpty())
+  if (x.isEmpty() || y.isEmpty()) {
     return 0;
+  }
 
   double m_x = 0, m_y = 0, m_dx2 = 0, m_dxdy = 0;
 

@@ -124,8 +124,9 @@ FormAuditPrevisions::~FormAuditPrevisions() {
 void FormAuditPrevisions::onListOfPrevisionsChanged() { updateListOfPrevisions(); }
 
 void FormAuditPrevisions::onSettingsChanged() {
-  if (auditWithTreeModel == nullptr)
+  if (auditWithTreeModel == nullptr) {
     return;
+  }
   if (ui->treeView->currentIndex().isValid()) {
     on_treeView_clicked(ui->treeView->currentIndex());
   } else {
@@ -178,8 +179,9 @@ void FormAuditPrevisions::updatePrevisionItemTableModel() {
     recentPrevisionItem->setNodeId(currentNodeId);
     recentPrevisionItem->setMode(currentMode);
 
-    if (recentPrevisionItemTableModel != nullptr)
+    if (recentPrevisionItemTableModel != nullptr) {
       recentPrevisionItemTableModel->resetModel();
+    }
   } else {
     recentPrevisionItem = new PCx_PrevisionItem(previsionModel, currentMode, currentNodeId,
                                                 auditWithTreeModel->getYears().constLast() + 1);
@@ -211,8 +213,9 @@ void FormAuditPrevisions::updateLabels() {
 }
 
 void FormAuditPrevisions::on_comboListPrevisions_activated(int index) {
-  if (index == -1 || ui->comboListPrevisions->count() == 0)
+  if (index == -1 || ui->comboListPrevisions->count() == 0) {
     return;
+  }
   unsigned int selectedPrevisionId = ui->comboListPrevisions->currentData().toUInt();
   if (!(selectedPrevisionId > 0)) {
     qFatal("Assertion failed");
@@ -342,8 +345,9 @@ void FormAuditPrevisions::on_pushButtonAddCriteriaToSubstract_clicked() {
 
 void FormAuditPrevisions::on_pushButtonDelCriteria_clicked() {
   QItemSelectionModel *selectionModel = ui->tableViewRecentCriteria->selectionModel();
-  if (selectionModel->selectedRows().isEmpty())
+  if (selectionModel->selectedRows().isEmpty()) {
     return;
+  }
   recentPrevisionItem->deleteCriteria(selectionModel->selectedRows());
   recentPrevisionItemTableModel->resetModel();
   updateLabels();
@@ -354,8 +358,9 @@ void FormAuditPrevisions::on_radioButtonDF_toggled(bool checked) {
     currentMode = MODES::DFRFDIRI::DF;
     updatePrevisionItemTableModel();
     updateLabels();
-    if (ui->textBrowser->isVisible())
+    if (ui->textBrowser->isVisible()) {
       ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
   }
 }
 
@@ -364,8 +369,9 @@ void FormAuditPrevisions::on_radioButtonRF_toggled(bool checked) {
     currentMode = MODES::DFRFDIRI::RF;
     updatePrevisionItemTableModel();
     updateLabels();
-    if (ui->textBrowser->isVisible())
+    if (ui->textBrowser->isVisible()) {
       ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
   }
 }
 
@@ -374,8 +380,9 @@ void FormAuditPrevisions::on_radioButtonDI_toggled(bool checked) {
     currentMode = MODES::DFRFDIRI::DI;
     updatePrevisionItemTableModel();
     updateLabels();
-    if (ui->textBrowser->isVisible())
+    if (ui->textBrowser->isVisible()) {
       ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
   }
 }
 
@@ -384,8 +391,9 @@ void FormAuditPrevisions::on_radioButtonRI_toggled(bool checked) {
     currentMode = MODES::DFRFDIRI::RI;
     updatePrevisionItemTableModel();
     updateLabels();
-    if (ui->textBrowser->isVisible())
+    if (ui->textBrowser->isVisible()) {
       ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
   }
 }
 
@@ -407,8 +415,9 @@ void FormAuditPrevisions::on_pushButtonApplyToNode_clicked() {
     currentPrevisionItemTableModel->resetModel();
     emit previsionUpdated(previsionModel->getPrevisionId());
     updateLabels();
-    if (ui->textBrowser->isVisible())
+    if (ui->textBrowser->isVisible()) {
       ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
   }
 }
 
@@ -420,8 +429,9 @@ void FormAuditPrevisions::on_pushButtonApplyToLeaves_clicked() {
     currentPrevisionItemTableModel->resetModel();
     emit previsionUpdated(previsionModel->getPrevisionId());
     updateLabels();
-    if (ui->textBrowser->isVisible())
+    if (ui->textBrowser->isVisible()) {
       ui->textBrowser->setHtml(currentPrevisionItem->getPrevisionItemsOfDescendantsAsHTML());
+    }
   }
 }
 
@@ -452,12 +462,14 @@ void FormAuditPrevisions::on_pushButtonSaveBigReport_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   currentPrevisionItem->savePrevisionItemReport(fileName, true, referenceNode);
 }
 

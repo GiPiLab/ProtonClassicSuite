@@ -57,14 +57,17 @@ FormReportingExplore::FormReportingExplore(QWidget *parent) : QWidget(parent), u
 }
 
 FormReportingExplore::~FormReportingExplore() {
-  if (selectedReporting != nullptr)
+  if (selectedReporting != nullptr) {
     delete selectedReporting;
+  }
 
-  if (report != nullptr)
+  if (report != nullptr) {
     delete report;
+  }
 
-  if (document != nullptr)
+  if (document != nullptr) {
     delete document;
+  }
 
   delete ui;
 }
@@ -83,8 +86,9 @@ void FormReportingExplore::onReportingDataChanged(unsigned int reportingId) {
 }
 
 void FormReportingExplore::onSettingsChanged() {
-  if (selectedReporting == nullptr)
+  if (selectedReporting == nullptr) {
     return;
+  }
   if (ui->treeView->currentIndex().isValid()) {
     on_treeView_clicked(ui->treeView->currentIndex());
   } else {
@@ -104,8 +108,9 @@ void FormReportingExplore::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else
+  } else {
     setEnabled(true);
+  }
 
   foreach (p, listOfReportings) { ui->comboListReportings->insertItem(0, p.second, p.first); }
   ui->comboListReportings->setCurrentIndex(0);
@@ -115,8 +120,9 @@ void FormReportingExplore::updateListOfReportings() {
 QSize FormReportingExplore::sizeHint() const { return {1000, 500}; }
 
 void FormReportingExplore::on_comboListReportings_activated(int index) {
-  if (index == -1 || ui->comboListReportings->count() == 0)
+  if (index == -1 || ui->comboListReportings->count() == 0) {
     return;
+  }
   unsigned int selectedReportingId = ui->comboListReportings->currentData().toUInt();
 
   if (selectedReporting != nullptr) {
@@ -148,30 +154,38 @@ void FormReportingExplore::on_comboListReportings_activated(int index) {
 
 QList<PCx_Report::PCRPRESETS> FormReportingExplore::getPresets() const {
   QList<PCx_Report::PCRPRESETS> presets;
-  if (ui->checkBoxA->isChecked())
+  if (ui->checkBoxA->isChecked()) {
     presets.append(PCx_Report::PCRPRESETS::PCRPRESET_A);
-  if (ui->checkBoxB->isChecked())
+  }
+  if (ui->checkBoxB->isChecked()) {
     presets.append(PCx_Report::PCRPRESETS::PCRPRESET_B);
-  if (ui->checkBoxC->isChecked())
+  }
+  if (ui->checkBoxC->isChecked()) {
     presets.append(PCx_Report::PCRPRESETS::PCRPRESET_C);
-  if (ui->checkBoxD->isChecked())
+  }
+  if (ui->checkBoxD->isChecked()) {
     presets.append(PCx_Report::PCRPRESETS::PCRPRESET_D);
-  if (ui->checkBoxS->isChecked())
+  }
+  if (ui->checkBoxS->isChecked()) {
     presets.append(PCx_Report::PCRPRESETS::PCRPRESET_S);
+  }
   return presets;
 }
 
 MODES::DFRFDIRI FormReportingExplore::getSelectedMode() const {
-  if (ui->radioButtonDF->isChecked())
+  if (ui->radioButtonDF->isChecked()) {
     return MODES::DFRFDIRI::DF;
-  if (ui->radioButtonRF->isChecked())
+  }
+  if (ui->radioButtonRF->isChecked()) {
     return MODES::DFRFDIRI::RF;
-  if (ui->radioButtonDI->isChecked())
+  }
+  if (ui->radioButtonDI->isChecked()) {
     return MODES::DFRFDIRI::DI;
-  if (ui->radioButtonRI->isChecked())
+  }
+  if (ui->radioButtonRI->isChecked()) {
     return MODES::DFRFDIRI::RI;
 
-  else {
+  } else {
     qWarning() << "Invalid selection";
   }
   return MODES::DFRFDIRI::DF;
@@ -227,23 +241,27 @@ void FormReportingExplore::on_checkBoxS_toggled(bool checked) {
 }
 
 void FormReportingExplore::on_radioButtonDF_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updateTextEdit();
+  }
 }
 
 void FormReportingExplore::on_radioButtonRF_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updateTextEdit();
+  }
 }
 
 void FormReportingExplore::on_radioButtonDI_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updateTextEdit();
+  }
 }
 
 void FormReportingExplore::on_radioButtonRI_toggled(bool checked) {
-  if (checked)
+  if (checked) {
     updateTextEdit();
+  }
 }
 
 void FormReportingExplore::on_pushButtonExport_clicked() {
@@ -251,11 +269,13 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -323,13 +343,14 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
   stream << output;
   stream.flush();
   file.close();
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
                              tr("Le document <b>%1</b> a bien été enregistré. Les images sont "
                                 "stockées dans le dossier <b>%2</b>")
                                  .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
+  }
 }
 
 void FormReportingExplore::on_pushButtonCollapseAll_clicked() {

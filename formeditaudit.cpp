@@ -124,8 +124,9 @@ void FormEditAudit::updateListOfAudits() {
 QSize FormEditAudit::sizeHint() const { return {900, 400}; }
 
 void FormEditAudit::on_comboListAudits_activated(int index) {
-  if (index == -1 || ui->comboListAudits->count() == 0)
+  if (index == -1 || ui->comboListAudits->count() == 0) {
     return;
+  }
   unsigned int selectedAuditId = ui->comboListAudits->currentData().toUInt();
   // qDebug()<<"Selected audit ID = "<<selectedAuditId;
   if (auditModel != nullptr) {
@@ -225,8 +226,9 @@ void FormEditAudit::on_statsButton_clicked() {
 }
 
 void FormEditAudit::onAuditDataUpdated(unsigned int auditId) {
-  if (auditModel == nullptr)
+  if (auditModel == nullptr) {
     return;
+  }
   if (auditModel->getAuditId() == auditId) {
     if (ui->treeView->currentIndex().isValid()) {
       on_treeView_clicked(ui->treeView->currentIndex());
@@ -243,14 +245,15 @@ void FormEditAudit::on_pushButtonExportHTML_clicked() {
 
   MODES::DFRFDIRI mode = MODES::DFRFDIRI::DF;
 
-  if (ui->tabWidget->currentWidget() == ui->tabDF)
+  if (ui->tabWidget->currentWidget() == ui->tabDF) {
     mode = MODES::DFRFDIRI::DF;
-  else if (ui->tabWidget->currentWidget() == ui->tabRF)
+  } else if (ui->tabWidget->currentWidget() == ui->tabRF) {
     mode = MODES::DFRFDIRI::RF;
-  else if (ui->tabWidget->currentWidget() == ui->tabDI)
+  } else if (ui->tabWidget->currentWidget() == ui->tabDI) {
     mode = MODES::DFRFDIRI::DI;
-  else if (ui->tabWidget->currentWidget() == ui->tabRI)
+  } else if (ui->tabWidget->currentWidget() == ui->tabRI) {
     mode = MODES::DFRFDIRI::RI;
+  }
 
   PCx_Tables tables(auditModel);
 
@@ -261,11 +264,13 @@ void FormEditAudit::on_pushButtonExportHTML_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -289,9 +294,10 @@ void FormEditAudit::on_pushButtonExportHTML_clicked() {
   stream << out;
   stream.flush();
   file.close();
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
                              tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
+  }
 }

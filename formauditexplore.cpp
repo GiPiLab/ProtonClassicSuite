@@ -77,8 +77,9 @@ FormAuditExplore::~FormAuditExplore() {
 void FormAuditExplore::onListOfAuditsChanged() { updateListOfAudits(); }
 
 void FormAuditExplore::onSettingsChanged() {
-  if (model == nullptr)
+  if (model == nullptr) {
     return;
+  }
   if (ui->treeView->currentIndex().isValid()) {
     on_treeView_clicked(ui->treeView->currentIndex());
   } else {
@@ -147,22 +148,22 @@ void FormAuditExplore::updateTextBrowser() {
 void FormAuditExplore::getSelections() {
   selectedMode = MODES::DFRFDIRI::GLOBAL;
 
-  if (ui->radioButtonDF->isChecked())
+  if (ui->radioButtonDF->isChecked()) {
     selectedMode = MODES::DFRFDIRI::DF;
 
-  else if (ui->radioButtonRF->isChecked())
+  } else if (ui->radioButtonRF->isChecked()) {
     selectedMode = MODES::DFRFDIRI::RF;
 
-  else if (ui->radioButtonDI->isChecked())
+  } else if (ui->radioButtonDI->isChecked()) {
     selectedMode = MODES::DFRFDIRI::DI;
 
-  else if (ui->radioButtonRI->isChecked())
+  } else if (ui->radioButtonRI->isChecked()) {
     selectedMode = MODES::DFRFDIRI::RI;
 
-  else if (ui->radioButtonGlobal->isChecked())
+  } else if (ui->radioButtonGlobal->isChecked()) {
     selectedMode = MODES::DFRFDIRI::GLOBAL;
 
-  else {
+  } else {
     qCritical() << "Unsupported case of radio button checking";
   }
 
@@ -170,62 +171,79 @@ void FormAuditExplore::getSelections() {
   selectedTabs.clear();
 
   if (selectedMode != MODES::DFRFDIRI::GLOBAL) {
-    if (ui->checkBoxPoidsRelatif->isChecked())
+    if (ui->checkBoxPoidsRelatif->isChecked()) {
       selectedTabs.append(PCx_Tables::PCAPRESETS::PCAOVERVIEW);
+    }
 
-    if (ui->checkBoxEvolution->isChecked())
+    if (ui->checkBoxEvolution->isChecked()) {
       selectedTabs.append(PCx_Tables::PCAPRESETS::PCAEVOLUTION);
+    }
 
-    if (ui->checkBoxEvolutionCumul->isChecked())
+    if (ui->checkBoxEvolutionCumul->isChecked()) {
       selectedTabs.append(PCx_Tables::PCAPRESETS::PCAEVOLUTIONCUMUL);
+    }
 
-    if (ui->checkBoxBase100->isChecked())
+    if (ui->checkBoxBase100->isChecked()) {
       selectedTabs.append(PCx_Tables::PCAPRESETS::PCABASE100);
+    }
 
-    if (ui->checkBoxJoursAct->isChecked())
+    if (ui->checkBoxJoursAct->isChecked()) {
       selectedTabs.append(PCx_Tables::PCAPRESETS::PCADAYOFWORK);
+    }
 
-    if (ui->checkBoxRawHistoryData->isChecked())
+    if (ui->checkBoxRawHistoryData->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAHISTORY);
+    }
 
-    if (ui->checkBoxOuvert->isChecked())
+    if (ui->checkBoxOuvert->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG1);
+    }
 
-    if (ui->checkBoxOuvertCumul->isChecked())
+    if (ui->checkBoxOuvertCumul->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG2);
+    }
 
-    if (ui->checkBoxRealise->isChecked())
+    if (ui->checkBoxRealise->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG3);
+    }
 
-    if (ui->checkBoxRealiseCumul->isChecked())
+    if (ui->checkBoxRealiseCumul->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG4);
+    }
 
-    if (ui->checkBoxEngage->isChecked())
+    if (ui->checkBoxEngage->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG5);
+    }
 
-    if (ui->checkBoxEngageCumul->isChecked())
+    if (ui->checkBoxEngageCumul->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG6);
+    }
 
-    if (ui->checkBoxDisponible->isChecked())
+    if (ui->checkBoxDisponible->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG7);
+    }
 
-    if (ui->checkBoxDisponibleCumul->isChecked())
+    if (ui->checkBoxDisponibleCumul->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG8);
+    }
 
   }
 
   else {
-    if (ui->checkBoxResults->isChecked())
+    if (ui->checkBoxResults->isChecked()) {
       selectedTabs.append(PCx_Tables::PCAPRESETS::PCARESULTS);
+    }
 
-    if (ui->checkBoxRecapGraph->isChecked())
+    if (ui->checkBoxRecapGraph->isChecked()) {
       selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG9);
+    }
   }
 }
 
 void FormAuditExplore::on_comboListAudits_activated(int index) {
-  if (index == -1 || ui->comboListAudits->count() == 0)
+  if (index == -1 || ui->comboListAudits->count() == 0) {
     return;
+  }
   unsigned int selectedAuditId = ui->comboListAudits->currentData().toUInt();
   if (!(selectedAuditId > 0)) {
     qFatal("Assertion failed");
@@ -307,12 +325,14 @@ void FormAuditExplore::on_saveButton_clicked() {
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
 
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -390,13 +410,14 @@ void FormAuditExplore::on_saveButton_clicked() {
   stream.flush();
   file.close();
   progress.setValue(maximumProgressValue);
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
                              tr("Le document <b>%1</b> a bien été enregistré. Les images sont "
                                 "stockées dans le dossier <b>%2</b>")
                                  .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
+  }
 }
 
 void FormAuditExplore::on_checkBoxResults_toggled(bool checked) {

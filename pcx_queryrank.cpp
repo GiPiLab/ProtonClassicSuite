@@ -95,8 +95,9 @@ QString PCx_QueryRank::exec(QXlsx::Document *xlsDoc) const {
   QString oredString = PCx_Audit::OREDtoTableString(ored);
   QString order = "asc";
 
-  if (grSm == GREATERSMALLER::GREATER)
+  if (grSm == GREATERSMALLER::GREATER) {
     order = "desc";
+  }
 
   if (typeId != ALLTYPES) {
     q.prepare(QString("select id_node,annee,%1 from audit_%2_%3 as a, arbre_%4 "
@@ -204,8 +205,9 @@ bool PCx_QueryRank::load(unsigned int queryId) {
 }
 
 bool PCx_QueryRank::canSave(const QString &name) const {
-  if (name.isEmpty())
+  if (name.isEmpty()) {
     return false;
+  }
 
   QSqlQuery q;
   q.prepare(QString("select * from audit_queries_%1 where name=:name and "
@@ -215,18 +217,20 @@ bool PCx_QueryRank::canSave(const QString &name) const {
   q.bindValue(":qmode", static_cast<int>(PCx_Query::QUERIESTYPES::RANK));
   q.exec();
 
-  if (q.next())
+  if (q.next()) {
     return false;
+  }
 
   return true;
 }
 
 QString PCx_QueryRank::getDescription() const {
   QString out;
-  if (typeId == PCx_Query::ALLTYPES)
+  if (typeId == PCx_Query::ALLTYPES) {
     out = QObject::tr("Tous les noeuds");
-  else
+  } else {
     out = QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
+  }
 
   out.append(QObject::tr(" dont les %1 des %2 sont parmi les [%3] %4 entre %5 et %6")
                  .arg(PCx_Audit::OREDtoCompleteString(ored, true).toHtmlEscaped(),

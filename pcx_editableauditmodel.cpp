@@ -213,14 +213,16 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(MODES::DFRFDIRI mode) cons
 
 bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, int year,
                                            QMap<PCx_Audit::ORED, double> vals, bool fastMode) {
-  if (PCx_Audit::setLeafValues(leafId, mode, year, vals, fastMode) == false)
+  if (PCx_Audit::setLeafValues(leafId, mode, year, vals, fastMode) == false) {
     return false;
+  }
 
   // If we are in fast mode, do not refresh the table model after each iteration
   if (!fastMode) {
     QSqlTableModel *tblModel = getTableModel(mode);
-    if (tblModel != nullptr)
+    if (tblModel != nullptr) {
       tblModel->select();
+    }
   }
   return true;
 }
@@ -228,6 +230,7 @@ bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, MODES::DFRFDIRI 
 void PCx_EditableAuditModel::clearAllData(MODES::DFRFDIRI mode) {
   PCx_Audit::clearAllData(mode);
   QSqlTableModel *tblModel = getTableModel(mode);
-  if (tblModel != nullptr)
+  if (tblModel != nullptr) {
     tblModel->select();
+  }
 }

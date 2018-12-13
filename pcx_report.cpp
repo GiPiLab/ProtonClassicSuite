@@ -295,8 +295,9 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
                         .arg(graphicsWidth)
                         .arg(graphicsHeight)
                         .arg(imageName));
-      if (progress != nullptr)
+      if (progress != nullptr) {
         progress->setValue(++progressValue);
+      }
     }
   }
   output.append("\n</div>\n");
@@ -316,10 +317,10 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
   QString encodedRelativeImagePath = QUrl::toPercentEncoding(relativeImagePath);
 
-  if (document != nullptr)
+  if (document != nullptr) {
     inlineImageMode = true;
 
-  else if (absoluteImagePath.isEmpty() || encodedRelativeImagePath.isEmpty()) {
+  } else if (absoluteImagePath.isEmpty() || encodedRelativeImagePath.isEmpty()) {
     qWarning() << "Please pass an absolute and relative path to store images";
     die();
   }
@@ -350,8 +351,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     listOfPresets.removeAll(PCRPRESETS::PCRPRESET_S);
   }
 
-  if (listOfPresets.isEmpty())
+  if (listOfPresets.isEmpty()) {
     return output;
+  }
 
   QString modeName = MODES::modeToCompleteString(mode);
 
@@ -392,8 +394,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                           .arg(graphicsWidth)
                           .arg(graphicsHeight)
                           .arg(imageName));
-        if (progress != nullptr)
+        if (progress != nullptr) {
           progress->setValue(++progressValue);
+        }
       }
     }
   }
@@ -431,8 +434,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                           .arg(graphicsWidth)
                           .arg(graphicsHeight)
                           .arg(imageName));
-        if (progress != nullptr)
+        if (progress != nullptr) {
           progress->setValue(++progressValue);
+        }
       }
     }
   }
@@ -470,8 +474,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                           .arg(graphicsWidth)
                           .arg(graphicsHeight)
                           .arg(imageName));
-        if (progress != nullptr)
+        if (progress != nullptr) {
           progress->setValue(++progressValue);
+        }
       }
     }
   }
@@ -509,8 +514,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                           .arg(graphicsWidth)
                           .arg(graphicsHeight)
                           .arg(imageName));
-        if (progress != nullptr)
+        if (progress != nullptr) {
           progress->setValue(++progressValue);
+        }
       }
     }
   }
@@ -560,9 +566,9 @@ bool PCx_Report::saveImageToDisk(QCustomPlot *plot, const QString &imageAbsolute
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const {
   QString output = "<ul>\n";
   PCx_Tree *tree = nullptr;
-  if (auditModel != nullptr)
+  if (auditModel != nullptr) {
     tree = auditModel->getAttachedTree();
-  else if (reportingModel != nullptr) {
+  } else if (reportingModel != nullptr) {
     tree = reportingModel->getAttachedTree();
   }
 

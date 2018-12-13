@@ -89,8 +89,9 @@ void DialogDuplicateAudit::on_pushButton_clicked() {
   // DUPLICATE AUDIT
 
   QList<int> years;
-  for (int i = year1; i <= year2; i++)
+  for (int i = year1; i <= year2; i++) {
     years.append(i);
+  }
 
   if (question(tr("Voulez-vous vraiment dupliquer cet audit ? L'opération peut "
                   "nécessiter du temps et ne peut être interrompue.")) == QMessageBox::Yes) {

@@ -124,8 +124,9 @@ unsigned int PCx_QueryVariation::save(const QString &name) const {
 }
 
 bool PCx_QueryVariation::canSave(const QString &name) const {
-  if (name.isEmpty())
+  if (name.isEmpty()) {
     return false;
+  }
 
   QSqlQuery q;
   q.prepare(QString("select * from audit_queries_%1 where name=:name and "
@@ -135,18 +136,20 @@ bool PCx_QueryVariation::canSave(const QString &name) const {
   q.bindValue(":qmode", static_cast<int>(PCx_Query::QUERIESTYPES::VARIATION));
   q.exec();
 
-  if (q.next())
+  if (q.next()) {
     return false;
+  }
 
   return true;
 }
 
 QString PCx_QueryVariation::getDescription() const {
   QString out;
-  if (typeId == PCx_Query::ALLTYPES)
+  if (typeId == PCx_Query::ALLTYPES) {
     out = QObject::tr("Tous les noeuds");
-  else
+  } else {
     out = QObject::tr("Noeuds du type [%1]").arg(model->getAttachedTree()->idTypeToName(typeId).toHtmlEscaped());
+  }
 
   out.append(QObject::tr(" dont les %1 des %2 ont connu une %3 %4 %5%6 entre %7 et %8")
                  .arg(PCx_Audit::OREDtoCompleteString(ored, true).toHtmlEscaped(),
@@ -200,14 +203,15 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const {
   while (q.next()) {
     unsigned int node = q.value("id_node").toUInt();
 
-    if (typeId != ALLTYPES && !nodesOfThisType.contains(node))
+    if (typeId != ALLTYPES && !nodesOfThisType.contains(node)) {
       continue;
+    }
 
     if (q.value("annee").toInt() == year1) {
       valuesForYear1.insert(node, q.value(oredString).toLongLong());
-    } else if (q.value("annee").toInt() == year2)
+    } else if (q.value("annee").toInt() == year2) {
       valuesForYear2.insert(node, q.value(oredString).toLongLong());
-    else {
+    } else {
       Q_UNREACHABLE();
       die();
     }
@@ -248,11 +252,13 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const {
     qint64 nodeVariation = j.value();
 
     if (incDec == INCREASEDECREASE::INCREASE) {
-      if (nodeVariation < 0)
+      if (nodeVariation < 0) {
         continue;
+      }
     } else if (incDec == INCREASEDECREASE::DECREASE) {
-      if (nodeVariation > 0)
+      if (nodeVariation > 0) {
         continue;
+      }
       nodeVariation = qAbs(nodeVariation);
     }
 
@@ -260,41 +266,48 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const {
 
     if (percentOrPoints == PERCENTORPOINTS::PERCENT) {
       // Only compare with two decimals
-      if (FIXEDPOINTCOEFF != 100)
+      if (FIXEDPOINTCOEFF != 100) {
         trueVal /= (FIXEDPOINTCOEFF / 100);
+      }
     }
 
     //        qDebug()<<"Comparing "<<nodeVariation<<" with "<<trueVal;
 
     switch (trueOp) {
     case OPERATORS::LOWERTHAN:
-      if (nodeVariation < trueVal)
+      if (nodeVariation < trueVal) {
         matchingNodes.insert(j.key(), j.value());
+      }
       break;
 
     case OPERATORS::GREATERTHAN:
-      if (nodeVariation > trueVal)
+      if (nodeVariation > trueVal) {
         matchingNodes.insert(j.key(), j.value());
+      }
       break;
 
     case OPERATORS::LOWEROREQUAL:
-      if (nodeVariation <= trueVal)
+      if (nodeVariation <= trueVal) {
         matchingNodes.insert(j.key(), j.value());
+      }
       break;
 
     case OPERATORS::GREATEROREQUAL:
-      if (nodeVariation >= trueVal)
+      if (nodeVariation >= trueVal) {
         matchingNodes.insert(j.key(), j.value());
+      }
       break;
 
     case OPERATORS::EQUAL:
-      if (nodeVariation == trueVal)
+      if (nodeVariation == trueVal) {
         matchingNodes.insert(j.key(), j.value());
+      }
       break;
 
     case OPERATORS::NOTEQUAL:
-      if (nodeVariation != trueVal)
+      if (nodeVariation != trueVal) {
         matchingNodes.insert(j.key(), j.value());
+      }
       break;
     }
   }
@@ -332,12 +345,14 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const {
     unsigned int node = matchIter.key();
     qint64 val = matchIter.value();
 
-    if (percentOrPoints == PERCENTORPOINTS::PERCENT)
+    if (percentOrPoints == PERCENTORPOINTS::PERCENT) {
       // Add the last decimal to fit FIXEDPOINTCOEFF
       val = val * 10;
+    }
 
-    if (incDec != INCREASEDECREASE::VARIATION)
+    if (incDec != INCREASEDECREASE::VARIATION) {
       val = qAbs(val);
+    }
     output.append(QString("<tr><td>%1</td><td align='right'>%2</td><td "
                           "align='right'>%3</td><td align='right'>%4 %5</td></tr>")
                       .arg(model->getAttachedTree()->getNodeName(node).toHtmlEscaped(),

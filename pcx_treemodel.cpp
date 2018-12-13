@@ -82,7 +82,7 @@ bool PCx_TreeModel::updateTree() {
   return res;
 }
 
-// TODO : DRAG&DROP BETWEEN TREES
+// TODO(unknown): DRAG&DROP BETWEEN TREES
 bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column,
                                  const QModelIndex &parent) {
   if (!parent.isValid()) {
@@ -100,10 +100,11 @@ bool PCx_TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
   QSqlDatabase::database().transaction();
   for (int i = 0; i < tmpModel.rowCount(); i++) {
-    // TODO : check for duplicates nodes under the same pid
+    // TODO(unknown): check for duplicates nodes under the same pid
     unsigned int dragId = tmpModel.item(i)->data(PCx_TreeModel::NodeIdUserRole).toUInt();
-    if (dragId != 1)
+    if (dragId != 1) {
       updateNodePid(dragId, dropId);
+    }
   }
   QSqlDatabase::database().commit();
 
@@ -143,8 +144,9 @@ bool PCx_TreeModel::updateNode(const QModelIndex &nodeIndex, const QString &newN
 
   bool res = PCx_Tree::updateNode(nodeId, newName, newType);
 
-  if (res == false)
+  if (res == false) {
     return false;
+  }
 
   QStandardItem *item = this->itemFromIndex(nodeIndex);
   // item->setText(QString("%1 %2").arg(idTypeToName(newType)).arg(newName));

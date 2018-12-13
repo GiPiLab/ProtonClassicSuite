@@ -182,8 +182,9 @@ void FormAuditReports::updateListOfAudits() {
 }
 
 void FormAuditReports::on_comboListAudits_activated(int index) {
-  if (index == -1 || ui->comboListAudits->count() == 0)
+  if (index == -1 || ui->comboListAudits->count() == 0) {
     return;
+  }
   unsigned int selectedAuditId = ui->comboListAudits->currentData().toUInt();
   if (!(selectedAuditId > 0)) {
     qFatal("Assertion failed");
@@ -217,7 +218,7 @@ void FormAuditReports::on_comboListAudits_activated(int index) {
 }
 
 void FormAuditReports::on_saveButton_clicked() {
-  // TODO : Order tables and graphics
+  // TODO(unknown): Order tables and graphics
   QItemSelectionModel *sel = ui->treeView->selectionModel();
   QModelIndexList selIndexes = sel->selectedIndexes();
 
@@ -233,11 +234,11 @@ void FormAuditReports::on_saveButton_clicked() {
 
   // qDebug()<<"Selected nodes : "<<selectedNodes;
   QList<unsigned int> sortedSelectedNodes;
-  if (ui->radioButtonBFS->isChecked())
+  if (ui->radioButtonBFS->isChecked()) {
     sortedSelectedNodes = model->getAttachedTree()->sortNodesBFS(selectedNodes);
-  else if (ui->radioButtonDFS->isChecked())
+  } else if (ui->radioButtonDFS->isChecked()) {
     sortedSelectedNodes = model->getAttachedTree()->sortNodesDFS(selectedNodes);
-  else {
+  } else {
     QMessageBox::warning(this, tr("Attention"),
                          tr("Choisissez l'ordre d'affichage des noeuds "
                             "sélectionnés dans le rapport !"));
@@ -298,14 +299,18 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   QString output = model->generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
   QList<MODES::DFRFDIRI> listModes;
-  if (ui->checkBoxDF->isChecked())
+  if (ui->checkBoxDF->isChecked()) {
     listModes.append(MODES::DFRFDIRI::DF);
-  if (ui->checkBoxRF->isChecked())
+  }
+  if (ui->checkBoxRF->isChecked()) {
     listModes.append(MODES::DFRFDIRI::RF);
-  if (ui->checkBoxDI->isChecked())
+  }
+  if (ui->checkBoxDI->isChecked()) {
     listModes.append(MODES::DFRFDIRI::DI);
-  if (ui->checkBoxRI->isChecked())
+  }
+  if (ui->checkBoxRI->isChecked()) {
     listModes.append(MODES::DFRFDIRI::RI);
+  }
 
   if (listModes.isEmpty() && (!selectedGraphics.isEmpty() || !selectedTables.isEmpty())) {
     QMessageBox::warning(this, tr("Attention"),
@@ -318,11 +323,13 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
       fileDialog.getSaveFileName(this, tr("Enregistrer le rapport en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty())
+  if (fileName.isEmpty()) {
     return;
+  }
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0)
+  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
     fileName.append(".html");
+  }
   fi = QFileInfo(fileName);
 
   QFile file(fileName);
@@ -386,13 +393,14 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
       output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(), selectedTables,
                                                            selectedGraphics, selectedNode, mode, referenceNode, nullptr,
                                                            absoluteImagePath, relativeImagePath, nullptr));
-      if (progress.wasCanceled())
+      if (progress.wasCanceled()) {
         goto cleanup;
+      }
       output.append(QStringLiteral("\n<br><br><br>"));
     }
-    if (!progress.wasCanceled())
+    if (!progress.wasCanceled()) {
       progress.setValue(++i);
-    else {
+    } else {
     cleanup:
       QDir dir(absoluteImagePath);
       dir.removeRecursively();
@@ -414,9 +422,9 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
     output.replace(" -qt-block-indent:0;", "");
   }
 
-  if (!progress.wasCanceled())
+  if (!progress.wasCanceled()) {
     progress.setValue(maximumProgressValue - 1);
-  else {
+  } else {
     QDir dir(absoluteImagePath);
     dir.removeRecursively();
     return;
@@ -438,13 +446,14 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   file.close();
 
   progress.setValue(maximumProgressValue);
-  if (stream.status() == QTextStream::Ok)
+  if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
                              tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont "
                                 "stockées dans le dossier <b>%2</b>")
                                  .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
-  else
+  } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le rapport n'a pas pu être enregistré !"));
+  }
 }
 
 // WARNING : Preselections are done with fixed indexing, refers to populateLists

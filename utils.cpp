@@ -114,8 +114,9 @@ void initializeNewDb() {
 
 bool loadDb(const QString &databaseName) {
   QSqlDatabase db = QSqlDatabase::database();
-  if (!databaseName.isNull())
+  if (!databaseName.isNull()) {
     db.setDatabaseName(databaseName);
+  }
 
   if (!db.open()) {
     qCritical() << db.lastError();
@@ -149,9 +150,10 @@ QString qTableViewToHtml(QTableView *tableView) {
 
   out.append("<thead><tr>");
   for (int column = 0; column < columnCount; column++) {
-    if (!tableView->isColumnHidden(column))
+    if (!tableView->isColumnHidden(column)) {
       out.append(QString("<th valign='middle'>%1</th>")
                      .arg(tableView->model()->headerData(column, Qt::Horizontal).toString().toHtmlEscaped()));
+    }
   }
   out.append("</tr></thead>\n");
 
@@ -182,10 +184,11 @@ QString qTableViewToHtml(QTableView *tableView) {
         if (static_cast<QMetaType::Type>(data.type()) == QMetaType::QDate) {
           dataString = data.toDate().toString(Qt::DefaultLocaleShortDate);
         } else {
-          if (data.toString().isEmpty())
+          if (data.toString().isEmpty()) {
             dataString = "&nbsp;";
-          else
+          } else {
             dataString = data.toString();
+          }
         }
         out.append(dataString.toHtmlEscaped() + "</td>");
       }
@@ -345,17 +348,19 @@ QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits) {
   }
 
   // Forced decimals mode
-  if (decimals >= 0)
+  if (decimals >= 0) {
     out.prepend(locale.toString(fixedPointToDouble(num), 'f', decimals));
-  else
+  } else {
     out.prepend(locale.toString(fixedPointToDouble(num), 'f', currentNumDecimals));
+  }
   return out;
 }
 
 QString formatDouble(double num, int decimals, bool forcedUnits) {
   // Convention
-  if (qIsNaN(num))
+  if (qIsNaN(num)) {
     return "DIV0";
+  }
 
   QLocale locale;
   QString out;
@@ -374,10 +379,11 @@ QString formatDouble(double num, int decimals, bool forcedUnits) {
     }
   }
   // Forced decimals mode
-  if (decimals >= 0)
+  if (decimals >= 0) {
     out.prepend(locale.toString(num, 'f', decimals));
-  else
+  } else {
     out.prepend(locale.toString(num, 'f', currentNumDecimals));
+  }
 
   return out;
 }

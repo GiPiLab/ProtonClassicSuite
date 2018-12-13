@@ -80,8 +80,9 @@ int PCx_Prevision::toPrevisionalExtendedAudit(const QString &newAuditName) {
   years.append(lastYear);
 
   int res = attachedAudit->duplicateAudit(newAuditName, years, true, true, true, true);
-  if (res < 0)
+  if (res < 0) {
     return res;
+  }
 
   PCx_Audit dupAudit(static_cast<unsigned int>(res));
 
@@ -114,8 +115,9 @@ bool PCx_Prevision::isPrevisionEmpty() const {
     qCritical() << q.lastError();
     die();
   }
-  if (q.next() && q.value(0).toInt() > 0)
+  if (q.next() && q.value(0).toInt() > 0) {
     return false;
+  }
 
   q.exec(QString("select count(*) from prevision_RF_%1 where "
                  "prevision_operators_to_add is not null or "
@@ -125,8 +127,9 @@ bool PCx_Prevision::isPrevisionEmpty() const {
     qCritical() << q.lastError();
     die();
   }
-  if (q.next() && q.value(0).toInt() > 0)
+  if (q.next() && q.value(0).toInt() > 0) {
     return false;
+  }
 
   q.exec(QString("select count(*) from prevision_DI_%1 where "
                  "prevision_operators_to_add is not null or "
@@ -136,8 +139,9 @@ bool PCx_Prevision::isPrevisionEmpty() const {
     qCritical() << q.lastError();
     die();
   }
-  if (q.next() && q.value(0).toInt() > 0)
+  if (q.next() && q.value(0).toInt() > 0) {
     return false;
+  }
 
   q.exec(QString("select count(*) from prevision_RI_%1 where "
                  "prevision_operators_to_add is not null or "
@@ -147,8 +151,9 @@ bool PCx_Prevision::isPrevisionEmpty() const {
     qCritical() << q.lastError();
     die();
   }
-  if (q.next() && q.value(0).toInt() > 0)
+  if (q.next() && q.value(0).toInt() > 0) {
     return false;
+  }
 
   return true;
 }
@@ -199,8 +204,9 @@ unsigned int PCx_Prevision::duplicatePrevision(const QString &newName) const {
 
 PCx_Prevision::~PCx_Prevision() {
   attachedTree = nullptr;
-  if (attachedAudit != nullptr)
+  if (attachedAudit != nullptr) {
     delete attachedAudit;
+  }
 }
 
 bool PCx_Prevision::previsionNameExists(const QString &previsionName) {
@@ -216,8 +222,9 @@ bool PCx_Prevision::previsionNameExists(const QString &previsionName) {
     die();
   }
 
-  if (q.value(0).toLongLong() > 0)
+  if (q.value(0).toLongLong() > 0) {
     return true;
+  }
   return false;
 }
 

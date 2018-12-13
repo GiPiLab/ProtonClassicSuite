@@ -81,20 +81,23 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     break;
   case QtWarningMsg:
     message.prepend("[W]");
-    if (noMessageBox == false)
+    if (noMessageBox == false) {
       QMessageBox::warning(nullptr, "Attention", message);
+    }
     std::cerr << qPrintable(message);
     break;
   case QtCriticalMsg:
     message.prepend("[C]");
-    if (noMessageBox == false)
+    if (noMessageBox == false) {
       QMessageBox::critical(nullptr, "Erreur critique", message);
+    }
     std::cerr << qPrintable(message);
     break;
   case QtFatalMsg:
     message.prepend("[F]");
-    if (noMessageBox == false)
+    if (noMessageBox == false) {
       QMessageBox::critical(nullptr, "Erreur fatale", message);
+    }
     std::cerr << qPrintable(message);
     die();
   }

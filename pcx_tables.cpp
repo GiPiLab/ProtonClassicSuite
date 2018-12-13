@@ -627,20 +627,25 @@ QString PCx_Tables::getPCAT5(unsigned int node, MODES::DFRFDIRI mode, unsigned i
       diffRootNodeDisponibles = disponiblesRoot[annee] - disponibles;
       diffRootNodeNC = diffRootNodeEngages + diffRootNodeDisponibles;
 
-      if (diffFirstYearRootNodeOuverts * diffRootNodeOuverts != 0)
+      if (diffFirstYearRootNodeOuverts * diffRootNodeOuverts != 0) {
         percentOuverts = 100.0 / diffFirstYearRootNodeOuverts * diffRootNodeOuverts;
+      }
 
-      if (diffFirstYearRootNodeRealises * diffRootNodeRealises != 0)
+      if (diffFirstYearRootNodeRealises * diffRootNodeRealises != 0) {
         percentRealises = 100.0 / diffFirstYearRootNodeRealises * diffRootNodeRealises;
+      }
 
-      if (diffFirstYearRootNodeEngages * diffRootNodeEngages != 0)
+      if (diffFirstYearRootNodeEngages * diffRootNodeEngages != 0) {
         percentEngages = 100.0 / diffFirstYearRootNodeEngages * diffRootNodeEngages;
+      }
 
-      if (diffFirstYearRootNodeDisponibles * diffRootNodeDisponibles != 0)
+      if (diffFirstYearRootNodeDisponibles * diffRootNodeDisponibles != 0) {
         percentDisponibles = 100.0 / diffFirstYearRootNodeDisponibles * diffRootNodeDisponibles;
+      }
 
-      if (diffRootNodeNC + diffFirstYearRootNodeNC != 0)
+      if (diffRootNodeNC + diffFirstYearRootNodeNC != 0) {
         percentNC = 100.0 / diffFirstYearRootNodeNC * diffRootNodeNC;
+      }
 
       output.append(QString("<tr><td class='t5annee'>%1</td><td align='right' "
                             "class='t5pourcent'>%2</td>"
@@ -718,20 +723,25 @@ QString PCx_Tables::getPCAT6(unsigned int node, MODES::DFRFDIRI mode) const {
     } else {
       double percentOuverts = 0.0, percentRealises = 0.0, percentEngages = 0.0, percentDisponibles = 0.0,
              percentNC = 0.0;
-      if (ouverts * firstYearOuvertsNode != 0)
+      if (ouverts * firstYearOuvertsNode != 0) {
         percentOuverts = 100.0 / firstYearOuvertsNode * ouverts;
+      }
 
-      if (realises * firstYearRealisesNode != 0)
+      if (realises * firstYearRealisesNode != 0) {
         percentRealises = 100.0 / firstYearRealisesNode * realises;
+      }
 
-      if (engages * firstYearEngagesNode != 0)
+      if (engages * firstYearEngagesNode != 0) {
         percentEngages = 100.0 / firstYearEngagesNode * engages;
+      }
 
-      if (disponibles * firstYearDisponiblesNode != 0)
+      if (disponibles * firstYearDisponiblesNode != 0) {
         percentDisponibles = 100.0 / firstYearDisponiblesNode * disponibles;
+      }
 
-      if (nc * firstYearNodeNC != 0)
+      if (nc * firstYearNodeNC != 0) {
         percentNC = 100.0 / firstYearNodeNC * nc;
+      }
 
       output.append(QString("<tr><td class='t6annee'>%1</td><td align='right' "
                             "class='t6pourcent'>%2</td>"
@@ -974,30 +984,33 @@ QString PCx_Tables::getPCAT10(unsigned int node) const {
     output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' "
                           "class='t1valeur'>")
                       .arg(annee));
-    if (diff_ouverts == 0)
+    if (diff_ouverts == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_ouverts > 0)
+    } else if (diff_ouverts > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
-    if (diff_realises == 0)
+    if (diff_realises == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_realises > 0)
+    } else if (diff_realises > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
-    if (diff_engages == 0)
+    if (diff_engages == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_engages > 0)
+    } else if (diff_engages > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
   }
@@ -1050,30 +1063,33 @@ QString PCx_Tables::getPCAT11(unsigned int node) const {
     output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' "
                           "class='t1valeur'>")
                       .arg(annee));
-    if (diff_ouverts == 0)
+    if (diff_ouverts == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_ouverts > 0)
+    } else if (diff_ouverts > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
-    if (diff_realises == 0)
+    if (diff_realises == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_realises > 0)
+    } else if (diff_realises > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
-    if (diff_engages == 0)
+    if (diff_engages == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_engages > 0)
+    } else if (diff_engages > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
   }
@@ -1133,30 +1149,33 @@ QString PCx_Tables::getPCAT12(unsigned int node) const {
     output.append(QString("<tr><td class='t1annee'>%1</td><td align='right' "
                           "class='t1valeur'>")
                       .arg(annee));
-    if (diff_ouverts == 0)
+    if (diff_ouverts == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_ouverts > 0)
+    } else if (diff_ouverts > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_ouverts)));
 
-    if (diff_realises == 0)
+    if (diff_realises == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_realises > 0)
+    } else if (diff_realises > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td><td align='right' class='t1valeur'>").arg(formatFixedPoint(diff_realises)));
 
-    if (diff_engages == 0)
+    if (diff_engages == 0) {
       output.append(QStringLiteral("<span style='color:black'>"));
-    else if (diff_engages > 0)
+    } else if (diff_engages > 0) {
       output.append(QStringLiteral("<span style='color:#008000'>"));
-    else
+    } else {
       output.append(QStringLiteral("<span style='color:#7c0000'>"));
+    }
 
     output.append(QString("%1</span></td></tr>").arg(formatFixedPoint(diff_engages)));
   }
@@ -1172,8 +1191,9 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
   }
 
   QDate lastDate = reportingModel->getLastReportingDate(mode, node);
-  if (lastDate.isNull() || !lastDate.isValid())
+  if (lastDate.isNull() || !lastDate.isValid()) {
     return QString();
+  }
 
   qint64 nodeVal = reportingModel->getNodeValue(node, mode, PCx_Reporting::OREDPCR::OUVERTS, lastDate);
 

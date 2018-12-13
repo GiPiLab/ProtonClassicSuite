@@ -74,21 +74,21 @@ void PCx_ReportingTableOverviewModel::setColRef(PCx_Reporting::OREDPCR ref) {
 
 QString
 PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) {
-  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF)
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF) {
     return MODES::modeToCompleteString(MODES::DFRFDIRI::DF);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF) {
     return MODES::modeToCompleteString(MODES::DFRFDIRI::RF);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI) {
     return MODES::modeToCompleteString(MODES::DFRFDIRI::DI);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI) {
     return MODES::modeToCompleteString(MODES::DFRFDIRI::RI);
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF) {
     return tr("Synthèse de fonctionnement (RF - DF)");
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI) {
     return tr("Synthèse d'investissement (RI - DI)");
-  else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI)
+  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI) {
     return tr("Synthèse fonctionnement + investissement (RF - DF + RI - DI)");
-  else {
+  } else {
     qWarning() << "Invalid mode";
   }
   return QString();
@@ -225,8 +225,9 @@ QVariant PCx_ReportingTableOverviewModel::headerData(int section, Qt::Orientatio
   QVariant value = queryModel.headerData(section, orientation, role);
   if (value.isValid() && role == Qt::DisplayRole && orientation == Qt::Horizontal) {
     QString val = value.toString();
-    if (val != "date")
+    if (val != "date") {
       return PCx_Reporting::OREDPCRtoCompleteString(PCx_Reporting::OREDPCRFromTableString(val));
+    }
   }
   return value;
 }
@@ -238,8 +239,9 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
   if (role == Qt::TextColorRole || role == Qt::DisplayRole || role == Qt::EditRole) {
     value = queryModel.record(item.row()).value(item.column());
     // The date column
-    if (item.column() == 0)
+    if (item.column() == 0) {
       return QDateTime::fromTime_t(value.toUInt()).date();
+    }
 
     double computedValue = NUMBERSFORMAT::fixedPointToDouble(value.toLongLong());
     QString retVal;
@@ -266,28 +268,34 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
       if (valRef != 0) {
         computedValue = static_cast<double>(value.toLongLong() / static_cast<double>(valRef) * 100);
         retVal = NUMBERSFORMAT::formatDouble(computedValue) + "%";
-      } else
+      } else {
         return "DIV0";
+      }
       percentMode = true;
-    } else
+    } else {
       retVal = NUMBERSFORMAT::formatDouble(computedValue);
+    }
 
-    if (role == Qt::DisplayRole)
+    if (role == Qt::DisplayRole) {
       return retVal;
+    }
 
     // For correct numeric sorting when '%' appended
-    if (role == Qt::EditRole)
+    if (role == Qt::EditRole) {
       return computedValue;
+    }
 
     if (role == Qt::TextColorRole) {
       if (computedValue < 0.0) {
         return QVariant::fromValue(QColor(Qt::red));
       }
       if (percentMode) {
-        if (computedValue > 100.0)
+        if (computedValue > 100.0) {
           return QVariant::fromValue(QColor(Qt::green));
-        if (computedValue > 0.0 && computedValue < 100.0)
+        }
+        if (computedValue > 0.0 && computedValue < 100.0) {
           return QVariant::fromValue(QColor(Qt::blue));
+        }
       }
     }
   }

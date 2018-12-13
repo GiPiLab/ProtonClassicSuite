@@ -89,8 +89,9 @@ PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int
 }
 
 PCx_Graphics::~PCx_Graphics() {
-  if (ownPlot)
+  if (ownPlot) {
     delete plot;
+  }
 }
 
 QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
@@ -124,15 +125,17 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
   while (q.next()) {
     int annee = q.value("annee").toInt();
-    if (firstYear == 0)
+    if (firstYear == 0) {
       firstYear = annee;
+    }
 
     qint64 data = q.value(oredName).toLongLong();
 
     if (q.value("id_node").toUInt() == referenceNode) {
       dataRoot.insert(annee, data);
-      if (node == referenceNode)
+      if (node == referenceNode) {
         dataNode.insert(annee, data);
+      }
     } else {
       dataNode.insert(annee, data);
     }
@@ -171,19 +174,23 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
       if (diffRootNode1 != 0) {
         percentRoot = diffRootNode * 100.0 / diffRootNode1;
       }
-      if (percentRoot < minYRange)
+      if (percentRoot < minYRange) {
         minYRange = percentRoot;
-      if (percentRoot > maxYRange)
+      }
+      if (percentRoot > maxYRange) {
         maxYRange = percentRoot;
+      }
       dataPlotRoot.insert(static_cast<double>(key), percentRoot);
 
       if (firstYearDataNode != 0) {
         percentNode = diffNode * 100.0 / firstYearDataNode;
       }
-      if (percentNode < minYRange)
+      if (percentNode < minYRange) {
         minYRange = percentNode;
-      if (percentNode > maxYRange)
+      }
+      if (percentNode > maxYRange) {
         maxYRange = percentNode;
+      }
       dataPlotNode.insert(static_cast<double>(key), percentNode);
 
       // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
@@ -437,14 +444,18 @@ QString PCx_Graphics::getPCAG9(unsigned int node) {
       dataRI = q.value(mode.first + "RI").toLongLong();
 
       // In case of negative disponible
-      if (dataDF < 0)
+      if (dataDF < 0) {
         dataDF = 0;
-      if (dataRF < 0)
+      }
+      if (dataRF < 0) {
         dataRF = 0;
-      if (dataDI < 0)
+      }
+      if (dataDI < 0) {
         dataDI = 0;
-      if (dataRI < 0)
+      }
+      if (dataRI < 0) {
         dataRI = 0;
+      }
 
       sum = dataDF + dataRF + dataDI + dataRI;
       if (sum > 0) {
@@ -523,10 +534,11 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   QColor PENCOLORS[4] = {Qt::darkCyan, Qt::red, Qt::gray, Qt::yellow};
 
   if (miniMode) {
-    if (selectedORED.count() == 2)
+    if (selectedORED.count() == 2) {
       plotTitle = QObject::tr("%1 (bleu) et %2 (rouge)")
                       .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0), true),
                            PCx_Audit::OREDtoCompleteString(selectedORED.at(1), true));
+    }
 
     QCPTextElement *title;
     if (plot->plotLayout()->elementCount() == 1) {
@@ -875,8 +887,9 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
 
   while (q.next()) {
     qint64 refVal = q.value(PCx_Reporting::OREDPCRtoTableString(oredReference)).toLongLong();
-    if (refVal == 0)
+    if (refVal == 0) {
       return plotTitle;
+    }
 
     foreach (PCx_Reporting::OREDPCR ored, selectedOREDPCR) {
       qint64 val = q.value(PCx_Reporting::OREDPCRtoTableString(ored)).toLongLong();
@@ -899,26 +912,32 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
 
 void PCx_Graphics::setGraphicsWidth(int width) {
   graphicsWidth = width;
-  if (graphicsWidth < MINWIDTH)
+  if (graphicsWidth < MINWIDTH) {
     graphicsWidth = MINWIDTH;
-  if (graphicsWidth > MAXWIDTH)
+  }
+  if (graphicsWidth > MAXWIDTH) {
     graphicsWidth = MAXWIDTH;
+  }
 }
 
 void PCx_Graphics::setGraphicsHeight(int height) {
   graphicsHeight = height;
-  if (graphicsHeight < MINHEIGHT)
+  if (graphicsHeight < MINHEIGHT) {
     graphicsHeight = MINHEIGHT;
-  if (graphicsHeight > MAXHEIGHT)
+  }
+  if (graphicsHeight > MAXHEIGHT) {
     graphicsHeight = MAXHEIGHT;
+  }
 }
 
 void PCx_Graphics::setScale(double scale) {
   this->scale = scale;
-  if (this->scale < MINSCALE)
+  if (this->scale < MINSCALE) {
     this->scale = MINSCALE;
-  if (this->scale > MAXSCALE)
+  }
+  if (this->scale > MAXSCALE) {
     this->scale = MAXSCALE;
+  }
 }
 
 QColor PCx_Graphics::getColorPen1() {

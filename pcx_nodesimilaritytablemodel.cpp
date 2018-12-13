@@ -110,8 +110,9 @@ void PCx_NodeSimilarityTableModel::computeDistances() {
 
   foreach (const QString &str1, listOfStrings) {
     foreach (const QString &str2, listOfStrings) {
-      if (str1 == str2)
+      if (str1 == str2) {
         continue;
+      }
       if (notCompute.contains(str1 + str2)) {
         continue;
       } else {

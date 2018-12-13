@@ -52,8 +52,9 @@ TreeMap::~TreeMap() { clear(); }
 
 TreeMap *TreeMap::insert(const QString &name, unsigned int id, int year, double value) {
   this->value += value;
-  for (TreeMap *p = parent; p != nullptr; p = p->parent)
+  for (TreeMap *p = parent; p != nullptr; p = p->parent) {
     p->value += value;
+  }
 
   foreach (TreeMap *x, children) {
     if (x->name == name) {
@@ -68,8 +69,9 @@ TreeMap *TreeMap::insert(const QString &name, unsigned int id, int year, double 
 
 TreeMap *TreeMap::findAt(const QPoint &pos) const {
   foreach (TreeMap *child, children) {
-    if (child->rect.contains(pos))
+    if (child->rect.contains(pos)) {
       return child;
+    }
   }
   return nullptr;
 }
@@ -97,8 +99,9 @@ void TreeMap::layout(const QRect &rect) {
 }
 
 void TreeMap::layout(QList<TreeMap *> items, int start, int end, const QRect &bounds) {
-  if (start > end)
+  if (start > end) {
     return;
+  }
 
   if (end - start < 2) {
     slicelayout(items, start, end, bounds);
@@ -108,8 +111,9 @@ void TreeMap::layout(QList<TreeMap *> items, int start, int end, const QRect &bo
   double x = bounds.x(), y = bounds.y(), w = bounds.width(), h = bounds.height();
 
   double total = 0;
-  for (int i = start; i <= end; i++)
+  for (int i = start; i <= end; i++) {
     total += items[i]->value;
+  }
   int mid = start;
   double a = items[start]->value / total;
   double b = a;
@@ -119,8 +123,9 @@ void TreeMap::layout(QList<TreeMap *> items, int start, int end, const QRect &bo
       double aspect = normAspect(h, w, a, b);
       double q = items[mid]->value / total;
 
-      if (normAspect(h, w, a, b + q) > aspect)
+      if (normAspect(h, w, a, b + q) > aspect) {
         break;
+      }
 
       mid++;
       b += q;
@@ -136,8 +141,9 @@ void TreeMap::layout(QList<TreeMap *> items, int start, int end, const QRect &bo
       double aspect = normAspect(w, h, a, b);
       double q = items[mid]->value / total;
 
-      if (normAspect(w, h, a, b + q) > aspect)
+      if (normAspect(w, h, a, b + q) > aspect) {
         break;
+      }
 
       mid++;
       b += q;
@@ -161,15 +167,17 @@ double TreeMap::aspect(double _big, double _small, double a, double b) const { r
 
 double TreeMap::normAspect(double _big, double _small, double a, double b) const {
   double x = aspect(_big, _small, a, b);
-  if (x < 1.0)
+  if (x < 1.0) {
     return 1.0 / x;
+  }
   return x;
 }
 
 void TreeMap::slicelayout(QList<TreeMap *> items, int start, int end, const QRect &bounds) {
   double total = 0, accumulator = 0;
-  for (int i = start; i <= end && i < items.count(); i++)
+  for (int i = start; i <= end && i < items.count(); i++) {
     total += items[i]->value;
+  }
 
   Qt::Orientation orientation = (bounds.width() > bounds.height()) ? Qt::Horizontal : Qt::Vertical;
 

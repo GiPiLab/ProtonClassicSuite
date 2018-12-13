@@ -213,37 +213,42 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
       if (!qIsNaN(entry.percentReal)) {
         percentMode = true;
         computedValue = entry.percentReal;
-      } else
+      } else {
         return ("DIV0");
+      }
       break;
     case static_cast<int>(TABLESUPERVISIONCOLUMNS::TAUXECART):
       if (!qIsNaN(entry.tauxEcart)) {
         percentMode = true;
         computedValue = entry.tauxEcart;
-      } else
+      } else {
         return ("DIV0");
+      }
       break;
     case static_cast<int>(TABLESUPERVISIONCOLUMNS::PERCENTBP):
       if (!qIsNaN(entry.percentBP)) {
         percentMode = true;
         computedValue = entry.percentBP;
-      } else
+      } else {
         return ("DIV0");
+      }
       break;
     case static_cast<int>(TABLESUPERVISIONCOLUMNS::PERCENTENGAGES):
       if (!qIsNaN(entry.percentEngage)) {
         percentMode = true;
         computedValue = entry.percentEngage;
-      } else
+      } else {
         return ("DIV0");
+      }
       break;
 
     case static_cast<int>(TABLESUPERVISIONCOLUMNS::PERCENTDISPONIBLES):
       if (!qIsNaN(entry.percentDisponible)) {
         percentMode = true;
         computedValue = entry.percentDisponible;
-      } else
+      } else {
         return ("DIV0");
+      }
       break;
 
     case static_cast<int>(TABLESUPERVISIONCOLUMNS::REALISESPREDITS):
@@ -275,8 +280,9 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
     output = NUMBERSFORMAT::formatDouble(computedValue);
 
     if (role == Qt::DisplayRole) {
-      if (percentMode == true)
+      if (percentMode == true) {
         output.append("%");
+      }
       return output;
     }
     // For correct QSortFilterProxyModel sorting when '%' (otherwise sorted as
@@ -287,16 +293,18 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
       switch (index.column()) {
       case static_cast<int>(TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS):
       case static_cast<int>(TABLESUPERVISIONCOLUMNS::TAUXECART): {
-        if (computedValue > 0.0)
+        if (computedValue > 0.0) {
           return QVariant::fromValue(QColor(Qt::red));
-        else
+        } else {
           return QVariant::fromValue(QColor(Qt::darkGreen));
+        }
       }
       case static_cast<int>(TABLESUPERVISIONCOLUMNS::PERCENTREALISES): {
-        if (computedValue > 100.0)
+        if (computedValue > 100.0) {
           return QVariant::fromValue(QColor(Qt::red));
-        else
+        } else {
           return QVariant::fromValue(QColor(Qt::darkGreen));
+        }
       }
       }
     }
@@ -308,12 +316,13 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
 
 QVariant PCx_ReportingTableSupervisionModel::headerData(int section, Qt::Orientation orientation, int role) const {
   if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
-    if (section == 0)
+    if (section == 0) {
       return tr("Nom");
-    else if (section == 1)
+    } else if (section == 1) {
       return tr("Date");
-    else
+    } else {
       return getColumnName(static_cast<TABLESUPERVISIONCOLUMNS>(section));
+    }
   }
   return QVariant();
 }
@@ -369,8 +378,9 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
   resteAConsommer = this->ouverts - this->realises;
   if (nb15NRestantes != 0) {
     consommePrevPar15N = resteAConsommer / nb15NRestantes;
-  } else
+  } else {
     consommePrevPar15N = std::numeric_limits<double>::quiet_NaN();
+  }
 
   realisesPredits = this->realises / nbJoursDepuisDebutAnnee * 365;
 
