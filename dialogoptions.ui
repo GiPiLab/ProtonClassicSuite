@@ -474,7 +474,7 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bon compromis entre compatibilité et qualité d'image, mais le temps de génération des rapports peut être important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>PNG (qualité)</string>
+         <string>PNG</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -487,17 +487,17 @@
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Favorise la vitesse de génération du rapport, moyennant une (légère) dégradation de la qualité des images et une (importante) augmentation de leur poids sur le disque. Compatibilité maximale.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>JPEG (vitesse)</string>
+         <string>JPEG</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QRadioButton" name="radioButtonSVG">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format d'image vectoriel : favorise à la fois la vitesse de génération du rapport et la qualité du rendu, mais nécessite un navigateur ou un traitement de textes récent pour pouvoir être lu&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format d'image vectoriel : favorise à la fois la vitesse de génération du rapport et la qualité du rendu, mais nécessite un navigateur ou un traitement de textes récent pour pouvoir être lu. L'aspect peut également varier par rapport au rendu dans ProtonClassicSuite&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>SVG (vitesse et qualité)</string>
+         <string>SVG</string>
         </property>
        </widget>
       </item>

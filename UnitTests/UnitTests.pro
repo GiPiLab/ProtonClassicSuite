@@ -6,7 +6,6 @@
 
 QT       += testlib
 
-DEFINES *= QT_USE_QSTRINGBUILDER
 
 include(../ProtonClassicSuite_forUnitTests.pri)
 
@@ -21,8 +20,7 @@ TEMPLATE = app
 #QMAKE_CXXFLAGS+=-Og --coverage
 #QMAKE_LFLAGS+=--coverage
 
-SOURCES += utils.cpp \
-    tst_protonclassicsuiteunittests_main.cpp \
+SOURCES += tst_protonclassicsuiteunittests_main.cpp \
     tst_protonclassicsuiteunittests_pcx_audit.cpp \
     tst_protonclassicsuiteunittests_pcx_tree.cpp \
     tst_protonclassicsuiteunittests_pcx_tablesandgraphics.cpp \
@@ -32,5 +30,4 @@ SOURCES += utils.cpp \
 
 #DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-HEADERS += utils.h \
-    tst_protonclassicsuiteunittests.h
+HEADERS += tst_protonclassicsuiteunittests.h
