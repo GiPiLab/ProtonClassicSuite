@@ -86,7 +86,7 @@ private:
   void updateListOfReportings();
   void updateTooltips();
   PCx_ReportingWithTreeModel *model;
-  PCx_Report *report;
+  PCx_Report *report{};
   QCustomPlot *plot;
 };
 

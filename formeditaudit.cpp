@@ -84,9 +84,7 @@ FormEditAudit::FormEditAudit(QWidget *parent) : QWidget(parent), ui(new Ui::Form
 
 FormEditAudit::~FormEditAudit() {
   delete ui;
-  if (auditModel != nullptr) {
-    delete auditModel;
-  }
+  delete auditModel;
   delete (delegateDF);
   delete (delegateRF);
   delete (delegateDI);
@@ -129,9 +127,7 @@ void FormEditAudit::on_comboListAudits_activated(int index) {
   }
   unsigned int selectedAuditId = ui->comboListAudits->currentData().toUInt();
   // qDebug()<<"Selected audit ID = "<<selectedAuditId;
-  if (auditModel != nullptr) {
-    delete auditModel;
-  }
+  delete auditModel;
 
   QItemSelectionModel *m = ui->treeView->selectionModel();
   // Read-write audit model

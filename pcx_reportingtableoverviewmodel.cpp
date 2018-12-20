@@ -76,21 +76,27 @@ QString
 PCx_ReportingTableOverviewModel::OVERVIEWMODEToCompleteString(PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) {
   if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF) {
     return MODES::modeToCompleteString(MODES::DFRFDIRI::DF);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF) {
-    return MODES::modeToCompleteString(MODES::DFRFDIRI::RF);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI) {
-    return MODES::modeToCompleteString(MODES::DFRFDIRI::DI);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI) {
-    return MODES::modeToCompleteString(MODES::DFRFDIRI::RI);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF) {
-    return tr("Synthèse de fonctionnement (RF - DF)");
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI) {
-    return tr("Synthèse d'investissement (RI - DI)");
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI) {
-    return tr("Synthèse fonctionnement + investissement (RF - DF + RI - DI)");
-  } else {
-    qWarning() << "Invalid mode";
   }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF) {
+    return MODES::modeToCompleteString(MODES::DFRFDIRI::RF);
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI) {
+    return MODES::modeToCompleteString(MODES::DFRFDIRI::DI);
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI) {
+    return MODES::modeToCompleteString(MODES::DFRFDIRI::RI);
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF) {
+    return tr("Synthèse de fonctionnement (RF - DF)");
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI) {
+    return tr("Synthèse d'investissement (RI - DI)");
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI) {
+    return tr("Synthèse fonctionnement + investissement (RF - DF + RI - DI)");
+  }
+  qWarning() << "Invalid mode";
+
   return QString();
 }
 

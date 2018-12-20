@@ -53,11 +53,7 @@ TreeMapWidget::TreeMapWidget(QWidget *parent) : QWidget(parent) {
   setContentsMargins(0, 0, 0, 0);
 }
 
-TreeMapWidget::~TreeMapWidget() {
-  if (root != nullptr) {
-    delete root;
-  }
-}
+TreeMapWidget::~TreeMapWidget() { delete root; }
 
 void TreeMapWidget::setDataGroupByYears(PCx_Audit *audit, MODES::DFRFDIRI mode, PCx_Audit::ORED ored,
                                         unsigned int nodeId) {
@@ -277,7 +273,7 @@ void TreeMapWidget::setDataGroupByNode(PCx_Audit *audit, MODES::DFRFDIRI mode, P
 bool TreeMapWidget::eventFilter(QObject *object, QEvent *e) {
   Q_UNUSED(object);
   if (e->type() == QEvent::MouseMove) {
-    QPoint pos = static_cast<QMouseEvent *>(e)->pos();
+    QPoint pos = dynamic_cast<QMouseEvent *>(e)->pos();
     TreeMap *underMouse = nullptr;
 
     foreach (TreeMap *first, root->getChildren())
@@ -296,8 +292,8 @@ bool TreeMapWidget::eventFilter(QObject *object, QEvent *e) {
     repaint();
     return true;
   } else if (e->type() == QEvent::MouseButtonPress) {
-    QPoint pos = static_cast<QMouseEvent *>(e)->pos();
-    Qt::MouseButton button = static_cast<QMouseEvent *>(e)->button();
+    QPoint pos = dynamic_cast<QMouseEvent *>(e)->pos();
+    Qt::MouseButton button = dynamic_cast<QMouseEvent *>(e)->button();
 
     if (button == Qt::LeftButton) {
       TreeMap *underMouse = nullptr;

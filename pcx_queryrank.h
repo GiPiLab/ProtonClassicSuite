@@ -75,7 +75,7 @@ public:
 
 private:
   GREATERSMALLER grSm;
-  unsigned int number;
+  unsigned int number{};
 
   PCx_QueryRank(const PCx_QueryRank &c);
   PCx_QueryRank &operator=(const PCx_QueryRank &);

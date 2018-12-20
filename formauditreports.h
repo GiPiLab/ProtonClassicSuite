@@ -100,7 +100,7 @@ private:
   void updateListOfAudits();
   unsigned int referenceNode;
   PCx_AuditWithTreeModel *model;
-  PCx_Report *report;
+  PCx_Report *report{};
   void populateLists();
   QCustomPlot *plot;
 };

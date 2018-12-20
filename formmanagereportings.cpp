@@ -61,9 +61,7 @@ FormManageReportings::FormManageReportings(QWidget *parent) : QWidget(parent), u
 }
 
 FormManageReportings::~FormManageReportings() {
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-  }
+  delete selectedReporting;
   delete ui;
 }
 

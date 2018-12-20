@@ -105,7 +105,7 @@ private:
 
   QTextDocument *doc;
   PCx_AuditWithTreeModel *model;
-  PCx_Report *report;
+  PCx_Report *report{};
 
   QList<PCx_Tables::PCAPRESETS> selectedTabs;
   QList<PCx_Graphics::PCAGRAPHICS> selectedGraphics;

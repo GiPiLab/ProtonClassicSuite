@@ -60,12 +60,8 @@ FormReportingGraphics::FormReportingGraphics(QWidget *parent) : QWidget(parent),
 
 FormReportingGraphics::~FormReportingGraphics() {
   delete ui;
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-  }
-  if (graphics != nullptr) {
-    delete graphics;
-  }
+  delete selectedReporting;
+  delete graphics;
 }
 
 void FormReportingGraphics::onListOfReportingsChanged() { updateListOfReportings(); }
@@ -92,9 +88,8 @@ void FormReportingGraphics::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else {
-    setEnabled(true);
   }
+  setEnabled(true);
 
   foreach (p, listOfReportings) { ui->comboListOfReportings->insertItem(0, p.second, p.first); }
   ui->comboListOfReportings->setCurrentIndex(0);
@@ -144,10 +139,9 @@ MODES::DFRFDIRI FormReportingGraphics::getSelectedMode() const {
   }
   if (ui->radioButtonRI->isChecked()) {
     return MODES::DFRFDIRI::RI;
-
-  } else {
-    qWarning() << "Invalid selection";
   }
+
+  qWarning() << "Invalid selection";
   return MODES::DFRFDIRI::DF;
 }
 

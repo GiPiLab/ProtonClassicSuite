@@ -204,9 +204,7 @@ unsigned int PCx_Prevision::duplicatePrevision(const QString &newName) const {
 
 PCx_Prevision::~PCx_Prevision() {
   attachedTree = nullptr;
-  if (attachedAudit != nullptr) {
-    delete attachedAudit;
-  }
+  delete attachedAudit;
 }
 
 bool PCx_Prevision::previsionNameExists(const QString &previsionName) {

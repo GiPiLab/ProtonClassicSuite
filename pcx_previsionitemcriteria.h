@@ -87,9 +87,9 @@ private:
   qint64 getPercentOf(unsigned int auditId, MODES::DFRFDIRI mode, unsigned int nodeId) const;
   qint64 getFixedValue() const { return previsionOperand; }
 
-  PREVISIONOPERATOR previsionOperator;
-  PCx_Audit::ORED previsionOredTarget;
-  qint64 previsionOperand;
+  PREVISIONOPERATOR previsionOperator{};
+  PCx_Audit::ORED previsionOredTarget{};
+  qint64 previsionOperand{};
 };
 
 #endif // PCX_PREVISIONITEMCRITERIA_H

@@ -82,9 +82,7 @@ void FormManagePrevisions::updateListOfPrevisions() {
 
 FormManagePrevisions::~FormManagePrevisions() {
   delete ui;
-  if (selectedPrevision != nullptr) {
-    delete selectedPrevision;
-  }
+  delete selectedPrevision;
 }
 
 void FormManagePrevisions::onSelectedPrevisionUpdated() {

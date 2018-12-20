@@ -97,28 +97,13 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) : QWidget(parent), ui(
 
 FormAuditPrevisions::~FormAuditPrevisions() {
   delete ui;
-  if (previsionModel != nullptr) {
-    delete previsionModel;
-  }
-  if (auditWithTreeModel != nullptr) {
-    delete auditWithTreeModel;
-  }
-  if (currentPrevisionItemTableModel != nullptr) {
-    delete currentPrevisionItemTableModel;
-  }
-  if (currentPrevisionItem != nullptr) {
-    delete currentPrevisionItem;
-  }
-  if (recentPrevisionItemTableModel != nullptr) {
-    delete recentPrevisionItemTableModel;
-  }
-
-  if (recentPrevisionItem != nullptr) {
-    delete recentPrevisionItem;
-  }
-  if (graphics != nullptr) {
-    delete graphics;
-  }
+  delete previsionModel;
+  delete auditWithTreeModel;
+  delete currentPrevisionItemTableModel;
+  delete currentPrevisionItem;
+  delete recentPrevisionItemTableModel;
+  delete recentPrevisionItem;
+  delete graphics;
 }
 
 void FormAuditPrevisions::onListOfPrevisionsChanged() { updateListOfPrevisions(); }

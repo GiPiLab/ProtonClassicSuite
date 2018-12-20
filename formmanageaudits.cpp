@@ -71,9 +71,7 @@ FormManageAudits::FormManageAudits(QWidget *parent) : QWidget(parent), ui(new Ui
 }
 
 FormManageAudits::~FormManageAudits() {
-  if (selectedAudit != nullptr) {
-    delete selectedAudit;
-  }
+  delete selectedAudit;
   delete ui;
 }
 

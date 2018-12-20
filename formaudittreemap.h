@@ -94,7 +94,7 @@ private:
 
   Ui::FormAuditTreemap *ui;
   PCx_Audit *selectedAudit;
-  int selectedYear;
+  int selectedYear{};
   unsigned int selectedNode;
 
   MODES::DFRFDIRI selectedMode;

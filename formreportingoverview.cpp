@@ -61,15 +61,9 @@ FormReportingOverview::FormReportingOverview(QWidget *parent) : QWidget(parent),
 
 FormReportingOverview::~FormReportingOverview() {
   delete ui;
-  if (proxyModel != nullptr) {
-    delete proxyModel;
-  }
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-  }
-  if (tableOverviewModel != nullptr) {
-    delete tableOverviewModel;
-  }
+  delete proxyModel;
+  delete selectedReporting;
+  delete tableOverviewModel;
 }
 
 void FormReportingOverview::onListOfReportingsChanged() { updateListOfReportings(); }
@@ -137,9 +131,8 @@ void FormReportingOverview::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else {
-    setEnabled(true);
   }
+  setEnabled(true);
 
   foreach (p, listOfReportings) { ui->comboListReportings->insertItem(0, p.second, p.first); }
   ui->comboListReportings->setCurrentIndex(0);
@@ -213,22 +206,26 @@ bool FormReportingOverview::dateExistsForNodeAndMode(time_t timeT, unsigned int 
                                                      PCx_ReportingTableOverviewModel::OVERVIEWMODE mode) const {
   if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF) {
     return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DF);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF) {
-    return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI) {
-    return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI);
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI) {
-    return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RI);
+  }
 
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF) {
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RF) {
+    return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF);
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::DI) {
+    return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI);
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RI) {
+    return selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RI);
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDF) {
     return (selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DF) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF));
-
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI) {
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RIDI) {
     return (selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RI));
-
-  } else if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI) {
+  }
+  if (mode == PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI) {
     return (selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DF) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::RF) &
             selectedReporting->dateExistsForNodeAndMode(timeT, nodeId, MODES::DFRFDIRI::DI) &
@@ -259,10 +256,9 @@ PCx_ReportingTableOverviewModel::OVERVIEWMODE FormReportingOverview::getSelected
   }
   if (ui->radioButtonRFDFRIDI->isChecked()) {
     return PCx_ReportingTableOverviewModel::OVERVIEWMODE::RFDFRIDI;
-
-  } else {
-    qWarning() << "Invalid selection";
   }
+
+  qWarning() << "Invalid selection";
   return PCx_ReportingTableOverviewModel::OVERVIEWMODE::DF;
 }
 

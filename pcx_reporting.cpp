@@ -90,11 +90,7 @@ PCx_Reporting::PCx_Reporting(unsigned int reportingId, bool _noLoadAttachedTree)
   }
 }
 
-PCx_Reporting::~PCx_Reporting() {
-  if (attachedTree != nullptr) {
-    delete attachedTree;
-  }
-}
+PCx_Reporting::~PCx_Reporting() { delete attachedTree; }
 
 unsigned int PCx_Reporting::getAttachedTreeId(unsigned int reportingId) {
   QSqlQuery q;
@@ -110,7 +106,7 @@ unsigned int PCx_Reporting::getAttachedTreeId(unsigned int reportingId) {
 }
 
 bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date,
-                                  QMap<PCx_Reporting::OREDPCR, double> vals, bool fastMode) {
+                                  const QMap<PCx_Reporting::OREDPCR, double> &vals, bool fastMode) {
   if (!fastMode) {
     if (!getAttachedTree()->isLeaf(leafId)) {
       qWarning() << "Not a leaf !";
@@ -686,7 +682,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
       vals.insert(PCx_Reporting::OREDPCR::VIREMENTSINTERNES, valDbl);
     }
 
-    if (vals.size() > 0) {
+    if (!vals.empty()) {
       // setLeafValues in fast mode only die on db error
       setLeafValues(nodeId, mode, laDate, vals, true);
     }

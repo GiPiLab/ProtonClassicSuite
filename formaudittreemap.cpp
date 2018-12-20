@@ -76,9 +76,7 @@ FormAuditTreemap::FormAuditTreemap(QWidget *parent) : QWidget(parent), ui(new Ui
 }
 
 FormAuditTreemap::~FormAuditTreemap() {
-  if (selectedAudit != nullptr) {
-    delete selectedAudit;
-  }
+  delete selectedAudit;
   delete ui;
 }
 
@@ -130,9 +128,7 @@ void FormAuditTreemap::on_comboListAudits_activated(int index) {
     qFatal("Assertion failed");
   }
 
-  if (selectedAudit != nullptr) {
-    delete selectedAudit;
-  }
+  delete selectedAudit;
 
   selectedAudit = new PCx_Audit(selectedAuditId);
   selectedNode = 1;

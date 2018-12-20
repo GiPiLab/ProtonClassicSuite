@@ -57,18 +57,9 @@ FormReportingExplore::FormReportingExplore(QWidget *parent) : QWidget(parent), u
 }
 
 FormReportingExplore::~FormReportingExplore() {
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-  }
-
-  if (report != nullptr) {
-    delete report;
-  }
-
-  if (document != nullptr) {
-    delete document;
-  }
-
+  delete selectedReporting;
+  delete report;
+  delete document;
   delete ui;
 }
 
@@ -108,9 +99,8 @@ void FormReportingExplore::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else {
-    setEnabled(true);
   }
+  setEnabled(true);
 
   foreach (p, listOfReportings) { ui->comboListReportings->insertItem(0, p.second, p.first); }
   ui->comboListReportings->setCurrentIndex(0);
@@ -125,16 +115,11 @@ void FormReportingExplore::on_comboListReportings_activated(int index) {
   }
   unsigned int selectedReportingId = ui->comboListReportings->currentData().toUInt();
 
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-    selectedReporting = nullptr;
-  }
+  delete selectedReporting;
 
   selectedReporting = new PCx_ReportingWithTreeModel(selectedReportingId);
 
-  if (report != nullptr) {
-    delete report;
-  }
+  delete report;
 
   QSettings settings;
   int graphicsWidth = settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt();
@@ -184,10 +169,8 @@ MODES::DFRFDIRI FormReportingExplore::getSelectedMode() const {
   }
   if (ui->radioButtonRI->isChecked()) {
     return MODES::DFRFDIRI::RI;
-
-  } else {
-    qWarning() << "Invalid selection";
   }
+  qWarning() << "Invalid selection";
   return MODES::DFRFDIRI::DF;
 }
 

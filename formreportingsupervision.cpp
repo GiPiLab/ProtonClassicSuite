@@ -106,15 +106,9 @@ void FormReportingSupervision::setColumnVisibility() {
 
 FormReportingSupervision::~FormReportingSupervision() {
   delete ui;
-  if (proxyModel != nullptr) {
-    delete proxyModel;
-  }
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-  }
-  if (model != nullptr) {
-    delete model;
-  }
+  delete proxyModel;
+  delete selectedReporting;
+  delete model;
 }
 
 void FormReportingSupervision::updateListOfReportings() {
@@ -128,9 +122,8 @@ void FormReportingSupervision::updateListOfReportings() {
                                 "fenêtre de gestion des reportings"));
     setEnabled(false);
     return;
-  } else {
-    setEnabled(true);
   }
+  setEnabled(true);
 
   foreach (p, listOfReportings) { ui->comboListReportings->insertItem(0, p.second, p.first); }
   ui->comboListReportings->setCurrentIndex(0);
@@ -193,10 +186,8 @@ MODES::DFRFDIRI FormReportingSupervision::getSelectedMode() const {
   }
   if (ui->radioButtonRI->isChecked()) {
     return MODES::DFRFDIRI::RI;
-
-  } else {
-    qWarning() << "Invalid selection";
   }
+  qWarning() << "Invalid selection";
   return MODES::DFRFDIRI::DF;
 }
 

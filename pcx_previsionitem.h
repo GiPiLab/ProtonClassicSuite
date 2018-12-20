@@ -64,8 +64,8 @@ public:
   QList<PCx_PrevisionItemCriteria> getItemsToAdd() const { return itemsToAdd; }
   QList<PCx_PrevisionItemCriteria> getItemsToSubstract() const { return itemsToSubstract; }
 
-  void insertCriteriaToAdd(PCx_PrevisionItemCriteria criteria, bool compute = true);
-  void insertCriteriaToSub(PCx_PrevisionItemCriteria criteria, bool compute = true);
+  void insertCriteriaToAdd(const PCx_PrevisionItemCriteria &criteria, bool compute = true);
+  void insertCriteriaToSub(const PCx_PrevisionItemCriteria &criteria, bool compute = true);
   bool deleteCriteria(QModelIndexList selectedIndexes, bool compute = true);
   void deleteAllCriteria();
 

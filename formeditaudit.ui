@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Saisie des données</string>
+   <string>Saisie des données d'audit</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Images.qrc">

@@ -153,7 +153,7 @@ public:
    * @param fastMode if true, skip few checks (is the node a leaf) to speedup
    * @return true on success, false if fastMode==false and checks failed
    */
-  bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, QMap<OREDPCR, double> vals,
+  bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDate date, const QMap<OREDPCR, double> &vals,
                      bool fastMode = false);
 
   /**

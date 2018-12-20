@@ -111,7 +111,7 @@ protected:
   unsigned int typeId;
   PCx_Audit::ORED ored;
   MODES::DFRFDIRI dfrfdiri;
-  int year1, year2;
+  int year1{}, year2{};
   QString name;
   unsigned int queryId;
 

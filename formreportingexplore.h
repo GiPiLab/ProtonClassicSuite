@@ -97,7 +97,7 @@ private slots:
 private:
   Ui::FormReportingExplore *ui;
   PCx_ReportingWithTreeModel *selectedReporting;
-  unsigned int selectedNode;
+  unsigned int selectedNode{};
   void updateListOfReportings();
   QTextDocument *document;
   PCx_Report *report;

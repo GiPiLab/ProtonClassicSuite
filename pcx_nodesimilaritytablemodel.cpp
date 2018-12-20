@@ -46,7 +46,7 @@
 #include <QElapsedTimer>
 #include <QProgressDialog>
 
-PCx_NodeSimilarityTableModel::PCx_NodeSimilarityTableModel(const QStringList strings,
+PCx_NodeSimilarityTableModel::PCx_NodeSimilarityTableModel(const QStringList &strings,
                                                            PCx_StringDistance::SIMILARITYMETRIC metric, QObject *parent)
     : QAbstractTableModel(parent), listOfStrings(strings), similarityMetric(metric) {
   computeDistances();
@@ -115,11 +115,10 @@ void PCx_NodeSimilarityTableModel::computeDistances() {
       }
       if (notCompute.contains(str1 + str2)) {
         continue;
-      } else {
-        PCx_StringDistance dist(str1, str2, similarityMetric);
-        if (dist.getNormalizedSimilarity() > threshold) {
-          distances.append(dist);
-        }
+      }
+      PCx_StringDistance dist(str1, str2, similarityMetric);
+      if (dist.getNormalizedSimilarity() > threshold) {
+        distances.append(dist);
         notCompute.insert(str2 + str1, true);
       }
     }

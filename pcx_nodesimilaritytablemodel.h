@@ -65,7 +65,7 @@ public:
    * @param metric the metric to use for similarity
    * @param parent the QObject parent
    */
-  explicit PCx_NodeSimilarityTableModel(const QStringList strings, PCx_StringDistance::SIMILARITYMETRIC metric,
+  explicit PCx_NodeSimilarityTableModel(const QStringList &strings, PCx_StringDistance::SIMILARITYMETRIC metric,
                                         QObject *parent = nullptr);
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;

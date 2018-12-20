@@ -212,7 +212,7 @@ QSqlTableModel *PCx_EditableAuditModel::getTableModel(MODES::DFRFDIRI mode) cons
 }
 
 bool PCx_EditableAuditModel::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, int year,
-                                           QMap<PCx_Audit::ORED, double> vals, bool fastMode) {
+                                           const QMap<PCx_Audit::ORED, double> &vals, bool fastMode) {
   if (PCx_Audit::setLeafValues(leafId, mode, year, vals, fastMode) == false) {
     return false;
   }

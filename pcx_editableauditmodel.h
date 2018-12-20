@@ -124,7 +124,7 @@ public:
    * is the audit finished) to speedup
    * @return true on success, false if fastMode==false and checks failed
    */
-  bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, int year, QMap<ORED, double> vals,
+  bool setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, int year, const QMap<ORED, double> &vals,
                      bool fastMode = false);
 
   /**

@@ -217,10 +217,6 @@ QString PCx_QueryVariation::exec(QXlsx::Document *xlsDoc) const {
     }
   }
 
-  if (valuesForYear1.keys() != valuesForYear2.keys()) {
-    qFatal("Assertion failed");
-  }
-
   QMapIterator<unsigned int, qint64> i(valuesForYear1);
   while (i.hasNext()) {
     i.next();

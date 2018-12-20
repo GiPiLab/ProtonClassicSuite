@@ -109,7 +109,7 @@ private:
   PCx_Reporting *reporting;
   MODES::DFRFDIRI currentMode;
   void updateQuery();
-  unsigned int nbNodes;
+  unsigned int nbNodes{};
   QList<Entry> entries;
   time_t selectedDateTimeT;
 };

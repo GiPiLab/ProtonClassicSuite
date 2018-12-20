@@ -60,7 +60,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
   // freeze
   bool noMessageBox = false;
 
-  if (message.contains("XCB", Qt::CaseInsensitive) == true) {
+  if (message.contains("XCB", Qt::CaseInsensitive)) {
     noMessageBox = true;
   }
 #ifdef Q_OS_ANDROID
@@ -81,21 +81,21 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     break;
   case QtWarningMsg:
     message.prepend("[W]");
-    if (noMessageBox == false) {
+    if (!noMessageBox) {
       QMessageBox::warning(nullptr, "Attention", message);
     }
     std::cerr << qPrintable(message);
     break;
   case QtCriticalMsg:
     message.prepend("[C]");
-    if (noMessageBox == false) {
+    if (!noMessageBox) {
       QMessageBox::critical(nullptr, "Erreur critique", message);
     }
     std::cerr << qPrintable(message);
     break;
   case QtFatalMsg:
     message.prepend("[F]");
-    if (noMessageBox == false) {
+    if (!noMessageBox) {
       QMessageBox::critical(nullptr, "Erreur fatale", message);
     }
     std::cerr << qPrintable(message);

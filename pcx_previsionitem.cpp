@@ -354,7 +354,7 @@ qint64 PCx_PrevisionItem::getPrevisionItemValue() const {
   return total;
 }
 
-void PCx_PrevisionItem::insertCriteriaToAdd(PCx_PrevisionItemCriteria criteria, bool compute) {
+void PCx_PrevisionItem::insertCriteriaToAdd(const PCx_PrevisionItemCriteria &criteria, bool compute) {
   itemsToAdd.append(criteria);
   if (compute) {
     computedValue = getPrevisionItemValue();
@@ -463,7 +463,7 @@ bool PCx_PrevisionItem::dispatchComputedValueToChildrenLeaves(PCx_Audit::ORED or
   return true;
 }
 
-void PCx_PrevisionItem::insertCriteriaToSub(PCx_PrevisionItemCriteria criteria, bool compute) {
+void PCx_PrevisionItem::insertCriteriaToSub(const PCx_PrevisionItemCriteria &criteria, bool compute) {
   itemsToSubstract.append(criteria);
   if (compute) {
     computedValue = getPrevisionItemValue();
@@ -572,7 +572,7 @@ void PCx_PrevisionItem::saveDataToDb() {
 QString PCx_PrevisionItem::getLongDescription() const {
   QString out;
   QStringList listItems;
-  if (itemsToAdd.size() == 0 && itemsToSubstract.size() == 0) {
+  if (itemsToAdd.empty() && itemsToSubstract.empty()) {
     return QObject::tr("aucune prévision");
   }
   foreach (const PCx_PrevisionItemCriteria &criteria, itemsToAdd) {
@@ -585,7 +585,7 @@ QString PCx_PrevisionItem::getLongDescription() const {
   foreach (const PCx_PrevisionItemCriteria &criteria, itemsToSubstract) {
     listItems.append(criteria.getCriteriaLongDescription());
   }
-  if (listItems.size() > 0) {
+  if (!listItems.empty()) {
     out.append('-');
     out.append(listItems.join('-'));
   }

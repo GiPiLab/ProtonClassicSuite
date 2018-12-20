@@ -222,9 +222,9 @@ qint64 PCx_PrevisionItemCriteria::getLastValueOf(unsigned int auditId, MODES::DF
   }
   if (q.next()) {
     return q.value(0).toLongLong();
-  } else {
-    qWarning() << "No data";
   }
+  qWarning() << "No data";
+
   return -MAX_NUM;
 }
 
@@ -255,9 +255,9 @@ qint64 PCx_PrevisionItemCriteria::getMinimumOf(unsigned int auditId, MODES::DFRF
   }
   if (q.next()) {
     return q.value(0).toLongLong();
-  } else {
-    qWarning() << "No data";
   }
+  qWarning() << "No data";
+
   return -MAX_NUM;
 }
 
@@ -276,9 +276,9 @@ qint64 PCx_PrevisionItemCriteria::getMaximumOf(unsigned int auditId, MODES::DFRF
   }
   if (q.next()) {
     return q.value(0).toLongLong();
-  } else {
-    qWarning() << "No data";
   }
+  qWarning() << "No data";
+
   return -MAX_NUM;
 }
 
@@ -297,9 +297,9 @@ qint64 PCx_PrevisionItemCriteria::getAverageOf(unsigned int auditId, MODES::DFRF
   }
   if (q.next()) {
     return q.value(0).toLongLong();
-  } else {
-    qWarning() << "No data";
   }
+  qWarning() << "No data";
+
   return -MAX_NUM;
 }
 

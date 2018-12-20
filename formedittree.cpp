@@ -64,9 +64,7 @@ FormEditTree::FormEditTree(QWidget *parent) : QWidget(parent), ui(new Ui::FormEd
 }
 
 FormEditTree::~FormEditTree() {
-  if (model != nullptr) {
-    delete model;
-  }
+  delete model;
   delete ui;
 }
 

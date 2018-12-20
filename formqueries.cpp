@@ -158,20 +158,12 @@ FormQueries::FormQueries(QWidget *parent) : QWidget(parent), ui(new Ui::FormQuer
 }
 
 FormQueries::~FormQueries() {
-  if (model != nullptr) {
-    delete model;
-  }
-  if (report != nullptr) {
-    delete report;
-  }
-  if (queriesModel != nullptr) {
-    delete queriesModel;
-  }
+  delete model;
+  delete report;
+  delete queriesModel;
   doc->clear();
   delete doc;
-  if (xlsDoc != nullptr) {
-    delete xlsDoc;
-  }
+  delete xlsDoc;
   delete ui;
 }
 
@@ -228,17 +220,9 @@ void FormQueries::on_comboBoxListAudits_activated(int index) {
   }
   // qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
-  if (model != nullptr) {
-    delete model;
-  }
-
-  if (report != nullptr) {
-    delete report;
-  }
-
-  if (queriesModel != nullptr) {
-    delete queriesModel;
-  }
+  delete model;
+  delete report;
+  delete queriesModel;
 
   model = new PCx_Audit(selectedAuditId);
   report = new PCx_Report(model);

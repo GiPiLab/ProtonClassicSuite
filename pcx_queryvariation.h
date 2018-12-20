@@ -100,7 +100,7 @@ private:
   INCREASEDECREASE incDec;
   PERCENTORPOINTS percentOrPoints;
   OPERATORS op;
-  qint64 val;
+  qint64 val{};
 
   PCx_QueryVariation(const PCx_QueryVariation &c);
   PCx_QueryVariation &operator=(const PCx_QueryVariation &);

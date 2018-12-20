@@ -83,16 +83,16 @@ QVariant PCx_PrevisionItemTableModel::data(const QModelIndex &index, int role) c
 
     if (index.column() == 0) {
       return trueItem->getCriteriaLongDescription();
-    } else if (index.column() == 1) {
+    }
+    if (index.column() == 1) {
       return NUMBERSFORMAT::formatFixedPoint(trueItem->compute(previsionItem->getPrevision()->getAttachedAuditId(),
                                                                previsionItem->getMode(), previsionItem->getNodeId()));
     }
   } else if (role == Qt::BackgroundRole) {
     if (index.row() < previsionItem->getItemsToAdd().count()) {
       return QVariant(QBrush(QColor(Qt::green)));
-    } else {
-      return QVariant(QBrush(QColor(Qt::red)));
     }
+    return QVariant(QBrush(QColor(Qt::red)));
 
   } else if (role == Qt::TextAlignmentRole) {
     if (index.column() == 1) {
