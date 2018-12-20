@@ -46,6 +46,7 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QPainter>
+#include <QSettings>
 #include <QStandardPaths>
 
 FormAuditTreemap::FormAuditTreemap(QWidget *parent) : QWidget(parent), ui(new Ui::FormAuditTreemap) {
@@ -219,6 +220,7 @@ void FormAuditTreemap::on_pushButtonSave_clicked() {
 
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+
   QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Images PNG (*.png)"));
   if (fileName.isEmpty()) {
     return;
