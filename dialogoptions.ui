@@ -9,14 +9,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>774</width>
-    <height>565</height>
+    <width>748</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>620</width>
-    <height>533</height>
+    <height>550</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
    <bool>true</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <item row="0" column="0" rowspan="2">
+   <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -48,16 +48,13 @@
       <string>Format d'enregistrement des tableaux</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="radioButtonCSS">
         <property name="text">
-         <string>Dans ce mode, l'apparence des cellules des tableaux est intégrée dans chaque balise HTML. Ce mode permet d'obtenir un meilleur affichage avec certains éditeurs de textes, mais produit des fichiers beaucoup plus volumineux et rend plus difficile la modification de l'apparence des tableaux.</string>
+         <string>Feuille de style</string>
         </property>
-        <property name="wordWrap">
+        <property name="checked">
          <bool>true</bool>
-        </property>
-        <property name="margin">
-         <number>4</number>
         </property>
        </widget>
       </item>
@@ -74,20 +71,16 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="radioButtonCSS">
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Feuille de style</string>
+         <string>Dans ce mode, l'apparence des cellules des tableaux est intégrée dans chaque balise HTML. Ce mode permet d'obtenir un meilleur affichage avec certains éditeurs de textes, mais produit des fichiers beaucoup plus volumineux et rend plus difficile la modification de l'apparence des tableaux.</string>
         </property>
-        <property name="checked">
+        <property name="wordWrap">
          <bool>true</bool>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QRadioButton" name="radioButtonInline">
-        <property name="text">
-         <string>Styles intégrés</string>
+        <property name="margin">
+         <number>4</number>
         </property>
        </widget>
       </item>
@@ -103,6 +96,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="radioButtonInline">
+        <property name="text">
+         <string>Styles intégrés</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -265,7 +265,7 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="enabled">
       <bool>true</bool>
@@ -274,16 +274,6 @@
       <string>Couleurs des requêtes</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Type variation :</string>
-        </property>
-        <property name="buddy">
-         <cstring>pushButtonColorReqVar</cstring>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_8">
         <property name="text">
@@ -294,13 +284,13 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>Type min/max :</string>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pushButtonColorReqVar">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de l'arrière plan des requêtes de type &amp;quot;variation&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
-        <property name="buddy">
-         <cstring>pushButtonColorReqMinMax</cstring>
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -324,61 +314,107 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="pushButtonColorReqVar">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de l'arrière plan des requêtes de type &amp;quot;variation&amp;quot;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_9">
         <property name="text">
-         <string/>
+         <string>Type min/max :</string>
+        </property>
+        <property name="buddy">
+         <cstring>pushButtonColorReqMinMax</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Type variation :</string>
+        </property>
+        <property name="buddy">
+         <cstring>pushButtonColorReqVar</cstring>
         </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="4" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
+   <item row="1" column="1">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="whatsThis">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Options concernant le format d'affichage et d'exportation des images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
+     <property name="title">
+      <string>Format des graphiques</string>
      </property>
-    </spacer>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Largeur :</string>
+        </property>
+        <property name="buddy">
+         <cstring>spinBoxWidth</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spinBoxWidth">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="correctionMode">
+         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+        </property>
+        <property name="suffix">
+         <string>px</string>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Hauteur :</string>
+        </property>
+        <property name="buddy">
+         <cstring>spinBoxHeight</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinBoxHeight">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="correctionMode">
+         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+        </property>
+        <property name="suffix">
+         <string>px</string>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
-   <item row="5" column="1">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="pushButtonOk">
-       <property name="text">
-        <string>Ok</string>
-       </property>
-       <property name="default">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonReset">
-       <property name="text">
-        <string>Réinitialiser</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonCancel">
-       <property name="text">
-        <string>Annuler</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="checkBoxRandomAllowed">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offre la possibilité de fabriquer des arbres, des audits et des reportings aléatoires afin de tester rapidement le comportement du système sur de gros volumes de données&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Autoriser les données aléatoires</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="1" rowspan="2">
     <widget class="QGroupBox" name="groupBox_5">
      <property name="whatsThis">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format d'affichage des nombres. N'influence pas la précision des calculs.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -446,150 +482,43 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QCheckBox" name="checkBoxRandomAllowed">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offre la possibilité de fabriquer des arbres, des audits et des reportings aléatoires afin de tester rapidement le comportement du système sur de gros volumes de données&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Autoriser les données aléatoires</string>
+      <string>Permet la création d'arbres aléatoires (une liste de prénoms est intégrée dans le logiciel) et le remplissage d'audits ou de reportings avec des valeurs aléatoires</string>
      </property>
-     <property name="checked">
+     <property name="wordWrap">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="2" column="0" rowspan="4">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Options concernant le format d'affichage et d'exportation des images.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="title">
-      <string>Format des graphiques</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_6">
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="radioButtonPNG">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bon compromis entre compatibilité et qualité d'image, mais le temps de génération des rapports peut être important&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>PNG</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="radioButtonJPG">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Favorise la vitesse de génération du rapport, moyennant une (légère) dégradation de la qualité des images et une (importante) augmentation de leur poids sur le disque. Compatibilité maximale.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>JPEG</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="radioButtonSVG">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Format d'image vectoriel : favorise à la fois la vitesse de génération du rapport et la qualité du rendu, mais nécessite un navigateur ou un traitement de textes récent pour pouvoir être lu. L'aspect peut également varier par rapport au rendu dans ProtonClassicSuite&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>SVG</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Largeur :</string>
-        </property>
-        <property name="buddy">
-         <cstring>spinBoxWidth</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Hauteur :</string>
-        </property>
-        <property name="buddy">
-         <cstring>spinBoxHeight</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Echelle : </string>
-        </property>
-        <property name="buddy">
-         <cstring>doubleSpinBoxScale</cstring>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1" colspan="2">
-       <widget class="QSpinBox" name="spinBoxWidth">
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="correctionMode">
-         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-        </property>
-        <property name="suffix">
-         <string>px</string>
-        </property>
-        <property name="singleStep">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" colspan="2">
-       <widget class="QSpinBox" name="spinBoxHeight">
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="correctionMode">
-         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-        </property>
-        <property name="suffix">
-         <string>px</string>
-        </property>
-        <property name="singleStep">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="2">
-       <widget class="QDoubleSpinBox" name="doubleSpinBoxScale">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Facteur de mise à l'échelle des graphiques lors de l'enregistrement. Les images sont déclarées de la taille spécifiée dans le rapport mais enregistrées avec le facteur de mise à l'échelle sur le disque. Par exemple une image de 650x400 avec un facteur d'échelle 2.0 sera enregistrée dans un fichier de 1300x800 sur le disque, afin d'optimiser la qualité d'impression du rapport.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Plus la taille des images est grande, plus le temps pour générer le rapport est long.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="correctionMode">
-         <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
-        </property>
-        <property name="suffix">
-         <string/>
-        </property>
-        <property name="decimals">
-         <number>1</number>
-        </property>
-        <property name="minimum">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.500000000000000</double>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+   <item row="4" column="0" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="pushButtonOk">
+       <property name="text">
+        <string>Ok</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonReset">
+       <property name="text">
+        <string>Réinitialiser</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButtonCancel">
+       <property name="text">
+        <string>Annuler</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -606,16 +535,11 @@
   <tabstop>pushButtonColorReqVar</tabstop>
   <tabstop>pushButtonColorReqRank</tabstop>
   <tabstop>pushButtonColorReqMinMax</tabstop>
-  <tabstop>radioButtonPNG</tabstop>
-  <tabstop>radioButtonJPG</tabstop>
   <tabstop>spinBoxWidth</tabstop>
-  <tabstop>spinBoxHeight</tabstop>
-  <tabstop>doubleSpinBoxScale</tabstop>
   <tabstop>spinBoxNumDecimals</tabstop>
   <tabstop>radioButtonUnits</tabstop>
   <tabstop>radioButtonThousands</tabstop>
   <tabstop>radioButtonMillions</tabstop>
-  <tabstop>checkBoxRandomAllowed</tabstop>
   <tabstop>pushButtonOk</tabstop>
   <tabstop>pushButtonReset</tabstop>
   <tabstop>pushButtonCancel</tabstop>

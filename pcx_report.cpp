@@ -45,18 +45,17 @@
 #include "utils.h"
 #include <QtSvg/QtSvg>
 
-PCx_Report::PCx_Report(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight, double scale)
-    : auditModel(model), tables(model), graphics(model, plot, graphicsWidth, graphicsHeight, scale) {
+PCx_Report::PCx_Report(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
+    : auditModel(model), tables(model), graphics(model, plot, graphicsWidth, graphicsHeight) {
   if (model == nullptr) {
     qFatal("Assertion failed");
   }
   reportingModel = nullptr;
 }
 
-PCx_Report::PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight,
-                       double scale)
+PCx_Report::PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
     : reportingModel(reportingModel), tables(reportingModel),
-      graphics(reportingModel, plot, graphicsWidth, graphicsHeight, scale) {
+      graphics(reportingModel, plot, graphicsWidth, graphicsHeight) {
   auditModel = nullptr;
 }
 
@@ -151,134 +150,77 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
 
   int graphicsWidth = graphics.getGraphicsWidth();
   int graphicsHeight = graphics.getGraphicsHeight();
-  double scale = graphics.getScale();
 
-  // Inline graphics mode
-  if (document != nullptr) {
-    foreach (PCx_Graphics::PCAGRAPHICS graph, listOfGraphics) {
-      switch (graph) {
-      case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
-        output.append(
-            "<div align='center' class='g'><b>" +
-            graphics.getPCAHistory(selectedNode, mode,
-                                   {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
-                                   prevItem, false) +
-            "</b><br>");
-        break;
+  // To save images
+  QString encodedRelativeImagePath = QUrl::toPercentEncoding(relativeImagePath);
 
-      case PCx_Graphics::PCAGRAPHICS::PCAG1:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG1(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG2:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG2(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG3:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG3(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG4:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG4(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG5:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG5(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG6:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG6(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG7:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG7(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG8:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG8(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG9:
-        output.append("<div align='center' class='g'><b>" + graphics.getPCAG9(selectedNode) + "</b><br>");
-        break;
-      }
+  QString suffix = ".png";
+
+  int progressValue = 0;
+  if (progress != nullptr) {
+    progressValue = progress->value();
+  }
+
+  foreach (PCx_Graphics::PCAGRAPHICS graph, listOfGraphics) {
+    switch (graph) {
+    case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
+      output.append(
+          "<div align='center' class='g'><b>" +
+          graphics.getPCAHistory(selectedNode, mode,
+                                 {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
+                                 prevItem, false) +
+          "</b><br>");
+      break;
+
+    case PCx_Graphics::PCAGRAPHICS::PCAG1:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG1(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG2:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG2(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG3:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG3(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG4:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG4(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG5:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG5(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG6:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG6(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG7:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG7(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG8:
+      output.append("<div align='center' class='g'><b>" +
+                    graphics.getPCAG8(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      break;
+    case PCx_Graphics::PCAGRAPHICS::PCAG9:
+      output.append("<div align='center' class='g'><b>" + graphics.getPCAG9(selectedNode) + "</b><br>");
+      break;
+    }
+
+    // Inline mode
+    if (document != nullptr) {
+
       QString name = "mydata://" + QString::number(qrand());
 
       document->addResource(QTextDocument::ImageResource, QUrl(name),
-                            QVariant(graphics.getPlot()->toPixmap(graphicsWidth, graphicsHeight, scale)));
+                            QVariant(graphics.getPlot()->toPixmap(graphicsWidth, graphicsHeight)));
       output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                         .arg(graphicsWidth)
                         .arg(graphicsHeight)
                         .arg(name));
-    }
-  }
-
-  // Export mode
-  else {
-    QSettings settings;
-    QString imageFormat = settings.value("output/imageFormat", "png").toString();
-    QString encodedRelativeImagePath = QUrl::toPercentEncoding(relativeImagePath);
-
-    QString suffix = "." + imageFormat;
-
-    int progressValue = 0;
-    if (progress != nullptr) {
-      progressValue = progress->value();
-    }
-
-    if (absoluteImagePath.isEmpty() || encodedRelativeImagePath.isEmpty()) {
-      qWarning() << "Please pass an absolute and relative path to store images";
-      die();
-    }
-
-    foreach (PCx_Graphics::PCAGRAPHICS graph, listOfGraphics) {
-      switch (graph) {
-      case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
-        output.append(
-            "<div align='center' class='g'><b>" +
-            graphics.getPCAHistory(selectedNode, mode,
-                                   {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
-                                   prevItem, false) +
-            "</b><br>");
-        break;
-
-      case PCx_Graphics::PCAGRAPHICS::PCAG1:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG1(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG2:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG2(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG3:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG3(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG4:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG4(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG5:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG5(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG6:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG6(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG7:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG7(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG8:
-        output.append("<div align='center' class='g'><b>" +
-                      graphics.getPCAG8(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
-        break;
-      case PCx_Graphics::PCAGRAPHICS::PCAG9:
-        output.append("<div align='center' class='g'><b>" + graphics.getPCAG9(selectedNode) + "</b><br>");
-        break;
-      }
-
+    } else { // Export mode
       QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
       QString imageName = generateUniqueFileName(suffix);
@@ -286,8 +228,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
       imageName.prepend(encodedRelativeImagePath + "/");
       imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-      if (saveImageToDisk(graphics.getPlot(), imageAbsoluteName, graphicsWidth, graphicsHeight, scale, imageFormat) ==
-          false) {
+      if (graphics.savePlotToDisk(imageAbsoluteName) == false) {
         die();
       }
 
@@ -325,10 +266,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     die();
   }
 
-  QSettings settings;
-  QString imageFormat = settings.value("output/imageFormat", "png").toString();
-
-  QString suffix = "." + imageFormat;
+  QString suffix = ".png";
 
   int progressValue = 0;
   if (progress != nullptr) {
@@ -337,7 +275,6 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
   int graphicsWidth = graphics.getGraphicsWidth();
   int graphicsHeight = graphics.getGraphicsHeight();
-  double scale = graphics.getScale();
 
   QString output = "\n<div class='reportingNodeContainer'>\n";
 
@@ -384,11 +321,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         imageName.prepend(encodedRelativeImagePath + "/");
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (saveImageToDisk(graphics.getPlot(), imageAbsoluteName, graphicsWidth, graphicsHeight, scale, imageFormat) ==
-            false) {
+        if (!graphics.savePlotToDisk(imageAbsoluteName)) {
           die();
         }
-
         output.append(QString("<br><div align='center' class='g'><img align='center' "
                               "width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                           .arg(graphicsWidth)
@@ -424,8 +359,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         imageName.prepend(encodedRelativeImagePath + "/");
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (saveImageToDisk(graphics.getPlot(), imageAbsoluteName, graphicsWidth, graphicsHeight, scale, imageFormat) ==
-            false) {
+        if (!graphics.savePlotToDisk(imageAbsoluteName)) {
           die();
         }
 
@@ -464,8 +398,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         imageName.prepend(encodedRelativeImagePath + "/");
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (saveImageToDisk(graphics.getPlot(), imageAbsoluteName, graphicsWidth, graphicsHeight, scale, imageFormat) ==
-            false) {
+        if (!graphics.savePlotToDisk(imageAbsoluteName)) {
           die();
         }
 
@@ -504,8 +437,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         imageName.prepend(encodedRelativeImagePath + "/");
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (saveImageToDisk(graphics.getPlot(), imageAbsoluteName, graphicsWidth, graphicsHeight, scale, imageFormat) ==
-            false) {
+        if (!graphics.savePlotToDisk(imageAbsoluteName)) {
           die();
         }
 
@@ -523,44 +455,6 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
   output.append("\n</div>\n");
   return output;
-}
-
-bool PCx_Report::saveImageToDisk(QCustomPlot *plot, const QString &imageAbsoluteName, int graphicsWidth,
-                                 int graphicsHeight, double scale, const QString &imageFormat) const {
-  const char *imgFormat = "png";
-  int quality = -1;
-
-  if (imageFormat == "png") {
-    imgFormat = "png";
-    quality = -1;
-  } else if (imageFormat == "jpg") {
-    imgFormat = "jpeg";
-    quality = 96;
-  } else if (imageFormat == "svg") {
-    imgFormat = "svg";
-    quality = -1;
-  } else {
-    qCritical() << "Invalid image format";
-    return false;
-  }
-
-  if (imageFormat == "svg") {
-    QSvgGenerator svggenerator;
-    svggenerator.setFileName(imageAbsoluteName);
-    QCPPainter qcpPainter;
-    qcpPainter.begin(&svggenerator);
-    plot->toPainter(&qcpPainter, graphicsWidth, graphicsHeight);
-    qcpPainter.end();
-  } else if (imageFormat == "png" || imageFormat == "jpg") {
-    if (!plot->saveRastered(imageAbsoluteName, graphicsWidth, graphicsHeight, scale, imgFormat, quality)) {
-      qCritical() << "Unable to save " << imageAbsoluteName;
-      die();
-    }
-  } else {
-    qCritical() << "Invalid image format";
-    return false;
-  }
-  return true;
 }
 
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const {

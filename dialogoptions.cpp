@@ -67,17 +67,6 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
     qWarning() << "Unsupported option for CSS !";
   }
 
-  QString imageFormat = settings.value("output/imageFormat", "png").toString();
-  if (imageFormat == "jpg") {
-    ui->radioButtonJPG->setChecked(true);
-  } else if (imageFormat == "png") {
-    ui->radioButtonPNG->setChecked(true);
-  } else if (imageFormat == "svg") {
-    ui->radioButtonSVG->setChecked(true);
-  } else {
-    qWarning() << "Unsupported option for image format !";
-  }
-
   int imageWidth = settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt();
   if (imageWidth < PCx_Graphics::MINWIDTH) {
     imageWidth = PCx_Graphics::MINWIDTH;
@@ -94,20 +83,8 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
     imageHeight = PCx_Graphics::MAXHEIGHT;
   }
 
-  double scale = settings.value("graphics/scale", PCx_Graphics::DEFAULTSCALE).toDouble();
-  if (scale < PCx_Graphics::MINSCALE) {
-    scale = PCx_Graphics::MINSCALE;
-  }
-  if (scale > PCx_Graphics::MAXSCALE) {
-    scale = PCx_Graphics::MAXSCALE;
-  }
-
   unsigned int numdecimals = settings.value("format/numdecimals", DEFAULTNUMDECIMALS).toUInt();
   ui->spinBoxNumDecimals->setValue(static_cast<int>(numdecimals));
-
-  ui->doubleSpinBoxScale->setMinimum(PCx_Graphics::MINSCALE);
-  ui->doubleSpinBoxScale->setMaximum(PCx_Graphics::MAXSCALE);
-  ui->doubleSpinBoxScale->setValue(scale);
 
   ui->spinBoxHeight->setMinimum(PCx_Graphics::MINHEIGHT);
   ui->spinBoxHeight->setMaximum(PCx_Graphics::MAXHEIGHT);
@@ -178,16 +155,6 @@ void DialogOptions::on_pushButtonOk_clicked() {
     qWarning() << "Unknown case of option selection for CSS";
   }
 
-  if (ui->radioButtonJPG->isChecked()) {
-    settings.setValue("output/imageFormat", "jpg");
-  } else if (ui->radioButtonPNG->isChecked()) {
-    settings.setValue("output/imageFormat", "png");
-  } else if (ui->radioButtonSVG->isChecked()) {
-    settings.setValue("output/imageFormat", "svg");
-  } else {
-    qWarning() << "Unknown case of option selection for image format";
-  }
-
   settings.setValue("format/numdecimals", ui->spinBoxNumDecimals->value());
 
   if (ui->radioButtonUnits->isChecked()) {
@@ -200,7 +167,6 @@ void DialogOptions::on_pushButtonOk_clicked() {
 
   settings.setValue("graphics/width", ui->spinBoxWidth->value());
   settings.setValue("graphics/height", ui->spinBoxHeight->value());
-  settings.setValue("graphics/scale", ui->doubleSpinBoxScale->value());
 
   settings.setValue("graphics/pen1", colorPen1.rgba());
   settings.setValue("graphics/pen2", colorPen2.rgba());
@@ -223,10 +189,8 @@ void DialogOptions::on_pushButtonCancel_clicked() { done(Rejected); }
 
 void DialogOptions::on_pushButtonReset_clicked() {
   ui->radioButtonCSS->setChecked(true);
-  ui->radioButtonPNG->setChecked(true);
   ui->spinBoxHeight->setValue(PCx_Graphics::DEFAULTHEIGHT);
   ui->spinBoxWidth->setValue(PCx_Graphics::DEFAULTWIDTH);
-  ui->doubleSpinBoxScale->setValue(PCx_Graphics::DEFAULTSCALE);
   colorReqMinMax = QColor(PCx_QueryMinMax::DEFAULTCOlOR);
   colorReqVar = QColor(PCx_QueryVariation::DEFAULTCOlOR);
   colorReqRank = QColor(PCx_QueryRank::DEFAULTCOlOR);

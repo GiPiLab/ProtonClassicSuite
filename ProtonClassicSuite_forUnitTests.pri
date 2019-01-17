@@ -1,4 +1,4 @@
-QT       += core gui sql printsupport svg
+QT       += core gui sql printsupport
 
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD

@@ -55,10 +55,10 @@ public:
   enum class PCRPRESETS { PCRPRESET_A, PCRPRESET_B, PCRPRESET_C, PCRPRESET_D, PCRPRESET_S };
 
   explicit PCx_Report(PCx_Audit *auditModel, QCustomPlot *plot = nullptr, int graphicsWidth = 650,
-                      int graphicsHeight = 400, double scale = 1.0);
+                      int graphicsHeight = 400);
 
   explicit PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot = nullptr, int graphicsWidth = 650,
-                      int graphicsHeight = 400, double scale = 1.0);
+                      int graphicsHeight = 400);
 
   QString generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs,
                                          QList<PCx_Tables::PCATABLES> listOfTables,
@@ -87,9 +87,6 @@ private:
 
   PCx_Report(const PCx_Report &c);
   PCx_Report &operator=(const PCx_Report &);
-
-  bool saveImageToDisk(QCustomPlot *plot, const QString &imageAbsoluteName, int graphicsWidth, int graphicsHeight,
-                       double scale, const QString &imgFormat) const;
 };
 
 #endif // PCX_REPORT_H

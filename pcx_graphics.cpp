@@ -45,11 +45,12 @@
 #include <QObject>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QtSvg>
 #include <cfloat>
 
 using namespace NUMBERSFORMAT;
 
-PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight, double scale)
+PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
     : auditModel(model) {
   if (model == nullptr) {
     qFatal("Assertion failed");
@@ -57,7 +58,6 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidt
   reportingModel = nullptr;
   setGraphicsWidth(graphicsWidth);
   setGraphicsHeight(graphicsHeight);
-  setScale(scale);
 
   if (plot == nullptr) {
     this->plot = new QCustomPlot();
@@ -68,8 +68,7 @@ PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidt
   }
 }
 
-PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight,
-                           double scale)
+PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
     : reportingModel(reportingModel) {
   if (reportingModel == nullptr) {
     qFatal("Assertion failed");
@@ -77,7 +76,6 @@ PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int
   auditModel = nullptr;
   setGraphicsWidth(graphicsWidth);
   setGraphicsHeight(graphicsHeight);
-  setScale(scale);
 
   if (plot == nullptr) {
     this->plot = new QCustomPlot();
@@ -237,7 +235,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   plot->yAxis->setLabel("%");
 
   plot->legend->setVisible(true);
-  plot->legend->setFont(QFont("DejaVu Sans"));
+  plot->legend->setFont(QFont("Sans serif"));
   plot->legend->setRowSpacing(3);
   plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom);
 
@@ -253,7 +251,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
     double val2 = dataPlotNode.value(key);
     auto *text = new QCPItemText(plot);
     text->setText(formatDouble(val1, -1, true) + '%');
-    text->setFont(QFont("DejaVu Sans"));
+    text->setFont(QFont("Sans serif"));
     int alignment = Qt::AlignHCenter;
 
     if (val1 < val2) {
@@ -269,7 +267,7 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
     text = new QCPItemText(plot);
     text->setText(formatDouble(val2, -1, true) + '%');
-    text->setFont(QFont("DejaVu Sans"));
+    text->setFont(QFont("Sans serif"));
 
     alignment = Qt::AlignHCenter;
 
@@ -318,8 +316,8 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   plot->xAxis->setSubTickLength(0);
   plot->xAxis->setTickLength(4);
 
-  plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
-  plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
+  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
+  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
 
   plot->xAxis->setTickLabelRotation(0);
   plot->xAxis->grid()->setVisible(false);
@@ -487,7 +485,7 @@ QString PCx_Graphics::getPCAG9(unsigned int node) {
   diBar->setData(ticks, valuesDI);
   riBar->setData(ticks, valuesRI);
 
-  plot->legend->setFont(QFont("DejaVu Sans", 8));
+  plot->legend->setFont(QFont("Sans serif", 8));
 
   plot->legend->setRowSpacing(-4);
   plot->legend->setWrap(2);
@@ -499,8 +497,8 @@ QString PCx_Graphics::getPCAG9(unsigned int node) {
   plot->xAxis->setTickLength(0, 0);
   plot->xAxis->grid()->setVisible(false);
   plot->xAxis->setTickLabelRotation(90);
-  plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
-  plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
+  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
+  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
 
   plot->xAxis->setTicker(textTicker);
   plot->xAxis->setRange(0, tickCounter);
@@ -544,7 +542,7 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     if (plot->plotLayout()->elementCount() == 1) {
       plot->plotLayout()->insertRow(0);
       title = new QCPTextElement(plot, plotTitle);
-      title->setFont(QFont("DejaVu Sans", 8));
+      title->setFont(QFont("Sans serif", 8));
       plot->plotLayout()->addElement(0, 0, title);
     } else {
       title = dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
@@ -629,10 +627,10 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
   plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
-  plot->legend->setFont(QFont("DejaVu Sans"));
+  plot->legend->setFont(QFont("Sans serif"));
   if (!miniMode) {
     plot->legend->setVisible(true);
-    plot->legend->setFont(QFont("DejaVu Sans", 7));
+    plot->legend->setFont(QFont("Sans serif", 7));
     plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignCenter);
   }
 
@@ -644,13 +642,13 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   plot->xAxis->setTickLength(4);
 
   plot->xAxis->setTickLabelRotation(0);
-  plot->yAxis->setTickLabelFont(QFont("DejaVu Sans"));
-  plot->xAxis->setTickLabelFont(QFont("DejaVu Sans"));
+  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
+  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
 
   if (miniMode) {
     plot->xAxis->setTickLabelRotation(45);
-    plot->yAxis->setTickLabelFont(QFont("DejaVu Sans", 7));
-    plot->xAxis->setTickLabelFont(QFont("DejaVu Sans", 7));
+    plot->yAxis->setTickLabelFont(QFont("Sans serif", 7));
+    plot->xAxis->setTickLabelFont(QFont("Sans serif", 7));
   }
 
   plot->yAxis->setLabel("€");
@@ -661,6 +659,14 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
   plot->replot();
   return plotTitle;
+}
+
+bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {
+  if (!plot->savePng(imageAbsoluteName, graphicsWidth, graphicsHeight)) {
+    qCritical() << "Unable to save " << imageAbsoluteName;
+    return false;
+  }
+  return true;
 }
 
 QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
@@ -687,7 +693,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   if (plot->plotLayout()->elementCount() == 1) {
     plot->plotLayout()->insertRow(0);
     title = new QCPTextElement(plot, plotTitle);
-    title->setFont(QFont("DejaVu Sans", 11));
+    title->setFont(QFont("Sans serif", 11));
     plot->plotLayout()->addElement(0, 0, title);
   } else {
     title = dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
@@ -765,7 +771,7 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
 
   plot->legend->setVisible(true);
-  plot->legend->setFont(QFont("DejaVu Sans", 8));
+  plot->legend->setFont(QFont("Sans serif", 8));
   plot->legend->setRowSpacing(-5);
   plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom | Qt::AlignRight);
 
@@ -839,7 +845,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
   if (plot->plotLayout()->elementCount() == 1) {
     plot->plotLayout()->insertRow(0);
     title = new QCPTextElement(plot, plotTitle);
-    title->setFont(QFont("DejaVu Sans", 11));
+    title->setFont(QFont("Sans serif", 11));
     plot->plotLayout()->addElement(0, 0, title);
   } else {
     title = dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
@@ -927,16 +933,6 @@ void PCx_Graphics::setGraphicsHeight(int height) {
   }
   if (graphicsHeight > MAXHEIGHT) {
     graphicsHeight = MAXHEIGHT;
-  }
-}
-
-void PCx_Graphics::setScale(double scale) {
-  this->scale = scale;
-  if (this->scale < MINSCALE) {
-    this->scale = MINSCALE;
-  }
-  if (this->scale > MAXSCALE) {
-    this->scale = MAXSCALE;
   }
 }
 

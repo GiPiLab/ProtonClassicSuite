@@ -125,7 +125,7 @@ void FormReportingExplore::on_comboListReportings_activated(int index) {
   int graphicsWidth = settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt();
   int graphicsHeight = settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt();
 
-  report = new PCx_Report(selectedReporting, nullptr, graphicsWidth, graphicsHeight, 1.0);
+  report = new PCx_Report(selectedReporting, nullptr, graphicsWidth, graphicsHeight);
 
   document->clear();
 
@@ -291,7 +291,6 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
 
   report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
-  report->getGraphics().setScale(settings.value("graphics/scale", PCx_Graphics::DEFAULTSCALE).toDouble());
 
   // Generate report in non-embedded mode, saving images
   QString output = selectedReporting->generateHTMLHeader();

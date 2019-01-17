@@ -97,7 +97,7 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
   QSettings settings;
   report.getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report.getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
-  report.getGraphics().setScale(1.0);
+
   out = prevision->generateHTMLHeader();
   out.append(prevision->generateHTMLPrevisionTitle());
   out.append("<h4>" + MODES::modeToCompleteString(mode).toHtmlEscaped() + "</h4>");
@@ -155,7 +155,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   QSettings settings;
   report.getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report.getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
-  report.getGraphics().setScale(settings.value("graphics/scale", PCx_Graphics::DEFAULTSCALE).toDouble());
+
   QString out = prevision->generateHTMLHeader();
   out.append(prevision->generateHTMLPrevisionTitle());
   QList<unsigned int> descendants;

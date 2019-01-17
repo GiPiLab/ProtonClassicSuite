@@ -50,15 +50,12 @@
 
 class PCx_Graphics {
 public:
-  static const int MAXWIDTH = 1024;
-  static const int MAXHEIGHT = 1024;
+  static const int MAXWIDTH = 2048;
+  static const int MAXHEIGHT = 2048;
   static const int MINWIDTH = 350;
   static const int MINHEIGHT = 350;
-  static constexpr double MINSCALE = 1.0;
-  static constexpr double MAXSCALE = 3.0;
   static const int DEFAULTWIDTH = 650;
   static const int DEFAULTHEIGHT = 400;
-  static constexpr double DEFAULTSCALE = 1.0;
 
   static const unsigned int DEFAULTPENCOLOR1 = 0xff0000;
   static const unsigned int DEFAULTPENCOLOR2 = 0x0000ff;
@@ -86,9 +83,9 @@ public:
   enum class PCRGRAPHICS { PCRHISTORY, PCRGPROVENANCE, PCRGVARIATION, PCRGUTILISATION, PCRCYCLES };
 
   PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
-               int graphicsHeight = DEFAULTHEIGHT, double scale = 1.0);
+               int graphicsHeight = DEFAULTHEIGHT);
   PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
-               int graphicsHeight = DEFAULTHEIGHT, double scale = 1.0);
+               int graphicsHeight = DEFAULTHEIGHT);
   virtual ~PCx_Graphics();
 
   QString getPCAG1(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
@@ -143,11 +140,9 @@ public:
 
   int getGraphicsWidth() const { return graphicsWidth; }
   int getGraphicsHeight() const { return graphicsHeight; }
-  double getScale() const { return scale; }
 
   void setGraphicsWidth(int width);
   void setGraphicsHeight(int height);
-  void setScale(double scale);
 
   static QColor getColorPen1();
   static QColor getColorPen2();
@@ -160,6 +155,8 @@ public:
   static int getAlpha();
 
   static QString getCSS();
+
+  bool savePlotToDisk(const QString &imageAbsoluteName) const;
 
 private:
   PCx_Audit *auditModel;
@@ -176,7 +173,6 @@ private:
                             const QString &plotTitle, QColor color);
   bool ownPlot;
   int graphicsWidth{}, graphicsHeight{};
-  double scale{};
 
   QCustomPlot *plot;
 

@@ -133,9 +133,6 @@ void FormAuditExplore::updateTextBrowser() {
   report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
 
-  // Always scale 1.0 when displaying
-  report->getGraphics().setScale(1.0);
-
   QString output = model->generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
   output.append(report->generateHTMLAuditReportForNode(selectedTabs, QList<PCx_Tables::PCATABLES>(), selectedGraphics,
@@ -376,7 +373,6 @@ void FormAuditExplore::on_saveButton_clicked() {
 
   report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
-  report->getGraphics().setScale(settings.value("graphics/scale", PCx_Graphics::DEFAULTSCALE).toDouble());
 
   // Generate report in non-embedded mode, saving images
   QString output = model->generateHTMLHeader();

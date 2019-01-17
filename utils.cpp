@@ -42,6 +42,7 @@
 
 #include "utils.h"
 
+#include "QCustomPlot/qcustomplot.h"
 #include <QApplication>
 #include <QDateTime>
 #include <QDebug>
@@ -55,6 +56,7 @@
 #include <QStandardPaths>
 #include <QUuid>
 #include <QtGlobal>
+#include <QtSvg>
 #include <cstdio>
 #ifndef Q_OS_ANDROID
 #include <graphviz/gvc.h>

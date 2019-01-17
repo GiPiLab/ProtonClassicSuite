@@ -390,7 +390,7 @@ void ProtonClassicSuiteUnitTests::benchmarkReport() {
                                        PCx_Graphics::PCAGRAPHICS::PCAG5, PCx_Graphics::PCAGRAPHICS::PCAG6,
                                        PCx_Graphics::PCAGRAPHICS::PCAG7, PCx_Graphics::PCAGRAPHICS::PCAG8,
                                        PCx_Graphics::PCAGRAPHICS::PCAG9, PCx_Graphics::PCAGRAPHICS::PCAHISTORY},
-      (qrand() % 10) + 1, MODES::DFRFDIRI::DF, 1, &doc, nullptr, nullptr, nullptr, nullptr));
+      4, MODES::DFRFDIRI::DF, 1, &doc, nullptr, nullptr, nullptr, nullptr));
 
   PCx_Audit::deleteAudit(auditId);
   PCx_Tree::deleteTree(treeId);
@@ -430,8 +430,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   QByteArray expectedGHist = "d30064d2490e767f93a76832b597319f7c9320c27f014c6237e00e4400d37e54";
 
   graphics.getPCAG1(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
 
@@ -441,8 +440,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG2(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G2" << hash.toHex();
@@ -451,8 +449,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG3(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G3" << hash.toHex();
@@ -461,8 +458,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG4(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G4" << hash.toHex();
@@ -471,8 +467,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG5(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G5" << hash.toHex();
@@ -481,8 +476,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG6(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G6" << hash.toHex();
@@ -491,8 +485,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG7(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G7" << hash.toHex();
@@ -501,8 +494,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG8(nodeA, MODES::DFRFDIRI::DF);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G8" << hash.toHex();
@@ -511,8 +503,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   ba.clear();
   buffer.open(QIODevice::WriteOnly);
   graphics.getPCAG9(nodeA);
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "G9" << hash.toHex();
@@ -523,8 +514,7 @@ void ProtonClassicSuiteUnitTests::testCaseForPCAGraphics() {
   graphics.getPCAHistory(nodeA, MODES::DFRFDIRI::DF,
                          QList<PCx_Audit::ORED>{PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES,
                                                 PCx_Audit::ORED::ENGAGES, PCx_Audit::ORED::DISPONIBLES});
-  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT, PCx_Graphics::DEFAULTSCALE)
-      .save(&buffer, "PNG");
+  plot.toPixmap(PCx_Graphics::DEFAULTWIDTH, PCx_Graphics::DEFAULTHEIGHT).save(&buffer, "PNG");
   buffer.close();
   hash = QCryptographicHash::hash(ba, QCryptographicHash::Sha256);
   qDebug() << "GHist" << hash.toHex();

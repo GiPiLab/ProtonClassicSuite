@@ -371,7 +371,6 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
-  report->getGraphics().setScale(settings.value("graphics/scale", PCx_Graphics::DEFAULTSCALE).toDouble());
 
   QElapsedTimer timer;
   timer.start();
