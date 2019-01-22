@@ -47,6 +47,9 @@
 #include "pcx_audit.h"
 #include "pcx_previsionitem.h"
 #include "pcx_reporting.h"
+#include <QtCharts/QtCharts>
+
+using namespace QtCharts;
 
 class PCx_Graphics {
 public:
@@ -157,6 +160,10 @@ public:
   static QString getCSS();
 
   bool savePlotToDisk(const QString &imageAbsoluteName) const;
+
+  QChart *getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                             const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
+                             bool miniMode);
 
 private:
   PCx_Audit *auditModel;

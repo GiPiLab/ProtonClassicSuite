@@ -36,7 +36,7 @@
 # termes.
 #
 
-QT       += core gui sql printsupport
+QT       += core gui sql printsupport charts
 
 CONFIG += c++11
 

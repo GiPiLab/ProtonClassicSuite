@@ -161,15 +161,23 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     progressValue = progress->value();
   }
 
+  QChart *chart = nullptr;
   foreach (PCx_Graphics::PCAGRAPHICS graph, listOfGraphics) {
     switch (graph) {
     case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
-      output.append(
-          "<div align='center' class='g'><b>" +
-          graphics.getPCAHistory(selectedNode, mode,
-                                 {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
-                                 prevItem, false) +
-          "</b><br>");
+      chart = graphics.getPCAHistoryChart(
+          selectedNode, mode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES}, prevItem,
+          false);
+      if (chart != nullptr) {
+        output.append("<div align='center' class='g'><b>" + chart->title() + "</b><br>");
+      }
+
+      /*  output.append(
+            "<div align='center' class='g'><b>" +
+            graphics.getPCAHistory(selectedNode, mode,
+                                   {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
+                                   prevItem, false) +
+            "</b><br>");*/
       break;
 
     case PCx_Graphics::PCAGRAPHICS::PCAG1:
@@ -214,12 +222,24 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
 
       QString name = "mydata://" + QString::number(qrand());
 
-      document->addResource(QTextDocument::ImageResource, QUrl(name),
-                            QVariant(graphics.getPlot()->toPixmap(graphicsWidth, graphicsHeight)));
-      output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+      // QPixmap pixmap(graphicsWidth, graphicsHeight);
+      QPixmap pixmap;
+      if (chart != nullptr) {
+        QChartView v(chart);
+        v.resize(graphicsWidth, graphicsHeight);
+        v.setRenderHint(QPainter::Antialiasing, true);
+        pixmap = v.grab();
+        chart = nullptr;
+
+      } else {
+        pixmap = graphics.getPlot()->toPixmap(graphicsWidth, graphicsHeight);
+      }
+      document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+      /*output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                         .arg(graphicsWidth)
                         .arg(graphicsHeight)
-                        .arg(name));
+                        .arg(name));*/
+      output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
     } else { // Export mode
       QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 

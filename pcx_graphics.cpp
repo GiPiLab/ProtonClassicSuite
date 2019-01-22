@@ -45,7 +45,6 @@
 #include <QObject>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QtSvg>
 #include <cfloat>
 
 using namespace NUMBERSFORMAT;
@@ -509,6 +508,136 @@ QString PCx_Graphics::getPCAG9(unsigned int node) {
   return plotTitle;
 }
 
+QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                                         const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
+                                         bool miniMode) {
+
+  if (auditModel == nullptr) {
+    qWarning() << "Model error";
+    return nullptr;
+  }
+
+  QChart *chart = new QChart();
+
+  QString plotTitle;
+
+  // Colors for each graph
+  QColor PENCOLORS[4] = {Qt::darkCyan, Qt::red, Qt::gray, Qt::yellow};
+
+  if (miniMode) {
+    if (selectedORED.count() == 2) {
+      plotTitle = QObject::tr("%1 (bleu) et %2 (rouge)")
+                      .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0), true),
+                           PCx_Audit::OREDtoCompleteString(selectedORED.at(1), true));
+    }
+  } else {
+    if (prevItem != nullptr) {
+      plotTitle = QString("Données historiques et prévision pour %1<br>(%2)")
+                      .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
+                           MODES::modeToCompleteString(mode));
+    } else {
+      plotTitle = QString("Données historiques pour %1<br>(%2)")
+                      .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
+                           MODES::modeToCompleteString(mode));
+    }
+  }
+  chart->setTitle(plotTitle);
+  if (selectedORED.isEmpty()) {
+    return nullptr;
+  }
+
+  QSqlQuery q;
+
+  q.prepare(QString("select * from audit_%1_%2 where id_node=:id order by annee")
+                .arg(MODES::modeToTableString(mode))
+                .arg(auditModel->getAuditId()));
+  q.bindValue(":id", selectedNodeId);
+  q.exec();
+
+  if (!q.isActive()) {
+    qCritical() << q.lastError();
+    die();
+  }
+
+  QList<QPointF> dataSeries[static_cast<int>(PCx_Audit::ORED::NONELAST)];
+
+  while (q.next()) {
+    unsigned int date = q.value("annee").toUInt();
+
+    for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
+      if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
+        qint64 data = q.value(PCx_Audit::OREDtoTableString(static_cast<PCx_Audit::ORED>(i))).toLongLong();
+        dataSeries[i].append(QPointF(static_cast<double>(date), NUMBERSFORMAT::fixedPointToDouble(data)));
+      }
+    }
+  }
+
+  if (prevItem != nullptr) {
+    qint64 summedPrev = prevItem->getSummedPrevisionItemValue();
+    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(
+        QPointF(static_cast<double>(prevItem->getYear()), NUMBERSFORMAT::fixedPointToDouble(summedPrev)));
+  }
+
+  QLineSeries *series;
+
+  for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
+    if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
+      series = new QLineSeries();
+      series->append(dataSeries[i]);
+      series->setName(PCx_Audit::OREDtoCompleteString(static_cast<PCx_Audit::ORED>(i)));
+      series->setPen(QPen(PENCOLORS[i]));
+      chart->addSeries(series);
+    }
+  }
+
+  chart->createDefaultAxes();
+  /*chart->layout()->setContentsMargins(0, 0, 0, 0);
+  chart->setBackgroundRoundness(0);*/
+
+  /*QCPRange range;
+
+  range = plot->yAxis->range();
+  double diffRange = range.upper * 0.5;
+  range.lower -= (diffRange / 3);
+  range.upper += (diffRange);
+  plot->yAxis->setRange(range);
+
+  plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+
+  plot->legend->setFont(QFont("Sans serif"));
+  if (!miniMode) {
+    plot->legend->setVisible(true);
+    plot->legend->setFont(QFont("Sans serif", 7));
+    plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignCenter);
+  }
+
+  QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
+  plot->xAxis->setTicker(fixedTicker);
+  fixedTicker->setTickStep(1.0);
+
+  plot->xAxis->setSubTickLength(0);
+  plot->xAxis->setTickLength(4);
+
+  plot->xAxis->setTickLabelRotation(0);
+  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
+  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
+
+  if (miniMode) {
+    plot->xAxis->setTickLabelRotation(45);
+    plot->yAxis->setTickLabelFont(QFont("Sans serif", 7));
+    plot->xAxis->setTickLabelFont(QFont("Sans serif", 7));
+  }
+
+  plot->yAxis->setLabel("€");
+  plot->yAxis->setNumberFormat("gbc");
+
+  plot->xAxis->setRange(dataX.first() - 0.8, dataX.last() + 0.8);
+  plot->xAxis->grid()->setVisible(false);
+  */
+
+  return chart;
+}
+
 QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                                     const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
                                     bool miniMode) {
@@ -576,14 +705,13 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     qCritical() << q.lastError();
     die();
   }
-  QVector<double> dataX, dataY[4];
+  QVector<double> dataX, dataY[static_cast<int>(PCx_Audit::ORED::NONELAST)];
 
   while (q.next()) {
     unsigned int date = q.value("annee").toUInt();
     dataX.append(static_cast<double>(date));
 
-    // WARNING : ORED fixed size here
-    for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < 4; i++) {
+    for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
       if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
         qint64 data = q.value(PCx_Audit::OREDtoTableString(static_cast<PCx_Audit::ORED>(i))).toLongLong();
         dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
@@ -604,8 +732,8 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   }
 
   bool first = true;
-  // WARNING : ORED fixed size here
-  for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < 4; i++) {
+
+  for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
     if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
       plot->addGraph();
       plot->graph()->setData(dataX, dataY[i]);

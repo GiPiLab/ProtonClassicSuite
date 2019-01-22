@@ -64,10 +64,11 @@ public:
    * an audit
    */
   enum class ORED {
-    OUVERTS,    ///< the amount of available money at the beginning of the year
-    REALISES,   ///< the amount of used money
-    ENGAGES,    ///< the amount of committed money
-    DISPONIBLES ///< OUVERTS-(REALISES+ENGAGES)
+    OUVERTS = 0, ///< the amount of available money at the beginning of the year
+    REALISES,    ///< the amount of used money
+    ENGAGES,     ///< the amount of committed money
+    DISPONIBLES, ///< OUVERTS-(REALISES+ENGAGES)
+    NONELAST     ///< To count the number of struct fields, must be the last
   };
 
   /**
