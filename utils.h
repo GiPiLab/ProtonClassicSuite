@@ -175,6 +175,19 @@ enum class FORMATMODE {
 void updateFormatModeAndDecimals();
 
 /**
+ * @brief getFormatModeSuffix returns suffix to append respecting current format mode
+ * @return empty, k or m
+ */
+const QString getFormatModeSuffix();
+
+/**
+ * @brief fixedDividedByFormatMode simply converts a number to kilo or mega
+ * @param num the number to divide
+ * @return num divided by 1000 or 1000000
+ */
+qint64 fixedDividedByFormatMode(qint64 num);
+
+/**
  * @brief formatDouble formats a double according to the current locale, the
  * number of decimals and the format mode
  * @param num the double to format

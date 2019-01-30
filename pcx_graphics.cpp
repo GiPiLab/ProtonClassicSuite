@@ -526,17 +526,18 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
 
   if (miniMode) {
     if (selectedORED.count() == 2) {
-      plotTitle = QObject::tr("%1 (bleu) et %2 (rouge)")
+      plotTitle = QObject::tr("<div style='text-align:center'><b>%1 (bleu) et %2 (rouge)</b></div>")
                       .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0), true),
                            PCx_Audit::OREDtoCompleteString(selectedORED.at(1), true));
     }
   } else {
     if (prevItem != nullptr) {
-      plotTitle = QString("Données historiques et prévision pour %1<br>(%2)")
-                      .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
-                           MODES::modeToCompleteString(mode));
+      plotTitle =
+          QString("<div style='text-align:center'><b>Données historiques et prévision pour %1</b><br>(%2)</div>")
+              .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
+                   MODES::modeToCompleteString(mode));
     } else {
-      plotTitle = QString("Données historiques pour %1<br>(%2)")
+      plotTitle = QString("<div style='text-align:center'><b>Données historiques pour %1</b><br>(%2)</div>")
                       .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
                            MODES::modeToCompleteString(mode));
     }
@@ -561,79 +562,77 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
 
   QList<QPointF> dataSeries[static_cast<int>(PCx_Audit::ORED::NONELAST)];
 
+  double maxYValue = -MAX_NUM;
+  double minYValue = MAX_NUM;
+
   while (q.next()) {
-    unsigned int date = q.value("annee").toUInt();
+    int date = q.value("annee").toInt();
+    QDateTime dt;
+    dt.setDate(QDate(date, 1, 1));
+    dt.setTime(QTime(10, 0));
 
     for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
       if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
-        qint64 data = q.value(PCx_Audit::OREDtoTableString(static_cast<PCx_Audit::ORED>(i))).toLongLong();
-        dataSeries[i].append(QPointF(static_cast<double>(date), NUMBERSFORMAT::fixedPointToDouble(data)));
+        qint64 data = NUMBERSFORMAT::fixedDividedByFormatMode(
+            q.value(PCx_Audit::OREDtoTableString(static_cast<PCx_Audit::ORED>(i))).toLongLong());
+        double dataF = NUMBERSFORMAT::fixedPointToDouble(data);
+        if (dataF > maxYValue) {
+          maxYValue = dataF;
+        }
+        if (dataF < minYValue) {
+          minYValue = dataF;
+        }
+        dataSeries[i].append(QPointF(dt.toMSecsSinceEpoch(), dataF));
       }
     }
   }
 
   if (prevItem != nullptr) {
-    qint64 summedPrev = prevItem->getSummedPrevisionItemValue();
-    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(
-        QPointF(static_cast<double>(prevItem->getYear()), NUMBERSFORMAT::fixedPointToDouble(summedPrev)));
+    qint64 summedPrev = NUMBERSFORMAT::fixedDividedByFormatMode(prevItem->getSummedPrevisionItemValue());
+    double summedPrevF = NUMBERSFORMAT::fixedPointToDouble(summedPrev);
+    if (summedPrevF > maxYValue) {
+      maxYValue = summedPrevF;
+    }
+    if (summedPrevF < minYValue) {
+      minYValue = summedPrevF;
+    }
+    QDateTime dt;
+    dt.setDate(QDate(prevItem->getYear(), 1, 1));
+    dt.setTime(QTime(10, 0));
+    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(QPointF(dt.toMSecsSinceEpoch(), summedPrevF));
   }
 
-  QLineSeries *series;
+  QLineSeries *series = nullptr;
+
+  QDateTimeAxis *xAxis = new QDateTimeAxis;
+  xAxis->setFormat("yyyy");
+
+  QValueAxis *yAxis = new QValueAxis();
+
+  chart->addAxis(xAxis, Qt::AlignBottom);
+  chart->addAxis(yAxis, Qt::AlignLeft);
 
   for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
     if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
+      QPen pen(PENCOLORS[i]);
+      pen.setWidth(2);
       series = new QLineSeries();
       series->append(dataSeries[i]);
       series->setName(PCx_Audit::OREDtoCompleteString(static_cast<PCx_Audit::ORED>(i)));
-      series->setPen(QPen(PENCOLORS[i]));
+      series->setPen(pen);
       chart->addSeries(series);
+      series->attachAxis(xAxis);
+      series->attachAxis(yAxis);
     }
   }
 
-  chart->createDefaultAxes();
-  /*chart->layout()->setContentsMargins(0, 0, 0, 0);
-  chart->setBackgroundRoundness(0);*/
+  yAxis->setRange(minYValue - (minYValue * 0.05), maxYValue + (maxYValue * 0.1));
+  yAxis->setLabelFormat("%G" + QString(NUMBERSFORMAT::getFormatModeSuffix()));
+  yAxis->applyNiceNumbers();
 
-  /*QCPRange range;
-
-  range = plot->yAxis->range();
-  double diffRange = range.upper * 0.5;
-  range.lower -= (diffRange / 3);
-  range.upper += (diffRange);
-  plot->yAxis->setRange(range);
-
-  plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-
-  plot->legend->setFont(QFont("Sans serif"));
-  if (!miniMode) {
-    plot->legend->setVisible(true);
-    plot->legend->setFont(QFont("Sans serif", 7));
-    plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignCenter);
-  }
-
-  QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
-  plot->xAxis->setTicker(fixedTicker);
-  fixedTicker->setTickStep(1.0);
-
-  plot->xAxis->setSubTickLength(0);
-  plot->xAxis->setTickLength(4);
-
-  plot->xAxis->setTickLabelRotation(0);
-  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
-  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
-
-  if (miniMode) {
-    plot->xAxis->setTickLabelRotation(45);
-    plot->yAxis->setTickLabelFont(QFont("Sans serif", 7));
-    plot->xAxis->setTickLabelFont(QFont("Sans serif", 7));
-  }
-
-  plot->yAxis->setLabel("€");
-  plot->yAxis->setNumberFormat("gbc");
-
-  plot->xAxis->setRange(dataX.first() - 0.8, dataX.last() + 0.8);
-  plot->xAxis->grid()->setVisible(false);
-  */
+  // Remove border
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
+  chart->setBackgroundRoundness(0);
 
   return chart;
 }
@@ -787,6 +786,15 @@ QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
 
   plot->replot();
   return plotTitle;
+}
+
+bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const {
+  QChartView v(chart);
+  QPixmap pixmap;
+  v.resize(graphicsWidth, graphicsHeight);
+  v.setRenderHint(QPainter::Antialiasing, true);
+  pixmap = v.grab();
+  return pixmap.save(imageAbsoluteName, "png");
 }
 
 bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {

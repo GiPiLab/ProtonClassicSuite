@@ -56,7 +56,6 @@
 #include <QStandardPaths>
 #include <QUuid>
 #include <QtGlobal>
-#include <QtSvg>
 #include <cstdio>
 #ifndef Q_OS_ANDROID
 #include <graphviz/gvc.h>
@@ -328,6 +327,34 @@ void updateFormatModeAndDecimals() {
   currentNumDecimals = settings.value("format/numdecimals", DEFAULTNUMDECIMALS).toInt();
 }
 
+const QString getFormatModeSuffix() {
+
+  switch (currentFormatMode) {
+  case FORMATMODE::FORMATMODENORMAL:
+    return {};
+
+  case FORMATMODE::FORMATMODETHOUSANDS:
+    return ("k");
+
+  case FORMATMODE::FORMATMODEMILLIONS:
+    return ("M");
+  }
+  return {};
+}
+
+qint64 fixedDividedByFormatMode(qint64 num) {
+  switch (currentFormatMode) {
+  case FORMATMODE::FORMATMODENORMAL:
+    break;
+  case FORMATMODE::FORMATMODETHOUSANDS:
+    num /= 1000;
+    break;
+  case FORMATMODE::FORMATMODEMILLIONS:
+    num /= 1000000;
+  }
+  return num;
+}
+
 QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits) {
   QLocale locale;
   QString out;
@@ -336,17 +363,8 @@ QString formatFixedPoint(qint64 num, int decimals, bool forcedUnits) {
     return QString();
   }
   if (!forcedUnits) {
-    switch (currentFormatMode) {
-    case FORMATMODE::FORMATMODENORMAL:
-      break;
-    case FORMATMODE::FORMATMODETHOUSANDS:
-      out = "k";
-      num /= 1000;
-      break;
-    case FORMATMODE::FORMATMODEMILLIONS:
-      out = "M";
-      num /= 1000000;
-    }
+    num = fixedDividedByFormatMode(num);
+    out = getFormatModeSuffix();
   }
 
   // Forced decimals mode
@@ -368,15 +386,14 @@ QString formatDouble(double num, int decimals, bool forcedUnits) {
   QString out;
 
   if (!forcedUnits) {
+    out = getFormatModeSuffix();
     switch (currentFormatMode) {
     case FORMATMODE::FORMATMODENORMAL:
       break;
     case FORMATMODE::FORMATMODETHOUSANDS:
-      out = "k";
       num /= 1000;
       break;
     case FORMATMODE::FORMATMODEMILLIONS:
-      out = "M";
       num /= 1000000;
     }
   }

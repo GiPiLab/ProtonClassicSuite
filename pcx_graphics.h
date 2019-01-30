@@ -165,6 +165,8 @@ public:
                              const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
                              bool miniMode);
 
+  bool saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const;
+
 private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;

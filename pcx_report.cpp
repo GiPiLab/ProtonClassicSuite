@@ -166,10 +166,11 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     switch (graph) {
     case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
       chart = graphics.getPCAHistoryChart(
-          selectedNode, mode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES}, prevItem,
-          false);
+          selectedNode, mode,
+          {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES, PCx_Audit::ORED::DISPONIBLES},
+          prevItem, false);
       if (chart != nullptr) {
-        output.append("<div align='center' class='g'><b>" + chart->title() + "</b><br>");
+        output.append("<div align='center' class='g'>");
       }
 
       /*  output.append(
@@ -248,8 +249,15 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
       imageName.prepend(encodedRelativeImagePath + "/");
       imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-      if (graphics.savePlotToDisk(imageAbsoluteName) == false) {
-        die();
+      if (chart == nullptr) {
+        if (graphics.savePlotToDisk(imageAbsoluteName) == false) {
+          die();
+        }
+      } else {
+        if (graphics.saveChartToDisk(chart, imageAbsoluteName) == false) {
+          die();
+        }
+        chart = nullptr;
       }
 
       output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
