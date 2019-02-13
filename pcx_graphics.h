@@ -95,6 +95,11 @@ public:
                    unsigned int referenceNode = 1) {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::OUVERTS, false, prevItem, referenceNode);
   }
+  QChart *getPCAG1Chart(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                        unsigned int referenceNode = 1) {
+    return getPCAG1G8Chart(node, mode, PCx_Audit::ORED::OUVERTS, false, prevItem, referenceNode);
+  }
+
   QString getPCAG3(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
                    unsigned int referenceNode = 1) {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::REALISES, false, prevItem, referenceNode);
@@ -174,6 +179,9 @@ private:
   // Returns the title of the graphic in html
   QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
                      const PCx_PrevisionItem *prevItem = nullptr, unsigned int referenceNode = 1);
+
+  QChart *getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
+                          const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const;
 
   // Histogram comparing percents of selected OREDs regarding to a reference for
   // the last reporting date

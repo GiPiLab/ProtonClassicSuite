@@ -127,6 +127,13 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
 
 int question(const QString &text, QWidget *parent = 0);
 
+/**
+ * @brief yearToMsSinceEpoch converts a year to ms since epoch
+ * @param year
+ * @return ms since epoch, 0 in case of invalid date
+ */
+qint64 yearToMsSinceEpoch(int year);
+
 namespace MODES {
 /**
  * @brief The DFRFDIRI enum describes available spendings and receipts modes

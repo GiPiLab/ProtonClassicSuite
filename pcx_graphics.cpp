@@ -91,6 +91,204 @@ PCx_Graphics::~PCx_Graphics() {
   }
 }
 
+QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
+                                      const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const {
+
+  if (node == 0 || plot == nullptr || auditModel == nullptr || referenceNode == 0) {
+    qFatal("Assertion failed");
+  }
+
+  QString tableName = MODES::modeToTableString(mode);
+  QString oredName = PCx_Audit::OREDtoTableString(modeORED);
+
+  QSqlQuery q;
+
+  // Will contain data read from db
+
+  QMap<int, qint64> dataRoot, dataNode;
+
+  q.prepare(QString("select * from audit_%1_%2 where id_node=:id or "
+                    "id_node=:refNode order by annee")
+                .arg(tableName)
+                .arg(auditModel->getAuditId()));
+  q.bindValue(":id", node);
+  q.bindValue(":refNode", referenceNode);
+  q.exec();
+
+  if (!q.isActive()) {
+    qCritical() << q.lastError();
+    die();
+  }
+
+  int firstYear = 0;
+
+  while (q.next()) {
+    int annee = q.value("annee").toInt();
+    if (firstYear == 0) {
+      firstYear = annee;
+    }
+
+    qint64 data = q.value(oredName).toLongLong();
+
+    if (q.value("id_node").toUInt() == referenceNode) {
+      dataRoot.insert(annee, data);
+      if (node == referenceNode) {
+        dataNode.insert(annee, data);
+      }
+    } else {
+      dataNode.insert(annee, data);
+    }
+  }
+
+  if (prevItem != nullptr) {
+    int year = prevItem->getYear();
+    dataNode.insert(year, prevItem->getSummedPrevisionItemValue());
+    PCx_PrevisionItem tmpPrevRootItem = PCx_PrevisionItem(prevItem->getPrevision(), mode, referenceNode, year);
+    tmpPrevRootItem.loadFromDb();
+    dataRoot.insert(year, tmpPrevRootItem.getSummedPrevisionItemValue());
+  }
+
+  qint64 firstYearDataRoot = dataRoot.value(firstYear);
+  qint64 firstYearDataNode = dataNode.value(firstYear);
+  qint64 diffRootNode1 = firstYearDataRoot - firstYearDataNode;
+
+  // Will contains computed data
+  QList<QPointF> dataPlotRoot, dataPlotNode;
+  // QMap<double, double> dataPlotRoot, dataPlotNode;
+
+  double minYRange = DBL_MAX - 1, maxYRange = DBL_MIN + 1;
+  int minYear = 10000, maxYear = -10000;
+
+  for (auto it = dataRoot.constBegin(), end = dataRoot.constEnd(); it != end; ++it) {
+    qint64 diffRootNode2 = 0, diffRootNode = 0, diffNode = 0;
+
+    int year = it.key();
+    // Skip the first year
+    if (year > firstYear) {
+      double percentRoot = 0.0, percentNode = 0.0;
+      diffRootNode2 = it.value() - dataNode.value(year);
+
+      diffRootNode = diffRootNode2 - diffRootNode1;
+      diffNode = dataNode.value(year) - firstYearDataNode;
+
+      if (diffRootNode1 != 0) {
+        percentRoot = diffRootNode * 100.0 / diffRootNode1;
+      }
+      if (percentRoot < minYRange) {
+        minYRange = percentRoot;
+      }
+      if (percentRoot > maxYRange) {
+        maxYRange = percentRoot;
+      }
+      dataPlotRoot.append(QPointF(yearToMsSinceEpoch(year), percentRoot));
+
+      if (firstYearDataNode != 0) {
+        percentNode = diffNode * 100.0 / firstYearDataNode;
+      }
+      if (percentNode < minYRange) {
+        minYRange = percentNode;
+      }
+      if (percentNode > maxYRange) {
+        maxYRange = percentNode;
+      }
+      if (year > maxYear) {
+        maxYear = year;
+      }
+      if (year < minYear) {
+        minYear = year;
+      }
+
+      dataPlotNode.append(QPointF(yearToMsSinceEpoch(year), percentNode));
+
+      // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
+      if (!cumule) {
+        diffRootNode1 = diffRootNode2;
+        firstYearDataNode = dataNode.value(year);
+      }
+    }
+  }
+
+  QChart *chart = new QChart();
+
+  QLineSeries *serie1 = new QLineSeries();
+  QLineSeries *serie2 = new QLineSeries();
+
+  serie1->append(dataPlotNode);
+  serie2->append(dataPlotRoot);
+
+  QAreaSeries *areaSerie1 = new QAreaSeries(serie1);
+  QAreaSeries *areaSerie2 = new QAreaSeries(serie2);
+
+  areaSerie1->setPointsVisible(true);
+  areaSerie2->setPointsVisible(true);
+  QColor c = getColorPen1();
+  int alpha = getAlpha();
+  c.setAlpha(alpha);
+
+  QPen pen(c);
+  pen.setWidth(3);
+  areaSerie1->setPen(pen);
+  areaSerie1->setBrush(QBrush(pen.color()));
+
+  c = getColorPen2();
+  c.setAlpha(alpha);
+  pen.setColor(c);
+  areaSerie2->setPen(pen);
+  areaSerie2->setBrush(QBrush(pen.color()));
+
+  chart->addSeries(areaSerie1);
+  chart->addSeries(areaSerie2);
+
+  // Legend
+  QString nodeName = auditModel->getAttachedTree()->getNodeName(node);
+  QString refNodeName = auditModel->getAttachedTree()->getNodeName(referenceNode);
+  areaSerie1->setName(nodeName);
+  areaSerie2->setName(QString("%2 - %1").arg(nodeName, refNodeName));
+
+  QDateTimeAxis *xAxis = new QDateTimeAxis;
+  xAxis->setForVendredi c 'est la saint Claude. Et tout le monde ou presque s' en fmat("yyyy");
+  xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
+  xAxis->setTickCount(maxYear - minYear + 3);
+
+  QValueAxis *yAxis = new QValueAxis();
+
+  yAxis->setMin(minYRange - (qAbs(minYRange) * 0.2));
+  yAxis->setMax(maxYRange + (qAbs(maxYRange) * 0.1));
+  yAxis->applyNiceNumbers();
+
+  chart->addAxis(xAxis, Qt::AlignBottom);
+  chart->addAxis(yAxis, Qt::AlignLeft);
+
+  areaSerie1->attachAxis(xAxis);
+  areaSerie1->attachAxis(yAxis);
+  areaSerie2->attachAxis(xAxis);
+  areaSerie2->attachAxis(yAxis);
+
+  areaSerie1->setPointLabelsVisible(true);
+  areaSerie1->setPointLabelsFormat("@yPoint%");
+  areaSerie2->setPointLabelsVisible(true);
+  areaSerie2->setPointLabelsFormat("@yPoint%");
+
+  QString plotTitle;
+  if (!cumule) {
+    plotTitle = QObject::tr("&Eacute;volution comparée des %1 de [ %4 ] hormis %2 et "
+                            "de [ %2 ]<br>(%3)")
+                    .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
+                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
+  }
+
+  else {
+    plotTitle = QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ] "
+                            "hormis %2 et de [ %2 ]<br>(%3)")
+                    .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
+                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
+  }
+
+  chart->setTitle(plotTitle);
+
+  return chart;
+}
+
 QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
                                  const PCx_PrevisionItem *prevItem, unsigned int referenceNode) {
   if (node == 0 || plot == nullptr || auditModel == nullptr || referenceNode == 0) {
@@ -564,12 +762,11 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
 
   double maxYValue = -MAX_NUM;
   double minYValue = MAX_NUM;
+  int minYear = 10000;
+  int maxYear = -10000;
 
   while (q.next()) {
-    int date = q.value("annee").toInt();
-    QDateTime dt;
-    dt.setDate(QDate(date, 1, 1));
-    dt.setTime(QTime(10, 0));
+    int year = q.value("annee").toInt();
 
     for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
       if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
@@ -579,10 +776,16 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
         if (dataF > maxYValue) {
           maxYValue = dataF;
         }
+        if (year < minYear) {
+          minYear = year;
+        }
+        if (year > maxYear) {
+          maxYear = year;
+        }
         if (dataF < minYValue) {
           minYValue = dataF;
         }
-        dataSeries[i].append(QPointF(dt.toMSecsSinceEpoch(), dataF));
+        dataSeries[i].append(QPointF(yearToMsSinceEpoch(year), dataF));
       }
     }
   }
@@ -596,15 +799,14 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
     if (summedPrevF < minYValue) {
       minYValue = summedPrevF;
     }
-    QDateTime dt;
-    dt.setDate(QDate(prevItem->getYear(), 1, 1));
-    dt.setTime(QTime(10, 0));
-    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(QPointF(dt.toMSecsSinceEpoch(), summedPrevF));
+    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(
+        QPointF(yearToMsSinceEpoch(prevItem->getYear()), summedPrevF));
   }
 
   QLineSeries *series = nullptr;
 
   QDateTimeAxis *xAxis = new QDateTimeAxis;
+  xAxis->setTickCount(maxYear - minYear + 1);
   xAxis->setFormat("yyyy");
 
   QValueAxis *yAxis = new QValueAxis();
@@ -623,10 +825,11 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
       chart->addSeries(series);
       series->attachAxis(xAxis);
       series->attachAxis(yAxis);
+      series->setPointsVisible(true);
     }
   }
 
-  yAxis->setRange(minYValue - (minYValue * 0.05), maxYValue + (maxYValue * 0.1));
+  yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.1));
   yAxis->setLabelFormat("%G" + QString(NUMBERSFORMAT::getFormatModeSuffix()));
   yAxis->applyNiceNumbers();
 

@@ -280,6 +280,15 @@ int question(const QString &text, QWidget *parent) {
   return messageBox.exec();
 }
 
+qint64 yearToMsSinceEpoch(int year) {
+  QDateTime dt(QDate(year, 6, 1), QTime(12, 0));
+
+  if (dt.isValid()) {
+    return dt.toMSecsSinceEpoch();
+  } else
+    return 0;
+}
+
 namespace MODES {
 
 QString modeToCompleteString(DFRFDIRI mode) {

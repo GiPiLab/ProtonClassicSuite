@@ -92,6 +92,8 @@ FormAuditPrevisions::FormAuditPrevisions(QWidget *parent) : QWidget(parent), ui(
 
   connect(ui->textBrowser, &QTextBrowser::anchorClicked, this, &FormAuditPrevisions::onAnchorClicked);
 
+  ui->plot->setRenderHint(QPainter::Antialiasing, true);
+
   updateListOfPrevisions();
 }
 
@@ -189,12 +191,12 @@ void FormAuditPrevisions::updateLabels() {
   ui->tableViewCriteria->resizeColumnToContents(0);
   ui->tableViewRecentCriteria->resizeColumnToContents(0);
 
-  ui->plot->clearGraphs();
-  ui->plot->clearItems();
-  ui->plot->clearPlottables();
+  QChart *oldChart = ui->plot->chart();
 
-  graphics->getPCAHistory(currentNodeId, currentMode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES},
-                          currentPrevisionItem, true);
+  ui->plot->setChart(graphics->getPCAHistoryChart(
+      currentNodeId, currentMode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES}, currentPrevisionItem, true));
+
+  delete oldChart;
 }
 
 void FormAuditPrevisions::on_comboListPrevisions_activated(int index) {
@@ -234,7 +236,7 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index) {
 
   previsionModel = new PCx_Prevision(selectedPrevisionId);
   auditWithTreeModel = new PCx_AuditWithTreeModel(previsionModel->getAttachedAuditId());
-  graphics = new PCx_Graphics(previsionModel->getAttachedAudit(), ui->plot);
+  graphics = new PCx_Graphics(previsionModel->getAttachedAudit(), nullptr);
 
   QItemSelectionModel *m = ui->treeView->selectionModel();
   ui->treeView->setModel(auditWithTreeModel->getAttachedTree());

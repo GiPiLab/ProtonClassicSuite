@@ -181,7 +181,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QCustomPlot" name="plot" native="true"/>
+     <widget class="QChartView" name="plot" native="true"/>
     </widget>
    </item>
    <item row="0" column="1" colspan="2">
@@ -561,9 +561,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QCustomPlot</class>
+   <class>QChartView</class>
    <extends>QWidget</extends>
-   <header>QCustomPlot/qcustomplot.h</header>
+   <header location="global">QtCharts/qchartview.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

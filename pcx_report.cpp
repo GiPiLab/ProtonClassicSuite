@@ -182,8 +182,11 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
       break;
 
     case PCx_Graphics::PCAGRAPHICS::PCAG1:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG1(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG1Chart(selectedNode, mode, prevItem, referenceNode);
+
+      if (chart != nullptr) {
+        output.append("<div align='center' class='g'>");
+      }
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG2:
       output.append("<div align='center' class='g'><b>" +
