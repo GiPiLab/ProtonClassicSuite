@@ -329,6 +329,11 @@ namespace NUMBERSFORMAT {
 static FORMATMODE currentFormatMode = FORMATMODE::FORMATMODENORMAL;
 static int currentNumDecimals = DEFAULTNUMDECIMALS;
 
+int getNumDecimals() {
+  QSettings settings;
+  return (settings.value("format/numdecimals", DEFAULTNUMDECIMALS).toInt());
+}
+
 void updateFormatModeAndDecimals() {
   QSettings settings;
   currentFormatMode = static_cast<FORMATMODE>(
@@ -414,6 +419,16 @@ QString formatDouble(double num, int decimals, bool forcedUnits) {
   }
 
   return out;
+}
+
+double doubleToDoubleRoundedByNumbersOfDecimals(double number) {
+  if (qIsNaN(number) || qIsInf(number) || !qIsFinite(number)) {
+    return number;
+  }
+
+  double factor = qPow(10, currentNumDecimals);
+
+  return qRound64(number * factor) / factor;
 }
 
 qint64 doubleToFixedPoint(double num) {

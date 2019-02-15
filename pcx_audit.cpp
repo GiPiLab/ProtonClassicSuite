@@ -1083,7 +1083,7 @@ QString PCx_Audit::generateHTMLAuditTitle() const {
 }
 
 QString PCx_Audit::OREDtoCompleteString(ORED ored, bool plural) {
-  QString out;
+
   if (!plural) {
     switch (ored) {
     case ORED::OUVERTS:
@@ -1094,9 +1094,10 @@ QString PCx_Audit::OREDtoCompleteString(ORED ored, bool plural) {
       return QObject::tr("engagé");
     case ORED::DISPONIBLES:
       return QObject::tr("disponible");
+    case ORED::NONELAST:
+      qWarning() << "Invalid ORED specified !";
+      return {};
     }
-    qWarning() << "Invalid ORED specified !";
-
   } else {
     switch (ored) {
     case ORED::OUVERTS:
@@ -1107,10 +1108,12 @@ QString PCx_Audit::OREDtoCompleteString(ORED ored, bool plural) {
       return QObject::tr("engagés");
     case ORED::DISPONIBLES:
       return QObject::tr("disponibles");
+    case ORED::NONELAST:
+      qWarning() << "Invalid ORED specified !";
+      return {};
     }
-    qWarning() << "Invalid ORED specified !";
   }
-  return out;
+  return {};
 }
 
 QString PCx_Audit::OREDtoTableString(ORED ored) {
@@ -1123,10 +1126,10 @@ QString PCx_Audit::OREDtoTableString(ORED ored) {
     return "engages";
   case ORED::DISPONIBLES:
     return "disponibles";
+  case ORED::NONELAST:
+    qWarning() << "Invalid ORED specified !";
   }
-  qWarning() << "Invalid ORED specified !";
-
-  return QString();
+  return {};
 }
 
 PCx_Audit::ORED PCx_Audit::OREDFromTableString(const QString &oredString) {

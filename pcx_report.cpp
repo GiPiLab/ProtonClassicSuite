@@ -166,9 +166,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     switch (graph) {
     case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
       chart = graphics.getPCAHistoryChart(
-          selectedNode, mode,
-          {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES, PCx_Audit::ORED::DISPONIBLES},
-          prevItem, false);
+          selectedNode, mode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES}, prevItem,
+          false);
       if (chart != nullptr) {
         output.append("<div align='center' class='g'>");
       }

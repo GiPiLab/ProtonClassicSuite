@@ -144,8 +144,11 @@
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_6">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de tracé 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>Série 1 :</string>
+         <string>Couleur 1 :</string>
         </property>
         <property name="buddy">
          <cstring>pushButtonColorPen1</cstring>
@@ -165,7 +168,7 @@
       <item row="1" column="1">
        <widget class="QPushButton" name="pushButtonColorPen2">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de la ligne et du remplissage pour la deuxième série des graphiques d'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de tracé 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string/>
@@ -184,8 +187,11 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_10">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de tracé 2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
         <property name="text">
-         <string>Série 2 :</string>
+         <string>Couleur 2 :</string>
         </property>
         <property name="buddy">
          <cstring>pushButtonColorPen2</cstring>
@@ -255,7 +261,7 @@
       <item row="0" column="1">
        <widget class="QPushButton" name="pushButtonColorPen1">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de la ligne et du remplissage pour la première série des graphiques d'audit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Couleur de tracé 1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string/>

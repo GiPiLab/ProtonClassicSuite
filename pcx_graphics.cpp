@@ -152,9 +152,8 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   qint64 firstYearDataNode = dataNode.value(firstYear);
   qint64 diffRootNode1 = firstYearDataRoot - firstYearDataNode;
 
-  // Will contains computed data
+  // Will contains computed data for Root, Node
   QList<QPointF> dataPlotRoot, dataPlotNode;
-  // QMap<double, double> dataPlotRoot, dataPlotNode;
 
   double minYRange = DBL_MAX - 1, maxYRange = DBL_MIN + 1;
   int minYear = 10000, maxYear = -10000;
@@ -180,7 +179,10 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
       if (percentRoot > maxYRange) {
         maxYRange = percentRoot;
       }
-      dataPlotRoot.append(QPointF(yearToMsSinceEpoch(year), percentRoot));
+
+      // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
+      dataPlotRoot.append(
+          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
 
       if (firstYearDataNode != 0) {
         percentNode = diffNode * 100.0 / firstYearDataNode;
@@ -197,8 +199,9 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
       if (year < minYear) {
         minYear = year;
       }
-
-      dataPlotNode.append(QPointF(yearToMsSinceEpoch(year), percentNode));
+      // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
+      dataPlotNode.append(
+          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
 
       // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
       if (!cumule) {
@@ -216,37 +219,30 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   serie1->append(dataPlotNode);
   serie2->append(dataPlotRoot);
 
-  QAreaSeries *areaSerie1 = new QAreaSeries(serie1);
-  QAreaSeries *areaSerie2 = new QAreaSeries(serie2);
-
-  areaSerie1->setPointsVisible(true);
-  areaSerie2->setPointsVisible(true);
+  serie1->setPointsVisible(true);
+  serie2->setPointsVisible(true);
   QColor c = getColorPen1();
-  int alpha = getAlpha();
-  c.setAlpha(alpha);
 
   QPen pen(c);
-  pen.setWidth(3);
-  areaSerie1->setPen(pen);
-  areaSerie1->setBrush(QBrush(pen.color()));
+  pen.setWidth(2);
+  serie1->setPen(pen);
 
   c = getColorPen2();
-  c.setAlpha(alpha);
-  pen.setColor(c);
-  areaSerie2->setPen(pen);
-  areaSerie2->setBrush(QBrush(pen.color()));
 
-  chart->addSeries(areaSerie1);
-  chart->addSeries(areaSerie2);
+  pen.setColor(c);
+  serie2->setPen(pen);
+
+  chart->addSeries(serie1);
+  chart->addSeries(serie2);
 
   // Legend
   QString nodeName = auditModel->getAttachedTree()->getNodeName(node);
   QString refNodeName = auditModel->getAttachedTree()->getNodeName(referenceNode);
-  areaSerie1->setName(nodeName);
-  areaSerie2->setName(QString("%2 - %1").arg(nodeName, refNodeName));
+  serie1->setName(nodeName);
+  serie2->setName(QString("%2 - %1").arg(nodeName, refNodeName));
 
   QDateTimeAxis *xAxis = new QDateTimeAxis;
-  xAxis->setForVendredi c 'est la saint Claude. Et tout le monde ou presque s' en fmat("yyyy");
+  xAxis->setFormat("yyyy");
   xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
   xAxis->setTickCount(maxYear - minYear + 3);
 
@@ -259,32 +255,35 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   chart->addAxis(xAxis, Qt::AlignBottom);
   chart->addAxis(yAxis, Qt::AlignLeft);
 
-  areaSerie1->attachAxis(xAxis);
-  areaSerie1->attachAxis(yAxis);
-  areaSerie2->attachAxis(xAxis);
-  areaSerie2->attachAxis(yAxis);
+  serie1->attachAxis(xAxis);
+  serie1->attachAxis(yAxis);
+  serie2->attachAxis(xAxis);
+  serie2->attachAxis(yAxis);
 
-  areaSerie1->setPointLabelsVisible(true);
-  areaSerie1->setPointLabelsFormat("@yPoint%");
-  areaSerie2->setPointLabelsVisible(true);
-  areaSerie2->setPointLabelsFormat("@yPoint%");
+  serie1->setPointLabelsVisible(true);
+  serie1->setPointLabelsFormat("@yPoint%");
+  serie2->setPointLabelsVisible(true);
+  serie2->setPointLabelsFormat("@yPoint%");
 
   QString plotTitle;
   if (!cumule) {
-    plotTitle = QObject::tr("&Eacute;volution comparée des %1 de [ %4 ] hormis %2 et "
+    plotTitle = QObject::tr("&Eacute;volution comparée des %1 de<br>[ %4 ] hormis %2 et "
                             "de [ %2 ]<br>(%3)")
                     .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
                          MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
   }
 
   else {
-    plotTitle = QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ] "
+    plotTitle = QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ]<br>"
                             "hormis %2 et de [ %2 ]<br>(%3)")
                     .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
                          MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
   }
 
   chart->setTitle(plotTitle);
+  // NOTE: Remove border
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
+  chart->setBackgroundRoundness(0);
 
   return chart;
 }
@@ -833,7 +832,7 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
   yAxis->setLabelFormat("%G" + QString(NUMBERSFORMAT::getFormatModeSuffix()));
   yAxis->applyNiceNumbers();
 
-  // Remove border
+  // NOTE: Remove border
   chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
 

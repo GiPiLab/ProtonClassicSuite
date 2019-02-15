@@ -176,6 +176,19 @@ enum class FORMATMODE {
 };
 
 /**
+ * @brief doubleToDoubleRoundedByNumbersOfDecimals rounds a double tu currentNumDecimals decimals
+ * @param number the number to round
+ * @return the number rounded to currentNumDecimals
+ */
+double doubleToDoubleRoundedByNumbersOfDecimals(double number);
+
+/**
+ * @brief getNumDecimals returns the numbers of decimals from settings
+ * @return the numbers of decimals from settings
+ */
+int getNumDecimals();
+
+/**
  * @brief updateFormatModeAndDecimals retrieves QSettings user properties about
  * number of decimals and number format mode
  */
