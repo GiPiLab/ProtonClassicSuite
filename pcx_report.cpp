@@ -216,8 +216,14 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
                     graphics.getPCAG8(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG9:
-      output.append("<div align='center' class='g'><b>" + graphics.getPCAG9(selectedNode) + "</b><br>");
+      chart = graphics.getPCAG9Chart(selectedNode);
+
+      if (chart != nullptr) {
+        output.append("<div align='center' class='g'>");
+      }
       break;
+      // output.append("<div align='center' class='g'><b>" + graphics.getPCAG9(selectedNode) + "</b><br>");
+      // break;
     }
 
     // Inline mode

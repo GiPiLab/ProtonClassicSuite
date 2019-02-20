@@ -245,12 +245,14 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   xAxis->setFormat("yyyy");
   xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
   xAxis->setTickCount(maxYear - minYear + 3);
+  xAxis->setGridLineVisible(false);
 
   QValueAxis *yAxis = new QValueAxis();
 
   yAxis->setMin(minYRange - (qAbs(minYRange) * 0.2));
   yAxis->setMax(maxYRange + (qAbs(maxYRange) * 0.1));
   yAxis->applyNiceNumbers();
+  yAxis->setGridLineVisible(false);
 
   chart->addAxis(xAxis, Qt::AlignBottom);
   chart->addAxis(yAxis, Qt::AlignLeft);
@@ -267,15 +269,16 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
 
   QString plotTitle;
   if (!cumule) {
-    plotTitle = QObject::tr("&Eacute;volution comparée des %1 de<br>[ %4 ] hormis %2 et "
-                            "de [ %2 ]<br>(%3)")
-                    .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
-                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
+    plotTitle =
+        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée des %1 de<br>%4 <i>hormis %2</i> et "
+                    "de %2</b><br>(%3)</div>")
+            .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
+                 MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
   }
 
   else {
-    plotTitle = QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ]<br>"
-                            "hormis %2 et de [ %2 ]<br>(%3)")
+    plotTitle = QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée du cumulé des %1 de %4<br>"
+                            "<i>hormis %2</i> et de %2</b><br>(%3)</div>")
                     .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
                          MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
   }
@@ -524,6 +527,179 @@ QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
   plot->yAxis->setRange(minYRange - (padding * 2), maxYRange + padding);
   return plotTitle;
+}
+
+QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
+  if (node == 0 || plot == nullptr || auditModel == nullptr) {
+    qFatal("Assertion failed");
+  }
+
+  QString plotTitle;
+
+  QChart *chart = new QChart();
+
+  QBarSet *dfBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::DF));
+  QBarSet *rfBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::RF));
+  QBarSet *diBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::DI));
+  QBarSet *riBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::RI));
+
+  QPen pen;
+  pen.setWidth(0);
+  QColor c = getColorDFBar();
+  int alpha = getAlpha();
+
+  pen.setColor(c);
+  dfBar->setPen(pen);
+  c.setAlpha(alpha);
+  dfBar->setBrush(c);
+
+  c = getColorRFBar();
+
+  pen.setColor(c);
+  rfBar->setPen(pen);
+  c.setAlpha(alpha);
+  rfBar->setBrush(c);
+
+  c = getColorDIBar();
+
+  pen.setColor(c);
+  diBar->setPen(pen);
+  c.setAlpha(alpha);
+  diBar->setBrush(c);
+
+  c = getColorRIBar();
+
+  pen.setColor(c);
+  riBar->setPen(pen);
+  c.setAlpha(alpha);
+  riBar->setBrush(c);
+
+  QSqlQuery q;
+  q.prepare(QString("select a.annee, a.ouverts 'ouvertsDF', b.ouverts 'ouvertsRF', "
+                    "c.ouverts 'ouvertsDI', d.ouverts 'ouvertsRI',"
+                    "a.realises 'realisesDF', b.realises 'realisesRF', c.realises "
+                    "'realisesDI', d.realises 'realisesRI',"
+                    "a.engages 'engagesDF', b.engages 'engagesRF', c.engages "
+                    "'engagesDI', d.engages 'engagesRI',"
+                    "a.disponibles 'disponiblesDF', b.disponibles 'disponiblesRF', "
+                    "c.disponibles 'disponiblesDI', d.disponibles 'disponiblesRI' "
+                    "from audit_DF_%1 a, audit_RF_%1 b, audit_DI_%1 c,audit_RI_%1 d "
+                    "where a.id_node=:id_node and a.id_node=b.id_node and "
+                    "b.id_node=c.id_node "
+                    "and c.id_node=d.id_node and a.annee=b.annee and b.annee=c.annee "
+                    "and c.annee=d.annee "
+                    "order by a.annee")
+                .arg(auditModel->getAuditId()));
+  q.bindValue(":id_node", node);
+  q.exec();
+  if (!q.isActive()) {
+    qCritical() << q.lastError();
+    die();
+  }
+
+  QVector<QPair<QString, QString>> listModesAndLabels;
+  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS),
+                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS, true)));
+  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES),
+                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES, true)));
+  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES),
+                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES, true)));
+  listModesAndLabels.append(
+      QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES),
+                              PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES, true)));
+
+  QStringList labels;
+  QList<double> valuesDF, valuesRF, valuesDI, valuesRI;
+
+  QPair<QString, QString> mode;
+  int i = 0;
+  while (q.next()) {
+    unsigned int annee = q.value("annee").toUInt();
+
+    foreach (mode, listModesAndLabels) {
+
+      qint64 dataDF = 0, dataRF = 0, dataDI = 0, dataRI = 0, sum = 0;
+      double percentDF = 0.0, percentRF = 0.0, percentDI = 0.0, percentRI = 0.0;
+      dataDF = q.value(mode.first + "DF").toLongLong();
+      dataRF = q.value(mode.first + "RF").toLongLong();
+      dataDI = q.value(mode.first + "DI").toLongLong();
+      dataRI = q.value(mode.first + "RI").toLongLong();
+
+      // In case of negative disponible
+      if (dataDF < 0) {
+        dataDF = 0;
+      }
+      if (dataRF < 0) {
+        dataRF = 0;
+      }
+      if (dataDI < 0) {
+        dataDI = 0;
+      }
+      if (dataRI < 0) {
+        dataRI = 0;
+      }
+
+      sum = dataDF + dataRF + dataDI + dataRI;
+      if (sum > 0) {
+        percentDF = 100.0 * dataDF / sum;
+        percentRF = 100.0 * dataRF / sum;
+        percentDI = 100.0 * dataDI / sum;
+        percentRI = 100.0 * dataRI / sum;
+      }
+      valuesDF.append(percentDF);
+      valuesRF.append(percentRF);
+      valuesDI.append(percentDI);
+      valuesRI.append(percentRI);
+
+      labels.append(QString("%1 %2").arg(mode.second).arg(annee));
+    }
+  }
+
+  dfBar->append(valuesDF);
+  rfBar->append(valuesRF);
+  diBar->append(valuesDI);
+  riBar->append(valuesRI);
+
+  QPercentBarSeries *series = new QPercentBarSeries();
+
+  series->append(dfBar);
+  series->append(diBar);
+  series->append(rfBar);
+  series->append(riBar);
+
+  chart->addSeries(series);
+
+  QBarCategoryAxis *axisX = new QBarCategoryAxis();
+  axisX->setLabelsAngle(90);
+  axisX->setLabelsFont(QFont("Sans", 6));
+  qDebug() << labels;
+  axisX->append(labels);
+  chart->addAxis(axisX, Qt::AlignBottom);
+  series->attachAxis(axisX);
+
+  QValueAxis *axisY = new QValueAxis();
+  axisY->setLabelFormat("%d%%");
+
+  chart->addAxis(axisY, Qt::AlignLeft);
+  series->attachAxis(axisY);
+
+  /*
+    plot->yAxis->setLabel("%");
+    plot->xAxis->setTickLength(0, 0);
+    plot->xAxis->grid()->setVisible(false);
+    plot->xAxis->setTickLabelRotation(90);
+    plot->xAxis->setTickLabelFont(QFont("Sans serif"));
+    plot->yAxis->setTickLabelFont(QFont("Sans serif"));
+
+    plot->xAxis->setTicker(textTicker);
+    plot->xAxis->setRange(0, tickCounter);
+    plot->yAxis->setRange(0, 180);*/
+
+  plotTitle = QString("Proportions des d&eacute;penses et recettes pour [ %1 ]")
+                  .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
+  chart->setTitle(plotTitle);
+
+  return chart;
 }
 
 QString PCx_Graphics::getPCAG9(unsigned int node) {
@@ -807,6 +983,7 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
   QDateTimeAxis *xAxis = new QDateTimeAxis;
   xAxis->setTickCount(maxYear - minYear + 1);
   xAxis->setFormat("yyyy");
+  xAxis->setGridLineVisible(false);
 
   QValueAxis *yAxis = new QValueAxis();
 

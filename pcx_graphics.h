@@ -132,6 +132,8 @@ public:
 
   QString getPCAG9(unsigned int node);
 
+  QChart *getPCAG9Chart(unsigned int node);
+
   QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Audit::ORED> &selectedORED,
                         const PCx_PrevisionItem *prevItem = nullptr, bool miniMode = false);
 
