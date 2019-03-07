@@ -150,6 +150,13 @@ enum class DFRFDIRI {
 };
 
 /**
+ * @brief modeToCompactString converts a mode to its compact textual representation
+ * @param mode the mode to convert
+ * @return the compact text representation of the mode
+ */
+QString modeToCompactString(DFRFDIRI mode);
+
+/**
  * @brief modeToCompleteString converts a mode to its textual representation
  * @param mode the mode to convert
  * @return the text representation of the mode
@@ -174,6 +181,12 @@ enum class FORMATMODE {
   FORMATMODETHOUSANDS, ///< numbers are divided by 1000 before beeing displayed
   FORMATMODEMILLIONS   ///< numbers are divided by 1000000 before beeing displayed
 };
+
+/**
+ * @brief getFormatMode get current format mode
+ * @return FORMATMODE
+ */
+FORMATMODE getFormatMode();
 
 /**
  * @brief doubleToDoubleRoundedByNumbersOfDecimals rounds a double tu currentNumDecimals decimals

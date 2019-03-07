@@ -65,10 +65,10 @@ public:
 
   static const unsigned int DEFAULTCOLORDFBAR = 0xff0000;
   static const unsigned int DEFAULTCOLORRFBAR = 0x00ff00;
-  static const unsigned int DEFAULTCOLORDIBAR = 0x0000ff;
-  static const unsigned int DEFAULTCOLORRIBAR = 0xffff00;
+  static const unsigned int DEFAULTCOLORDIBAR = 0xaa0000;
+  static const unsigned int DEFAULTCOLORRIBAR = 0x00aa00;
 
-  static const int DEFAULTALPHA = 70;
+  static const int DEFAULTALPHA = 200;
 
   enum class PCAGRAPHICS {
     PCAG1,
@@ -91,51 +91,45 @@ public:
                int graphicsHeight = DEFAULTHEIGHT);
   virtual ~PCx_Graphics();
 
-  QString getPCAG1(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG1(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::OUVERTS, false, prevItem, referenceNode);
   }
-  QChart *getPCAG1Chart(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                        unsigned int referenceNode = 1) {
-    return getPCAG1G8Chart(node, mode, PCx_Audit::ORED::OUVERTS, false, prevItem, referenceNode);
-  }
 
-  QString getPCAG3(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG3(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::REALISES, false, prevItem, referenceNode);
   }
-  QString getPCAG5(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG5(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::ENGAGES, false, prevItem, referenceNode);
   }
-  QString getPCAG7(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG7(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::DISPONIBLES, false, prevItem, referenceNode);
   }
 
-  QString getPCAG2(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG2(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::OUVERTS, true, prevItem, referenceNode);
   }
-  QString getPCAG4(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG4(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::REALISES, true, prevItem, referenceNode);
   }
-  QString getPCAG6(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG6(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::ENGAGES, true, prevItem, referenceNode);
   }
-  QString getPCAG8(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
-                   unsigned int referenceNode = 1) {
+  QChart *getPCAG8(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
+                   unsigned int referenceNode = 1) const {
     return getPCAG1G8(node, mode, PCx_Audit::ORED::DISPONIBLES, true, prevItem, referenceNode);
   }
 
-  QString getPCAG9(unsigned int node);
+  QChart *getPCAG9(unsigned int node, int year) const;
 
-  QChart *getPCAG9Chart(unsigned int node);
-
-  QString getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Audit::ORED> &selectedORED,
-                        const PCx_PrevisionItem *prevItem = nullptr, bool miniMode = false);
+  QChart *getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Audit::ORED> &selectedORED,
+                        const PCx_PrevisionItem *prevItem, bool miniMode) const;
 
   // History line plot with selected OREDPCR
   QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
@@ -168,22 +162,14 @@ public:
 
   bool savePlotToDisk(const QString &imageAbsoluteName) const;
 
-  QChart *getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                             const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
-                             bool miniMode);
-
   bool saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const;
 
 private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;
 
-  // Returns the title of the graphic in html
-  QString getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
-                     const PCx_PrevisionItem *prevItem = nullptr, unsigned int referenceNode = 1);
-
-  QChart *getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
-                          const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const;
+  QChart *getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
+                     const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const;
 
   // Histogram comparing percents of selected OREDs regarding to a reference for
   // the last reporting date

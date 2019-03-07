@@ -291,6 +291,22 @@ qint64 yearToMsSinceEpoch(int year) {
 
 namespace MODES {
 
+QString modeToCompactString(DFRFDIRI mode) {
+  switch (mode) {
+  case DFRFDIRI::DF:
+    return QObject::tr("Dép. de fonct.");
+  case DFRFDIRI::RF:
+    return QObject::tr("Rec. de fonct.");
+  case DFRFDIRI::DI:
+    return QObject::tr("Dép. d'invest.");
+  case DFRFDIRI::RI:
+    return QObject::tr("Rec. d'invest.");
+  default:
+    qWarning() << "Invalid mode specified !";
+  }
+  return QString();
+}
+
 QString modeToCompleteString(DFRFDIRI mode) {
   switch (mode) {
   case DFRFDIRI::DF:
@@ -332,6 +348,12 @@ static int currentNumDecimals = DEFAULTNUMDECIMALS;
 int getNumDecimals() {
   QSettings settings;
   return (settings.value("format/numdecimals", DEFAULTNUMDECIMALS).toInt());
+}
+
+FORMATMODE getFormatMode() {
+  QSettings settings;
+  return static_cast<FORMATMODE>(
+      settings.value("format/formatMode", static_cast<int>(FORMATMODE::FORMATMODENORMAL)).toUInt());
 }
 
 void updateFormatModeAndDecimals() {

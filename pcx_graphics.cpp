@@ -91,8 +91,8 @@ PCx_Graphics::~PCx_Graphics() {
   }
 }
 
-QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
-                                      const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const {
+QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
+                                 const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const {
 
   if (node == 0 || plot == nullptr || auditModel == nullptr || referenceNode == 0) {
     qFatal("Assertion failed");
@@ -240,6 +240,7 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   QString refNodeName = auditModel->getAttachedTree()->getNodeName(referenceNode);
   serie1->setName(nodeName);
   serie2->setName(QString("%2 - %1").arg(nodeName, refNodeName));
+  chart->setLocalizeNumbers(true);
 
   QDateTimeAxis *xAxis = new QDateTimeAxis;
   xAxis->setFormat("yyyy");
@@ -252,7 +253,7 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   yAxis->setMin(minYRange - (qAbs(minYRange) * 0.2));
   yAxis->setMax(maxYRange + (qAbs(maxYRange) * 0.1));
   yAxis->applyNiceNumbers();
-  yAxis->setGridLineVisible(false);
+  yAxis->setLabelFormat("%.0f%");
 
   chart->addAxis(xAxis, Qt::AlignBottom);
   chart->addAxis(yAxis, Qt::AlignLeft);
@@ -284,6 +285,7 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   }
 
   chart->setTitle(plotTitle);
+
   // NOTE: Remove border
   chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
@@ -291,246 +293,8 @@ QChart *PCx_Graphics::getPCAG1G8Chart(unsigned int node, MODES::DFRFDIRI mode, P
   return chart;
 }
 
-QString PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
-                                 const PCx_PrevisionItem *prevItem, unsigned int referenceNode) {
-  if (node == 0 || plot == nullptr || auditModel == nullptr || referenceNode == 0) {
-    qFatal("Assertion failed");
-  }
-
-  QString tableName = MODES::modeToTableString(mode);
-  QString oredName = PCx_Audit::OREDtoTableString(modeORED);
-
-  QSqlQuery q;
-
-  // Will contain data read from db
-  QMap<int, qint64> dataRoot, dataNode;
-
-  q.prepare(QString("select * from audit_%1_%2 where id_node=:id or "
-                    "id_node=:refNode order by annee")
-                .arg(tableName)
-                .arg(auditModel->getAuditId()));
-  q.bindValue(":id", node);
-  q.bindValue(":refNode", referenceNode);
-  q.exec();
-
-  if (!q.isActive()) {
-    qCritical() << q.lastError();
-    die();
-  }
-
-  int firstYear = 0;
-
-  while (q.next()) {
-    int annee = q.value("annee").toInt();
-    if (firstYear == 0) {
-      firstYear = annee;
-    }
-
-    qint64 data = q.value(oredName).toLongLong();
-
-    if (q.value("id_node").toUInt() == referenceNode) {
-      dataRoot.insert(annee, data);
-      if (node == referenceNode) {
-        dataNode.insert(annee, data);
-      }
-    } else {
-      dataNode.insert(annee, data);
-    }
-  }
-
-  if (prevItem != nullptr) {
-    int year = prevItem->getYear();
-    dataNode.insert(year, prevItem->getSummedPrevisionItemValue());
-    PCx_PrevisionItem tmpPrevRootItem = PCx_PrevisionItem(prevItem->getPrevision(), mode, referenceNode, year);
-    tmpPrevRootItem.loadFromDb();
-    dataRoot.insert(year, tmpPrevRootItem.getSummedPrevisionItemValue());
-  }
-
-  qint64 firstYearDataRoot = dataRoot.value(firstYear);
-  qint64 firstYearDataNode = dataNode.value(firstYear);
-  qint64 diffRootNode1 = firstYearDataRoot - firstYearDataNode;
-
-  // Will contains computed data
-  QMap<double, double> dataPlotRoot, dataPlotNode;
-  QVector<double> dataPlotRootX, dataPlotNodeX, dataPlotRootY, dataPlotNodeY;
-
-  double minYRange = DBL_MAX - 1, maxYRange = DBL_MIN + 1;
-
-  for (QMap<int, qint64>::const_iterator it = dataRoot.constBegin(), end = dataRoot.constEnd(); it != end; ++it) {
-    qint64 diffRootNode2 = 0, diffRootNode = 0, diffNode = 0;
-
-    int key = it.key();
-    // Skip the first year
-    if (key > firstYear) {
-      double percentRoot = 0.0, percentNode = 0.0;
-      diffRootNode2 = it.value() - dataNode.value(key);
-
-      diffRootNode = diffRootNode2 - diffRootNode1;
-      diffNode = dataNode.value(key) - firstYearDataNode;
-
-      if (diffRootNode1 != 0) {
-        percentRoot = diffRootNode * 100.0 / diffRootNode1;
-      }
-      if (percentRoot < minYRange) {
-        minYRange = percentRoot;
-      }
-      if (percentRoot > maxYRange) {
-        maxYRange = percentRoot;
-      }
-      dataPlotRoot.insert(static_cast<double>(key), percentRoot);
-
-      if (firstYearDataNode != 0) {
-        percentNode = diffNode * 100.0 / firstYearDataNode;
-      }
-      if (percentNode < minYRange) {
-        minYRange = percentNode;
-      }
-      if (percentNode > maxYRange) {
-        maxYRange = percentNode;
-      }
-      dataPlotNode.insert(static_cast<double>(key), percentNode);
-
-      // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
-      if (!cumule) {
-        diffRootNode1 = diffRootNode2;
-        firstYearDataNode = dataNode.value(key);
-      }
-    }
-  }
-
-  for (QMap<double, double>::const_iterator it = dataPlotNode.constBegin(), end = dataPlotNode.constEnd(); it != end;
-       ++it) {
-    dataPlotNodeX.append(it.key());
-    dataPlotNodeY.append(it.value());
-  }
-
-  for (QMap<double, double>::const_iterator it = dataPlotRoot.constBegin(), end = dataPlotRoot.constEnd(); it != end;
-       ++it) {
-    dataPlotRootX.append(it.key());
-    dataPlotRootY.append(it.value());
-  }
-
-  if (ownPlot) {
-    delete plot;
-    plot = new QCustomPlot();
-  } else {
-    plot->clearGraphs();
-    plot->clearItems();
-    plot->clearPlottables();
-  }
-
-  plot->addGraph();
-  plot->graph(0)->setData(dataPlotNodeX, dataPlotNodeY, true);
-
-  plot->addGraph();
-  plot->graph(1)->setData(dataPlotRootX, dataPlotRootY, true);
-
-  // Legend
-  QString nodeName = auditModel->getAttachedTree()->getNodeName(node);
-  QString refNodeName = auditModel->getAttachedTree()->getNodeName(referenceNode);
-  plot->graph(0)->setName(nodeName);
-  plot->graph(1)->setName(QString("%2 - %1").arg(nodeName, refNodeName));
-
-  plot->yAxis->setLabel("%");
-
-  plot->legend->setVisible(true);
-  plot->legend->setFont(QFont("Sans serif"));
-  plot->legend->setRowSpacing(3);
-  plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom);
-
-  plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
-  plot->graph(1)->setScatterStyle(QCPScatterStyle::ssDisc);
-
-  int i = 0;
-
-  for (QMap<double, double>::const_iterator it = dataPlotRoot.constBegin(), end = dataPlotRoot.constEnd(); it != end;
-       ++it) {
-    double key = it.key();
-    double val1 = it.value();
-    double val2 = dataPlotNode.value(key);
-    auto *text = new QCPItemText(plot);
-    text->setText(formatDouble(val1, -1, true) + '%');
-    text->setFont(QFont("Sans serif"));
-    int alignment = Qt::AlignHCenter;
-
-    if (val1 < val2) {
-      alignment |= Qt::AlignTop;
-      text->setPadding(QMargins(0, 8, 0, 0));
-    } else {
-      alignment |= Qt::AlignBottom;
-      text->setPadding(QMargins(0, 0, 0, 4));
-    }
-
-    text->setPositionAlignment(static_cast<Qt::AlignmentFlag>(alignment));
-    text->position->setCoords(key, val1);
-
-    text = new QCPItemText(plot);
-    text->setText(formatDouble(val2, -1, true) + '%');
-    text->setFont(QFont("Sans serif"));
-
-    alignment = Qt::AlignHCenter;
-
-    if (val2 < val1) {
-      alignment |= Qt::AlignTop;
-      text->setPadding(QMargins(0, 8, 0, 0));
-    } else {
-      alignment |= Qt::AlignBottom;
-      text->setPadding(QMargins(0, 0, 0, 4));
-    }
-
-    text->setPositionAlignment(static_cast<Qt::AlignmentFlag>(alignment));
-    text->position->setCoords(key, val2);
-    i++;
-  }
-
-  QString plotTitle;
-  if (!cumule) {
-    plotTitle = QObject::tr("&Eacute;volution comparée des %1 de [ %4 ] hormis %2 et "
-                            "de [ %2 ]<br>(%3)")
-                    .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
-                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
-  }
-
-  else {
-    plotTitle = QObject::tr("&Eacute;volution comparée du cumulé des %1 de [ %4 ] "
-                            "hormis %2 et de [ %2 ]<br>(%3)")
-                    .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
-                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
-  }
-
-  QColor c = getColorPen1();
-  int alpha = getAlpha();
-  plot->graph(0)->setPen(QPen(c));
-  c.setAlpha(alpha);
-  plot->graph(0)->setBrush(QBrush(c));
-  c = getColorPen2();
-  plot->graph(1)->setPen(QPen(c));
-  c.setAlpha(alpha);
-  plot->graph(1)->setBrush(QBrush(c));
-
-  QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
-  plot->xAxis->setTicker(fixedTicker);
-  fixedTicker->setTickStep(1.0);
-
-  plot->xAxis->setSubTickLength(0);
-  plot->xAxis->setTickLength(4);
-
-  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
-  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
-
-  plot->xAxis->setTickLabelRotation(0);
-  plot->xAxis->grid()->setVisible(false);
-  plot->yAxis->grid()->setZeroLinePen(plot->yAxis->grid()->pen());
-  plot->xAxis->setRange(dataPlotNodeX.first() - 0.8, dataPlotNodeX.last() + 0.8);
-
-  double padding = (maxYRange - minYRange) * 0.2;
-
-  plot->yAxis->setRange(minYRange - (padding * 2), maxYRange + padding);
-  return plotTitle;
-}
-
-QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
-  if (node == 0 || plot == nullptr || auditModel == nullptr) {
+QChart *PCx_Graphics::getPCAG9(unsigned int node, int year) const {
+  if (node == 0 || auditModel == nullptr || !auditModel->getYears().contains(year)) {
     qFatal("Assertion failed");
   }
 
@@ -538,10 +302,10 @@ QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
 
   QChart *chart = new QChart();
 
-  QBarSet *dfBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::DF));
-  QBarSet *rfBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::RF));
-  QBarSet *diBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::DI));
-  QBarSet *riBar = new QBarSet(MODES::modeToCompleteString(MODES::DFRFDIRI::RI));
+  QBarSet *dfBar = new QBarSet(MODES::modeToCompactString(MODES::DFRFDIRI::DF));
+  QBarSet *rfBar = new QBarSet(MODES::modeToCompactString(MODES::DFRFDIRI::RF));
+  QBarSet *diBar = new QBarSet(MODES::modeToCompactString(MODES::DFRFDIRI::DI));
+  QBarSet *riBar = new QBarSet(MODES::modeToCompactString(MODES::DFRFDIRI::RI));
 
   QPen pen;
   pen.setWidth(0);
@@ -580,17 +344,15 @@ QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
                     "a.realises 'realisesDF', b.realises 'realisesRF', c.realises "
                     "'realisesDI', d.realises 'realisesRI',"
                     "a.engages 'engagesDF', b.engages 'engagesRF', c.engages "
-                    "'engagesDI', d.engages 'engagesRI',"
-                    "a.disponibles 'disponiblesDF', b.disponibles 'disponiblesRF', "
-                    "c.disponibles 'disponiblesDI', d.disponibles 'disponiblesRI' "
+                    "'engagesDI', d.engages 'engagesRI' "
                     "from audit_DF_%1 a, audit_RF_%1 b, audit_DI_%1 c,audit_RI_%1 d "
                     "where a.id_node=:id_node and a.id_node=b.id_node and "
                     "b.id_node=c.id_node "
-                    "and c.id_node=d.id_node and a.annee=b.annee and b.annee=c.annee "
-                    "and c.annee=d.annee "
-                    "order by a.annee")
+                    "and c.id_node=d.id_node and a.annee=:year and b.annee=:year "
+                    "and c.annee=:year and d.annee=:year ")
                 .arg(auditModel->getAuditId()));
   q.bindValue(":id_node", node);
+  q.bindValue(":year", year);
   q.exec();
   if (!q.isActive()) {
     qCritical() << q.lastError();
@@ -604,17 +366,13 @@ QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
                                                     PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES, true)));
   listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES),
                                                     PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES, true)));
-  listModesAndLabels.append(
-      QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES),
-                              PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES, true)));
 
   QStringList labels;
   QList<double> valuesDF, valuesRF, valuesDI, valuesRI;
 
   QPair<QString, QString> mode;
-  int i = 0;
+
   while (q.next()) {
-    unsigned int annee = q.value("annee").toUInt();
 
     foreach (mode, listModesAndLabels) {
 
@@ -651,7 +409,7 @@ QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
       valuesDI.append(percentDI);
       valuesRI.append(percentRI);
 
-      labels.append(QString("%1 %2").arg(mode.second).arg(annee));
+      labels.append(mode.second);
     }
   }
 
@@ -667,12 +425,11 @@ QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
   series->append(rfBar);
   series->append(riBar);
 
+  series->setLabelsVisible(true);
+
   chart->addSeries(series);
 
   QBarCategoryAxis *axisX = new QBarCategoryAxis();
-  axisX->setLabelsAngle(90);
-  axisX->setLabelsFont(QFont("Sans", 6));
-  qDebug() << labels;
   axisX->append(labels);
   chart->addAxis(axisX, Qt::AlignBottom);
   series->attachAxis(axisX);
@@ -683,207 +440,19 @@ QChart *PCx_Graphics::getPCAG9Chart(unsigned int node) {
   chart->addAxis(axisY, Qt::AlignLeft);
   series->attachAxis(axisY);
 
-  /*
-    plot->yAxis->setLabel("%");
-    plot->xAxis->setTickLength(0, 0);
-    plot->xAxis->grid()->setVisible(false);
-    plot->xAxis->setTickLabelRotation(90);
-    plot->xAxis->setTickLabelFont(QFont("Sans serif"));
-    plot->yAxis->setTickLabelFont(QFont("Sans serif"));
-
-    plot->xAxis->setTicker(textTicker);
-    plot->xAxis->setRange(0, tickCounter);
-    plot->yAxis->setRange(0, 180);*/
-
-  plotTitle = QString("Proportions des d&eacute;penses et recettes pour [ %1 ]")
-                  .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
+  plotTitle = QString("<div style='text-align:center'><b>D&eacute;penses et recettes de %1</b><br>en %2</div>")
+                  .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
+                  .arg(year);
   chart->setTitle(plotTitle);
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
+  chart->setBackgroundRoundness(0);
 
   return chart;
 }
 
-QString PCx_Graphics::getPCAG9(unsigned int node) {
-  if (node == 0 || plot == nullptr || auditModel == nullptr) {
-    qFatal("Assertion failed");
-  }
-
-  QString plotTitle;
-
-  if (ownPlot) {
-    delete plot;
-    plot = new QCustomPlot();
-  } else {
-    plot->clearGraphs();
-    plot->clearItems();
-    plot->clearPlottables();
-  }
-
-  auto *dfBar = new QCPBars(plot->xAxis, plot->yAxis);
-  auto *rfBar = new QCPBars(plot->xAxis, plot->yAxis);
-  auto *diBar = new QCPBars(plot->xAxis, plot->yAxis);
-  auto *riBar = new QCPBars(plot->xAxis, plot->yAxis);
-
-  QPen pen;
-  pen.setWidth(0);
-  QColor c = getColorDFBar();
-  int alpha = getAlpha();
-
-  dfBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::DF));
-  pen.setColor(c);
-  dfBar->setPen(pen);
-  c.setAlpha(alpha);
-  dfBar->setBrush(c);
-
-  c = getColorRFBar();
-
-  rfBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::RF));
-  pen.setColor(c);
-  rfBar->setPen(pen);
-  c.setAlpha(alpha);
-  rfBar->setBrush(c);
-
-  c = getColorDIBar();
-
-  diBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::DI));
-  pen.setColor(c);
-  diBar->setPen(pen);
-  c.setAlpha(alpha);
-  diBar->setBrush(c);
-
-  c = getColorRIBar();
-
-  riBar->setName(MODES::modeToCompleteString(MODES::DFRFDIRI::RI));
-  pen.setColor(c);
-  riBar->setPen(pen);
-  c.setAlpha(alpha);
-  riBar->setBrush(c);
-
-  rfBar->moveAbove(dfBar);
-  diBar->moveAbove(rfBar);
-  riBar->moveAbove(diBar);
-
-  QSqlQuery q;
-  q.prepare(QString("select a.annee, a.ouverts 'ouvertsDF', b.ouverts 'ouvertsRF', "
-                    "c.ouverts 'ouvertsDI', d.ouverts 'ouvertsRI',"
-                    "a.realises 'realisesDF', b.realises 'realisesRF', c.realises "
-                    "'realisesDI', d.realises 'realisesRI',"
-                    "a.engages 'engagesDF', b.engages 'engagesRF', c.engages "
-                    "'engagesDI', d.engages 'engagesRI',"
-                    "a.disponibles 'disponiblesDF', b.disponibles 'disponiblesRF', "
-                    "c.disponibles 'disponiblesDI', d.disponibles 'disponiblesRI' "
-                    "from audit_DF_%1 a, audit_RF_%1 b, audit_DI_%1 c,audit_RI_%1 d "
-                    "where a.id_node=:id_node and a.id_node=b.id_node and "
-                    "b.id_node=c.id_node "
-                    "and c.id_node=d.id_node and a.annee=b.annee and b.annee=c.annee "
-                    "and c.annee=d.annee "
-                    "order by a.annee")
-                .arg(auditModel->getAuditId()));
-  q.bindValue(":id_node", node);
-  q.exec();
-  if (!q.isActive()) {
-    qCritical() << q.lastError();
-    die();
-  }
-
-  QVector<QPair<QString, QString>> listModesAndLabels;
-  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::OUVERTS),
-                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::OUVERTS)));
-  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::REALISES),
-                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::REALISES)));
-  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::ENGAGES),
-                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::ENGAGES)));
-  listModesAndLabels.append(QPair<QString, QString>(PCx_Audit::OREDtoTableString(PCx_Audit::ORED::DISPONIBLES),
-                                                    PCx_Audit::OREDtoCompleteString(PCx_Audit::ORED::DISPONIBLES)));
-
-  QVector<double> ticks;
-  QVector<QString> labels;
-  QVector<double> valuesDF, valuesRF, valuesDI, valuesRI;
-  int tickCounter = 0;
-  QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
-
-  QPair<QString, QString> mode;
-  while (q.next()) {
-    unsigned int annee = q.value("annee").toUInt();
-
-    foreach (mode, listModesAndLabels) {
-      qint64 dataDF = 0, dataRF = 0, dataDI = 0, dataRI = 0, sum = 0;
-      double percentDF = 0.0, percentRF = 0.0, percentDI = 0.0, percentRI = 0.0;
-      dataDF = q.value(mode.first + "DF").toLongLong();
-      dataRF = q.value(mode.first + "RF").toLongLong();
-      dataDI = q.value(mode.first + "DI").toLongLong();
-      dataRI = q.value(mode.first + "RI").toLongLong();
-
-      // In case of negative disponible
-      if (dataDF < 0) {
-        dataDF = 0;
-      }
-      if (dataRF < 0) {
-        dataRF = 0;
-      }
-      if (dataDI < 0) {
-        dataDI = 0;
-      }
-      if (dataRI < 0) {
-        dataRI = 0;
-      }
-
-      sum = dataDF + dataRF + dataDI + dataRI;
-      if (sum > 0) {
-        percentDF = 100.0 * dataDF / sum;
-        percentRF = 100.0 * dataRF / sum;
-        percentDI = 100.0 * dataDI / sum;
-        percentRI = 100.0 * dataRI / sum;
-      }
-      valuesDF.append(percentDF);
-      valuesRF.append(percentRF);
-      valuesDI.append(percentDI);
-      valuesRI.append(percentRI);
-      ++tickCounter;
-      ticks.append(tickCounter);
-      textTicker->addTick(tickCounter, QString("%1 %2").arg(mode.second).arg(annee));
-    }
-    ++tickCounter;
-    ticks.append(tickCounter);
-    textTicker->addTick(tickCounter, QString());
-    labels.append(QString());
-    valuesDF.append(0.0);
-    valuesRF.append(0.0);
-    valuesDI.append(0.0);
-    valuesRI.append(0.0);
-  }
-
-  dfBar->setData(ticks, valuesDF);
-  rfBar->setData(ticks, valuesRF);
-  diBar->setData(ticks, valuesDI);
-  riBar->setData(ticks, valuesRI);
-
-  plot->legend->setFont(QFont("Sans serif", 8));
-
-  plot->legend->setRowSpacing(-4);
-  plot->legend->setWrap(2);
-  plot->legend->setVisible(true);
-
-  plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignHCenter);
-
-  plot->yAxis->setLabel("%");
-  plot->xAxis->setTickLength(0, 0);
-  plot->xAxis->grid()->setVisible(false);
-  plot->xAxis->setTickLabelRotation(90);
-  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
-  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
-
-  plot->xAxis->setTicker(textTicker);
-  plot->xAxis->setRange(0, tickCounter);
-  plot->yAxis->setRange(0, 180);
-
-  plotTitle = QString("Proportions des d&eacute;penses et recettes pour [ %1 ]")
-                  .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped());
-  return plotTitle;
-}
-
-QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                                         const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
-                                         bool miniMode) {
+QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                                    const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
+                                    bool miniMode) const {
 
   if (auditModel == nullptr) {
     qWarning() << "Model error";
@@ -898,19 +467,17 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
   QColor PENCOLORS[4] = {Qt::darkCyan, Qt::red, Qt::gray, Qt::yellow};
 
   if (miniMode) {
-    if (selectedORED.count() == 2) {
-      plotTitle = QObject::tr("<div style='text-align:center'><b>%1 (bleu) et %2 (rouge)</b></div>")
-                      .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0), true),
-                           PCx_Audit::OREDtoCompleteString(selectedORED.at(1), true));
-    }
+    plotTitle = QObject::tr("<div style='text-align:center'><b>%1</b></div>")
+                    .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped());
+
   } else {
     if (prevItem != nullptr) {
       plotTitle =
-          QString("<div style='text-align:center'><b>Données historiques et prévision pour %1</b><br>(%2)</div>")
+          QObject::tr("<div style='text-align:center'><b>Données historiques et prévision pour %1</b><br>(%2)</div>")
               .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
                    MODES::modeToCompleteString(mode));
     } else {
-      plotTitle = QString("<div style='text-align:center'><b>Données historiques pour %1</b><br>(%2)</div>")
+      plotTitle = QObject::tr("<div style='text-align:center'><b>Données historiques pour %1</b><br>(%2)</div>")
                       .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
                            MODES::modeToCompleteString(mode));
     }
@@ -981,7 +548,15 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
   QLineSeries *series = nullptr;
 
   QDateTimeAxis *xAxis = new QDateTimeAxis;
-  xAxis->setTickCount(maxYear - minYear + 1);
+  if (prevItem == nullptr) {
+    xAxis->setTickCount(maxYear - minYear + 3);
+    xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
+
+  } else {
+    xAxis->setTickCount(maxYear - minYear + 4);
+    xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 2, 6, 1)));
+  }
+
   xAxis->setFormat("yyyy");
   xAxis->setGridLineVisible(false);
 
@@ -989,6 +564,7 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
 
   chart->addAxis(xAxis, Qt::AlignBottom);
   chart->addAxis(yAxis, Qt::AlignLeft);
+  yAxis->setGridLineVisible(true);
 
   for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
     if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
@@ -996,7 +572,7 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
       pen.setWidth(2);
       series = new QLineSeries();
       series->append(dataSeries[i]);
-      series->setName(PCx_Audit::OREDtoCompleteString(static_cast<PCx_Audit::ORED>(i)));
+      series->setName(PCx_Audit::OREDtoCompleteString(static_cast<PCx_Audit::ORED>(i), true));
       series->setPen(pen);
       chart->addSeries(series);
       series->attachAxis(xAxis);
@@ -1006,165 +582,35 @@ QChart *PCx_Graphics::getPCAHistoryChart(unsigned int selectedNodeId, MODES::DFR
   }
 
   yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.1));
-  yAxis->setLabelFormat("%G" + QString(NUMBERSFORMAT::getFormatModeSuffix()));
+  chart->setLocalizeNumbers(true);
+
+  QString formatString;
+  switch (NUMBERSFORMAT::getFormatMode()) {
+  case NUMBERSFORMAT::FORMATMODE::FORMATMODENORMAL:
+    formatString = "%.0f" + NUMBERSFORMAT::getFormatModeSuffix();
+    break;
+  case NUMBERSFORMAT::FORMATMODE::FORMATMODETHOUSANDS:
+    formatString = "%.2f" + NUMBERSFORMAT::getFormatModeSuffix();
+    break;
+  case NUMBERSFORMAT::FORMATMODE::FORMATMODEMILLIONS:
+    formatString = "%.2f" + NUMBERSFORMAT::getFormatModeSuffix();
+    break;
+  }
+
+  yAxis->setLabelFormat(formatString);
+
   yAxis->applyNiceNumbers();
+
+  if (miniMode) {
+    xAxis->setVisible(false);
+    // yAxis->setVisible(false);
+  }
 
   // NOTE: Remove border
   chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
 
   return chart;
-}
-
-QString PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                                    const QList<PCx_Audit::ORED> &selectedORED, const PCx_PrevisionItem *prevItem,
-                                    bool miniMode) {
-  if (auditModel == nullptr) {
-    qWarning() << "Model error";
-    return QString();
-  }
-
-  if (ownPlot) {
-    delete plot;
-    plot = new QCustomPlot();
-  } else {
-    plot->clearGraphs();
-    plot->clearItems();
-    plot->clearPlottables();
-  }
-
-  QString plotTitle;
-
-  // Colors for each graph
-  QColor PENCOLORS[4] = {Qt::darkCyan, Qt::red, Qt::gray, Qt::yellow};
-
-  if (miniMode) {
-    if (selectedORED.count() == 2) {
-      plotTitle = QObject::tr("%1 (bleu) et %2 (rouge)")
-                      .arg(PCx_Audit::OREDtoCompleteString(selectedORED.at(0), true),
-                           PCx_Audit::OREDtoCompleteString(selectedORED.at(1), true));
-    }
-
-    QCPTextElement *title;
-    if (plot->plotLayout()->elementCount() == 1) {
-      plot->plotLayout()->insertRow(0);
-      title = new QCPTextElement(plot, plotTitle);
-      title->setFont(QFont("Sans serif", 8));
-      plot->plotLayout()->addElement(0, 0, title);
-    } else {
-      title = dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
-      title->setText(plotTitle);
-    }
-  } else {
-    if (prevItem != nullptr) {
-      plotTitle = QString("Données historiques et prévision pour %1<br>(%2)")
-                      .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
-                           MODES::modeToCompleteString(mode));
-    } else {
-      plotTitle = QString("Données historiques pour %1<br>(%2)")
-                      .arg(auditModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
-                           MODES::modeToCompleteString(mode));
-    }
-  }
-  if (selectedORED.isEmpty()) {
-    plot->replot();
-    return QString();
-  }
-
-  QSqlQuery q;
-
-  q.prepare(QString("select * from audit_%1_%2 where id_node=:id order by annee")
-                .arg(MODES::modeToTableString(mode))
-                .arg(auditModel->getAuditId()));
-  q.bindValue(":id", selectedNodeId);
-  q.exec();
-
-  if (!q.isActive()) {
-    qCritical() << q.lastError();
-    die();
-  }
-  QVector<double> dataX, dataY[static_cast<int>(PCx_Audit::ORED::NONELAST)];
-
-  while (q.next()) {
-    unsigned int date = q.value("annee").toUInt();
-    dataX.append(static_cast<double>(date));
-
-    for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
-      if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
-        qint64 data = q.value(PCx_Audit::OREDtoTableString(static_cast<PCx_Audit::ORED>(i))).toLongLong();
-        dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
-      }
-    }
-  }
-
-  if (dataX.isEmpty()) {
-    plot->replot();
-    return QString();
-  }
-
-  if (prevItem != nullptr) {
-    dataX.append(static_cast<double>(prevItem->getYear()));
-    qint64 summedPrev = prevItem->getSummedPrevisionItemValue();
-    // if(summedPrev!=0)
-    dataY[0].append(NUMBERSFORMAT::fixedPointToDouble(summedPrev));
-  }
-
-  bool first = true;
-
-  for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
-    if (selectedORED.contains(static_cast<PCx_Audit::ORED>(i))) {
-      plot->addGraph();
-      plot->graph()->setData(dataX, dataY[i]);
-      plot->graph()->setName(PCx_Audit::OREDtoCompleteString(static_cast<PCx_Audit::ORED>(i)));
-      plot->graph()->setPen(QPen(PENCOLORS[i]));
-      plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
-      plot->graph()->rescaleAxes(!first);
-      first = false;
-    }
-  }
-
-  QCPRange range;
-
-  range = plot->yAxis->range();
-  double diffRange = range.upper * 0.5;
-  range.lower -= (diffRange / 3);
-  range.upper += (diffRange);
-  plot->yAxis->setRange(range);
-
-  plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-
-  plot->legend->setFont(QFont("Sans serif"));
-  if (!miniMode) {
-    plot->legend->setVisible(true);
-    plot->legend->setFont(QFont("Sans serif", 7));
-    plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignCenter);
-  }
-
-  QSharedPointer<QCPAxisTickerFixed> fixedTicker(new QCPAxisTickerFixed);
-  plot->xAxis->setTicker(fixedTicker);
-  fixedTicker->setTickStep(1.0);
-
-  plot->xAxis->setSubTickLength(0);
-  plot->xAxis->setTickLength(4);
-
-  plot->xAxis->setTickLabelRotation(0);
-  plot->yAxis->setTickLabelFont(QFont("Sans serif"));
-  plot->xAxis->setTickLabelFont(QFont("Sans serif"));
-
-  if (miniMode) {
-    plot->xAxis->setTickLabelRotation(45);
-    plot->yAxis->setTickLabelFont(QFont("Sans serif", 7));
-    plot->xAxis->setTickLabelFont(QFont("Sans serif", 7));
-  }
-
-  plot->yAxis->setLabel("€");
-  plot->yAxis->setNumberFormat("gbc");
-
-  plot->xAxis->setRange(dataX.first() - 0.8, dataX.last() + 0.8);
-  plot->xAxis->grid()->setVisible(false);
-
-  plot->replot();
-  return plotTitle;
 }
 
 bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const {

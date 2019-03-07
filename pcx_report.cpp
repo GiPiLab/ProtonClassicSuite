@@ -163,117 +163,125 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
 
   QChart *chart = nullptr;
   foreach (PCx_Graphics::PCAGRAPHICS graph, listOfGraphics) {
+    output.append("<div align='center' class='g'>");
+
     switch (graph) {
     case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
-      chart = graphics.getPCAHistoryChart(
-          selectedNode, mode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES}, prevItem,
-          false);
-      if (chart != nullptr) {
-        output.append("<div align='center' class='g'>");
-      }
-
-      /*  output.append(
-            "<div align='center' class='g'><b>" +
-            graphics.getPCAHistory(selectedNode, mode,
-                                   {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
-                                   prevItem, false) +
-            "</b><br>");*/
+      chart = graphics.getPCAHistory(selectedNode, mode,
+                                     {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES},
+                                     prevItem, false);
       break;
 
     case PCx_Graphics::PCAGRAPHICS::PCAG1:
-      chart = graphics.getPCAG1Chart(selectedNode, mode, prevItem, referenceNode);
-
-      if (chart != nullptr) {
-        output.append("<div align='center' class='g'>");
-      }
+      chart = graphics.getPCAG1(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG2:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG2(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG2(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG3:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG3(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG3(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG4:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG4(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG4(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG5:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG5(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG5(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG6:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG6(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG6(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG7:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG7(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG7(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG8:
-      output.append("<div align='center' class='g'><b>" +
-                    graphics.getPCAG8(selectedNode, mode, prevItem, referenceNode) + "</b><br>");
+      chart = graphics.getPCAG8(selectedNode, mode, prevItem, referenceNode);
       break;
     case PCx_Graphics::PCAGRAPHICS::PCAG9:
-      chart = graphics.getPCAG9Chart(selectedNode);
 
-      if (chart != nullptr) {
-        output.append("<div align='center' class='g'>");
+      // NOTE : PCAG9 is now a chart per year
+      foreach (int year, auditModel->getYears()) {
+        chart = graphics.getPCAG9(selectedNode, year);
+        if (chart != nullptr) {
+          output.append("<div align='center' class='g'>");
+
+          if (document != nullptr) {
+            QString name = "mydata://" + QString::number(qrand());
+            QPixmap pixmap;
+
+            QChartView v(chart);
+            v.resize(graphicsWidth, graphicsHeight);
+            v.setRenderHint(QPainter::Antialiasing, true);
+            pixmap = v.grab();
+            chart = nullptr;
+            document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+            output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
+          } else {
+            QString imageName = generateUniqueFileName(suffix);
+            QString imageAbsoluteName = imageName;
+            imageName.prepend(encodedRelativeImagePath + "/");
+            imageAbsoluteName.prepend(absoluteImagePath + "/");
+
+            if (graphics.saveChartToDisk(chart, imageAbsoluteName) == false) {
+              die();
+            }
+            output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              .arg(graphicsWidth)
+                              .arg(graphicsHeight)
+                              .arg(imageName));
+            chart = nullptr;
+          }
+        }
       }
       break;
-      // output.append("<div align='center' class='g'><b>" + graphics.getPCAG9(selectedNode) + "</b><br>");
-      // break;
     }
 
-    // Inline mode
-    if (document != nullptr) {
+    // NOTE : PCAG9 needs to be called for each year, done previously
+    if (graph != PCx_Graphics::PCAGRAPHICS::PCAG9) {
 
-      QString name = "mydata://" + QString::number(qrand());
+      // Inline mode
+      if (document != nullptr) {
 
-      // QPixmap pixmap(graphicsWidth, graphicsHeight);
-      QPixmap pixmap;
-      if (chart != nullptr) {
-        QChartView v(chart);
-        v.resize(graphicsWidth, graphicsHeight);
-        v.setRenderHint(QPainter::Antialiasing, true);
-        pixmap = v.grab();
-        chart = nullptr;
+        QString name = "mydata://" + QString::number(qrand());
 
-      } else {
-        pixmap = graphics.getPlot()->toPixmap(graphicsWidth, graphicsHeight);
-      }
-      document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
-      /*output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                        .arg(graphicsWidth)
-                        .arg(graphicsHeight)
-                        .arg(name));*/
-      output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
-    } else { // Export mode
-      QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+        QPixmap pixmap;
+        if (chart != nullptr) {
+          QChartView v(chart);
+          v.resize(graphicsWidth, graphicsHeight);
+          v.setRenderHint(QPainter::Antialiasing, true);
+          pixmap = v.grab();
+          chart = nullptr;
 
-      QString imageName = generateUniqueFileName(suffix);
-      QString imageAbsoluteName = imageName;
-      imageName.prepend(encodedRelativeImagePath + "/");
-      imageAbsoluteName.prepend(absoluteImagePath + "/");
-
-      if (chart == nullptr) {
-        if (graphics.savePlotToDisk(imageAbsoluteName) == false) {
-          die();
+        } else {
+          pixmap = graphics.getPlot()->toPixmap(graphicsWidth, graphicsHeight);
         }
-      } else {
-        if (graphics.saveChartToDisk(chart, imageAbsoluteName) == false) {
-          die();
-        }
-        chart = nullptr;
-      }
+        document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+        output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
+      } else { // Export mode
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
-      output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                        .arg(graphicsWidth)
-                        .arg(graphicsHeight)
-                        .arg(imageName));
-      if (progress != nullptr) {
-        progress->setValue(++progressValue);
+        QString imageName = generateUniqueFileName(suffix);
+        QString imageAbsoluteName = imageName;
+        imageName.prepend(encodedRelativeImagePath + "/");
+        imageAbsoluteName.prepend(absoluteImagePath + "/");
+
+        if (chart == nullptr) {
+          if (graphics.savePlotToDisk(imageAbsoluteName) == false) {
+            die();
+          }
+        } else {
+          if (graphics.saveChartToDisk(chart, imageAbsoluteName) == false) {
+            die();
+          }
+          chart = nullptr;
+        }
+
+        output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                          .arg(graphicsWidth)
+                          .arg(graphicsHeight)
+                          .arg(imageName));
+        if (progress != nullptr) {
+          progress->setValue(++progressValue);
+        }
       }
     }
   }

@@ -193,7 +193,7 @@ void FormAuditPrevisions::updateLabels() {
 
   QChart *oldChart = ui->plot->chart();
 
-  ui->plot->setChart(graphics->getPCAHistoryChart(
+  ui->plot->setChart(graphics->getPCAHistory(
       currentNodeId, currentMode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES}, currentPrevisionItem, true));
 
   delete oldChart;
