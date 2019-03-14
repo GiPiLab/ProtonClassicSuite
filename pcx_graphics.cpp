@@ -602,8 +602,13 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   yAxis->applyNiceNumbers();
 
   if (miniMode) {
-    xAxis->setVisible(false);
-    // yAxis->setVisible(false);
+    QFont font("Sans", 6);
+    chart->setMargins(QMargins(0, 0, 0, 0));
+    chart->setTitle(QString());
+    xAxis->setLabelsFont(font);
+    yAxis->setLabelsFont(font);
+    xAxis->setLabelsAngle(45);
+    xAxis->setFormat("yy");
   }
 
   // NOTE: Remove border
@@ -613,12 +618,17 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   return chart;
 }
 
-bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const {
-  QChartView v(chart);
+QPixmap PCx_Graphics::chartToPixmap(QChart *chart) const {
   QPixmap pixmap;
-  v.resize(graphicsWidth, graphicsHeight);
-  v.setRenderHint(QPainter::Antialiasing, true);
-  pixmap = v.grab();
+  QChartView chartView(chart);
+  chartView.resize(graphicsWidth, graphicsHeight);
+  chartView.setRenderHint(QPainter::Antialiasing, true);
+  pixmap = chartView.grab();
+  return pixmap;
+}
+
+bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const {
+  QPixmap pixmap = chartToPixmap(chart);
   return pixmap.save(imageAbsoluteName, "png");
 }
 

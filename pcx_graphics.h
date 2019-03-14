@@ -160,6 +160,8 @@ public:
 
   static QString getCSS();
 
+  QPixmap chartToPixmap(QChart *chart) const;
+
   bool savePlotToDisk(const QString &imageAbsoluteName) const;
 
   bool saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const;
