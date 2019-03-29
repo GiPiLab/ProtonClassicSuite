@@ -47,6 +47,7 @@
 #include "pcx_audit.h"
 #include "pcx_previsionitem.h"
 #include "pcx_reporting.h"
+#include <QStandardItemModel>
 #include <QtCharts/QtCharts>
 
 using namespace QtCharts;
@@ -165,6 +166,8 @@ public:
   bool savePlotToDisk(const QString &imageAbsoluteName) const;
 
   bool saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const;
+
+  QStandardItemModel *getListOfAvailablePCAGraphics() const;
 
 private:
   PCx_Audit *auditModel;

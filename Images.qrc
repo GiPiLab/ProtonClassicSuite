@@ -28,6 +28,7 @@
         <file>icons/editPrevisions.png</file>
         <file>icons/treemap.png</file>
         <file>icons/movies.png</file>
+        <file>icons/picture_save.png</file>
     </qresource>
     <qresource prefix="/Pictures">
         <file>icons/logo.png</file>

@@ -17,453 +17,163 @@
    <iconset resource="Images.qrc">
     <normaloff>:/icons/icons/exploreAudit.png</normaloff>:/icons/icons/exploreAudit.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_4">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QSplitter" name="splitter">
+    <widget class="QSplitter" name="splitter_3">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
-     <widget class="QWidget" name="layoutWidget1">
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButtonExpandAll">
-         <property name="text">
-          <string>Déplier tout</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="pushButtonCollapseAll">
-         <property name="text">
-          <string>Replier tout</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QTreeView" name="treeView">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clic gauche pour sélectionner le noeud à étudier, double clic pour sélectionner le noeud de référence pour les comparaisons de certains tableaux et graphiques.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="showDropIndicator" stdset="0">
-          <bool>false</bool>
-         </property>
-         <property name="expandsOnDoubleClick">
-          <bool>false</bool>
-         </property>
-         <attribute name="headerVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QComboBox" name="comboListAudits"/>
-       </item>
-       <item row="4" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBoxMode">
-         <property name="title">
-          <string>Mode d'affichage</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_3">
-          <property name="leftMargin">
-           <number>4</number>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0" colspan="2">
+         <widget class="QComboBox" name="comboListAudits"/>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QTreeView" name="treeView">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clic gauche pour sélectionner le noeud à étudier, double clic pour sélectionner le noeud de référence pour les comparaisons de certains tableaux et graphiques.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
-          <property name="topMargin">
-           <number>2</number>
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
           </property>
-          <property name="rightMargin">
-           <number>2</number>
+          <property name="showDropIndicator" stdset="0">
+           <bool>false</bool>
           </property>
-          <property name="bottomMargin">
-           <number>2</number>
+          <property name="expandsOnDoubleClick">
+           <bool>false</bool>
           </property>
-          <property name="horizontalSpacing">
-           <number>4</number>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButtonExpandAll">
+          <property name="text">
+           <string>Déplier tout</string>
           </property>
-          <property name="verticalSpacing">
-           <number>1</number>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="pushButtonCollapseAll">
+          <property name="text">
+           <string>Replier tout</string>
           </property>
-          <item row="2" column="0">
-           <widget class="QRadioButton" name="radioButtonRF">
-            <property name="text">
-             <string>R. fonctionnement</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QRadioButton" name="radioButtonDI">
-            <property name="text">
-             <string>D. investissement</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QRadioButton" name="radioButtonRI">
-            <property name="text">
-             <string>R. investissement</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="2">
-           <widget class="QRadioButton" name="radioButtonGlobal">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Résultats combinant les dépenses et les recettes de fonctionnement et d'investissement&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Résultats globaux</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QRadioButton" name="radioButtonDF">
-            <property name="text">
-             <string>D. fonctionnement</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBoxTables">
-         <property name="whatsThis">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des tableaux à afficher&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="title">
-          <string>Tableaux</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <property name="leftMargin">
-           <number>4</number>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QComboBox" name="comboBoxTable"/>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="textEdit">
+          <property name="acceptDrops">
+           <bool>false</bool>
           </property>
-          <property name="topMargin">
-           <number>2</number>
+          <property name="undoRedoEnabled">
+           <bool>false</bool>
           </property>
-          <property name="rightMargin">
-           <number>2</number>
+          <property name="readOnly">
+           <bool>true</bool>
           </property>
-          <property name="bottomMargin">
-           <number>2</number>
+          <property name="textInteractionFlags">
+           <set>Qt::NoTextInteraction</set>
           </property>
-          <property name="horizontalSpacing">
-           <number>4</number>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveButton">
+          <property name="text">
+           <string>Enregistrer les tableaux</string>
           </property>
-          <property name="verticalSpacing">
-           <number>1</number>
+          <property name="icon">
+           <iconset resource="Images.qrc">
+            <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
           </property>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBoxEvolution">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Évolution</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="checkBoxJoursAct">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Jours activité</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="checkBoxPoidsRelatif">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Poids relatifs</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBoxResults">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Résultats</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="checkBoxEvolutionCumul">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>--&gt; cumulée</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="checkBoxBase100">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Base 100</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="6" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBoxGraphics">
-         <property name="whatsThis">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des graphiques à afficher&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="title">
-          <string>Graphiques</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <property name="leftMargin">
-           <number>4</number>
+          <property name="default">
+           <bool>true</bool>
           </property>
-          <property name="topMargin">
-           <number>2</number>
-          </property>
-          <property name="rightMargin">
-           <number>2</number>
-          </property>
-          <property name="bottomMargin">
-           <number>2</number>
-          </property>
-          <property name="horizontalSpacing">
-           <number>4</number>
-          </property>
-          <property name="verticalSpacing">
-           <number>1</number>
-          </property>
-          <item row="0" column="0" colspan="2">
-           <widget class="QCheckBox" name="checkBoxRecapGraph">
-            <property name="text">
-             <string>Décomposition par année</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBoxOuvert">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Crédits ouverts</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QCheckBox" name="checkBoxEngage">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Engagé</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="checkBoxOuvertCumul">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>--&gt; cumulé</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="checkBoxRealise">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Réalisé</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="checkBoxRealiseCumul">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>--&gt; cumulé</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QCheckBox" name="checkBoxEngageCumul">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>--&gt; cumulé</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QCheckBox" name="checkBoxDisponible">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Disponible</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QCheckBox" name="checkBoxDisponibleCumul">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>--&gt; cumulé</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QCheckBox" name="checkBoxRawHistoryData">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Données historiques</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="1" column="0" colspan="2">
-        <widget class="QTextEdit" name="textEdit">
-         <property name="acceptDrops">
-          <bool>false</bool>
-         </property>
-         <property name="undoRedoEnabled">
-          <bool>false</bool>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="textInteractionFlags">
-          <set>Qt::NoTextInteraction</set>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>680</width>
-           <height>0</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QPushButton" name="saveButton">
-         <property name="text">
-          <string>Enregistrer en HTML</string>
-         </property>
-         <property name="icon">
-          <iconset resource="Images.qrc">
-           <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
-         </property>
-         <property name="default">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QComboBox" name="comboBoxChart1"/>
+        </item>
+        <item>
+         <widget class="QChartView" name="chartView1"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveChart1Button">
+          <property name="text">
+           <string>Enregistrer le graphique</string>
+          </property>
+          <property name="icon">
+           <iconset resource="Images.qrc">
+            <normaloff>:/icons/icons/picture_save.png</normaloff>:/icons/icons/picture_save.png</iconset>
+          </property>
+          <property name="default">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QComboBox" name="comboBoxChart2"/>
+        </item>
+        <item>
+         <widget class="QChartView" name="chartView2"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="saveChart2Button">
+          <property name="text">
+           <string>Enregistrer le graphique</string>
+          </property>
+          <property name="icon">
+           <iconset resource="Images.qrc">
+            <normaloff>:/icons/icons/picture_save.png</normaloff>:/icons/icons/picture_save.png</iconset>
+          </property>
+          <property name="default">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QChartView</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">QtCharts</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>comboListAudits</tabstop>
   <tabstop>treeView</tabstop>
   <tabstop>pushButtonExpandAll</tabstop>
   <tabstop>pushButtonCollapseAll</tabstop>
-  <tabstop>radioButtonGlobal</tabstop>
-  <tabstop>radioButtonDF</tabstop>
-  <tabstop>radioButtonDI</tabstop>
-  <tabstop>radioButtonRF</tabstop>
-  <tabstop>radioButtonRI</tabstop>
-  <tabstop>checkBoxResults</tabstop>
-  <tabstop>checkBoxPoidsRelatif</tabstop>
-  <tabstop>checkBoxEvolution</tabstop>
-  <tabstop>checkBoxBase100</tabstop>
-  <tabstop>checkBoxEvolutionCumul</tabstop>
-  <tabstop>checkBoxJoursAct</tabstop>
-  <tabstop>checkBoxRecapGraph</tabstop>
-  <tabstop>checkBoxOuvert</tabstop>
-  <tabstop>checkBoxEngage</tabstop>
-  <tabstop>checkBoxOuvertCumul</tabstop>
-  <tabstop>checkBoxEngageCumul</tabstop>
-  <tabstop>checkBoxRealise</tabstop>
-  <tabstop>checkBoxDisponible</tabstop>
-  <tabstop>checkBoxRealiseCumul</tabstop>
-  <tabstop>checkBoxDisponibleCumul</tabstop>
   <tabstop>textEdit</tabstop>
   <tabstop>saveButton</tabstop>
  </tabstops>

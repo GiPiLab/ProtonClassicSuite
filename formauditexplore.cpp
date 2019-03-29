@@ -47,20 +47,13 @@
 #include <QPrintDialog>
 #include <QScrollBar>
 
-//#include "QCustomPlot/qcpdocumentobject.h"
-
 FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui::FormAuditExplore) {
   model = nullptr;
   ready = false;
   ui->setupUi(this);
-  ui->splitter->setStretchFactor(1, 1);
 
   doc = new QTextDocument();
   ui->textEdit->setDocument(doc);
-  // NOTE : For vectorized graphics
-  // interface = new QCPDocumentObject(this);
-  // ui->textEdit->document()->documentLayout()->registerHandler(QCPDocumentObject::PlotTextFormat,
-  // interface);
   updateListOfAudits();
   referenceNode = 1;
 }
@@ -72,6 +65,7 @@ FormAuditExplore::~FormAuditExplore() {
     delete report;
   }
   delete ui;
+  delete listOfTablesModel;
 }
 
 void FormAuditExplore::onListOfAuditsChanged() { updateListOfAudits(); }
@@ -123,10 +117,6 @@ void FormAuditExplore::updateTextBrowser() {
   unsigned int selectedNode =
       ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
-  getSelections();
-  QScrollBar *sb = ui->textEdit->verticalScrollBar();
-  int sbval = sb->value();
-
   doc->clear();
 
   QSettings settings;
@@ -139,102 +129,6 @@ void FormAuditExplore::updateTextBrowser() {
                                                        selectedNode, selectedMode, referenceNode, doc));
   output.append("</body></html>");
   doc->setHtml(output);
-  sb->setValue(sbval);
-}
-
-void FormAuditExplore::getSelections() {
-  selectedMode = MODES::DFRFDIRI::GLOBAL;
-
-  if (ui->radioButtonDF->isChecked()) {
-    selectedMode = MODES::DFRFDIRI::DF;
-
-  } else if (ui->radioButtonRF->isChecked()) {
-    selectedMode = MODES::DFRFDIRI::RF;
-
-  } else if (ui->radioButtonDI->isChecked()) {
-    selectedMode = MODES::DFRFDIRI::DI;
-
-  } else if (ui->radioButtonRI->isChecked()) {
-    selectedMode = MODES::DFRFDIRI::RI;
-
-  } else if (ui->radioButtonGlobal->isChecked()) {
-    selectedMode = MODES::DFRFDIRI::GLOBAL;
-
-  } else {
-    qCritical() << "Unsupported case of radio button checking";
-  }
-
-  selectedGraphics.clear();
-  selectedTabs.clear();
-
-  if (selectedMode != MODES::DFRFDIRI::GLOBAL) {
-    if (ui->checkBoxPoidsRelatif->isChecked()) {
-      selectedTabs.append(PCx_Tables::PCAPRESETS::PCAOVERVIEW);
-    }
-
-    if (ui->checkBoxEvolution->isChecked()) {
-      selectedTabs.append(PCx_Tables::PCAPRESETS::PCAEVOLUTION);
-    }
-
-    if (ui->checkBoxEvolutionCumul->isChecked()) {
-      selectedTabs.append(PCx_Tables::PCAPRESETS::PCAEVOLUTIONCUMUL);
-    }
-
-    if (ui->checkBoxBase100->isChecked()) {
-      selectedTabs.append(PCx_Tables::PCAPRESETS::PCABASE100);
-    }
-
-    if (ui->checkBoxJoursAct->isChecked()) {
-      selectedTabs.append(PCx_Tables::PCAPRESETS::PCADAYOFWORK);
-    }
-
-    if (ui->checkBoxRawHistoryData->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAHISTORY);
-    }
-
-    if (ui->checkBoxOuvert->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG1);
-    }
-
-    if (ui->checkBoxOuvertCumul->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG2);
-    }
-
-    if (ui->checkBoxRealise->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG3);
-    }
-
-    if (ui->checkBoxRealiseCumul->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG4);
-    }
-
-    if (ui->checkBoxEngage->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG5);
-    }
-
-    if (ui->checkBoxEngageCumul->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG6);
-    }
-
-    if (ui->checkBoxDisponible->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG7);
-    }
-
-    if (ui->checkBoxDisponibleCumul->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG8);
-    }
-
-  }
-
-  else {
-    if (ui->checkBoxResults->isChecked()) {
-      selectedTabs.append(PCx_Tables::PCAPRESETS::PCARESULTS);
-    }
-
-    if (ui->checkBoxRecapGraph->isChecked()) {
-      selectedGraphics.append(PCx_Graphics::PCAGRAPHICS::PCAG9);
-    }
-  }
 }
 
 void FormAuditExplore::on_comboListAudits_activated(int index) {
@@ -260,6 +154,10 @@ void FormAuditExplore::on_comboListAudits_activated(int index) {
   QItemSelectionModel *m = ui->treeView->selectionModel();
   ui->treeView->setModel(model->getAttachedTree());
   delete m;
+
+  listOfTablesModel = report->getTables().getListModelOfAvailableAuditTables(true, false);
+  ui->comboBoxTable->setModel(listOfTablesModel);
+
   ui->treeView->expandToDepth(1);
   QModelIndex rootIndex = model->getAttachedTree()->index(0, 0);
   ui->treeView->setCurrentIndex(rootIndex);
@@ -272,49 +170,6 @@ void FormAuditExplore::on_treeView_clicked(const QModelIndex &index) {
   // ui->groupBoxMode->setTitle(index.data().toString());
 
   updateTextBrowser();
-}
-
-void FormAuditExplore::on_radioButtonGlobal_toggled(bool checked) {
-  if (checked) {
-    selectedMode = MODES::DFRFDIRI::GLOBAL;
-    updateTextBrowser();
-
-    ui->checkBoxPoidsRelatif->setEnabled(false);
-    ui->checkBoxBase100->setEnabled(false);
-    ui->checkBoxEvolution->setEnabled(false);
-    ui->checkBoxEvolutionCumul->setEnabled(false);
-    ui->checkBoxJoursAct->setEnabled(false);
-    ui->checkBoxResults->setEnabled(true);
-
-    ui->checkBoxRawHistoryData->setEnabled(false);
-    ui->checkBoxOuvert->setEnabled(false);
-    ui->checkBoxOuvertCumul->setEnabled(false);
-    ui->checkBoxRealise->setEnabled(false);
-    ui->checkBoxRealiseCumul->setEnabled(false);
-    ui->checkBoxEngage->setEnabled(false);
-    ui->checkBoxEngageCumul->setEnabled(false);
-    ui->checkBoxDisponible->setEnabled(false);
-    ui->checkBoxDisponibleCumul->setEnabled(false);
-    ui->checkBoxRecapGraph->setEnabled(true);
-  } else {
-    ui->checkBoxPoidsRelatif->setEnabled(true);
-    ui->checkBoxBase100->setEnabled(true);
-    ui->checkBoxEvolution->setEnabled(true);
-    ui->checkBoxEvolutionCumul->setEnabled(true);
-    ui->checkBoxJoursAct->setEnabled(true);
-    ui->checkBoxResults->setEnabled(false);
-
-    ui->checkBoxRawHistoryData->setEnabled(true);
-    ui->checkBoxOuvert->setEnabled(true);
-    ui->checkBoxOuvertCumul->setEnabled(true);
-    ui->checkBoxRealise->setEnabled(true);
-    ui->checkBoxRealiseCumul->setEnabled(true);
-    ui->checkBoxEngage->setEnabled(true);
-    ui->checkBoxEngageCumul->setEnabled(true);
-    ui->checkBoxDisponible->setEnabled(true);
-    ui->checkBoxDisponibleCumul->setEnabled(true);
-    ui->checkBoxRecapGraph->setEnabled(false);
-  }
 }
 
 void FormAuditExplore::on_saveButton_clicked() {
@@ -359,7 +214,6 @@ void FormAuditExplore::on_saveButton_clicked() {
   }
 
   unsigned int node = ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
-  getSelections();
 
   int maximumProgressValue = selectedGraphics.count();
 
@@ -408,111 +262,11 @@ void FormAuditExplore::on_saveButton_clicked() {
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
-                             tr("Le document <b>%1</b> a bien été enregistré. Les images sont "
-                                "stockées dans le dossier <b>%2</b>")
+                             tr("Le document <b>%1</b> a bien été enregistré.")
                                  .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
   }
-}
-
-void FormAuditExplore::on_checkBoxResults_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxRecapGraph_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxOuvert_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxEngage_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxOuvertCumul_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxEngageCumul_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxRealise_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxDisponible_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxRealiseCumul_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxDisponibleCumul_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxPoidsRelatif_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_radioButtonDF_toggled(bool checked) {
-  if (checked) {
-    updateTextBrowser();
-  }
-}
-
-void FormAuditExplore::on_radioButtonRF_toggled(bool checked) {
-  if (checked) {
-    updateTextBrowser();
-  }
-}
-
-void FormAuditExplore::on_radioButtonDI_toggled(bool checked) {
-  if (checked) {
-    updateTextBrowser();
-  }
-}
-
-void FormAuditExplore::on_radioButtonRI_toggled(bool checked) {
-  if (checked) {
-    updateTextBrowser();
-  }
-}
-
-void FormAuditExplore::on_checkBoxEvolution_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxEvolutionCumul_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxBase100_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
-
-void FormAuditExplore::on_checkBoxJoursAct_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
 }
 
 void FormAuditExplore::on_pushButtonCollapseAll_clicked() {
@@ -521,11 +275,6 @@ void FormAuditExplore::on_pushButtonCollapseAll_clicked() {
 }
 
 void FormAuditExplore::on_pushButtonExpandAll_clicked() { ui->treeView->expandAll(); }
-
-void FormAuditExplore::on_checkBoxRawHistoryData_toggled(bool checked) {
-  Q_UNUSED(checked);
-  updateTextBrowser();
-}
 
 void FormAuditExplore::on_treeView_doubleClicked(const QModelIndex &index) {
   referenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();

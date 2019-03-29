@@ -45,10 +45,14 @@
 
 #include "pcx_audit.h"
 #include "pcx_reporting.h"
+#include <QStandardItemModel>
 
 class PCx_Tables {
 public:
   enum class PCAPRESETS { PCARESULTS, PCAOVERVIEW, PCAEVOLUTION, PCAEVOLUTIONCUMUL, PCABASE100, PCADAYOFWORK };
+
+  static const int TableIdUserRole = Qt::UserRole + 242;
+  static const int ModeIdUserRole = Qt::UserRole + 121;
 
   enum class PCATABLES {
     PCARAWDATA,
@@ -78,6 +82,25 @@ public:
     PCRRIDI,
     PCRRFDFRIDI
   };
+
+  QMap<PCATABLES, QString> pcaTablesDescription{
+      {PCATABLES::PCARAWDATA, QObject::tr("Données brutes")},
+      {PCATABLES::PCAT1, QObject::tr("Récapitulatif")},
+      {PCATABLES::PCAT2,
+       QObject::tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]")},
+      {PCATABLES::PCAT2BIS, QObject::tr("Évolution du compte administratif de la collectivité hors celui de [...]")},
+      {PCATABLES::PCAT3, QObject::tr("Évolution cumulée du compte administratif de [...]")},
+      {PCATABLES::PCAT3BIS, QObject::tr("Évolution du compte administratif de [...]")},
+      {PCATABLES::PCAT4, QObject::tr("Poids relatif de [...] au sein de la collectivité")},
+      {PCATABLES::PCAT5,
+       QObject::tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]")},
+      {PCATABLES::PCAT6, QObject::tr("Analyse en base 100 du compte administratif de [...]")},
+      {PCATABLES::PCAT7, QObject::tr("Transcription en \"jours/activité\" de [...]")},
+      {PCATABLES::PCAT8, QObject::tr("Moyennes budgétaires de [...]")},
+      {PCATABLES::PCAT9, QObject::tr("Equivalences moyennes en \"jours activité\" de [...]")},
+      {PCATABLES::PCAT10, QObject::tr("Résultats de fonctionnement de [...]")},
+      {PCATABLES::PCAT11, QObject::tr("Résultats d'investissement de [...]")},
+      {PCATABLES::PCAT12, QObject::tr("Résultats budgétaire de [...]")}};
 
   PCx_Tables(PCx_Audit *auditModel);
   PCx_Tables(PCx_Reporting *reportingModel);
@@ -128,9 +151,14 @@ public:
   QString getPCRRIDI(unsigned int node) const;
   QString getPCRRFDFRIDI(unsigned int node) const;
 
+  QStandardItemModel *getTreeModelOfAvailableAuditTables(bool richTooltip = false) const;
+  QStandardItemModel *getListModelOfAvailableAuditTables(bool splitDFRFDIRI = false, bool richTooltip = false) const;
+
 private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;
+
+  int createListOfAuditTablesModel();
 
   PCx_Tables(const PCx_Tables &c);
   PCx_Tables &operator=(const PCx_Tables &);

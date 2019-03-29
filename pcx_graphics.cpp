@@ -632,6 +632,8 @@ bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteNa
   return pixmap.save(imageAbsoluteName, "png");
 }
 
+QStandardItemModel *PCx_Graphics::getListOfAvailablePCAGraphics() const {}
+
 bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {
   if (!plot->savePng(imageAbsoluteName, graphicsWidth, graphicsHeight)) {
     qCritical() << "Unable to save " << imageAbsoluteName;
