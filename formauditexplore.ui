@@ -27,7 +27,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0" colspan="2">
          <widget class="QComboBox" name="comboListAudits"/>
@@ -68,11 +68,14 @@
        </layout>
       </widget>
       <widget class="QWidget" name="">
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
          <widget class="QComboBox" name="comboBoxTable"/>
         </item>
-        <item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBoxDFRFDIRITable"/>
+        </item>
+        <item row="1" column="0" colspan="2">
          <widget class="QTextEdit" name="textEdit">
           <property name="acceptDrops">
            <bool>false</bool>
@@ -88,8 +91,8 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="saveButton">
+        <item row="2" column="0" colspan="2">
+         <widget class="QPushButton" name="saveTablesButton">
           <property name="text">
            <string>Enregistrer les tableaux</string>
           </property>
@@ -110,14 +113,17 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QWidget" name="">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
          <widget class="QComboBox" name="comboBoxChart1"/>
         </item>
-        <item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBoxDFRFDIRIChart1"/>
+        </item>
+        <item row="1" column="0" colspan="2">
          <widget class="QChartView" name="chartView1"/>
         </item>
-        <item>
+        <item row="2" column="0" colspan="2">
          <widget class="QPushButton" name="saveChart1Button">
           <property name="text">
            <string>Enregistrer le graphique</string>
@@ -134,14 +140,17 @@
        </layout>
       </widget>
       <widget class="QWidget" name="">
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
          <widget class="QComboBox" name="comboBoxChart2"/>
         </item>
-        <item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBoxDFRFDIRIChart2"/>
+        </item>
+        <item row="1" column="0" colspan="2">
          <widget class="QChartView" name="chartView2"/>
         </item>
-        <item>
+        <item row="2" column="0" colspan="2">
          <widget class="QPushButton" name="saveChart2Button">
           <property name="text">
            <string>Enregistrer le graphique</string>
@@ -175,7 +184,7 @@
   <tabstop>pushButtonExpandAll</tabstop>
   <tabstop>pushButtonCollapseAll</tabstop>
   <tabstop>textEdit</tabstop>
-  <tabstop>saveButton</tabstop>
+  <tabstop>saveTablesButton</tabstop>
  </tabstops>
  <resources>
   <include location="Images.qrc"/>

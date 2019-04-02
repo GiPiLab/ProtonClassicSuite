@@ -339,6 +339,25 @@ QString modeToTableString(DFRFDIRI mode) {
   return QString();
 }
 
+QStandardItemModel *getListModelOfDFRFDIRI() {
+  QStandardItemModel *model = new QStandardItemModel();
+  QStandardItem *item;
+
+  item = new QStandardItem(modeToCompleteString(DFRFDIRI::DF));
+  item->setData(static_cast<int>(DFRFDIRI::DF), ModeIdUserRole);
+  model->appendRow(item);
+  item = new QStandardItem(modeToCompleteString(DFRFDIRI::RF));
+  item->setData(static_cast<int>(DFRFDIRI::RF), ModeIdUserRole);
+  model->appendRow(item);
+  item = new QStandardItem(modeToCompleteString(DFRFDIRI::DI));
+  item->setData(static_cast<int>(DFRFDIRI::DI), ModeIdUserRole);
+  model->appendRow(item);
+  item = new QStandardItem(modeToCompleteString(DFRFDIRI::RI));
+  item->setData(static_cast<int>(DFRFDIRI::RI), ModeIdUserRole);
+  model->appendRow(item);
+  return model;
+}
+
 } // namespace MODES
 
 namespace NUMBERSFORMAT {

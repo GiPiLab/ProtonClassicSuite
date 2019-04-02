@@ -78,8 +78,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
   if (!listOfTabs.isEmpty()) {
     foreach (PCx_Tables::PCAPRESETS tab, listOfTabs) {
       switch (tab) {
-      case PCx_Tables::PCAPRESETS::PCAOVERVIEW:
-        output.append(tables.getPCAPresetOverview(selectedNode, mode, referenceNode));
+      case PCx_Tables::PCAPRESETS::PCARELATIVEWEIGHTS:
+        output.append(tables.getPCAPresetRelativeWeights(selectedNode, mode, referenceNode));
         break;
       case PCx_Tables::PCAPRESETS::PCAEVOLUTION:
         output.append(tables.getPCAPresetEvolution(selectedNode, mode, referenceNode));

@@ -41,6 +41,7 @@
  */
 
 #include "pcx_tables.h"
+#include "pcx_graphics.h"
 #include "pcx_reportingtableoverviewmodel.h"
 #include "pcx_treemodel.h"
 #include "utils.h"
@@ -54,6 +55,39 @@ using namespace NUMBERSFORMAT;
 PCx_Tables::PCx_Tables(PCx_Audit *model) : auditModel(model) { reportingModel = nullptr; }
 
 PCx_Tables::PCx_Tables(PCx_Reporting *reportingModel) : reportingModel(reportingModel) { auditModel = nullptr; }
+
+const QMap<PCx_Tables::PCATABLES, QString> PCx_Tables::pcaTablesDescription() {
+  static const QMap<PCx_Tables::PCATABLES, QString> map = {
+      {PCATABLES::PCARAWDATA, QObject::tr("Données brutes")},
+      {PCATABLES::PCAT1, QObject::tr("Récapitulatif")},
+      {PCATABLES::PCAT2,
+       QObject::tr("Évolution cumulée du compte administratif de la collectivité hors celui de [...]")},
+      {PCATABLES::PCAT2BIS, QObject::tr("Évolution du compte administratif de la collectivité hors celui de [...]")},
+      {PCATABLES::PCAT3, QObject::tr("Évolution cumulée du compte administratif de [...]")},
+      {PCATABLES::PCAT3BIS, QObject::tr("Évolution du compte administratif de [...]")},
+      {PCATABLES::PCAT4, QObject::tr("Poids relatif de [...] au sein de la collectivité")},
+      {PCATABLES::PCAT5,
+       QObject::tr("Analyse en base 100 du compte administratif de la collectivité hors celui de [...]")},
+      {PCATABLES::PCAT6, QObject::tr("Analyse en base 100 du compte administratif de [...]")},
+      {PCATABLES::PCAT7, QObject::tr("Transcription en \"jours/activité\" de [...]")},
+      {PCATABLES::PCAT8, QObject::tr("Moyennes budgétaires de [...]")},
+      {PCATABLES::PCAT9, QObject::tr("Equivalences moyennes en \"jours activité\" de [...]")},
+      {PCATABLES::PCAT10, QObject::tr("Résultats de fonctionnement de [...]")},
+      {PCATABLES::PCAT11, QObject::tr("Résultats d'investissement de [...]")},
+      {PCATABLES::PCAT12, QObject::tr("Résultats budgétaire de [...]")}};
+  return map;
+}
+
+const QMap<PCx_Tables::PCAPRESETS, QString> PCx_Tables::pcaPresetsDescription() {
+  static const QMap<PCx_Tables::PCAPRESETS, QString> map = {
+      {PCAPRESETS::PCABASE100, QObject::tr("Analyses en base 100")},
+      {PCAPRESETS::PCARESULTS, QObject::tr("Résultats")},
+      {PCAPRESETS::PCARELATIVEWEIGHTS, QObject::tr("Poids relatifs")},
+      {PCAPRESETS::PCADAYOFWORK, QObject::tr("Jours-activité")},
+      {PCAPRESETS::PCAEVOLUTION, QObject::tr("Évolutions")},
+      {PCAPRESETS::PCAEVOLUTIONCUMUL, QObject::tr("Évolutions cumulées")}};
+  return map;
+}
 
 QString PCx_Tables::getPCAT1(unsigned int node, MODES::DFRFDIRI mode) const {
   if (node == 0 || auditModel == nullptr) {
@@ -1638,96 +1672,28 @@ QString PCx_Tables::getPCRRFDFRIDI(unsigned int node) const {
   return qTableViewToHtml(&view);
 }
 
-QStandardItemModel *PCx_Tables::getTreeModelOfAvailableAuditTables(bool richTooltip) const {
-  QStandardItemModel *model = new QStandardItemModel();
-  QStandardItem *item;
-
-  item = new QStandardItem(pcaTablesDescription.value(PCATABLES::PCAT10));
-  item->setData(static_cast<int>(PCx_Tables::PCATABLES::PCAT10), PCx_Tables::TableIdUserRole);
-  item->setData(static_cast<int>(MODES::DFRFDIRI::GLOBAL), PCx_Tables::ModeIdUserRole);
-  if (richTooltip) {
-    item->setToolTip("<span style='font-size:8pt'>" + getPCAT10(1) + "</span>");
-  }
-  model->invisibleRootItem()->appendRow(item);
-
-  item = new QStandardItem(pcaTablesDescription.value(PCATABLES::PCAT11));
-  item->setData(static_cast<int>(PCx_Tables::PCATABLES::PCAT11), PCx_Tables::TableIdUserRole);
-  item->setData(static_cast<int>(MODES::DFRFDIRI::GLOBAL), PCx_Tables::ModeIdUserRole);
-  if (richTooltip) {
-    item->setToolTip("<span style='font-size:8pt'>" + getPCAT11(1) + "</span>");
-  }
-  model->invisibleRootItem()->appendRow(item);
-
-  item = new QStandardItem(pcaTablesDescription.value(PCATABLES::PCAT12));
-  item->setData(static_cast<int>(PCx_Tables::PCATABLES::PCAT12), PCx_Tables::TableIdUserRole);
-  item->setData(static_cast<int>(MODES::DFRFDIRI::GLOBAL), PCx_Tables::ModeIdUserRole);
-  if (richTooltip) {
-    item->setToolTip("<span style='font-size:8pt'>" + getPCAT12(1) + "</span>");
-  }
-  model->invisibleRootItem()->appendRow(item);
-
-  QMap<MODES::DFRFDIRI, QStandardItem *> listModesToParentItem;
-
-  QStandardItem *itemDF, *itemRF, *itemDI, *itemRI;
-
-  itemDF = new QStandardItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DF));
-  itemRF = new QStandardItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RF));
-  itemDI = new QStandardItem(MODES::modeToCompleteString(MODES::DFRFDIRI::DI));
-  itemRI = new QStandardItem(MODES::modeToCompleteString(MODES::DFRFDIRI::RI));
-  listModesToParentItem.insert(MODES::DFRFDIRI::DF, itemDF);
-  listModesToParentItem.insert(MODES::DFRFDIRI::RF, itemRF);
-  listModesToParentItem.insert(MODES::DFRFDIRI::DI, itemDI);
-  listModesToParentItem.insert(MODES::DFRFDIRI::RI, itemRI);
-  model->invisibleRootItem()->appendRows({itemDF, itemRF, itemDI, itemRI});
-
-  QList<PCATABLES> listOfRemainingTablesToShow = {
-      PCATABLES::PCAT1, PCATABLES::PCAT2, PCATABLES::PCAT2BIS, PCATABLES::PCAT3, PCATABLES::PCAT3BIS, PCATABLES::PCAT4,
-      PCATABLES::PCAT5, PCATABLES::PCAT6, PCATABLES::PCAT7,    PCATABLES::PCAT8, PCATABLES::PCAT9};
-
-  foreach (MODES::DFRFDIRI mode, listModesToParentItem.keys()) {
-    foreach (PCATABLES table, listOfRemainingTablesToShow) {
-      item = new QStandardItem(pcaTablesDescription.value(table));
-      item->setData(static_cast<int>(table), PCx_Tables::TableIdUserRole);
-      item->setData(static_cast<int>(mode), PCx_Tables::ModeIdUserRole);
-      if (richTooltip) {
-        item->setToolTip("<span style='font-size:8pt'>" + getPCAT1(1, mode) + "</span>");
-      }
-      listModesToParentItem.value(mode)->appendRow(item);
-    }
-  }
-  return model;
-}
-
-QStandardItemModel *PCx_Tables::getListModelOfAvailableAuditTables(bool splitDFRFDIRI, bool richTooltip) const {
+QStandardItemModel *PCx_Tables::getListModelOfAvailableAuditTables(bool richTooltip,
+                                                                   MODES::DFRFDIRI modeForRichTooltip) const {
 
   QStandardItemModel *model = new QStandardItemModel();
   QStandardItem *item;
 
-  item = new QStandardItem(pcaTablesDescription.value(PCATABLES::PCAT10));
+  item = new QStandardItem(pcaTablesDescription().value(PCATABLES::PCAT10));
   item->setData(static_cast<int>(PCx_Tables::PCATABLES::PCAT10), PCx_Tables::TableIdUserRole);
-  if (splitDFRFDIRI) {
-    item->setData(static_cast<int>(MODES::DFRFDIRI::GLOBAL), PCx_Tables::ModeIdUserRole);
-  }
   if (richTooltip) {
     item->setToolTip("<span style='font-size:8pt'>" + getPCAT10(1) + "</span>");
   }
   model->appendRow(item);
 
-  item = new QStandardItem(pcaTablesDescription.value(PCATABLES::PCAT11));
+  item = new QStandardItem(pcaTablesDescription().value(PCATABLES::PCAT11));
   item->setData(static_cast<int>(PCx_Tables::PCATABLES::PCAT11), PCx_Tables::TableIdUserRole);
-  if (splitDFRFDIRI) {
-    item->setData(static_cast<int>(MODES::DFRFDIRI::GLOBAL), PCx_Tables::ModeIdUserRole);
-  }
   if (richTooltip) {
     item->setToolTip("<span style='font-size:8pt'>" + getPCAT11(1) + "</span>");
   }
   model->appendRow(item);
 
-  item = new QStandardItem(pcaTablesDescription.value(PCATABLES::PCAT12));
+  item = new QStandardItem(pcaTablesDescription().value(PCATABLES::PCAT12));
   item->setData(static_cast<int>(PCx_Tables::PCATABLES::PCAT12), PCx_Tables::TableIdUserRole);
-  if (splitDFRFDIRI) {
-    item->setData(static_cast<int>(MODES::DFRFDIRI::GLOBAL), PCx_Tables::ModeIdUserRole);
-  }
   if (richTooltip) {
     item->setToolTip("<span style='font-size:8pt'>" + getPCAT12(1) + "</span>");
   }
@@ -1737,35 +1703,40 @@ QStandardItemModel *PCx_Tables::getListModelOfAvailableAuditTables(bool splitDFR
       PCATABLES::PCAT1, PCATABLES::PCAT2, PCATABLES::PCAT2BIS, PCATABLES::PCAT3, PCATABLES::PCAT3BIS, PCATABLES::PCAT4,
       PCATABLES::PCAT5, PCATABLES::PCAT6, PCATABLES::PCAT7,    PCATABLES::PCAT8, PCATABLES::PCAT9};
 
-  QList<MODES::DFRFDIRI> listModes = {MODES::DFRFDIRI::DF, MODES::DFRFDIRI::RF, MODES::DFRFDIRI::DI,
-                                      MODES::DFRFDIRI::RI};
-
-  QMap<MODES::DFRFDIRI, QString> modeToPrefix = {{MODES::DFRFDIRI::DF, QObject::tr("DF - ")},
-                                                 {MODES::DFRFDIRI::RF, QObject::tr("RF - ")},
-                                                 {MODES::DFRFDIRI::DI, QObject::tr("DI - ")},
-                                                 {MODES::DFRFDIRI::RI, QObject::tr("RI - ")}};
-
-  QMap<MODES::DFRFDIRI, QBrush> modeToBackground = {{MODES::DFRFDIRI::DF, QBrush(Qt::GlobalColor::darkGray)},
-                                                    {MODES::DFRFDIRI::RF, QBrush(Qt::GlobalColor::gray)},
-                                                    {MODES::DFRFDIRI::DI, QBrush(Qt::GlobalColor::darkGray)},
-                                                    {MODES::DFRFDIRI::RI, QBrush(Qt::GlobalColor::gray)}};
-
-  foreach (MODES::DFRFDIRI mode, listModes) {
-    foreach (PCATABLES table, listOfRemainingTablesToShow) {
-      item = new QStandardItem(modeToPrefix.value(mode) + pcaTablesDescription.value(table));
-      item->setBackground(modeToBackground.value(mode));
-      item->setData(static_cast<int>(table), PCx_Tables::TableIdUserRole);
-      item->setData(static_cast<int>(mode), PCx_Tables::ModeIdUserRole);
-      if (richTooltip) {
-        item->setToolTip("<span style='font-size:8pt'>" + getPCAT1(1, mode) + "</span>");
-      }
-      model->appendRow(item);
+  foreach (PCATABLES table, listOfRemainingTablesToShow) {
+    item = new QStandardItem(pcaTablesDescription().value(table));
+    item->setData(static_cast<int>(table), PCx_Tables::TableIdUserRole);
+    if (richTooltip) {
+      item->setToolTip("<span style='font-size:8pt'>" + getPCAT1(1, modeForRichTooltip) + "</span>");
     }
+    model->appendRow(item);
+  }
+
+  return model;
+}
+
+QStandardItemModel *PCx_Tables::getListModelOfAvailableAuditPresets() {
+  QStandardItemModel *model = new QStandardItemModel();
+  QStandardItem *item;
+
+  item = new QStandardItem(pcaPresetsDescription().value(PCAPRESETS::PCARESULTS));
+  item->setData(static_cast<int>(PCx_Tables::PCAPRESETS::PCARESULTS), PCx_Tables::PresetIdUserRole);
+  model->appendRow(item);
+
+  QList<PCAPRESETS> listOfRemainingPresetsToShow = {PCAPRESETS::PCAEVOLUTION, PCAPRESETS::PCAEVOLUTIONCUMUL,
+                                                    PCAPRESETS::PCABASE100, PCAPRESETS::PCADAYOFWORK,
+                                                    PCAPRESETS::PCARELATIVEWEIGHTS};
+
+  foreach (PCAPRESETS preset, listOfRemainingPresetsToShow) {
+    item = new QStandardItem(pcaPresetsDescription().value(preset));
+    item->setData(static_cast<int>(preset), PCx_Tables::PresetIdUserRole);
+    model->appendRow(item);
   }
   return model;
 }
 
-QString PCx_Tables::getPCAPresetOverview(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode) const {
+QString PCx_Tables::getPCAPresetRelativeWeights(unsigned int node, MODES::DFRFDIRI mode,
+                                                unsigned int referenceNode) const {
   QString out = getPCAT1(node, mode) + "<br>\n" + getPCAT4(node, mode, referenceNode) + "<br>\n" +
                 getPCAT8(node, mode) + "<br>\n";
   return out;

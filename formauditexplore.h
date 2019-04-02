@@ -73,24 +73,38 @@ private slots:
 
   void on_treeView_doubleClicked(const QModelIndex &index);
 
-  void on_saveButton_clicked();
+  void on_saveTablesButton_clicked();
+
+  void on_comboBoxTable_activated(int index);
+
+  void on_comboBoxDFRFDIRITable_activated(int index);
+
+  void on_comboBoxChart1_activated(int index);
+
+  void on_comboBoxDFRFDIRIChart1_activated(int index);
+
+  void on_comboBoxChart2_activated(int index);
+
+  void on_comboBoxDFRFDIRIChart2_activated(int index);
+
+protected:
+  void showEvent(QShowEvent *ev);
 
 private:
   Ui::FormAuditExplore *ui;
   void updateListOfAudits();
-  void updateTextBrowser();
+  void updateViews();
 
   QTextDocument *doc;
   PCx_AuditWithTreeModel *model;
   PCx_Report *report{};
 
-  QList<PCx_Tables::PCAPRESETS> selectedTabs;
-  QList<PCx_Graphics::PCAGRAPHICS> selectedGraphics;
-  MODES::DFRFDIRI selectedMode;
   unsigned int referenceNode;
-  QStandardItemModel *listOfTablesModel;
+  QStandardItemModel *listOfPresetModel = nullptr, *listOfDFRFDIRIModel = nullptr;
 
-  bool ready;
+  bool ready, newAuditSelected;
+
+  QSize sizeHint() const;
 };
 
 #endif // FORMAUDITEXPLORE_H

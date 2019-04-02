@@ -50,12 +50,27 @@
 FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui::FormAuditExplore) {
   model = nullptr;
   ready = false;
+  newAuditSelected = false;
   ui->setupUi(this);
+
+  ui->splitter_2->setStretchFactor(1, 1);
 
   doc = new QTextDocument();
   ui->textEdit->setDocument(doc);
-  updateListOfAudits();
+
+  listOfDFRFDIRIModel = MODES::getListModelOfDFRFDIRI();
+  listOfPresetModel = PCx_Tables::getListModelOfAvailableAuditPresets();
+  ui->comboBoxTable->setModel(listOfPresetModel);
+  ui->comboBoxDFRFDIRITable->setModel(listOfDFRFDIRIModel);
+  ui->comboBoxDFRFDIRIChart1->setModel(listOfDFRFDIRIModel);
+  ui->comboBoxDFRFDIRIChart2->setModel(listOfDFRFDIRIModel);
+  if (static_cast<PCx_Tables::PCAPRESETS>(listOfPresetModel->item(0)->data(PCx_Tables::PresetIdUserRole).toUInt()) ==
+      PCx_Tables::PCAPRESETS::PCARESULTS) {
+    ui->comboBoxDFRFDIRITable->setEnabled(false);
+  }
+
   referenceNode = 1;
+  updateListOfAudits();
 }
 
 FormAuditExplore::~FormAuditExplore() {
@@ -65,7 +80,8 @@ FormAuditExplore::~FormAuditExplore() {
     delete report;
   }
   delete ui;
-  delete listOfTablesModel;
+  delete listOfPresetModel;
+  delete listOfDFRFDIRIModel;
 }
 
 void FormAuditExplore::onListOfAuditsChanged() { updateListOfAudits(); }
@@ -106,8 +122,8 @@ void FormAuditExplore::updateListOfAudits() {
   on_comboListAudits_activated(0);
 }
 
-void FormAuditExplore::updateTextBrowser() {
-  ui->saveButton->setEnabled(ready);
+void FormAuditExplore::updateViews() {
+  ui->saveTablesButton->setEnabled(ready);
   if (!ready) {
     doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un "
                     "audit et n'oubliez pas de le terminer</h1>"));
@@ -117,29 +133,28 @@ void FormAuditExplore::updateTextBrowser() {
   unsigned int selectedNode =
       ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
-  doc->clear();
-
-  QSettings settings;
-  report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
-  report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
-
   QString output = model->generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
-  output.append(report->generateHTMLAuditReportForNode(selectedTabs, QList<PCx_Tables::PCATABLES>(), selectedGraphics,
-                                                       selectedNode, selectedMode, referenceNode, doc));
+
+  MODES::DFRFDIRI currentTablePresetMode =
+      static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRITable->currentData(MODES::ModeIdUserRole).toInt());
+
+  PCx_Tables::PCAPRESETS currentTablePreset =
+      static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
+
+  output.append(report->generateHTMLAuditReportForNode({currentTablePreset}, {}, {}, selectedNode,
+                                                       currentTablePresetMode, referenceNode, doc));
   output.append("</body></html>");
   doc->setHtml(output);
 }
+
+QSize FormAuditExplore::sizeHint() const { return {850, 550}; }
 
 void FormAuditExplore::on_comboListAudits_activated(int index) {
   if (index == -1 || ui->comboListAudits->count() == 0) {
     return;
   }
   unsigned int selectedAuditId = ui->comboListAudits->currentData().toUInt();
-  if (!(selectedAuditId > 0)) {
-    qFatal("Assertion failed");
-  }
-  // qDebug()<<"Selected audit ID = "<<selectedAuditId;
 
   if (model != nullptr) {
     delete model;
@@ -155,24 +170,30 @@ void FormAuditExplore::on_comboListAudits_activated(int index) {
   ui->treeView->setModel(model->getAttachedTree());
   delete m;
 
-  listOfTablesModel = report->getTables().getListModelOfAvailableAuditTables(true, false);
-  ui->comboBoxTable->setModel(listOfTablesModel);
-
   ui->treeView->expandToDepth(1);
   QModelIndex rootIndex = model->getAttachedTree()->index(0, 0);
+  newAuditSelected = true;
   ui->treeView->setCurrentIndex(rootIndex);
   on_treeView_clicked(rootIndex);
-  updateTextBrowser();
 }
 
 void FormAuditExplore::on_treeView_clicked(const QModelIndex &index) {
   Q_UNUSED(index);
   // ui->groupBoxMode->setTitle(index.data().toString());
 
-  updateTextBrowser();
+  QScrollBar *sb = ui->textEdit->verticalScrollBar();
+  int sbval = sb->value();
+  updateViews();
+  if (newAuditSelected == false) {
+
+    sb->setValue(sbval);
+  } else {
+    sb->setValue(sb->minimum());
+    newAuditSelected = false;
+  }
 }
 
-void FormAuditExplore::on_saveButton_clicked() {
+void FormAuditExplore::on_saveTablesButton_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
   QString fileName =
@@ -196,44 +217,22 @@ void FormAuditExplore::on_saveButton_clicked() {
   file.close();
   file.remove();
 
-  QString relativeImagePath = fi.fileName() + "_files";
-  QString absoluteImagePath = fi.absoluteFilePath() + "_files";
-
-  QFileInfo imageDirInfo(absoluteImagePath);
-
-  if (!imageDirInfo.exists()) {
-    if (!fi.absoluteDir().mkdir(relativeImagePath)) {
-      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des images impossible"));
-      return;
-    }
-  } else {
-    if (!imageDirInfo.isWritable()) {
-      QMessageBox::critical(this, tr("Attention"), tr("Ecriture impossible dans le dossier des images"));
-      return;
-    }
-  }
-
   unsigned int node = ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
-  int maximumProgressValue = selectedGraphics.count();
+  PCx_Tables::PCAPRESETS currentTablePreset =
+      static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
 
-  QProgressDialog progress(tr("Enregistrement en cours..."), nullptr, 0, maximumProgressValue);
-  progress.setMinimumDuration(1000);
-
-  progress.setWindowModality(Qt::ApplicationModal);
-  progress.setValue(0);
+  MODES::DFRFDIRI currentTablePresetMode =
+      static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRITable->currentData(MODES::ModeIdUserRole).toInt());
 
   QSettings settings;
-
-  report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
-  report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
 
   // Generate report in non-embedded mode, saving images
   QString output = model->generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
-  output.append(report->generateHTMLAuditReportForNode(selectedTabs, QList<PCx_Tables::PCATABLES>(), selectedGraphics,
-                                                       node, selectedMode, referenceNode, nullptr, absoluteImagePath,
-                                                       relativeImagePath, &progress));
+
+  output.append(report->generateHTMLAuditReportForNode({currentTablePreset}, {}, {}, node, currentTablePresetMode,
+                                                       referenceNode, nullptr, nullptr, nullptr, nullptr));
   output.append("</body></html>");
 
   QString settingStyle = settings.value("output/style", "CSS").toString();
@@ -250,8 +249,6 @@ void FormAuditExplore::on_saveButton_clicked() {
 
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    QDir dir(absoluteImagePath);
-    dir.removeRecursively();
     return;
   }
   QTextStream stream(&file);
@@ -259,11 +256,10 @@ void FormAuditExplore::on_saveButton_clicked() {
   stream << output;
   stream.flush();
   file.close();
-  progress.setValue(maximumProgressValue);
+
   if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
-                             tr("Le document <b>%1</b> a bien été enregistré.")
-                                 .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
+                             tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
   }
@@ -281,5 +277,48 @@ void FormAuditExplore::on_treeView_doubleClicked(const QModelIndex &index) {
   QMessageBox::information(this, "Information",
                            tr("Nouveau noeud de référence pour les calculs : %1")
                                .arg(model->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
-  updateTextBrowser();
+  updateViews();
+}
+
+void FormAuditExplore::on_comboBoxTable_activated(int index) {
+  qDebug() << "comboTable activated";
+  if (index == -1 || ui->comboBoxTable->count() == 0) {
+    return;
+  }
+
+  PCx_Tables::PCAPRESETS currentTablePreset =
+      static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
+
+  if (currentTablePreset == PCx_Tables::PCAPRESETS::PCARESULTS) {
+    ui->comboBoxDFRFDIRITable->setEnabled(false);
+  } else {
+    ui->comboBoxDFRFDIRITable->setEnabled(true);
+  }
+  updateViews();
+}
+
+void FormAuditExplore::on_comboBoxDFRFDIRITable_activated(int index) {
+  qDebug() << "comboDFRFDIRI activated";
+
+  if (index == -1 || ui->comboBoxTable->count() == 0) {
+    return;
+  }
+  updateViews();
+}
+
+void FormAuditExplore::on_comboBoxChart1_activated(int index) {}
+
+void FormAuditExplore::on_comboBoxDFRFDIRIChart1_activated(int index) {}
+
+void FormAuditExplore::on_comboBoxChart2_activated(int index) {}
+
+void FormAuditExplore::on_comboBoxDFRFDIRIChart2_activated(int index) {}
+
+void FormAuditExplore::showEvent(QShowEvent *ev) {
+  QWidget::showEvent(ev);
+
+  // Set scrollbar of text document to the top, as it cannot be set in treeView_clicked before the form has been shown
+  // (ie, just after opening it)
+  QScrollBar *sb = ui->textEdit->verticalScrollBar();
+  sb->setValue(0);
 }

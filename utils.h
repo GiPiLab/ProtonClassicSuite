@@ -43,6 +43,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QStandardItemModel>
 #include <QString>
 #include <QTableView>
 
@@ -148,6 +149,9 @@ enum class DFRFDIRI {
   RI,     ///< recettes d'investissement (receipts)
   GLOBAL, ///< a meta-mode not stored in database
 };
+
+static const int ModeIdUserRole = Qt::UserRole + 220;
+QStandardItemModel *getListModelOfDFRFDIRI();
 
 /**
  * @brief modeToCompactString converts a mode to its compact textual representation
