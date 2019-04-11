@@ -29,9 +29,6 @@
       </property>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0" colspan="2">
-         <widget class="QComboBox" name="comboListAudits"/>
-        </item>
         <item row="1" column="0" colspan="2">
          <widget class="QTreeView" name="treeView">
           <property name="toolTip">
@@ -51,12 +48,8 @@
           </attribute>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QPushButton" name="pushButtonExpandAll">
-          <property name="text">
-           <string>Déplier tout</string>
-          </property>
-         </widget>
+        <item row="0" column="0" colspan="2">
+         <widget class="QComboBox" name="comboListAudits"/>
         </item>
         <item row="2" column="1">
          <widget class="QPushButton" name="pushButtonCollapseAll">
@@ -65,17 +58,18 @@
           </property>
          </widget>
         </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="pushButtonExpandAll">
+          <property name="text">
+           <string>Déplier tout</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QComboBox" name="comboBoxTable"/>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboBoxDFRFDIRITable"/>
-        </item>
-        <item row="1" column="0" colspan="2">
+        <item row="1" column="0" colspan="4">
          <widget class="QTextEdit" name="textEdit">
           <property name="acceptDrops">
            <bool>false</bool>
@@ -91,10 +85,19 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0" colspan="2">
+        <item row="0" column="3">
          <widget class="QPushButton" name="saveTablesButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistrer les tableaux&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Enregistrer les tableaux</string>
+           <string/>
           </property>
           <property name="icon">
            <iconset resource="Images.qrc">
@@ -105,6 +108,12 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="2">
+         <widget class="QComboBox" name="comboBoxDFRFDIRITable"/>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QComboBox" name="comboBoxTable"/>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -112,21 +121,27 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart1"/>
+        </item>
         <item row="0" column="0">
          <widget class="QComboBox" name="comboBoxChart1"/>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboBoxDFRFDIRIChart1"/>
-        </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QChartView" name="chartView1"/>
-        </item>
-        <item row="2" column="0" colspan="2">
+        <item row="0" column="2">
          <widget class="QPushButton" name="saveChart1Button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistrer le graphique&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Enregistrer le graphique</string>
+           <string/>
           </property>
           <property name="icon">
            <iconset resource="Images.qrc">
@@ -137,23 +152,32 @@
           </property>
          </widget>
         </item>
+        <item row="1" column="0" colspan="3">
+         <widget class="QChartView" name="chartView1"/>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="0">
          <widget class="QComboBox" name="comboBoxChart2"/>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboBoxDFRFDIRIChart2"/>
+         <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart2"/>
         </item>
-        <item row="1" column="0" colspan="2">
-         <widget class="QChartView" name="chartView2"/>
-        </item>
-        <item row="2" column="0" colspan="2">
+        <item row="0" column="2">
          <widget class="QPushButton" name="saveChart2Button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistrer le graphique&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
-           <string>Enregistrer le graphique</string>
+           <string/>
           </property>
           <property name="icon">
            <iconset resource="Images.qrc">
@@ -163,6 +187,9 @@
            <bool>true</bool>
           </property>
          </widget>
+        </item>
+        <item row="1" column="0" colspan="3">
+         <widget class="QChartView" name="chartView2"/>
         </item>
        </layout>
       </widget>
@@ -184,7 +211,6 @@
   <tabstop>pushButtonExpandAll</tabstop>
   <tabstop>pushButtonCollapseAll</tabstop>
   <tabstop>textEdit</tabstop>
-  <tabstop>saveTablesButton</tabstop>
  </tabstops>
  <resources>
   <include location="Images.qrc"/>

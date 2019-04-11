@@ -49,6 +49,24 @@
 
 using namespace NUMBERSFORMAT;
 
+const QMap<PCx_Graphics::PCAGRAPHICS, QString> PCx_Graphics::pcaGraphicsDescription() {
+  static const QMap<PCx_Graphics::PCAGRAPHICS, QString> map = {
+      {PCAGRAPHICS::PCAHISTORY, QObject::tr("Données historiques")},
+      {PCAGRAPHICS::PCAG1, QObject::tr("Évolution comparée des crédits ouverts")},
+      {PCAGRAPHICS::PCAG2, QObject::tr("Évolution comparée du cumulé des crédits ouverts")},
+      {PCAGRAPHICS::PCAG3, QObject::tr("Évolution comparée du réalisé")},
+      {PCAGRAPHICS::PCAG4, QObject::tr("Évolution comparée du cumulé du réalisé")},
+      {PCAGRAPHICS::PCAG5, QObject::tr("Évolution comparée de l'engagé")},
+      {PCAGRAPHICS::PCAG6, QObject::tr("Évolution comparée du cumulé de l'engagé")},
+      {PCAGRAPHICS::PCAG7, QObject::tr("Évolution comparée du disponible")},
+      {PCAGRAPHICS::PCAG8, QObject::tr("Évolution comparée du cumulé du disponible")},
+      {PCAGRAPHICS::PCAG9, QObject::tr("Répartion par année des ouverts/réalisés/engagés")}};
+
+  return map;
+}
+
+const QMap<PCx_Graphics::PCRGRAPHICS, QString> PCx_Graphics::pcrGraphicsDescription() { return {}; }
+
 PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
     : auditModel(model) {
   if (model == nullptr) {
@@ -271,17 +289,24 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   QString plotTitle;
   if (!cumule) {
     plotTitle =
-        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée des %1 de<br>%4 <i>hormis %2</i> et "
+        /*QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée des %1 de<br>%4 <i>hormis %2</i> et "
                     "de %2</b><br>(%3)</div>")
             .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
-                 MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
+                 MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());*/
+
+        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée des %1 (%2)</b></div>")
+            .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), MODES::modeToCompleteString(mode));
   }
 
   else {
-    plotTitle = QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée du cumulé des %1 de %4<br>"
+    /*plotTitle = QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée du cumulé des %1 de %4<br>"
                             "<i>hormis %2</i> et de %2</b><br>(%3)</div>")
                     .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
-                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());
+                         MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());*/
+
+    plotTitle =
+        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée du cumulé des %1 (%2)</b></div>")
+            .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), MODES::modeToCompleteString(mode));
   }
 
   chart->setTitle(plotTitle);
@@ -618,11 +643,42 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   return chart;
 }
 
+QChart *PCx_Graphics::getChartFromPCAGRAPHICS(PCx_Graphics::PCAGRAPHICS pcaGraphic, unsigned int node,
+                                              MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem,
+                                              unsigned int referenceNode, int year) const {
+  switch (pcaGraphic) {
+  case PCx_Graphics::PCAGRAPHICS::PCAG1:
+    return getPCAG1(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG2:
+    return getPCAG2(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG3:
+    return getPCAG3(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG4:
+    return getPCAG4(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG5:
+    return getPCAG5(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG6:
+    return getPCAG6(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG7:
+    return getPCAG7(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG8:
+    return getPCAG8(node, mode, prevItem, referenceNode);
+  case PCx_Graphics::PCAGRAPHICS::PCAG9:
+    return getPCAG9(node, year);
+  case PCx_Graphics::PCAGRAPHICS::PCAHISTORY:
+    return getPCAHistory(node, mode, {PCx_Audit::ORED::OUVERTS, PCx_Audit::ORED::REALISES, PCx_Audit::ORED::ENGAGES,
+                                      PCx_Audit::ORED::DISPONIBLES},
+                         prevItem, false);
+  }
+  return {};
+}
+
 QPixmap PCx_Graphics::chartToPixmap(QChart *chart) const {
   QPixmap pixmap;
   QChartView chartView(chart);
   chartView.resize(graphicsWidth, graphicsHeight);
   chartView.setRenderHint(QPainter::Antialiasing, true);
+  // NOTE : grab can be blurry if QChartView is already displayed
   pixmap = chartView.grab();
   return pixmap;
 }
@@ -632,7 +688,20 @@ bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteNa
   return pixmap.save(imageAbsoluteName, "png");
 }
 
-QStandardItemModel *PCx_Graphics::getListOfAvailablePCAGraphics() const {}
+QStandardItemModel *PCx_Graphics::getListModelOfAvailablePCAGRAPHICS() {
+  QStandardItemModel *model = new QStandardItemModel();
+  QStandardItem *item;
+
+  QMapIterator<PCAGRAPHICS, QString> mapIter(pcaGraphicsDescription());
+
+  while (mapIter.hasNext()) {
+    mapIter.next();
+    item = new QStandardItem(mapIter.value());
+    item->setData(static_cast<int>(mapIter.key()), PCx_Graphics::GraphicIdUserRole);
+    model->appendRow(item);
+  }
+  return model;
+}
 
 bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {
   if (!plot->savePng(imageAbsoluteName, graphicsWidth, graphicsHeight)) {

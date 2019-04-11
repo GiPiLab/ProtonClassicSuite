@@ -71,6 +71,8 @@ public:
 
   static const int DEFAULTALPHA = 200;
 
+  static const int GraphicIdUserRole = Qt::UserRole + 240;
+
   enum class PCAGRAPHICS {
     PCAG1,
     PCAG2,
@@ -84,7 +86,11 @@ public:
     PCAHISTORY // Used in PCB but display history in PCA
   };
 
+  static const QMap<PCAGRAPHICS, QString> pcaGraphicsDescription();
+
   enum class PCRGRAPHICS { PCRHISTORY, PCRGPROVENANCE, PCRGVARIATION, PCRGUTILISATION, PCRCYCLES };
+
+  static const QMap<PCRGRAPHICS, QString> pcrGraphicsDescription();
 
   PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
                int graphicsHeight = DEFAULTHEIGHT);
@@ -132,6 +138,10 @@ public:
   QChart *getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode, const QList<PCx_Audit::ORED> &selectedORED,
                         const PCx_PrevisionItem *prevItem, bool miniMode) const;
 
+  QChart *getChartFromPCAGRAPHICS(PCAGRAPHICS pcaGraphic, unsigned int node, MODES::DFRFDIRI mode,
+                                  const PCx_PrevisionItem *prevItem = nullptr, unsigned int referenceNode = 1,
+                                  int year = -1) const;
+
   // History line plot with selected OREDPCR
   QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                         const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR);
@@ -161,13 +171,18 @@ public:
 
   static QString getCSS();
 
+  /**
+   * @brief chartToPixmap renders a chart to a pixmap
+   * @param chart the chart to render. Its ownership is taken
+   * @return the pixmap
+   */
   QPixmap chartToPixmap(QChart *chart) const;
 
   bool savePlotToDisk(const QString &imageAbsoluteName) const;
 
   bool saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const;
 
-  QStandardItemModel *getListOfAvailablePCAGraphics() const;
+  static QStandardItemModel *getListModelOfAvailablePCAGRAPHICS();
 
 private:
   PCx_Audit *auditModel;

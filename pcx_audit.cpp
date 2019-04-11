@@ -113,6 +113,18 @@ idToChildrenString.clear();
 idToPid.clear();*/
 }
 
+QStandardItemModel *PCx_Audit::getListModelOfAuditYears() const {
+  QStandardItemModel *model = new QStandardItemModel();
+  QStandardItem *item;
+
+  foreach (int year, years) {
+    item = new QStandardItem(QString::number(year));
+    item->setData(year, Qt::UserRole + 1);
+    model->appendRow(item);
+  }
+  return model;
+}
+
 void PCx_Audit::finishAudit() {
   finished = true;
   QSqlQuery q;

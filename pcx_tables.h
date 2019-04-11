@@ -100,6 +100,10 @@ public:
                                       unsigned int referenceNode = 1) const; // T1, T4, T8
   QString getPCAPresetResults(unsigned int node) const;                      // T10, T11, T12
 
+  QString getPCAPresetFromPCAPRESETS(PCx_Tables::PCAPRESETS pcaPreset, unsigned int node,
+                                     MODES::DFRFDIRI mode = MODES::DFRFDIRI::GLOBAL,
+                                     unsigned int referenceNode = 1) const;
+
   static QString getCSS();
 
   QString getPCARawData(unsigned int node, MODES::DFRFDIRI mode) const;

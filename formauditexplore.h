@@ -44,8 +44,10 @@
 #define FORMAUDITEXPLORE_H
 
 #include "pcx_auditwithtreemodel.h"
-#include "pcx_report.h"
+
+#include <QTextDocument>
 #include <QWidget>
+#include <QtCharts>
 
 namespace Ui {
 class FormAuditExplore;
@@ -81,11 +83,15 @@ private slots:
 
   void on_comboBoxChart1_activated(int index);
 
-  void on_comboBoxDFRFDIRIChart1_activated(int index);
-
   void on_comboBoxChart2_activated(int index);
 
-  void on_comboBoxDFRFDIRIChart2_activated(int index);
+  void on_comboBoxDFRFDIRIOrYearsChart1_activated(int index);
+
+  void on_comboBoxDFRFDIRIOrYearsChart2_activated(int index);
+
+  void on_saveChart1Button_clicked();
+
+  void on_saveChart2Button_clicked();
 
 protected:
   void showEvent(QShowEvent *ev);
@@ -97,14 +103,15 @@ private:
 
   QTextDocument *doc;
   PCx_AuditWithTreeModel *model;
-  PCx_Report *report{};
 
   unsigned int referenceNode;
-  QStandardItemModel *listOfPresetModel = nullptr, *listOfDFRFDIRIModel = nullptr;
+  QStandardItemModel *listOfPresetModel = nullptr, *listOfDFRFDIRIModel = nullptr, *listOfYearsModel = nullptr,
+                     *listOfGraphicsModel = nullptr;
 
   bool ready, newAuditSelected;
 
   QSize sizeHint() const;
+  bool saveChart(QChartView *chartView);
 };
 
 #endif // FORMAUDITEXPLORE_H

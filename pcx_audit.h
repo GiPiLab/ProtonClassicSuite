@@ -154,6 +154,12 @@ public:
   QStringList getYearsStringList() const { return yearsStringList; }
 
   /**
+   * @brief getListModelOfAuditYears create a model with current audit years as strings and int in Qt::UserRole+1
+   * @return a model. It has to be released.
+   */
+  QStandardItemModel *getListModelOfAuditYears() const;
+
+  /**
    * @brief getCreationTimeUTC gets the creation time/date of the audit in UTC
    * @return the creation time and date in UTC
    */

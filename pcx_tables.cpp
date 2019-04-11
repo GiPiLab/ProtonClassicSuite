@@ -1747,6 +1747,25 @@ QString PCx_Tables::getPCAPresetResults(unsigned int node) const {
   return out;
 }
 
+QString PCx_Tables::getPCAPresetFromPCAPRESETS(PCx_Tables::PCAPRESETS pcaPreset, unsigned int node,
+                                               MODES::DFRFDIRI mode, unsigned int referenceNode) const {
+  switch (pcaPreset) {
+  case PCx_Tables::PCAPRESETS::PCABASE100:
+    return getPCAPresetBase100(node, mode, referenceNode);
+  case PCx_Tables::PCAPRESETS::PCARESULTS:
+    return getPCAPresetResults(node);
+  case PCx_Tables::PCAPRESETS::PCADAYOFWORK:
+    return getPCAPresetDayOfWork(node, mode);
+  case PCx_Tables::PCAPRESETS::PCAEVOLUTION:
+    return getPCAPresetEvolution(node, mode, referenceNode);
+  case PCx_Tables::PCAPRESETS::PCAEVOLUTIONCUMUL:
+    return getPCAPresetEvolutionCumul(node, mode, referenceNode);
+  case PCx_Tables::PCAPRESETS::PCARELATIVEWEIGHTS:
+    return getPCAPresetRelativeWeights(node, mode, referenceNode);
+  }
+  return {};
+}
+
 QString PCx_Tables::getCSS() {
   return QStringLiteral("\ntable{margin-top:2em;color:navy;font-weight:400;font-size:8pt;page-"
                         "break-inside:avoid;}"

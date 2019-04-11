@@ -41,29 +41,40 @@
  */
 
 #include "formauditexplore.h"
+#include "pcx_graphics.h"
+#include "pcx_tables.h"
 #include "ui_formauditexplore.h"
 #include "utils.h"
+#include <QDebug>
 #include <QFileDialog>
 #include <QPrintDialog>
 #include <QScrollBar>
+#include <QTextDocument>
 
 FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui::FormAuditExplore) {
   model = nullptr;
   ready = false;
+
   newAuditSelected = false;
   ui->setupUi(this);
 
   ui->splitter_2->setStretchFactor(1, 1);
+
+  ui->chartView1->setRenderHint(QPainter::RenderHint::Antialiasing, true);
+  ui->chartView2->setRenderHint(QPainter::RenderHint::Antialiasing, true);
 
   doc = new QTextDocument();
   ui->textEdit->setDocument(doc);
 
   listOfDFRFDIRIModel = MODES::getListModelOfDFRFDIRI();
   listOfPresetModel = PCx_Tables::getListModelOfAvailableAuditPresets();
+  listOfGraphicsModel = PCx_Graphics::getListModelOfAvailablePCAGRAPHICS();
   ui->comboBoxTable->setModel(listOfPresetModel);
   ui->comboBoxDFRFDIRITable->setModel(listOfDFRFDIRIModel);
-  ui->comboBoxDFRFDIRIChart1->setModel(listOfDFRFDIRIModel);
-  ui->comboBoxDFRFDIRIChart2->setModel(listOfDFRFDIRIModel);
+  ui->comboBoxChart1->setModel(listOfGraphicsModel);
+  ui->comboBoxChart2->setModel(listOfGraphicsModel);
+  ui->comboBoxDFRFDIRIOrYearsChart1->setModel(listOfDFRFDIRIModel);
+  ui->comboBoxDFRFDIRIOrYearsChart2->setModel(listOfDFRFDIRIModel);
   if (static_cast<PCx_Tables::PCAPRESETS>(listOfPresetModel->item(0)->data(PCx_Tables::PresetIdUserRole).toUInt()) ==
       PCx_Tables::PCAPRESETS::PCARESULTS) {
     ui->comboBoxDFRFDIRITable->setEnabled(false);
@@ -77,11 +88,12 @@ FormAuditExplore::~FormAuditExplore() {
   delete doc;
   if (model != nullptr) {
     delete model;
-    delete report;
   }
   delete ui;
   delete listOfPresetModel;
   delete listOfDFRFDIRIModel;
+  delete listOfYearsModel;
+  delete listOfGraphicsModel;
 }
 
 void FormAuditExplore::onListOfAuditsChanged() { updateListOfAudits(); }
@@ -142,8 +154,42 @@ void FormAuditExplore::updateViews() {
   PCx_Tables::PCAPRESETS currentTablePreset =
       static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
 
-  output.append(report->generateHTMLAuditReportForNode({currentTablePreset}, {}, {}, selectedNode,
-                                                       currentTablePresetMode, referenceNode, doc));
+  PCx_Graphics::PCAGRAPHICS currentChart1 =
+      static_cast<PCx_Graphics::PCAGRAPHICS>(ui->comboBoxChart1->currentData(PCx_Graphics::GraphicIdUserRole).toUInt());
+  PCx_Graphics::PCAGRAPHICS currentChart2 =
+      static_cast<PCx_Graphics::PCAGRAPHICS>(ui->comboBoxChart2->currentData(PCx_Graphics::GraphicIdUserRole).toUInt());
+
+  MODES::DFRFDIRI currentChart1Mode, currentChart2Mode;
+  int currentChart1Year, currentChart2Year;
+
+  if (currentChart1 != PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    currentChart1Mode =
+        static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRIOrYearsChart1->currentData(MODES::ModeIdUserRole).toInt());
+    currentChart1Year = -1;
+  } else {
+    currentChart1Mode = MODES::DFRFDIRI::GLOBAL;
+    currentChart1Year = ui->comboBoxDFRFDIRIOrYearsChart1->currentData(Qt::UserRole + 1).toInt();
+  }
+
+  if (currentChart2 != PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    currentChart2Mode =
+        static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRIOrYearsChart2->currentData(MODES::ModeIdUserRole).toInt());
+    currentChart2Year = -1;
+  } else {
+    currentChart2Mode = MODES::DFRFDIRI::GLOBAL;
+    currentChart2Year = ui->comboBoxDFRFDIRIOrYearsChart2->currentData(Qt::UserRole + 1).toInt();
+  }
+
+  PCx_Graphics graphics(model);
+  PCx_Tables tables(model);
+
+  ui->chartView1->setChart(graphics.getChartFromPCAGRAPHICS(currentChart1, selectedNode, currentChart1Mode, nullptr,
+                                                            referenceNode, currentChart1Year));
+  ui->chartView2->setChart(graphics.getChartFromPCAGRAPHICS(currentChart2, selectedNode, currentChart2Mode, nullptr,
+                                                            referenceNode, currentChart2Year));
+
+  output.append(
+      tables.getPCAPresetFromPCAPRESETS(currentTablePreset, selectedNode, currentTablePresetMode, referenceNode));
   output.append("</body></html>");
   doc->setHtml(output);
 }
@@ -158,13 +204,11 @@ void FormAuditExplore::on_comboListAudits_activated(int index) {
 
   if (model != nullptr) {
     delete model;
-    delete report;
   }
 
   referenceNode = 1;
 
   model = new PCx_AuditWithTreeModel(selectedAuditId);
-  report = new PCx_Report(model);
 
   QItemSelectionModel *m = ui->treeView->selectionModel();
   ui->treeView->setModel(model->getAttachedTree());
@@ -174,6 +218,26 @@ void FormAuditExplore::on_comboListAudits_activated(int index) {
   QModelIndex rootIndex = model->getAttachedTree()->index(0, 0);
   newAuditSelected = true;
   ui->treeView->setCurrentIndex(rootIndex);
+  delete listOfYearsModel;
+  listOfYearsModel = model->getListModelOfAuditYears();
+  if (static_cast<PCx_Graphics::PCAGRAPHICS>(
+          ui->comboBoxChart1->currentData(PCx_Graphics::GraphicIdUserRole).toInt()) ==
+      PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    ui->comboBoxDFRFDIRIOrYearsChart1->setModel(listOfYearsModel);
+
+  } else {
+    ui->comboBoxDFRFDIRIOrYearsChart1->setModel(listOfDFRFDIRIModel);
+  }
+
+  if (static_cast<PCx_Graphics::PCAGRAPHICS>(
+          ui->comboBoxChart2->currentData(PCx_Graphics::GraphicIdUserRole).toInt()) ==
+      PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    ui->comboBoxDFRFDIRIOrYearsChart2->setModel(listOfYearsModel);
+
+  } else {
+    ui->comboBoxDFRFDIRIOrYearsChart2->setModel(listOfDFRFDIRIModel);
+  }
+
   on_treeView_clicked(rootIndex);
 }
 
@@ -213,9 +277,6 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
     return;
   }
-  // Will reopen after computation
-  file.close();
-  file.remove();
 
   unsigned int node = ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
@@ -231,8 +292,9 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
   QString output = model->generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
 
-  output.append(report->generateHTMLAuditReportForNode({currentTablePreset}, {}, {}, node, currentTablePresetMode,
-                                                       referenceNode, nullptr, nullptr, nullptr, nullptr));
+  PCx_Tables tables(model);
+
+  output.append(tables.getPCAPresetFromPCAPRESETS(currentTablePreset, node, currentTablePresetMode, referenceNode));
   output.append("</body></html>");
 
   QString settingStyle = settings.value("output/style", "CSS").toString();
@@ -247,10 +309,6 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
     output.replace(" -qt-block-indent:0;", "");
   }
 
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    return;
-  }
   QTextStream stream(&file);
   stream.setCodec("UTF-8");
   stream << output;
@@ -281,7 +339,7 @@ void FormAuditExplore::on_treeView_doubleClicked(const QModelIndex &index) {
 }
 
 void FormAuditExplore::on_comboBoxTable_activated(int index) {
-  qDebug() << "comboTable activated";
+
   if (index == -1 || ui->comboBoxTable->count() == 0) {
     return;
   }
@@ -306,13 +364,39 @@ void FormAuditExplore::on_comboBoxDFRFDIRITable_activated(int index) {
   updateViews();
 }
 
-void FormAuditExplore::on_comboBoxChart1_activated(int index) {}
+void FormAuditExplore::on_comboBoxChart1_activated(int index) {
+  if (index == -1 || ui->comboBoxChart1->count() == 0) {
+    return;
+  }
 
-void FormAuditExplore::on_comboBoxDFRFDIRIChart1_activated(int index) {}
+  if (static_cast<PCx_Graphics::PCAGRAPHICS>(
+          ui->comboBoxChart1->currentData(PCx_Graphics::GraphicIdUserRole).toInt()) ==
+      PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    ui->comboBoxDFRFDIRIOrYearsChart1->setModel(listOfYearsModel);
 
-void FormAuditExplore::on_comboBoxChart2_activated(int index) {}
+  } else {
+    ui->comboBoxDFRFDIRIOrYearsChart1->setModel(listOfDFRFDIRIModel);
+  }
 
-void FormAuditExplore::on_comboBoxDFRFDIRIChart2_activated(int index) {}
+  updateViews();
+}
+
+void FormAuditExplore::on_comboBoxChart2_activated(int index) {
+  if (index == -1 || ui->comboBoxChart2->count() == 0) {
+    return;
+  }
+
+  if (static_cast<PCx_Graphics::PCAGRAPHICS>(
+          ui->comboBoxChart2->currentData(PCx_Graphics::GraphicIdUserRole).toInt()) ==
+      PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    ui->comboBoxDFRFDIRIOrYearsChart2->setModel(listOfYearsModel);
+
+  } else {
+    ui->comboBoxDFRFDIRIOrYearsChart2->setModel(listOfDFRFDIRIModel);
+  }
+
+  updateViews();
+}
 
 void FormAuditExplore::showEvent(QShowEvent *ev) {
   QWidget::showEvent(ev);
@@ -322,3 +406,53 @@ void FormAuditExplore::showEvent(QShowEvent *ev) {
   QScrollBar *sb = ui->textEdit->verticalScrollBar();
   sb->setValue(0);
 }
+
+void FormAuditExplore::on_comboBoxDFRFDIRIOrYearsChart1_activated(int index) {
+  if (index == -1 || ui->comboBoxDFRFDIRIOrYearsChart1->count() == 0) {
+    return;
+  }
+  updateViews();
+}
+
+void FormAuditExplore::on_comboBoxDFRFDIRIOrYearsChart2_activated(int index) {
+  if (index == -1 || ui->comboBoxDFRFDIRIOrYearsChart2->count() == 0) {
+    return;
+  }
+  updateViews();
+}
+
+bool FormAuditExplore::saveChart(QChartView *chartView) {
+  QFileDialog fileDialog;
+  fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+  QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Fichiers images (*.png)"));
+  if (fileName.isEmpty()) {
+    return false;
+  }
+
+  QFileInfo fi(fileName);
+  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0 && fi.suffix().compare("png", Qt::CaseInsensitive) != 0) {
+    fileName.append(".png");
+  }
+  fi = QFileInfo(fileName);
+
+  // NOTE : do not use PCx_Graphics::chartToPixmap because it will take ownership of the chart, and do not use
+  // QChartView->grab() because it could be blurry
+
+  QPixmap pixmap(chartView->size());
+  QPainter painter(&pixmap);
+  painter.setRenderHint(QPainter::Antialiasing, true);
+  chartView->render(&painter);
+  bool res = pixmap.save(fileName);
+
+  if (res) {
+    QMessageBox::information(this, tr("Information"),
+                             tr("L'image <b>%1</b> a bien été enregistrée.").arg(fi.fileName().toHtmlEscaped()));
+  } else {
+    QMessageBox::critical(this, tr("Attention"), tr("L'image n'a pas pu être enregistrée !"));
+  }
+  return res;
+}
+
+void FormAuditExplore::on_saveChart1Button_clicked() { saveChart(ui->chartView1); }
+
+void FormAuditExplore::on_saveChart2Button_clicked() { saveChart(ui->chartView2); }
