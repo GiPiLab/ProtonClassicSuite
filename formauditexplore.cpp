@@ -59,6 +59,7 @@ FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui
   ui->setupUi(this);
 
   ui->splitter_2->setStretchFactor(1, 1);
+  ui->splitter_3->setStretchFactor(1, 1);
 
   ui->chartView1->setRenderHint(QPainter::RenderHint::Antialiasing, true);
   ui->chartView2->setRenderHint(QPainter::RenderHint::Antialiasing, true);
@@ -79,6 +80,8 @@ FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui
       PCx_Tables::PCAPRESETS::PCARESULTS) {
     ui->comboBoxDFRFDIRITable->setEnabled(false);
   }
+
+  ui->comboBoxChart2->setCurrentIndex(1);
 
   referenceNode = 1;
   updateListOfAudits();

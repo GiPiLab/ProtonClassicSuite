@@ -199,8 +199,9 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
       }
 
       // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
-      dataPlotRoot.append(
-          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
+      // dataPlotRoot.append(
+      //    QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
+      dataPlotRoot.append(QPointF(yearToMsSinceEpoch(year), percentRoot));
 
       if (firstYearDataNode != 0) {
         percentNode = diffNode * 100.0 / firstYearDataNode;
@@ -218,8 +219,9 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         minYear = year;
       }
       // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
-      dataPlotNode.append(
-          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
+      // dataPlotNode.append(
+      //    QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
+      dataPlotNode.append(QPointF(yearToMsSinceEpoch(year), percentNode));
 
       // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
       if (!cumule) {
@@ -234,11 +236,15 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   QLineSeries *serie1 = new QLineSeries();
   QLineSeries *serie2 = new QLineSeries();
 
+  serie1->setUseOpenGL(false);
+  serie2->setUseOpenGL(false);
+
   serie1->append(dataPlotNode);
   serie2->append(dataPlotRoot);
 
   serie1->setPointsVisible(true);
   serie2->setPointsVisible(true);
+
   QColor c = getColorPen1();
 
   QPen pen(c);
@@ -253,15 +259,20 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   chart->addSeries(serie1);
   chart->addSeries(serie2);
 
+  QFont smallFont = QFont("Sans", 8);
+
   // Legend
   QString nodeName = auditModel->getAttachedTree()->getNodeName(node);
   QString refNodeName = auditModel->getAttachedTree()->getNodeName(referenceNode);
   serie1->setName(nodeName);
-  serie2->setName(QString("%2 - %1").arg(nodeName, refNodeName));
+  serie2->setName(QString("%2 hormis %1").arg(nodeName, refNodeName));
+  chart->legend()->setFont(smallFont);
   chart->setLocalizeNumbers(true);
 
   QDateTimeAxis *xAxis = new QDateTimeAxis;
   xAxis->setFormat("yyyy");
+  xAxis->setLabelsAngle(-45);
+  xAxis->setLabelsFont(smallFont);
   xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
   xAxis->setTickCount(maxYear - minYear + 3);
   xAxis->setGridLineVisible(false);
@@ -270,6 +281,7 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
   yAxis->setMin(minYRange - (qAbs(minYRange) * 0.2));
   yAxis->setMax(maxYRange + (qAbs(maxYRange) * 0.1));
+  yAxis->setLabelsFont(smallFont);
   yAxis->applyNiceNumbers();
   yAxis->setLabelFormat("%.0f%");
 
@@ -281,10 +293,11 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   serie2->attachAxis(xAxis);
   serie2->attachAxis(yAxis);
 
-  serie1->setPointLabelsVisible(true);
-  serie1->setPointLabelsFormat("@yPoint%");
-  serie2->setPointLabelsVisible(true);
-  serie2->setPointLabelsFormat("@yPoint%");
+  /* serie1->setPointLabelsVisible(true);
+   serie1->setPointLabelsFormat("@yPoint%");
+   serie2->setPointLabelsVisible(true);
+   serie2->setPointLabelsFormat("@yPoint%");
+ */
 
   QString plotTitle;
   if (!cumule) {
@@ -294,7 +307,7 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
             .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), nodeName.toHtmlEscaped(),
                  MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());*/
 
-        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée des %1 (%2)</b></div>")
+        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée des %1</b><br>%2</div>")
             .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), MODES::modeToCompleteString(mode));
   }
 
@@ -305,12 +318,13 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
                          MODES::modeToCompleteString(mode), refNodeName.toHtmlEscaped());*/
 
     plotTitle =
-        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée du cumulé des %1 (%2)</b></div>")
+        QObject::tr("<div style='text-align:center'><b>&Eacute;volution comparée du cumulé des %1</b><br>%2</div>")
             .arg(PCx_Audit::OREDtoCompleteString(modeORED, true), MODES::modeToCompleteString(mode));
   }
 
   chart->setTitle(plotTitle);
 
+  chart->setMargins(QMargins(0, 0, 0, 0));
   // NOTE: Remove border
   chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
@@ -582,13 +596,17 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 2, 6, 1)));
   }
 
+  QFont smallFont("Sans", 8);
   xAxis->setFormat("yyyy");
+  xAxis->setLabelsAngle(-45);
+  xAxis->setLabelsFont(smallFont);
   xAxis->setGridLineVisible(false);
 
   QValueAxis *yAxis = new QValueAxis();
 
   chart->addAxis(xAxis, Qt::AlignBottom);
   chart->addAxis(yAxis, Qt::AlignLeft);
+
   yAxis->setGridLineVisible(true);
 
   for (int i = static_cast<int>(PCx_Audit::ORED::OUVERTS); i < static_cast<int>(PCx_Audit::ORED::NONELAST); i++) {
@@ -625,14 +643,15 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   yAxis->setLabelFormat(formatString);
 
   yAxis->applyNiceNumbers();
+  yAxis->setLabelsFont(smallFont);
 
   if (miniMode) {
     QFont font("Sans", 6);
     chart->setMargins(QMargins(0, 0, 0, 0));
     chart->setTitle(QString());
     xAxis->setLabelsFont(font);
+    chart->legend()->setFont(QFont("Sans", 7));
     yAxis->setLabelsFont(font);
-    xAxis->setLabelsAngle(45);
     xAxis->setFormat("yy");
   }
 
