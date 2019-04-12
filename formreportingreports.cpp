@@ -143,9 +143,8 @@ void FormReportingReports::on_saveButton_clicked() {
   } else if (ui->radioButtonDFS->isChecked()) {
     sortedSelectedNodes = model->getAttachedTree()->sortNodesDFS(selectedNodes);
   } else {
-    QMessageBox::warning(this, tr("Attention"),
-                         tr("Choisissez l'ordre d'affichage des noeuds "
-                            "sélectionnés dans le rapport !"));
+    QMessageBox::warning(this, tr("Attention"), tr("Choisissez l'ordre d'affichage des noeuds "
+                                                   "sélectionnés dans le rapport !"));
     return;
   }
 
@@ -193,9 +192,8 @@ void FormReportingReports::on_saveButton_clicked() {
   }
 
   if (listModes.isEmpty() && !selectedPresets.isEmpty()) {
-    QMessageBox::warning(this, tr("Attention"),
-                         tr("Sélectionnez au moins un mode (dépenses/recettes "
-                            "de fonctionnement/d'investissement)"));
+    QMessageBox::warning(this, tr("Attention"), tr("Sélectionnez au moins un mode (dépenses/recettes "
+                                                   "de fonctionnement/d'investissement)"));
     return;
   }
 
@@ -211,6 +209,11 @@ void FormReportingReports::on_saveButton_clicked() {
     fileName.append(".html");
   }
   fi = QFileInfo(fileName);
+
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return;
+  }
 
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {

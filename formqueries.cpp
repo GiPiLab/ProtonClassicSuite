@@ -508,6 +508,11 @@ void FormQueries::on_pushButtonSave_clicked() {
   }
   fi = QFileInfo(fileName);
 
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return;
+  }
+
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible"));
@@ -680,6 +685,11 @@ void FormQueries::on_pushButtonSaveXLSX_clicked() {
     fileName.append(".xlsx");
   }
   fi = QFileInfo(fileName);
+
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return;
+  }
 
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly)) {

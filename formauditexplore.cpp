@@ -272,6 +272,11 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
   }
   fi = QFileInfo(fileName);
 
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return;
+  }
+
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
@@ -435,14 +440,16 @@ bool FormAuditExplore::saveChart(QChartView *chartView) {
   }
   fi = QFileInfo(fileName);
 
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return false;
+  }
+
   // NOTE : do not use PCx_Graphics::chartToPixmap because it will take ownership of the chart, and do not use
   // QChartView->grab() because it could be blurry
 
-  QPixmap pixmap(chartView->size());
-  QPainter painter(&pixmap);
-  painter.setRenderHint(QPainter::Antialiasing, true);
-  chartView->render(&painter);
-  bool res = pixmap.save(fileName);
+  QPixmap pixmap = PCx_Graphics::chartViewToPixmap(chartView);
+  bool res = PCx_Graphics::savePixmapToDisk(pixmap, fileName);
 
   if (res) {
     QMessageBox::information(this, tr("Information"),

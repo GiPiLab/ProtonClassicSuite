@@ -74,9 +74,8 @@ void FormManageReportings::updateListOfTrees() {
 
   QList<QPair<unsigned int, QString>> lot = PCx_Tree::getListOfTrees(true);
   if (lot.isEmpty()) {
-    QMessageBox::information(this, tr("Information"),
-                             tr("Tout d'abord, créez et terminez un arbre dans "
-                                "la fenêtre de gestion des arbres"));
+    QMessageBox::information(this, tr("Information"), tr("Tout d'abord, créez et terminez un arbre dans "
+                                                         "la fenêtre de gestion des arbres"));
   }
 
   setEnabled(!lot.isEmpty());
@@ -255,6 +254,11 @@ void FormManageReportings::on_pushButtonExportLeaves_clicked() {
     }
     fi = QFileInfo(fileName);
 
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+      QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+      return;
+    }
+
     bool res = selectedReporting->exportLeavesSkeleton(fileName);
 
     if (res == true) {
@@ -366,6 +370,11 @@ void FormManageReportings::on_pushButtonExportDF_clicked() {
     }
     fi = QFileInfo(fileName);
 
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+      QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+      return;
+    }
+
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::DF, fileName);
 
     if (res == true) {
@@ -395,6 +404,11 @@ void FormManageReportings::on_pushButtonExportRF_clicked() {
     }
     fi = QFileInfo(fileName);
 
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+      QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+      return;
+    }
+
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::RF, fileName);
 
     if (res == true) {
@@ -423,6 +437,11 @@ void FormManageReportings::on_pushButtonExportDI_clicked() {
       fileName.append(".xlsx");
     }
     fi = QFileInfo(fileName);
+
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+      QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+      return;
+    }
 
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::DI, fileName);
 
@@ -491,6 +510,11 @@ void FormManageReportings::on_pushButtonExportRI_clicked() {
       fileName.append(".xlsx");
     }
     fi = QFileInfo(fileName);
+
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+      QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+      return;
+    }
 
     bool res = selectedReporting->exportLeavesDataXLSX(MODES::DFRFDIRI::RI, fileName);
 

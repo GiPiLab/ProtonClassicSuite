@@ -172,15 +172,22 @@ public:
   static QString getCSS();
 
   /**
-   * @brief chartToPixmap renders a chart to a pixmap
-   * @param chart the chart to render. Its ownership is taken
-   * @return the pixmap
+   * @brief chartToPixmap renders a chart to a pixmap. The chart must not be displayed into a chartview
+   * @param chart the chart to render. Its ownership is taken and it will be destroyed after return
+   * @return the pixmap of "graphicsWidth" and "graphicsHeight" size
    */
   QPixmap chartToPixmap(QChart *chart) const;
 
+  /**
+   * @brief chartViewToPixmap renders a displayed chartView to a pixmap
+   * @param chartView the chartView to render. Ownership is not taken
+   * @return the pixmap
+   */
+  static QPixmap chartViewToPixmap(QChartView *chartView);
+
   bool savePlotToDisk(const QString &imageAbsoluteName) const;
 
-  bool saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const;
+  static bool savePixmapToDisk(const QPixmap &pixmap, const QString &imageAbsoluteName);
 
   static QStandardItemModel *getListModelOfAvailablePCAGRAPHICS();
 

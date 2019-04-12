@@ -678,14 +678,24 @@ QPixmap PCx_Graphics::chartToPixmap(QChart *chart) const {
   QChartView chartView(chart);
   chartView.resize(graphicsWidth, graphicsHeight);
   chartView.setRenderHint(QPainter::Antialiasing, true);
-  // NOTE : grab can be blurry if QChartView is already displayed
   pixmap = chartView.grab();
   return pixmap;
 }
 
-bool PCx_Graphics::saveChartToDisk(QChart *chart, const QString &imageAbsoluteName) const {
-  QPixmap pixmap = chartToPixmap(chart);
-  return pixmap.save(imageAbsoluteName, "png");
+QPixmap PCx_Graphics::chartViewToPixmap(QChartView *chartView) {
+  QPixmap pixmap(chartView->size());
+  QPainter painter(&pixmap);
+  painter.setRenderHint(QPainter::Antialiasing, true);
+  chartView->render(&painter);
+  return pixmap;
+}
+
+bool PCx_Graphics::savePixmapToDisk(const QPixmap &pixmap, const QString &imageAbsoluteName) {
+  bool res = pixmap.save(imageAbsoluteName, "png", -1);
+  if (res == false) {
+    qCritical() << QObject::tr("Enregistrement de l'image %1 impossible").arg(imageAbsoluteName);
+  }
+  return res;
 }
 
 QStandardItemModel *PCx_Graphics::getListModelOfAvailablePCAGRAPHICS() {

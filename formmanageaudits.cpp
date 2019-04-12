@@ -553,6 +553,11 @@ bool FormManageAudits::exportLeaves(MODES::DFRFDIRI mode) {
   }
   fi = QFileInfo(fileName);
 
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return false;
+  }
+
   bool res = selectedAudit->exportLeavesDataXLSX(mode, fileName);
 
   if (res == true) {
@@ -610,6 +615,11 @@ void FormManageAudits::on_pushButtonSkel_clicked() {
     fileName.append(".xlsx");
   }
   fi = QFileInfo(fileName);
+
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return;
+  }
 
   bool res = selectedAudit->exportLeavesSkeleton(fileName);
 

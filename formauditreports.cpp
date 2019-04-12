@@ -239,9 +239,8 @@ void FormAuditReports::on_saveButton_clicked() {
   } else if (ui->radioButtonDFS->isChecked()) {
     sortedSelectedNodes = model->getAttachedTree()->sortNodesDFS(selectedNodes);
   } else {
-    QMessageBox::warning(this, tr("Attention"),
-                         tr("Choisissez l'ordre d'affichage des noeuds "
-                            "sélectionnés dans le rapport !"));
+    QMessageBox::warning(this, tr("Attention"), tr("Choisissez l'ordre d'affichage des noeuds "
+                                                   "sélectionnés dans le rapport !"));
     return;
   }
   // qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
@@ -313,9 +312,8 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   }
 
   if (listModes.isEmpty() && (!selectedGraphics.isEmpty() || !selectedTables.isEmpty())) {
-    QMessageBox::warning(this, tr("Attention"),
-                         tr("Sélectionnez au moins un mode (dépenses/recettes "
-                            "de fonctionnement/d'investissement)"));
+    QMessageBox::warning(this, tr("Attention"), tr("Sélectionnez au moins un mode (dépenses/recettes "
+                                                   "de fonctionnement/d'investissement)"));
     return;
   }
 
@@ -332,14 +330,10 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   }
   fi = QFileInfo(fileName);
 
-  QFile file(fileName);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
     return;
   }
-  // Will reopen later
-  file.close();
-  file.remove();
 
   QString relativeImagePath = fi.fileName() + "_files";
   QString absoluteImagePath = fi.absoluteFilePath() + "_files";
@@ -430,6 +424,8 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   }
 
   qDebug() << "Report generated in " << timer.elapsed() << "ms";
+
+  QFile file(fileName);
 
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));

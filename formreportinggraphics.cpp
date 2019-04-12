@@ -284,6 +284,11 @@ void FormReportingGraphics::on_pushButtonExportPlot_clicked() {
   }
   fi = QFileInfo(fileName);
 
+  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+    return;
+  }
+
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));

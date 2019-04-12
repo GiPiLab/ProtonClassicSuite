@@ -215,10 +215,11 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
 
         output.append("<div align='center' class='g'>");
 
+        QPixmap pixmap;
+        pixmap = graphics.chartToPixmap(chart);
+
         if (document != nullptr) {
           QString name = "mydata://" + QString::number(qrand());
-          QPixmap pixmap;
-          pixmap = graphics.chartToPixmap(chart);
           document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
           output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
         } else {
@@ -226,10 +227,10 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
           QString imageAbsoluteName = imageName;
           imageName.prepend(encodedRelativeImagePath + "/");
           imageAbsoluteName.prepend(absoluteImagePath + "/");
-
-          if (graphics.saveChartToDisk(chart, imageAbsoluteName) == false) {
-            die();
+          if (PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName) == false) {
+            break;
           }
+
           output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
                             .arg(graphicsWidth)
                             .arg(graphicsHeight)
@@ -243,12 +244,13 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     if (graph != PCx_Graphics::PCAGRAPHICS::PCAG9) {
 
       // Inline mode
+      QPixmap pixmap;
+      pixmap = graphics.chartToPixmap(chart);
+
       if (document != nullptr) {
 
         QString name = "mydata://" + QString::number(qrand());
 
-        QPixmap pixmap;
-        pixmap = graphics.chartToPixmap(chart);
         document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
         output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
       } else { // Export mode
@@ -259,8 +261,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         imageName.prepend(encodedRelativeImagePath + "/");
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (graphics.saveChartToDisk(chart, imageAbsoluteName) == false) {
-          die();
+        if (PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName) == false) {
+          break;
         }
 
         output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
@@ -274,7 +276,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     }
   }
   output.append("\n</div>\n");
-  qDebug() << "Time to render :" << timer.elapsed() << "ms";
+  qDebug() << "Time to render for node" << selectedNode << "=" << timer.elapsed() << "ms";
 
   return output;
 }
