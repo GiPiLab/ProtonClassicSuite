@@ -352,16 +352,6 @@
       <string>Format des graphiques</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Largeur :</string>
-        </property>
-        <property name="buddy">
-         <cstring>spinBoxWidth</cstring>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QSpinBox" name="spinBoxWidth">
         <property name="alignment">
@@ -388,6 +378,16 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Largeur :</string>
+        </property>
+        <property name="buddy">
+         <cstring>spinBoxWidth</cstring>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QSpinBox" name="spinBoxHeight">
         <property name="alignment">
@@ -401,6 +401,16 @@
         </property>
         <property name="singleStep">
          <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="checkBoxShowPointLabels">
+        <property name="toolTip">
+         <string>Afficher les étiquettes de données sur certains graphiques</string>
+        </property>
+        <property name="text">
+         <string>Étiquettes de données</string>
         </property>
        </widget>
       </item>

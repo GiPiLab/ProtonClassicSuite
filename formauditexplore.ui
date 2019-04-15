@@ -85,8 +85,14 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="2">
+         <widget class="QComboBox" name="comboBoxDFRFDIRITable"/>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QComboBox" name="comboBoxTable"/>
+        </item>
         <item row="0" column="3">
-         <widget class="QPushButton" name="saveTablesButton">
+         <widget class="QToolButton" name="saveTablesButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -103,16 +109,7 @@
            <iconset resource="Images.qrc">
             <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
           </property>
-          <property name="default">
-           <bool>true</bool>
-          </property>
          </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QComboBox" name="comboBoxDFRFDIRITable"/>
-        </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QComboBox" name="comboBoxTable"/>
         </item>
        </layout>
       </widget>
@@ -123,50 +120,58 @@
       </property>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_3">
+        <item row="1" column="0" colspan="4">
+         <widget class="QChartView" name="chartView1"/>
+        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart1"/>
+        </item>
+        <item row="0" column="3">
+         <widget class="QToolButton" name="saveChart1Button">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistrer le graphique&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="Images.qrc">
+            <normaloff>:/icons/icons/picture_save.png</normaloff>:/icons/icons/picture_save.png</iconset>
+          </property>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QComboBox" name="comboBoxChart1"/>
         </item>
         <item row="0" column="2">
-         <widget class="QPushButton" name="saveChart1Button">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
+         <widget class="QToolButton" name="resetZoomChart1Button">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enregistrer le graphique&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zoom par défaut&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string/>
           </property>
           <property name="icon">
            <iconset resource="Images.qrc">
-            <normaloff>:/icons/icons/picture_save.png</normaloff>:/icons/icons/picture_save.png</iconset>
-          </property>
-          <property name="default">
-           <bool>true</bool>
+            <normaloff>:/icons/icons/zoom_actual.png</normaloff>:/icons/icons/zoom_actual.png</iconset>
           </property>
          </widget>
-        </item>
-        <item row="1" column="0" colspan="3">
-         <widget class="QChartView" name="chartView1"/>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="0">
-         <widget class="QComboBox" name="comboBoxChart2"/>
+        <item row="1" column="0" colspan="4">
+         <widget class="QChartView" name="chartView2"/>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart2"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="saveChart2Button">
+        <item row="0" column="3">
+         <widget class="QToolButton" name="saveChart2Button">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -183,13 +188,27 @@
            <iconset resource="Images.qrc">
             <normaloff>:/icons/icons/picture_save.png</normaloff>:/icons/icons/picture_save.png</iconset>
           </property>
-          <property name="default">
-           <bool>true</bool>
-          </property>
          </widget>
         </item>
-        <item row="1" column="0" colspan="3">
-         <widget class="QChartView" name="chartView2"/>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart2"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QComboBox" name="comboBoxChart2"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QToolButton" name="resetZoomChart2Button">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Zoom par défaut&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="icon">
+           <iconset resource="Images.qrc">
+            <normaloff>:/icons/icons/zoom_actual.png</normaloff>:/icons/icons/zoom_actual.png</iconset>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

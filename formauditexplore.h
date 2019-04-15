@@ -93,6 +93,10 @@ private slots:
 
   void on_saveChart2Button_clicked();
 
+  void on_resetZoomChart1Button_clicked();
+
+  void on_resetZoomChart2Button_clicked();
+
 protected:
   void showEvent(QShowEvent *ev);
 

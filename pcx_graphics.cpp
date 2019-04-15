@@ -67,6 +67,16 @@ const QMap<PCx_Graphics::PCAGRAPHICS, QString> PCx_Graphics::pcaGraphicsDescript
 
 const QMap<PCx_Graphics::PCRGRAPHICS, QString> PCx_Graphics::pcrGraphicsDescription() { return {}; }
 
+const QMap<PCx_Graphics::SETTINGKEY, QString> PCx_Graphics::settingKey() {
+  static const QMap<PCx_Graphics::SETTINGKEY, QString> map = {
+      {SETTINGKEY::ALPHA, "graphics/alpha"},         {SETTINGKEY::WIDTH, "graphics/width"},
+      {SETTINGKEY::HEIGHT, "graphics/height"},       {SETTINGKEY::PENCOLOR1, "graphics/pen1"},
+      {SETTINGKEY::PENCOLOR2, "graphics/pen2"},      {SETTINGKEY::DFBARCOLOR, "graphics/penDFBar"},
+      {SETTINGKEY::RFBARCOLOR, "graphics/penRFBar"}, {SETTINGKEY::DIBARCOLOR, "graphics/penDIBar"},
+      {SETTINGKEY::RIBARCOLOR, "graphics/penRIBar"}, {SETTINGKEY::SHOWPOINTLABELS, "graphics/showPointLabels"}};
+  return map;
+}
+
 PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
     : auditModel(model) {
   if (model == nullptr) {
@@ -199,9 +209,9 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
       }
 
       // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
-      // dataPlotRoot.append(
-      //    QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
-      dataPlotRoot.append(QPointF(yearToMsSinceEpoch(year), percentRoot));
+      dataPlotRoot.append(
+          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
+      // dataPlotRoot.append(QPointF(yearToMsSinceEpoch(year), percentRoot));
 
       if (firstYearDataNode != 0) {
         percentNode = diffNode * 100.0 / firstYearDataNode;
@@ -219,9 +229,9 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         minYear = year;
       }
       // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
-      // dataPlotNode.append(
-      //    QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
-      dataPlotNode.append(QPointF(yearToMsSinceEpoch(year), percentNode));
+      dataPlotNode.append(
+          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
+      // dataPlotNode.append(QPointF(yearToMsSinceEpoch(year), percentNode));
 
       // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
       if (!cumule) {
@@ -245,13 +255,13 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   serie1->setPointsVisible(true);
   serie2->setPointsVisible(true);
 
-  QColor c = getColorPen1();
+  QColor c = getSettingValue(SETTINGKEY::PENCOLOR1).toUInt();
 
   QPen pen(c);
   pen.setWidth(2);
   serie1->setPen(pen);
 
-  c = getColorPen2();
+  c = getSettingValue(SETTINGKEY::PENCOLOR2).toUInt();
 
   pen.setColor(c);
   serie2->setPen(pen);
@@ -293,11 +303,12 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   serie2->attachAxis(xAxis);
   serie2->attachAxis(yAxis);
 
-  /* serie1->setPointLabelsVisible(true);
-   serie1->setPointLabelsFormat("@yPoint%");
-   serie2->setPointLabelsVisible(true);
-   serie2->setPointLabelsFormat("@yPoint%");
- */
+  if (getSettingValue(SETTINGKEY::SHOWPOINTLABELS).toBool()) {
+    serie1->setPointLabelsVisible(true);
+    serie1->setPointLabelsFormat("@yPoint%");
+    serie2->setPointLabelsVisible(true);
+    serie2->setPointLabelsFormat("@yPoint%");
+  }
 
   QString plotTitle;
   if (!cumule) {
@@ -348,29 +359,29 @@ QChart *PCx_Graphics::getPCAG9(unsigned int node, int year) const {
 
   QPen pen;
   pen.setWidth(0);
-  QColor c = getColorDFBar();
-  int alpha = getAlpha();
+  QColor c = getSettingValue(SETTINGKEY::DFBARCOLOR).toUInt();
+  int alpha = getSettingValue(SETTINGKEY::ALPHA).toInt();
 
   pen.setColor(c);
   dfBar->setPen(pen);
   c.setAlpha(alpha);
   dfBar->setBrush(c);
 
-  c = getColorRFBar();
+  c = getSettingValue(SETTINGKEY::RFBARCOLOR).toUInt();
 
   pen.setColor(c);
   rfBar->setPen(pen);
   c.setAlpha(alpha);
   rfBar->setBrush(c);
 
-  c = getColorDIBar();
+  c = getSettingValue(SETTINGKEY::DIBARCOLOR).toUInt();
 
   pen.setColor(c);
   diBar->setPen(pen);
   c.setAlpha(alpha);
   diBar->setBrush(c);
 
-  c = getColorRIBar();
+  c = getSettingValue(SETTINGKEY::RIBARCOLOR).toUInt();
 
   pen.setColor(c);
   riBar->setPen(pen);
@@ -464,7 +475,7 @@ QChart *PCx_Graphics::getPCAG9(unsigned int node, int year) const {
   series->append(rfBar);
   series->append(riBar);
 
-  series->setLabelsVisible(true);
+  series->setLabelsVisible(getSettingValue(SETTINGKEY::SHOWPOINTLABELS).toBool());
 
   chart->addSeries(series);
 
@@ -695,6 +706,8 @@ QChart *PCx_Graphics::getChartFromPCAGRAPHICS(PCx_Graphics::PCAGRAPHICS pcaGraph
 QPixmap PCx_Graphics::chartToPixmap(QChart *chart) const {
   QPixmap pixmap;
   QChartView chartView(chart);
+  int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
+  int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
   chartView.resize(graphicsWidth, graphicsHeight);
   chartView.setRenderHint(QPainter::Antialiasing, true);
   pixmap = chartView.grab();
@@ -733,6 +746,8 @@ QStandardItemModel *PCx_Graphics::getListModelOfAvailablePCAGRAPHICS() {
 }
 
 bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {
+  int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
+  int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
   if (!plot->savePng(imageAbsoluteName, graphicsWidth, graphicsHeight)) {
     qCritical() << "Unable to save " << imageAbsoluteName;
     return false;
@@ -866,7 +881,8 @@ QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode
                                                 PCx_Reporting::OREDPCR::OCDM, PCx_Reporting::OREDPCR::VCDM,
                                                 PCx_Reporting::OREDPCR::VIREMENTSINTERNES};
   return getPCRPercentBars(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::OUVERTS,
-                           QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName, modeName), getColorDFBar());
+                           QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName, modeName),
+                           getSettingValue(SETTINGKEY::DFBARCOLOR).toUInt());
 }
 
 QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) {
@@ -877,7 +893,7 @@ QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode)
                                                 PCx_Reporting::OREDPCR::VIREMENTSINTERNES};
   return getPCRPercentBars(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::BP,
                            QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName, modeName),
-                           getColorRFBar());
+                           getSettingValue(SETTINGKEY::RFBARCOLOR).toUInt());
 }
 
 QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) {
@@ -886,7 +902,8 @@ QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mod
   QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::REALISES, PCx_Reporting::OREDPCR::ENGAGES,
                                                 PCx_Reporting::OREDPCR::DISPONIBLES};
   return getPCRPercentBars(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::OUVERTS,
-                           QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName, modeName), getColorDIBar());
+                           QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName, modeName),
+                           getSettingValue(SETTINGKEY::DIBARCOLOR).toUInt());
 }
 
 QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) {
@@ -895,6 +912,11 @@ QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) {
 }
 
 QCustomPlot *PCx_Graphics::getPlot() const { return plot; }
+
+QVariant PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY key) {
+  QSettings settings;
+  return settings.value(settingKey().value(key));
+}
 
 QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                                         QList<PCx_Reporting::OREDPCR> selectedOREDPCR,
@@ -928,7 +950,7 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
   QPen pen;
   pen.setWidth(0);
 
-  int alpha = getAlpha();
+  int alpha = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::ALPHA).toInt();
 
   pen.setColor(color);
   bars->setPen(pen);
@@ -988,65 +1010,27 @@ QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRF
 }
 
 void PCx_Graphics::setGraphicsWidth(int width) {
-  graphicsWidth = width;
+  int graphicsWidth = width;
   if (graphicsWidth < MINWIDTH) {
     graphicsWidth = MINWIDTH;
   }
   if (graphicsWidth > MAXWIDTH) {
     graphicsWidth = MAXWIDTH;
   }
+  QSettings settings;
+  settings.setValue(settingKey().value(SETTINGKEY::WIDTH), width);
 }
 
 void PCx_Graphics::setGraphicsHeight(int height) {
-  graphicsHeight = height;
+  int graphicsHeight = height;
   if (graphicsHeight < MINHEIGHT) {
     graphicsHeight = MINHEIGHT;
   }
   if (graphicsHeight > MAXHEIGHT) {
     graphicsHeight = MAXHEIGHT;
   }
-}
-
-QColor PCx_Graphics::getColorPen1() {
   QSettings settings;
-  unsigned int oldcolor = settings.value("graphics/pen1", PCx_Graphics::DEFAULTPENCOLOR1).toUInt();
-  return {oldcolor};
-}
-
-QColor PCx_Graphics::getColorPen2() {
-  QSettings settings;
-  unsigned int oldcolor = settings.value("graphics/pen2", PCx_Graphics::DEFAULTPENCOLOR2).toUInt();
-  return {oldcolor};
-}
-
-QColor PCx_Graphics::getColorDFBar() {
-  QSettings settings;
-  unsigned int oldcolor = settings.value("graphics/penDFBar", PCx_Graphics::DEFAULTCOLORDFBAR).toUInt();
-  return {oldcolor};
-}
-
-QColor PCx_Graphics::getColorRFBar() {
-  QSettings settings;
-  unsigned int oldcolor = settings.value("graphics/penRFBar", PCx_Graphics::DEFAULTCOLORRFBAR).toUInt();
-  return {oldcolor};
-}
-
-QColor PCx_Graphics::getColorDIBar() {
-  QSettings settings;
-  unsigned int oldcolor = settings.value("graphics/penDIBar", PCx_Graphics::DEFAULTCOLORDIBAR).toUInt();
-  return {oldcolor};
-}
-
-QColor PCx_Graphics::getColorRIBar() {
-  QSettings settings;
-  unsigned int oldcolor = settings.value("graphics/penRIBar", PCx_Graphics::DEFAULTCOLORRIBAR).toUInt();
-  return {oldcolor};
-}
-
-int PCx_Graphics::getAlpha() {
-  QSettings settings;
-  int alpha = settings.value("graphics/alpha", PCx_Graphics::DEFAULTALPHA).toInt();
-  return alpha;
+  settings.setValue(settingKey().value(SETTINGKEY::HEIGHT), height);
 }
 
 QString PCx_Graphics::getCSS() {

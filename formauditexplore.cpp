@@ -63,6 +63,9 @@ FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui
 
   ui->chartView1->setRenderHint(QPainter::RenderHint::Antialiasing, true);
   ui->chartView2->setRenderHint(QPainter::RenderHint::Antialiasing, true);
+  ui->chartView1->setRubberBand(QChartView::RectangleRubberBand);
+  ui->chartView2->setRubberBand(QChartView::RectangleRubberBand);
+  // ui->chartView1->setMouseTracking(true);
 
   doc = new QTextDocument();
   ui->textEdit->setDocument(doc);
@@ -466,3 +469,7 @@ bool FormAuditExplore::saveChart(QChartView *chartView) {
 void FormAuditExplore::on_saveChart1Button_clicked() { saveChart(ui->chartView1); }
 
 void FormAuditExplore::on_saveChart2Button_clicked() { saveChart(ui->chartView2); }
+
+void FormAuditExplore::on_resetZoomChart1Button_clicked() { ui->chartView1->chart()->zoomReset(); }
+
+void FormAuditExplore::on_resetZoomChart2Button_clicked() { ui->chartView2->chart()->zoomReset(); }

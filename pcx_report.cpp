@@ -150,8 +150,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
     }
   }
 
-  int graphicsWidth = graphics.getGraphicsWidth();
-  int graphicsHeight = graphics.getGraphicsHeight();
+  int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
+  int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
 
   // To save images
   QString encodedRelativeImagePath = QUrl::toPercentEncoding(relativeImagePath);
@@ -309,8 +309,8 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     progressValue = progress->value();
   }
 
-  int graphicsWidth = graphics.getGraphicsWidth();
-  int graphicsHeight = graphics.getGraphicsHeight();
+  int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
+  int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
 
   QString output = "\n<div class='reportingNodeContainer'>\n";
 

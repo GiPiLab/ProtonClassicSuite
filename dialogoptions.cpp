@@ -67,7 +67,9 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
     qWarning() << "Unsupported option for CSS !";
   }
 
-  int imageWidth = settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt();
+  int imageWidth =
+      settings.value(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::WIDTH), PCx_Graphics::DEFAULTWIDTH)
+          .toInt();
   if (imageWidth < PCx_Graphics::MINWIDTH) {
     imageWidth = PCx_Graphics::MINWIDTH;
   }
@@ -75,7 +77,9 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
     imageWidth = PCx_Graphics::MAXWIDTH;
   }
 
-  int imageHeight = settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt();
+  int imageHeight =
+      settings.value(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::HEIGHT), PCx_Graphics::DEFAULTHEIGHT)
+          .toInt();
   if (imageHeight < PCx_Graphics::MINHEIGHT) {
     imageHeight = PCx_Graphics::MINHEIGHT;
   }
@@ -98,16 +102,19 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
   colorReqRank = PCx_QueryRank::getColor();
   colorReqMinMax = PCx_QueryMinMax::getColor();
 
-  colorPen1 = PCx_Graphics::getColorPen1();
-  colorPen2 = PCx_Graphics::getColorPen2();
-  alpha = PCx_Graphics::getAlpha();
+  colorPen1 = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::PENCOLOR1).toUInt();
+  colorPen2 = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::PENCOLOR2).toUInt();
+  alpha = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::ALPHA).toInt();
+
+  bool showPointLabels = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::SHOWPOINTLABELS).toBool();
+  ui->checkBoxShowPointLabels->setChecked(showPointLabels);
 
   ui->sliderAlpha->setValue(alpha);
 
-  colorDFBar = PCx_Graphics::getColorDFBar();
-  colorRFBar = PCx_Graphics::getColorRFBar();
-  colorDIBar = PCx_Graphics::getColorDIBar();
-  colorRIBar = PCx_Graphics::getColorRIBar();
+  colorDFBar = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::DFBARCOLOR).toUInt();
+  colorRFBar = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::RFBARCOLOR).toUInt();
+  colorDIBar = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::DIBARCOLOR).toUInt();
+  colorRIBar = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::RIBARCOLOR).toUInt();
 
   ui->pushButtonColorDF->setStyleSheet("background-color:" + colorDFBar.name());
   ui->pushButtonColorRF->setStyleSheet("background-color:" + colorRFBar.name());
@@ -165,16 +172,17 @@ void DialogOptions::on_pushButtonOk_clicked() {
     settings.setValue("format/formatMode", static_cast<int>(FORMATMODE::FORMATMODEMILLIONS));
   }
 
-  settings.setValue("graphics/width", ui->spinBoxWidth->value());
-  settings.setValue("graphics/height", ui->spinBoxHeight->value());
-
-  settings.setValue("graphics/pen1", colorPen1.rgba());
-  settings.setValue("graphics/pen2", colorPen2.rgba());
-  settings.setValue("graphics/alpha", alpha);
-  settings.setValue("graphics/penDFBar", colorDFBar.rgba());
-  settings.setValue("graphics/penRFBar", colorRFBar.rgba());
-  settings.setValue("graphics/penDIBar", colorDIBar.rgba());
-  settings.setValue("graphics/penRIBar", colorRIBar.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::WIDTH), ui->spinBoxWidth->value());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::HEIGHT), ui->spinBoxHeight->value());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::PENCOLOR1), colorPen1.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::PENCOLOR2), colorPen2.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::ALPHA), alpha);
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::DFBARCOLOR), colorDFBar.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::RFBARCOLOR), colorRFBar.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::DIBARCOLOR), colorDIBar.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::RIBARCOLOR), colorRIBar.rgba());
+  settings.setValue(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::SHOWPOINTLABELS),
+                    ui->checkBoxShowPointLabels->isChecked());
 
   settings.setValue("queries/penvar", colorReqVar.rgba());
   settings.setValue("queries/penrank", colorReqRank.rgba());
@@ -198,6 +206,8 @@ void DialogOptions::on_pushButtonReset_clicked() {
   colorPen1 = PCx_Graphics::DEFAULTPENCOLOR1;
   colorPen2 = PCx_Graphics::DEFAULTPENCOLOR2;
   alpha = PCx_Graphics::DEFAULTALPHA;
+
+  ui->checkBoxShowPointLabels->setChecked(false);
 
   colorDFBar = PCx_Graphics::DEFAULTCOLORDFBAR;
   colorRFBar = PCx_Graphics::DEFAULTCOLORRFBAR;
@@ -250,7 +260,7 @@ void DialogOptions::on_pushButtonColorReqMinMax_clicked() {
 }
 
 void DialogOptions::on_pushButtonColorPen1_clicked() {
-  QColor oldcolor = PCx_Graphics::getColorPen1();
+  QColor oldcolor = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::PENCOLOR1).toUInt();
   QColor color = QColorDialog::getColor(oldcolor, this);
   if (color.isValid()) {
     colorPen1 = color;
@@ -259,7 +269,7 @@ void DialogOptions::on_pushButtonColorPen1_clicked() {
 }
 
 void DialogOptions::on_pushButtonColorPen2_clicked() {
-  QColor oldcolor = PCx_Graphics::getColorPen2();
+  QColor oldcolor = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::PENCOLOR2).toUInt();
   QColor color = QColorDialog::getColor(oldcolor, this);
   if (color.isValid()) {
     colorPen2 = color;
@@ -270,7 +280,7 @@ void DialogOptions::on_pushButtonColorPen2_clicked() {
 void DialogOptions::on_sliderAlpha_valueChanged(int value) { alpha = value; }
 
 void DialogOptions::on_pushButtonColorDF_clicked() {
-  QColor oldcolor = PCx_Graphics::getColorDFBar();
+  QColor oldcolor = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::DFBARCOLOR).toUInt();
   QColor color = QColorDialog::getColor(oldcolor, this);
   if (color.isValid()) {
     colorDFBar = color;
@@ -279,7 +289,7 @@ void DialogOptions::on_pushButtonColorDF_clicked() {
 }
 
 void DialogOptions::on_pushButtonColorRF_clicked() {
-  QColor oldcolor = PCx_Graphics::getColorRFBar();
+  QColor oldcolor = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::RFBARCOLOR).toUInt();
   QColor color = QColorDialog::getColor(oldcolor, this);
   if (color.isValid()) {
     colorRFBar = color;
@@ -288,7 +298,7 @@ void DialogOptions::on_pushButtonColorRF_clicked() {
 }
 
 void DialogOptions::on_pushButtonColorDI_clicked() {
-  QColor oldcolor = PCx_Graphics::getColorDIBar();
+  QColor oldcolor = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::DIBARCOLOR).toUInt();
   QColor color = QColorDialog::getColor(oldcolor, this);
   if (color.isValid()) {
     colorDIBar = color;
@@ -297,7 +307,7 @@ void DialogOptions::on_pushButtonColorDI_clicked() {
 }
 
 void DialogOptions::on_pushButtonColorRI_clicked() {
-  QColor oldcolor = PCx_Graphics::getColorRIBar();
+  QColor oldcolor = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::RIBARCOLOR).toUInt();
   QColor color = QColorDialog::getColor(oldcolor, this);
   if (color.isValid()) {
     colorRIBar = color;

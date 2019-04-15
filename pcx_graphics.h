@@ -92,6 +92,21 @@ public:
 
   static const QMap<PCRGRAPHICS, QString> pcrGraphicsDescription();
 
+  enum class SETTINGKEY {
+    PENCOLOR1,
+    PENCOLOR2,
+    DFBARCOLOR,
+    RFBARCOLOR,
+    DIBARCOLOR,
+    RIBARCOLOR,
+    ALPHA,
+    WIDTH,
+    HEIGHT,
+    SHOWPOINTLABELS
+  };
+
+  static const QMap<SETTINGKEY, QString> settingKey();
+
   PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
                int graphicsHeight = DEFAULTHEIGHT);
   PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
@@ -153,21 +168,10 @@ public:
 
   QCustomPlot *getPlot() const;
 
-  int getGraphicsWidth() const { return graphicsWidth; }
-  int getGraphicsHeight() const { return graphicsHeight; }
+  static QVariant getSettingValue(SETTINGKEY key);
 
   void setGraphicsWidth(int width);
   void setGraphicsHeight(int height);
-
-  static QColor getColorPen1();
-  static QColor getColorPen2();
-
-  static QColor getColorDFBar();
-  static QColor getColorRFBar();
-  static QColor getColorDIBar();
-  static QColor getColorRIBar();
-
-  static int getAlpha();
 
   static QString getCSS();
 
@@ -204,7 +208,6 @@ private:
                             QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference,
                             const QString &plotTitle, QColor color);
   bool ownPlot;
-  int graphicsWidth{}, graphicsHeight{};
 
   QCustomPlot *plot;
 
