@@ -121,7 +121,7 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="1" column="0" colspan="4">
-         <widget class="QChartView" name="chartView1"/>
+         <widget class="ZoomableQChartView" name="chartView1"/>
         </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart1"/>
@@ -168,7 +168,7 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="1" column="0" colspan="4">
-         <widget class="QChartView" name="chartView2"/>
+         <widget class="ZoomableQChartView" name="chartView2"/>
         </item>
         <item row="0" column="3">
          <widget class="QToolButton" name="saveChart2Button">
@@ -219,9 +219,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QChartView</class>
+   <class>ZoomableQChartView</class>
    <extends>QGraphicsView</extends>
-   <header location="global">QtCharts</header>
+   <header>zoomableqchartview.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

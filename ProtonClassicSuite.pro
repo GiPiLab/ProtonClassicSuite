@@ -99,7 +99,8 @@ SOURCES += main.cpp\
     formdisplayprevisionreport.cpp \
     treemap.cpp \
     treemapwidget.cpp \
-    formaudittreemap.cpp
+    formaudittreemap.cpp \
+    zoomableqchartview.cpp
 
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
@@ -151,7 +152,8 @@ HEADERS  += mainwindow.h \
     formdisplayprevisionreport.h \
     treemap.h \
     treemapwidget.h \
-    formaudittreemap.h
+    formaudittreemap.h \
+    zoomableqchartview.h
 
 FORMS    += mainwindow.ui \
     formdisplaytree.ui \
