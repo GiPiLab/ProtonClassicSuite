@@ -63,9 +63,6 @@ FormAuditExplore::FormAuditExplore(QWidget *parent) : QWidget(parent), ui(new Ui
 
   ui->chartView1->setRenderHint(QPainter::RenderHint::Antialiasing, true);
   ui->chartView2->setRenderHint(QPainter::RenderHint::Antialiasing, true);
-  ui->chartView1->setRubberBand(QChartView::RectangleRubberBand);
-  ui->chartView2->setRubberBand(QChartView::RectangleRubberBand);
-  // ui->chartView1->setMouseTracking(true);
 
   doc = new QTextDocument();
   ui->textEdit->setDocument(doc);

@@ -9,7 +9,10 @@ public:
   ZoomableQChartView(QWidget *parent);
 
 protected:
-  void keyPressEvent(QKeyEvent *event);
+  void wheelEvent(QWheelEvent *event);
+
+private:
+  qreal zoomFactor = 1.0;
 };
 
 #endif // ZOOMABLEQCHARTVIEW_H

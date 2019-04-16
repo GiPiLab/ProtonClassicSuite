@@ -209,9 +209,7 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
       }
 
       // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
-      dataPlotRoot.append(
-          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
-      // dataPlotRoot.append(QPointF(yearToMsSinceEpoch(year), percentRoot));
+      dataPlotRoot.append(QPointF(year, NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentRoot)));
 
       if (firstYearDataNode != 0) {
         percentNode = diffNode * 100.0 / firstYearDataNode;
@@ -229,9 +227,7 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
         minYear = year;
       }
       // NOTE: we round the number to the selected number of decimal as we cannot format point label explicitely
-      dataPlotNode.append(
-          QPointF(yearToMsSinceEpoch(year), NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
-      // dataPlotNode.append(QPointF(yearToMsSinceEpoch(year), percentNode));
+      dataPlotNode.append(QPointF(year, NUMBERSFORMAT::doubleToDoubleRoundedByNumbersOfDecimals(percentNode)));
 
       // cumule==false => G1, G3, G5, G7, otherwise G2, G4, G6, G8
       if (!cumule) {
@@ -277,14 +273,20 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   serie1->setName(nodeName);
   serie2->setName(QString("%2 hormis %1").arg(nodeName, refNodeName));
   chart->legend()->setFont(smallFont);
-  chart->setLocalizeNumbers(true);
+  // chart->setLocalizeNumbers(true);
 
-  QDateTimeAxis *xAxis = new QDateTimeAxis;
-  xAxis->setFormat("yyyy");
+  QValueAxis *xAxis = new QValueAxis();
+
   xAxis->setLabelsAngle(-45);
   xAxis->setLabelsFont(smallFont);
-  xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
-  xAxis->setTickCount(maxYear - minYear + 3);
+
+  xAxis->applyNiceNumbers();
+  xAxis->setLabelFormat("%.0f");
+  xAxis->setTickType(QValueAxis::TicksDynamic);
+  xAxis->setTickInterval(1.0);
+  xAxis->setRange(minYear - 1, maxYear + 1);
+
+  // xAxis->setMinorGridLineVisible(true);
   xAxis->setGridLineVisible(false);
 
   QValueAxis *yAxis = new QValueAxis();
@@ -577,7 +579,7 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         if (dataF < minYValue) {
           minYValue = dataF;
         }
-        dataSeries[i].append(QPointF(yearToMsSinceEpoch(year), dataF));
+        dataSeries[i].append(QPointF(year, dataF));
       }
     }
   }
@@ -591,24 +593,27 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     if (summedPrevF < minYValue) {
       minYValue = summedPrevF;
     }
-    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(
-        QPointF(yearToMsSinceEpoch(prevItem->getYear()), summedPrevF));
+    dataSeries[static_cast<int>(PCx_Audit::ORED::OUVERTS)].append(QPointF(prevItem->getYear(), summedPrevF));
   }
 
   QLineSeries *series = nullptr;
 
-  QDateTimeAxis *xAxis = new QDateTimeAxis;
+  QValueAxis *xAxis = new QValueAxis();
+  xAxis->applyNiceNumbers();
+  xAxis->setLabelFormat("%.0f");
+  xAxis->setTickType(QValueAxis::TicksDynamic);
+  xAxis->setTickInterval(1.0);
+  xAxis->setRange(minYear - 1, maxYear + 1);
+
   if (prevItem == nullptr) {
-    xAxis->setTickCount(maxYear - minYear + 3);
-    xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 1, 6, 1)));
+    xAxis->setRange(minYear - 1, maxYear + 1);
 
   } else {
-    xAxis->setTickCount(maxYear - minYear + 4);
-    xAxis->setRange(QDateTime(QDate(minYear - 1, 6, 1)), QDateTime(QDate(maxYear + 2, 6, 1)));
+
+    xAxis->setRange(minYear - 1, maxYear + 2);
   }
 
   QFont smallFont("Sans", 8);
-  xAxis->setFormat("yyyy");
   xAxis->setLabelsAngle(-45);
   xAxis->setLabelsFont(smallFont);
   xAxis->setGridLineVisible(false);
@@ -635,8 +640,7 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     }
   }
 
-  yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.1));
-  chart->setLocalizeNumbers(true);
+  yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.08));
 
   QString formatString;
   switch (NUMBERSFORMAT::getFormatMode()) {
@@ -663,7 +667,6 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     xAxis->setLabelsFont(font);
     chart->legend()->setFont(QFont("Sans", 7));
     yAxis->setLabelsFont(font);
-    xAxis->setFormat("yy");
   }
 
   // NOTE: Remove border
