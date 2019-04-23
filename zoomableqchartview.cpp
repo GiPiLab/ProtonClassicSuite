@@ -4,7 +4,7 @@ ZoomableQChartView::ZoomableQChartView(QWidget *parent) : QChartView(parent) {}
 
 void ZoomableQChartView::wheelEvent(QWheelEvent *event) {
   qreal factor;
-  factor = event->angleDelta().y() > 0 ? 2.0 : 0.5;
+  factor = event->angleDelta().y() > 0 ? 1.5 : 0.6;
 
   // Reset zoomFactor in case of chart change
   if (!chart()->isZoomed()) {
@@ -12,7 +12,7 @@ void ZoomableQChartView::wheelEvent(QWheelEvent *event) {
   }
 
   if (zoomFactor * factor >= 17 || zoomFactor * factor <= 0.124) {
-    event->ignore();
+    QChartView::wheelEvent(event);
     return;
   }
   zoomFactor *= factor;
@@ -25,5 +25,52 @@ void ZoomableQChartView::wheelEvent(QWheelEvent *event) {
   // NOTE : ugly hack to deal with pointLabels remaining bug
   resize(size() + QSize(1, 1));
   resize(size() - QSize(1, 1));
-  event->accept();
+  QChartView::wheelEvent(event);
+}
+
+void ZoomableQChartView::mousePressEvent(QMouseEvent *event) {
+  if (event->button() == Qt::MouseButton::LeftButton) {
+    moveChart = true;
+    lastPosX = event->x();
+    lastPosY = event->y();
+  }
+
+  QChartView::mousePressEvent(event);
+}
+
+void ZoomableQChartView::mouseMoveEvent(QMouseEvent *event) {
+
+  if (event->type() == QEvent::Leave) {
+    moveChart = false;
+    QChartView::mouseMoveEvent(event);
+    return;
+  }
+
+  if (event->x() < 0 || event->y() < 0 || event->x() > size().width() || event->y() > size().height()) {
+    moveChart = false;
+    QChartView::mouseMoveEvent(event);
+    return;
+  }
+
+  if (moveChart) {
+
+    chart()->scroll(lastPosX - event->x(), event->y() - lastPosY);
+    lastPosX = event->x();
+    lastPosY = event->y();
+    // NOTE : ugly hack to deal with pointLabels remaining bug
+    resize(size() + QSize(1, 1));
+    resize(size() - QSize(1, 1));
+  }
+
+  QChartView::mouseMoveEvent(event);
+}
+
+void ZoomableQChartView::mouseReleaseEvent(QMouseEvent *event) {
+  if (event->button() == Qt::MouseButton::LeftButton) {
+    moveChart = false;
+    // NOTE : ugly hack to deal with pointLabels remaining bug
+    resize(size() + QSize(1, 1));
+    resize(size() - QSize(1, 1));
+  }
+  QChartView::mouseReleaseEvent(event);
 }

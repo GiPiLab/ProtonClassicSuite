@@ -137,14 +137,30 @@ void FormAuditExplore::updateListOfAudits() {
   on_comboListAudits_activated(0);
 }
 
-void FormAuditExplore::updateViews() {
-  ui->saveTablesButton->setEnabled(ready);
-  if (!ready) {
-    doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un "
-                    "audit et n'oubliez pas de le terminer</h1>"));
-    return;
-  }
+void FormAuditExplore::updateChartView(QChartView *chartView, QComboBox *comboChartSelected,
+                                       QComboBox *comboModeSelected) {
+  unsigned int selectedNode =
+      ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
+  PCx_Graphics::PCAGRAPHICS currentChart =
+      static_cast<PCx_Graphics::PCAGRAPHICS>(comboChartSelected->currentData(PCx_Graphics::GraphicIdUserRole).toUInt());
 
+  MODES::DFRFDIRI currentChartMode;
+  int currentChartYear;
+
+  if (currentChart != PCx_Graphics::PCAGRAPHICS::PCAG9) {
+    currentChartMode = static_cast<MODES::DFRFDIRI>(comboModeSelected->currentData(MODES::ModeIdUserRole).toInt());
+    currentChartYear = -1;
+  } else {
+    currentChartMode = MODES::DFRFDIRI::GLOBAL;
+    currentChartYear = comboModeSelected->currentData(Qt::UserRole + 1).toInt();
+  }
+  PCx_Graphics graphics(model);
+
+  chartView->setChart(graphics.getChartFromPCAGRAPHICS(currentChart, selectedNode, currentChartMode, nullptr,
+                                                       referenceNode, currentChartYear));
+}
+
+void FormAuditExplore::updateTextView() {
   unsigned int selectedNode =
       ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
@@ -157,44 +173,25 @@ void FormAuditExplore::updateViews() {
   PCx_Tables::PCAPRESETS currentTablePreset =
       static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
 
-  PCx_Graphics::PCAGRAPHICS currentChart1 =
-      static_cast<PCx_Graphics::PCAGRAPHICS>(ui->comboBoxChart1->currentData(PCx_Graphics::GraphicIdUserRole).toUInt());
-  PCx_Graphics::PCAGRAPHICS currentChart2 =
-      static_cast<PCx_Graphics::PCAGRAPHICS>(ui->comboBoxChart2->currentData(PCx_Graphics::GraphicIdUserRole).toUInt());
-
-  MODES::DFRFDIRI currentChart1Mode, currentChart2Mode;
-  int currentChart1Year, currentChart2Year;
-
-  if (currentChart1 != PCx_Graphics::PCAGRAPHICS::PCAG9) {
-    currentChart1Mode =
-        static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRIOrYearsChart1->currentData(MODES::ModeIdUserRole).toInt());
-    currentChart1Year = -1;
-  } else {
-    currentChart1Mode = MODES::DFRFDIRI::GLOBAL;
-    currentChart1Year = ui->comboBoxDFRFDIRIOrYearsChart1->currentData(Qt::UserRole + 1).toInt();
-  }
-
-  if (currentChart2 != PCx_Graphics::PCAGRAPHICS::PCAG9) {
-    currentChart2Mode =
-        static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRIOrYearsChart2->currentData(MODES::ModeIdUserRole).toInt());
-    currentChart2Year = -1;
-  } else {
-    currentChart2Mode = MODES::DFRFDIRI::GLOBAL;
-    currentChart2Year = ui->comboBoxDFRFDIRIOrYearsChart2->currentData(Qt::UserRole + 1).toInt();
-  }
-
-  PCx_Graphics graphics(model);
   PCx_Tables tables(model);
-
-  ui->chartView1->setChart(graphics.getChartFromPCAGRAPHICS(currentChart1, selectedNode, currentChart1Mode, nullptr,
-                                                            referenceNode, currentChart1Year));
-  ui->chartView2->setChart(graphics.getChartFromPCAGRAPHICS(currentChart2, selectedNode, currentChart2Mode, nullptr,
-                                                            referenceNode, currentChart2Year));
 
   output.append(
       tables.getPCAPresetFromPCAPRESETS(currentTablePreset, selectedNode, currentTablePresetMode, referenceNode));
   output.append("</body></html>");
   doc->setHtml(output);
+}
+
+void FormAuditExplore::updateAllViews() {
+  ui->saveTablesButton->setEnabled(ready);
+  if (!ready) {
+    doc->setHtml(tr("<h1 align='center'><br><br><br><br><br>Remplissez un "
+                    "audit et n'oubliez pas de le terminer</h1>"));
+    return;
+  }
+
+  updateChartView(ui->chartView1, ui->comboBoxChart1, ui->comboBoxDFRFDIRIOrYearsChart1);
+  updateChartView(ui->chartView2, ui->comboBoxChart2, ui->comboBoxDFRFDIRIOrYearsChart2);
+  updateTextView();
 }
 
 QSize FormAuditExplore::sizeHint() const { return {850, 550}; }
@@ -250,7 +247,7 @@ void FormAuditExplore::on_treeView_clicked(const QModelIndex &index) {
 
   QScrollBar *sb = ui->textEdit->verticalScrollBar();
   int sbval = sb->value();
-  updateViews();
+  updateAllViews();
   if (newAuditSelected == false) {
 
     sb->setValue(sbval);
@@ -343,7 +340,7 @@ void FormAuditExplore::on_treeView_doubleClicked(const QModelIndex &index) {
   QMessageBox::information(this, "Information",
                            tr("Nouveau noeud de référence pour les calculs : %1")
                                .arg(model->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
-  updateViews();
+  updateAllViews();
 }
 
 void FormAuditExplore::on_comboBoxTable_activated(int index) {
@@ -360,7 +357,7 @@ void FormAuditExplore::on_comboBoxTable_activated(int index) {
   } else {
     ui->comboBoxDFRFDIRITable->setEnabled(true);
   }
-  updateViews();
+  updateTextView();
 }
 
 void FormAuditExplore::on_comboBoxDFRFDIRITable_activated(int index) {
@@ -369,7 +366,7 @@ void FormAuditExplore::on_comboBoxDFRFDIRITable_activated(int index) {
   if (index == -1 || ui->comboBoxTable->count() == 0) {
     return;
   }
-  updateViews();
+  updateTextView();
 }
 
 void FormAuditExplore::on_comboBoxChart1_activated(int index) {
@@ -386,7 +383,7 @@ void FormAuditExplore::on_comboBoxChart1_activated(int index) {
     ui->comboBoxDFRFDIRIOrYearsChart1->setModel(listOfDFRFDIRIModel);
   }
 
-  updateViews();
+  updateChartView(ui->chartView1, ui->comboBoxChart1, ui->comboBoxDFRFDIRIOrYearsChart1);
 }
 
 void FormAuditExplore::on_comboBoxChart2_activated(int index) {
@@ -403,7 +400,7 @@ void FormAuditExplore::on_comboBoxChart2_activated(int index) {
     ui->comboBoxDFRFDIRIOrYearsChart2->setModel(listOfDFRFDIRIModel);
   }
 
-  updateViews();
+  updateChartView(ui->chartView2, ui->comboBoxChart2, ui->comboBoxDFRFDIRIOrYearsChart2);
 }
 
 void FormAuditExplore::showEvent(QShowEvent *ev) {
@@ -419,14 +416,14 @@ void FormAuditExplore::on_comboBoxDFRFDIRIOrYearsChart1_activated(int index) {
   if (index == -1 || ui->comboBoxDFRFDIRIOrYearsChart1->count() == 0) {
     return;
   }
-  updateViews();
+  updateChartView(ui->chartView1, ui->comboBoxChart1, ui->comboBoxDFRFDIRIOrYearsChart1);
 }
 
 void FormAuditExplore::on_comboBoxDFRFDIRIOrYearsChart2_activated(int index) {
   if (index == -1 || ui->comboBoxDFRFDIRIOrYearsChart2->count() == 0) {
     return;
   }
-  updateViews();
+  updateChartView(ui->chartView2, ui->comboBoxChart2, ui->comboBoxDFRFDIRIOrYearsChart2);
 }
 
 bool FormAuditExplore::saveChart(QChartView *chartView) {
@@ -466,7 +463,3 @@ bool FormAuditExplore::saveChart(QChartView *chartView) {
 void FormAuditExplore::on_saveChart1Button_clicked() { saveChart(ui->chartView1); }
 
 void FormAuditExplore::on_saveChart2Button_clicked() { saveChart(ui->chartView2); }
-
-void FormAuditExplore::on_resetZoomChart1Button_clicked() { ui->chartView1->chart()->zoomReset(); }
-
-void FormAuditExplore::on_resetZoomChart2Button_clicked() { ui->chartView2->chart()->zoomReset(); }

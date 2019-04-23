@@ -93,17 +93,13 @@ private slots:
 
   void on_saveChart2Button_clicked();
 
-  void on_resetZoomChart1Button_clicked();
-
-  void on_resetZoomChart2Button_clicked();
-
 protected:
   void showEvent(QShowEvent *ev);
 
 private:
   Ui::FormAuditExplore *ui;
   void updateListOfAudits();
-  void updateViews();
+  void updateAllViews();
 
   QTextDocument *doc;
   PCx_AuditWithTreeModel *model;
@@ -116,6 +112,8 @@ private:
 
   QSize sizeHint() const;
   bool saveChart(QChartView *chartView);
+  void updateTextView();
+  void updateChartView(QChartView *chartView, QComboBox *comboChartSelected, QComboBox *comboModeSelected);
 };
 
 #endif // FORMAUDITEXPLORE_H
