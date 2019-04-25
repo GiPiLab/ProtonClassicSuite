@@ -128,9 +128,8 @@ void FormAuditPrevisions::updateListOfPrevisions() {
   QList<QPair<unsigned int, QString>> listOfPrevisions = PCx_Prevision::getListOfPrevisions();
 
   if (listOfPrevisions.isEmpty()) {
-    QMessageBox::information(this, tr("Information"),
-                             tr("Créez d'abord une prévision dans la fenêtre "
-                                "de gestion des prévisions"));
+    QMessageBox::information(this, tr("Information"), tr("Créez d'abord une prévision dans la fenêtre "
+                                                         "de gestion des prévisions"));
   } else {
     QMessageBox::information(this, tr("Astuce"),
                              tr("Pensez à utiliser l'<b>aide contextuelle</b> (clic sur le bouton à "
@@ -437,7 +436,7 @@ QSize FormAuditPrevisions::sizeHint() const { return {850, 500}; }
 void FormAuditPrevisions::on_pushButtonDisplayReport_clicked() {
   FormDisplayPrevisionReport *form = new FormDisplayPrevisionReport(currentPrevisionItem, referenceNode, this);
   form->setAttribute(Qt::WA_DeleteOnClose);
-  QMdiSubWindow *mdiSubWin = dynamic_cast<QMdiSubWindow *>(this->parentWidget());
+  QMdiSubWindow *mdiSubWin = qobject_cast<QMdiSubWindow *>(this->parentWidget());
   QMdiArea *mdiArea = mdiSubWin->mdiArea();
   QMdiSubWindow *subWin = mdiArea->addSubWindow(form);
   subWin->setWindowIcon(QIcon(":/icons/icons/editPrevisions.png"));

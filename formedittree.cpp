@@ -178,9 +178,8 @@ void FormEditTree::on_deleteTreeButton_clicked() {
 
       emit listOfTreeChanged();
     } else if (result == 0) {
-      QMessageBox::warning(this, tr("Attention"),
-                           tr("Il existe des audits ou des reportings liés à "
-                              "cet arbre. Supprimez-les d'abord"));
+      QMessageBox::warning(this, tr("Attention"), tr("Il existe des audits ou des reportings liés à "
+                                                     "cet arbre. Supprimez-les d'abord"));
       return;
     }
   }
@@ -259,9 +258,8 @@ void FormEditTree::on_addNodeButton_clicked() {
 
     QModelIndex indexType = ui->listTypesView->currentIndex();
     if (indexType.row() < 0) {
-      QMessageBox::information(this, tr("Information"),
-                               tr("Sélectionnez le type de l'élément à ajouter "
-                                  "dans la zone de droite"));
+      QMessageBox::information(this, tr("Information"), tr("Sélectionnez le type de l'élément à ajouter "
+                                                           "dans la zone de droite"));
       return;
     }
 
@@ -355,9 +353,8 @@ noeud de ce type portant ce nom dans l'arbre !")); goto redo;
 
     QModelIndex indexType = ui->listTypesView->currentIndex();
     if (indexType.row() < 0) {
-      QMessageBox::information(this, tr("Information"),
-                               tr("Sélectionnez le nouveau type du noeud à "
-                                  "modifier dans la zone de droite"));
+      QMessageBox::information(this, tr("Information"), tr("Sélectionnez le nouveau type du noeud à "
+                                                           "modifier dans la zone de droite"));
       return;
     }
 
@@ -427,9 +424,8 @@ void FormEditTree::on_deleteNodeButton_clicked() {
     }
     model->deleteNode(selection[0]);
   } else {
-    QMessageBox::information(this, tr("Information"),
-                             tr("Sélectionner le noeud à supprimer. Tous ses "
-                                "descendants seront également supprimés"));
+    QMessageBox::information(this, tr("Information"), tr("Sélectionner le noeud à supprimer. Tous ses "
+                                                         "descendants seront également supprimés"));
   }
 }
 
@@ -454,7 +450,7 @@ void FormEditTree::on_finishTreeButton_clicked() {
 void FormEditTree::on_viewTreeButton_clicked() {
   auto *ddt = new FormDisplayTree(model->getTreeId(), this);
   ddt->setAttribute(Qt::WA_DeleteOnClose);
-  auto *mdiSubWin = dynamic_cast<QMdiSubWindow *>(this->parentWidget());
+  auto *mdiSubWin = qobject_cast<QMdiSubWindow *>(this->parentWidget());
   QMdiArea *mdiArea = mdiSubWin->mdiArea();
   QMdiSubWindow *subWin = mdiArea->addSubWindow(ddt);
   subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));
@@ -601,7 +597,7 @@ redo:
 void FormEditTree::on_consistencyButton_clicked() {
   auto *form = new FormTreeConsistency(model->getTreeId(), this);
   form->setAttribute(Qt::WA_DeleteOnClose);
-  auto *mdiSubWin = dynamic_cast<QMdiSubWindow *>(this->parentWidget());
+  auto *mdiSubWin = qobject_cast<QMdiSubWindow *>(this->parentWidget());
   QMdiArea *mdiArea = mdiSubWin->mdiArea();
   QMdiSubWindow *subWin = mdiArea->addSubWindow(form);
   subWin->setWindowIcon(QIcon(":/icons/icons/tree.png"));

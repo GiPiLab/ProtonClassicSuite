@@ -79,13 +79,13 @@ void auditDataDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 }
 
 void auditDataDelegate::setEditorData(QWidget *editor, const QModelIndex &index) const {
-  auto *edit = dynamic_cast<QDoubleSpinBox *>(editor);
+  auto *edit = qobject_cast<QDoubleSpinBox *>(editor);
   // Convert fixed point arithmetics to double for displaying
   edit->setValue(fixedPointToDouble(index.data().toLongLong()));
 }
 
 void auditDataDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-  QDoubleSpinBox *edit = dynamic_cast<QDoubleSpinBox *>(editor);
+  QDoubleSpinBox *edit = qobject_cast<QDoubleSpinBox *>(editor);
   double value = edit->value();
   if (value > MAX_NUM) {
     value = MAX_NUM;

@@ -215,7 +215,7 @@ void FormEditAudit::on_pushButtonExpandAll_clicked() { ui->treeView->expandAll()
 void FormEditAudit::on_statsButton_clicked() {
   auto *infos = new FormAuditInfos(auditModel->getAuditId(), this);
   infos->setAttribute(Qt::WA_DeleteOnClose);
-  auto *mdiSubWin = dynamic_cast<QMdiSubWindow *>(this->parentWidget());
+  auto *mdiSubWin = qobject_cast<QMdiSubWindow *>(this->parentWidget());
   QMdiArea *mdiArea = mdiSubWin->mdiArea();
   mdiArea->addSubWindow(infos);
   infos->show();

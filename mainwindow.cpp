@@ -258,17 +258,25 @@ void MainWindow::onFormReportingReportsWindowsDestroyed() {
 }
 
 void MainWindow::onFormAuditExploreWindowsDestroyed(QObject *obj) {
-  int index = listOfFormAuditExplore.indexOf(dynamic_cast<FormAuditExplore *>(obj));
+
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
+  int index = listOfFormAuditExplore.indexOf(static_cast<FormAuditExplore *>(obj));
+  Q_ASSERT(index != -1);
+  int size = listOfFormAuditExplore.size();
+  Q_ASSERT(size > 0);
   listOfFormAuditExplore.removeAt(index);
+  Q_ASSERT(listOfFormAuditExplore.size() == size - 1);
 }
 
 void MainWindow::onFormAuditTreemapWindowsDestroyed(QObject *obj) {
-  int index = listOfFormAuditTreemap.indexOf(dynamic_cast<FormAuditTreemap *>(obj));
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
+  int index = listOfFormAuditTreemap.indexOf(static_cast<FormAuditTreemap *>(obj));
   listOfFormAuditTreemap.removeAt(index);
 }
 
 void MainWindow::onFormQueriesWindowsDestroyed(QObject *obj) {
-  listOfFormQueries.removeAt(listOfFormQueries.indexOf(dynamic_cast<FormQueries *>(obj)));
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
+  listOfFormQueries.removeAt(listOfFormQueries.indexOf(static_cast<FormQueries *>(obj)));
   // qDebug()<<"FormQueries window closed, remaining :"<<listOfFormQueries;
 }
 
@@ -610,20 +618,24 @@ void MainWindow::on_actionReportingOverview_triggered() {
 }
 
 void MainWindow::onFormReportingTablesWindowsDestroyed(QObject *obj) {
-  listOfFormReportingOverview.removeAt(listOfFormReportingOverview.indexOf(dynamic_cast<FormReportingOverview *>(obj)));
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
+  listOfFormReportingOverview.removeAt(listOfFormReportingOverview.indexOf(static_cast<FormReportingOverview *>(obj)));
 }
 
 void MainWindow::onFormReportingSupervisionWindowsDestroyed(QObject *obj) {
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
   listOfFormReportingSupervision.removeAt(
-      listOfFormReportingSupervision.indexOf(dynamic_cast<FormReportingSupervision *>(obj)));
+      listOfFormReportingSupervision.indexOf(static_cast<FormReportingSupervision *>(obj)));
 }
 
 void MainWindow::onFormReportingGraphicsWindowsDestroyed(QObject *obj) {
-  listOfFormReportingGraphics.removeAt(listOfFormReportingGraphics.indexOf(dynamic_cast<FormReportingGraphics *>(obj)));
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
+  listOfFormReportingGraphics.removeAt(listOfFormReportingGraphics.indexOf(static_cast<FormReportingGraphics *>(obj)));
 }
 
 void MainWindow::onFormReportingExploreWindowsDestroyed(QObject *obj) {
-  listOfFormReportingExplore.removeAt(listOfFormReportingExplore.indexOf(dynamic_cast<FormReportingExplore *>(obj)));
+  // WARNING : do not use dynamic_cast or qobject_cast, as the pointer is already destroyed here
+  listOfFormReportingExplore.removeAt(listOfFormReportingExplore.indexOf(static_cast<FormReportingExplore *>(obj)));
 }
 
 void MainWindow::on_actionReportingSupervision_triggered() {
@@ -716,6 +728,7 @@ void MainWindow::on_actionExploreAudits_triggered() {
 
   dlg->show();
   listOfFormAuditExplore.append(dlg);
+  qDebug() << "DLG = " << dlg;
 
   connect(dlg, &QObject::destroyed, this, &MainWindow::onFormAuditExploreWindowsDestroyed);
 
