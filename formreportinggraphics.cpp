@@ -41,7 +41,6 @@
  */
 
 #include "formreportinggraphics.h"
-#include "QCustomPlot/qcustomplot.h"
 #include "ui_formreportinggraphics.h"
 #include <QFileDialog>
 #include <QSqlError>

@@ -45,8 +45,7 @@
 
 FormReportingReports::FormReportingReports(QWidget *parent) : QWidget(parent), ui(new Ui::FormReportingReports) {
   ui->setupUi(this);
-  model = nullptr;
-  plot = new QCustomPlot();
+  model = nullptr;  
   updateListOfReportings();
 }
 
@@ -55,8 +54,7 @@ FormReportingReports::~FormReportingReports() {
   if (model != nullptr) {
     delete model;
     delete report;
-  }
-  delete plot;
+  }  
 }
 
 void FormReportingReports::onListOfReportingsChanged() { updateListOfReportings(); }

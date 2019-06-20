@@ -67,7 +67,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
+      <widget class="QWidget" name="layoutWidget2">
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="1" column="0" colspan="4">
          <widget class="QTextEdit" name="textEdit">
@@ -118,7 +118,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="layoutWidget">
+      <widget class="QWidget" name="layoutWidget3">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBoxDFRFDIRIOrYearsChart1"/>
@@ -151,7 +151,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="layoutWidget">
+      <widget class="QWidget" name="layoutWidget4">
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="0" column="2">
          <widget class="QToolButton" name="saveChart2Button">

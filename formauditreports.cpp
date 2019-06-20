@@ -48,7 +48,6 @@ FormAuditReports::FormAuditReports(QWidget *parent) : QWidget(parent), ui(new Ui
   ui->setupUi(this);
   ui->splitter->setStretchFactor(1, 1);
   model = nullptr;
-  plot = new QCustomPlot();
   referenceNode = 1;
   updateListOfAudits();
 }
@@ -58,8 +57,7 @@ FormAuditReports::~FormAuditReports() {
   if (model != nullptr) {
     delete model;
     delete report;
-  }
-  delete plot;
+  }  
 }
 
 void FormAuditReports::populateLists() {

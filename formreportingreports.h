@@ -43,7 +43,6 @@
 #ifndef FORMREPORTINGREPORTS_H
 #define FORMREPORTINGREPORTS_H
 
-#include "QCustomPlot/qcustomplot.h"
 #include "pcx_report.h"
 #include "pcx_reportingwithtreemodel.h"
 #include <QWidget>
@@ -87,7 +86,6 @@ private:
   void updateTooltips();
   PCx_ReportingWithTreeModel *model;
   PCx_Report *report{};
-  QCustomPlot *plot;
 };
 
 #endif // FORMREPORTINGREPORTS_H

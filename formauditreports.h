@@ -43,7 +43,6 @@
 #ifndef FORMAUDITREPORTS_H
 #define FORMAUDITREPORTS_H
 
-#include "QCustomPlot/qcustomplot.h"
 #include "pcx_auditwithtreemodel.h"
 #include "pcx_report.h"
 #include <QWidget>
@@ -101,8 +100,7 @@ private:
   unsigned int referenceNode;
   PCx_AuditWithTreeModel *model;
   PCx_Report *report{};
-  void populateLists();
-  QCustomPlot *plot;
+  void populateLists();  
 };
 
 #endif // FORMAUDITREPORTS_H
