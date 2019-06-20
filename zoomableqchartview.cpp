@@ -46,14 +46,14 @@ ZoomableQChartView::ZoomableQChartView(QWidget *parent) : QChartView(parent) {}
 
 void ZoomableQChartView::wheelEvent(QWheelEvent *event) {
   qreal factor;
-  factor = event->angleDelta().y() > 0 ? 1.5 : 0.6;
+  factor = event->angleDelta().y() > 0 ? 2 : 0.5;
 
   // Reset zoomFactor in case of chart change
   if (!chart()->isZoomed()) {
     zoomFactor = 1.0;
   }
 
-  if (zoomFactor * factor >= 17 || zoomFactor * factor <= 0.124) {
+  if (zoomFactor * factor > 8 || zoomFactor * factor < 0.5) {
     QChartView::wheelEvent(event);
     return;
   }
@@ -64,6 +64,12 @@ void ZoomableQChartView::wheelEvent(QWheelEvent *event) {
   QPointF mousePos = mapFromGlobal(QCursor::pos());
   rect.moveCenter(mousePos);
   chart()->zoomIn(rect);
+
+  /* QValueAxis *yAxis = qobject_cast<QValueAxis *>(chart()->axes(Qt::Vertical).first());
+   if (yAxis != nullptr) {
+     yAxis->applyNiceNumbers();
+   }*/
+
   // NOTE : ugly hack to deal with pointLabels remaining bug
   resize(size() + QSize(1, 1));
   resize(size() - QSize(1, 1));
@@ -97,6 +103,7 @@ void ZoomableQChartView::mouseMoveEvent(QMouseEvent *event) {
   if (moveChart) {
 
     chart()->scroll(lastPosX - event->x(), event->y() - lastPosY);
+
     lastPosX = event->x();
     lastPosY = event->y();
     // NOTE : ugly hack to deal with pointLabels remaining bug

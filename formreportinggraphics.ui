@@ -207,7 +207,7 @@
      <widget class="QWidget" name="layoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QCustomPlot" name="plot" native="true"/>
+        <widget class="ZoomableQChartView" name="plot"/>
        </item>
        <item>
         <widget class="QPushButton" name="pushButtonExportPlot">
@@ -227,10 +227,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QCustomPlot</class>
-   <extends>QWidget</extends>
-   <header>QCustomPlot/qcustomplot.h</header>
-   <container>1</container>
+   <class>ZoomableQChartView</class>
+   <extends>QGraphicsView</extends>
+   <header>zoomableqchartview.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

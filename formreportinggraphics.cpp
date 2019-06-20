@@ -54,6 +54,7 @@ FormReportingGraphics::FormReportingGraphics(QWidget *parent) : QWidget(parent),
   graphics = nullptr;
   // Root ID
   selectedNodeId = 1;
+  ui->plot->setRenderHint(QPainter::RenderHint::Antialiasing, true);
   ui->splitter->setStretchFactor(1, 1);
   updateListOfReportings();
 }
@@ -102,17 +103,13 @@ void FormReportingGraphics::on_comboListOfReportings_activated(int index) {
   }
   unsigned int selectedReportingId = ui->comboListOfReportings->currentData().toUInt();
 
-  if (selectedReporting != nullptr) {
-    delete selectedReporting;
-    selectedReporting = nullptr;
-  }
-  if (graphics != nullptr) {
-    delete graphics;
-    graphics = nullptr;
-  }
+  delete selectedReporting;
+  selectedReporting = nullptr;
+  delete graphics;
+  graphics = nullptr;
 
   selectedReporting = new PCx_ReportingWithTreeModel(selectedReportingId);
-  graphics = new PCx_Graphics(selectedReporting, ui->plot);
+  graphics = new PCx_Graphics(selectedReporting);
   ui->treeView->setModel(selectedReporting->getAttachedTree());
   ui->treeView->expandToDepth(1);
   QModelIndex rootIndex = selectedReporting->getAttachedTree()->index(0, 0);
@@ -187,7 +184,10 @@ QList<PCx_Reporting::OREDPCR> FormReportingGraphics::getSelectedOREDPCR() const 
  * @brief FormReportingGraphics::updatePlot draw the plot with selected datas
  */
 void FormReportingGraphics::updatePlot() {
-  graphics->getPCRHistory(selectedNodeId, getSelectedMode(), getSelectedOREDPCR());
+
+  QChart *oldChart = ui->plot->chart();
+  ui->plot->setChart(graphics->getPCRHistoryChart(selectedNodeId, getSelectedMode(), getSelectedOREDPCR()));
+  delete oldChart;
 }
 
 void FormReportingGraphics::on_radioButtonDF_toggled(bool checked) {
@@ -296,7 +296,7 @@ void FormReportingGraphics::on_pushButtonExportPlot_clicked() {
   }
   file.close();
 
-  if (ui->plot->savePng(fileName, 0, 0, 3.0) == true) {
+  if (PCx_Graphics::savePixmapToDisk(PCx_Graphics::chartViewToPixmap(ui->plot), fileName) == true) {
     QMessageBox::information(this, tr("Information"), tr("Image enregistrée"));
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Image non enregistrée !"));

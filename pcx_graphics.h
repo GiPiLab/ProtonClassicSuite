@@ -161,10 +161,13 @@ public:
   QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                         const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR);
 
-  QString getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode);
-  QString getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode);
-  QString getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode);
-  QString getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode);
+  QChart *getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                             const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR) const;
+
+  QChart *getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode);
+  QChart *getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode);
+  QChart *getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode);
+  QChart *getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode);
 
   QCustomPlot *getPlot() const;
 
@@ -207,6 +210,11 @@ private:
   QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                             QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference,
                             const QString &plotTitle, QColor color);
+
+  QChart *getPCRPercentBarsChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                                 QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference,
+                                 const QString &plotTitle, QColor color);
+
   bool ownPlot;
 
   QCustomPlot *plot;

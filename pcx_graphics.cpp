@@ -603,14 +603,10 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   xAxis->setLabelFormat("%.0f");
   xAxis->setTickType(QValueAxis::TicksDynamic);
   xAxis->setTickInterval(1.0);
-  xAxis->setRange(minYear - 1, maxYear + 1);
+  // xAxis->setRange(minYear - 1, maxYear + 1);
 
-  if (prevItem == nullptr) {
-    xAxis->setRange(minYear - 1, maxYear + 1);
-
-  } else {
-
-    xAxis->setRange(minYear - 1, maxYear + 2);
+  if (prevItem != nullptr) {
+    xAxis->setRange(minYear, maxYear + 1);
   }
 
   QFont smallFont("Sans", 8);
@@ -758,6 +754,132 @@ bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {
   return true;
 }
 
+QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                                         const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR) const {
+
+  if (reportingModel == nullptr) {
+    qWarning() << "Model error";
+    return nullptr;
+  }
+
+  QChart *chart = new QChart();
+
+  QString plotTitle;
+
+  // Colors for each graph
+  Qt::GlobalColor PENCOLORS[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)] = {
+      Qt::blue,    Qt::red,      Qt::yellow,   Qt::green,     Qt::magenta,   Qt::cyan,
+      Qt::darkRed, Qt::darkBlue, Qt::darkGray, Qt::darkGreen, Qt::darkYellow};
+
+  plotTitle = QObject::tr("<div style='text-align:center'>%1\n(%2)</div>")
+                  .arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
+                       MODES::modeToCompleteString(mode));
+
+  chart->setTitle(plotTitle);
+  if (selectedOREDPCR.isEmpty()) {
+    return nullptr;
+  }
+
+  QSqlQuery q;
+
+  q.prepare(QString("select * from reporting_%1_%2 where id_node=:id order by date")
+                .arg(MODES::modeToTableString(mode))
+                .arg(reportingModel->getReportingId()));
+  q.bindValue(":id", selectedNodeId);
+  q.exec();
+
+  if (!q.isActive()) {
+    qCritical() << q.lastError();
+    die();
+  }
+  // QVector<double> dataX, dataY[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)];
+
+  QList<QPointF> dataSeries[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)];
+
+  double maxYValue = -MAX_NUM;
+  double minYValue = MAX_NUM;
+
+  while (q.next()) {
+    // Converts to milliseconds since epoch
+    qint64 timestamp = q.value("date").toLongLong() * 1000;
+
+    for (int i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
+         i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
+      if (selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i))) {
+        qint64 data = NUMBERSFORMAT::fixedDividedByFormatMode(
+            q.value(PCx_Reporting::OREDPCRtoTableString(static_cast<PCx_Reporting::OREDPCR>(i))).toLongLong());
+        double dataF = NUMBERSFORMAT::fixedPointToDouble(data);
+        if (dataF > maxYValue) {
+          maxYValue = dataF;
+        }
+        if (dataF < minYValue) {
+          minYValue = dataF;
+        }
+        dataSeries[i].append(QPointF(timestamp, dataF));
+      }
+    }
+  }
+
+  QLineSeries *series = nullptr;
+
+  QDateTimeAxis *xAxis = new QDateTimeAxis();
+  xAxis->setFormat("dd-MM-yyyy");
+
+  QFont smallFont("Sans", 8);
+  xAxis->setLabelsAngle(-45);
+  xAxis->setLabelsFont(smallFont);
+  // xAxis->setGridLineVisible(false);
+
+  QValueAxis *yAxis = new QValueAxis();
+
+  chart->addAxis(xAxis, Qt::AlignBottom);
+  chart->addAxis(yAxis, Qt::AlignLeft);
+
+  yAxis->setGridLineVisible(true);
+
+  for (int i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
+       i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
+    if (selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i))) {
+      QPen pen(PENCOLORS[i]);
+      pen.setWidth(2);
+      series = new QLineSeries();
+      series->append(dataSeries[i]);
+      series->setName(PCx_Reporting::OREDPCRtoCompleteString(static_cast<PCx_Reporting::OREDPCR>(i), true));
+      series->setPen(pen);
+      chart->addSeries(series);
+      series->attachAxis(xAxis);
+      series->attachAxis(yAxis);
+      series->setPointsVisible(true);
+    }
+  }
+
+  yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.08));
+
+  QString formatString;
+  switch (NUMBERSFORMAT::getFormatMode()) {
+  case NUMBERSFORMAT::FORMATMODE::FORMATMODENORMAL:
+    formatString = "%.0f" + NUMBERSFORMAT::getFormatModeSuffix();
+    break;
+  case NUMBERSFORMAT::FORMATMODE::FORMATMODETHOUSANDS:
+    formatString = "%.2f" + NUMBERSFORMAT::getFormatModeSuffix();
+    break;
+  case NUMBERSFORMAT::FORMATMODE::FORMATMODEMILLIONS:
+    formatString = "%.2f" + NUMBERSFORMAT::getFormatModeSuffix();
+    break;
+  }
+
+  yAxis->setLabelFormat(formatString);
+
+  yAxis->applyNiceNumbers();
+  yAxis->setLabelsFont(smallFont);
+
+  // NOTE: Remove border
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
+  chart->setBackgroundRoundness(0);
+
+  return chart;
+}
+
 QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                                     const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR) {
   if (reportingModel == nullptr) {
@@ -876,42 +998,42 @@ QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   return plotTitle;
 }
 
-QString PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) {
-  QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
-  QString modeName = MODES::modeToCompleteString(mode);
+QChart *PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) {
+    QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
+    QString modeName = MODES::modeToCompleteString(mode);
 
-  QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::BP, PCx_Reporting::OREDPCR::REPORTS,
-                                                PCx_Reporting::OREDPCR::OCDM, PCx_Reporting::OREDPCR::VCDM,
-                                                PCx_Reporting::OREDPCR::VIREMENTSINTERNES};
-  return getPCRPercentBars(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::OUVERTS,
-                           QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName, modeName),
-                           getSettingValue(SETTINGKEY::DFBARCOLOR).toUInt());
+    QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::BP, PCx_Reporting::OREDPCR::REPORTS,
+                                                  PCx_Reporting::OREDPCR::OCDM, PCx_Reporting::OREDPCR::VCDM,
+                                                  PCx_Reporting::OREDPCR::VIREMENTSINTERNES};
+    return getPCRPercentBarsChart(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::OUVERTS,
+                                  QString("Provenance des crédits de\n%1\n(%2)").arg(nodeName, modeName),
+                                  getSettingValue(SETTINGKEY::DFBARCOLOR).toUInt());
 }
 
-QString PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) {
-  QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
-  QString modeName = MODES::modeToCompleteString(mode);
+QChart *PCx_Graphics::getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode) {
+    QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
+    QString modeName = MODES::modeToCompleteString(mode);
 
-  QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::OCDM, PCx_Reporting::OREDPCR::VCDM,
-                                                PCx_Reporting::OREDPCR::VIREMENTSINTERNES};
-  return getPCRPercentBars(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::BP,
-                           QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName, modeName),
-                           getSettingValue(SETTINGKEY::RFBARCOLOR).toUInt());
+    QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::OCDM, PCx_Reporting::OREDPCR::VCDM,
+                                                  PCx_Reporting::OREDPCR::VIREMENTSINTERNES};
+    return getPCRPercentBarsChart(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::BP,
+                                  QString("Facteurs de variation des crédits de\n%1\n(%2)").arg(nodeName, modeName),
+                                  getSettingValue(SETTINGKEY::RFBARCOLOR).toUInt());
 }
 
-QString PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) {
-  QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
-  QString modeName = MODES::modeToCompleteString(mode);
-  QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::REALISES, PCx_Reporting::OREDPCR::ENGAGES,
-                                                PCx_Reporting::OREDPCR::DISPONIBLES};
-  return getPCRPercentBars(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::OUVERTS,
-                           QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName, modeName),
-                           getSettingValue(SETTINGKEY::DIBARCOLOR).toUInt());
+QChart *PCx_Graphics::getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode) {
+    QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
+    QString modeName = MODES::modeToCompleteString(mode);
+    QList<PCx_Reporting::OREDPCR> selectedORED = {PCx_Reporting::OREDPCR::REALISES, PCx_Reporting::OREDPCR::ENGAGES,
+                                                  PCx_Reporting::OREDPCR::DISPONIBLES};
+    return getPCRPercentBarsChart(nodeId, mode, selectedORED, PCx_Reporting::OREDPCR::OUVERTS,
+                                  QString("Utilisation des crédits de\n%1\n(%2)").arg(nodeName, modeName),
+                                  getSettingValue(SETTINGKEY::DIBARCOLOR).toUInt());
 }
 
-QString PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) {
-  QList<PCx_Reporting::OREDPCR> oredPCR = {PCx_Reporting::OREDPCR::OUVERTS, PCx_Reporting::OREDPCR::REALISES};
-  return getPCRHistory(nodeId, mode, oredPCR);
+QChart *PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) {
+    QList<PCx_Reporting::OREDPCR> oredPCR = {PCx_Reporting::OREDPCR::OUVERTS, PCx_Reporting::OREDPCR::REALISES};
+    return getPCRHistoryChart(nodeId, mode, oredPCR);
 }
 
 QCustomPlot *PCx_Graphics::getPlot() const { return plot; }
@@ -919,6 +1041,79 @@ QCustomPlot *PCx_Graphics::getPlot() const { return plot; }
 QVariant PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY key) {
   QSettings settings;
   return settings.value(settingKey().value(key));
+}
+
+QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
+                                             QList<PCx_Reporting::OREDPCR> selectedOREDPCR,
+                                             PCx_Reporting::OREDPCR oredReference, const QString &plotTitle,
+                                             QColor color) {
+    if (reportingModel == nullptr) {
+        qWarning() << "Model error";
+        return nullptr;
+    }
+
+    QChart *chart = new QChart();
+
+    QBarSet *barSet = new QBarSet(reportingModel->getAttachedTree()->getNodeName(selectedNodeId));
+
+    QPen pen;
+    pen.setWidth(0);
+
+    int alpha = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::ALPHA).toInt();
+
+    pen.setColor(color);
+    barSet->setPen(pen);
+    color.setAlpha(alpha);
+    barSet->setBrush(color);
+
+    QSqlQuery q;
+    q.prepare(QString("select * from reporting_%1_%2 where id_node=:id_node "
+                      "order by date desc limit 1")
+                  .arg(MODES::modeToTableString(mode))
+                  .arg(reportingModel->getReportingId()));
+    q.bindValue(":id_node", selectedNodeId);
+    q.exec();
+    if (!q.isActive()) {
+        qCritical() << q.lastError();
+        die();
+    }
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+
+    foreach (PCx_Reporting::OREDPCR ored, selectedOREDPCR) {
+        axisX->append(PCx_Reporting::OREDPCRtoCompleteString(ored));
+    }
+
+    while (q.next()) {
+        qint64 refVal = q.value(PCx_Reporting::OREDPCRtoTableString(oredReference)).toLongLong();
+        if (refVal == 0) {
+            return nullptr;
+        }
+
+        foreach (PCx_Reporting::OREDPCR ored, selectedOREDPCR) {
+            qint64 val = q.value(PCx_Reporting::OREDPCRtoTableString(ored)).toLongLong();
+            barSet->append(static_cast<double>(val) / static_cast<double>(refVal) * 100.0);
+        }
+    }
+
+    QBarSeries *series = new QBarSeries();
+    series->append(barSet);
+    chart->addSeries(series);
+
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    QValueAxis *axisY = new QValueAxis();
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
+    axisY->applyNiceNumbers();
+    axisY->setTitleText("%");
+    axisY->setLabelFormat("%.0f");
+    chart->setTitle(plotTitle);
+    chart->layout()->setContentsMargins(0, 0, 0, 0);
+    chart->setBackgroundRoundness(0);
+    return chart;
 }
 
 QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
