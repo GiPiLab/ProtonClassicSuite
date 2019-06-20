@@ -77,54 +77,33 @@ const QMap<PCx_Graphics::SETTINGKEY, QString> PCx_Graphics::settingKey() {
   return map;
 }
 
-PCx_Graphics::PCx_Graphics(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
-    : auditModel(model) {
-  if (model == nullptr) {
-    qFatal("Assertion failed");
-  }
-  reportingModel = nullptr;
-  setGraphicsWidth(graphicsWidth);
-  setGraphicsHeight(graphicsHeight);
-
-  if (plot == nullptr) {
-    this->plot = new QCustomPlot();
-    ownPlot = true;
-  } else {
-    this->plot = plot;
-    ownPlot = false;
-  }
+PCx_Graphics::PCx_Graphics(PCx_Audit *model, int graphicsWidth, int graphicsHeight) : auditModel(model) {
+    if (model == nullptr) {
+        qFatal("Assertion failed");
+    }
+    reportingModel = nullptr;
+    setGraphicsWidth(graphicsWidth);
+    setGraphicsHeight(graphicsHeight);
 }
 
-PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
+PCx_Graphics::PCx_Graphics(PCx_Reporting *reportingModel, int graphicsWidth, int graphicsHeight)
     : reportingModel(reportingModel) {
-  if (reportingModel == nullptr) {
-    qFatal("Assertion failed");
-  }
-  auditModel = nullptr;
-  setGraphicsWidth(graphicsWidth);
-  setGraphicsHeight(graphicsHeight);
-
-  if (plot == nullptr) {
-    this->plot = new QCustomPlot();
-    ownPlot = true;
-  } else {
-    this->plot = plot;
-    ownPlot = false;
-  }
+    if (reportingModel == nullptr) {
+        qFatal("Assertion failed");
+    }
+    auditModel = nullptr;
+    setGraphicsWidth(graphicsWidth);
+    setGraphicsHeight(graphicsHeight);
 }
 
-PCx_Graphics::~PCx_Graphics() {
-  if (ownPlot) {
-    delete plot;
-  }
-}
+PCx_Graphics::~PCx_Graphics() {}
 
 QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Audit::ORED modeORED, bool cumule,
                                  const PCx_PrevisionItem *prevItem, unsigned int referenceNode) const {
 
-  if (node == 0 || plot == nullptr || auditModel == nullptr || referenceNode == 0) {
-    qFatal("Assertion failed");
-  }
+    if (node == 0 || auditModel == nullptr || referenceNode == 0) {
+        qFatal("Assertion failed");
+    }
 
   QString tableName = MODES::modeToTableString(mode);
   QString oredName = PCx_Audit::OREDtoTableString(modeORED);
@@ -744,15 +723,6 @@ QStandardItemModel *PCx_Graphics::getListModelOfAvailablePCAGRAPHICS() {
   return model;
 }
 
-bool PCx_Graphics::savePlotToDisk(const QString &imageAbsoluteName) const {
-  int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
-  int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
-  if (!plot->savePng(imageAbsoluteName, graphicsWidth, graphicsHeight)) {
-    qCritical() << "Unable to save " << imageAbsoluteName;
-    return false;
-  }
-  return true;
-}
 
 QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                                          const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR) const {
@@ -798,25 +768,27 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
 
   double maxYValue = -MAX_NUM;
   double minYValue = MAX_NUM;
+  int numberOfDates = 0;
 
   while (q.next()) {
     // Converts to milliseconds since epoch
     qint64 timestamp = q.value("date").toLongLong() * 1000;
+    numberOfDates++;
 
     for (int i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
          i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
-      if (selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i))) {
-        qint64 data = NUMBERSFORMAT::fixedDividedByFormatMode(
-            q.value(PCx_Reporting::OREDPCRtoTableString(static_cast<PCx_Reporting::OREDPCR>(i))).toLongLong());
-        double dataF = NUMBERSFORMAT::fixedPointToDouble(data);
-        if (dataF > maxYValue) {
-          maxYValue = dataF;
+        if (selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i))) {
+            qint64 data = NUMBERSFORMAT::fixedDividedByFormatMode(
+                q.value(PCx_Reporting::OREDPCRtoTableString(static_cast<PCx_Reporting::OREDPCR>(i))).toLongLong());
+            double dataF = NUMBERSFORMAT::fixedPointToDouble(data);
+            if (dataF > maxYValue) {
+                maxYValue = dataF;
+            }
+            if (dataF < minYValue) {
+                minYValue = dataF;
+            }
+            dataSeries[i].append(QPointF(timestamp, dataF));
         }
-        if (dataF < minYValue) {
-          minYValue = dataF;
-        }
-        dataSeries[i].append(QPointF(timestamp, dataF));
-      }
     }
   }
 
@@ -824,6 +796,7 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
 
   QDateTimeAxis *xAxis = new QDateTimeAxis();
   xAxis->setFormat("dd-MM-yyyy");
+  xAxis->setTickCount(numberOfDates);
 
   QFont smallFont("Sans", 8);
   xAxis->setLabelsAngle(-45);
@@ -880,124 +853,6 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
   return chart;
 }
 
-QString PCx_Graphics::getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                                    const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR) {
-  if (reportingModel == nullptr) {
-    qWarning() << "Model error";
-    return QString();
-  }
-
-  if (ownPlot) {
-    delete plot;
-    plot = new QCustomPlot();
-  } else {
-    plot->clearGraphs();
-    plot->clearItems();
-    plot->clearPlottables();
-  }
-
-  QString plotTitle = QObject::tr("%1\n(%2)")
-                          .arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
-                               MODES::modeToCompleteString(mode));
-
-  QCPTextElement *title;
-  if (plot->plotLayout()->elementCount() == 1) {
-    plot->plotLayout()->insertRow(0);
-    title = new QCPTextElement(plot, plotTitle);
-    title->setFont(QFont("Sans serif", 11));
-    plot->plotLayout()->addElement(0, 0, title);
-  } else {
-    title = dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
-    title->setText(plotTitle);
-  }
-
-  if (selectedOREDPCR.isEmpty()) {
-    plot->replot();
-    return QString();
-  }
-
-  // Colors for each graph
-  Qt::GlobalColor PENCOLORS[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)] = {
-      Qt::blue,    Qt::red,      Qt::yellow,   Qt::green,     Qt::magenta,   Qt::cyan,
-      Qt::darkRed, Qt::darkBlue, Qt::darkGray, Qt::darkGreen, Qt::darkYellow};
-
-  QSqlQuery q;
-
-  q.prepare(QString("select * from reporting_%1_%2 where id_node=:id order by date")
-                .arg(MODES::modeToTableString(mode))
-                .arg(reportingModel->getReportingId()));
-  q.bindValue(":id", selectedNodeId);
-  q.exec();
-
-  if (!q.isActive()) {
-    qCritical() << q.lastError();
-    die();
-  }
-  QVector<double> dataX, dataY[static_cast<int>(PCx_Reporting::OREDPCR::NONELAST)];
-
-  while (q.next()) {
-    unsigned int date = q.value("date").toUInt();
-    dataX.append(static_cast<double>(date));
-
-    for (int i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
-         i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
-      if (selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i))) {
-        qint64 data = q.value(PCx_Reporting::OREDPCRtoTableString(static_cast<PCx_Reporting::OREDPCR>(i))).toLongLong();
-        dataY[i].append(NUMBERSFORMAT::fixedPointToDouble(data));
-      }
-    }
-  }
-
-  if (dataX.isEmpty()) {
-    plot->replot();
-    return QString();
-  }
-
-  bool first = true;
-  for (int i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
-       i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
-    if (selectedOREDPCR.contains(static_cast<PCx_Reporting::OREDPCR>(i))) {
-      plot->addGraph();
-      plot->graph()->setData(dataX, dataY[i]);
-      plot->graph()->setName(PCx_Reporting::OREDPCRtoCompleteString(static_cast<PCx_Reporting::OREDPCR>(i)));
-      plot->graph()->setPen(QPen(PENCOLORS[i]));
-      plot->graph()->setScatterStyle(QCPScatterStyle::ssDisc);
-      plot->graph()->rescaleAxes(!first);
-      first = false;
-    }
-  }
-
-  QCPRange range;
-  int year = QDateTime::fromTime_t(static_cast<unsigned int>(dataX.first())).date().year();
-  QDateTime dtBegin(QDate(year, 1, 1));
-  QDateTime dtEnd(QDate(year, 12, 31));
-  plot->xAxis->setRangeLower(static_cast<double>(dtBegin.toTime_t()));
-  plot->xAxis->setRangeUpper(static_cast<double>(dtEnd.toTime_t()));
-
-  range = plot->yAxis->range();
-  range.lower -= (range.lower * 20.0 / 100.0);
-  range.upper += (range.upper * 10.0 / 100.0);
-  plot->yAxis->setRange(range);
-
-  plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
-
-  plot->legend->setVisible(true);
-  plot->legend->setFont(QFont("Sans serif", 8));
-  plot->legend->setRowSpacing(-5);
-  plot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignBottom | Qt::AlignRight);
-
-  plot->xAxis->setTickLabelRotation(0);
-  plot->yAxis->setLabel("€");
-
-  QSharedPointer<QCPAxisTickerDateTime> dateTimeTicker(new QCPAxisTickerDateTime);
-  dateTimeTicker->setDateTimeFormat("MMM\nyyyy");
-
-  plot->xAxis->setTicker(dateTimeTicker);
-
-  plot->replot();
-  return plotTitle;
-}
-
 QChart *PCx_Graphics::getPCRProvenance(unsigned int nodeId, MODES::DFRFDIRI mode) {
     QString nodeName = reportingModel->getAttachedTree()->getNodeName(nodeId);
     QString modeName = MODES::modeToCompleteString(mode);
@@ -1036,7 +891,6 @@ QChart *PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) {
     return getPCRHistoryChart(nodeId, mode, oredPCR);
 }
 
-QCustomPlot *PCx_Graphics::getPlot() const { return plot; }
 
 QVariant PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY key) {
   QSettings settings;
@@ -1096,7 +950,7 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
         }
     }
 
-    QBarSeries *series = new QBarSeries();
+    QBarSeries *series = new QBarSeries();    
     series->append(barSet);
     chart->addSeries(series);
 
@@ -1106,7 +960,9 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
     QValueAxis *axisY = new QValueAxis();
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
+    axisX->setGridLineVisible(false);
 
+    chart->legend()->setVisible(false);
     axisY->applyNiceNumbers();
     axisY->setTitleText("%");
     axisY->setLabelFormat("%.0f");
@@ -1114,97 +970,6 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
     return chart;
-}
-
-QString PCx_Graphics::getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                                        QList<PCx_Reporting::OREDPCR> selectedOREDPCR,
-                                        PCx_Reporting::OREDPCR oredReference, const QString &plotTitle, QColor color) {
-  if (reportingModel == nullptr) {
-    qWarning() << "Model error";
-    return QString();
-  }
-  if (ownPlot) {
-    delete plot;
-    plot = new QCustomPlot();
-  } else {
-    plot->clearGraphs();
-    plot->clearItems();
-    plot->clearPlottables();
-  }
-
-  QCPTextElement *title;
-  if (plot->plotLayout()->elementCount() == 1) {
-    plot->plotLayout()->insertRow(0);
-    title = new QCPTextElement(plot, plotTitle);
-    title->setFont(QFont("Sans serif", 11));
-    plot->plotLayout()->addElement(0, 0, title);
-  } else {
-    title = dynamic_cast<QCPTextElement *>(plot->plotLayout()->elementAt(0));
-    title->setText(plotTitle);
-  }
-
-  auto *bars = new QCPBars(plot->xAxis, plot->yAxis);
-
-  QPen pen;
-  pen.setWidth(0);
-
-  int alpha = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::ALPHA).toInt();
-
-  pen.setColor(color);
-  bars->setPen(pen);
-  color.setAlpha(alpha);
-  bars->setBrush(color);
-
-  QSqlQuery q;
-  q.prepare(QString("select * from reporting_%1_%2 where id_node=:id_node "
-                    "order by date desc limit 1")
-                .arg(MODES::modeToTableString(mode))
-                .arg(reportingModel->getReportingId()));
-  q.bindValue(":id_node", selectedNodeId);
-  q.exec();
-  if (!q.isActive()) {
-    qCritical() << q.lastError();
-    die();
-  }
-
-  QVector<double> ticks;
-  QVector<double> values;
-
-  int i = 1;
-
-  QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
-
-  plot->xAxis->setTicker(textTicker);
-
-  foreach (PCx_Reporting::OREDPCR ored, selectedOREDPCR) {
-    textTicker->addTick(i, PCx_Reporting::OREDPCRtoCompleteString(ored));
-    ticks.append(i);
-    i++;
-  }
-
-  while (q.next()) {
-    qint64 refVal = q.value(PCx_Reporting::OREDPCRtoTableString(oredReference)).toLongLong();
-    if (refVal == 0) {
-      return plotTitle;
-    }
-
-    foreach (PCx_Reporting::OREDPCR ored, selectedOREDPCR) {
-      qint64 val = q.value(PCx_Reporting::OREDPCRtoTableString(ored)).toLongLong();
-      values.append(static_cast<double>(val) / static_cast<double>(refVal) * 100.0);
-    }
-  }
-
-  bars->setData(ticks, values);
-
-  plot->legend->setVisible(false);
-
-  plot->yAxis->setLabel("%");
-  plot->xAxis->setTickLength(0, 0);
-  plot->xAxis->grid()->setVisible(false);
-  plot->xAxis->setRange(0, ticks.count() + 1);
-  plot->yAxis->rescale();
-
-  return plotTitle;
 }
 
 void PCx_Graphics::setGraphicsWidth(int width) {

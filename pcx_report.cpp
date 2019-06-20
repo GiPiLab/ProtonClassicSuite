@@ -45,18 +45,17 @@
 #include "utils.h"
 #include <QtSvg/QtSvg>
 
-PCx_Report::PCx_Report(PCx_Audit *model, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
-    : auditModel(model), tables(model), graphics(model, plot, graphicsWidth, graphicsHeight) {
-  if (model == nullptr) {
-    qFatal("Assertion failed");
-  }
-  reportingModel = nullptr;
+PCx_Report::PCx_Report(PCx_Audit *model, int graphicsWidth, int graphicsHeight)
+    : auditModel(model), tables(model), graphics(model, graphicsWidth, graphicsHeight) {
+    if (model == nullptr) {
+        qFatal("Assertion failed");
+    }
+    reportingModel = nullptr;
 }
 
-PCx_Report::PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot, int graphicsWidth, int graphicsHeight)
-    : reportingModel(reportingModel), tables(reportingModel),
-      graphics(reportingModel, plot, graphicsWidth, graphicsHeight) {
-  auditModel = nullptr;
+PCx_Report::PCx_Report(PCx_Reporting *reportingModel, int graphicsWidth, int graphicsHeight)
+    : reportingModel(reportingModel), tables(reportingModel), graphics(reportingModel, graphicsWidth, graphicsHeight) {
+    auditModel = nullptr;
 }
 
 QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs,

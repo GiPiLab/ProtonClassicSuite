@@ -728,7 +728,6 @@ void MainWindow::on_actionExploreAudits_triggered() {
 
   dlg->show();
   listOfFormAuditExplore.append(dlg);
-  qDebug() << "DLG = " << dlg;
 
   connect(dlg, &QObject::destroyed, this, &MainWindow::onFormAuditExploreWindowsDestroyed);
 

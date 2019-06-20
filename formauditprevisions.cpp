@@ -235,7 +235,7 @@ void FormAuditPrevisions::on_comboListPrevisions_activated(int index) {
 
   previsionModel = new PCx_Prevision(selectedPrevisionId);
   auditWithTreeModel = new PCx_AuditWithTreeModel(previsionModel->getAttachedAuditId());
-  graphics = new PCx_Graphics(previsionModel->getAttachedAudit(), nullptr);
+  graphics = new PCx_Graphics(previsionModel->getAttachedAudit());
 
   QItemSelectionModel *m = ui->treeView->selectionModel();
   ui->treeView->setModel(auditWithTreeModel->getAttachedTree());

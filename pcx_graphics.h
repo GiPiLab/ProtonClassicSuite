@@ -43,7 +43,6 @@
 #ifndef PCX_GRAPHICS_H
 #define PCX_GRAPHICS_H
 
-#include "QCustomPlot/qcustomplot.h"
 #include "pcx_audit.h"
 #include "pcx_previsionitem.h"
 #include "pcx_reporting.h"
@@ -107,10 +106,8 @@ public:
 
   static const QMap<SETTINGKEY, QString> settingKey();
 
-  PCx_Graphics(PCx_Audit *auditModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
-               int graphicsHeight = DEFAULTHEIGHT);
-  PCx_Graphics(PCx_Reporting *reportingModel, QCustomPlot *plot = nullptr, int graphicsWidth = DEFAULTWIDTH,
-               int graphicsHeight = DEFAULTHEIGHT);
+  PCx_Graphics(PCx_Audit *auditModel, int graphicsWidth = DEFAULTWIDTH, int graphicsHeight = DEFAULTHEIGHT);
+  PCx_Graphics(PCx_Reporting *reportingModel, int graphicsWidth = DEFAULTWIDTH, int graphicsHeight = DEFAULTHEIGHT);
   virtual ~PCx_Graphics();
 
   QChart *getPCAG1(unsigned int node, MODES::DFRFDIRI mode, const PCx_PrevisionItem *prevItem = nullptr,
@@ -158,9 +155,6 @@ public:
                                   int year = -1) const;
 
   // History line plot with selected OREDPCR
-  QString getPCRHistory(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                        const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR);
-
   QChart *getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                              const QList<PCx_Reporting::OREDPCR> &selectedOREDPCR) const;
 
@@ -168,8 +162,6 @@ public:
   QChart *getPCRVariation(unsigned int nodeId, MODES::DFRFDIRI mode);
   QChart *getPCRUtilisation(unsigned int nodeId, MODES::DFRFDIRI mode);
   QChart *getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode);
-
-  QCustomPlot *getPlot() const;
 
   static QVariant getSettingValue(SETTINGKEY key);
 
@@ -192,8 +184,6 @@ public:
    */
   static QPixmap chartViewToPixmap(QChartView *chartView);
 
-  bool savePlotToDisk(const QString &imageAbsoluteName) const;
-
   static bool savePixmapToDisk(const QPixmap &pixmap, const QString &imageAbsoluteName);
 
   static QStandardItemModel *getListModelOfAvailablePCAGRAPHICS();
@@ -207,17 +197,9 @@ private:
 
   // Histogram comparing percents of selected OREDs regarding to a reference for
   // the last reporting date
-  QString getPCRPercentBars(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
-                            QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference,
-                            const QString &plotTitle, QColor color);
-
   QChart *getPCRPercentBarsChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,
                                  QList<PCx_Reporting::OREDPCR> selectedOREDPCR, PCx_Reporting::OREDPCR oredReference,
                                  const QString &plotTitle, QColor color);
-
-  bool ownPlot;
-
-  QCustomPlot *plot;
 
   PCx_Graphics(const PCx_Graphics &c);
   PCx_Graphics &operator=(const PCx_Graphics &);

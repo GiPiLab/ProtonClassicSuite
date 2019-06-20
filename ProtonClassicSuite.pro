@@ -52,7 +52,6 @@ SOURCES += main.cpp\
 	mainwindow.cpp \
     auditdatadelegate.cpp \
     utils.cpp \
-    QCustomPlot/qcustomplot.cpp \
     formdisplaytree.cpp \
     formedittree.cpp \
     formeditaudit.cpp \
@@ -105,7 +104,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     auditdatadelegate.h \
     utils.h \
-    QCustomPlot/qcustomplot.h \
     formdisplaytree.h \
     formedittree.h \
     formeditaudit.h \

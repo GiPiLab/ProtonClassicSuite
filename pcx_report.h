@@ -54,11 +54,9 @@ public:
   // and graphics
   enum class PCRPRESETS { PCRPRESET_A, PCRPRESET_B, PCRPRESET_C, PCRPRESET_D, PCRPRESET_S };
 
-  explicit PCx_Report(PCx_Audit *auditModel, QCustomPlot *plot = nullptr, int graphicsWidth = 650,
-                      int graphicsHeight = 400);
+  explicit PCx_Report(PCx_Audit *auditModel, int graphicsWidth = 650, int graphicsHeight = 400);
 
-  explicit PCx_Report(PCx_Reporting *reportingModel, QCustomPlot *plot = nullptr, int graphicsWidth = 650,
-                      int graphicsHeight = 400);
+  explicit PCx_Report(PCx_Reporting *reportingModel, int graphicsWidth = 650, int graphicsHeight = 400);
 
   QString generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs,
                                          QList<PCx_Tables::PCATABLES> listOfTables,
