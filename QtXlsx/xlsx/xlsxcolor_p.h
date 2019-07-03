@@ -76,7 +76,6 @@ private:
     QVariant val;
 };
 
-
 #if !defined(QT_NO_DATASTREAM)
 Q_XLSX_EXPORT QDataStream &operator<<(QDataStream &, const XlsxColor &);
 Q_XLSX_EXPORT QDataStream &operator>>(QDataStream &, XlsxColor &);

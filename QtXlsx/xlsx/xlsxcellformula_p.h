@@ -22,56 +22,43 @@
 ** WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 ****************************************************************************/
+#ifndef XLSXCELLFORMULA_P_H
+#define XLSXCELLFORMULA_P_H
 
-#include "xlsxzipreader_p.h"
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt Xlsx API.  It exists for the convenience
+// of the Qt Xlsx.  This header file may change from
+// version to version without notice, or even be removed.
+//
+// We mean it.
+//
 
-#include <private/qzipreader_p.h>
+#include "xlsxglobal.h"
+#include "xlsxcellformula.h"
+#include "xlsxcellrange.h"
 
-namespace QXlsx {
+#include <QSharedData>
+#include <QString>
 
-ZipReader::ZipReader(const QString &filePath) :
-    m_reader(new QZipReader(filePath))
+QT_BEGIN_NAMESPACE_XLSX
+
+class CellFormulaPrivate : public QSharedData
 {
-    init();
-}
+public:
+    CellFormulaPrivate(const QString &formula, const CellRange &reference, CellFormula::FormulaType type);
+    CellFormulaPrivate(const CellFormulaPrivate &other);
+    ~CellFormulaPrivate();
 
-ZipReader::ZipReader(QIODevice *device) :
-    m_reader(new QZipReader(device))
-{
-    init();
-}
+    QString formula; //formula contents
+    CellFormula::FormulaType type;
+    CellRange reference;
+    bool ca; //Calculate Cell
+    int si;  //Shared group index
+};
 
-ZipReader::~ZipReader()
-{
+QT_END_NAMESPACE_XLSX
 
-}
-
-void ZipReader::init()
-{
-#if QT_VERSION >= 0x050600
-    QVector<QZipReader::FileInfo> allFiles = m_reader->fileInfoList();
-#else
-    QList<QZipReader::FileInfo> allFiles = m_reader->fileInfoList();
-#endif
-    foreach (const QZipReader::FileInfo &fi, allFiles) {
-        if (fi.isFile)
-            m_filePaths.append(fi.filePath);
-    }
-}
-
-bool ZipReader::exists() const
-{
-    return m_reader->exists();
-}
-
-QStringList ZipReader::filePaths() const
-{
-    return m_filePaths;
-}
-
-QByteArray ZipReader::fileData(const QString &fileName) const
-{
-    return m_reader->fileData(fileName);
-}
-
-} // namespace QXlsx
+#endif // XLSXCELLFORMULA_P_H

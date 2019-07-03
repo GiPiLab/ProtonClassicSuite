@@ -2,6 +2,7 @@
 #include "xlsxstyles_p.h"
 #include "xlsxutility_p.h"
 
+#include <QDataStream>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 #include <QDebug>
@@ -121,10 +122,10 @@ QColor XlsxColor::fromARGBString(const QString &c)
 {
     Q_ASSERT(c.length() == 8);
     QColor color;
-    color.setAlpha(c.midRef(0, 2).toInt(0, 16));
-    color.setRed(c.midRef(2, 2).toInt(0, 16));
-    color.setGreen(c.midRef(4, 2).toInt(0, 16));
-    color.setBlue(c.midRef(6, 2).toInt(0, 16));
+    color.setAlpha(c.mid(0, 2).toInt(Q_NULLPTR, 16));
+    color.setRed(c.mid(2, 2).toInt(Q_NULLPTR, 16));
+    color.setGreen(c.mid(4, 2).toInt(Q_NULLPTR, 16));
+    color.setBlue(c.mid(6, 2).toInt(Q_NULLPTR, 16));
     return color;
 }
 
@@ -139,22 +140,22 @@ QString XlsxColor::toARGBString(const QColor &c)
 QDataStream &operator<<(QDataStream &s, const XlsxColor &color)
 {
     if (color.isInvalid())
-        s<<QVariant::fromValue(0);
+        s<<0;
     else if (color.isRgbColor())
-        s<<QVariant::fromValue(1)<<color.rgbColor();
+        s<<1<<color.rgbColor();
     else if (color.isIndexedColor())
-        s<<QVariant::fromValue(2)<<QVariant::fromValue(color.indexedColor());
+        s<<2<<color.indexedColor();
     else if (color.isThemeColor())
-        s<<QVariant::fromValue(3)<<color.themeColor();
+        s<<3<<color.themeColor();
     else
-        s<<QVariant::fromValue(4);
+        s<<4;
 
     return s;
 }
 
 QDataStream &operator>>(QDataStream &s, XlsxColor &color)
 {
-    QVariant marker(4);
+    int marker(4);
     s>>marker;
     if (marker == 0) {
         color = XlsxColor();
@@ -163,15 +164,13 @@ QDataStream &operator>>(QDataStream &s, XlsxColor &color)
         s>>c;
         color = XlsxColor(c);
     } else if (marker == 2) {
-        QVariant indexed;
+        int indexed;
         s>>indexed;
-        color = XlsxColor(indexed.toInt());
+        color = XlsxColor(indexed);
     } else if (marker == 3) {
         QStringList list;
-        //HACK TO COMPILE
-        //s>>list;
-        //color = XlsxColor(list[0], list[1]);
-        color = XlsxColor("","");
+        s>>list;
+        color = XlsxColor(list[0], list[1]);
     }
 
     return s;
