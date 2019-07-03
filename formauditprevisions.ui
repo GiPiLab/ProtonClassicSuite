@@ -106,7 +106,48 @@
      </property>
      <widget class="QWidget" name="layoutWidget_1">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="0" colspan="4">
+       <item row="4" column="1">
+        <widget class="QRadioButton" name="radioButtonRF">
+         <property name="text">
+          <string>RF</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2" colspan="2">
+        <widget class="QPushButton" name="pushButtonCollapseAll">
+         <property name="text">
+          <string>Replier tout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QRadioButton" name="radioButtonDF">
+         <property name="text">
+          <string>DF</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="3">
+        <widget class="QRadioButton" name="radioButtonRI">
+         <property name="text">
+          <string>RI</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="4">
+        <widget class="QComboBox" name="comboListPrevisions"/>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QPushButton" name="pushButtonExpandAll">
+         <property name="text">
+          <string>Déplier tout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="4">
         <widget class="QTreeView" name="treeView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -131,51 +172,20 @@
          </attribute>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QRadioButton" name="radioButtonDF">
-         <property name="text">
-          <string>DF</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QRadioButton" name="radioButtonRF">
-         <property name="text">
-          <string>RF</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
+       <item row="4" column="2">
         <widget class="QRadioButton" name="radioButtonDI">
          <property name="text">
           <string>DI</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="3">
-        <widget class="QRadioButton" name="radioButtonRI">
-         <property name="text">
-          <string>RI</string>
+       <item row="1" column="0" colspan="4">
+        <widget class="QLabel" name="labelReference">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Noeud de référence pour les calculs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="4">
-        <widget class="QComboBox" name="comboListPrevisions"/>
-       </item>
-       <item row="2" column="0" colspan="2">
-        <widget class="QPushButton" name="pushButtonExpandAll">
          <property name="text">
-          <string>Déplier tout</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2" colspan="2">
-        <widget class="QPushButton" name="pushButtonCollapseAll">
-         <property name="text">
-          <string>Replier tout</string>
+          <string>Ref : 1.Racine</string>
          </property>
         </widget>
        </item>

@@ -61,13 +61,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   whatThisAction = QWhatsThis::createAction();
   ui->toolBar->insertAction(nullptr, whatThisAction);
 
-  restoreSettings();
-  updateTitle();
+  QCoreApplication::setOrganizationName("GiPiLab");
+  QCoreApplication::setApplicationName("ProtonClassicSuite");
+
   QSettings settings;
   if (settings.value("firstRun", true).toBool() == true) {
     ui->actionAbout->trigger();
     settings.setValue("firstRun", false);
   }
+  restoreSettings();
+  updateTitle();
+
   setMenusState();
   updateFormatModeAndDecimals();
 }
@@ -106,23 +110,22 @@ void MainWindow::desactivateActions() {
 }
 
 void MainWindow::restoreSettings() {
-  QCoreApplication::setOrganizationName("GiPiLab");
-  QCoreApplication::setApplicationName("ProtonClassicSuite");
-  QSettings settings;
 
-  if (settings.value("mainwindow/maximised", false).toBool() == true) {
-    setWindowState(Qt::WindowMaximized);
-  }
-  this->move(settings.value("mainwindow/position", QVariant(this->pos())).toPoint());
-  this->resize(settings.value("mainwindow/size", QVariant(this->size())).toSize());
+    QSettings settings;
 
-  recentDb = settings.value("database/recentdb").toString();
-  if (!recentDb.isEmpty()) {
-    QFileInfo fi(recentDb);
-    if (fi.exists() && fi.isFile() && fi.isReadable() && fi.isWritable()) {
-      loadDb(recentDb);
+    if (settings.value("mainwindow/maximised", false).toBool() == true) {
+        setWindowState(Qt::WindowMaximized);
     }
-  }
+    this->move(settings.value("mainwindow/position", QVariant(this->pos())).toPoint());
+    this->resize(settings.value("mainwindow/size", QVariant(this->size())).toSize());
+
+    recentDb = settings.value("database/recentdb").toString();
+    if (!recentDb.isEmpty()) {
+        QFileInfo fi(recentDb);
+        if (fi.exists() && fi.isFile() && fi.isReadable() && fi.isWritable()) {
+            loadDb(recentDb);
+        }
+    }
 }
 
 void MainWindow::saveSettings() {
@@ -525,13 +528,8 @@ void MainWindow::on_actionQueries_triggered() {
 }
 
 void MainWindow::on_actionAbout_triggered() {
-  DialogAbout dlg(this);
-
-  if (dlg.exec() == QDialog::Accepted) {
-    // Update menus if a new licence key is entered
-    on_actionCloseAllSubwin_triggered();
-    setMenusState();
-  }
+    DialogAbout dlg(this);
+    dlg.exec();
 }
 
 void MainWindow::on_actionManageReportings_triggered() {

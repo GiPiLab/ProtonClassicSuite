@@ -893,8 +893,43 @@ QChart *PCx_Graphics::getPCRCycles(unsigned int nodeId, MODES::DFRFDIRI mode) {
 
 
 QVariant PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY key) {
-  QSettings settings;
-  return settings.value(settingKey().value(key));
+    QSettings settings;
+
+    QVariant defaultValue;
+    switch (key) {
+    case SETTINGKEY::PENCOLOR1:
+        defaultValue = DEFAULTPENCOLOR1;
+        break;
+    case SETTINGKEY::PENCOLOR2:
+        defaultValue = DEFAULTPENCOLOR2;
+        break;
+    case SETTINGKEY::DFBARCOLOR:
+        defaultValue = DEFAULTCOLORDFBAR;
+        break;
+    case SETTINGKEY::RFBARCOLOR:
+        defaultValue = DEFAULTCOLORRFBAR;
+        break;
+    case SETTINGKEY::DIBARCOLOR:
+        defaultValue = DEFAULTCOLORDIBAR;
+        break;
+    case SETTINGKEY::RIBARCOLOR:
+        defaultValue = DEFAULTCOLORRIBAR;
+        break;
+    case SETTINGKEY::ALPHA:
+        defaultValue = DEFAULTALPHA;
+        break;
+    case SETTINGKEY::SHOWPOINTLABELS:
+        defaultValue = DEFAULTSHOWPOINTLABELS;
+        break;
+    case SETTINGKEY::WIDTH:
+        defaultValue = DEFAULTWIDTH;
+        break;
+    case SETTINGKEY::HEIGHT:
+        defaultValue = DEFAULTHEIGHT;
+        break;
+    }
+
+    return settings.value(settingKey().value(key), defaultValue);
 }
 
 QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES::DFRFDIRI mode,

@@ -69,4 +69,4 @@ DialogAbout::DialogAbout(QWidget *parent) : QDialog(parent), ui(new Ui::DialogAb
 
 DialogAbout::~DialogAbout() { delete ui; }
 
-void DialogAbout::on_pushButton_clicked() { reject(); }
+void DialogAbout::on_pushButton_clicked() { accept(); }

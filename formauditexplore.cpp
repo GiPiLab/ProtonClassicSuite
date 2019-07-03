@@ -336,11 +336,15 @@ void FormAuditExplore::on_pushButtonCollapseAll_clicked() {
 void FormAuditExplore::on_pushButtonExpandAll_clicked() { ui->treeView->expandAll(); }
 
 void FormAuditExplore::on_treeView_doubleClicked(const QModelIndex &index) {
-  referenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
-  QMessageBox::information(this, "Information",
-                           tr("Nouveau noeud de référence pour les calculs : %1")
-                               .arg(model->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
-  updateAllViews();
+
+    unsigned int potentialNewReferenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    QString potentialName = model->getAttachedTree()->getNodeName(potentialNewReferenceNode).toHtmlEscaped();
+    if (question(tr("Nouveau noeud de référence pour les calculs : <b>%1</b>. Confirmer ?").arg(potentialName)) ==
+        QMessageBox::Yes) {
+        referenceNode = potentialNewReferenceNode;
+        ui->labelReferenceNode->setText("Ref : " + potentialName);
+        updateAllViews();
+    }
 }
 
 void FormAuditExplore::on_comboBoxTable_activated(int index) {

@@ -331,10 +331,15 @@ void FormReportingReports::on_saveButton_clicked() {
 
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
-    QMessageBox::information(this, tr("Information"),
-                             tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont "
-                                "stockées dans le dossier <b>%2</b>")
-                                 .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
+
+      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>. "
+                      "Voulez-vous ouvrir le rapport dans le navigateur ?")
+                       .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped())) == QMessageBox::Yes) {
+          if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
+              QMessageBox::warning(this, tr("Attention"), tr("Ouverture impossible"));
+          }
+      }
+
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le rapport n'a pas pu être enregistré !"));
   }

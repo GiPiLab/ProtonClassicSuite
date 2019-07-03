@@ -46,6 +46,7 @@
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QMessageBox>
 #include <QSharedMemory>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -123,22 +124,8 @@ int main(int argc, char *argv[]) {
   qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
   a.installTranslator(&qtTranslator);
 
-  // qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{message}");
-
   qInstallMessageHandler(myMessageOutput);
 
-  // qDebug()<<"***ProtonClassicSuite starting***";
-
-  /*
-QPixmap pixmap(":/icons/icons/logo.png");
-QSplashScreen splash(pixmap);
-splash.show();
-
-
-QTime dieTime= QTime::currentTime().addSecs(1);
-while( QTime::currentTime() < dieTime )
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-*/
 
   int retval;
 
@@ -146,7 +133,20 @@ while( QTime::currentTime() < dieTime )
 
   MainWindow w;
   w.show();
-  //  splash.finish(&w);
+
+  QSettings settings;
+  QString recentDb = settings.value("database/recentdb").toString();
+  if (recentDb.isEmpty()) {
+      QMessageBox::information(
+          nullptr, QObject::tr("Pour commencer..."),
+          QObject::tr(
+              "Bienvenue dans ProtonClassicSuite ! Pour commencer vous devez <b>créer</b> une "
+              "nouvelle base de données, ou <b>ouvrir</b> une base existante. À tout moment vous pouvez obtenir de "
+              "l'aide en "
+              "utilisant les <b>infobulles</b> (activées en laissant le curseur de la souris sur un élément) et "
+              "l'outil "
+              "\"<b>qu'est-ce que c'est ?</b>\" (accessible <i>via</i> la dernière icône de la barre d'outils)"));
+  }
 
   retval = a.exec();
 

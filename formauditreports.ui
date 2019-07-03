@@ -28,20 +28,7 @@
      </property>
      <widget class="QWidget" name="layoutWidget">
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="2" column="1">
-        <widget class="QPushButton" name="pushButtonCollapseAll">
-         <property name="text">
-          <string>Replier tout</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QComboBox" name="comboListAudits"/>
-       </item>
-       <item row="4" column="1">
-        <widget class="QComboBox" name="comboListTypes"/>
-       </item>
-       <item row="1" column="0" colspan="2">
+       <item row="2" column="0" colspan="2">
         <widget class="QTreeView" name="treeView">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Clics gauches pour sélectionner les noeuds à inclure dans le rapport, double clic pour sélectionner le noeud de référence pour les comparaisons de certains tableaux et graphiques.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -63,14 +50,17 @@
          </attribute>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushButtonExpandAll">
+       <item row="0" column="0" colspan="2">
+        <widget class="QComboBox" name="comboListAudits"/>
+       </item>
+       <item row="4" column="1">
+        <widget class="QPushButton" name="pushButtonUnSelectAllNodes">
          <property name="text">
-          <string>Déplier tout</string>
+          <string>Sélectionner rien</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="0">
         <widget class="QPushButton" name="pushButtonSelectType">
          <property name="toolTip">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Sélection par type&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -80,17 +70,37 @@
          </property>
         </widget>
        </item>
+       <item row="5" column="1">
+        <widget class="QComboBox" name="comboListTypes"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="pushButtonCollapseAll">
+         <property name="text">
+          <string>Replier tout</string>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
+        <widget class="QPushButton" name="pushButtonExpandAll">
+         <property name="text">
+          <string>Déplier tout</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
         <widget class="QPushButton" name="pushButtonSelectAllNodes">
          <property name="text">
           <string>Sélectionner tout</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="pushButtonUnSelectAllNodes">
+       <item row="1" column="0" colspan="2">
+        <widget class="QLabel" name="labelReference">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Noeud de référence pour les calculs&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
-          <string>Sélectionner rien</string>
+          <string>Ref : 1.Racine</string>
          </property>
         </widget>
        </item>

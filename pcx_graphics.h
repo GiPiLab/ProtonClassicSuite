@@ -60,6 +60,8 @@ public:
   static const int DEFAULTWIDTH = 650;
   static const int DEFAULTHEIGHT = 400;
 
+  static const bool DEFAULTSHOWPOINTLABELS = false;
+
   static const unsigned int DEFAULTPENCOLOR1 = 0xff0000;
   static const unsigned int DEFAULTPENCOLOR2 = 0x0000ff;
 

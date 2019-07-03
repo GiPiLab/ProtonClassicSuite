@@ -67,21 +67,17 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
     qWarning() << "Unsupported option for CSS !";
   }
 
-  int imageWidth =
-      settings.value(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::WIDTH), PCx_Graphics::DEFAULTWIDTH)
-          .toInt();
+  int imageWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
   if (imageWidth < PCx_Graphics::MINWIDTH) {
-    imageWidth = PCx_Graphics::MINWIDTH;
+      imageWidth = PCx_Graphics::MINWIDTH;
   }
   if (imageWidth > PCx_Graphics::MAXWIDTH) {
     imageWidth = PCx_Graphics::MAXWIDTH;
   }
 
-  int imageHeight =
-      settings.value(PCx_Graphics::settingKey().value(PCx_Graphics::SETTINGKEY::HEIGHT), PCx_Graphics::DEFAULTHEIGHT)
-          .toInt();
+  int imageHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
   if (imageHeight < PCx_Graphics::MINHEIGHT) {
-    imageHeight = PCx_Graphics::MINHEIGHT;
+      imageHeight = PCx_Graphics::MINHEIGHT;
   }
   if (imageHeight > PCx_Graphics::MAXHEIGHT) {
     imageHeight = PCx_Graphics::MAXHEIGHT;
@@ -207,7 +203,7 @@ void DialogOptions::on_pushButtonReset_clicked() {
   colorPen2 = PCx_Graphics::DEFAULTPENCOLOR2;
   alpha = PCx_Graphics::DEFAULTALPHA;
 
-  ui->checkBoxShowPointLabels->setChecked(false);
+  ui->checkBoxShowPointLabels->setChecked(PCx_Graphics::DEFAULTSHOWPOINTLABELS);
 
   colorDFBar = PCx_Graphics::DEFAULTCOLORDFBAR;
   colorRFBar = PCx_Graphics::DEFAULTCOLORRFBAR;

@@ -131,10 +131,14 @@ void FormAuditPrevisions::updateListOfPrevisions() {
     QMessageBox::information(this, tr("Information"), tr("Créez d'abord une prévision dans la fenêtre "
                                                          "de gestion des prévisions"));
   } else {
-    QMessageBox::information(this, tr("Astuce"),
-                             tr("Pensez à utiliser l'<b>aide contextuelle</b> (clic sur le bouton à "
-                                "droite dans la barre d'outil puis sur une zone de cette fenêtre) "
-                                "afin d'obtenir des explications"));
+      QSettings settings;
+      if (settings.value("misc/messageboxauditprevisionshown", false) != true) {
+          QMessageBox::information(this, tr("Astuce"),
+                                   tr("Pensez à utiliser l'outil <b>qu'est-ce que c'est ?</b> (via le bouton à "
+                                      "droite dans la barre d'outil) "
+                                      "afin d'obtenir des explications"));
+          settings.setValue("misc/messageboxauditprevisionshown", true);
+      }
   }
 
   bool nonEmpty = !listOfPrevisions.isEmpty();
@@ -469,8 +473,11 @@ void FormAuditPrevisions::on_pushButtonCollapseAll_clicked() {
 }
 
 void FormAuditPrevisions::on_treeView_doubleClicked(const QModelIndex &index) {
-  referenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
-  QMessageBox::information(this, "Information",
-                           tr("Nouveau noeud de référence pour les calculs : %1")
-                               .arg(previsionModel->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
+    unsigned int potentialNewReferenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    QString potentialName = previsionModel->getAttachedTree()->getNodeName(potentialNewReferenceNode).toHtmlEscaped();
+    if (question(tr("Nouveau noeud de référence pour les calculs : <b>%1</b>. Confirmer ?").arg(potentialName)) ==
+        QMessageBox::Yes) {
+        referenceNode = potentialNewReferenceNode;
+        ui->labelReference->setText("Ref : " + potentialName);
+    }
 }

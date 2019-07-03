@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>916</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -203,7 +203,10 @@
      <normaloff>:/icons/icons/database_add.png</normaloff>:/icons/icons/database_add.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Nouvelle base de données</string>
+    <string>&amp;Créer une nouvelle base de données</string>
+   </property>
+   <property name="toolTip">
+    <string>Créer une nouvelle base de données</string>
    </property>
   </action>
   <action name="actionOpenDb">
@@ -212,7 +215,10 @@
      <normaloff>:/icons/icons/database_go.png</normaloff>:/icons/icons/database_go.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Ouvrir base de données</string>
+    <string>&amp;Ouvrir une base de données existante</string>
+   </property>
+   <property name="toolTip">
+    <string>Ouvrir une base de données existante</string>
    </property>
   </action>
   <action name="actionOptions">

@@ -440,12 +440,16 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
-    QMessageBox::information(this, tr("Information"),
-                             tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont "
-                                "stockées dans le dossier <b>%2</b>")
-                                 .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
+      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>. "
+                      "Voulez-vous ouvrir le rapport dans le navigateur ?")
+                       .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped())) == QMessageBox::Yes) {
+          if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
+              QMessageBox::warning(this, tr("Attention"), tr("Ouverture impossible"));
+          }
+      }
+
   } else {
-    QMessageBox::critical(this, tr("Attention"), tr("Le rapport n'a pas pu être enregistré !"));
+      QMessageBox::critical(this, tr("Attention"), tr("Le rapport n'a pas pu être enregistré !"));
   }
 }
 
@@ -541,9 +545,11 @@ void FormAuditReports::on_pushButtonUnSelectAllNodes_clicked() { ui->treeView->c
 QSize FormAuditReports::sizeHint() const { return {900, 600}; }
 
 void FormAuditReports::on_treeView_doubleClicked(const QModelIndex &index) {
-  referenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
-  QMessageBox::information(this, "Information",
-                           tr("Nouveau noeud de référence pour les calculs : %1")
-                               .arg(model->getAttachedTree()->getNodeName(referenceNode).toHtmlEscaped()));
-  populateLists();
+    unsigned int potentialNewReferenceNode = index.data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    QString potentialName = model->getAttachedTree()->getNodeName(potentialNewReferenceNode).toHtmlEscaped();
+    if (question(tr("Nouveau noeud de référence pour les calculs : <b>%1</b>. Confirmer ?").arg(potentialName)) ==
+        QMessageBox::Yes) {
+        referenceNode = potentialNewReferenceNode;
+        ui->labelReference->setText("Ref : " + potentialName);
+    }
 }
