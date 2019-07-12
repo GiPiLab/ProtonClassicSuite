@@ -1,4 +1,4 @@
-QT       += core gui sql printsupport
+QT       += core gui sql printsupport charts
 
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
@@ -10,8 +10,7 @@ include(QtXlsx/xlsx/qtxlsx.pri)
 
 
 
-SOURCES +=  $$PWD/QCustomPlot/qcustomplot.cpp \
-    $$PWD/pcx_tables.cpp \
+SOURCES += $$PWD/pcx_tables.cpp \
     $$PWD/pcx_report.cpp \
     $$PWD/pcx_graphics.cpp \
     $$PWD/pcx_queryvariation.cpp \
@@ -38,8 +37,7 @@ SOURCES +=  $$PWD/QCustomPlot/qcustomplot.cpp \
 
 
 
-HEADERS  += $$PWD/QCustomPlot/qcustomplot.h \
-    $$PWD/pcx_tables.h \
+HEADERS  += $$PWD/pcx_tables.h \
     $$PWD/pcx_report.h \
     $$PWD/pcx_graphics.h \
     $$PWD/pcx_queryvariation.h \
