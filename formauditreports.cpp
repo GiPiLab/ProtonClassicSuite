@@ -60,102 +60,9 @@ FormAuditReports::~FormAuditReports() {
   }  
 }
 
-void FormAuditReports::populateLists() {
-  ui->listTables->clear();
-  ui->listGraphics->clear();
-  QList<unsigned int> leaves = model->getAttachedTree()->getLeavesId();
-  unsigned int nodeId = leaves.at(qrand() % leaves.count());
-  QListWidgetItem *item;
-  item = new QListWidgetItem(tr("Récapitulatif"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT1));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT1(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Évolution cumulée du compte administratif de "
-                                "la collectivité hors celui de [...]"),
-                             ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT2));
-  item->setToolTip("<span style='font-size:8pt'>" +
-                   report->getTables().getPCAT2(nodeId, MODES::DFRFDIRI::DF, referenceNode) + "</span>");
-  item = new QListWidgetItem(tr("Évolution du compte administratif de la "
-                                "collectivité hors celui de [...]"),
-                             ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT2BIS));
-  item->setToolTip("<span style='font-size:8pt'>" +
-                   report->getTables().getPCAT2bis(nodeId, MODES::DFRFDIRI::DF, referenceNode) + "</span>");
-  item = new QListWidgetItem(tr("Évolution cumulée du compte administratif de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT3));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT3(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Évolution du compte administratif de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT3BIS));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT3bis(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Poids relatif de [...] au sein de la collectivité"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT4));
-  item->setToolTip("<span style='font-size:8pt'>" +
-                   report->getTables().getPCAT4(nodeId, MODES::DFRFDIRI::DF, referenceNode) + "</span>");
-  item = new QListWidgetItem(tr("Analyse en base 100 du compte administratif "
-                                "de la collectivité hors celui de [...]"),
-                             ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT5));
-  item->setToolTip("<span style='font-size:8pt'>" +
-                   report->getTables().getPCAT5(nodeId, MODES::DFRFDIRI::DF, referenceNode) + "</span>");
-  item = new QListWidgetItem(tr("Analyse en base 100 du compte administratif de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT6));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT6(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Transcription en \"jours/activité\" de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT7));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT7(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Moyennes budgétaires de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT8));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT8(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Equivalences moyennes en \"jours activité\" de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT9));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT9(nodeId, MODES::DFRFDIRI::DF) +
-                   "</span>");
-  item = new QListWidgetItem(tr("Résultats de fonctionnement de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT10));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT10(nodeId) + "</span>");
-  item = new QListWidgetItem(tr("Résultats d'investissement de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT11));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT11(nodeId) + "</span>");
-  item = new QListWidgetItem(tr("Résultats budgétaire de [...]"), ui->listTables);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Tables::PCATABLES::PCAT12));
-  item->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCAT12(nodeId) + "</span>");
-
-  item = new QListWidgetItem(tr("Évolution comparée des crédits ouverts de la "
-                                "collectivité et de [...]"),
-                             ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG1));
-  item = new QListWidgetItem(tr("Évolution comparée du cumulé des crédits "
-                                "ouverts de la collectivité et de [...]"),
-                             ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG2));
-  item = new QListWidgetItem(tr("Évolution comparée du réalisé de la collectivité et de [...]"), ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG3));
-  item = new QListWidgetItem(tr("Évolution comparée du cumulé du réalisé de la "
-                                "collectivité et de [...]"),
-                             ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG4));
-  item = new QListWidgetItem(tr("Évolution comparée de l'engagé de la collectivité et de [...]"), ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG5));
-  item = new QListWidgetItem(tr("Évolution comparée du cumulé de l'engagé de "
-                                "la collectivité et de [...]"),
-                             ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG6));
-  item = new QListWidgetItem(tr("Évolution comparée du disponible de la collectivité et de [...]"), ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG7));
-  item = new QListWidgetItem(tr("Évolution comparée du cumulé du disponible de "
-                                "la collectivité et de [...]"),
-                             ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG8));
-  item = new QListWidgetItem(tr("Décomposition par année"), ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAG9));
-  item = new QListWidgetItem(tr("Données historiques de [...]"), ui->listGraphics);
-  item->setData(PCx_TreeModel::NodeIdUserRole, static_cast<int>(PCx_Graphics::PCAGRAPHICS::PCAHISTORY));
+void FormAuditReports::populateLists() {    
+    ui->listTables->setModel(report->getTables().getListModelOfAvailableAuditTables(true));
+    ui->listGraphics->setModel(report->getGraphics().getListModelOfAvailablePCAGRAPHICS());
 }
 
 void FormAuditReports::onListOfAuditsChanged() { updateListOfAudits(); }
@@ -243,27 +150,24 @@ void FormAuditReports::on_saveButton_clicked() {
   }
   // qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
 
-  QList<QListWidgetItem *> selectedItemsTables = ui->listTables->selectedItems();
-  QList<QListWidgetItem *> selectedItemsGraphics = ui->listGraphics->selectedItems();
+  QModelIndexList selectedItemsTables = ui->listTables->selectionModel()->selectedIndexes();
+  QModelIndexList selectedItemsGraphics = ui->listGraphics->selectionModel()->selectedIndexes();
 
   QList<PCx_Tables::PCATABLES> selectedTables;
   QList<PCx_Graphics::PCAGRAPHICS> selectedGraphics;
 
-  foreach (QListWidgetItem *item, selectedItemsTables) {
-    //  qDebug()<<"Selecting table
-    //  "<<item->data(PCx_TreeModel::NodeIdUserRole).toUInt();
-    selectedTables.append(static_cast<PCx_Tables::PCATABLES>(item->data(PCx_TreeModel::NodeIdUserRole).toUInt()));
+  foreach (const QModelIndex &item, selectedItemsTables) {
+      selectedTables.append(static_cast<PCx_Tables::PCATABLES>(item.data(PCx_Tables::TableIdUserRole).toUInt()));
   }
 
-  foreach (QListWidgetItem *item, selectedItemsGraphics) {
-    //  qDebug()<<"Selecting graphic
-    //  "<<item->data(PCx_TreeModel::NodeIdUserRole).toUInt();
-    selectedGraphics.append(static_cast<PCx_Graphics::PCAGRAPHICS>(item->data(PCx_TreeModel::NodeIdUserRole).toUInt()));
+  foreach (const QModelIndex &item, selectedItemsGraphics) {
+      selectedGraphics.append(
+          static_cast<PCx_Graphics::PCAGRAPHICS>(item.data(PCx_Graphics::GraphicIdUserRole).toUInt()));
   }
 
   if (selectedTables.isEmpty() && selectedGraphics.isEmpty()) {
-    QMessageBox::warning(this, tr("Attention"), tr("Sélectionnez au moins un tableau ou un graphique"));
-    return;
+      QMessageBox::warning(this, tr("Attention"), tr("Sélectionnez au moins un tableau ou un graphique"));
+      return;
   }
 
   QList<PCx_Tables::PCATABLES> modeIndependantTables;
@@ -453,59 +357,212 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   }
 }
 
-// WARNING : Preselections are done with fixed indexing, refers to populateLists
 void FormAuditReports::on_pushButtonPoidsRelatifs_clicked() {
-  // T1,T4,T8
-  ui->listTables->item(0)->setSelected(true);
-  ui->listTables->item(5)->setSelected(true);
-  ui->listTables->item(9)->setSelected(true);
-  ui->listGraphics->item(9)->setSelected(true);
+
+    QItemSelectionModel *listTablesSelectionModel = ui->listTables->selectionModel();
+    QAbstractItemModel *listTablesModel = ui->listTables->model();
+
+    QModelIndexList indexes =
+        listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                               static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT1), 1, Qt::MatchExactly);
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT4), 1,
+                                          Qt::MatchExactly));
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT8), 1,
+                                          Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listTablesSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
+
+    QItemSelectionModel *listGraphicsSelectionModel = ui->listGraphics->selectionModel();
+    QAbstractItemModel *listGraphicsModel = ui->listGraphics->model();
+
+    indexes =
+        listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                 static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG9), 1, Qt::MatchExactly);
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listGraphicsSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
 }
 
 void FormAuditReports::on_pushButtonBase100_clicked() {
-  // T5,T6
-  ui->listTables->item(6)->setSelected(true);
-  ui->listTables->item(7)->setSelected(true);
+    QItemSelectionModel *listTablesSelectionModel = ui->listTables->selectionModel();
+    QAbstractItemModel *listTablesModel = ui->listTables->model();
+
+    QModelIndexList indexes =
+        listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                               static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT5), 1, Qt::MatchExactly);
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT6), 1,
+                                          Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listTablesSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
 }
 
 void FormAuditReports::on_pushButtonEvolution_clicked() {
-  // T2bis,T3bis
-  ui->listTables->item(2)->setSelected(true);
-  ui->listTables->item(4)->setSelected(true);
+    QItemSelectionModel *listTablesSelectionModel = ui->listTables->selectionModel();
+    QAbstractItemModel *listTablesModel = ui->listTables->model();
 
-  // G1,G3,G5,G7
-  ui->listGraphics->item(0)->setSelected(true);
-  ui->listGraphics->item(2)->setSelected(true);
-  ui->listGraphics->item(4)->setSelected(true);
-  ui->listGraphics->item(6)->setSelected(true);
+    QModelIndexList indexes =
+        listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                               static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT2BIS), 1, Qt::MatchExactly);
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT3BIS), 1,
+                                          Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listTablesSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
+
+    QItemSelectionModel *listGraphicsSelectionModel = ui->listGraphics->selectionModel();
+    QAbstractItemModel *listGraphicsModel = ui->listGraphics->model();
+
+    indexes =
+        listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                 static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG1), 1, Qt::MatchExactly);
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG3), 1,
+                                            Qt::MatchExactly));
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG5), 1,
+                                            Qt::MatchExactly));
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG7), 1,
+                                            Qt::MatchExactly));
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAHISTORY), 1,
+                                            Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listGraphicsSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
 }
 
 void FormAuditReports::on_pushButtonEvolutionCumul_clicked() {
-  // T2,T3
-  ui->listTables->item(1)->setSelected(true);
-  ui->listTables->item(3)->setSelected(true);
+    QItemSelectionModel *listTablesSelectionModel = ui->listTables->selectionModel();
+    QAbstractItemModel *listTablesModel = ui->listTables->model();
 
-  // G2,G4,G6,G8
-  ui->listGraphics->item(1)->setSelected(true);
-  ui->listGraphics->item(3)->setSelected(true);
-  ui->listGraphics->item(5)->setSelected(true);
-  ui->listGraphics->item(7)->setSelected(true);
+    QModelIndexList indexes =
+        listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                               static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT2), 1, Qt::MatchExactly);
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT3), 1,
+                                          Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listTablesSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
+
+    QItemSelectionModel *listGraphicsSelectionModel = ui->listGraphics->selectionModel();
+    QAbstractItemModel *listGraphicsModel = ui->listGraphics->model();
+
+    indexes =
+        listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                 static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG2), 1, Qt::MatchExactly);
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG4), 1,
+                                            Qt::MatchExactly));
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG6), 1,
+                                            Qt::MatchExactly));
+
+    indexes.append(listGraphicsModel->match(listGraphicsModel->index(0, 0), PCx_Graphics::GraphicIdUserRole,
+                                            static_cast<unsigned int>(PCx_Graphics::PCAGRAPHICS::PCAG8), 1,
+                                            Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listGraphicsSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
 }
 
 void FormAuditReports::on_pushButtonJoursAct_clicked() {
-  // T7,T9
-  ui->listTables->item(8)->setSelected(true);
-  ui->listTables->item(10)->setSelected(true);
+    QItemSelectionModel *listTablesSelectionModel = ui->listTables->selectionModel();
+    QAbstractItemModel *listTablesModel = ui->listTables->model();
+
+    QModelIndexList indexes =
+        listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                               static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT7), 1, Qt::MatchExactly);
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT9), 1,
+                                          Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listTablesSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
 }
 
 void FormAuditReports::on_pushButtonResultats_clicked() {
-  // T10,T11,T12
-  ui->listTables->item(11)->setSelected(true);
-  ui->listTables->item(12)->setSelected(true);
-  ui->listTables->item(13)->setSelected(true);
+    QItemSelectionModel *listTablesSelectionModel = ui->listTables->selectionModel();
+    QAbstractItemModel *listTablesModel = ui->listTables->model();
 
-  // G9
-  ui->listGraphics->item(8)->setSelected(true);
+    QModelIndexList indexes =
+        listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                               static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT10), 1, Qt::MatchExactly);
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT11), 1,
+                                          Qt::MatchExactly));
+
+    indexes.append(listTablesModel->match(listTablesModel->index(0, 0), PCx_Tables::TableIdUserRole,
+                                          static_cast<unsigned int>(PCx_Tables::PCATABLES::PCAT12), 1,
+                                          Qt::MatchExactly));
+
+    if (indexes.isEmpty()) {
+        qWarning() << "Problème de selection";
+    } else {
+        foreach (const QModelIndex &idx, indexes) {
+            listTablesSelectionModel->select(idx, QItemSelectionModel::Toggle);
+        }
+    }
 }
 
 void FormAuditReports::on_pushButtonExpandAll_clicked() { ui->treeView->expandAll(); }
@@ -531,7 +588,7 @@ void FormAuditReports::on_pushButtonSelectType_clicked() {
   QModelIndexList indexOfTypes = treeModel->getIndexesOfNodesWithThisType(selectedType);
 
   foreach (const QModelIndex &index, indexOfTypes) {
-    ui->treeView->selectionModel()->select(index, QItemSelectionModel::Select);
+      ui->treeView->selectionModel()->select(index, QItemSelectionModel::Toggle);
   }
 }
 

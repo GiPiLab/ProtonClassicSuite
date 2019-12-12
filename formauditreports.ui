@@ -144,6 +144,9 @@
        </item>
        <item row="6" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Cliquez pour activer/désactiver des préselections thématiques pour les tableaux et les graphiques&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="whatsThis">
           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste de préselections de tableaux et de graphiques. Un clic sur un des boutons ajoute la préselection à la sélection de tableaux et de graphiques actuelle.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -236,16 +239,16 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QListWidget" name="listGraphics">
+       <item row="3" column="0" colspan="2">
+        <widget class="QListView" name="listTables">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
-           <verstretch>2</verstretch>
+           <verstretch>3</verstretch>
           </sizepolicy>
          </property>
          <property name="whatsThis">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des graphiques pouvant être incorporés dans le rapport. Seul les éléments sélectionnés seront pris en compte.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des tableaux pouvant être incorporés dans le rapport. Seul les éléments sélectionnés seront pris en compte.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
@@ -261,16 +264,19 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="2">
-        <widget class="QListWidget" name="listTables">
+       <item row="5" column="0" colspan="2">
+        <widget class="QListView" name="listGraphics">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
-           <verstretch>3</verstretch>
+           <verstretch>2</verstretch>
           </sizepolicy>
          </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Astuce : vous pouvez désactiver l'affichage des étiquettes de données dans les options générales&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="whatsThis">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des tableaux pouvant être incorporés dans le rapport. Seul les éléments sélectionnés seront pris en compte.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Liste des graphiques pouvant être incorporés dans le rapport. Seul les éléments sélectionnés seront pris en compte.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>
@@ -344,6 +350,9 @@
        <width>16777215</width>
        <height>47</height>
       </size>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Fabriquer le rapport. Cette opération peut nécessiter du temps !&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
       <string>Générer le rapport</string>

@@ -1703,13 +1703,53 @@ QStandardItemModel *PCx_Tables::getListModelOfAvailableAuditTables(bool richTool
       PCATABLES::PCAT1, PCATABLES::PCAT2, PCATABLES::PCAT2BIS, PCATABLES::PCAT3, PCATABLES::PCAT3BIS, PCATABLES::PCAT4,
       PCATABLES::PCAT5, PCATABLES::PCAT6, PCATABLES::PCAT7,    PCATABLES::PCAT8, PCATABLES::PCAT9};
 
-  foreach (PCATABLES table, listOfRemainingTablesToShow) {
-    item = new QStandardItem(pcaTablesDescription().value(table));
-    item->setData(static_cast<int>(table), PCx_Tables::TableIdUserRole);
-    if (richTooltip) {
-      item->setToolTip("<span style='font-size:8pt'>" + getPCAT1(1, modeForRichTooltip) + "</span>");
-    }
-    model->appendRow(item);
+  foreach (PCx_Tables::PCATABLES table, listOfRemainingTablesToShow) {
+      item = new QStandardItem(pcaTablesDescription().value(table));
+      item->setData(static_cast<int>(table), PCx_Tables::TableIdUserRole);
+      if (richTooltip) {
+          switch (table) {
+          case PCATABLES::PCARAWDATA:
+          case PCATABLES::PCAT10:
+          case PCATABLES::PCAT11:
+          case PCATABLES::PCAT12:
+              break;
+
+          case PCATABLES::PCAT1:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT1(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT2:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT2(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT2BIS:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT2bis(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT3:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT3(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT3BIS:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT3bis(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT4:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT4(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT5:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT5(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT6:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT6(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT7:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT7(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT8:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT8(1, modeForRichTooltip) + "</span>");
+              break;
+          case PCATABLES::PCAT9:
+              item->setToolTip("<span style='font-size:8pt'>" + getPCAT9(1, modeForRichTooltip) + "</span>");
+              break;
+          }
+      }
+      model->appendRow(item);
   }
 
   return model;

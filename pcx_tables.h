@@ -90,7 +90,7 @@ public:
   PCx_Tables(PCx_Audit *auditModel);
   PCx_Tables(PCx_Reporting *reportingModel);
 
-  QString getPCAPresetDayOfWork(unsigned int node, MODES::DFRFDIRI mode) const; // T1, T4, T8
+  QString getPCAPresetDayOfWork(unsigned int node, MODES::DFRFDIRI mode) const;                               // T7, T9
   QString getPCAPresetBase100(unsigned int node, MODES::DFRFDIRI mode, unsigned int referenceNode = 1) const; // T5, T6
   QString getPCAPresetEvolutionCumul(unsigned int node, MODES::DFRFDIRI mode,
                                      unsigned int referenceNode = 1) const; // T2, T3
