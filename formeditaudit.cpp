@@ -42,6 +42,7 @@
 
 #include "formeditaudit.h"
 #include "formauditinfos.h"
+#include "pcx_report.h"
 #include "pcx_tables.h"
 #include "ui_formeditaudit.h"
 #include "utils.h"
@@ -236,69 +237,70 @@ void FormEditAudit::onAuditDataUpdated(unsigned int auditId) {
 }
 
 void FormEditAudit::on_pushButtonExportHTML_clicked() {
-  QString out = auditModel->generateHTMLHeader();
-  out.append(auditModel->generateHTMLAuditTitle());
+    QString out = PCx_Report::generateHTMLHeader();
+    out.append(auditModel->generateHTMLAuditTitle());
 
-  MODES::DFRFDIRI mode = MODES::DFRFDIRI::DF;
+    MODES::DFRFDIRI mode = MODES::DFRFDIRI::DF;
 
-  if (ui->tabWidget->currentWidget() == ui->tabDF) {
-    mode = MODES::DFRFDIRI::DF;
-  } else if (ui->tabWidget->currentWidget() == ui->tabRF) {
-    mode = MODES::DFRFDIRI::RF;
-  } else if (ui->tabWidget->currentWidget() == ui->tabDI) {
-    mode = MODES::DFRFDIRI::DI;
-  } else if (ui->tabWidget->currentWidget() == ui->tabRI) {
-    mode = MODES::DFRFDIRI::RI;
-  }
+    if (ui->tabWidget->currentWidget() == ui->tabDF) {
+        mode = MODES::DFRFDIRI::DF;
+    } else if (ui->tabWidget->currentWidget() == ui->tabRF) {
+        mode = MODES::DFRFDIRI::RF;
+    } else if (ui->tabWidget->currentWidget() == ui->tabDI) {
+        mode = MODES::DFRFDIRI::DI;
+    } else if (ui->tabWidget->currentWidget() == ui->tabRI) {
+        mode = MODES::DFRFDIRI::RI;
+    }
 
-  PCx_Tables tables(auditModel);
+    PCx_Tables tables(auditModel);
 
-  out.append(tables.getPCARawData(selectedNode, mode));
-  out.append("</body></html>");
+    out.append(tables.getPCARawData(selectedNode, mode));
+    out.append("</body></html>");
 
-  QFileDialog fileDialog;
-  fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
-    fileName.append(".html");
-  }
-  fi = QFileInfo(fileName);
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+    QString fileName =
+        fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
+    if (fileName.isEmpty()) {
+        return;
+    }
+    QFileInfo fi(fileName);
+    if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
+        fileName.append(".html");
+    }
+    fi = QFileInfo(fileName);
 
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
-    return;
-  }
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+        QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
+        return;
+    }
 
-  QFile file(fileName);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    return;
-  }
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, tr("Attention"),
+                              tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
+        return;
+    }
 
-  QSettings settings;
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-  if (settingStyle == "INLINE") {
-    QTextDocument doc;
-    doc.setHtml(out);
+    QSettings settings;
+    QString settingStyle = settings.value("output/style", "CSS").toString();
+    if (settingStyle == "INLINE") {
+        QTextDocument doc;
+        doc.setHtml(out);
 
-    out = doc.toHtml("utf-8");
-    out.replace(" -qt-block-indent:0;", "");
-  }
+        out = doc.toHtml("utf-8");
+        out.replace(" -qt-block-indent:0;", "");
+    }
 
-  QTextStream stream(&file);
-  stream.setCodec("UTF-8");
-  stream << out;
-  stream.flush();
-  file.close();
-  if (stream.status() == QTextStream::Ok) {
-    QMessageBox::information(this, tr("Information"),
-                             tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
-  } else {
-    QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
-  }
+    QTextStream stream(&file);
+    stream.setCodec("UTF-8");
+    stream << out;
+    stream.flush();
+    file.close();
+    if (stream.status() == QTextStream::Ok) {
+        QMessageBox::information(this, tr("Information"),
+                                 tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
+    } else {
+        QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
+    }
 }

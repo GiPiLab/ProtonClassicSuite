@@ -178,7 +178,7 @@ void FormReportingExplore::updateTextEdit() {
   QScrollBar *sb = ui->textEdit->verticalScrollBar();
   int sbval = sb->value();
 
-  QString output = selectedReporting->generateHTMLHeader() + selectedReporting->generateHTMLReportingTitle();
+  QString output = PCx_Report::generateHTMLHeader() + selectedReporting->generateHTMLReportingTitle();
   document->clear();
 
   output.append(
@@ -298,7 +298,7 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
 
   // Generate report in non-embedded mode, saving images
-  QString output = selectedReporting->generateHTMLHeader();
+  QString output = PCx_Report::generateHTMLHeader();
   output.append(selectedReporting->generateHTMLReportingTitle());
   output.append(QString("<h1 id='node%2'>%1</h1>")
                     .arg(selectedReporting->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped())

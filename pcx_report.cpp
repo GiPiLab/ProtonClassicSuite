@@ -487,6 +487,29 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
   return output;
 }
 
+QString PCx_Report::getCSS() {
+    QString css = "\nbody{font-family:sans-serif;font-size:9pt;background-color:"
+                  "white;color:black;}"
+                  "\nh1{color:#A00;}"
+                  "\nh2{color:navy;}"
+                  "\nh3{color:green;font-size:larger}"
+                  "\n.auditNodeContainer{display:flex;flex-wrap:wrap}"
+                  "\n.reportingNodeContainer{display:flex;flex-wrap:wrap}";
+
+    css.append(PCx_Query::getCSS());
+    css.append(PCx_Tables::getCSS());
+    css.append(PCx_Graphics::getCSS());
+    return css;
+}
+
+QString PCx_Report::generateHTMLHeader() {
+    return QString("<!DOCTYPE html>\n<html>\n<head><title>Rapport ProtonClassicSuite"
+                   "</title>\n<meta http-equiv='Content-Type' "
+                   "content='text/html;charset=utf-8'>\n<style "
+                   "type='text/css'>\n%2\n</style>\n</head>\n<body>")
+        .arg(getCSS());
+}
+
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const {
   QString output = "<ul>\n";
   PCx_Tree *tree = nullptr;

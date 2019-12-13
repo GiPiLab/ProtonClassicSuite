@@ -1066,29 +1066,6 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode, bool progressBar) {
   QSqlDatabase::database().commit();
 }
 
-QString PCx_Audit::getCSS() {
-  QString css = "\nbody{font-family:sans-serif;font-size:9pt;background-color:"
-                "white;color:black;}"
-                "\nh1{color:#A00;}"
-                "\nh2{color:navy;}"
-                "\nh3{color:green;font-size:larger}"
-                "\n.auditNodeContainer{display:flex;flex-wrap:wrap}";
-
-  css.append(PCx_Query::getCSS());
-  css.append(PCx_Tables::getCSS());
-  css.append(PCx_Graphics::getCSS());
-  return css;
-}
-
-QString PCx_Audit::generateHTMLHeader() const {
-  return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 "
-                 "Transitional//EN\">\n<html>\n<head><title>Audit "
-                 "%1</title>\n<meta http-equiv='Content-Type' "
-                 "content='text/html;charset=utf-8'>\n<style "
-                 "type='text/css'>\n%2\n</style>\n</head>\n<body>")
-      .arg(auditName.toHtmlEscaped(), getCSS());
-}
-
 QString PCx_Audit::generateHTMLAuditTitle() const {
   return QString("<h3>Audit %1 (%2), arbre %3</h3>")
       .arg(auditName.toHtmlEscaped(), yearsString, attachedTreeName.toHtmlEscaped());

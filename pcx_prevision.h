@@ -72,7 +72,6 @@ public:
   static QList<QPair<unsigned int, QString>> getListOfPrevisions();
   static bool deletePrevision(unsigned int previsionId);
 
-  QString generateHTMLHeader() const;
   QString generateHTMLPrevisionTitle() const;
 
 private:

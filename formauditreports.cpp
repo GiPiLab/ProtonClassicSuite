@@ -197,7 +197,7 @@ qDebug()<<"Mode-independant selected graphics = "<<modeIndependantGraphics;
 qDebug()<<"Mode-dependant selected tables = "<<selectedTables;
 qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
-  QString output = model->generateHTMLHeader();
+  QString output = PCx_Report::generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
   QList<MODES::DFRFDIRI> listModes;
   if (ui->checkBoxDF->isChecked()) {
@@ -265,6 +265,7 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   int i = 0;
   QSettings settings;
 
+  // TODO: use SETTINGKEYS
   report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
 

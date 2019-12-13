@@ -77,7 +77,19 @@ public:
   const PCx_Tables &getTables() const { return tables; }
   PCx_Graphics &getGraphics() { return graphics; }
 
-private:
+  /**
+   * @brief generateHTMLHeader gets the header of an html document, with css
+   * @return the HTML header including the opening "<body>"
+   */
+  static QString generateHTMLHeader();
+
+  /**
+   * @brief getCSS gets the css to display an reporting in HTML
+   * @return a string with CSS rules
+   */
+  static QString getCSS();
+
+  private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;
   PCx_Tables tables;

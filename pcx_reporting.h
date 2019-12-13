@@ -193,19 +193,6 @@ public:
   bool exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString &fileName) const;
 
   /**
-   * @brief getCSS gets the css to display an reporting in HTML
-   * @return a string with CSS rules
-   */
-  static QString getCSS();
-
-  /**
-   * @brief generateHTMLHeader gets the header of an html document, with css and
-   * reporting title
-   * @return the HTML header including the opening "<body>"
-   */
-  QString generateHTMLHeader() const;
-
-  /**
    * @brief generateHTMLReportingTitle gets the HTML title for the reporting
    * @return the title of the reporting, to be inserted in the "<body>"
    */

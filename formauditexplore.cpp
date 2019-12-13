@@ -42,6 +42,7 @@
 
 #include "formauditexplore.h"
 #include "pcx_graphics.h"
+#include "pcx_report.h"
 #include "pcx_tables.h"
 #include "ui_formauditexplore.h"
 #include "utils.h"
@@ -161,24 +162,24 @@ void FormAuditExplore::updateChartView(QChartView *chartView, QComboBox *comboCh
 }
 
 void FormAuditExplore::updateTextView() {
-  unsigned int selectedNode =
-      ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
+    unsigned int selectedNode =
+        ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
-  QString output = model->generateHTMLHeader();
-  output.append(model->generateHTMLAuditTitle());
+    QString output = PCx_Report::generateHTMLHeader();
+    output.append(model->generateHTMLAuditTitle());
 
-  MODES::DFRFDIRI currentTablePresetMode =
-      static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRITable->currentData(MODES::ModeIdUserRole).toInt());
+    MODES::DFRFDIRI currentTablePresetMode =
+        static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRITable->currentData(MODES::ModeIdUserRole).toInt());
 
-  PCx_Tables::PCAPRESETS currentTablePreset =
-      static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
+    PCx_Tables::PCAPRESETS currentTablePreset =
+        static_cast<PCx_Tables::PCAPRESETS>(ui->comboBoxTable->currentData(PCx_Tables::PresetIdUserRole).toUInt());
 
-  PCx_Tables tables(model);
+    PCx_Tables tables(model);
 
-  output.append(
-      tables.getPCAPresetFromPCAPRESETS(currentTablePreset, selectedNode, currentTablePresetMode, referenceNode));
-  output.append("</body></html>");
-  doc->setHtml(output);
+    output.append(
+        tables.getPCAPresetFromPCAPRESETS(currentTablePreset, selectedNode, currentTablePresetMode, referenceNode));
+    output.append("</body></html>");
+    doc->setHtml(output);
 }
 
 void FormAuditExplore::updateAllViews() {
@@ -294,7 +295,7 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
   QSettings settings;
 
   // Generate report in non-embedded mode, saving images
-  QString output = model->generateHTMLHeader();
+  QString output = PCx_Report::generateHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
 
   PCx_Tables tables(model);

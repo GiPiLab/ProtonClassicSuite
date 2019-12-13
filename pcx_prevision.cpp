@@ -451,15 +451,6 @@ unsigned int PCx_Prevision::addNewPrevision(unsigned int auditId, const QString 
   return uLastId;
 }
 
-QString PCx_Prevision::generateHTMLHeader() const {
-  return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 "
-                 "Transitional//EN\">\n<html>\n<head><title>Prévision "
-                 "%1</title>\n<meta http-equiv='Content-Type' "
-                 "content='text/html;charset=utf-8'>\n<style "
-                 "type='text/css'>\n%2\n</style>\n</head>\n<body>")
-      .arg(previsionName.toHtmlEscaped(), PCx_Audit::getCSS());
-}
-
 QString PCx_Prevision::generateHTMLPrevisionTitle() const {
   return QString("<h3>Prévision %1 portant sur l'audit %2 (%3)</h3>")
       .arg(previsionName.toHtmlEscaped(), attachedAudit->getAuditName().toHtmlEscaped(),

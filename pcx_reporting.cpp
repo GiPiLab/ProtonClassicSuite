@@ -1107,29 +1107,6 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString &fi
   return xlsx.saveAs(fileName);
 }
 
-QString PCx_Reporting::getCSS() {
-  QString css = "\nbody{font-family:sans-serif;font-size:9pt;background-color:"
-                "white;color:black;}"
-                "\nh1{color:#A00;}"
-                "\nh2{color:navy;}"
-                "\nh3{color:green;font-size:larger}"
-                "\n.reportingNodeContainer{}";
-
-  css.append(PCx_Query::getCSS());
-  css.append(PCx_Tables::getCSS());
-  css.append(PCx_Graphics::getCSS());
-  return css;
-}
-
-QString PCx_Reporting::generateHTMLHeader() const {
-  return QString("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 "
-                 "Transitional//EN\">\n<html>\n<head><title>Reporting "
-                 "%1</title>\n<meta http-equiv='Content-Type' "
-                 "content='text/html;charset=utf-8'>\n<style "
-                 "type='text/css'>\n%2\n</style>\n</head>\n<body>")
-      .arg(reportingName.toHtmlEscaped(), getCSS());
-}
-
 QString PCx_Reporting::generateHTMLReportingTitle() const {
   return QString("<h3>Reporting %1, arbre %3</h3>")
       .arg(reportingName.toHtmlEscaped(), attachedTreeName.toHtmlEscaped());
