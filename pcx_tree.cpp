@@ -2909,7 +2909,7 @@ int PCx_Tree::importTreeFromXLSX(const QString &fileName, const QString &treeNam
 
   QHash<QString, unsigned int> typesToIdTypes;
 
-  QStringList foundTypesSorted = foundTypes.toList();
+  QStringList foundTypesSorted = foundTypes.values();
   foundTypesSorted.sort();
 
   foreach (const QString &oneType, foundTypesSorted) {

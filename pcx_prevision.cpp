@@ -75,7 +75,7 @@ int PCx_Prevision::toPrevisionalExtendedAudit(const QString &newAuditName) {
     return -1;
   }
   QList<int> years = attachedAudit->getYears();
-  qSort(years);
+  std::sort(years.begin(), years.end());
   int lastYear = years.last() + 1;
   years.append(lastYear);
 

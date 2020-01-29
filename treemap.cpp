@@ -87,7 +87,7 @@ void TreeMap::clear() {
 }
 
 void TreeMap::sort() {
-  qSort(children.begin(), children.end(), lessThan);
+  std::sort(children.begin(), children.end(), lessThan);
   foreach (TreeMap *child, children)
     child->sort();
 }

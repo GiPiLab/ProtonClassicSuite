@@ -78,8 +78,8 @@ PCx_Audit::PCx_Audit(unsigned int auditId, bool _noLoadAttachedTree) : auditId(a
 
     QSet<int> yearsTemp;
     foreach (const QString &uneAnnee, yearsSplitted) { yearsTemp.insert(uneAnnee.toInt()); }
-    years = yearsTemp.toList();
-    qSort(years);
+    years = yearsTemp.values();
+    std::sort(years.begin(), years.end());
 
     foreach (int annee, years) { yearsStringList.append(QString::number(annee)); }
 
@@ -328,7 +328,7 @@ int PCx_Audit::duplicateAudit(const QString &newName, QList<int> years, bool cop
     qFatal("Assertion failed");
   }
 
-  qSort(years);
+  std::sort(years.begin(), years.end());
   progress.setValue(1);
   int year1 = years.first();
   int year2 = years.last();
@@ -1145,9 +1145,9 @@ unsigned int PCx_Audit::addNewAudit(const QString &name, const QList<int> &years
   }
 
   // Removes duplicates and sort years
-  QSet<int> yearsSet = years.toSet();
-  QList<int> yearsList = yearsSet.toList();
-  qSort(yearsList);
+  QSet<int> yearsSet(years.begin(), years.end());
+  QList<int> yearsList = yearsSet.values();
+  std::sort(yearsList.begin(), yearsList.end());
 
   QString yearsString;
   foreach (int annee, yearsList) {

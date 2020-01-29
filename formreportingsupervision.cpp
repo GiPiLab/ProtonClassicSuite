@@ -363,8 +363,8 @@ QSize FormReportingSupervision::sizeHint() const { return {900, 500}; }
 
 void FormReportingSupervision::updateDateRefCombo() {
   ui->comboBoxListDates->clear();
-  QList<QDate> listDates = selectedReporting->getDatesForNodeAndMode(1, getSelectedMode()).toList();
-  qSort(listDates.begin(), listDates.end(), qGreater<QDate>());
+  QList<QDate> listDates = selectedReporting->getDatesForNodeAndMode(1, getSelectedMode()).values();
+  std::sort(listDates.begin(), listDates.end(), std::greater<QDate>());
 
   ui->comboBoxListDates->addItem("Dernière situation", -1);
   foreach (const QDate &date, listDates) {

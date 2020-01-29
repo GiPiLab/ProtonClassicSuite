@@ -169,8 +169,8 @@ void FormReportingOverview::updateComboRefDate(QComboBox *combo) {
     datesForNode = dates1.intersect(dates2).intersect(dates3).intersect(dates4);
   }
 
-  QList<QDate> listDatesForNode = datesForNode.toList();
-  qSort(listDatesForNode.begin(), listDatesForNode.end(), qGreater<QDate>());
+  QList<QDate> listDatesForNode = datesForNode.values();
+  std::sort(listDatesForNode.begin(), listDatesForNode.end(), std::greater<QDate>());
 
   foreach (QDate date, listDatesForNode) {
     QDateTime dt(date);
