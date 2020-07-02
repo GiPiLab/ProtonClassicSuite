@@ -56,7 +56,8 @@ DialogAbout::DialogAbout(QWidget *parent) : QDialog(parent), ui(new Ui::DialogAb
   ui->label->setText(QString("ProtonClassicSuite version %1 (build %2)<br>©2006-%3 "
                              "Laboratoire de "
                              "Recherche pour le Développement Local<br><a "
-                             "href='https://gipilab.org'>https://gipilab.org</a>")
+                             "href='https://gipilab.org'>gipilab.org</a> - <a "
+                             "href='https://protonclassic.com'>protonclassic.com</a>")
                          .arg(VERSION)
                          .arg(__DATE__)
                          .arg(QDate::currentDate().year()));
