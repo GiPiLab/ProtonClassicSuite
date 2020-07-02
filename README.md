@@ -14,16 +14,6 @@ Cette suite logicielle à destination des organismes publics (collectivités loc
 * https://gipilab.org
 
 
-## Instruction de compilation
+## Licence
 
-Installer :
-
-* QT 5.7 ou plus récent
-* Graphviz
-
-Puis exécuter :
-
-* qmake
-* make
-
-
+Licence CECILL (une licence semblable à l'esprit de la GPL mais compatible avec le droit français)
