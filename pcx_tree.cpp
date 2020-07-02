@@ -2496,7 +2496,6 @@ int PCx_Tree::createRandomTree(const QString &name, unsigned int nbNodes) {
     qFatal("Assertion failed");
   }
 
-  qsrand(static_cast<unsigned int>(time(nullptr)));
   int maxNumType = getListOfDefaultTypes().size();
 
   QStringList usedFirstNames;
@@ -2505,12 +2504,12 @@ int PCx_Tree::createRandomTree(const QString &name, unsigned int nbNodes) {
   for (unsigned int i = 1; i < nbNodes; i++) {
     QSqlQuery q;
 
-    unsigned int type = static_cast<unsigned int>(qrand() % maxNumType) + 1;
-    unsigned int pid = (static_cast<unsigned int>(qrand()) % i) + 1;
+    unsigned int type = QRandomGenerator::global()->bounded(1, maxNumType);
+    unsigned int pid = QRandomGenerator::global()->bounded(1, (int)i);
     // QString name=QUuid::createUuid().toString();
-    QString name = firstNameList.at(qrand() % firstNameListSize);
+    QString name = firstNameList.at(QRandomGenerator::global()->bounded(firstNameListSize));
     while (usedFirstNames.contains(name)) {
-      name = firstNameList.at(qrand() % firstNameListSize);
+      name = firstNameList.at(QRandomGenerator::global()->bounded(firstNameListSize));
     }
     usedFirstNames.append(name);
     q.prepare(QString("insert into arbre_%1 (nom,pid,type) values (:nom, :pid, :type)").arg(lastId));

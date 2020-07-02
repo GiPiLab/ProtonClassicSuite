@@ -53,7 +53,7 @@
 
 DialogAbout::DialogAbout(QWidget *parent) : QDialog(parent), ui(new Ui::DialogAbout) {
   ui->setupUi(this);
-  ui->label->setText(QString("ProtonClassicSuite version %1 (%2)<br>©2006-%3 "
+  ui->label->setText(QString("ProtonClassicSuite version %1 (build %2)<br>©2006-%3 "
                              "Laboratoire de "
                              "Recherche pour le Développement Local<br><a "
                              "href='https://gipilab.org'>https://gipilab.org</a>")

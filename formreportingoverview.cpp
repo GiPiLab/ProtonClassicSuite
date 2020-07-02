@@ -173,7 +173,7 @@ void FormReportingOverview::updateComboRefDate(QComboBox *combo) {
   std::sort(listDatesForNode.begin(), listDatesForNode.end(), std::greater<QDate>());
 
   foreach (QDate date, listDatesForNode) {
-    QDateTime dt(date);
+    QDateTime dt = date.startOfDay();
     combo->addItem(date.toString(Qt::DefaultLocaleShortDate), dt.toTime_t());
   }
   combo->addItem("", -1);

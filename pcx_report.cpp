@@ -218,7 +218,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         pixmap = graphics.chartToPixmap(chart);
 
         if (document != nullptr) {
-          QString name = "mydata://" + QString::number(qrand());
+          QString name = "mydata://" + QString::number(QRandomGenerator::global()->generate());
           document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
           output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
         } else {
@@ -248,7 +248,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
       // Inline mode
       if (document != nullptr) {
 
-        QString name = "mydata://" + QString::number(qrand());
+        QString name = "mydata://" + QString::number(QRandomGenerator::global()->generate());
 
         document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
         output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
@@ -345,11 +345,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         pixmap = graphics.chartToPixmap(chart);
 
         if (inlineImageMode) {
-            QString name = "mydata://" + QString::number(qrand());
-            document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
-            output.append(QString("<br><div class='g' align='center'><img align='center' "
-                                  "alt='GRAPH' src='%3'></div><br>")
-                              .arg(name));
+          QString name = "mydata://" + QString::number(QRandomGenerator::global()->generate());
+          document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+          output.append(QString("<br><div class='g' align='center'><img align='center' "
+                                "alt='GRAPH' src='%3'></div><br>")
+                            .arg(name));
 
         } else {
             QString imageName = generateUniqueFileName(suffix);
@@ -381,11 +381,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         pixmap = graphics.chartToPixmap(chart);
 
         if (inlineImageMode) {
-            QString name = "mydata://" + QString::number(qrand());
-            document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
-            output.append(QString("<br><div class='g' align='center'><img align='center' "
-                                  "alt='GRAPH' src='%3'></div><br>")
-                              .arg(name));
+          QString name = "mydata://" + QString::number(QRandomGenerator::global()->generate());
+          document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+          output.append(QString("<br><div class='g' align='center'><img align='center' "
+                                "alt='GRAPH' src='%3'></div><br>")
+                            .arg(name));
 
       } else {
         QString imageName = generateUniqueFileName(suffix);
@@ -418,11 +418,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         pixmap = graphics.chartToPixmap(chart);
 
         if (inlineImageMode) {
-            QString name = "mydata://" + QString::number(qrand());
-            document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
-            output.append(QString("<br><div class='g' align='center'><img align='center' "
-                                  "alt='GRAPH' src='%3'></div><br>")
-                              .arg(name));
+          QString name = "mydata://" + QString::number(QRandomGenerator::global()->generate());
+          document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+          output.append(QString("<br><div class='g' align='center'><img align='center' "
+                                "alt='GRAPH' src='%3'></div><br>")
+                            .arg(name));
 
       } else {
         QString imageName = generateUniqueFileName(suffix);
@@ -455,11 +455,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         pixmap = graphics.chartToPixmap(chart);
 
         if (inlineImageMode) {
-            QString name = "mydata://" + QString::number(qrand());
-            document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
-            output.append(QString("<br><div class='g' align='center'><img align='center' "
-                                  "alt='GRAPH' src='%3'></div><br>")
-                              .arg(name));
+          QString name = "mydata://" + QString::number(QRandomGenerator::global()->generate());
+          document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
+          output.append(QString("<br><div class='g' align='center'><img align='center' "
+                                "alt='GRAPH' src='%3'></div><br>")
+                            .arg(name));
 
       } else {
         QString imageName = generateUniqueFileName(suffix);

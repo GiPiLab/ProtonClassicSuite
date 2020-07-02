@@ -78,7 +78,7 @@ void FormReportingReports::updateListOfReportings() {
 
 void FormReportingReports::updateTooltips() {
   QList<unsigned int> leaves = model->getAttachedTree()->getLeavesId();
-  unsigned int nodeId = leaves.at(qrand() % leaves.count());
+  unsigned int nodeId = leaves.at(QRandomGenerator::global()->bounded(leaves.count()));
   ui->checkBoxS->setToolTip("<span style='font-size:8pt'>" + report->getTables().getPCRRFDF(nodeId) + "</span>");
   ui->checkBoxA->setToolTip("<span style='font-size:8pt'>" +
                             report->getTables().getPCRProvenance(nodeId, MODES::DFRFDIRI::DF) + "</span>");

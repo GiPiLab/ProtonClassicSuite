@@ -368,7 +368,7 @@ void FormReportingSupervision::updateDateRefCombo() {
 
   ui->comboBoxListDates->addItem("Dernière situation", -1);
   foreach (const QDate &date, listDates) {
-    ui->comboBoxListDates->addItem(date.toString(Qt::DefaultLocaleShortDate), QDateTime(date).toTime_t());
+    ui->comboBoxListDates->addItem(date.toString(Qt::DefaultLocaleShortDate), date.startOfDay().toTime_t());
   }
 
   if (model != nullptr && selectedReporting != nullptr) {

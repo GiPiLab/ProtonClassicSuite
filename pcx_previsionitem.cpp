@@ -74,14 +74,14 @@ void PCx_PrevisionItem::loadFromDb() {
   if (q.next()) {
     label = q.value("label").toString();
     computedValue = q.value("computedPrevision").toLongLong();
-    QStringList items = q.value("prevision_operators_to_add").toString().split(';', QString::SkipEmptyParts);
+    QStringList items = q.value("prevision_operators_to_add").toString().split(';', Qt::SkipEmptyParts);
     foreach (const QString &item, items) {
       PCx_PrevisionItemCriteria criteria(item);
       itemsToAdd.append(criteria);
     }
 
     items.clear();
-    items = q.value("prevision_operators_to_substract").toString().split(';', QString::SkipEmptyParts);
+    items = q.value("prevision_operators_to_substract").toString().split(';', Qt::SkipEmptyParts);
 
     foreach (const QString &item, items) {
       PCx_PrevisionItemCriteria criteria(item);

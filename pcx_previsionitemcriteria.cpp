@@ -119,7 +119,7 @@ bool PCx_PrevisionItemCriteria::unserialize(const QString &criteriaString) {
   if (criteriaString.isEmpty()) {
     return true;
   }
-  QStringList items = criteriaString.split(",", QString::SkipEmptyParts);
+  QStringList items = criteriaString.split(",", Qt::SkipEmptyParts);
   if (items.size() != 3) {
     qWarning() << "Invalid criteria string : " << criteriaString;
     return false;
