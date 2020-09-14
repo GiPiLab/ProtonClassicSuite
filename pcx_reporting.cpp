@@ -1172,7 +1172,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
       if (i == static_cast<int>(PCx_Reporting::OREDPCR::DISPONIBLES)) {
         continue;
       }
-      randval = randomGenerator->bounded(0, MAX_RANDOM_NUM_FOR_A_LEAF);
+      randval = randomGenerator->bounded(MAX_RANDOM_NUM_FOR_A_LEAF);
 
       data.insert(static_cast<PCx_Reporting::OREDPCR>(i), randval);
     }

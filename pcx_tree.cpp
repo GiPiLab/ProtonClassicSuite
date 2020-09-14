@@ -2505,7 +2505,7 @@ int PCx_Tree::createRandomTree(const QString &name, unsigned int nbNodes) {
     QSqlQuery q;
 
     unsigned int type = QRandomGenerator::global()->bounded(1, maxNumType);
-    unsigned int pid = QRandomGenerator::global()->bounded(1, (int)i);
+    unsigned int pid = QRandomGenerator::global()->bounded(1, (int)i + 1);
     // QString name=QUuid::createUuid().toString();
     QString name = firstNameList.at(QRandomGenerator::global()->bounded(firstNameListSize));
     while (usedFirstNames.contains(name)) {
