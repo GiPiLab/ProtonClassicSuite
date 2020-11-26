@@ -43,7 +43,6 @@
 #include "pcx_report.h"
 #include "pcx_query.h"
 #include "utils.h"
-#include <QtSvg/QtSvg>
 
 PCx_Report::PCx_Report(PCx_Audit *model, int graphicsWidth, int graphicsHeight)
     : auditModel(model), tables(model), graphics(model, graphicsWidth, graphicsHeight) {

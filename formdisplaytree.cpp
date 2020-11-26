@@ -76,11 +76,12 @@ void FormDisplayTree::on_printViewButton_clicked() {
   }
   QPainter painter;
   painter.begin(&printer);
-  double xscale = printer.pageRect().width() / double(ui->treeView->width());
-  double yscale = printer.pageRect().height() / double(ui->treeView->height());
+  double xscale = printer.pageLayout().paintRectPixels(printer.resolution()).width() / double(ui->treeView->width());
+  double yscale = printer.pageLayout().paintRectPixels(printer.resolution()).height() / double(ui->treeView->height());
   double scale = qMin(xscale, yscale) / 2;
-  painter.translate(printer.paperRect().x() + printer.pageRect().width() / 2,
-                    printer.paperRect().y() + printer.pageRect().height() / 2);
+  painter.translate(
+      printer.pageLayout().fullRect().x() + printer.pageLayout().paintRectPixels(printer.resolution()).width() / 2,
+      printer.pageLayout().fullRect().y() + printer.pageLayout().paintRectPixels(printer.resolution()).height() / 2);
   painter.scale(scale, scale);
   painter.translate(-width() / 2, -height() / 2);
 
