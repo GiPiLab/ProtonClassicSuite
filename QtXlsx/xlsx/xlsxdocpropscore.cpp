@@ -24,13 +24,13 @@
 ****************************************************************************/
 #include "xlsxdocpropscore_p.h"
 
-#include <QXmlStreamWriter>
-#include <QXmlStreamReader>
-#include <QDir>
-#include <QFile>
+#include <QBuffer>
 #include <QDateTime>
 #include <QDebug>
-#include <QBuffer>
+#include <QDir>
+#include <QFile>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 namespace QXlsx {
 
@@ -136,10 +136,10 @@ bool DocPropsCore::loadFromXmlFile(QIODevice *device)
     while (!reader.atEnd()) {
          QXmlStreamReader::TokenType token = reader.readNext();
          if (token == QXmlStreamReader::StartElement) {
-             const QStringRef nsUri = reader.namespaceUri();
-             const QStringRef name = reader.name();
-             if (name == QStringLiteral("subject") && nsUri == dc) {
-                 setProperty(QStringLiteral("subject"), reader.readElementText());
+           const auto nsUri = reader.namespaceUri();
+           const auto name = reader.name();
+           if (name == QStringLiteral("subject") && nsUri == dc) {
+             setProperty(QStringLiteral("subject"), reader.readElementText());
              } else if (name == QStringLiteral("title") && nsUri == dc) {
                  setProperty(QStringLiteral("title"), reader.readElementText());
              } else if (name == QStringLiteral("creator") && nsUri == dc) {
