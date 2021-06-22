@@ -288,12 +288,11 @@ void FormEditAudit::on_pushButtonExportHTML_clicked() {
         QTextDocument doc;
         doc.setHtml(out);
 
-        out = doc.toHtml("utf-8");
+        out = doc.toHtml();
         out.replace(" -qt-block-indent:0;", "");
     }
 
     QTextStream stream(&file);
-    stream.setCodec("UTF-8");
     stream << out;
     stream.flush();
     file.close();

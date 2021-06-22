@@ -165,7 +165,7 @@ QString qTableViewToHtml(QTableView *tableView) {
       QString align;
       QModelIndex index = tableView->model()->index(row, column);
       if (!tableView->isColumnHidden(column)) {
-        QVariant color = tableView->model()->data(index, Qt::TextColorRole);
+        QVariant color = tableView->model()->data(index, Qt::ForegroundRole);
         QVariant alignment = tableView->model()->data(index, Qt::TextAlignmentRole);
         if (alignment.isValid()) {
           if (alignment.toInt() == Qt::AlignCenter) {
@@ -182,8 +182,9 @@ QString qTableViewToHtml(QTableView *tableView) {
         QVariant data = tableView->model()->data(index);
         out.append("<td " + align + " style='" + cellStyle + "'>");
         QString dataString;
+        QLocale defaultLocale;
         if (static_cast<QMetaType::Type>(data.type()) == QMetaType::QDate) {
-          dataString = data.toDate().toString(Qt::DefaultLocaleShortDate);
+          dataString = defaultLocale.toString(data.toDate(), QLocale::ShortFormat);
         } else {
           if (data.toString().isEmpty()) {
             dataString = "&nbsp;";

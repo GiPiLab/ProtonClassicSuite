@@ -47,9 +47,8 @@
 #include "pcx_previsionitem.h"
 #include "pcx_reporting.h"
 #include <QStandardItemModel>
-#include <QtCharts/QtCharts>
+#include <QtCharts>
 
-using namespace QtCharts;
 
 class PCx_Graphics {
 public:

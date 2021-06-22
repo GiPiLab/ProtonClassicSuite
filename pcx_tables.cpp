@@ -1230,11 +1230,12 @@ QString PCx_Tables::getPCRRatioParents(unsigned int node, MODES::DFRFDIRI mode) 
     return QString();
   }
 
+  QLocale defaultLocale;
   qint64 nodeVal = reportingModel->getNodeValue(node, mode, PCx_Reporting::OREDPCR::OUVERTS, lastDate);
 
   QString out = QObject::tr("<p>Le %1, date de la dernière situation PCR, les crédits "
                             "ouverts pour <strong>%2</strong> s'élevaient à %3 € %4</p>")
-                    .arg(lastDate.toString(Qt::DefaultLocaleShortDate),
+                    .arg(defaultLocale.toString(lastDate, QLocale::ShortFormat),
                          reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
                          NUMBERSFORMAT::formatFixedPoint(nodeVal), node != 1 ? "représentant : " : "");
 

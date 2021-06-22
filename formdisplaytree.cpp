@@ -156,7 +156,6 @@ void FormDisplayTree::on_exportButton_clicked() {
       return;
     }
     QTextStream stream(&file);
-    stream.setCodec("UTF-8");
     stream << dot;
     file.close();
     QMessageBox::information(this, tr("Succès"), tr("Source de l'arbre enregistrée au format DOT"));

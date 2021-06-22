@@ -249,8 +249,8 @@ void FormManageAudits::on_comboListOfAudits_activated(int index) {
 
   // qDebug()<<"Selected audit = "<<selectedAuditId<< "
   // "<<ui->comboListOfAudits->currentText();
-
-  ui->labelDate->setText(selectedAudit->getCreationTimeLocal().toString(Qt::DefaultLocaleLongDate));
+  QLocale defaultLocale;
+  ui->labelDate->setText(defaultLocale.toString(selectedAudit->getCreationTimeLocal(), QLocale::LongFormat));
   if (selectedAudit->isFinished() == true) {
     ui->labelFinished->setText(tr("oui"));
     ui->finishAuditButton->setEnabled(false);
