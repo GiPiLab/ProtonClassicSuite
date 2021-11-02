@@ -520,13 +520,12 @@ void FormQueries::on_pushButtonSave_clicked() {
   }
 
   QTextStream stream(&file);
-  stream.setCodec("UTF-8");
 
   QSettings settings;
   QString settingStyle = settings.value("output/style", "CSS").toString();
 
   if (settingStyle == "INLINE") {
-    stream << doc->toHtml("utf-8");
+    stream << doc->toHtml();
   } else {
     stream << currentHtmlDoc;
   }

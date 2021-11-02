@@ -465,10 +465,11 @@ void FormManageReportings::updateReportingInfos() {
     dateRF = selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RF);
     dateDI = selectedReporting->getLastReportingDate(MODES::DFRFDIRI::DI);
     dateRI = selectedReporting->getLastReportingDate(MODES::DFRFDIRI::RI);
-    ui->labelLastDF->setText(dateDF.toString(Qt::DefaultLocaleShortDate));
-    ui->labelLastRF->setText(dateRF.toString(Qt::DefaultLocaleShortDate));
-    ui->labelLastDI->setText(dateDI.toString(Qt::DefaultLocaleShortDate));
-    ui->labelLastRI->setText(dateRI.toString(Qt::DefaultLocaleShortDate));
+    QLocale defaultLocale;
+    ui->labelLastDF->setText(defaultLocale.toString(dateDF, QLocale::ShortFormat));
+    ui->labelLastRF->setText(defaultLocale.toString(dateRF, QLocale::ShortFormat));
+    ui->labelLastDI->setText(defaultLocale.toString(dateDI, QLocale::ShortFormat));
+    ui->labelLastRI->setText(defaultLocale.toString(dateRI, QLocale::ShortFormat));
     if (!dateDF.isValid()) {
       ui->pushButtonDeleteLastDF->setEnabled(false);
     } else {

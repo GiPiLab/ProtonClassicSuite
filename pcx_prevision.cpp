@@ -303,8 +303,9 @@ QList<QPair<unsigned int, QString>> PCx_Prevision::getListOfPrevisions() {
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
     dt.setTimeSpec(Qt::UTC);
     QDateTime dtLocal = dt.toLocalTime();
+    QLocale defaultLocale;
     QPair<unsigned int, QString> p;
-    item = QString("%1 - %2").arg(query.value("nom").toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+    item = QString("%1 - %2").arg(query.value("nom").toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
     p.first = query.value("id").toUInt();
     p.second = item;
     listOfPrevisions.append(p);

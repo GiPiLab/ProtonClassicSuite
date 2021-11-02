@@ -183,7 +183,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
     return out;
   }
 
-  if (role == Qt::DisplayRole || role == Qt::TextColorRole || role == Qt::EditRole) {
+  if (role == Qt::DisplayRole || role == Qt::ForegroundRole || role == Qt::EditRole) {
     int row = index.row();
     Entry entry = entries.at(row);
     QString output;
@@ -289,7 +289,7 @@ QVariant PCx_ReportingTableSupervisionModel::data(const QModelIndex &index, int 
     // string, not as number)
     else if (role == Qt::EditRole) {
       return computedValue;
-    } else if (role == Qt::TextColorRole) {
+    } else if (role == Qt::ForegroundRole) {
       switch (index.column()) {
       case static_cast<int>(TABLESUPERVISIONCOLUMNS::DIFFREALISESPREDITSOUVERTS):
       case static_cast<int>(TABLESUPERVISIONCOLUMNS::TAUXECART): {
@@ -370,7 +370,7 @@ PCx_ReportingTableSupervisionModel::Entry::Entry(unsigned int nodeId, unsigned i
   this->realises = NUMBERSFORMAT::fixedPointToDouble(realises);
   this->engages = NUMBERSFORMAT::fixedPointToDouble(engages);
   this->disponibles = NUMBERSFORMAT::fixedPointToDouble(disponibles);
-  date = QDateTime::fromTime_t(dateTimeT).date();
+  date = QDateTime::fromSecsSinceEpoch(dateTimeT).date();
 
   int nbJoursDepuisDebutAnnee = date.dayOfYear();
   int nbJoursRestants = 365 - nbJoursDepuisDebutAnnee;

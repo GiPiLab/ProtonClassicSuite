@@ -229,7 +229,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     // compatible with text editors)
     QTextDocument formattedOut;
     formattedOut.setHtml(out);
-    out = formattedOut.toHtml("utf-8");
+    out = formattedOut.toHtml();
 
     // Cleanup the output a bit
     out.replace(" -qt-block-indent:0;", "");
@@ -242,8 +242,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     dir.removeRecursively();
     return false;
   }
-  QTextStream stream(&file);
-  stream.setCodec("UTF-8");
+  QTextStream stream(&file);  
   stream << out;
   stream.flush();
   file.close();

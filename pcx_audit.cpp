@@ -573,16 +573,17 @@ void PCx_Audit::updateParent(const QString &tableName, int annee, unsigned int n
 }
 
 QString PCx_Audit::getHTMLAuditStatistics() const {
-  QString out =
-      QString("\n<table cellpadding='5' border='1' align='center'>\n"
-              "<tr><td>Arbre associé</td><td align='right'>%1 (%2 noeuds)</td></tr>"
-              "<tr><td>Années d'application</td><td align='right'>%3</td></tr>"
-              "<tr><td>Date de création</td><td align='right'>%4</td></tr>"
-              "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
-              "</table>\n")
-          .arg(attachedTreeName.toHtmlEscaped())
-          .arg(getAttachedTree()->getNumberOfNodes())
-          .arg(yearsString, creationTimeLocal.toString(Qt::SystemLocaleLongDate).toHtmlEscaped(), finishedString);
+  QLocale defaultLocale;
+  QString out = QString("\n<table cellpadding='5' border='1' align='center'>\n"
+                        "<tr><td>Arbre associé</td><td align='right'>%1 (%2 noeuds)</td></tr>"
+                        "<tr><td>Années d'application</td><td align='right'>%3</td></tr>"
+                        "<tr><td>Date de création</td><td align='right'>%4</td></tr>"
+                        "<tr><td>Audit terminé</td><td align='right'>%5</td></tr>"
+                        "</table>\n")
+                    .arg(attachedTreeName.toHtmlEscaped())
+                    .arg(getAttachedTree()->getNumberOfNodes())
+                    .arg(yearsString, defaultLocale.toString(creationTimeLocal, QLocale::LongFormat).toHtmlEscaped(),
+                         finishedString);
 
   out.append("\n<br><table cellpadding='5' border='1' align='center'>\n"
              "<tr><th>&nbsp;</th><th>DF</th><th>RF</th><th>DI</th><th>RI</th></tr>");
@@ -1490,11 +1491,12 @@ QList<QPair<unsigned int, QString>> PCx_Audit::getListOfAudits(ListAuditsMode mo
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
     dt.setTimeSpec(Qt::UTC);
     QDateTime dtLocal = dt.toLocalTime();
+    QLocale defaultLocale;
     QPair<unsigned int, QString> p;
     if (query.value("termine").toBool()) {
       // Finished audit
       item = QString("%1 - %2 (audit terminé)")
-                 .arg(query.value("nom").toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+                 .arg(query.value("nom").toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
       if (mode != PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly) {
         p.first = query.value("id").toUInt();
         p.second = item;
@@ -1502,7 +1504,8 @@ QList<QPair<unsigned int, QString>> PCx_Audit::getListOfAudits(ListAuditsMode mo
       }
     } else if (mode != PCx_Audit::ListAuditsMode::FinishedAuditsOnly) {
       // Unfinished audit
-      item = QString("%1 - %2").arg(query.value("nom").toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+      item =
+          QString("%1 - %2").arg(query.value("nom").toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
       p.first = query.value("id").toUInt();
       p.second = item;
       listOfAudits.append(p);
@@ -1533,11 +1536,12 @@ QList<QPair<unsigned int, QString>> PCx_Audit::getListOfAuditsAttachedWithThisTr
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
     dt.setTimeSpec(Qt::UTC);
     QDateTime dtLocal = dt.toLocalTime();
+    QLocale defaultLocale;
     QPair<unsigned int, QString> p;
     if (query.value("termine").toBool()) {
       // Finished audit
       item = QString("%1 - %2 (audit terminé)")
-                 .arg(query.value("nom").toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+                 .arg(query.value("nom").toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
       if (mode != PCx_Audit::ListAuditsMode::UnFinishedAuditsOnly) {
         p.first = query.value("id").toUInt();
         p.second = item;
@@ -1545,7 +1549,8 @@ QList<QPair<unsigned int, QString>> PCx_Audit::getListOfAuditsAttachedWithThisTr
       }
     } else if (mode != PCx_Audit::ListAuditsMode::FinishedAuditsOnly) {
       // Unfinished audit
-      item = QString("%1 - %2").arg(query.value("nom").toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+      item =
+          QString("%1 - %2").arg(query.value("nom").toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
       p.first = query.value("id").toUInt();
       p.second = item;
       listOfAudits.append(p);

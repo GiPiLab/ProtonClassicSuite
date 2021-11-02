@@ -109,7 +109,8 @@ void FormManagePrevisions::on_comboListPrevisions_activated(int index) {
   // qDebug()<<"Selected audit = "<<selectedAuditId<< "
   // "<<ui->comboListOfAudits->currentText();
 
-  ui->labelDate->setText(selectedPrevision->getCreationTimeLocal().toString(Qt::DefaultLocaleLongDate));
+  QLocale defaultLocale;
+  ui->labelDate->setText(defaultLocale.toString(selectedPrevision->getCreationTimeLocal(), QLocale::LongFormat));
   ui->labelName->setText(selectedPrevision->getPrevisionName());
   ui->labelAttachedAudit->setText(selectedAttachedAudit.getAuditName());
   ui->labelAttachedAuditYears->setText(selectedAttachedAudit.getYearsString());

@@ -1350,9 +1350,11 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
   double percentVINT = std::numeric_limits<double>::quiet_NaN();
   double sumPercent = std::numeric_limits<double>::quiet_NaN();
 
+  QLocale locale;
+
   if (q.next()) {
     unsigned int dateTimeT = q.value("date").toUInt();
-    QDate laDate = QDateTime::fromTime_t(dateTimeT).date();
+    QDate laDate = QDateTime::fromSecsSinceEpoch(dateTimeT).date();
     qint64 bp = q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::BP)).toLongLong();
     qint64 ocdm = q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OCDM)).toLongLong();
     qint64 vcdm = q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::VCDM)).toLongLong();
@@ -1394,7 +1396,7 @@ QString PCx_Tables::getPCRVariation(unsigned int node, MODES::DFRFDIRI mode) con
                         "PCR, les crédits alloués au budget primitif à <b>%2</b> ont "
                         "enregistré une variation de %3 €, correspondant à %4 % de "
                         "l'autorisation d'origine</p>")
-                    .arg(laDate.toString(Qt::DefaultLocaleShortDate),
+                    .arg(locale.toString(laDate, QLocale::ShortFormat),
                          reportingModel->getAttachedTree()->getNodeName(node).toHtmlEscaped(),
                          NUMBERSFORMAT::formatFixedPoint(sum), NUMBERSFORMAT::formatDouble(sumPercent, -1, true)));
 
@@ -1524,9 +1526,11 @@ QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const 
     die();
   }
 
+  QLocale defaultLocale;
+
   if (q.next()) {
     unsigned int dateTimeT = q.value("date").toUInt();
-    QDate laDate = QDateTime::fromTime_t(dateTimeT).date();
+    QDate laDate = QDateTime::fromSecsSinceEpoch(dateTimeT).date();
     double ouverts = NUMBERSFORMAT::fixedPointToDouble(
         q.value(PCx_Reporting::OREDPCRtoTableString(PCx_Reporting::OREDPCR::OUVERTS)).toLongLong());
     double realises = NUMBERSFORMAT::fixedPointToDouble(
@@ -1636,7 +1640,7 @@ QString PCx_Tables::getPCRCycles(unsigned int node, MODES::DFRFDIRI mode) const 
     if (q.value("ouverts").toLongLong() != 0) {
       out.append(QString("<li>Taux d'écart constaté le %1, date de la dernière "
                          "situation PCR = <b>%2 %</b></li></ol>")
-                     .arg(laDate.toString(Qt::DefaultLocaleShortDate),
+                     .arg(defaultLocale.toString(laDate, QLocale::ShortFormat),
                           NUMBERSFORMAT::formatDouble((journReal * 365 - ouverts) / ouverts * 100)));
 
       out.append(QStringLiteral("<p>Le taux d'écart signale, s'il est négatif, un cycle à venir, "

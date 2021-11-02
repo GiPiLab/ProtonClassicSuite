@@ -172,9 +172,10 @@ void FormReportingOverview::updateComboRefDate(QComboBox *combo) {
   QList<QDate> listDatesForNode = datesForNode.values();
   std::sort(listDatesForNode.begin(), listDatesForNode.end(), std::greater<QDate>());
 
+  QLocale defaultLocale;
   foreach (QDate date, listDatesForNode) {
     QDateTime dt = date.startOfDay();
-    combo->addItem(date.toString(Qt::DefaultLocaleShortDate), dt.toTime_t());
+    combo->addItem(defaultLocale.toString(date, QLocale::ShortFormat), dt.toSecsSinceEpoch());
   }
   combo->addItem("", -1);
 }
@@ -531,11 +532,10 @@ void FormReportingOverview::on_pushButtonExportHTML_clicked() {
   QTextDocument doc;
   doc.setHtml(selectedReporting->generateHTMLReportingTitle() + ui->textEdit->toHtml());
 
-  QString output = doc.toHtml("utf-8");
+  QString output = doc.toHtml();
   output.replace(" -qt-block-indent:0;", "");
 
-  QTextStream stream(&file);
-  stream.setCodec("UTF-8");
+  QTextStream stream(&file);  
   stream << output;
   stream.flush();
   file.close();

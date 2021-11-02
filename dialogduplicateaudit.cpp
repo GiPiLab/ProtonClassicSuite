@@ -49,7 +49,8 @@ DialogDuplicateAudit::DialogDuplicateAudit(unsigned int oldAuditId, QWidget *par
   ui->setupUi(this);
   oldAudit = new PCx_Audit(oldAuditId);
   ui->labelOldName->setText(oldAudit->getAuditName());
-  ui->labelOldDate->setText(oldAudit->getCreationTimeLocal().toString(Qt::SystemLocaleLongDate));
+  QLocale defaultLocale;
+  ui->labelOldDate->setText(defaultLocale.toString(oldAudit->getCreationTimeLocal(), QLocale::LongFormat));
   ui->labelOldTree->setText(QString("%1 (%2 noeuds)")
                                 .arg(oldAudit->getAttachedTreeName())
                                 .arg(oldAudit->getAttachedTree()->getNumberOfNodes()));

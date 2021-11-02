@@ -63,8 +63,7 @@ DialogAbout::DialogAbout(QWidget *parent) : QDialog(parent), ui(new Ui::DialogAb
                          .arg(QDate::currentDate().year()));
   QFile eulaFile(":/EULA/EULA.txt");
   eulaFile.open(QIODevice::ReadOnly);
-  QTextStream in(&eulaFile);
-  in.setCodec("UTF-8");
+  QTextStream in(&eulaFile);  
   QString line = in.readAll();
   eulaFile.close();
   ui->plainTextEdit->setPlainText(line);

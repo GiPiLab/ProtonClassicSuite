@@ -242,11 +242,11 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
   QVariant value;
   bool percentMode = false;
 
-  if (role == Qt::TextColorRole || role == Qt::DisplayRole || role == Qt::EditRole) {
+  if (role == Qt::ForegroundRole || role == Qt::DisplayRole || role == Qt::EditRole) {
     value = queryModel.record(item.row()).value(item.column());
     // The date column
     if (item.column() == 0) {
-      return QDateTime::fromTime_t(value.toUInt()).date();
+      return QDateTime::fromSecsSinceEpoch(value.toUInt()).date();
     }
 
     double computedValue = NUMBERSFORMAT::fixedPointToDouble(value.toLongLong());
@@ -291,7 +291,7 @@ QVariant PCx_ReportingTableOverviewModel::data(const QModelIndex &item, int role
       return computedValue;
     }
 
-    if (role == Qt::TextColorRole) {
+    if (role == Qt::ForegroundRole) {
       if (computedValue < 0.0) {
         return QVariant::fromValue(QColor(Qt::red));
       }

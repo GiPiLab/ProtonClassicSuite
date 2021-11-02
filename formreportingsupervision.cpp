@@ -343,11 +343,10 @@ void FormReportingSupervision::on_pushButtonExportHTML_clicked() {
   QTextDocument doc;
   doc.setHtml(out);
 
-  QString output = doc.toHtml("utf-8");
+  QString output = doc.toHtml();
   output.replace(" -qt-block-indent:0;", "");
 
-  QTextStream stream(&file);
-  stream.setCodec("UTF-8");
+  QTextStream stream(&file);  
   stream << output;
   stream.flush();
   file.close();
@@ -367,8 +366,10 @@ void FormReportingSupervision::updateDateRefCombo() {
   std::sort(listDates.begin(), listDates.end(), std::greater<QDate>());
 
   ui->comboBoxListDates->addItem("Dernière situation", -1);
+  QLocale defaultLocale;
   foreach (const QDate &date, listDates) {
-    ui->comboBoxListDates->addItem(date.toString(Qt::DefaultLocaleShortDate), date.startOfDay().toTime_t());
+    ui->comboBoxListDates->addItem(defaultLocale.toString(date, QLocale::ShortFormat),
+                                   date.startOfDay().toSecsSinceEpoch());
   }
 
   if (model != nullptr && selectedReporting != nullptr) {

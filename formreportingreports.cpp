@@ -300,7 +300,7 @@ void FormReportingReports::on_saveButton_clicked() {
     // compatible with text editors)
     QTextDocument formattedOut;
     formattedOut.setHtml(output);
-    output = formattedOut.toHtml("utf-8");
+    output = formattedOut.toHtml();
 
     // Cleanup the output a bit
     output.replace(" -qt-block-indent:0;", "");
@@ -323,8 +323,7 @@ void FormReportingReports::on_saveButton_clicked() {
     return;
   }
 
-  QTextStream stream(&file);
-  stream.setCodec("UTF-8");
+  QTextStream stream(&file);  
   stream << output;
   stream.flush();
   file.close();

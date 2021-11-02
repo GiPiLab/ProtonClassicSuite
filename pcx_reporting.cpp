@@ -153,7 +153,7 @@ bool PCx_Reporting::setLeafValues(unsigned int leafId, MODES::DFRFDIRI mode, QDa
   q.bindValue(":id_node", leafId);
 
   QDateTime dt = date.startOfDay();
-  unsigned int sSinceEpoch = dt.toTime_t();
+  unsigned int sSinceEpoch = dt.toSecsSinceEpoch();
 
   q.bindValue(":date", sSinceEpoch);
 
@@ -213,7 +213,7 @@ qint64 PCx_Reporting::getNodeValue(unsigned int nodeId, MODES::DFRFDIRI mode, OR
   q.prepare(QString("select %1 from reporting_%2_%3 where date=:date and id_node=:node")
                 .arg(OREDPCRtoTableString(ored), modeToTableString(mode))
                 .arg(reportingId));
-  q.bindValue(":date", date.startOfDay().toTime_t());
+  q.bindValue(":date", date.startOfDay().toSecsSinceEpoch());
   q.bindValue(":node", nodeId);
   if (!q.exec()) {
     qCritical() << q.lastError();
@@ -265,7 +265,7 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
   QSqlQuery q;
 
   q.prepare(QString("select * from %1 where id_node in(%2) and date=:date").arg(tableName, childrenString));
-  unsigned int tDate = date.startOfDay().toTime_t();
+  unsigned int tDate = date.startOfDay().toSecsSinceEpoch();
 
   q.bindValue(":date", tDate);
   if (!q.exec()) {
@@ -631,7 +631,7 @@ bool PCx_Reporting::importDataFromXLSX(const QString &fileName, MODES::DFRFDIRI 
     engages = xlsx.read(row, 13);
     rattachesnmoins1 = xlsx.read(row, 14);
 
-    QDate laDate = QXlsx::datetimeFromNumber(date.toDouble()).date();
+    QDate laDate = QXlsx::datetimeFromNumber(date.toDouble()).toDate();
 
     unsigned int nodeId = cellNodeId.toUInt();
     if (nodeId == 0) {
@@ -749,7 +749,7 @@ QDate PCx_Reporting::getLastReportingDate(MODES::DFRFDIRI mode, unsigned int nod
     return {};
   }
 
-  return QDateTime::fromTime_t(q.value(0).toUInt()).date();
+  return QDateTime::fromSecsSinceEpoch(q.value(0).toUInt()).date();
 }
 
 bool PCx_Reporting::deleteLastReportingDate(MODES::DFRFDIRI mode) {
@@ -757,7 +757,7 @@ bool PCx_Reporting::deleteLastReportingDate(MODES::DFRFDIRI mode) {
   QDate date = getLastReportingDate(mode);
   q.prepare(
       QString("delete from reporting_%1_%2 where date=:date").arg(MODES::modeToTableString(mode)).arg(reportingId));
-  q.bindValue(":date", date.startOfDay().toTime_t());
+  q.bindValue(":date", date.startOfDay().toSecsSinceEpoch());
   if (!q.exec()) {
     qCritical() << q.lastError();
     die();
@@ -848,7 +848,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const 
       q.prepare(QString("select ouverts,realises,engages from reporting_DF_%1 "
                         "where date=:date and id_node=:node")
                     .arg(reportingId));
-      q.bindValue(":date", dateDF.startOfDay().toTime_t());
+      q.bindValue(":date", dateDF.startOfDay().toSecsSinceEpoch());
       q.bindValue(":node", leaf);
       if (!q.exec()) {
         qCritical() << q.lastError();
@@ -879,7 +879,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const 
       q.prepare(QString("select ouverts,realises,engages from reporting_RF_%1 "
                         "where date=:date and id_node=:node")
                     .arg(reportingId));
-      q.bindValue(":date", dateRF.startOfDay().toTime_t());
+      q.bindValue(":date", dateRF.startOfDay().toSecsSinceEpoch());
       q.bindValue(":node", leaf);
       if (!q.exec()) {
         qCritical() << q.lastError();
@@ -911,7 +911,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const 
       q.prepare(QString("select ouverts,realises,engages from reporting_DI_%1 "
                         "where date=:date and id_node=:node")
                     .arg(reportingId));
-      q.bindValue(":date", dateDI.startOfDay().toTime_t());
+      q.bindValue(":date", dateDI.startOfDay().toSecsSinceEpoch());
       q.bindValue(":node", leaf);
       if (!q.exec()) {
         qCritical() << q.lastError();
@@ -943,7 +943,7 @@ bool PCx_Reporting::addLastReportingDateToExistingAudit(PCx_Audit *audit) const 
       q.prepare(QString("select ouverts,realises,engages from reporting_RI_%1 "
                         "where date=:date and id_node=:node")
                     .arg(reportingId));
-      q.bindValue(":date", dateRI.startOfDay().toTime_t());
+      q.bindValue(":date", dateRI.startOfDay().toSecsSinceEpoch());
       q.bindValue(":node", leaf);
       if (!q.exec()) {
         qCritical() << q.lastError();
@@ -1063,7 +1063,7 @@ bool PCx_Reporting::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString &fi
       xlsx.write(row, 1, leafId);
       xlsx.write(row, 2, typeAndNodeName.first);
       xlsx.write(row, 3, typeAndNodeName.second);
-      xlsx.write(row, 4, QDateTime::fromTime_t(q.value("date").toUInt()).date());
+      xlsx.write(row, 4, QDateTime::fromSecsSinceEpoch(q.value("date").toUInt()).date());
 
       if (!valBp.isNull()) {
         xlsx.write(row, 5, fixedPointToDouble(valBp.toLongLong()));
@@ -1126,13 +1126,13 @@ QSet<QDate> PCx_Reporting::getDatesForNodeAndMode(unsigned int nodeId, MODES::DF
   }
   while (q.next()) {
     unsigned int rowDate = q.value(0).toUInt();
-    out.insert(QDateTime::fromTime_t(rowDate).date());
+    out.insert(QDateTime::fromSecsSinceEpoch(rowDate).date());
   }
   return out;
 }
 
 bool PCx_Reporting::dateExistsForNodeAndMode(time_t timeT, unsigned int nodeId, MODES::DFRFDIRI mode) const {
-  return dateExistsForNodeAndMode(QDateTime::fromTime_t(static_cast<unsigned int>(timeT)).date(), nodeId, mode);
+  return dateExistsForNodeAndMode(QDateTime::fromSecsSinceEpoch(static_cast<unsigned int>(timeT)).date(), nodeId, mode);
 }
 
 void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
@@ -1194,7 +1194,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
 bool PCx_Reporting::dateExistsForNodeAndMode(QDate date, unsigned int nodeId, MODES::DFRFDIRI mode) const {
   QSqlQuery q;
   QDateTime dt = date.startOfDay();
-  unsigned int dateToCheck = dt.toTime_t();
+  unsigned int dateToCheck = dt.toSecsSinceEpoch();
   q.prepare(QString("select count(*) from reporting_%1_%2 where date=:date and "
                     "id_node=:idnode")
                 .arg(MODES::modeToTableString(mode))
@@ -1618,8 +1618,9 @@ QList<QPair<unsigned int, QString>> PCx_Reporting::getListOfReportings() {
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
     dt.setTimeSpec(Qt::UTC);
     QDateTime dtLocal = dt.toLocalTime();
+    QLocale defaultLocale;
     QPair<unsigned int, QString> p;
-    item = QString("%1 - %2").arg(query.value("nom").toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+    item = QString("%1 - %2").arg(query.value("nom").toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
     p.first = query.value("id").toUInt();
     p.second = item;
     listOfReportings.append(p);

@@ -1760,7 +1760,9 @@ int PCx_Tree::guessHierarchy() {
     die();
   }
 
-  QRegExp numRegExp("^(\\d+)");
+  QRegularExpression numRegExp("^(\\d+)");
+  QRegularExpressionMatch numRegExpMatch;
+
   while (q.next()) {
     QString nom = q.value("nom").toString();
     unsigned int id = q.value("id").toUInt();
@@ -1770,9 +1772,10 @@ int PCx_Tree::guessHierarchy() {
     if (!nameToId.contains(nom)) {
       nameToId.insert(nom, id);
       oldIdToPid.insert(id, pid);
-      int pos = numRegExp.indexIn(nom);
-      if (pos > -1) {
-        prefixToId.insert(numRegExp.cap(1), id);
+
+      numRegExpMatch = numRegExp.match(nom);
+      if (numRegExpMatch.hasMatch()) {
+        prefixToId.insert(numRegExpMatch.captured(1), id);
       }
     }
   }
@@ -2504,7 +2507,7 @@ int PCx_Tree::createRandomTree(const QString &name, unsigned int nbNodes) {
   for (unsigned int i = 1; i < nbNodes; i++) {
     QSqlQuery q;
 
-    unsigned int type = QRandomGenerator::global()->bounded(1, maxNumType);
+    unsigned int type = QRandomGenerator::global()->bounded(1, maxNumType + 1);
     unsigned int pid = QRandomGenerator::global()->bounded(1, (int)i + 1);
     // QString name=QUuid::createUuid().toString();
     QString name = firstNameList.at(QRandomGenerator::global()->bounded(firstNameListSize));
@@ -2636,16 +2639,17 @@ QList<QPair<unsigned int, QString>> PCx_Tree::getListOfTrees(bool finishedOnly) 
     dt = QDateTime::fromString(query.value(3).toString(), "yyyy-MM-dd hh:mm:ss");
     dt.setTimeSpec(Qt::UTC);
     QDateTime dtLocal = dt.toLocalTime();
+    QLocale defaultLocale;
 
     if (query.value("termine").toBool()) {
       item = QString("%1 - %2 (arbre terminé)")
-                 .arg(query.value(1).toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+                 .arg(query.value(1).toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
       QPair<unsigned int, QString> p;
       p.first = query.value(0).toUInt();
       p.second = item;
       listOfTrees.append(p);
     } else if (!finishedOnly) {
-      item = QString("%1 - %2").arg(query.value(1).toString(), dtLocal.toString(Qt::SystemLocaleShortDate));
+      item = QString("%1 - %2").arg(query.value(1).toString(), defaultLocale.toString(dtLocal, QLocale::ShortFormat));
       QPair<unsigned int, QString> p;
       p.first = query.value(0).toUInt();
       p.second = item;
