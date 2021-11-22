@@ -79,8 +79,8 @@ void ZoomableQChartView::wheelEvent(QWheelEvent *event) {
 void ZoomableQChartView::mousePressEvent(QMouseEvent *event) {
   if (event->button() == Qt::MouseButton::LeftButton) {
     moveChart = true;
-    lastPosX = event->x();
-    lastPosY = event->y();
+    lastPosX = event->position().x();
+    lastPosY = event->position().y();
   }
 
   QChartView::mousePressEvent(event);
@@ -94,7 +94,8 @@ void ZoomableQChartView::mouseMoveEvent(QMouseEvent *event) {
     return;
   }
 
-  if (event->x() < 0 || event->y() < 0 || event->x() > size().width() || event->y() > size().height()) {
+  if (event->position().x() < 0 || event->position().y() < 0 || event->position().x() > size().width() ||
+      event->position().y() > size().height()) {
     moveChart = false;
     QChartView::mouseMoveEvent(event);
     return;
@@ -102,10 +103,10 @@ void ZoomableQChartView::mouseMoveEvent(QMouseEvent *event) {
 
   if (moveChart) {
 
-    chart()->scroll(lastPosX - event->x(), event->y() - lastPosY);
+    chart()->scroll(lastPosX - event->position().x(), event->position().y() - lastPosY);
 
-    lastPosX = event->x();
-    lastPosY = event->y();
+    lastPosX = event->position().x();
+    lastPosY = event->position().y();
     // NOTE : ugly hack to deal with pointLabels remaining bug
     resize(size() + QSize(1, 1));
     resize(size() - QSize(1, 1));

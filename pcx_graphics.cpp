@@ -259,11 +259,11 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   xAxis->setLabelsAngle(-45);
   xAxis->setLabelsFont(smallFont);
 
-  xAxis->applyNiceNumbers();
   xAxis->setLabelFormat("%.0f");
   xAxis->setTickType(QValueAxis::TicksDynamic);
-  xAxis->setTickInterval(1.0);
+  xAxis->setTickInterval(1.0);  
   xAxis->setRange(minYear - 1, maxYear + 1);
+  xAxis->applyNiceNumbers();
 
   // xAxis->setMinorGridLineVisible(true);
   xAxis->setGridLineVisible(false);
@@ -578,7 +578,6 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   QLineSeries *series = nullptr;
 
   QValueAxis *xAxis = new QValueAxis();
-  xAxis->applyNiceNumbers();
   xAxis->setLabelFormat("%.0f");
   xAxis->setTickType(QValueAxis::TicksDynamic);
   xAxis->setTickInterval(1.0);
@@ -587,6 +586,7 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   if (prevItem != nullptr) {
     xAxis->setRange(minYear, maxYear + 1);
   }
+  xAxis->applyNiceNumbers();
 
   QFont smallFont("Sans", 8);
   xAxis->setLabelsAngle(-45);
