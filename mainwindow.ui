@@ -30,7 +30,7 @@
      <x>0</x>
      <y>0</y>
      <width>916</width>
-     <height>19</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -151,6 +151,9 @@
    <property name="text">
     <string>&amp;Quitter</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
+   </property>
   </action>
   <action name="actionManageAudits">
    <property name="icon">
@@ -208,6 +211,9 @@
    <property name="toolTip">
     <string>Créer une nouvelle base de données</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionOpenDb">
    <property name="icon">
@@ -219,6 +225,9 @@
    </property>
    <property name="toolTip">
     <string>Ouvrir une base de données existante</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionOptions">

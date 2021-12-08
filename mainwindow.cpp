@@ -43,6 +43,7 @@
 #include "mainwindow.h"
 #include "dialogabout.h"
 #include "ui_mainwindow.h"
+#include <QKeySequence>
 #include <QWhatsThis>
 
 using namespace NUMBERSFORMAT;
