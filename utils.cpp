@@ -183,7 +183,7 @@ QString qTableViewToHtml(QTableView *tableView) {
         out.append("<td " + align + " style='" + cellStyle + "'>");
         QString dataString;
         QLocale defaultLocale;
-        if (static_cast<QMetaType::Type>(data.type()) == QMetaType::QDate) {
+        if (data.typeId() == QMetaType::QDate) {
           dataString = defaultLocale.toString(data.toDate(), QLocale::ShortFormat);
         } else {
           if (data.toString().isEmpty()) {
@@ -276,8 +276,6 @@ int question(const QString &text, QWidget *parent) {
   messageBox.setText(text);
   messageBox.setIcon(QMessageBox::Question);
   messageBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-  messageBox.setButtonText(QMessageBox::Yes, "&Oui");
-  messageBox.setButtonText(QMessageBox::No, "&Non");
   return messageBox.exec();
 }
 

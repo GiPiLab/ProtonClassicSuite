@@ -121,8 +121,9 @@ int main(int argc, char *argv[]) {
 #endif
 
   QTranslator qtTranslator;
-  qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-  a.installTranslator(&qtTranslator);
+  if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+    QCoreApplication::installTranslator(&qtTranslator);
+  }
 
   qInstallMessageHandler(myMessageOutput);
 
