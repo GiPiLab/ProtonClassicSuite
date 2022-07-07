@@ -581,7 +581,7 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   xAxis->setLabelFormat("%.0f");
   xAxis->setTickType(QValueAxis::TicksDynamic);
   xAxis->setTickInterval(1.0);
-  // xAxis->setRange(minYear - 1, maxYear + 1);
+  xAxis->setRange(minYear, maxYear);
 
   if (prevItem != nullptr) {
     xAxis->setRange(minYear, maxYear + 1);
