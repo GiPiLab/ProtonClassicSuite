@@ -42,7 +42,9 @@
 
 #include "formauditreports.h"
 #include "pcx_auditwithtreemodel.h"
+#include "qtextdocumentwriter.h"
 #include "ui_formauditreports.h"
+#include "utils.h"
 
 FormAuditReports::FormAuditReports(QWidget *parent) : QWidget(parent), ui(new Ui::FormAuditReports) {
   ui->setupUi(this);
@@ -197,8 +199,6 @@ qDebug()<<"Mode-independant selected graphics = "<<modeIndependantGraphics;
 qDebug()<<"Mode-dependant selected tables = "<<selectedTables;
 qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
-  QString output = PCx_Report::generateHTMLHeader();
-  output.append(model->generateHTMLAuditTitle());
   QList<MODES::DFRFDIRI> listModes;
   if (ui->checkBoxDF->isChecked()) {
     listModes.append(MODES::DFRFDIRI::DF);
@@ -272,9 +272,10 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   QElapsedTimer timer;
   timer.start();
 
-  output.append(report->generateHTMLTOC(sortedSelectedNodes));
+  QHash<unsigned int,QString> nodeToFileName;
 
   foreach (unsigned int selectedNode, sortedSelectedNodes) {
+    QString output = report->generateNodeHTMLHeader(selectedNode);
     output.append(QString("\n\n<h2 id='node%2'>%1</h2>")
                       .arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped())
                       .arg(selectedNode));
@@ -302,21 +303,41 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
       dir.removeRecursively();
       return;
     }
-    output.append(QStringLiteral("\n\n<br><br><br><br>"));
-  }
-  output.append(QStringLiteral("\n</body></html>"));
+    output.append(QStringLiteral("\n\n</body></html>"));
 
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-  if (settingStyle == "INLINE") {
-    // Pass HTML through a temp QTextDocument to reinject css into tags (more
-    // compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(output);
-    output = formattedOut.toHtml();
+    // BEGIN WRITE NODE FILE
 
-    // Cleanup the output a bit
-    output.replace(" -qt-block-indent:0;", "");
+
+
+    QString nodeUniqueName=generateUniqueFileName(".html");
+    QString nodeAbsoluteFileName = absoluteImagePath + "/" + nodeUniqueName;
+    QString nodeRelativeFileName = relativeImagePath + "/" + nodeUniqueName;
+    nodeToFileName.insert(selectedNode,nodeRelativeFileName);
+    QFile nodeFile(nodeAbsoluteFileName);
+
+    if (!nodeFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+      QMessageBox::critical(this, tr("Attention"),
+                            tr("Ouverture du fichier impossible : %1").arg(nodeFile.errorString()));
+      return;
+    }
+
+    QTextStream nodeStream(&nodeFile);
+    nodeStream << output;
+    nodeStream.flush();
+    nodeFile.close();
+
+    if (nodeStream.status() != QTextStream::Ok) {
+      QMessageBox::critical(this, tr("Attention"), tr("Erreur d'enregistrement d'un noeud du rapport"));
+      return;
+    }
+    // END WRITE NODE FILE
   }
+
+  // Main html file
+  QString mainOutput = PCx_Report::generateMainHTMLHeader();
+  mainOutput.append(model->generateHTMLAuditTitle());
+  mainOutput.append(report->generateHTMLTOC(sortedSelectedNodes,nodeToFileName));
+  mainOutput.append(QStringLiteral("\n</body></html>"));
 
   if (!progress.wasCanceled()) {
     progress.setValue(maximumProgressValue - 1);
@@ -325,8 +346,6 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
     dir.removeRecursively();
     return;
   }
-
-  qDebug() << "Report generated in " << timer.elapsed() << "ms";
 
   QFile file(fileName);
 
@@ -337,8 +356,8 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
     return;
   }
 
-  QTextStream stream(&file);  
-  stream << output;
+  QTextStream stream(&file);
+  stream << mainOutput;
   stream.flush();
   file.close();
 

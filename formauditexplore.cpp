@@ -165,7 +165,7 @@ void FormAuditExplore::updateTextView() {
     unsigned int selectedNode =
         ui->treeView->selectionModel()->currentIndex().data(PCx_TreeModel::NodeIdUserRole).toUInt();
 
-    QString output = PCx_Report::generateHTMLHeader();
+    QString output = PCx_Report::generateMainHTMLHeader();
     output.append(model->generateHTMLAuditTitle());
 
     MODES::DFRFDIRI currentTablePresetMode =
@@ -295,7 +295,7 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
   QSettings settings;
 
   // Generate report in non-embedded mode, saving images
-  QString output = PCx_Report::generateHTMLHeader();
+  QString output = PCx_Report::generateMainHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
 
   PCx_Tables tables(model);

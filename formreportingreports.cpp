@@ -173,7 +173,7 @@ void FormReportingReports::on_saveButton_clicked() {
     return;
   }
 
-  QString output = PCx_Report::generateHTMLHeader();
+  QString output = PCx_Report::generateMainHTMLHeader();
   output.append(model->generateHTMLReportingTitle());
   QList<MODES::DFRFDIRI> listModes;
   if (ui->checkBoxDF->isChecked()) {

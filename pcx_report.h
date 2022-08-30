@@ -72,16 +72,24 @@ public:
                                              const QString &relativeImagePath = "",
                                              QProgressDialog *progress = nullptr);
 
+
   QString generateHTMLTOC(QList<unsigned int> nodes) const;
+  QString generateHTMLTOC(QList<unsigned int> nodes, QHash<unsigned int,QString> nodeToFileName) const;
 
   const PCx_Tables &getTables() const { return tables; }
   PCx_Graphics &getGraphics() { return graphics; }
 
   /**
-   * @brief generateHTMLHeader gets the header of an html document, with css
+   * @brief generateMainHTMLHeader gets the header of an html document, with css
    * @return the HTML header including the opening "<body>"
    */
-  static QString generateHTMLHeader();
+  static QString generateMainHTMLHeader();
+
+  /**
+   * @brief generateNodeHTMLHeader gets the header of an html document specific for a node, with css
+   * @return the HTML header including the opening "<body>"
+   */
+  QString generateNodeHTMLHeader(unsigned int node) const;
 
   /**
    * @brief getCSS gets the css to display an reporting in HTML
@@ -89,7 +97,7 @@ public:
    */
   static QString getCSS();
 
-  private:
+private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;
   PCx_Tables tables;

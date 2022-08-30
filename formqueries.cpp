@@ -335,7 +335,7 @@ void FormQueries::on_pushButtonExecReqVariation_clicked() {
 
   PCx_QueryVariation qv(model, typeId, ored, dfrfdiri, incdec, pop, oper, val, year1, year2);
 
-  currentHtmlDoc = PCx_Report::generateHTMLHeader();
+  currentHtmlDoc = PCx_Report::generateMainHTMLHeader();
   currentHtmlDoc.append(model->generateHTMLAuditTitle());
   if (xlsDoc != nullptr) {
     delete xlsDoc;
@@ -425,7 +425,7 @@ QString FormQueries::execQueries(QModelIndexList items, QXlsx::Document *xlsDocu
   progress.setWindowModality(Qt::ApplicationModal);
 
   progress.setValue(0);
-  QString output = PCx_Report::generateHTMLHeader();
+  QString output = PCx_Report::generateMainHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
 
   int count = 0;
@@ -547,7 +547,7 @@ void FormQueries::on_pushButtonExecReqRank_clicked() {
 
   PCx_QueryRank qr(model, typeId, ored, dfrfdiri, grSm, number, year1, year2);
 
-  currentHtmlDoc = PCx_Report::generateHTMLHeader();
+  currentHtmlDoc = PCx_Report::generateMainHTMLHeader();
   currentHtmlDoc.append(model->generateHTMLAuditTitle());
 
   if (xlsDoc != nullptr) {
@@ -614,7 +614,7 @@ void FormQueries::on_pushButtonExecReq3_clicked() {
 
   PCx_QueryMinMax qmm(model, typeId, ored, dfrfdiri, val1, val2, year1, year2);
 
-  currentHtmlDoc = PCx_Report::generateHTMLHeader();
+  currentHtmlDoc = PCx_Report::generateMainHTMLHeader();
   currentHtmlDoc.append(model->generateHTMLAuditTitle());
 
   if (xlsDoc != nullptr) {

@@ -237,7 +237,7 @@ void FormEditAudit::onAuditDataUpdated(unsigned int auditId) {
 }
 
 void FormEditAudit::on_pushButtonExportHTML_clicked() {
-    QString out = PCx_Report::generateHTMLHeader();
+    QString out = PCx_Report::generateMainHTMLHeader();
     out.append(auditModel->generateHTMLAuditTitle());
 
     MODES::DFRFDIRI mode = MODES::DFRFDIRI::DF;

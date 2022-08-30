@@ -222,8 +222,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
           output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
         } else {
           QString imageName = generateUniqueFileName(suffix);
-          QString imageAbsoluteName = imageName;
-          imageName.prepend(encodedRelativeImagePath + "/");
+          QString imageAbsoluteName = imageName;          
           imageAbsoluteName.prepend(absoluteImagePath + "/");
           if (PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName) == false) {
             break;
@@ -255,8 +254,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
         QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;
-        imageName.prepend(encodedRelativeImagePath + "/");
+        QString imageAbsoluteName = imageName;        
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
         if (PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName) == false) {
@@ -429,7 +427,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
         imageName.prepend(encodedRelativeImagePath + "/");
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
+        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageName)) {
             die();
         }
 
@@ -462,11 +460,11 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
       } else {
         QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;
-        imageName.prepend(encodedRelativeImagePath + "/");
-        imageAbsoluteName.prepend(absoluteImagePath + "/");
+        //QString imageAbsoluteName = imageName;
+        //imageName.prepend(encodedRelativeImagePath + "/");
+        //imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
+        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageName)) {
             die();
         }
 
@@ -501,15 +499,62 @@ QString PCx_Report::getCSS() {
     return css;
 }
 
-QString PCx_Report::generateHTMLHeader() {
-    return QString("<!DOCTYPE html>\n<html>\n<head><title>Rapport ProtonClassicSuite"
-                   "</title>\n<meta http-equiv='Content-Type' "
-                   "content='text/html;charset=utf-8'>\n<style "
-                   "type='text/css'>\n%2\n</style>\n</head>\n<body>")
-        .arg(getCSS());
+QString PCx_Report::generateMainHTMLHeader() {
+  return QString("<!DOCTYPE html>\n<html>\n<head><title>Rapport ProtonClassicSuite"
+                 "</title>\n<meta http-equiv='Content-Type' "
+                 "content='text/html;charset=utf-8'>\n<style "
+                 "type='text/css'>\n%1\n</style>\n</head>\n<body>")
+      .arg(getCSS());
 }
 
+QString PCx_Report::generateNodeHTMLHeader(unsigned int node) const {
+  PCx_Tree *tree = nullptr;
+  if (auditModel != nullptr) {
+    tree = auditModel->getAttachedTree();
+  } else if (reportingModel != nullptr) {
+    tree = reportingModel->getAttachedTree();
+  }
+
+  if (tree == nullptr) {
+    qWarning() << "Invalid model used";
+    return QString();
+  }
+
+  return QString("<!DOCTYPE html>\n<html>\n<head><title>%1</title>\n<meta http-equiv='Content-Type' "
+                 "content='text/html;charset=utf-8'>\n<style "
+                 "type='text/css'>\n%2\n</style>\n</head>\n<body>")
+      .arg(tree->getNodeName(node).toHtmlEscaped())
+      .arg(getCSS());
+}
+
+
 QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const {
+    QString output = "<ul>\n";
+    PCx_Tree *tree = nullptr;
+    if (auditModel != nullptr) {
+        tree = auditModel->getAttachedTree();
+    } else if (reportingModel != nullptr) {
+        tree = reportingModel->getAttachedTree();
+    }
+
+    if (tree == nullptr) {
+        qWarning() << "Invalid model used";
+        return QString();
+    }
+
+
+
+    foreach (unsigned int node, nodes) {
+        output.append(
+            QString("<li><a href='node%1'>%2</a></li>\n").arg(node).arg(tree->getNodeName(node).toHtmlEscaped()));
+    }
+    output.append("</ul>\n");
+    return output;
+}
+
+
+
+QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes, QHash<unsigned int, QString> nodeToFileName) const {
   QString output = "<ul>\n";
   PCx_Tree *tree = nullptr;
   if (auditModel != nullptr) {
@@ -523,9 +568,16 @@ QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const {
     return QString();
   }
 
+
+
   foreach (unsigned int node, nodes) {
+      if(!nodeToFileName.contains(node))
+      {
+          qWarning()<<"Unknown node used";
+          return QString();
+      }
     output.append(
-        QString("<li><a href='#node%1'>%2</a></li>\n").arg(node).arg(tree->getNodeName(node).toHtmlEscaped()));
+          QString("<li><a href='%1'>%2</a></li>\n").arg(nodeToFileName.value(node)).arg(tree->getNodeName(node).toHtmlEscaped()));
   }
   output.append("</ul>\n");
   return output;
