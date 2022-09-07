@@ -350,8 +350,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
         } else {
             QString imageName = generateUniqueFileName(suffix);
-            QString imageAbsoluteName = imageName;
-            imageName.prepend(encodedRelativeImagePath + "/");
+            QString imageAbsoluteName = imageName;            
             imageAbsoluteName.prepend(absoluteImagePath + "/");
 
             if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
@@ -386,8 +385,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
       } else {
         QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;
-        imageName.prepend(encodedRelativeImagePath + "/");
+        QString imageAbsoluteName = imageName;        
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
         if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
@@ -423,11 +421,10 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
       } else {
         QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;
-        imageName.prepend(encodedRelativeImagePath + "/");
+        QString imageAbsoluteName = imageName;        
         imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageName)) {
+        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
             die();
         }
 
@@ -460,11 +457,10 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
 
       } else {
         QString imageName = generateUniqueFileName(suffix);
-        //QString imageAbsoluteName = imageName;
-        //imageName.prepend(encodedRelativeImagePath + "/");
-        //imageAbsoluteName.prepend(absoluteImagePath + "/");
+        QString imageAbsoluteName = imageName;        
+        imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageName)) {
+        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
             die();
         }
 

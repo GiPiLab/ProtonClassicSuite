@@ -276,7 +276,7 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   foreach (unsigned int selectedNode, sortedSelectedNodes) {
     QString output = report->generateNodeHTMLHeader(selectedNode);
-    output.append(QString("\n\n<h2 id='node%2'>%1</h2>")
+    output.append(QString("\n\n<h1 id='node%2'>%1</h1>")
                       .arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped())
                       .arg(selectedNode));
 

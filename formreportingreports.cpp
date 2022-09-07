@@ -173,8 +173,6 @@ void FormReportingReports::on_saveButton_clicked() {
     return;
   }
 
-  QString output = PCx_Report::generateMainHTMLHeader();
-  output.append(model->generateHTMLReportingTitle());
   QList<MODES::DFRFDIRI> listModes;
   if (ui->checkBoxDF->isChecked()) {
     listModes.append(MODES::DFRFDIRI::DF);
@@ -256,12 +254,18 @@ void FormReportingReports::on_saveButton_clicked() {
   // QElapsedTimer timer;
   // timer.start();
 
-  output.append(report->generateHTMLTOC(sortedSelectedNodes));
+
 
   QList<PCx_Report::PCRPRESETS> presetsSansS = selectedPresets;
   presetsSansS.removeAll(PCx_Report::PCRPRESETS::PCRPRESET_S);
 
+
+  QHash<unsigned int,QString> nodeToFileName;
+
+
   foreach (unsigned int selectedNode, sortedSelectedNodes) {
+   QString output = report->generateNodeHTMLHeader(selectedNode);
+
     output.append(QString("\n\n<h1 id='node%2'>%1</h1>")
                       .arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped())
                       .arg(selectedNode));
@@ -290,9 +294,19 @@ void FormReportingReports::on_saveButton_clicked() {
       dir.removeRecursively();
       return;
     }
-    output.append("\n\n<br><br><br><br>");
+    output.append("\n\n<br><br><br><br>\n</body>\n</html>");
+
+  QString nodeUniqueName=generateUniqueFileName(".html");
+  QString nodeAbsoluteFileName = absoluteImagePath + "/" + nodeUniqueName;
+  QString nodeRelativeFileName = relativeImagePath + "/" + nodeUniqueName;
+  nodeToFileName.insert(selectedNode,nodeRelativeFileName);
+  QFile nodeFile(nodeAbsoluteFileName);
+
+  if (!nodeFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+      QMessageBox::critical(this, tr("Attention"),
+                            tr("Ouverture du fichier impossible : %1").arg(nodeFile.errorString()));
+      return;
   }
-  output.append("\n</body></html>");
 
   QString settingStyle = settings.value("output/style", "CSS").toString();
   if (settingStyle == "INLINE") {
@@ -302,19 +316,36 @@ void FormReportingReports::on_saveButton_clicked() {
     formattedOut.setHtml(output);
     output = formattedOut.toHtml();
 
-    // Cleanup the output a bit
-    output.replace(" -qt-block-indent:0;", "");
+  // Cleanup the output a bit
+  output.replace(" -qt-block-indent:0;", "");
   }
+
+  QTextStream nodeStream(&nodeFile);
+  nodeStream << output;
+  nodeStream.flush();
+  nodeFile.close();
+
+  if (nodeStream.status() != QTextStream::Ok) {
+      QMessageBox::critical(this, tr("Attention"), tr("Erreur d'enregistrement d'un noeud du rapport"));
+      return;
+  }
+  output.clear();
+  // END WRITE NODE FILE
+
+  }
+
 
   if (!progress.wasCanceled()) {
-    progress.setValue(maximumProgressValue - 1);
+      progress.setValue(maximumProgressValue - 1);
   } else {
-    QDir dir(absoluteImagePath);
-    dir.removeRecursively();
-    return;
+      QDir dir(absoluteImagePath);
+      dir.removeRecursively();
+      return;
   }
 
-  // qDebug()<<"Report generated in "<<timer.elapsed()<<"ms";
+
+
+  //Main HTML file
 
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
@@ -323,15 +354,22 @@ void FormReportingReports::on_saveButton_clicked() {
     return;
   }
 
+
+  QString mainOutput = PCx_Report::generateMainHTMLHeader();
+  mainOutput.append(model->generateHTMLReportingTitle());
+  mainOutput.append(report->generateHTMLTOC(sortedSelectedNodes,nodeToFileName));
+
+
   QTextStream stream(&file);  
-  stream << output;
+  stream << mainOutput;
   stream.flush();
   file.close();
+
 
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
 
-      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>. "
+      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les données des noeuds sont stockées dans le dossier <b>%2</b>. "
                       "Voulez-vous ouvrir le rapport dans le navigateur ?")
                        .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped())) == QMessageBox::Yes) {
           if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
