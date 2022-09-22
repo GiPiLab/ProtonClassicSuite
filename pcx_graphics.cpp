@@ -261,7 +261,7 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
   xAxis->setLabelFormat("%.0f");
   xAxis->setTickType(QValueAxis::TicksDynamic);
-  xAxis->setTickInterval(1.0);  
+  xAxis->setTickInterval(1.0);
   xAxis->setRange(minYear - 1, maxYear + 1);
   xAxis->applyNiceNumbers();
 
@@ -700,6 +700,23 @@ QPixmap PCx_Graphics::chartViewToPixmap(QChartView *chartView) {
   return pixmap;
 }
 
+QString PCx_Graphics::pixmapToBase64PNG(const QPixmap &pixmap)
+{
+    QByteArray ba;
+    QString output=nullptr;
+    QBuffer buffer(&ba);
+    buffer.open(QIODevice::ReadWrite);
+    if(pixmap.save(&buffer,"png",-1))
+    {
+        output=buffer.data().toBase64();
+    }
+    else{
+        qCritical()<<QObject::tr("Erreur d'enregistrement de l'image");
+    }
+    buffer.close();
+    return output;
+}
+
 bool PCx_Graphics::savePixmapToDisk(const QPixmap &pixmap, const QString &imageAbsoluteName) {
   bool res = pixmap.save(imageAbsoluteName, "png", -1);
   if (res == false) {
@@ -985,7 +1002,7 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
         }
     }
 
-    QBarSeries *series = new QBarSeries();    
+    QBarSeries *series = new QBarSeries();
     series->append(barSet);
     chart->addSeries(series);
 

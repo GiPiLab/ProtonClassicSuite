@@ -108,6 +108,15 @@ void initializeNewDb(void);
  */
 QString generateUniqueFileName(const QString &suffix = 0);
 
+
+/**
+ * @brief chooseHTMLFileNameWithDialog open the save file dialog to allow user to choose the file name and path
+ * @return the absolute name and path of the file, null on error
+ */
+QString chooseHTMLFileNameWithDialog();
+
+
+
 /**
  * @brief dotToPdf renders a graph in DOT format to a pdf file
  * @param dot the graph in DOT format

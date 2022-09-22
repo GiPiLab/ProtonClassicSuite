@@ -59,10 +59,10 @@ FormAuditReports::~FormAuditReports() {
   if (model != nullptr) {
     delete model;
     delete report;
-  }  
+  }
 }
 
-void FormAuditReports::populateLists() {    
+void FormAuditReports::populateLists() {
     ui->listTables->setModel(report->getTables().getListModelOfAvailableAuditTables(true));
     ui->listGraphics->setModel(report->getGraphics().getListModelOfAvailablePCAGRAPHICS());
 }
@@ -219,37 +219,23 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
     return;
   }
 
-  QFileDialog fileDialog;
-  fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer le rapport en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
+  QString fileName=chooseHTMLFileNameWithDialog();
+  if(fileName==nullptr)return;
   QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
-    fileName.append(".html");
-  }
-  fi = QFileInfo(fileName);
 
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
-    return;
-  }
+  QString relativeNodesPath = fi.fileName() + "_files";
+  QString absoluteNodesPath = fi.absoluteFilePath() + "_files";
 
-  QString relativeImagePath = fi.fileName() + "_files";
-  QString absoluteImagePath = fi.absoluteFilePath() + "_files";
+  QFileInfo nodesDirInfo(absoluteNodesPath);
 
-  QFileInfo imageDirInfo(absoluteImagePath);
-
-  if (!imageDirInfo.exists()) {
-    if (!fi.absoluteDir().mkdir(relativeImagePath)) {
-      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des images impossible"));
+  if (!nodesDirInfo.exists()) {
+    if (!fi.absoluteDir().mkdir(relativeNodesPath)) {
+      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des noeuds impossible"));
       return;
     }
   } else {
-    if (!imageDirInfo.isWritable()) {
-      QMessageBox::critical(this, tr("Attention"), tr("Écriture impossible dans le dossier des images"));
+    if (!nodesDirInfo.isWritable()) {
+      QMessageBox::critical(this, tr("Attention"), tr("Écriture impossible dans le dossier des noeuds"));
       return;
     }
   }
@@ -284,12 +270,11 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
       // Mode-independant
       output.append(report->generateHTMLAuditReportForNode(
           QList<PCx_Tables::PCAPRESETS>(), modeIndependantTables, modeIndependantGraphics, selectedNode,
-          MODES::DFRFDIRI::DF, referenceNode, nullptr, absoluteImagePath, relativeImagePath, nullptr));
+          MODES::DFRFDIRI::DF, referenceNode, nullptr, nullptr));
     }
     foreach (MODES::DFRFDIRI mode, listModes) {
       output.append(report->generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(), selectedTables,
-                                                           selectedGraphics, selectedNode, mode, referenceNode, nullptr,
-                                                           absoluteImagePath, relativeImagePath, nullptr));
+                                                           selectedGraphics, selectedNode, mode, referenceNode, nullptr, nullptr));
       if (progress.wasCanceled()) {
         goto cleanup;
       }
@@ -299,7 +284,7 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
       progress.setValue(++i);
     } else {
     cleanup:
-      QDir dir(absoluteImagePath);
+      QDir dir(absoluteNodesPath);
       dir.removeRecursively();
       return;
     }
@@ -307,11 +292,9 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
     // BEGIN WRITE NODE FILE
 
-
-
     QString nodeUniqueName=generateUniqueFileName(".html");
-    QString nodeAbsoluteFileName = absoluteImagePath + "/" + nodeUniqueName;
-    QString nodeRelativeFileName = relativeImagePath + "/" + nodeUniqueName;
+    QString nodeAbsoluteFileName = absoluteNodesPath + "/" + nodeUniqueName;
+    QString nodeRelativeFileName = relativeNodesPath + "/" + nodeUniqueName;
     nodeToFileName.insert(selectedNode,nodeRelativeFileName);
     QFile nodeFile(nodeAbsoluteFileName);
 
@@ -342,7 +325,7 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   if (!progress.wasCanceled()) {
     progress.setValue(maximumProgressValue - 1);
   } else {
-    QDir dir(absoluteImagePath);
+    QDir dir(absoluteNodesPath);
     dir.removeRecursively();
     return;
   }
@@ -351,7 +334,7 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    QDir dir(absoluteImagePath);
+    QDir dir(absoluteNodesPath);
     dir.removeRecursively();
     return;
   }
@@ -363,9 +346,9 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
-      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les images sont stockées dans le dossier <b>%2</b>. "
+      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les noeuds sont stockées dans le dossier <b>%2</b>. "
                       "Voulez-vous ouvrir le rapport dans le navigateur ?")
-                       .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped())) == QMessageBox::Yes) {
+                       .arg(fi.fileName().toHtmlEscaped(), relativeNodesPath.toHtmlEscaped())) == QMessageBox::Yes) {
           if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
               QMessageBox::warning(this, tr("Attention"), tr("Ouverture impossible"));
           }

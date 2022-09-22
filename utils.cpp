@@ -41,6 +41,7 @@
  */
 
 #include "utils.h"
+#include "qfiledialog.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -482,3 +483,26 @@ double fixedPointToDouble(qint64 num) {
   return static_cast<double>((static_cast<double>(num) / static_cast<double>(FIXEDPOINTCOEFF)));
 }
 } // namespace NUMBERSFORMAT
+
+QString chooseHTMLFileNameWithDialog()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+
+    QString fileName =
+        fileDialog.getSaveFileName(nullptr, QObject::tr("Enregistrer en HTML"), "", QObject::tr("Fichiers HTML (*.html *.htm)"));
+    if (fileName.isEmpty()) {
+        return nullptr;
+    }
+    QFileInfo fi(fileName);
+    if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
+        fileName.append(".html");
+    }
+    fi = QFileInfo(fileName);
+
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+        QMessageBox::critical(nullptr, QObject::tr("Attention"), QObject::tr("Fichier non accessible en écriture"));
+            return nullptr;
+    }
+    return fileName;
+}

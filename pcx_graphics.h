@@ -189,7 +189,9 @@ public:
 
   static QStandardItemModel *getListModelOfAvailablePCAGRAPHICS();
 
-private:
+  static QString pixmapToBase64PNG(const QPixmap &pixmap);
+
+  private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;
 

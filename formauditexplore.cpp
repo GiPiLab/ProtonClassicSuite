@@ -259,24 +259,9 @@ void FormAuditExplore::on_treeView_clicked(const QModelIndex &index) {
 }
 
 void FormAuditExplore::on_saveTablesButton_clicked() {
-  QFileDialog fileDialog;
-  fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
 
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
-    fileName.append(".html");
-  }
-  fi = QFileInfo(fileName);
-
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
-    return;
-  }
+  QString fileName = chooseHTMLFileNameWithDialog();
+    if(fileName==nullptr) return;
 
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -315,14 +300,14 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
     output.replace(" -qt-block-indent:0;", "");
   }
 
-  QTextStream stream(&file);  
+  QTextStream stream(&file);
   stream << output;
   stream.flush();
   file.close();
 
   if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
-                             tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
+                             tr("Le document <b>%1</b> a bien été enregistré.").arg(fileName.toHtmlEscaped()));
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
   }

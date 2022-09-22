@@ -303,8 +303,7 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
   output.append(QString("<h1 id='node%2'>%1</h1>")
                     .arg(selectedReporting->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped())
                     .arg(selectedNode));
-  output.append(report->generateHTMLReportingReportForNode(getPresets(), selectedNode, getSelectedMode(), true, nullptr,
-                                                           absoluteImagePath, relativeImagePath));
+  output.append(report->generateHTMLReportingReportForNode(getPresets(), selectedNode, getSelectedMode(), true, nullptr));
   output.append("</body></html>");
 
   QString settingStyle = settings.value("output/style", "CSS").toString();
@@ -325,7 +324,7 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
     dir.removeRecursively();
     return;
   }
-  QTextStream stream(&file);  
+  QTextStream stream(&file);
   stream << output;
   stream.flush();
   file.close();

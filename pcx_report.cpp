@@ -41,6 +41,7 @@
  */
 
 #include "pcx_report.h"
+#include "pcx_graphics.h"
 #include "pcx_query.h"
 #include "utils.h"
 
@@ -57,12 +58,11 @@ PCx_Report::PCx_Report(PCx_Reporting *reportingModel, int graphicsWidth, int gra
     auditModel = nullptr;
 }
 
-QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs,
-                                                   QList<PCx_Tables::PCATABLES> listOfTables,
-                                                   QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics,
+QString PCx_Report::generateHTMLAuditReportForNode(const QList<PCx_Tables::PCAPRESETS> &listOfTabs,
+                                                   const QList<PCx_Tables::PCATABLES> &listOfTables,
+                                                   const QList<PCx_Graphics::PCAGRAPHICS> &listOfGraphics,
                                                    unsigned int selectedNode, MODES::DFRFDIRI mode,
                                                    unsigned int referenceNode, QTextDocument *document,
-                                                   const QString &absoluteImagePath, const QString &relativeImagePath,
                                                    QProgressDialog *progress, const PCx_PrevisionItem *prevItem) {
   if (selectedNode == 0 || referenceNode == 0 || auditModel == nullptr) {
     qFatal("Assertion failed");
@@ -151,9 +151,6 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
   int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
   int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
 
-  // To save images
-  QString encodedRelativeImagePath = QUrl::toPercentEncoding(relativeImagePath);
-
   QString suffix = ".png";
 
   int progressValue = 0;
@@ -221,17 +218,17 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
           document->addResource(QTextDocument::ImageResource, QUrl(name), QVariant(pixmap));
           output.append(QString("<img alt='GRAPH' src='%1'></div><br>").arg(name));
         } else {
-          QString imageName = generateUniqueFileName(suffix);
-          QString imageAbsoluteName = imageName;          
-          imageAbsoluteName.prepend(absoluteImagePath + "/");
-          if (PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName) == false) {
-            break;
+
+          QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
+          if(base64IMG==nullptr)
+          {
+              break;
           }
 
-          output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+          output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='data:image/png;base64,%3'></div><br>")
                             .arg(graphicsWidth)
                             .arg(graphicsHeight)
-                            .arg(imageName));
+                            .arg(base64IMG));
         }
       }
       break;
@@ -253,18 +250,15 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
       } else { // Export mode
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
-        QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;        
-        imageAbsoluteName.prepend(absoluteImagePath + "/");
+        QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
+        if(base64IMG==nullptr)
+            break;
 
-        if (PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName) == false) {
-          break;
-        }
-
-        output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+        output.append(QString("<img width='%1' height='%2' alt='GRAPH' src='data:image/png;base64,%3'></div><br>")
                           .arg(graphicsWidth)
                           .arg(graphicsHeight)
-                          .arg(imageName));
+                          .arg(base64IMG));
+
         if (progress != nullptr) {
           progress->setValue(++progressValue);
         }
@@ -279,9 +273,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>
 
 QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets,
                                                        unsigned int selectedNode, MODES::DFRFDIRI mode,
-                                                       bool includeGraphics, QTextDocument *document,
-                                                       const QString &absoluteImagePath,
-                                                       const QString &relativeImagePath, QProgressDialog *progress) {
+                                                       bool includeGraphics, QTextDocument *document, QProgressDialog *progress) {
   if (reportingModel == nullptr) {
     qCritical() << "NULL model error";
     return QString();
@@ -291,14 +283,9 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
   QChart *chart = nullptr;
   QPixmap pixmap;
 
-  QString encodedRelativeImagePath = QUrl::toPercentEncoding(relativeImagePath);
-
   if (document != nullptr) {
     inlineImageMode = true;
 
-  } else if (absoluteImagePath.isEmpty() || encodedRelativeImagePath.isEmpty()) {
-    qWarning() << "Please pass an absolute and relative path to store images";
-    die();
   }
 
   QString suffix = ".png";
@@ -311,7 +298,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
   int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
   int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
 
-  QString output = "\n<div class='reportingNodeContainer'>\n";
+  QString output;
 
   if (listOfPresets.contains(PCRPRESETS::PCRPRESET_S)) {
     output.append("<h4>Synthèse de fonctionnement (RF-DF)</h4>");
@@ -334,7 +321,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
   output.append(tables.getPCRRatioParents(selectedNode, mode));
 
   if (listOfPresets.contains(PCRPRESETS::PCRPRESET_A)) {
-    output.append("<h4>Provenance des crédits</h4>");
+    output.append("\n<h4>Provenance des crédits</h4>");
     output.append(tables.getPCRProvenance(selectedNode, mode));
 
     if (includeGraphics) {
@@ -349,27 +336,24 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                             .arg(name));
 
         } else {
-            QString imageName = generateUniqueFileName(suffix);
-            QString imageAbsoluteName = imageName;            
-            imageAbsoluteName.prepend(absoluteImagePath + "/");
-
-            if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
-                die();
-            }
+            QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
             output.append(QString("<br><div align='center' class='g'><img align='center' "
-                                  "width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                                  "width='%1' height='%2' alt='GRAPH' src='data:image/png;base64,%3'></div><br>")
                               .arg(graphicsWidth)
                               .arg(graphicsHeight)
-                              .arg(imageName));
-            if (progress != nullptr) {
+                              .arg(base64IMG));
+
+
+        if (progress != nullptr) {
                 progress->setValue(++progressValue);
             }
         }
     }
   }
 
+
   if (listOfPresets.contains(PCRPRESETS::PCRPRESET_B)) {
-    output.append("<h4>Facteurs de variation des crédits</h4>");
+    output.append("\n<h4>Facteurs de variation des crédits</h4>");
     output.append(tables.getPCRVariation(selectedNode, mode));
 
     if (includeGraphics) {
@@ -384,19 +368,14 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                             .arg(name));
 
       } else {
-        QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;        
-        imageAbsoluteName.prepend(absoluteImagePath + "/");
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
-            die();
-        }
-
+        QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
         output.append(QString("<br><div align='center' class='g'><img align='center' "
-                              "width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
+                              "width='%1' height='%2' alt='GRAPH' src='data:image/png;base64,%3'></div><br>")
                           .arg(graphicsWidth)
                           .arg(graphicsHeight)
-                          .arg(imageName));
+                          .arg(base64IMG));
+
         if (progress != nullptr) {
           progress->setValue(++progressValue);
         }
@@ -405,7 +384,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
   }
 
   if (listOfPresets.contains(PCRPRESETS::PCRPRESET_C)) {
-    output.append("<h4>Utilisation des crédits</h4>");
+    output.append("\n<h4>Utilisation des crédits</h4>");
     output.append(tables.getPCRUtilisation(selectedNode, mode));
 
     if (includeGraphics) {
@@ -420,19 +399,13 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                             .arg(name));
 
       } else {
-        QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;        
-        imageAbsoluteName.prepend(absoluteImagePath + "/");
+            QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
+            output.append(QString("<br><div align='center' class='g'><img align='center' "
+                                  "width='%1' height='%2' alt='GRAPH' src='data:image/png;base64,%3'></div><br>")
+                              .arg(graphicsWidth)
+                              .arg(graphicsHeight)
+                              .arg(base64IMG));
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
-            die();
-        }
-
-        output.append(QString("<br><div align='center' class='g'><img align='center' "
-                              "width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                          .arg(graphicsWidth)
-                          .arg(graphicsHeight)
-                          .arg(imageName));
         if (progress != nullptr) {
           progress->setValue(++progressValue);
         }
@@ -441,7 +414,7 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
   }
 
   if (listOfPresets.contains(PCRPRESETS::PCRPRESET_D)) {
-    output.append("<h4>Détection des cycles et des écarts</h4>");
+    output.append("\n<h4>Détection des cycles et des écarts</h4>");
     output.append(tables.getPCRCycles(selectedNode, mode));
 
     if (includeGraphics) {
@@ -456,27 +429,21 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
                             .arg(name));
 
       } else {
-        QString imageName = generateUniqueFileName(suffix);
-        QString imageAbsoluteName = imageName;        
-        imageAbsoluteName.prepend(absoluteImagePath + "/");
+            QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
+            output.append(QString("<br><div align='center' class='g'><img align='center' "
+                                  "width='%1' height='%2' alt='GRAPH' src='data:image/png;base64,%3'></div><br>")
+                              .arg(graphicsWidth)
+                              .arg(graphicsHeight)
+                              .arg(base64IMG));
 
-        if (!PCx_Graphics::savePixmapToDisk(pixmap, imageAbsoluteName)) {
-            die();
-        }
-
-        output.append(QString("<br><div align='center' class='g'><img align='center' "
-                              "width='%1' height='%2' alt='GRAPH' src='%3'></div><br>")
-                          .arg(graphicsWidth)
-                          .arg(graphicsHeight)
-                          .arg(imageName));
-        if (progress != nullptr) {
+          if (progress != nullptr) {
           progress->setValue(++progressValue);
         }
       }
     }
   }
 
-  output.append("\n</div>\n");
+  output.append("\n");
   return output;
 }
 
@@ -486,8 +453,8 @@ QString PCx_Report::getCSS() {
                   "\nh1{color:#A00;}"
                   "\nh2{color:navy;}"
                   "\nh3{color:green;font-size:larger}"
-                  "\n.auditNodeContainer{display:flex;flex-wrap:wrap}"
-                  "\n.reportingNodeContainer{display:flex;flex-wrap:wrap}";
+                  "\n.auditNodeContainer{}"
+                  "\n.reportingNodeContainer{}";
 
     css.append(PCx_Query::getCSS());
     css.append(PCx_Tables::getCSS());

@@ -58,20 +58,16 @@ public:
 
   explicit PCx_Report(PCx_Reporting *reportingModel, int graphicsWidth = 650, int graphicsHeight = 400);
 
-  QString generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS> listOfTabs,
-                                         QList<PCx_Tables::PCATABLES> listOfTables,
-                                         QList<PCx_Graphics::PCAGRAPHICS> listOfGraphics, unsigned int selectedNode,
+  QString generateHTMLAuditReportForNode(const QList<PCx_Tables::PCAPRESETS> &listOfTabs,
+                                         const QList<PCx_Tables::PCATABLES> &listOfTables,
+                                         const QList<PCx_Graphics::PCAGRAPHICS> &listOfGraphics, unsigned int selectedNode,
                                          MODES::DFRFDIRI mode, unsigned int referenceNode = 1,
-                                         QTextDocument *document = nullptr, const QString &absoluteImagePath = "",
-                                         const QString &relativeImagePath = "", QProgressDialog *progress = nullptr,
+                                         QTextDocument *document = nullptr, QProgressDialog *progress = nullptr,
                                          const PCx_PrevisionItem *prevItem = nullptr);
 
   QString generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRESETS> listOfPresets, unsigned int selectedNode,
                                              MODES::DFRFDIRI mode, bool includeGraphics = true,
-                                             QTextDocument *document = nullptr, const QString &absoluteImagePath = "",
-                                             const QString &relativeImagePath = "",
-                                             QProgressDialog *progress = nullptr);
-
+                                             QTextDocument *document = nullptr, QProgressDialog *progress = nullptr);
 
   QString generateHTMLTOC(QList<unsigned int> nodes) const;
   QString generateHTMLTOC(QList<unsigned int> nodes, QHash<unsigned int,QString> nodeToFileName) const;

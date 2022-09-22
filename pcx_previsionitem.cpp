@@ -113,7 +113,7 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
   out.append(getPrevisionItemAsHTML());
   out.append("<p align='center'><b>Données historiques et prévision</b></p>");
   out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(), tables, graphics, nodeId, mode,
-                                                   referenceNode, document, "", "", nullptr, this));
+                                                   referenceNode, document, nullptr, this));
   out.append("</body></html>");
   document->setHtml(out);
   return out;
@@ -184,8 +184,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   out.append("<p align='center'><b>Données historiques et prévision</b></p>");
 
   out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(), tables, graphics, nodeId, mode,
-                                                   referenceNode, nullptr, absoluteImagePath, relativeImagePath,
-                                                   nullptr, this));
+                                                   referenceNode, nullptr, nullptr, this));
   if (showDescendants) {
     int maximumProgressValue = (descendants.count()) * (graphics.size());
     QProgressDialog progress(QObject::tr("Enregistrement en cours..."), QObject::tr("Annuler"), 0,
@@ -211,8 +210,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
 
       out.append(tmpItem.getPrevisionItemAsHTML());
       out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(), tables, graphics, descendant,
-                                                       mode, referenceNode, nullptr, absoluteImagePath,
-                                                       relativeImagePath, &progress, &tmpItem));
+                                                       mode, referenceNode, nullptr, &progress, &tmpItem));
       if (progress.wasCanceled()) {
         QDir dir(absoluteImagePath);
         dir.removeRecursively();
@@ -242,7 +240,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     dir.removeRecursively();
     return false;
   }
-  QTextStream stream(&file);  
+  QTextStream stream(&file);
   stream << out;
   stream.flush();
   file.close();

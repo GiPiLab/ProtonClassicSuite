@@ -45,7 +45,7 @@
 
 FormReportingReports::FormReportingReports(QWidget *parent) : QWidget(parent), ui(new Ui::FormReportingReports) {
   ui->setupUi(this);
-  model = nullptr;  
+  model = nullptr;
   updateListOfReportings();
 }
 
@@ -54,7 +54,7 @@ FormReportingReports::~FormReportingReports() {
   if (model != nullptr) {
     delete model;
     delete report;
-  }  
+  }
 }
 
 void FormReportingReports::onListOfReportingsChanged() { updateListOfReportings(); }
@@ -193,46 +193,24 @@ void FormReportingReports::on_saveButton_clicked() {
     return;
   }
 
-  QFileDialog fileDialog;
-  fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer le rapport en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
-    fileName.append(".html");
-  }
-  fi = QFileInfo(fileName);
 
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
-    return;
-  }
+  QString mainFileName=chooseHTMLFileNameWithDialog();
+  if(mainFileName==nullptr)return;
+  QFileInfo fi(mainFileName);
 
-  QFile file(fileName);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    return;
-  }
-  // Will reopen later
-  file.close();
-  file.remove();
+  QString relativeNodesPath = fi.fileName() + "_files";
+  QString absoluteNodesPath = fi.absoluteFilePath() + "_files";
 
-  QString relativeImagePath = fi.fileName() + "_files";
-  QString absoluteImagePath = fi.absoluteFilePath() + "_files";
+  QFileInfo nodesDirInfo(absoluteNodesPath);
 
-  QFileInfo imageDirInfo(absoluteImagePath);
-
-  if (!imageDirInfo.exists()) {
-    if (!fi.absoluteDir().mkdir(relativeImagePath)) {
-      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des images impossible"));
+  if (!nodesDirInfo.exists()) {
+    if (!fi.absoluteDir().mkdir(relativeNodesPath)) {
+      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des noeuds impossible"));
       return;
     }
   } else {
-    if (!imageDirInfo.isWritable()) {
-      QMessageBox::critical(this, tr("Attention"), tr("Écriture impossible dans le dossier des images"));
+    if (!nodesDirInfo.isWritable()) {
+      QMessageBox::critical(this, tr("Attention"), tr("Écriture impossible dans le dossier des noeuds"));
       return;
     }
   }
@@ -273,13 +251,11 @@ void FormReportingReports::on_saveButton_clicked() {
     if (selectedPresets.contains(PCx_Report::PCRPRESETS::PCRPRESET_S)) {
       QList<PCx_Report::PCRPRESETS> tmpPreset = {PCx_Report::PCRPRESETS::PCRPRESET_S};
       output.append(report->generateHTMLReportingReportForNode(tmpPreset, selectedNode, MODES::DFRFDIRI::GLOBAL,
-                                                               ui->checkBoxIncludeGraphics->isChecked(), nullptr,
-                                                               absoluteImagePath, relativeImagePath, nullptr));
+                                                               ui->checkBoxIncludeGraphics->isChecked(), nullptr, nullptr));
     }
     foreach (MODES::DFRFDIRI mode, listModes) {
       output.append(report->generateHTMLReportingReportForNode(presetsSansS, selectedNode, mode,
-                                                               ui->checkBoxIncludeGraphics->isChecked(), nullptr,
-                                                               absoluteImagePath, relativeImagePath, nullptr));
+                                                               ui->checkBoxIncludeGraphics->isChecked(), nullptr, nullptr));
       if (progress.wasCanceled()) {
         goto cleanup;
       }
@@ -290,15 +266,15 @@ void FormReportingReports::on_saveButton_clicked() {
       progress.setValue(++i);
     } else {
     cleanup:
-      QDir dir(absoluteImagePath);
+      QDir dir(absoluteNodesPath);
       dir.removeRecursively();
       return;
     }
     output.append("\n\n<br><br><br><br>\n</body>\n</html>");
 
   QString nodeUniqueName=generateUniqueFileName(".html");
-  QString nodeAbsoluteFileName = absoluteImagePath + "/" + nodeUniqueName;
-  QString nodeRelativeFileName = relativeImagePath + "/" + nodeUniqueName;
+  QString nodeAbsoluteFileName = absoluteNodesPath + "/" + nodeUniqueName;
+  QString nodeRelativeFileName = relativeNodesPath + "/" + nodeUniqueName;
   nodeToFileName.insert(selectedNode,nodeRelativeFileName);
   QFile nodeFile(nodeAbsoluteFileName);
 
@@ -338,7 +314,7 @@ void FormReportingReports::on_saveButton_clicked() {
   if (!progress.wasCanceled()) {
       progress.setValue(maximumProgressValue - 1);
   } else {
-      QDir dir(absoluteImagePath);
+      QDir dir(absoluteNodesPath);
       dir.removeRecursively();
       return;
   }
@@ -347,9 +323,10 @@ void FormReportingReports::on_saveButton_clicked() {
 
   //Main HTML file
 
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    QDir dir(absoluteImagePath);
+  QFile mainFile(mainFileName);
+  if (!mainFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(mainFile.errorString()));
+    QDir dir(absoluteNodesPath);
     dir.removeRecursively();
     return;
   }
@@ -360,10 +337,10 @@ void FormReportingReports::on_saveButton_clicked() {
   mainOutput.append(report->generateHTMLTOC(sortedSelectedNodes,nodeToFileName));
 
 
-  QTextStream stream(&file);  
+  QTextStream stream(&mainFile);
   stream << mainOutput;
   stream.flush();
-  file.close();
+  mainFile.close();
 
 
   progress.setValue(maximumProgressValue);
@@ -371,7 +348,7 @@ void FormReportingReports::on_saveButton_clicked() {
 
       if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les données des noeuds sont stockées dans le dossier <b>%2</b>. "
                       "Voulez-vous ouvrir le rapport dans le navigateur ?")
-                       .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped())) == QMessageBox::Yes) {
+                       .arg(fi.fileName().toHtmlEscaped(), relativeNodesPath.toHtmlEscaped())) == QMessageBox::Yes) {
           if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
               QMessageBox::warning(this, tr("Attention"), tr("Ouverture impossible"));
           }
