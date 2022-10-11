@@ -448,13 +448,9 @@ void FormAuditPrevisions::on_pushButtonDisplayReport_clicked() {
 }
 
 void FormAuditPrevisions::on_pushButtonSaveBigReport_clicked() {
-  QFileDialog fileDialog;
-  fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
+
+  QString fileName=chooseHTMLFileNameWithDialog();
+  if(fileName==nullptr)return;
 
   QFileInfo fi(fileName);
   if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {

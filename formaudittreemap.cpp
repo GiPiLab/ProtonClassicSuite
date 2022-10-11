@@ -42,6 +42,7 @@
 
 #include "formaudittreemap.h"
 #include "ui_formaudittreemap.h"
+#include "utils.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -221,18 +222,8 @@ void FormAuditTreemap::on_pushButtonSave_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
 
-  QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Images PNG (*.png)"));
+  QString fileName = choosePNGFileNameWithDialog();
   if (fileName.isEmpty()) {
-    return;
-  }
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0) {
-    fileName.append(".png");
-  }
-  fi = QFileInfo(fileName);
-
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
     return;
   }
 

@@ -418,19 +418,8 @@ void FormAuditExplore::on_comboBoxDFRFDIRIOrYearsChart2_activated(int index) {
 bool FormAuditExplore::saveChart(QChartView *chartView) {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Fichiers images (*.png)"));
+  QString fileName = choosePNGFileNameWithDialog();
   if (fileName.isEmpty()) {
-    return false;
-  }
-
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0 && fi.suffix().compare("png", Qt::CaseInsensitive) != 0) {
-    fileName.append(".png");
-  }
-  fi = QFileInfo(fileName);
-
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
     return false;
   }
 
@@ -442,7 +431,7 @@ bool FormAuditExplore::saveChart(QChartView *chartView) {
 
   if (res) {
     QMessageBox::information(this, tr("Information"),
-                             tr("L'image <b>%1</b> a bien été enregistrée.").arg(fi.fileName().toHtmlEscaped()));
+                             tr("L'image <b>%1</b> a bien été enregistrée.").arg(fileName.toHtmlEscaped()));
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("L'image n'a pas pu être enregistrée !"));
   }

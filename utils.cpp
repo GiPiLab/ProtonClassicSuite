@@ -506,3 +506,26 @@ QString chooseHTMLFileNameWithDialog()
     }
     return fileName;
 }
+
+QString choosePNGFileNameWithDialog()
+{
+    QFileDialog fileDialog;
+    fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
+
+    QString fileName =
+        fileDialog.getSaveFileName(nullptr, QObject::tr("Enregistrer en PNG"), "", QObject::tr("Images PNG (*.png)"));
+    if (fileName.isEmpty()) {
+        return nullptr;
+    }
+    QFileInfo fi(fileName);
+    if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0)  {
+        fileName.append(".png");
+    }
+    fi = QFileInfo(fileName);
+
+    if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
+        QMessageBox::critical(nullptr, QObject::tr("Attention"), QObject::tr("Fichier non accessible en écriture"));
+            return nullptr;
+    }
+    return fileName;
+}

@@ -42,6 +42,7 @@
 
 #include "formreportinggraphics.h"
 #include "ui_formreportinggraphics.h"
+#include "utils.h"
 #include <QFileDialog>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -273,18 +274,8 @@ QSize FormReportingGraphics::sizeHint() const { return {800, 500}; }
 void FormReportingGraphics::on_pushButtonExportPlot_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName = fileDialog.getSaveFileName(this, tr("Enregistrer en PNG"), "", tr("Images PNG (*.png)"));
+  QString fileName = choosePNGFileNameWithDialog();
   if (fileName.isEmpty()) {
-    return;
-  }
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("png", Qt::CaseInsensitive) != 0) {
-    fileName.append(".png");
-  }
-  fi = QFileInfo(fileName);
-
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
     return;
   }
 

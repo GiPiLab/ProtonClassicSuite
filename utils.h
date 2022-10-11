@@ -116,6 +116,12 @@ QString generateUniqueFileName(const QString &suffix = 0);
 QString chooseHTMLFileNameWithDialog();
 
 
+/**
+ * @brief choosePNGFileNameWithDialog open the save file dialog to allow user to choose the file name and path
+ * @return the absolute name and path of the file, null on error
+ */
+QString choosePNGFileNameWithDialog();
+
 
 /**
  * @brief dotToPdf renders a graph in DOT format to a pdf file

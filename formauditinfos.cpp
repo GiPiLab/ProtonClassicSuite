@@ -43,6 +43,7 @@
 #include "formauditinfos.h"
 #include "pcx_report.h"
 #include "ui_formauditinfos.h"
+#include "utils.h"
 
 FormAuditInfos::FormAuditInfos(unsigned int auditId, QWidget *parent)
     : QWidget(parent), ui(new Ui::FormAuditInfos), auditId(auditId) {
@@ -66,21 +67,8 @@ QSize FormAuditInfos::sizeHint() const { return {650, 450}; }
 void FormAuditInfos::on_pushButton_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
-    fileName.append(".html");
-  }
-  fi = QFileInfo(fileName);
-
-  if (fi.exists() && (!fi.isFile() || !fi.isWritable())) {
-    QMessageBox::critical(this, tr("Attention"), tr("Fichier non accessible en écriture"));
-    return;
-  }
+  QString fileName = chooseHTMLFileNameWithDialog();
+  if(fileName.isEmpty())return;
 
   QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -114,7 +102,7 @@ void FormAuditInfos::on_pushButton_clicked() {
 
   if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(this, tr("Information"),
-                             tr("Le document <b>%1</b> a bien été enregistré.").arg(fi.fileName().toHtmlEscaped()));
+                             tr("Le document <b>%1</b> a bien été enregistré.").arg(fileName.toHtmlEscaped()));
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le document n'a pas pu être enregistré !"));
   }

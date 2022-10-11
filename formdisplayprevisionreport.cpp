@@ -42,6 +42,7 @@
 
 #include "formdisplayprevisionreport.h"
 #include "ui_formdisplayprevisionreport.h"
+#include "utils.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QStandardPaths>
@@ -64,16 +65,9 @@ FormDisplayPrevisionReport::~FormDisplayPrevisionReport() {
 void FormDisplayPrevisionReport::on_pushButtonSaveHTML_clicked() {
   QFileDialog fileDialog;
   fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation));
-  QString fileName =
-      fileDialog.getSaveFileName(this, tr("Enregistrer en HTML"), "", tr("Fichiers HTML (*.html *.htm)"));
-  if (fileName.isEmpty()) {
-    return;
-  }
+  QString fileName = chooseHTMLFileNameWithDialog();
+  if(fileName.isEmpty())return;
 
-  QFileInfo fi(fileName);
-  if (fi.suffix().compare("html", Qt::CaseInsensitive) != 0 && fi.suffix().compare("htm", Qt::CaseInsensitive) != 0) {
-    fileName.append(".html");
-  }
   previsionItem->savePrevisionItemReport(fileName, false, referenceNode);
 }
 
