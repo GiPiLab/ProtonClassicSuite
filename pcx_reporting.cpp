@@ -41,13 +41,12 @@
  */
 
 #include "pcx_reporting.h"
-#include "pcx_query.h"
-#include "pcx_report.h"
 #include "utils.h"
 #include "xlsxdocument.h"
 #include "xlsxutility_p.h"
 #include <QCoreApplication>
 #include <QDebug>
+#include <QRandomGenerator>
 #include <QElapsedTimer>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -353,67 +352,67 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
                     ":rattachenmoins1)")
                 .arg(tableName));
   if (nullOuverts) {
-    q.bindValue(":ouverts", QVariant(QVariant::LongLong));
+      q.bindValue(":ouverts", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":ouverts", sumOuverts);
   }
 
   if (nullRealises) {
-    q.bindValue(":realises", QVariant(QVariant::LongLong));
+    q.bindValue(":realises", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":realises", sumRealises);
   }
 
   if (nullEngages) {
-    q.bindValue(":engages", QVariant(QVariant::LongLong));
+    q.bindValue(":engages", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":engages", sumEngages);
   }
 
   if (nullDisponibles) {
-    q.bindValue(":disponibles", QVariant(QVariant::LongLong));
+    q.bindValue(":disponibles", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":disponibles", sumDisponibles);
   }
 
   if (nullBP) {
-    q.bindValue(":bp", QVariant(QVariant::LongLong));
+    q.bindValue(":bp", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":bp", sumBP);
   }
 
   if (nullReports) {
-    q.bindValue(":reports", QVariant(QVariant::LongLong));
+    q.bindValue(":reports", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":reports", sumReports);
   }
 
   if (nullOCDM) {
-    q.bindValue(":ocdm", QVariant(QVariant::LongLong));
+    q.bindValue(":ocdm", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":ocdm", sumOCDM);
   }
 
   if (nullVCDM) {
-    q.bindValue(":vcdm", QVariant(QVariant::LongLong));
+    q.bindValue(":vcdm", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":vcdm", sumVCDM);
   }
 
   if (nullBudgetVote) {
-    q.bindValue(":budgetvote", QVariant(QVariant::LongLong));
+    q.bindValue(":budgetvote", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":budgetvote", sumBudgetVote);
   }
 
   if (nullVCInternes) {
-    q.bindValue(":vcinterne", QVariant(QVariant::LongLong));
+    q.bindValue(":vcinterne", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":vcinterne", sumVCInternes);
   }
 
   if (nullRattachesNMoins1) {
-    q.bindValue(":rattachenmoins1", QVariant(QVariant::LongLong));
+    q.bindValue(":rattachenmoins1", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":rattachenmoins1", sumRattachesNMoins1);
   }

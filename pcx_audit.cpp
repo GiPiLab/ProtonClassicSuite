@@ -533,25 +533,25 @@ void PCx_Audit::updateParent(const QString &tableName, int annee, unsigned int n
                     "disponibles where annee=:annee and id_node=:id_node")
                 .arg(tableName));
   if (nullOuverts) {
-    q.bindValue(":ouverts", QVariant(QVariant::LongLong));
+      q.bindValue(":ouverts", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":ouverts", sumOuverts);
   }
 
   if (nullRealises) {
-    q.bindValue(":realises", QVariant(QVariant::LongLong));
+    q.bindValue(":realises", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":realises", sumRealises);
   }
 
   if (nullEngages) {
-    q.bindValue(":engages", QVariant(QVariant::LongLong));
+    q.bindValue(":engages", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":engages", sumEngages);
   }
 
   if (nullDisponibles) {
-    q.bindValue(":disponibles", QVariant(QVariant::LongLong));
+    q.bindValue(":disponibles", QVariant(QMetaType::fromType<qlonglong>()));
   } else {
     q.bindValue(":disponibles", sumDisponibles);
   }
