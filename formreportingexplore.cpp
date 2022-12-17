@@ -271,12 +271,12 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
 
   if (!imageDirInfo.exists()) {
     if (!fi.absoluteDir().mkdir(relativeImagePath)) {
-      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des images impossible"));
+      QMessageBox::critical(this, tr("Attention"), tr("Création du dossier des noeuds impossible"));
       return;
     }
   } else {
     if (!imageDirInfo.isWritable()) {
-      QMessageBox::critical(this, tr("Attention"), tr("Ecriture impossible dans le dossier des images"));
+      QMessageBox::critical(this, tr("Attention"), tr("Ecriture impossible dans le dossier des noeuds"));
       return;
     }
   }

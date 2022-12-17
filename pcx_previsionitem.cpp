@@ -140,13 +140,13 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   if (!imageDirInfo.exists()) {
     if (!fi.absoluteDir().mkdir(relativeImagePath)) {
       QMessageBox::critical(nullptr, QObject::tr("Attention"),
-                            QObject::tr("Création du dossier des images impossible"));
+                            QObject::tr("Création du dossier des noeuds impossible"));
       return false;
     }
   } else {
     if (!imageDirInfo.isWritable()) {
       QMessageBox::critical(nullptr, QObject::tr("Attention"),
-                            QObject::tr("Ecriture impossible dans le dossier des images"));
+                            QObject::tr("Ecriture impossible dans le dossier des noeuds"));
       return false;
     }
   }
@@ -247,8 +247,8 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   // progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(nullptr, QObject::tr("Information"),
-                             QObject::tr("Le document <b>%1</b> a bien été enregistré. Les images "
-                                         "sont stockées dans le dossier <b>%2</b>")
+                             QObject::tr("Le document <b>%1</b> a bien été enregistré. Les documents liés "
+                                         "sont stockés dans le dossier <b>%2</b>")
                                  .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
   } else {
     QMessageBox::critical(nullptr, QObject::tr("Attention"), QObject::tr("Le document n'a pas pu être enregistré !"));
