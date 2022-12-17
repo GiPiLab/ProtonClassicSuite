@@ -5,7 +5,6 @@
 
 #include <QtGlobal>
 #include <QStringList>
-#include <QSharedPointer>
 
 #include "xlsxabstractsheet.h"
 
@@ -16,7 +15,7 @@ class DocumentPrivate;
 class ChartsheetPrivate;
 class Chart;
 
-class Chartsheet : public AbstractSheet
+class QXLSX_EXPORT Chartsheet : public AbstractSheet
 {
     Q_DECLARE_PRIVATE(Chartsheet)
 
@@ -29,10 +28,10 @@ private:
     friend class Workbook;
 
     Chartsheet(const QString &sheetName, int sheetId, Workbook *book, CreateFlag flag);
-    Chartsheet *copy(const QString &distName, int distId) const;
+    Chartsheet *copy(const QString &distName, int distId) const override;
 
-    void saveToXmlFile(QIODevice *device) const;
-    bool loadFromXmlFile(QIODevice *device);
+    void saveToXmlFile(QIODevice *device) const override;
+    bool loadFromXmlFile(QIODevice *device) override;
 };
 
 QT_END_NAMESPACE_XLSX

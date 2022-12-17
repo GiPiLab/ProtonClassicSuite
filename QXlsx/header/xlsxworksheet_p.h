@@ -10,11 +10,7 @@
 #include <QImage>
 #include <QSharedPointer>
 
-#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
 #include <QRegularExpression>
-#else
-#include <QRegExp>
-#endif
 
 #include "xlsxworksheet.h"
 #include "xlsxabstractsheet_p.h"
@@ -115,33 +111,29 @@ struct XlsxColumnInfo
                     double width = 0,
                     const Format &format = Format(),
                     bool hidden = false)
-        : firstColumn(firstColumn),
-          lastColumn(lastColumn),
-          customWidth(false),
-          isSetWidth(isSetWidth),
-          width(width),
+        : width(width),
           format(format),
-          hidden(hidden),
+          firstColumn(firstColumn),
+          lastColumn(lastColumn),
           outlineLevel(0),
+          isSetWidth(isSetWidth),
+          customWidth(false),
+          hidden(hidden),
           collapsed(false)
     {
 
     }
 
+    double width;
+    Format format;
     int firstColumn;
     int lastColumn;
-    bool customWidth;
-    double width;
-    bool isSetWidth;
-    Format format;
-    bool hidden;
     int outlineLevel;
+    bool isSetWidth;
+    bool customWidth;
+    bool hidden;
     bool collapsed;
 };
-
-// #ifndef QMapIntSharedPointerCell
-// typedef QMap<int, QSharedPointer<Cell> > QMapIntSharedPointerCell;
-// #endif
 
 class WorksheetPrivate : public AbstractSheetPrivate
 {
@@ -160,7 +152,7 @@ public:
     void validateDimension();
 
     void saveXmlSheetData(QXmlStreamWriter &writer) const;
-    void saveXmlCellData(QXmlStreamWriter &writer, int row, int col, QSharedPointer<Cell> cell) const;
+    void saveXmlCellData(QXmlStreamWriter &writer, int row, int col, std::shared_ptr<Cell> cell) const;
     void saveXmlMergeCells(QXmlStreamWriter &writer) const;
     void saveXmlHyperlinks(QXmlStreamWriter &writer) const;
     void saveXmlDrawings(QXmlStreamWriter &writer) const;
@@ -185,7 +177,7 @@ public:
     SharedStrings *sharedStrings() const;
 
 public:
-    QMap<int, QMap<int, QSharedPointer<Cell> > > cellTable;
+    QMap<int, QMap<int, std::shared_ptr<Cell> > > cellTable;
 
     QMap<int, QMap<int, QString> > comments;
     QMap<int, QMap<int, QSharedPointer<XlsxHyperlinkData> > > urlTable;
@@ -249,11 +241,7 @@ public:
     bool showOutlineSymbols;
     bool showWhiteSpace;
 
-#if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
     QRegularExpression urlPattern;
-#else
-    QRegExp urlPattern;
-#endif
 
 private:
 
