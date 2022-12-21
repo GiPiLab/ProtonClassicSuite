@@ -151,8 +151,6 @@ QString PCx_Report::generateHTMLAuditReportForNode(const QList<PCx_Tables::PCAPR
   int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
   int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
 
-  QString suffix = ".png";
-
   int progressValue = 0;
   if (progress != nullptr) {
     progressValue = progress->value();
@@ -287,8 +285,6 @@ QString PCx_Report::generateHTMLReportingReportForNode(QList<PCx_Report::PCRPRES
     inlineImageMode = true;
 
   }
-
-  QString suffix = ".png";
 
   int progressValue = 0;
   if (progress != nullptr) {

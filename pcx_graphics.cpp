@@ -993,6 +993,8 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
     while (q.next()) {
         qint64 refVal = q.value(PCx_Reporting::OREDPCRtoTableString(oredReference)).toLongLong();
         if (refVal == 0) {
+            delete axisX;
+            delete chart;
             return nullptr;
         }
 
@@ -1033,7 +1035,7 @@ void PCx_Graphics::setGraphicsWidth(int width) {
     graphicsWidth = MAXWIDTH;
   }
   QSettings settings;
-  settings.setValue(settingKey().value(SETTINGKEY::WIDTH), width);
+  settings.setValue(settingKey().value(SETTINGKEY::WIDTH), graphicsWidth);
 }
 
 void PCx_Graphics::setGraphicsHeight(int height) {
@@ -1045,7 +1047,7 @@ void PCx_Graphics::setGraphicsHeight(int height) {
     graphicsHeight = MAXHEIGHT;
   }
   QSettings settings;
-  settings.setValue(settingKey().value(SETTINGKEY::HEIGHT), height);
+  settings.setValue(settingKey().value(SETTINGKEY::HEIGHT), graphicsHeight);
 }
 
 QString PCx_Graphics::getCSS() {
