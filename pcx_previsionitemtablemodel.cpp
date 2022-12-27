@@ -68,7 +68,6 @@ int PCx_PrevisionItemTableModel::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant PCx_PrevisionItemTableModel::data(const QModelIndex &index, int role) const {
-  // FIXME : Too much refresh
   if (!index.isValid()) {
     return QVariant();
   }

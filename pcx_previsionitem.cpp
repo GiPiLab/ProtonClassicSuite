@@ -119,6 +119,7 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
   return out;
 }
 
+
 bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool showDescendants,
                                                 unsigned int referenceNode) const {
   QFile file(fileName);
@@ -131,25 +132,6 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   file.close();
   file.remove();
   QFileInfo fi(fileName);
-
-  QString relativeImagePath = fi.fileName() + "_files";
-  QString absoluteImagePath = fi.absoluteFilePath() + "_files";
-
-  QFileInfo imageDirInfo(absoluteImagePath);
-
-  if (!imageDirInfo.exists()) {
-    if (!fi.absoluteDir().mkdir(relativeImagePath)) {
-      QMessageBox::critical(nullptr, QObject::tr("Attention"),
-                            QObject::tr("Création du dossier des noeuds impossible"));
-      return false;
-    }
-  } else {
-    if (!imageDirInfo.isWritable()) {
-      QMessageBox::critical(nullptr, QObject::tr("Attention"),
-                            QObject::tr("Ecriture impossible dans le dossier des noeuds"));
-      return false;
-    }
-  }
 
   PCx_Report report(prevision->getAttachedAudit());
   QSettings settings;
@@ -212,8 +194,6 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
       out.append(report.generateHTMLAuditReportForNode(QList<PCx_Tables::PCAPRESETS>(), tables, graphics, descendant,
                                                        mode, referenceNode, nullptr, &progress, &tmpItem));
       if (progress.wasCanceled()) {
-        QDir dir(absoluteImagePath);
-        dir.removeRecursively();
         return false;
       }
     }
@@ -236,8 +216,6 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(nullptr, QObject::tr("Attention"),
                           QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    QDir dir(absoluteImagePath);
-    dir.removeRecursively();
     return false;
   }
   QTextStream stream(&file);
@@ -247,9 +225,8 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   // progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
     QMessageBox::information(nullptr, QObject::tr("Information"),
-                             QObject::tr("Le document <b>%1</b> a bien été enregistré. Les documents liés "
-                                         "sont stockés dans le dossier <b>%2</b>")
-                                 .arg(fi.fileName().toHtmlEscaped(), relativeImagePath.toHtmlEscaped()));
+                             QObject::tr("Le document <b>%1</b> a bien été enregistré")
+                                 .arg(fi.fileName().toHtmlEscaped()));
   } else {
     QMessageBox::critical(nullptr, QObject::tr("Attention"), QObject::tr("Le document n'a pas pu être enregistré !"));
     return false;
@@ -542,7 +519,6 @@ void PCx_PrevisionItem::saveDataToDb() {
   foreach (const PCx_PrevisionItemCriteria &criteria, itemsToSubstract) { items.append(criteria.serialize()); }
   QString subString = items.join(';');
 
-  // FIXME : Ensure computedValue consistency
   computedValue = getPrevisionItemValue();
 
   q.prepare(QString("insert into prevision_%1_%2 "

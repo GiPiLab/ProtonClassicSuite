@@ -47,7 +47,7 @@
 #include <QString>
 #include <QTableView>
 
-#define VERSION "1.1.2"
+#define VERSION "1.2.0beta"
 
 #define MAXOBJECTNAMELENGTH                                                                                            \
   64 ///< Maximum length of audits, reportings, trees, queries and previsions

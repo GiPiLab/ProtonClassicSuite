@@ -280,13 +280,7 @@ void FormEditTree::on_addNodeButton_clicked() {
 
     } while (ok && text.isEmpty());
 
-    if (ok) {
-      // NOTE : allow duplicates
-      /*if(model->nodeExists(text,selectedTypeId))
-{
-    QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un noeud
-de ce type avec ce nom !")); goto redo;
-}*/
+    if (ok) {      
       if (text.size() > PCx_Tree::MAXNODENAMELENGTH) {
         QMessageBox::warning(this, tr("Attention"), tr("Nom trop long !"));
         goto redo;
@@ -331,14 +325,7 @@ void FormEditTree::on_modifyNodeButton_clicked() {
       } while (ok && text.isEmpty());
 
       if (ok) {
-        if (text != typeAndNodeName.second) {
-          // NOTE : allow duplicates
-          /*
-if(model->nodeExists(text,selectedTypeId))
-{
-    QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un
-noeud de ce type portant ce nom dans l'arbre !")); goto redo;
-}*/
+        if (text != typeAndNodeName.second) {          
           if (text.size() > MAXOBJECTNAMELENGTH) {
             QMessageBox::warning(this, tr("Attention"), tr("Nom trop long !"));
             goto redoRoot;
@@ -375,13 +362,7 @@ noeud de ce type portant ce nom dans l'arbre !")); goto redo;
 
     if (ok) {
       if (selectedTypeId != oldTypeId || text != typeAndNodeName.second) {
-        // NOTE : allow duplicates
-        /*
-if(model->nodeExists(text,selectedTypeId))
-{
-    QMessageBox::warning(this,tr("Attention"),tr("Il existe déjà un
-noeud de ce type portant ce nom dans l'arbre !")); goto redo;
-}*/
+
         if (text.size() > MAXOBJECTNAMELENGTH) {
           QMessageBox::warning(this, tr("Attention"), tr("Nom trop long !"));
           goto redo;
