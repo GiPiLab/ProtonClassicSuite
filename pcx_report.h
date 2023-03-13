@@ -70,7 +70,15 @@ public:
                                              QTextDocument *document = nullptr, QProgressDialog *progress = nullptr);
 
   QString generateHTMLTOC(QList<unsigned int> nodes) const;
-  QString generateHTMLTOC(QList<unsigned int> nodes, QHash<unsigned int,QString> nodeToFileName) const;
+
+
+  /**
+   * @brief generateSVGTOC generates a graphviz svg clickable tree to insert in html file as a table of content
+   * The tree contains all nodes, nodes in nodeToFileName are not grayed and will contain an href
+   * @param nodeToFileName a map to a node id and an href
+   * @return the svg
+   */
+  QString generateSVGTOC(QMap<unsigned int,QUrl> nodeToFileName) const;
 
   const PCx_Tables &getTables() const { return tables; }
   PCx_Graphics &getGraphics() { return graphics; }

@@ -269,16 +269,6 @@ void FormEditAudit::on_pushButtonExportHTML_clicked() {
         return;
     }
 
-    QSettings settings;
-    QString settingStyle = settings.value("output/style", "CSS").toString();
-    if (settingStyle == "INLINE") {
-        QTextDocument doc;
-        doc.setHtml(out);
-
-        out = doc.toHtml();
-        out.replace(" -qt-block-indent:0;", "");
-    }
-
     QTextStream stream(&file);
     stream << out;
     stream.flush();

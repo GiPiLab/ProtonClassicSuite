@@ -122,15 +122,6 @@ QString PCx_PrevisionItem::displayPrevisionItemReportInQTextDocument(QTextDocume
 
 bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool showDescendants,
                                                 unsigned int referenceNode) const {
-  QFile file(fileName);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(nullptr, QObject::tr("Attention"),
-                          QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    return false;
-  }
-  // Will reopen after computation
-  file.close();
-  file.remove();
   QFileInfo fi(fileName);
 
   PCx_Report report(prevision->getAttachedAudit());
@@ -147,15 +138,22 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   if (showDescendants) {
     descendants = prevision->getAttachedTree()->getDescendantsId(nodeId);
     QList<unsigned int> dPlusMe = descendants;
-    dPlusMe.prepend(nodeId);
-    out.append(report.generateHTMLTOC(dPlusMe));
+    dPlusMe.prepend(nodeId);    
+
+    QMap<unsigned int,QUrl>nodeToUrl;
+    foreach(unsigned int node,dPlusMe)
+    {
+        nodeToUrl.insert(node,QUrl(QString("#PCXnode%1").arg(node)));
+    }
+    out.append(report.generateSVGTOC(nodeToUrl));
   }
 
   QList<PCx_Tables::PCATABLES> tables = {PCx_Tables::PCATABLES::PCARAWDATA};
   QList<PCx_Graphics::PCAGRAPHICS> graphics = {PCx_Graphics::PCAGRAPHICS::PCAHISTORY, PCx_Graphics::PCAGRAPHICS::PCAG1,
                                                PCx_Graphics::PCAGRAPHICS::PCAG2};
 
-  out.append(QString("<h2 id='node%1'>" + prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped() + "</h2>")
+  //Warning with id : graphviz generates 'nodexx' id, no duplicates allowed
+  out.append(QString("<h2 id='PCXnode%1'>" + prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped() + "</h2>")
                  .arg(nodeId));
   out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 "
                      ": <b>%2€</b></p>")
@@ -178,7 +176,8 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     progress.setValue(0);
     foreach (unsigned int descendant, descendants) {
       out.append(
-          QString("<h2 id='node%1'>" + prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped() + "</h2>")
+                  //Warning with id : graphviz generates 'nodexx' id, no duplicates allowed
+          QString("<h2 id='PCXnode%1'>" + prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped() + "</h2>")
               .arg(descendant));
 
       PCx_PrevisionItem tmpItem(prevision, mode, descendant, year);
@@ -201,18 +200,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
 
   out.append("</body></html>");
 
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-  if (settingStyle == "INLINE") {
-    // Pass HTML through a temp QTextDocument to reinject css into tags (more
-    // compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(out);
-    out = formattedOut.toHtml();
-
-    // Cleanup the output a bit
-    out.replace(" -qt-block-indent:0;", "");
-  }
-
+  QFile file(fileName);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(nullptr, QObject::tr("Attention"),
                           QObject::tr("Ouverture du fichier impossible : %1").arg(file.errorString()));

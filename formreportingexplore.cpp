@@ -255,13 +255,6 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
   if(fileName.isEmpty())return;
 
   QFile file(fileName);
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
-    return;
-  }
-  // Will reopen after computation
-  file.close();
-  file.remove();
 
   QFileInfo fi(fileName);
   QString relativeImagePath = fi.fileName() + "_files";

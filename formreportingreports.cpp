@@ -238,7 +238,7 @@ void FormReportingReports::on_saveButton_clicked() {
   presetsSansS.removeAll(PCx_Report::PCRPRESETS::PCRPRESET_S);
 
 
-  QHash<unsigned int,QString> nodeToFileName;
+  QMap<unsigned int,QUrl> nodeToFileName;
 
 
   foreach (unsigned int selectedNode, sortedSelectedNodes) {
@@ -334,7 +334,7 @@ void FormReportingReports::on_saveButton_clicked() {
 
   QString mainOutput = PCx_Report::generateMainHTMLHeader();
   mainOutput.append(model->generateHTMLReportingTitle());
-  mainOutput.append(report->generateHTMLTOC(sortedSelectedNodes,nodeToFileName));
+  mainOutput.append(report->generateSVGTOC(nodeToFileName));
 
 
   QTextStream stream(&mainFile);

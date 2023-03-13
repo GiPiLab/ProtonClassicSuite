@@ -54,7 +54,7 @@
 #include <QUuid>
 #include <ctime>
 
-QStringList PCx_Tree::firstNameList = {"Aaron",
+const QStringList PCx_Tree::firstNameList = {"Aaron",
                                        "Abdonie",
                                        "Abdonise",
                                        "Abel",
@@ -1595,6 +1595,9 @@ QStringList PCx_Tree::firstNameList = {"Aaron",
                                        "Zoé",
                                        "Zoltan"};
 
+
+ const QString PCx_Tree::_dotGraphHeader= QStringLiteral("graph g{\ntooltip=\" \";rankdir=TB;node[shape=\"box\"];ranksep=\"1.5\";splines=\"polyline\";\n");
+
 PCx_Tree::PCx_Tree(unsigned int treeId) : treeId(treeId) {
   if (treeId == 0) {
     qFatal("Assertion failed");
@@ -2164,10 +2167,38 @@ bool PCx_Tree::deleteNode(unsigned int nodeId) {
   return true;
 }
 
+QString PCx_Tree::toDot(QMap<unsigned int,QUrl> nodesToUrl) const {
+    QString dotOutput = _dotGraphHeader;
+
+    QList<unsigned int> allNodes=getNodesId();
+
+    foreach (unsigned int node, allNodes) {
+        if(!nodesToUrl.contains(node))
+        {
+            dotOutput.append(QString("%1 [tooltip=\" \" color=\"lightgray\" fontcolor=\"lightgray\" label=\"%2\"];\n").arg(node).arg(getNodeName(node).replace('"', QString("\\\""))));
+        }
+
+        else
+        {
+            dotOutput.append(QString("%1 [tooltip=\" \" label=\"%2\" href=\"%3\"];\n").arg(node).arg(getNodeName(node).replace('"', QString("\\\""))).arg(nodesToUrl.value(node).toString()));
+        }
+    }
+
+    foreach (unsigned int node, allNodes) {
+      unsigned int pid = getParentId(node);
+
+      if (pid != 0) {
+        dotOutput.append(QString("\t%1--%2 [tooltip=\" \"];\n").arg(pid).arg(node));
+      }
+    }
+    dotOutput.append(QStringLiteral("}\n"));    
+    return dotOutput;
+}
+
 QString PCx_Tree::toDot() const {
   QList<unsigned int> nodes = getNodesId();
 
-  QString out = QStringLiteral("graph g{\nrankdir=LR;\n");
+  QString out = _dotGraphHeader;
 
   foreach (unsigned int node, nodes) {
     // Escape double quotes for dot format

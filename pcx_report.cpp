@@ -513,7 +513,7 @@ QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes) const {
 
 
 
-QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes, QHash<unsigned int, QString> nodeToFileName) const {
+QString PCx_Report::generateSVGTOC(QMap<unsigned int, QUrl> nodeToFileName) const {
   QString output = "<ul>\n";
   PCx_Tree *tree = nullptr;
   if (auditModel != nullptr) {
@@ -527,17 +527,11 @@ QString PCx_Report::generateHTMLTOC(QList<unsigned int> nodes, QHash<unsigned in
     return QString();
   }
 
+  QString dot=tree->toDot(nodeToFileName);  
+  QString svg=dotToSvg(dot.toUtf8());
 
+  output.append("<!--\n"+dot+"\n-->");
+  output.append(svg);
 
-  foreach (unsigned int node, nodes) {
-      if(!nodeToFileName.contains(node))
-      {
-          qWarning()<<"Unknown node used";
-          return QString();
-      }
-    output.append(
-          QString("<li><a href='%1'>%2</a></li>\n").arg(nodeToFileName.value(node)).arg(tree->getNodeName(node).toHtmlEscaped()));
-  }
-  output.append("</ul>\n");
   return output;
 }

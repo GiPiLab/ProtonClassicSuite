@@ -58,15 +58,6 @@ DialogOptions::DialogOptions(QWidget *parent) : QDialog(parent), ui(new Ui::Dial
 
   ui->checkBoxRandomAllowed->setChecked(settings.value("misc/randomAllowed", true).toBool());
 
-  QString css = settings.value("output/style", "CSS").toString();
-  if (css == "CSS") {
-    ui->radioButtonCSS->setChecked(true);
-  } else if (css == "INLINE") {
-    ui->radioButtonInline->setChecked(true);
-  } else {
-    qWarning() << "Unsupported option for CSS !";
-  }
-
   int imageWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
   if (imageWidth < PCx_Graphics::MINWIDTH) {
       imageWidth = PCx_Graphics::MINWIDTH;
@@ -150,14 +141,6 @@ void DialogOptions::on_pushButtonOk_clicked() {
     settings.setValue("misc/randomAllowed", false);
   }
 
-  if (ui->radioButtonCSS->isChecked()) {
-    settings.setValue("output/style", "CSS");
-  } else if (ui->radioButtonInline->isChecked()) {
-    settings.setValue("output/style", "INLINE");
-  } else {
-    qWarning() << "Unknown case of option selection for CSS";
-  }
-
   settings.setValue("format/numdecimals", ui->spinBoxNumDecimals->value());
 
   if (ui->radioButtonUnits->isChecked()) {
@@ -192,7 +175,6 @@ void DialogOptions::on_pushButtonOk_clicked() {
 void DialogOptions::on_pushButtonCancel_clicked() { done(Rejected); }
 
 void DialogOptions::on_pushButtonReset_clicked() {
-  ui->radioButtonCSS->setChecked(true);
   ui->spinBoxHeight->setValue(PCx_Graphics::DEFAULTHEIGHT);
   ui->spinBoxWidth->setValue(PCx_Graphics::DEFAULTWIDTH);
   colorReqMinMax = QColor(PCx_QueryMinMax::DEFAULTCOlOR);

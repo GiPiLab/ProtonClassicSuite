@@ -202,6 +202,62 @@ QString qTableViewToHtml(QTableView *tableView) {
   return out;
 }
 
+QString dotToSvg(const QByteArray &dot){
+
+  const char *dotData = dot.constData();
+
+  GVC_t *gvc;
+  graph_t *g;
+
+  gvc = gvContext();
+
+  g = agmemread(dotData);
+
+  if (g == nullptr) {
+    gvFreeContext(gvc);
+    qCritical() << "Error while reading DOT data !";
+    return nullptr;
+  }
+
+  if (gvLayout(gvc, g, "dot") != 0) {
+    gvFreeLayout(gvc, g);
+    agclose(g);
+    gvFreeContext(gvc);
+    qCritical() << "Error during graph layout !";
+    return nullptr;
+  }
+
+  char *outputData;
+  unsigned int length = 0;
+
+  gvRenderData(gvc, g, "svg", &outputData, &length);
+
+  if (length == 0) {
+    gvFreeRenderData(outputData);
+    gvFreeLayout(gvc, g);
+    agclose(g);
+    gvFreeContext(gvc);
+    qCritical() << "Error while rendering graph !";
+    return nullptr;
+  }
+
+  QString out(outputData);
+
+  gvFreeRenderData(outputData);
+  gvFreeLayout(gvc, g);
+  agclose(g);
+  gvFreeContext(gvc);
+
+  //Remove xml header unneeded to embed into html
+  out.remove("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+  out.remove("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"");
+  out.remove("\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
+
+  //Remove fixed width and height
+  out.remove(QRegularExpression("width=.*"));
+  return out;
+}
+
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName) {
   Q_ASSERT(!outputFileName.isEmpty());
 

@@ -294,6 +294,16 @@ public:
    */
   QString toDot() const;
 
+
+  /**
+   * @brief toDot generate a tree in DOT format suitable for Graphviz, with hyperlinks
+   * @param nodesToUrl an optional map of nodes to url. All nodes of the tree are drawn,
+   * nodes in nodesToUrl are in black with href, other nodes are grayed
+   * @return the tree in DOT format
+   */
+  QString toDot(QMap<unsigned int, QUrl> nodesToUrl) const;
+
+
   /**
    * @brief toXLSX saves a tree in XLSX
    *
@@ -465,7 +475,7 @@ public:
    */
   void updateNodePid(unsigned int nodeId, unsigned int newPid);
 
-  static QStringList firstNameList;
+  static const QStringList firstNameList;
 
   /**
    * @brief checkIdToTypeAndName check if the node ID has the type name and node
@@ -476,6 +486,9 @@ public:
    * @return true if it matches, false otherwise
    */
   bool checkIdToTypeAndName(unsigned int id, const QString &typeName, const QString &nodeName) const;
+
+
+
 
 protected:
   /**
@@ -536,6 +549,9 @@ protected:
    * @return the identifier of the new tree, call die on database error
    */
   static int _internalAddTree(const QString &name, bool createRoot = true);
+
+  static const QString _dotGraphHeader;
+
 
   // Cache to speedup isLeaf, only consistant with finished trees
   QHash<unsigned int, bool> nodeIsALeaf;

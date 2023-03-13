@@ -132,6 +132,13 @@ QString choosePNGFileNameWithDialog();
 bool dotToPdf(const QByteArray &dot, const QString &outputFileName);
 
 /**
+ * @brief dotToSvg renders a graph in DOT format to an SVG
+ * @param dot the graph in DOT format
+ * @return the SVG in text format (ready to insert in html) or nullptr on error
+ */
+QString dotToSvg(const QByteArray &dot);
+
+/**
  * @brief the NUMBERSFORMAT namespace regroups functions to deal with input and
  * output of numbers between UI and database
  *

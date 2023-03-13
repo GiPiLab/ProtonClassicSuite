@@ -42,7 +42,6 @@
 
 #include "formauditreports.h"
 #include "pcx_auditwithtreemodel.h"
-#include "qtextdocumentwriter.h"
 #include "ui_formauditreports.h"
 #include "utils.h"
 
@@ -125,7 +124,6 @@ void FormAuditReports::on_comboListAudits_activated(int index) {
 }
 
 void FormAuditReports::on_saveButton_clicked() {
-  // TODO(unknown): Order tables and graphics
   QItemSelectionModel *sel = ui->treeView->selectionModel();
   QModelIndexList selIndexes = sel->selectedIndexes();
 
@@ -251,14 +249,13 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   int i = 0;
   QSettings settings;
 
-  // TODO: use SETTINGKEYS
   report->getGraphics().setGraphicsWidth(settings.value("graphics/width", PCx_Graphics::DEFAULTWIDTH).toInt());
   report->getGraphics().setGraphicsHeight(settings.value("graphics/height", PCx_Graphics::DEFAULTHEIGHT).toInt());
 
   QElapsedTimer timer;
   timer.start();
 
-  QHash<unsigned int,QString> nodeToFileName;
+  QMap<unsigned int,QUrl> nodeToFileName;
 
   foreach (unsigned int selectedNode, sortedSelectedNodes) {
     QString output = report->generateNodeHTMLHeader(selectedNode);
@@ -319,7 +316,7 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
   // Main html file
   QString mainOutput = PCx_Report::generateMainHTMLHeader();
   mainOutput.append(model->generateHTMLAuditTitle());
-  mainOutput.append(report->generateHTMLTOC(sortedSelectedNodes,nodeToFileName));
+  mainOutput.append(report->generateSVGTOC(nodeToFileName));
   mainOutput.append(QStringLiteral("\n</body></html>"));
 
   if (!progress.wasCanceled()) {
