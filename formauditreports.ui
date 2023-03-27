@@ -296,48 +296,7 @@
      </widget>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QGroupBox" name="groupBoxTraversal">
-     <property name="whatsThis">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ordre dans lequel les noeuds seront présentés à l'intérieur du rapport.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="title">
-      <string>Ordre d'affichage des noeuds</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="topMargin">
-       <number>2</number>
-      </property>
-      <property name="bottomMargin">
-       <number>2</number>
-      </property>
-      <item>
-       <widget class="QRadioButton" name="radioButtonDFS">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, A1, A2, B, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Profondeur d'abord</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButtonBFS">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, B, A1, A2, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Largeur d'abord</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="1">
+   <item row="2" column="0" colspan="2">
     <widget class="QPushButton" name="saveButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -377,8 +336,6 @@
   <tabstop>pushButtonUnSelectAllNodes</tabstop>
   <tabstop>pushButtonSelectType</tabstop>
   <tabstop>comboListTypes</tabstop>
-  <tabstop>radioButtonDFS</tabstop>
-  <tabstop>radioButtonBFS</tabstop>
   <tabstop>checkBoxDF</tabstop>
   <tabstop>checkBoxRF</tabstop>
   <tabstop>checkBoxDI</tabstop>

@@ -135,6 +135,8 @@ void FormReportingReports::on_saveButton_clicked() {
   }
 
   // qDebug()<<"Selected nodes : "<<selectedNodes;
+   // NOTE : useless since graphviz tree TOC
+  /*
   QList<unsigned int> sortedSelectedNodes;
   if (ui->radioButtonBFS->isChecked()) {
     sortedSelectedNodes = model->getAttachedTree()->sortNodesBFS(selectedNodes);
@@ -145,6 +147,7 @@ void FormReportingReports::on_saveButton_clicked() {
                                                    "sélectionnés dans le rapport !"));
     return;
   }
+  */
 
   QList<PCx_Report::PCRPRESETS> selectedPresets;
 
@@ -240,8 +243,8 @@ void FormReportingReports::on_saveButton_clicked() {
 
   QMap<unsigned int,QUrl> nodeToFileName;
 
-
-  foreach (unsigned int selectedNode, sortedSelectedNodes) {
+//foreach (unsigned int selectedNode, sortedSelectedNodes) {
+  foreach (unsigned int selectedNode, selectedNodes) {
    QString output = report->generateNodeHTMLHeader(selectedNode);
 
     output.append(QString("\n\n<h1 id='node%2'>%1</h1>")

@@ -138,7 +138,9 @@ void FormAuditReports::on_saveButton_clicked() {
   }
 
   // qDebug()<<"Selected nodes : "<<selectedNodes;
-  QList<unsigned int> sortedSelectedNodes;
+  //NOTE : useless since graphviz tree toc
+   /*
+   * QList<unsigned int> sortedSelectedNodes;
   if (ui->radioButtonBFS->isChecked()) {
     sortedSelectedNodes = model->getAttachedTree()->sortNodesBFS(selectedNodes);
   } else if (ui->radioButtonDFS->isChecked()) {
@@ -149,6 +151,7 @@ void FormAuditReports::on_saveButton_clicked() {
     return;
   }
   // qDebug()<<"Selected nodes (sorted) : "<<sortedSelectedNodes;
+  */
 
   QModelIndexList selectedItemsTables = ui->listTables->selectionModel()->selectedIndexes();
   QModelIndexList selectedItemsGraphics = ui->listGraphics->selectionModel()->selectedIndexes();
@@ -257,7 +260,8 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   QMap<unsigned int,QUrl> nodeToFileName;
 
-  foreach (unsigned int selectedNode, sortedSelectedNodes) {
+  //foreach (unsigned int selectedNode, sortedSelectedNodes) {
+  foreach (unsigned int selectedNode, selectedNodes) {
     QString output = report->generateNodeHTMLHeader(selectedNode);
     output.append(QString("\n\n<h1 id='node%2'>%1</h1>")
                       .arg(model->getAttachedTree()->getNodeName(selectedNode).toHtmlEscaped())

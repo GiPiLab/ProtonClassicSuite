@@ -152,7 +152,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
   QList<PCx_Graphics::PCAGRAPHICS> graphics = {PCx_Graphics::PCAGRAPHICS::PCAHISTORY, PCx_Graphics::PCAGRAPHICS::PCAG1,
                                                PCx_Graphics::PCAGRAPHICS::PCAG2};
 
-  //Warning with id : graphviz generates 'nodexx' id, no duplicates allowed
+  //WARNING with id : graphviz generates 'nodexx' id, no duplicates allowed
   out.append(QString("<h2 id='PCXnode%1'>" + prevision->getAttachedTree()->getNodeName(nodeId).toHtmlEscaped() + "</h2>")
                  .arg(nodeId));
   out.append(QString("<p align='center' style='font-size:14pt'>Valeur prévue pour %1 "
@@ -176,7 +176,7 @@ bool PCx_PrevisionItem::savePrevisionItemReport(const QString &fileName, bool sh
     progress.setValue(0);
     foreach (unsigned int descendant, descendants) {
       out.append(
-                  //Warning with id : graphviz generates 'nodexx' id, no duplicates allowed
+                  //WARNING with id : graphviz generates 'nodexx' id, no duplicates allowed
           QString("<h2 id='PCXnode%1'>" + prevision->getAttachedTree()->getNodeName(descendant).toHtmlEscaped() + "</h2>")
               .arg(descendant));
 

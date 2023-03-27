@@ -48,6 +48,7 @@
 #include "pcx_reporting.h"
 #include <QStandardItemModel>
 #include <QtCharts>
+#include <QtSvg/QSvgGenerator>
 
 
 class PCx_Graphics {
@@ -191,7 +192,8 @@ public:
 
   static QString pixmapToBase64PNG(const QPixmap &pixmap);
 
-  private:
+
+private:
   PCx_Audit *auditModel;
   PCx_Reporting *reportingModel;
 

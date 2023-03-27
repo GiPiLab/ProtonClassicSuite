@@ -682,7 +682,7 @@ QChart *PCx_Graphics::getChartFromPCAGRAPHICS(PCx_Graphics::PCAGRAPHICS pcaGraph
 }
 
 QPixmap PCx_Graphics::chartToPixmap(QChart *chart) const {
-  QPixmap pixmap;
+  QPixmap pixmap;  
   QChartView chartView(chart);
   int graphicsWidth = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::WIDTH).toInt();
   int graphicsHeight = PCx_Graphics::getSettingValue(PCx_Graphics::SETTINGKEY::HEIGHT).toInt();
@@ -699,6 +699,7 @@ QPixmap PCx_Graphics::chartViewToPixmap(QChartView *chartView) {
   chartView->render(&painter);
   return pixmap;
 }
+
 
 QString PCx_Graphics::pixmapToBase64PNG(const QPixmap &pixmap)
 {

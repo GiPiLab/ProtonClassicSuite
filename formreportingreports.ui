@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>728</width>
-    <height>415</height>
+    <height>340</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,6 +18,93 @@
     <normaloff>:/icons/icons/reportingReport.png</normaloff>:/icons/icons/reportingReport.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0" rowspan="2">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="2" column="1">
+      <widget class="QPushButton" name="pushButtonCollapseAll">
+       <property name="text">
+        <string>Replier tout</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" colspan="2">
+      <widget class="QComboBox" name="comboListReportings"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="comboListTypes"/>
+     </item>
+     <item row="1" column="0" colspan="2">
+      <widget class="QTreeView" name="treeView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="pushButtonExpandAll">
+       <property name="text">
+        <string>Déplier tout</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QPushButton" name="pushButtonSelectType">
+       <property name="text">
+        <string>Sélectionner les :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="pushButtonSelectAllNodes">
+       <property name="text">
+        <string>Sélectionner tout</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="pushButtonUnSelectAllNodes">
+       <property name="text">
+        <string>Sélectionner rien</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="saveButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>47</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Générer le rapport</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
+     </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="1">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -127,137 +214,6 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="3">
-    <layout class="QGridLayout" name="gridLayout_3">
-     <item row="2" column="1">
-      <widget class="QPushButton" name="pushButtonCollapseAll">
-       <property name="text">
-        <string>Replier tout</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0" colspan="2">
-      <widget class="QComboBox" name="comboListReportings"/>
-     </item>
-     <item row="4" column="1">
-      <widget class="QComboBox" name="comboListTypes"/>
-     </item>
-     <item row="1" column="0" colspan="2">
-      <widget class="QTreeView" name="treeView">
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
-       <property name="showDropIndicator" stdset="0">
-        <bool>false</bool>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::ExtendedSelection</enum>
-       </property>
-       <attribute name="headerVisible">
-        <bool>false</bool>
-       </attribute>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="pushButtonExpandAll">
-       <property name="text">
-        <string>Déplier tout</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="pushButtonSelectType">
-       <property name="text">
-        <string>Sélectionner les :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QPushButton" name="pushButtonSelectAllNodes">
-       <property name="text">
-        <string>Sélectionner tout</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QPushButton" name="pushButtonUnSelectAllNodes">
-       <property name="text">
-        <string>Sélectionner rien</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="saveButton">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>47</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Générer le rapport</string>
-     </property>
-     <property name="icon">
-      <iconset resource="Images.qrc">
-       <normaloff>:/icons/icons/html.png</normaloff>:/icons/icons/html.png</iconset>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBoxTraversal">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Ordre d'affichage des noeuds</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="topMargin">
-       <number>2</number>
-      </property>
-      <property name="bottomMargin">
-       <number>2</number>
-      </property>
-      <item>
-       <widget class="QRadioButton" name="radioButtonBFS">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, B, A1, A2, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Largeur d'abord</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="radioButtonDFS">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Si l'arbre est :&lt;/p&gt;&lt;p&gt;R&lt;/p&gt;&lt;p&gt;----A&lt;/p&gt;&lt;p&gt;---------A1&lt;/p&gt;&lt;p&gt;---------A2&lt;/p&gt;&lt;p&gt;----B&lt;/p&gt;&lt;p&gt;---------B1&lt;/p&gt;&lt;p&gt;---------B2&lt;/p&gt;&lt;p&gt;Le rapport contiendra dans cet ordre :&lt;/p&gt;&lt;p&gt;R, A, A1, A2, B, B1, B2&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Profondeur d'abord</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
   </layout>
  </widget>
  <tabstops>
@@ -281,8 +237,6 @@
   <tabstop>checkBoxRF</tabstop>
   <tabstop>checkBoxDI</tabstop>
   <tabstop>checkBoxRI</tabstop>
-  <tabstop>radioButtonBFS</tabstop>
-  <tabstop>radioButtonDFS</tabstop>
   <tabstop>saveButton</tabstop>
  </tabstops>
  <resources>

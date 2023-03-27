@@ -218,6 +218,8 @@ QString PCx_Report::generateHTMLAuditReportForNode(const QList<PCx_Tables::PCAPR
         } else {
 
           QString base64IMG=PCx_Graphics::pixmapToBase64PNG(pixmap);
+
+
           if(base64IMG==nullptr)
           {
               break;
@@ -227,6 +229,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(const QList<PCx_Tables::PCAPR
                             .arg(graphicsWidth)
                             .arg(graphicsHeight)
                             .arg(base64IMG));
+
         }
       }
       break;
