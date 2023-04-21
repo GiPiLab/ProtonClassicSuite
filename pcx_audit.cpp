@@ -1037,19 +1037,19 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode, bool progressBar) {
   int nbNode = 0;
   QRandomGenerator *randomGenerator = QRandomGenerator::global();
 
-  double randval;
+  unsigned int randValOuverts,randValRealises,randValEngages;
 
   foreach (unsigned int leaf, leaves) {
     foreach (int year, years) {
       data.clear();
-      randval = randomGenerator->bounded(MAX_RANDOM_NUM_FOR_A_LEAF);
-      data.insert(PCx_Audit::ORED::OUVERTS, randval);
+      randValOuverts = randomGenerator->bounded(100,MAX_RANDOM_NUM_FOR_A_LEAF);
+      data.insert(PCx_Audit::ORED::OUVERTS, randValOuverts);
 
-      randval = randomGenerator->bounded(MAX_RANDOM_NUM_FOR_A_LEAF / 2);
-      data.insert(PCx_Audit::ORED::REALISES, randval);
+      randValRealises = randomGenerator->bounded(randValOuverts);
+      data.insert(PCx_Audit::ORED::REALISES, randValRealises);
 
-      randval = randomGenerator->bounded(MAX_RANDOM_NUM_FOR_A_LEAF / 4);
-      data.insert(PCx_Audit::ORED::ENGAGES, randval);
+      randValEngages = randomGenerator->bounded(randValOuverts-randValRealises);
+      data.insert(PCx_Audit::ORED::ENGAGES, randValEngages);
 
       // the transaction will be rollback in setLeafValues=>die
       setLeafValues(leaf, mode, year, data, true);
