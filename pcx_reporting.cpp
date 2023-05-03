@@ -1153,7 +1153,8 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
   int nbNode = 0;
   QRandomGenerator *randomGenerator = QRandomGenerator::global();
 
-  double randval;
+  int rvOuverts, rvRealises, rvEngages, rvBp, rvReports, rvOcdm, rvVcdm, rvBudgetVote,
+      rvVirementsInternes, rvRattacheNMoins1;
 
   QDate lastDate = getLastReportingDate(mode);
   QDate nextDate;
@@ -1166,15 +1167,40 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
   foreach (unsigned int leaf, leaves) {
     data.clear();
 
-    for (auto i = static_cast<int>(PCx_Reporting::OREDPCR::OUVERTS);
-         i < static_cast<int>(PCx_Reporting::OREDPCR::NONELAST); i++) {
-      if (i == static_cast<int>(PCx_Reporting::OREDPCR::DISPONIBLES)) {
-        continue;
-      }
-      randval = randomGenerator->bounded(MAX_RANDOM_NUM_FOR_A_LEAF);
+    rvOuverts = randomGenerator->bounded(100, MAX_RANDOM_NUM_FOR_A_LEAF / 2);
+    data.insert(OREDPCR::OUVERTS, rvOuverts);
 
-      data.insert(static_cast<PCx_Reporting::OREDPCR>(i), randval);
-    }
+    rvRealises = randomGenerator->bounded(rvOuverts+1);
+    data.insert(OREDPCR::REALISES, rvRealises);
+
+    rvEngages = randomGenerator->bounded(rvOuverts-rvRealises+1);
+    data.insert(OREDPCR::ENGAGES, rvEngages);
+
+    rvBudgetVote = rvOuverts;
+    data.insert(OREDPCR::BUDGETVOTE, rvBudgetVote);
+
+    rvBp = randomGenerator->bounded(rvOuverts / 2, rvOuverts + 1);
+    int restant = rvOuverts - rvBp;
+    data.insert(OREDPCR::BP, rvBp);
+
+    rvOcdm = randomGenerator->bounded(restant);
+    restant = restant - rvOcdm;
+    data.insert(OREDPCR::OCDM, rvOcdm);
+
+    rvVcdm = randomGenerator->bounded(restant);
+    restant = restant - rvVcdm;
+    data.insert(OREDPCR::VCDM, rvVcdm);
+
+    rvReports = randomGenerator->bounded(restant);
+    restant = restant - rvReports;
+    data.insert(OREDPCR::REPORTS, rvReports);
+
+    rvVirementsInternes = randomGenerator->bounded(restant);
+    restant = restant - rvVirementsInternes;
+    data.insert(OREDPCR::VIREMENTSINTERNES, rvVirementsInternes);
+
+    rvRattacheNMoins1 = randomGenerator->bounded(restant);
+    data.insert(OREDPCR::RATTACHENMOINS1, rvRattacheNMoins1);
 
     // the transaction will be rollback in setLeafValues=>die
     setLeafValues(leaf, mode, nextDate, data, true);
