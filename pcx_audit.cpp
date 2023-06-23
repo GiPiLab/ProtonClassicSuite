@@ -1014,27 +1014,16 @@ bool PCx_Audit::exportLeavesDataXLSX(MODES::DFRFDIRI mode, const QString &fileNa
   return xlsx.saveAs(fileName);
 }
 
-void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode, bool progressBar) {
+void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode)
+{
   QList<unsigned int> leaves = getAttachedTree()->getLeavesId();
 
   QMap<PCx_Audit::ORED, double> data;
-
-  int maxVal = leaves.size();
-
-  QProgressDialog progress(QObject::tr("Génération des données aléatoires..."), QObject::tr("Annuler"), 0, maxVal);
-
-  if (progressBar) {
-    progress.setWindowModality(Qt::ApplicationModal);
-
-    progress.setMinimumDuration(300);
-    progress.setValue(0);
-  }
 
   QSqlDatabase::database().transaction();
 
   clearAllData(mode);
 
-  int nbNode = 0;
   QRandomGenerator *randomGenerator = QRandomGenerator::global();
 
   int randValOuverts, randValRealises, randValEngages;
@@ -1060,15 +1049,6 @@ void PCx_Audit::fillWithRandomData(MODES::DFRFDIRI mode, bool progressBar) {
 
       // the transaction will be rollback in setLeafValues=>die
       setLeafValues(leaf, mode, year, data, true);
-    }
-    nbNode++;
-    if (progressBar) {
-      if (!progress.wasCanceled()) {
-        progress.setValue(nbNode);
-      } else {
-        QSqlDatabase::database().rollback();
-        return;
-      }
     }
   }
   QSqlDatabase::database().commit();

@@ -1139,21 +1139,11 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
 
   QMap<PCx_Reporting::OREDPCR, double> data;
 
-  int maxVal = leaves.size();
-
-  QProgressDialog progress(QObject::tr("Génération des données aléatoires..."), QObject::tr("Annuler"), 0, maxVal);
-
-  progress.setWindowModality(Qt::ApplicationModal);
-
-  progress.setMinimumDuration(300);
-  progress.setValue(0);
-
   QSqlDatabase::database().transaction();
 
-  int nbNode = 0;
   QRandomGenerator *randomGenerator = QRandomGenerator::global();
 
-  int rvOuverts, rvRealises, rvEngages, rvBp, rvReports, rvOcdm, rvVcdm, rvBudgetVote,
+  qint64 rvOuverts, rvRealises, rvEngages, rvBp, rvReports, rvOcdm, rvVcdm, rvBudgetVote,
       rvVirementsInternes, rvRattacheNMoins1;
 
   QDate lastDate = getLastReportingDate(mode);
@@ -1167,10 +1157,22 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
   foreach (unsigned int leaf, leaves) {
     data.clear();
 
-    rvOuverts = randomGenerator->bounded(100, MAX_RANDOM_NUM_FOR_A_LEAF / 2);
+    //Generate random "ouverts" only for the first date, otherwise use the last value
+    if (lastDate.isNull()) {
+      rvOuverts = randomGenerator->bounded(100, MAX_RANDOM_NUM_FOR_A_LEAF / 2);
+    } else {
+      rvOuverts = fixedPointToDouble(getNodeValue(leaf, mode, OREDPCR::OUVERTS, lastDate));
+    }
     data.insert(OREDPCR::OUVERTS, rvOuverts);
 
-    rvRealises = randomGenerator->bounded(rvOuverts+1);
+    if (lastDate.isNull()) {
+      rvRealises = randomGenerator->bounded(rvOuverts / 12);
+    } else {
+      rvRealises = (qint64) fixedPointToDouble(getNodeValue(leaf, mode, OREDPCR::REALISES, lastDate))
+                   + randomGenerator->bounded(rvOuverts / 8);
+      if (rvRealises > rvOuverts)
+        rvRealises = rvOuverts;
+    }
     data.insert(OREDPCR::REALISES, rvRealises);
 
     rvEngages = randomGenerator->bounded(rvOuverts-rvRealises+1);
@@ -1204,14 +1206,6 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
 
     // the transaction will be rollback in setLeafValues=>die
     setLeafValues(leaf, mode, nextDate, data, true);
-
-    nbNode++;
-    if (!progress.wasCanceled()) {
-      progress.setValue(nbNode);
-    } else {
-      QSqlDatabase::database().rollback();
-      return;
-    }
   }
   QSqlDatabase::database().commit();
 }
