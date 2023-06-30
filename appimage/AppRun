@@ -1,1 +1,4 @@
-usr/bin/ProtonClassicSuite
+#!/bin/sh
+
+GVBINDIR=$APPDIR/usr/lib/graphviz $APPDIR/usr/bin/ProtonClassicSuite
+
