@@ -183,20 +183,30 @@ RC_ICONS = icons/logo64_64.ico
 #QMAKE_CXXFLAGS_DEBUG += -pg
 #QMAKE_LFLAGS_DEBUG += -pg
 
-win32: LIBS += -lgvc -lcgraph
-
 unix:!android{
     LIBS += -lgvc -lcgraph
 }
 
-
-win32: INCLUDEPATH += "c:/Program Files/Graphviz/include"
-
-win32:CONFIG(release, debug|release): LIBS += -L"$$PWD/../../../../Program Files/Graphviz/lib/release/lib/" -lcgraph
-else:win32:CONFIG(debug, debug|release): LIBS += -L"$$PWD/../../../../Program Files/Graphviz/lib/release/lib/" -lcgraphd
-
-win32:INCLUDEPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
-win32:DEPENDPATH += "$$PWD/../../../../Program Files/Graphviz/lib/release"
+win32:
+{
+    contains (QT_ARCH, x86_64) {
+        message("Compiling for 64 bits windows")
+        INCLUDEPATH += "c:/Program Files/Graphviz/include"
+        INCLUDEPATH += "c:/Program Files/Graphviz/lib"
+        DEPENDPATH += "c:/Program Files/Graphviz/lib"
+        CONFIG(release, debug|release): LIBS += -L"c:/Program Files/Graphviz/lib" -lcgraph
+        CONFIG(debug, debug|release): LIBS += -L"c:/Program Files/Graphviz/lib" -lcgraphd
+    }
+    else {
+        message("Compiling for 32 bits windows")
+        INCLUDEPATH += "c:/Program Files (x86)/Graphviz/include"
+        INCLUDEPATH += "c:/Program Files (x86)/Graphviz/lib"
+        DEPENDPATH += "c:/Program Files (x86)/Graphviz/lib"
+        CONFIG(release, debug|release): LIBS += -L"c:/Program Files (x86)/Graphviz/lib" -lcgraph
+        CONFIG(debug, debug|release): LIBS += -L"c:/Program Files (x86)/Graphviz/lib" -lcgraphd
+    }
+    LIBS += -lgvc -lcgraph
+}
 
 RESOURCES += \
     Images.qrc
