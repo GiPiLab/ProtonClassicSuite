@@ -187,9 +187,8 @@ unix:!android{
     LIBS += -lgvc -lcgraph
 }
 
-win32:
-{
-    contains (QT_ARCH, x86_64) {
+win32:{
+        contains (QT_ARCH, x86_64) {
         message("Compiling for 64 bits windows")
         INCLUDEPATH += "c:/Program Files/Graphviz/include"
         INCLUDEPATH += "c:/Program Files/Graphviz/lib"
