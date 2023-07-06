@@ -352,67 +352,117 @@ void PCx_Reporting::updateParent(const QString &tableName, QDate date, unsigned 
                     ":rattachenmoins1)")
                 .arg(tableName));
   if (nullOuverts) {
-      q.bindValue(":ouverts", QVariant(QMetaType::fromType<qlonglong>()));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    q.bindValue(":ouverts", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":ouverts", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":ouverts", sumOuverts);
   }
 
   if (nullRealises) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":realises", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":realises", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":realises", sumRealises);
   }
 
   if (nullEngages) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":engages", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":engages", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":engages", sumEngages);
   }
 
   if (nullDisponibles) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":disponibles", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":disponibles", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":disponibles", sumDisponibles);
   }
 
   if (nullBP) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":bp", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":bp", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":bp", sumBP);
   }
 
   if (nullReports) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":reports", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":reports", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":reports", sumReports);
   }
 
   if (nullOCDM) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":ocdm", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":ocdm", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":ocdm", sumOCDM);
   }
 
   if (nullVCDM) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":vcdm", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":vcdm", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":vcdm", sumVCDM);
   }
 
   if (nullBudgetVote) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":budgetvote", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":budgetvote", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":budgetvote", sumBudgetVote);
   }
 
   if (nullVCInternes) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":vcinterne", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":vcinterne", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":vcinterne", sumVCInternes);
   }
 
   if (nullRattachesNMoins1) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":rattachenmoins1", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":rattachenmoins1", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":rattachenmoins1", sumRattachesNMoins1);
   }
@@ -1143,7 +1193,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
 
   QRandomGenerator *randomGenerator = QRandomGenerator::global();
 
-  qint64 rvOuverts, rvRealises, rvEngages, rvBp, rvReports, rvOcdm, rvVcdm, rvBudgetVote,
+  qint32 rvOuverts, rvRealises, rvEngages, rvBp, rvReports, rvOcdm, rvVcdm, rvBudgetVote,
       rvVirementsInternes, rvRattacheNMoins1;
 
   QDate lastDate = getLastReportingDate(mode);
@@ -1175,7 +1225,7 @@ void PCx_Reporting::addRandomDataForNext15(MODES::DFRFDIRI mode) {
     }
     data.insert(OREDPCR::REALISES, rvRealises);
 
-    rvEngages = randomGenerator->bounded(rvOuverts-rvRealises+1);
+    rvEngages = randomGenerator->bounded(rvOuverts - rvRealises + 1);
     data.insert(OREDPCR::ENGAGES, rvEngages);
 
     rvBudgetVote = rvOuverts;

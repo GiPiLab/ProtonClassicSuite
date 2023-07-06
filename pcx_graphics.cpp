@@ -750,6 +750,10 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
     return nullptr;
   }
 
+  if (selectedOREDPCR.isEmpty()) {
+    return nullptr;
+  }
+
   QChart *chart = new QChart();
 
   QString plotTitle;
@@ -762,11 +766,6 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
   plotTitle = QObject::tr("<div style='text-align:center'>%1\n(%2)</div>")
                   .arg(reportingModel->getAttachedTree()->getNodeName(selectedNodeId).toHtmlEscaped(),
                        MODES::modeToCompleteString(mode));
-
-  chart->setTitle(plotTitle);
-  if (selectedOREDPCR.isEmpty()) {
-    return nullptr;
-  }
 
   QSqlQuery q;
 
@@ -808,6 +807,12 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
             dataSeries[i].append(QPointF(timestamp, dataF));
         }
     }
+  }
+
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
+  if (numberOfDates == 0) {
+    new QGraphicsSimpleTextItem(QObject::tr("Pas de données"), chart);
+    return chart;
   }
 
   QLineSeries *series = nullptr;
@@ -864,9 +869,8 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
   yAxis->applyNiceNumbers();
   yAxis->setLabelsFont(smallFont);
 
-  // NOTE: Remove border
-  chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
+  chart->setTitle(plotTitle);
 
   return chart;
 }
@@ -991,6 +995,7 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
         axisX->append(PCx_Reporting::OREDPCRtoCompleteString(ored));
     }
 
+    bool hasData = false;
     while (q.next()) {
         qint64 refVal = q.value(PCx_Reporting::OREDPCRtoTableString(oredReference)).toLongLong();
         if (refVal == 0) {
@@ -998,11 +1003,20 @@ QChart *PCx_Graphics::getPCRPercentBarsChart(unsigned int selectedNodeId, MODES:
             delete chart;
             return nullptr;
         }
+        hasData = true;
 
         foreach (PCx_Reporting::OREDPCR ored, selectedOREDPCR) {
             qint64 val = q.value(PCx_Reporting::OREDPCRtoTableString(ored)).toLongLong();
             barSet->append(static_cast<double>(val) / static_cast<double>(refVal) * 100.0);
         }
+    }
+
+    chart->layout()->setContentsMargins(0, 0, 0, 0);
+
+    if (hasData == false) {
+        new QGraphicsSimpleTextItem(QObject::tr("Pas de données"), chart);
+        delete axisX;
+        return chart;
     }
 
     QBarSeries *series = new QBarSeries();

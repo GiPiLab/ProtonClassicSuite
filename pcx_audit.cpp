@@ -533,25 +533,43 @@ void PCx_Audit::updateParent(const QString &tableName, int annee, unsigned int n
                     "disponibles where annee=:annee and id_node=:id_node")
                 .arg(tableName));
   if (nullOuverts) {
-      q.bindValue(":ouverts", QVariant(QMetaType::fromType<qlonglong>()));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    q.bindValue(":ouverts", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":ouverts", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":ouverts", sumOuverts);
   }
 
   if (nullRealises) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":realises", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":realises", QVariant(QVariant::LongLong));
+#endif
   } else {
     q.bindValue(":realises", sumRealises);
   }
 
   if (nullEngages) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":engages", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":engages", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":engages", sumEngages);
   }
 
   if (nullDisponibles) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     q.bindValue(":disponibles", QVariant(QMetaType::fromType<qlonglong>()));
+#else
+    q.bindValue(":disponibles", QVariant(QVariant::LongLong));
+#endif
+
   } else {
     q.bindValue(":disponibles", sumDisponibles);
   }

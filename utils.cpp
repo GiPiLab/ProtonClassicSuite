@@ -184,7 +184,12 @@ QString qTableViewToHtml(QTableView *tableView) {
         out.append("<td " + align + " style='" + cellStyle + "'>");
         QString dataString;
         QLocale defaultLocale;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         if (data.typeId() == QMetaType::QDate) {
+#else
+        if (static_cast<QMetaType::Type>(data.type()) == QMetaType::QDate) {
+#endif
           dataString = defaultLocale.toString(data.toDate(), QLocale::ShortFormat);
         } else {
           if (data.toString().isEmpty()) {

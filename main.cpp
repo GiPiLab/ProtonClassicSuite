@@ -121,7 +121,13 @@ int main(int argc, char *argv[]) {
 #endif
 
   QTranslator qtTranslator;
-  if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  if (qtTranslator.load("qt_" + QLocale::system().name(),
+                        QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+#else
+  if (qtTranslator.load("qt_" + QLocale::system().name(),
+                        QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+#endif
     QCoreApplication::installTranslator(&qtTranslator);
   }
 
