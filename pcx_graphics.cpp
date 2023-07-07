@@ -513,8 +513,9 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
                            MODES::modeToCompleteString(mode));
     }
   }
-  chart->setTitle(plotTitle);
+
   if (selectedORED.isEmpty()) {
+    delete chart;
     return nullptr;
   }
 
@@ -538,6 +539,8 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   int minYear = 10000;
   int maxYear = -10000;
 
+  bool hasData = false;
+
   while (q.next()) {
     int year = q.value("annee").toInt();
 
@@ -558,10 +561,22 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
         if (dataF < minYValue) {
           minYValue = dataF;
         }
+        if (dataF != 0) {
+          hasData = true;
+        }
         dataSeries[i].append(QPointF(year, dataF));
       }
     }
   }
+
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
+  chart->setBackgroundRoundness(0);
+
+  if (hasData == false) {
+    new QGraphicsSimpleTextItem(QObject::tr("Pas de données"), chart);
+    return chart;
+  }
+  chart->setTitle(plotTitle);
 
   if (prevItem != nullptr) {
     qint64 summedPrev = NUMBERSFORMAT::fixedDividedByFormatMode(prevItem->getSummedPrevisionItemValue());
@@ -614,7 +629,6 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
       series->setPointsVisible(true);
     }
   }
-
   yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.08));
 
   QString formatString;
@@ -643,10 +657,6 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     chart->legend()->setFont(QFont("Sans", 7));
     yAxis->setLabelsFont(font);
   }
-
-  // NOTE: Remove border
-  chart->layout()->setContentsMargins(0, 0, 0, 0);
-  chart->setBackgroundRoundness(0);
 
   return chart;
 }

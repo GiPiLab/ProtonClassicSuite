@@ -521,15 +521,7 @@ void FormQueries::on_pushButtonSave_clicked() {
 
   QTextStream stream(&file);
 
-  QSettings settings;
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-
-  if (settingStyle == "INLINE") {
-    stream << doc->toHtml();
-  } else {
-    stream << currentHtmlDoc;
-  }
-
+  stream << currentHtmlDoc;
   stream.flush();
   file.close();
 }

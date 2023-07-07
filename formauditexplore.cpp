@@ -277,8 +277,6 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
   MODES::DFRFDIRI currentTablePresetMode =
       static_cast<MODES::DFRFDIRI>(ui->comboBoxDFRFDIRITable->currentData(MODES::ModeIdUserRole).toInt());
 
-  QSettings settings;
-
   // Generate report in non-embedded mode, saving images
   QString output = PCx_Report::generateMainHTMLHeader();
   output.append(model->generateHTMLAuditTitle());
@@ -287,18 +285,6 @@ void FormAuditExplore::on_saveTablesButton_clicked() {
 
   output.append(tables.getPCAPresetFromPCAPRESETS(currentTablePreset, node, currentTablePresetMode, referenceNode));
   output.append("</body></html>");
-
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-  if (settingStyle == "INLINE") {
-    // Pass HTML through a temp QTextDocument to reinject css into tags (more
-    // compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(output);
-    output = formattedOut.toHtml();
-
-    // Cleanup the output a bit
-    output.replace(" -qt-block-indent:0;", "");
-  }
 
   QTextStream stream(&file);
   stream << output;

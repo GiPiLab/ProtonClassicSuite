@@ -347,13 +347,10 @@ qDebug()<<"Mode-dependant selected graphics = "<<selectedGraphics;*/
 
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
-      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les noeuds sont stockées dans le dossier <b>%2</b>. "
-                      "Voulez-vous ouvrir le rapport dans le navigateur ?")
-                       .arg(fi.fileName().toHtmlEscaped(), relativeNodesPath.toHtmlEscaped())) == QMessageBox::Yes) {
-          if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
-              QMessageBox::warning(this, tr("Attention"), tr("Ouverture impossible"));
-          }
-      }
+    QMessageBox::information(this,
+                             tr("Informations"),
+                             tr("Le rapport a bien été enregistré, vous pouvez l'ouvrir avec votre "
+                                "navigateur internet"));
 
   } else {
       QMessageBox::critical(this, tr("Attention"), tr("Le rapport n'a pas pu être enregistré !"));

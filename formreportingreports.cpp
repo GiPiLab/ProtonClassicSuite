@@ -235,8 +235,6 @@ void FormReportingReports::on_saveButton_clicked() {
   // QElapsedTimer timer;
   // timer.start();
 
-
-
   QList<PCx_Report::PCRPRESETS> presetsSansS = selectedPresets;
   presetsSansS.removeAll(PCx_Report::PCRPRESETS::PCRPRESET_S);
 
@@ -285,18 +283,6 @@ void FormReportingReports::on_saveButton_clicked() {
       QMessageBox::critical(this, tr("Attention"),
                             tr("Ouverture du fichier impossible : %1").arg(nodeFile.errorString()));
       return;
-  }
-
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-  if (settingStyle == "INLINE") {
-    // Pass HTML through a temp QTextDocument to reinject css into tags (more
-    // compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(output);
-    output = formattedOut.toHtml();
-
-  // Cleanup the output a bit
-  output.replace(" -qt-block-indent:0;", "");
   }
 
   QTextStream nodeStream(&nodeFile);
@@ -348,14 +334,10 @@ void FormReportingReports::on_saveButton_clicked() {
 
   progress.setValue(maximumProgressValue);
   if (stream.status() == QTextStream::Ok) {
-
-      if (question(tr("Le rapport <b>%1</b> a bien été enregistré. Les données des noeuds sont stockées dans le dossier <b>%2</b>. "
-                      "Voulez-vous ouvrir le rapport dans le navigateur ?")
-                       .arg(fi.fileName().toHtmlEscaped(), relativeNodesPath.toHtmlEscaped())) == QMessageBox::Yes) {
-          if (QDesktopServices::openUrl(QUrl("file://" + fi.absoluteFilePath(), QUrl::TolerantMode)) == false) {
-              QMessageBox::warning(this, tr("Attention"), tr("Ouverture impossible"));
-          }
-      }
+    QMessageBox::information(this,
+                             tr("Informations"),
+                             tr("Le rapport a bien été enregistré, vous pouvez l'ouvrir avec votre "
+                                "navigateur internet"));
 
   } else {
     QMessageBox::critical(this, tr("Attention"), tr("Le rapport n'a pas pu être enregistré !"));

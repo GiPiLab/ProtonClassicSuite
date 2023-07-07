@@ -288,18 +288,6 @@ void FormReportingExplore::on_pushButtonExport_clicked() {
   output.append(report->generateHTMLReportingReportForNode(getPresets(), selectedNode, getSelectedMode(), true, nullptr));
   output.append("</body></html>");
 
-  QString settingStyle = settings.value("output/style", "CSS").toString();
-  if (settingStyle == "INLINE") {
-    // Pass HTML through a temp QTextDocument to reinject css into tags (more
-    // compatible with text editors)
-    QTextDocument formattedOut;
-    formattedOut.setHtml(output);
-    output = formattedOut.toHtml();
-
-    // Cleanup the output a bit
-    output.replace(" -qt-block-indent:0;", "");
-  }
-
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QMessageBox::critical(this, tr("Attention"), tr("Ouverture du fichier impossible : %1").arg(file.errorString()));
     QDir dir(absoluteImagePath);
