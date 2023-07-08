@@ -221,8 +221,8 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   QLineSeries *serie1 = new QLineSeries();
   QLineSeries *serie2 = new QLineSeries();
 
-  serie1->setUseOpenGL(false);
-  serie2->setUseOpenGL(false);
+  //serie1->setUseOpenGL(false);
+  //serie2->setUseOpenGL(false);
 
   serie1->append(dataPlotNode);
   serie2->append(dataPlotRoot);
@@ -251,12 +251,12 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   QString refNodeName = auditModel->getAttachedTree()->getNodeName(referenceNode);
   serie1->setName(nodeName);
   serie2->setName(QString("%2 hormis %1").arg(nodeName, refNodeName));
-  chart->legend()->setFont(smallFont);
+  //chart->legend()->setFont(smallFont);
   // chart->setLocalizeNumbers(true);
 
   QValueAxis *xAxis = new QValueAxis();
 
-  xAxis->setLabelsAngle(-45);
+  xAxis->setLabelsAngle(-90);
   xAxis->setLabelsFont(smallFont);
 
   xAxis->setLabelFormat("%.0f");
@@ -287,8 +287,10 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
   if (getSettingValue(SETTINGKEY::SHOWPOINTLABELS).toBool()) {
     serie1->setPointLabelsVisible(true);
     serie1->setPointLabelsFormat("@yPoint%");
+    serie1->setPointLabelsFont(smallFont);
     serie2->setPointLabelsVisible(true);
     serie2->setPointLabelsFormat("@yPoint%");
+    serie2->setPointLabelsFont(smallFont);
   }
 
   QString plotTitle;
@@ -316,7 +318,7 @@ QChart *PCx_Graphics::getPCAG1G8(unsigned int node, MODES::DFRFDIRI mode, PCx_Au
 
   chart->setTitle(plotTitle);
 
-  chart->setMargins(QMargins(0, 0, 0, 0));
+  chart->setMargins(QMargins(5, 5, 5, 5));
   // NOTE: Remove border
   chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
@@ -475,6 +477,7 @@ QChart *PCx_Graphics::getPCAG9(unsigned int node, int year) const {
                   .arg(auditModel->getAttachedTree()->getNodeName(node).toHtmlEscaped())
                   .arg(year);
   chart->setTitle(plotTitle);
+  chart->setMargins(QMargins(5, 5, 5, 5));
   chart->layout()->setContentsMargins(0, 0, 0, 0);
   chart->setBackgroundRoundness(0);
 
@@ -604,7 +607,7 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
   xAxis->applyNiceNumbers();
 
   QFont smallFont("Sans", 8);
-  xAxis->setLabelsAngle(-45);
+  xAxis->setLabelsAngle(-90);
   xAxis->setLabelsFont(smallFont);
   xAxis->setGridLineVisible(false);
 
@@ -627,6 +630,15 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
       series->attachAxis(xAxis);
       series->attachAxis(yAxis);
       series->setPointsVisible(true);
+
+      if (getSettingValue(SETTINGKEY::SHOWPOINTLABELS).toBool()) {
+        series->setPointLabelsVisible(true);
+        series->setPointLabelsFormat("@yPoint");
+        series->setPointLabelsFont(smallFont);
+        series->setPointLabelsVisible(true);
+        series->setPointLabelsFormat("@yPoint");
+        series->setPointLabelsFont(smallFont);
+      }
     }
   }
   yAxis->setRange(minYValue - (qAbs(minYValue) * 0.05), maxYValue + (qAbs(maxYValue) * 0.08));
@@ -657,6 +669,10 @@ QChart *PCx_Graphics::getPCAHistory(unsigned int selectedNodeId, MODES::DFRFDIRI
     chart->legend()->setFont(QFont("Sans", 7));
     yAxis->setLabelsFont(font);
   }
+
+  chart->setMargins(QMargins(5, 5, 5, 5));
+  // NOTE: Remove border
+  chart->layout()->setContentsMargins(0, 0, 0, 0);
 
   return chart;
 }
@@ -832,7 +848,7 @@ QChart *PCx_Graphics::getPCRHistoryChart(unsigned int selectedNodeId, MODES::DFR
   xAxis->setTickCount(numberOfDates);
 
   QFont smallFont("Sans", 8);
-  xAxis->setLabelsAngle(-45);
+  xAxis->setLabelsAngle(-90);
   xAxis->setLabelsFont(smallFont);
   // xAxis->setGridLineVisible(false);
 
