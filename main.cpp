@@ -51,7 +51,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QTranslator>
-#include <ctime>
 #include <iostream>
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
@@ -108,16 +107,27 @@ int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
 
   // Avoid multiple application instances
-
 #ifndef Q_OS_ANDROID
-  QSharedMemory sharedMemory;
-  sharedMemory.setKey("GIPILABPROTONCLASSICSUITE");
-  sharedMemory.attach();
+  QSharedMemory shm;
 
-  if (!sharedMemory.create(1)) {
-    QMessageBox::information(nullptr, "Attention", "Une seule instance de ProtonClassicSuite est autorisée à la fois");
-    return EXIT_FAILURE;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+  shm.setNativeKey("GIPILABPROTONCLASSICSUITE");
+#else
+  shm.setKey("GIPILABPROTONCLASSICSUITE");
+#endif
+
+  if (!shm.create(1)) {
+      if (shm.error() == QSharedMemory::AlreadyExists) {
+          QMessageBox::warning(nullptr,
+                               "Attention",
+                               "Une seule instance de ProtonClassicSuite est autorisée à la fois");
+          return EXIT_FAILURE;
+      } else {
+          QMessageBox::critical(nullptr, "Attention", shm.errorString());
+          return EXIT_FAILURE;
+      }
   }
+
 #endif
 
   QTranslator qtTranslator;
@@ -159,7 +169,7 @@ int main(int argc, char *argv[]) {
   QSqlDatabase::database().close();
 
 #ifndef Q_OS_ANDROID
-  sharedMemory.detach();
+  shm.detach();
 #endif
 
   return retval;
