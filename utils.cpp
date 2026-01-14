@@ -59,6 +59,7 @@
 #include <QtMath>
 #include <cstdio>
 #ifndef Q_OS_ANDROID
+#include <graphviz/graphviz_version.h>
 #include <graphviz/gvc.h>
 #endif
 
@@ -233,7 +234,12 @@ QString dotToSvg(const QByteArray &dot){
   }
 
   char *outputData;
+
+#if GVPLUGIN_VERSION > 6
+  size_t length = 0;
+#else
   unsigned int length = 0;
+#endif
 
   gvRenderData(gvc, g, "svg", &outputData, &length);
 
@@ -293,7 +299,12 @@ bool dotToPdf(const QByteArray &dot, const QString &outputFileName) {
   }
 
   char *outputData;
+
+#if GVPLUGIN_VERSION > 6
+  size_t length = 0;
+#else
   unsigned int length = 0;
+#endif
 
   gvRenderData(gvc, g, "pdf", &outputData, &length);
 
