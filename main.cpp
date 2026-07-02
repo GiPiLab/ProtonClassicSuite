@@ -41,7 +41,6 @@
  */
 
 #include "mainwindow.h"
-#include "utils.h"
 #include <QApplication>
 #include <QDebug>
 #include <QLibraryInfo>
@@ -51,56 +50,20 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QTranslator>
-#include <iostream>
 
-void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
-  QString message = QString("%1 (%2:%3)\n").arg(msg).arg(context.file).arg(context.line);
+QtMessageHandler originalHandler = nullptr;
 
-  // Do not display a message box in case of XCB warning to avoid ui global
-  // freeze
-  bool noMessageBox = false;
+void logToFile(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QString message = qFormatLogMessage(type, context, msg);
+    static FILE *f = fopen("protonclassicsuite_logs.txt", "a");
+    fprintf(f, "%s", qPrintable(message));
+    fflush(f);
 
-  if (message.contains("XCB", Qt::CaseInsensitive)) {
-    noMessageBox = true;
-  }
-#ifdef Q_OS_ANDROID
-  // Avoid an anoying popup on android and combobox
-  if (message.contains("This plugin does not support grabbing the keyboard", Qt::CaseInsensitive) == true) {
-    noMessageBox = true;
-  }
-#endif
-
-  switch (type) {
-  case QtInfoMsg:
-    message.prepend("[I]");
-    std::cerr << qPrintable(message);
-    break;
-  case QtDebugMsg:
-    message.prepend("[D]");
-    std::cerr << qPrintable(message);
-    break;
-  case QtWarningMsg:
-    message.prepend("[W]");
-    if (!noMessageBox) {
-      QMessageBox::warning(nullptr, "Attention", message);
+    if (originalHandler)
+    {
+        originalHandler(type, context, msg);
     }
-    std::cerr << qPrintable(message);
-    break;
-  case QtCriticalMsg:
-    message.prepend("[C]");
-    if (!noMessageBox) {
-      QMessageBox::critical(nullptr, "Erreur critique", message);
-    }
-    std::cerr << qPrintable(message);
-    break;
-  case QtFatalMsg:
-    message.prepend("[F]");
-    if (!noMessageBox) {
-      QMessageBox::critical(nullptr, "Erreur fatale", message);
-    }
-    std::cerr << qPrintable(message);
-    die();
-  }
 }
 
 int main(int argc, char *argv[]) {
@@ -141,7 +104,9 @@ int main(int argc, char *argv[]) {
     QCoreApplication::installTranslator(&qtTranslator);
   }
 
-  qInstallMessageHandler(myMessageOutput);
+
+  qSetMessagePattern("%{appname} %{time} %{type}%{if-category} - %{category} - %{endif}%{file}(%{line}): %{message}\n");
+  originalHandler = qInstallMessageHandler(logToFile);
 
   int retval;
 
