@@ -56,7 +56,16 @@ QtMessageHandler originalHandler = nullptr;
 void logToFile(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString message = qFormatLogMessage(type, context, msg);
-    static FILE *f = fopen("protonclassicsuite_logs.txt", "a");
+    static bool initialized=false;
+    static FILE *f=nullptr;
+
+    if (!initialized) {
+        QString logPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+        QDir().mkpath(logPath);  // Crée le répertoire s'il n'existe pas
+        logPath += "/protonclassicsuite_logs.txt";
+        f = fopen(qPrintable(logPath), "a");
+        initialized = true;
+    }
     fprintf(f, "%s", qPrintable(message));
     fflush(f);
 
