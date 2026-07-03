@@ -259,13 +259,15 @@ QString dotToSvg(const QByteArray &dot){
   agclose(g);
   gvFreeContext(gvc);
 
+  static const QRegularExpression expWidth("width=.*");
+
   //Remove xml header unneeded to embed into html
   out.remove("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
   out.remove("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"");
   out.remove("\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
 
   //Remove fixed width and height
-  out.remove(QRegularExpression("width=.*"));
+  out.remove(expWidth);
   return out;
 }
 

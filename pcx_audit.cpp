@@ -92,7 +92,7 @@ PCx_Audit::PCx_Audit(unsigned int auditId, bool _noLoadAttachedTree) : auditId(a
       finishedString = QObject::tr("non");
     }
     creationTimeUTC = QDateTime::fromString(q.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    creationTimeUTC.setTimeSpec(Qt::UTC);
+    creationTimeUTC.setTimeZone(QTimeZone::UTC);
     creationTimeLocal = creationTimeUTC.toLocalTime();
   } else {
     qCritical() << "Invalid audit ID !";
@@ -1494,7 +1494,7 @@ QList<QPair<unsigned int, QString>> PCx_Audit::getListOfAudits(ListAuditsMode mo
   while (query.next()) {
     QString item;
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    dt.setTimeSpec(Qt::UTC);
+    dt.setTimeZone(QTimeZone::UTC);
     QDateTime dtLocal = dt.toLocalTime();
     QLocale defaultLocale;
     QPair<unsigned int, QString> p;
@@ -1539,7 +1539,7 @@ QList<QPair<unsigned int, QString>> PCx_Audit::getListOfAuditsAttachedWithThisTr
   while (query.next()) {
     QString item;
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    dt.setTimeSpec(Qt::UTC);
+    dt.setTimeZone(QTimeZone::UTC);
     QDateTime dtLocal = dt.toLocalTime();
     QLocale defaultLocale;
     QPair<unsigned int, QString> p;

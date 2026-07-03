@@ -75,7 +75,7 @@ PCx_Reporting::PCx_Reporting(unsigned int reportingId, bool _noLoadAttachedTree)
     attachedTreeId = q.value("id_arbre").toUInt();
 
     creationTimeUTC = QDateTime::fromString(q.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    creationTimeUTC.setTimeSpec(Qt::UTC);
+    creationTimeUTC.setTimeZone(QTimeZone::UTC);
     creationTimeLocal = creationTimeUTC.toLocalTime();
   } else {
     qCritical() << "Invalid reporting ID !";
@@ -1685,7 +1685,7 @@ QList<QPair<unsigned int, QString>> PCx_Reporting::getListOfReportings() {
   while (query.next()) {
     QString item;
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    dt.setTimeSpec(Qt::UTC);
+    dt.setTimeZone(QTimeZone::UTC);
     QDateTime dtLocal = dt.toLocalTime();
     QLocale defaultLocale;
     QPair<unsigned int, QString> p;

@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
   }
 
 
-  qSetMessagePattern("%{appname} %{time} %{type}%{if-category} - %{category} - %{endif}%{file}(%{line}): %{message}\n");
+  qSetMessagePattern("%{appname} %{time} %{type}%{if-category} - %{category} -%{endif} %{file}(%{line}): %{message}\n");
   originalHandler = qInstallMessageHandler(logToFile);
 
   int retval;

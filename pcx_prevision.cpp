@@ -45,6 +45,8 @@
 #include <QMessageBox>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QDateTime>
+#include <QTimeZone>
 
 PCx_Prevision::PCx_Prevision(unsigned int previsionId) : previsionId(previsionId) {
   QSqlQuery q;
@@ -61,7 +63,7 @@ PCx_Prevision::PCx_Prevision(unsigned int previsionId) : previsionId(previsionId
     attachedTree = attachedAudit->getAttachedTree();
     attachedTreeId = attachedAudit->getAttachedTreeId();
     creationTimeUTC = QDateTime::fromString(q.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    creationTimeUTC.setTimeSpec(Qt::UTC);
+    creationTimeUTC.setTimeZone(QTimeZone::UTC);
     creationTimeLocal = creationTimeUTC.toLocalTime();
   } else {
     qCritical() << "Invalid prevision ID !";
@@ -301,7 +303,7 @@ QList<QPair<unsigned int, QString>> PCx_Prevision::getListOfPrevisions() {
   while (query.next()) {
     QString item;
     dt = QDateTime::fromString(query.value("le_timestamp").toString(), "yyyy-MM-dd hh:mm:ss");
-    dt.setTimeSpec(Qt::UTC);
+    dt.setTimeZone(QTimeZone::UTC);
     QDateTime dtLocal = dt.toLocalTime();
     QLocale defaultLocale;
     QPair<unsigned int, QString> p;

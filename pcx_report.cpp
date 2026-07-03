@@ -267,7 +267,7 @@ QString PCx_Report::generateHTMLAuditReportForNode(const QList<PCx_Tables::PCAPR
     }
   }
   output.append("\n</div>\n");
-  qDebug() << "Time to render for node" << selectedNode << "=" << timer.elapsed() << "ms";
+  //qDebug() << "Time to render for node" << selectedNode << "=" << timer.elapsed() << "ms";
 
   return output;
 }

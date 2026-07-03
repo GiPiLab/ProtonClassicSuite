@@ -62,11 +62,13 @@ DialogAbout::DialogAbout(QWidget *parent) : QDialog(parent), ui(new Ui::DialogAb
                          .arg(__DATE__)
                          .arg(QDate::currentDate().year()));
   QFile eulaFile(":/EULA/EULA.txt");
-  eulaFile.open(QIODevice::ReadOnly);
-  QTextStream in(&eulaFile);  
-  QString line = in.readAll();
-  eulaFile.close();
-  ui->plainTextEdit->setPlainText(line);
+  if(eulaFile.open(QIODevice::ReadOnly))
+  {
+      QTextStream in(&eulaFile);
+      QString line = in.readAll();
+      eulaFile.close();
+      ui->plainTextEdit->setPlainText(line);
+  }
 }
 
 DialogAbout::~DialogAbout() { delete ui; }

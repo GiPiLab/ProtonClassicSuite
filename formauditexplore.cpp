@@ -336,7 +336,7 @@ void FormAuditExplore::on_comboBoxTable_activated(int index) {
 }
 
 void FormAuditExplore::on_comboBoxDFRFDIRITable_activated(int index) {
-  qDebug() << "comboDFRFDIRI activated";
+  //qDebug() << "comboDFRFDIRI activated";
 
   if (index == -1 || ui->comboBoxTable->count() == 0) {
     return;
