@@ -8,12 +8,7 @@ Cette suite logicielle à destination des organismes publics (collectivités loc
 * ProtonClassicBudget, pour l'allocation de crédits des exercices à venir
 
 
-## Sites web :
-
-* https://protonclassic.com
-* https://gipilab.org
 
 
-## Licence
 
-Licence CECILL (une licence semblable à l'esprit de la GPL mais compatible avec le droit français)
+Licence CECILL (http://www.cecill.info/licences/Licence_CeCILL_V2.1-fr.html)
